@@ -2,23 +2,14 @@
 
 import pygame
 from pygame.locals import *
-
-LT_GRN  = (150, 255, 150)
-
-background = LT_GRN
-size = 640, 320
-width, height = size
-
-pygame.init()
-screen = pygame.display.set_mode(size)
-running = True
+from common import *
 
 ball = pygame.image.load("ball.gif")
 rect = ball.get_rect()
 speed = [1, 1]
-
 clock = pygame.time.Clock()
 
+running = True
 while running:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -30,7 +21,7 @@ while running:
     if rect.top < 0 or rect.bottom > height:
         speed[1] = -speed[1]
 
-    screen.fill(background)
+    screen.fill(LT_GRN)
     screen.blit(ball, rect)
     pygame.display.update()
     clock.tick(120)

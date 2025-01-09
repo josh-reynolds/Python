@@ -2,20 +2,9 @@
 
 import pygame
 from pygame.locals import *
+from common import *
 
-RED    = (255,   0,   0)
-GREEN  = (  0, 255,   0)
-BLUE   = (  0,   0, 255)
-GREY   = (150, 150, 150)
-BLACK  = (  0,   0,   0)
-SIZE   = (500, 200)
-
-width, height = SIZE
 dirs = {K_LEFT: (-5, 0), K_RIGHT: (5, 0), K_UP: (0, -5), K_DOWN: (0, 5)}
-
-pygame.init()
-screen = pygame.display.set_mode(SIZE)
-
 rect0 = Rect(50, 60, 200, 80)
 rect = rect0.copy()
 
