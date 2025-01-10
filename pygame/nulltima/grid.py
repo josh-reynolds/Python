@@ -1,6 +1,6 @@
 import unittest
 from common import *
-from world import world
+from world import world, terrains
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width, cell_height):
@@ -12,6 +12,9 @@ class Grid:
         self.cell_height = cell_height
         self.contents = [[BLACK for x in range(width)] for x in range(height)]
         self.world = world()
+
+    def __getitem__(self, coord):
+        return self.world.get_cell(coord[0], coord[1])
 
     def update(self):
         pass
@@ -47,7 +50,8 @@ class GridTestCase(unittest.TestCase):
                             [0, 0, 1, 0, 0],
                             [0, 0, 0, 0, 0],
                             [0, 0, 0, 0, 0]]
-#        self.assertEqual(
+
+        self.assertEqual(g[2,2], terrains[1])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
