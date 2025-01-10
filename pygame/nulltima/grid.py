@@ -32,6 +32,9 @@ class Grid:
                 pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
+    def move(self, dx, dy):
+        self.offset = (self.offset[0] + dx,
+                       self.offset[1] + dy)
 
 def grid(width, height, left, top, cell_width, cell_height):
     return Grid(width, height, left, top, cell_width, cell_height)
@@ -61,6 +64,11 @@ class GridTestCase(unittest.TestCase):
         self.g.offset = (1,1)
 
         self.assertEqual(self.g[1,1], terrains[1])
+
+    def test_moving_a_grid(self):
+        self.g.move(1,2)
+
+        self.assertEqual(self.g.offset, (1, 2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
