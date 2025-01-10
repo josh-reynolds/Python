@@ -5,10 +5,11 @@ from grid import grid
 
 g = grid(3, 3, 60, 60, 50, 50)
 g.world.contents = [[1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 3, 1],
                     [1, 1, 4, 1, 1],
-                    [1, 1, 1, 1, 1],
+                    [1, 3, 1, 1, 1],
                     [1, 1, 1, 1, 1]]
+g.offset = (1,1)
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)

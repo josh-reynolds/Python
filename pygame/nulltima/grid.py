@@ -12,9 +12,11 @@ class Grid:
         self.cell_height = cell_height
         self.contents = [[BLACK for x in range(width)] for x in range(height)]
         self.world = world()
+        self.offset = (0,0)
 
     def __getitem__(self, coord):
-        return self.world.get_cell(coord[0], coord[1])
+        return self.world.get_cell(coord[0] + self.offset[0], 
+                                   coord[1] + self.offset[1])
 
     def update(self):
         pass
@@ -26,7 +28,8 @@ class Grid:
                          y * self.cell_height + self.top,
                          self.cell_width,
                          self.cell_height)
-                pygame.draw.rect(screen, self.world.get_cell(x,y), coord)
+                color = self[x,y]
+                pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
 
@@ -52,6 +55,17 @@ class GridTestCase(unittest.TestCase):
                             [0, 0, 0, 0, 0]]
 
         self.assertEqual(g[2,2], terrains[1])
+
+    def test_coordinate_offset(self):
+        g = grid(3, 3, 10, 10, 6, 6)
+        g.world.contents = [[0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0],
+                            [0, 0, 1, 0, 0],
+                            [0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0]]
+        g.offset = (1,1)
+
+        self.assertEqual(g[1,1], terrains[1])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
