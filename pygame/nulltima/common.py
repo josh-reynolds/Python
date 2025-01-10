@@ -19,6 +19,3 @@ def draw_text(text, pos):
     img = font.render(text, True, BLACK)
     screen.blit(img, pos)
 
-pygame.init()
-screen = pygame.display.set_mode(SIZE)
-font = pygame.font.Font(None, 24)
