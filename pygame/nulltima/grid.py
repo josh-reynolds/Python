@@ -37,35 +37,30 @@ def grid(width, height, left, top, cell_width, cell_height):
     return Grid(width, height, left, top, cell_width, cell_height)
 
 class GridTestCase(unittest.TestCase):
+    def setUp(self):
+        self.g = grid(3, 3, 11, 9, 4, 3)
+        self.g.world.contents = [[0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0],
+                                [0, 0, 1, 0, 0],
+                                [0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0]]
+
     def test_constructing_a_grid(self):
-        g = grid(10, 7, 11, 9, 4, 3)
-        self.assertEqual(g.width, 10)
-        self.assertEqual(g.height, 7)
-        self.assertEqual(g.left, 11)
-        self.assertEqual(g.top, 9)
-        self.assertEqual(g.cell_width, 4)
-        self.assertEqual(g.cell_height, 3)
+        self.assertEqual(self.g.width, 3)
+        self.assertEqual(self.g.height, 3)
+        self.assertEqual(self.g.left, 11)
+        self.assertEqual(self.g.top, 9)
+        self.assertEqual(self.g.cell_width, 4)
+        self.assertEqual(self.g.cell_height, 3)
 
     def test_coordinate_mapping_to_world(self):
-        g = grid(3, 3, 10, 10, 6, 6)
-        g.world.contents = [[0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0],
-                            [0, 0, 1, 0, 0],
-                            [0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0]]
 
-        self.assertEqual(g[2,2], terrains[1])
+        self.assertEqual(self.g[2,2], terrains[1])
 
     def test_coordinate_offset(self):
-        g = grid(3, 3, 10, 10, 6, 6)
-        g.world.contents = [[0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0],
-                            [0, 0, 1, 0, 0],
-                            [0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0]]
-        g.offset = (1,1)
+        self.g.offset = (1,1)
 
-        self.assertEqual(g[1,1], terrains[1])
+        self.assertEqual(self.g[1,1], terrains[1])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
