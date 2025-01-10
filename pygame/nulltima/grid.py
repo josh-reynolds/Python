@@ -40,6 +40,15 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(g.cell_width, 4)
         self.assertEqual(g.cell_height, 3)
 
+    def test_coordinate_mapping_to_world(self):
+        g = grid(3, 3, 10, 10, 6, 6)
+        g.world.contents = [[0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0],
+                            [0, 0, 1, 0, 0],
+                            [0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0]]
+#        self.assertEqual(
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

@@ -1,12 +1,14 @@
 import unittest
 from common import *
 
+terrains = {0:BLACK, 1:WHITE, 2:RED, 3:GREEN, 4:BLUE}
+
 class World:
     def __init__(self, contents):
         self.contents = contents
 
     def get_cell(self, x, y):
-        return BLUE
+        return terrains[self.contents[x][y]]
 
 def world(contents=[]):
     return World(contents)

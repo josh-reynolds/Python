@@ -3,7 +3,12 @@ from pygame.locals import *
 from common import *
 from grid import grid
 
-g = grid(11, 11, 60, 60, 30, 30)
+g = grid(3, 3, 60, 60, 50, 50)
+g.world.contents = [[1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 4, 1, 1],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1]]
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
