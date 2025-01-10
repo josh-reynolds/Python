@@ -4,6 +4,7 @@ def suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     suite.addTests(loader.loadTestsFromName('grid'))
+    suite.addTests(loader.loadTestsFromName('world'))
     return suite
 
 # ---------------------------------------------------------------------------

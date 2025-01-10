@@ -1,5 +1,6 @@
 import unittest
 from common import *
+from world import world
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width, cell_height):
@@ -10,6 +11,7 @@ class Grid:
         self.cell_width = cell_width
         self.cell_height = cell_height
         self.contents = [[BLACK for x in range(width)] for x in range(height)]
+        self.world = world()
 
     def update(self):
         pass
@@ -21,6 +23,7 @@ class Grid:
                          y * self.cell_height + self.top,
                          self.cell_width,
                          self.cell_height)
+                pygame.draw.rect(screen, self.world.get_cell(x,y), coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
 
