@@ -42,7 +42,7 @@ class Grid:
                 self.cell_height)
 
     def move(self, dx, dy):
-        if not self.is_impassable(self.center[0] + dx, self.center[1] + dy):
+        if self.can_move(dx, dy):
             newx = self.offset[0] + dx
             if newx < 0:
                 newx = 0
@@ -59,6 +59,9 @@ class Grid:
 
     def is_impassable(self, x, y):
         return self[x,y][1]
+
+    def can_move(self, dx, dy):
+        return not self.is_impassable(self.center[0] + dx, self.center[1] + dy)
 
 def grid(width, height, left, top, cell_width, cell_height):
     return Grid(width, height, left, top, cell_width, cell_height)
@@ -105,6 +108,12 @@ class GridTestCase(unittest.TestCase):
     def test_impassability_check(self):
         self.assertEqual(self.g.is_impassable(0,0), True)
         self.assertEqual(self.g.is_impassable(2,2), False)
+
+    def test_move_check(self):
+        self.assertEqual(self.g.can_move(0,1), True)
+        self.assertEqual(self.g.can_move(1,0), True)
+        self.assertEqual(self.g.can_move(0,-1), False)
+        self.assertEqual(self.g.can_move(-1,0), False)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
