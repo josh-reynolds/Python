@@ -28,6 +28,7 @@ while running:
             if event.key in dirs:
                 v = dirs[event.key]
                 g.move(v[0], v[1])
+                print(g.player.position)
 
     screen.fill(GREY)
     g.update()

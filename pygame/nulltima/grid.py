@@ -1,6 +1,7 @@
 import unittest
 from common import *
 from world import world, terrains
+from player import player
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width, cell_height):
@@ -13,6 +14,8 @@ class Grid:
         self.contents = [[BLACK for x in range(width)] for x in range(height)]
         self.world = world()
         self.offset = (0,0)
+        self.center = (self.width//2, self.height//2)
+        self.player = player(self.center[0], self.center[1])
 
     def __getitem__(self, coord):
         return self.world.get_cell(coord[0] + self.offset[0], 
@@ -31,6 +34,13 @@ class Grid:
                 color = self[x,y]
                 pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
+
+        player_position = (self.player.position[0] * self.cell_width + self.left,
+                           self.player.position[1] * self.cell_height + self.top,
+                           self.cell_width,
+                           self.cell_height)
+        pygame.draw.ellipse(screen, BLACK, player_position)
+
 
     def move(self, dx, dy):
         newx = self.offset[0] + dx
