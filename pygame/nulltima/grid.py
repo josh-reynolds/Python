@@ -56,6 +56,9 @@ class Grid:
 
         self.offset = (newx, newy)
 
+    def is_impassable(self, x, y):
+        return self[x,y][1]
+
 def grid(width, height, left, top, cell_width, cell_height):
     return Grid(width, height, left, top, cell_width, cell_height)
 
@@ -97,6 +100,10 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(coords[1], 12)
         self.assertEqual(coords[2], 4)
         self.assertEqual(coords[3], 3)
+
+    def test_impassability_check(self):
+        self.assertEqual(self.g.is_impassable(0,0), True)
+        self.assertEqual(self.g.is_impassable(2,2), False)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
