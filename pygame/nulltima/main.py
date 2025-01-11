@@ -14,7 +14,7 @@ g.world.contents = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 1, 1, 1, 1, 1, 5, 6, 5, 0],
                     [0, 1, 1, 1, 1, 1, 5, 5, 5, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-g.offset = (1,1)
+g.offset = (3,3)
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
@@ -28,7 +28,6 @@ while running:
             if event.key in dirs:
                 v = dirs[event.key]
                 g.move(v[0], v[1])
-                print(g.player.position)
 
     screen.fill(GREY)
     g.update()
