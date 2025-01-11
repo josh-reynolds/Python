@@ -6,8 +6,8 @@ Overworld mode
 [OK] impassable terrain
 [  ] opaque terrain and LOS
 [  ] better handling of border cells
-[  ] larger map
-[  ] map data to separate file
+[OK] larger map
+[OK] map data to separate file
 [  ] incorporate terrain data into world file?
 [  ] terrain graphics
 [  ] player sprite & animation
@@ -58,6 +58,8 @@ Optional
 [  ] books & readable items
 [  ] hazardous tiles
 [  ] status effects
+[  ] mini-map and mapped/visited vs. visible
+[  ] boats & vehicles/mounts
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
