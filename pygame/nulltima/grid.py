@@ -33,8 +33,19 @@ class Grid:
                 pygame.draw.rect(screen, cell, coord, 1)
 
     def move(self, dx, dy):
-        self.offset = (self.offset[0] + dx,
-                       self.offset[1] + dy)
+        newx = self.offset[0] + dx
+        if newx < 0:
+            newx = 0
+        if newx > len(self.world.contents[0]) - self.width:
+            newx = len(self.world.contents[0]) - self.width
+
+        newy = self.offset[1] + dy
+        if newy < 0:
+            newy = 0
+        if newy > len(self.world.contents) - self.height:
+            newy = len(self.world.contents) - self.height
+
+        self.offset = (newx, newy)
 
 def grid(width, height, left, top, cell_width, cell_height):
     return Grid(width, height, left, top, cell_width, cell_height)

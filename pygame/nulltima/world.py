@@ -1,7 +1,8 @@
 import unittest
 from common import *
 
-terrains = {0:BLACK, 1:WHITE, 2:RED, 3:GREEN, 4:BLUE}
+terrains = {0:BLACK, 1:WHITE, 2:RED, 3:GREEN, 4:BLUE,
+            5:CYAN, 6:MAGENTA, 7:YELLOW}
 
 class World:
     def __init__(self, contents):
