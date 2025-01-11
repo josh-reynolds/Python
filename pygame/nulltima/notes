@@ -3,45 +3,55 @@
 TO_DO:
 
 Overworld mode
-* impassable terrain
-* opaque terrain and LOS
-* better handling of border cells
-* larger map
-* map data to separate file
-* terrain graphics
-* player sprite & animation
-* monster spawning
-* monster sprites & animation
-* monster movement & world clock
-* monster persistence
+[OK] impassable terrain
+[  ] opaque terrain and LOS
+[  ] better handling of border cells
+[  ] larger map
+[  ] map data to separate file
+[  ] terrain graphics
+[  ] player sprite & animation
+[  ] monster spawning
+[  ] monster sprites & animation
+[  ] monster movement & world clock
+[  ] monster persistence
 
 Combat mode
-* mode switching
-* combat maps
-* turn order
-* monster AI
-* character statistics
-* combat actions: move, spell, attack, ?
+[  ] mode switching
+[  ] combat maps
+[  ] turn order
+[  ] monster AI
+[  ] character statistics
+[  ] combat actions: move, spell, attack, ?
+[  ] items & loot
 
 Menus
-* character creation
-* save/load game state
+[  ] character creation
+[  ] save/load game state
 
 Town mode
-* town map files
-* vendors
-* town tileset
-* town actions: buy, sell, ?
+[  ] town map files
+[  ] vendors
+[  ] town tileset
+[  ] town actions: buy, sell, ?
 
 Dungeon mode
-* wire-frame FPS
-* dungeon maps
-* level switching
+[  ] wire-frame FPS
+[  ] dungeon maps
+[  ] level switching
 
 Design
-* RPG mechanics & progression
-* story / goals
-* separate code & data
+[  ] RPG mechanics & progression
+[  ] story / goals
+[  ] separate code & data
+[  ] world map / procedural?
+[  ] town maps
+[  ] dungeon maps
+
+Optional
+[  ] interactive tiles (switches, buttons, doors, etc.)
+[  ] books & readable items
+[  ] hazardous tiles
+[  ] status effects
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
