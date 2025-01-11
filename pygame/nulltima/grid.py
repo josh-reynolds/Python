@@ -42,19 +42,20 @@ class Grid:
                 self.cell_height)
 
     def move(self, dx, dy):
-        newx = self.offset[0] + dx
-        if newx < 0:
-            newx = 0
-        if newx > len(self.world.contents[0]) - self.width:
-            newx = len(self.world.contents[0]) - self.width
-
-        newy = self.offset[1] + dy
-        if newy < 0:
-            newy = 0
-        if newy > len(self.world.contents) - self.height:
-            newy = len(self.world.contents) - self.height
-
-        self.offset = (newx, newy)
+        if not self.is_impassable(self.center[0] + dx, self.center[1] + dy):
+            newx = self.offset[0] + dx
+            if newx < 0:
+                newx = 0
+            if newx > len(self.world.contents[0]) - self.width:
+                newx = len(self.world.contents[0]) - self.width
+    
+            newy = self.offset[1] + dy
+            if newy < 0:
+                newy = 0
+            if newy > len(self.world.contents) - self.height:
+                newy = len(self.world.contents) - self.height
+    
+            self.offset = (newx, newy)
 
     def is_impassable(self, x, y):
         return self[x,y][1]
@@ -66,9 +67,9 @@ class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.g = grid(3, 3, 11, 9, 4, 3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
-                                [0, 0, 0, 0, 0],
-                                [0, 0, 1, 0, 0],
-                                [0, 0, 0, 0, 0],
+                                [0, 1, 1, 1, 0],
+                                [0, 1, 1, 1, 0],
+                                [0, 1, 1, 1, 0],
                                 [0, 0, 0, 0, 0]]
 
     def test_constructing_a_grid(self):
