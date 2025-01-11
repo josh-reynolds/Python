@@ -2,7 +2,7 @@ import unittest
 
 class Player:
     def __init__(self, x, y):
-        self.position = (x, y)
+        self.position = (x, y)          # redundant? player always at center of grid...
 
     def update(self):
         pass

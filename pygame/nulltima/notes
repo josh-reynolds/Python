@@ -1,0 +1,53 @@
+1/11/25
+
+TO_DO:
+
+Overworld mode
+* impassable terrain
+* opaque terrain and LOS
+* better handling of border cells
+* larger map
+* map data to separate file
+* terrain graphics
+* player sprite & animation
+* monster spawning
+* monster sprites & animation
+* monster movement & world clock
+* monster persistence
+
+Combat mode
+* mode switching
+* combat maps
+* turn order
+* monster AI
+* character statistics
+* combat actions: move, spell, attack, ?
+
+Menus
+* character creation
+* save/load game state
+
+Town mode
+* town map files
+* vendors
+* town tileset
+* town actions: buy, sell, ?
+
+Dungeon mode
+* wire-frame FPS
+* dungeon maps
+* level switching
+
+Design
+* RPG mechanics & progression
+* story / goals
+* separate code & data
+
+Notes:
+Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
+simpler base - like Akallabeth or Ultima I - for an initial target, though the later games (and competing
+series that came along after) provide an interesting roadmap for features. Some things are easier to do now,
+and our expectations have changed in the forty-some years since the originals. But to keep this manageable,
+stick with a very limited initial feature set.
+
+

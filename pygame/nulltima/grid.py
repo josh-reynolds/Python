@@ -28,7 +28,7 @@ class Grid:
         for y, row in enumerate(self.contents):
             for x, cell in enumerate(row):
                 coord = self.grid_to_screen(x,y)
-                color = self[x,y]
+                color = self[x,y][0]
                 pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
