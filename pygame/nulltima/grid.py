@@ -18,8 +18,8 @@ class Grid:
         self.player = player(self.center[0], self.center[1])
 
     def __getitem__(self, coord):
-        return self.world.get_cell(coord[0] + self.offset[0], 
-                                   coord[1] + self.offset[1])
+        return self.world.get_cell(coord[1] + self.offset[1], 
+                                   coord[0] + self.offset[0])
 
     def update(self):
         pass
