@@ -22,6 +22,16 @@ class World:
     def get_cell(self, x, y):
         return terrains[self.contents[x][y]]
 
+    def open_file(self, filename):
+        f = open(filename, 'r')
+        lines = f.readlines()
+        contents = []
+        for line in lines:
+            new_line = [int(x) for x in line.split()]
+            contents.append(new_line)
+        self.contents = contents
+        f.close()
+
 def world(contents=[]):
     return World(contents)
 
@@ -30,6 +40,13 @@ class WorldTestCase(unittest.TestCase):
         contents = [1]
         w = world(contents)
         self.assertEqual(w.contents, [1])
+
+    def test_loading_a_world_file(self):
+        contents = []
+        w = world(contents)
+        w.open_file("test_world.txt")
+        self.assertEqual(w.get_cell(1,1), terrains[3])
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

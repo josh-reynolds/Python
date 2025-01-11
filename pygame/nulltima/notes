@@ -8,12 +8,15 @@ Overworld mode
 [  ] better handling of border cells
 [  ] larger map
 [  ] map data to separate file
+[  ] incorporate terrain data into world file?
 [  ] terrain graphics
 [  ] player sprite & animation
 [  ] monster spawning
 [  ] monster sprites & animation
 [  ] monster movement & world clock
 [  ] monster persistence
+[  ] sound effects
+[  ] music
 
 Combat mode
 [  ] mode switching
@@ -30,7 +33,8 @@ Menus
 
 Town mode
 [  ] town map files
-[  ] vendors
+[  ] NPCs & dialogue
+[  ] vendors & shops
 [  ] town tileset
 [  ] town actions: buy, sell, ?
 
@@ -43,9 +47,11 @@ Design
 [  ] RPG mechanics & progression
 [  ] story / goals
 [  ] separate code & data
+[  ] file layout
 [  ] world map / procedural?
 [  ] town maps
 [  ] dungeon maps
+[  ] dialogue content
 
 Optional
 [  ] interactive tiles (switches, buttons, doors, etc.)
@@ -60,4 +66,9 @@ series that came along after) provide an interesting roadmap for features. Some 
 and our expectations have changed in the forty-some years since the originals. But to keep this manageable,
 stick with a very limited initial feature set.
 
-
+Assumptions:
+* grid is square
+* grid dimensions are an odd number, so player can be centered
+    * IIRC Ultima IV was 11x11, Ultima III was 13x13
+* player remains at center - grid moves instead
+* world data format is space-delimited integers, probably low range, but not necessarily single-digit
