@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 RED     = (255,   0,   0)
 GREEN   = (  0, 255,   0)
@@ -18,6 +19,25 @@ width, height = SIZE
 def draw_text(text, pos):
     img = font.render(text, True, BLACK)
     screen.blit(img, pos)
+
+def random_point():
+    x = randint(0, width)
+    y = randint(0, height)
+    return (x, y)
+
+def random_points(n):
+    points = []
+    for i in range(n):
+        p = random_point()
+        points.append(p)
+    return points
+
+def random_rects(n):
+    rects = []
+    for i in range(n):
+        r = pygame.Rect(random_point(), (20, 20))
+        rects.append(r)
+    return rects
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
