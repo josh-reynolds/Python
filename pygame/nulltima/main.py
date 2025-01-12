@@ -20,6 +20,8 @@ while running:
             if event.key in dirs:
                 v = dirs[event.key]
                 g.move(v[0], v[1])
+            elif event.key == K_q:
+                running = False
 
     screen.fill(GREY)
     g.update()
