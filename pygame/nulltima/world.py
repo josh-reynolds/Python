@@ -34,6 +34,12 @@ class World:
         self.contents = contents
         f.close()
 
+    def width(self):
+        return len(self.contents[0])
+
+    def height(self):
+        return len(self.contents)
+
 def world(contents=[]):
     return World(contents)
 
@@ -44,11 +50,15 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(w.contents, [1])
 
     def test_loading_a_world_file(self):
-        contents = []
-        w = world(contents)
+        w = world()
         w.open_file("test_world.txt")
         self.assertEqual(w.get_cell(1,1), terrains[3])
 
+    def test_world_width_and_height(self):
+        w = world()
+        w.open_file("test_world.txt")
+        self.assertEqual(w.width(), 10)
+        self.assertEqual(w.height(), 10)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -49,13 +49,13 @@ class Grid:
     def boundary_check(self, x, y):
         if x < 0:
             x = 0
-        if x > len(self.world.contents[0]) - self.width:
-            x = len(self.world.contents[0]) - self.width
+        if x > self.world.width() - self.width:
+            x = self.world.width() - self.width
 
         if y < 0:
             y = 0
-        if y > len(self.world.contents) - self.height:
-            y = len(self.world.contents) - self.height
+        if y > self.world.height() - self.height:
+            y = self.world.height() - self.height
 
         return (x, y)
 
