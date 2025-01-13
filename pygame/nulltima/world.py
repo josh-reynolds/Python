@@ -22,7 +22,11 @@ class World:
         self.contents = contents
 
     def get_cell(self, x, y):
-        return terrains[self.contents[x][y]]
+        if (x >= 0 and x < len(self.contents[0]) and
+            y >= 0 and y < len(self.contents)):
+                return terrains[self.contents[x][y]]
+        else:
+            return terrains[9]
 
     def open_file(self, filename):
         f = open(filename, 'r')

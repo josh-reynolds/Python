@@ -49,13 +49,13 @@ class Grid:
     def boundary_check(self, x, y):
         if x < 0:
             x = 0
-        if x > self.world.width() - self.width:
-            x = self.world.width() - self.width
+        if x > self.world.width():
+            x = self.world.width()
 
         if y < 0:
             y = 0
-        if y > self.world.height() - self.height:
-            y = self.world.height() - self.height
+        if y > self.world.height():
+            y = self.world.height()
 
         return (x, y)
 
@@ -114,9 +114,9 @@ class GridTestCase(unittest.TestCase):
     def test_boundary_check(self):
         self.assertEqual(self.g.boundary_check(-1, -1), (0, 0))
         self.assertEqual(self.g.boundary_check(-1, 2), (0, 2))
-        self.assertEqual(self.g.boundary_check(3, -1), (2, 0))
+        self.assertEqual(self.g.boundary_check(3, -1), (3, 0))
         self.assertEqual(self.g.boundary_check(0, 0), (0, 0))
-        self.assertEqual(self.g.boundary_check(3, 3), (2, 2))
+        self.assertEqual(self.g.boundary_check(3, 3), (3, 3))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
