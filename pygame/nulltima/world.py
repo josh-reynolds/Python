@@ -1,21 +1,21 @@
 import unittest
 from common import *
 
-# terrain fields: color, impassable?
+# terrain fields: color, passable?
 #    color will be phased out in favor of tile images
 #    we will want an opaque? field at some point as well
 #    I don't think these yet merit a full class - tuple 
 #    data records are enough for now
-terrains = {0:(BLACK, True), 
-            1:(WHITE, False), 
-            2:(RED, False), 
-            3:(GREEN, False), 
-            4:(BLUE, True),
-            5:(CYAN, False), 
-            6:(MAGENTA, False), 
-            7:(YELLOW, False),
-            8:(BROWN, True),
-            9:(GREY, True)}
+terrains = {0:(BLACK, False), 
+            1:(WHITE, True), 
+            2:(RED, True), 
+            3:(GREEN, True), 
+            4:(BLUE, False),
+            5:(CYAN, True), 
+            6:(MAGENTA, True), 
+            7:(YELLOW, True),
+            8:(BROWN, False),
+            9:(GREY, False)}
 
 class World:
     def __init__(self, contents):
