@@ -51,6 +51,7 @@ Design
 [  ] RPG mechanics & progression
 [  ] story / goals
 [  ] separate code & data
+[  ] separate model & view components a la MVC
 [  ] file layout
 [  ] world map / procedural?
 [  ] town maps

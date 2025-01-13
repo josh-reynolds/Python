@@ -17,27 +17,27 @@ class Grid:
         self.center = (self.width//2, self.height//2)
         self.player = player(self.center[0], self.center[1])
 
-    def __getitem__(self, coord):
-        return self.world.get_cell(coord[1] + self.offset[1], 
-                                   coord[0] + self.offset[0])
+    def __getitem__(self, index):
+        return self.world.get_cell(index[1] + self.offset[1], 
+                                   index[0] + self.offset[0])
 
     def update(self):
         pass
 
     def draw(self, screen):
-        for y, row in enumerate(self.contents):
-            for x, cell in enumerate(row):
-                coord = self.grid_to_screen(x,y)
-                color = self[x,y][0]
+        for iy, row in enumerate(self.contents):
+            for ix, cell in enumerate(row):
+                coord = self.index_to_screen(ix,iy)
+                color = self[ix,iy][0]
                 pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
-        player_position = self.grid_to_screen(self.center[0], self.center[1])
+        player_position = self.index_to_screen(self.center[0], self.center[1])
         pygame.draw.ellipse(screen, BLACK, player_position)
 
-    def grid_to_screen(self, x, y):
-        return (x * self.cell_width + self.left,
-                y * self.cell_height + self.top,
+    def index_to_screen(self, ix, iy):
+        return (ix * self.cell_width + self.left,
+                iy * self.cell_height + self.top,
                 self.cell_width,
                 self.cell_height)
 
@@ -96,7 +96,7 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.offset, (1, 2))
 
     def test_converting_grid_coords_to_screen(self):
-        coords = self.g.grid_to_screen(1,1)
+        coords = self.g.index_to_screen(1,1)
 
         self.assertEqual(coords[0], 15)
         self.assertEqual(coords[1], 12)

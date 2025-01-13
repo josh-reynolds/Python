@@ -6,7 +6,6 @@ from grid import grid
 g = grid(11, 11, 60, 60, 25, 25)
 #g.world.open_file("test_world.txt")
 g.world.open_file("large_world.txt")
-g.offset = (6, 6)
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
