@@ -43,19 +43,21 @@ class Grid:
 
     def move(self, dx, dy):
         if self.can_move(dx, dy):
-            newx = self.offset[0] + dx
-            if newx < 0:
-                newx = 0
-            if newx > len(self.world.contents[0]) - self.width:
-                newx = len(self.world.contents[0]) - self.width
-    
-            newy = self.offset[1] + dy
-            if newy < 0:
-                newy = 0
-            if newy > len(self.world.contents) - self.height:
-                newy = len(self.world.contents) - self.height
-    
-            self.offset = (newx, newy)
+            self.offset = self.boundary_check(self.offset[0] + dx,
+                                              self.offset[1] + dy)
+
+    def boundary_check(self, x, y):
+        if x < 0:
+            x = 0
+        if x > len(self.world.contents[0]) - self.width:
+            x = len(self.world.contents[0]) - self.width
+
+        if y < 0:
+            y = 0
+        if y > len(self.world.contents) - self.height:
+            y = len(self.world.contents) - self.height
+
+        return (x, y)
 
     def can_move(self, dx, dy):
         return self[self.center[0] + dx, 
@@ -108,6 +110,13 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.can_move(1,0), True)
         self.assertEqual(self.g.can_move(0,-1), False)
         self.assertEqual(self.g.can_move(-1,0), False)
+
+    def test_boundary_check(self):
+        self.assertEqual(self.g.boundary_check(-1, -1), (0, 0))
+        self.assertEqual(self.g.boundary_check(-1, 2), (0, 2))
+        self.assertEqual(self.g.boundary_check(3, -1), (2, 0))
+        self.assertEqual(self.g.boundary_check(0, 0), (0, 0))
+        self.assertEqual(self.g.boundary_check(3, 3), (2, 2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
