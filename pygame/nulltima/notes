@@ -6,6 +6,7 @@ Overworld mode
 [OK] impassable terrain
 [  ] opaque terrain and LOS
 [  ] better handling of border cells
+[  ] migrate coordinate system to origin-on-player
 [OK] larger map
 [OK] map data to separate file
 [  ] incorporate terrain data into world file?
@@ -13,10 +14,13 @@ Overworld mode
 [  ] player sprite & animation
 [  ] monster spawning
 [  ] monster sprites & animation
-[  ] monster movement & world clock
-[  ] monster persistence
+[  ] monster movement & world clock ('pass' action)
+[  ] monster persistence & despawning
 [  ] sound effects
 [  ] music
+[  ] world actions: move, attack, spell, enter, ?
+[  ] status display
+[  ] action feedback & console
 
 Combat mode
 [  ] mode switching
@@ -60,6 +64,8 @@ Optional
 [  ] status effects
 [  ] mini-map and mapped/visited vs. visible
 [  ] boats & vehicles/mounts
+[  ] mouse control
+[  ] attract mode
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
@@ -67,6 +73,13 @@ simpler base - like Akallabeth or Ultima I - for an initial target, though the l
 series that came along after) provide an interesting roadmap for features. Some things are easier to do now,
 and our expectations have changed in the forty-some years since the originals. But to keep this manageable,
 stick with a very limited initial feature set.
+
+... tried out Akallabeth and Ultima I. The former is much more primitive than I remember, at least graphically 
+(just abstract lines - I can see them on an Apple II greenscreen in my mind). The latter, though, is more
+advanced than I recall. A huge step up. All of the core features above are present, except for the combat
+mode. There's only one character involved, so combat occurs on the world map. But towns, wireframe dungeons, 
+and so on are all there. This might be a good feature set to target. Take it in stages - get the overworld
+working first.
 
 Assumptions:
 * grid is square

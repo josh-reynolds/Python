@@ -13,7 +13,9 @@ terrains = {0:(BLACK, True),
             4:(BLUE, True),
             5:(CYAN, False), 
             6:(MAGENTA, False), 
-            7:(YELLOW, False)}
+            7:(YELLOW, False),
+            8:(BROWN, True),
+            9:(GREY, True)}
 
 class World:
     def __init__(self, contents):
