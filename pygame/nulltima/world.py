@@ -15,7 +15,7 @@ terrains = {0:(BLACK, False),
             6:(MAGENTA, True), 
             7:(YELLOW, True),
             8:(BROWN, False),
-            9:(GREY, False)}
+            9:(GREY, False)}       # boundary color
 
 class World:
     def __init__(self, contents):

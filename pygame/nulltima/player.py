@@ -1,8 +1,8 @@
 import unittest
 
 class Player:
-    def __init__(self, x, y):
-        self.position = (x, y)          # redundant? player always at center of grid...
+    def __init__(self):
+        pass
 
     def update(self):
         pass
@@ -13,15 +13,15 @@ class Player:
     def move(self, dx, dy):
         pass
 
-def player(x, y):
-    return Player(x, y)
+def player():
+    return Player()
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.p = player(3,3)
+        self.p = player()
 
     def test_constructing_a_player(self):
-        self.assertEqual(self.p.position, (3,3))
+        pass
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ class Grid:
         self.world = world()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
-        self.player = player(self.center[0], self.center[1])
+        self.player = player()
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
