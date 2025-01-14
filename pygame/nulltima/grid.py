@@ -39,8 +39,7 @@ class Grid:
         pygame.draw.ellipse(screen, BLACK, player_position)
 
     def is_occluded(self, ix, iy):
-        # gather all cells between origin and ix,iy using 
-        #    a modified Bresenham line-drawing approach
+        cells = self.bresenham(ix, iy)
         # if any cells in the list are opaque, return True
         # else return False
         pass
