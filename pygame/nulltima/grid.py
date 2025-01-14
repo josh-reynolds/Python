@@ -1,4 +1,5 @@
 import unittest
+import math
 from common import *
 from world import world, terrains
 from player import player
@@ -43,6 +44,50 @@ class Grid:
         # if any cells in the list are opaque, return True
         # else return False
         pass
+
+    # assumes we are tracing a line to the center of the grid
+    # since this consumes index coordinates, we have an origin in 
+    # the top-left corner and are only dealing with one cartesian quadrant
+    # (plus it's upside down) - may need to adjust, and possibly simplify.
+    # starting with the full algorithm
+    def bresenham(self, ix, iy):
+        cells = []
+
+        x = self.center[0]
+        y = self.center[1]
+        dx = ix - x
+        dy = iy - y
+        ax = 2 * abs(dx)
+        ay = 2 * abs(dy)
+        sx = math.copysign(1, dx)
+        sy = math.copysign(1, dy)
+
+        if ax > ay:
+            d = ay - ax/2
+            while True:
+                if ((x,y) != (ix,iy) and
+                    (x,y) != (self.center[0], self.center[1])):
+                    cells.append((int(x), int(y)))
+                if x == ix:
+                    return cells
+                if d >= 0:
+                    y = y + sy
+                    d = d - ax
+                x = x + sx
+                d = d + ay
+        else:
+            d = ax - ay/2
+            while True:
+                if ((x,y) != (ix,iy) and
+                    (x,y) != (self.center[0], self.center[1])):
+                    cells.append((int(x), int(y)))
+                if y == iy:
+                    return cells
+                if d >= 0:
+                    x = x + sx
+                    d = d - ay
+                y = y + sy
+                d = d + ax
 
     def index_to_screen(self, ix, iy):
         return (ix * self.cell_width + self.left,
@@ -105,6 +150,22 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.can_move(1,0), True)
         self.assertEqual(self.g.can_move(0,-1), False)
         self.assertEqual(self.g.can_move(-1,0), False)
+
+    def test_bresenham_calculation(self):
+        g = grid (11, 11, 5, 5, 5, 5)
+        g.world.contents = [[0 for x in range(20)] for x in range(20)]
+
+        b = g.bresenham(0,0)
+        self.assertEqual(b, [(4,4), (3,3), (2,2), (1,1)])
+
+        b = g.bresenham(10,10)
+        self.assertEqual(b, [(6,6), (7,7), (8,8), (9,9)])
+
+        b = g.bresenham(0,10)
+        self.assertEqual(b, [(4,6), (3,7), (2,8), (1,9)])
+
+        b = g.bresenham(10,0)
+        self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
