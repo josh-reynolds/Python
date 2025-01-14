@@ -17,8 +17,3 @@ SIZE   = (640, 480)
 
 width, height = SIZE
 dirs = {K_LEFT: (-1, 0), K_RIGHT: (1, 0), K_UP: (0, -1), K_DOWN: (0, 1)}
-
-def draw_text(text, pos):
-    img = font.render(text, True, BLACK)
-    screen.blit(img, pos)
-
