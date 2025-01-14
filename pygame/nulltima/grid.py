@@ -65,8 +65,7 @@ class Grid:
         if ax > ay:
             d = ay - ax/2
             while True:
-                if ((x,y) != (ix,iy) and
-                    (x,y) != (self.center[0], self.center[1])):
+                if self.not_endpoint(x, y, ix, iy):
                     cells.append((int(x), int(y)))
                 if x == ix:
                     return cells
@@ -78,8 +77,7 @@ class Grid:
         else:
             d = ax - ay/2
             while True:
-                if ((x,y) != (ix,iy) and
-                    (x,y) != (self.center[0], self.center[1])):
+                if self.not_endpoint(x, y, ix, iy):
                     cells.append((int(x), int(y)))
                 if y == iy:
                     return cells
@@ -88,6 +86,9 @@ class Grid:
                     d = d - ay
                 y = y + sy
                 d = d + ax
+
+    def not_endpoint(self, x1, y1, x2, y2):
+        return (x1,y1) != (x2,y2) and (x1,y1) != (self.center[0], self.center[1])
 
     def index_to_screen(self, ix, iy):
         return (ix * self.cell_width + self.left,
