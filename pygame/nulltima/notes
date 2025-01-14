@@ -4,9 +4,8 @@ TO_DO:
 
 Overworld mode
 [OK] impassable terrain
-[  ] opaque terrain and LOS
+[OK] opaque terrain and LOS
 [OK] better handling of border cells
-[  ] migrate coordinate system to origin-on-player
 [OK] larger map
 [OK] map data to separate file
 [  ] incorporate terrain data into world file?
@@ -20,6 +19,8 @@ Overworld mode
 [  ] music
 [  ] world actions: move, attack, spell, enter, ?
 [  ] status display
+[  ] move counter
+[  ] food and starvation
 [  ] action feedback & console
 
 Combat mode
@@ -86,7 +87,11 @@ working first.
 
 Assumptions:
 * grid is square
+    * Ultima I has a rectangular grid along the top two thirds of the screen
+    * need to decide on screen layout to settle this question
 * grid dimensions are an odd number, so player can be centered
     * IIRC Ultima IV was 11x11, Ultima III was 13x13
 * player remains at center - grid moves instead
 * world data format is space-delimited integers, probably low range, but not necessarily single-digit
+    * after putting together a couple world files manually, numbers are tedious to look at
+    * may want some tooling to help generate maps

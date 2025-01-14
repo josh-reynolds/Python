@@ -40,9 +40,10 @@ class Grid:
 
     def is_occluded(self, ix, iy):
         cells = self.bresenham(ix, iy)
-        # if any cells in the list are opaque, return True
-        # else return False
-        pass
+        for cell in cells:
+            if self[cell[0], cell[1]][2]:        # field codes getting too 'magic numbery'
+                return True
+        return False
 
     # assumes we are tracing a line to the center of the grid
     # since this consumes index coordinates, we have an origin in 
