@@ -29,11 +29,20 @@ class Grid:
             for ix, cell in enumerate(row):
                 coord = self.index_to_screen(ix,iy)
                 color = self[ix,iy][0]
+                if self.is_occluded(ix,iy):
+                    color = BLACK
                 pygame.draw.rect(screen, color, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
         player_position = self.index_to_screen(self.center[0], self.center[1])
         pygame.draw.ellipse(screen, BLACK, player_position)
+
+    def is_occluded(self, ix, iy):
+        # gather all cells between origin and ix,iy using 
+        #    a modified Bresenham line-drawing approach
+        # if any cells in the list are opaque, return True
+        # else return False
+        pass
 
     def index_to_screen(self, ix, iy):
         return (ix * self.cell_width + self.left,

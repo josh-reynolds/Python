@@ -5,7 +5,7 @@ TO_DO:
 Overworld mode
 [OK] impassable terrain
 [  ] opaque terrain and LOS
-[  ] better handling of border cells
+[OK] better handling of border cells
 [  ] migrate coordinate system to origin-on-player
 [OK] larger map
 [OK] map data to separate file
@@ -67,6 +67,8 @@ Optional
 [  ] boats & vehicles/mounts
 [  ] mouse control
 [  ] attract mode
+[  ] mouse control
+[  ] controller control
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
