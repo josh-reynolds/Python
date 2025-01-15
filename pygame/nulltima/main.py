@@ -3,7 +3,7 @@ from pygame.locals import *
 from common import *
 from grid import grid
 
-g = grid(11, 11, 60, 60, 25, 25)
+g = grid(11, 11, 60, 60, 32, 32)
 #g.world.open_file("test_world.txt")
 g.world.open_file("large_world.txt")
 
@@ -30,8 +30,8 @@ while running:
     screen.fill(GREY)
     g.update()
     g.draw(screen)
-    draw_text("Arrow keys to move", (350, 60))
-    draw_text("q to quit", (350, 80))
+    draw_text("Arrow keys to move", (420, 60))
+    draw_text("q to quit", (420, 80))
     pygame.display.flip()
 
 pygame.quit()
