@@ -9,7 +9,9 @@ Overworld mode
 [OK] larger map
 [OK] map data to separate file
 [  ] incorporate terrain data into world file?
-[  ] terrain graphics
+[OK] basic terrain graphics
+[  ] better terrain graphics
+[  ] sprite/tile sheet
 [  ] player sprite & animation
 [  ] monster spawning
 [  ] monster sprites & animation

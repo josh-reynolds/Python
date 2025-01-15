@@ -29,10 +29,10 @@ class Grid:
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
                 coord = self.index_to_screen(ix,iy)
-                color = self[ix,iy][0]
+                image = pygame.image.load("./images/" + self[ix,iy][3])
                 if self.is_occluded(ix,iy):
-                    color = BLACK
-                pygame.draw.rect(screen, color, coord)
+                    image = pygame.image.load("./images/tile_0.png")
+                screen.blit(image, coord)
                 pygame.draw.rect(screen, cell, coord, 1)
 
         player_position = self.index_to_screen(self.center[0], self.center[1])
