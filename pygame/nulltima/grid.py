@@ -25,7 +25,10 @@ class Grid:
     def update(self):
         pass
 
+    # will move the image loading pieces - don't need to keep doing that
+    # every frame...
     def draw(self, screen):
+        player_image = pygame.image.load("./images/player.png")
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
                 coord = self.index_to_screen(ix,iy)
@@ -33,10 +36,10 @@ class Grid:
                 if self.is_occluded(ix,iy):
                     image = pygame.image.load("./images/tile_0.png")
                 screen.blit(image, coord)
-                pygame.draw.rect(screen, cell, coord, 1)
+                #pygame.draw.rect(screen, cell, coord, 1)
 
         player_position = self.index_to_screen(self.center[0], self.center[1])
-        pygame.draw.ellipse(screen, BLACK, player_position)
+        screen.blit(player_image, player_position)
 
     def is_occluded(self, ix, iy):
         cells = self.bresenham(ix, iy)
