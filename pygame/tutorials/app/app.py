@@ -41,6 +41,14 @@ class App:
         App.screen = pygame.display.set_mode((640,240), flags)
         App.t = Text('Pygame App', pos = (20, 20))
         App.running = True
+        self.shortcuts = {
+                (K_x, KMOD_LMETA): 'print("cmd+x")',
+                (K_x, KMOD_LALT): 'print("alt+x")',
+                (K_x, KMOD_LCTRL): 'print("ctrl+x")',
+                (K_x, KMOD_LMETA + KMOD_LSHIFT): 'print("cmd+shift+x")',
+                (K_x, KMOD_LMETA + KMOD_LALT): 'print("cmd+alt+x")',
+                (K_x, KMOD_LMETA + KMOD_LALT + KMOD_LSHIFT): 'print("cmd+alt+shift+x")',
+                }   
 
     def run(self):
         """Run the main event loop."""
@@ -48,12 +56,21 @@ class App:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     App.running = False
+                if event.type == KEYDOWN:
+                    self.do_shortcut(event)
 
             App.screen.fill(Color('gray'))
             App.t.draw()
             pygame.display.update()
 
         pygame.quit()
+
+    def do_shortcut(self, event):
+        """Find the key/mod combination in the dictionary and execute the cmd."""
+        k = event.key
+        m = event.mod
+        if (k, m) in self.shortcuts:
+            exec(self.shortcuts[k, m])
 
 if __name__ == "__main__":
     App().run()
