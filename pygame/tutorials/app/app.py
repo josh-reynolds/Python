@@ -37,8 +37,9 @@ class App:
     def __init__(self):
         """Initialize pygame and the application."""
         pygame.init()
-        flags = RESIZABLE
-        App.screen = pygame.display.set_mode((640,240), flags)
+        self.flags = RESIZABLE
+        self.rect = Rect(0, 0, 640, 240)
+        App.screen = pygame.display.set_mode(self.rect.size, self.flags)
         App.t = Text('Pygame App', pos = (20, 20))
         App.running = True
         self.shortcuts = {
@@ -48,6 +49,10 @@ class App:
                 (K_x, KMOD_LMETA + KMOD_LSHIFT): 'print("cmd+shift+x")',
                 (K_x, KMOD_LMETA + KMOD_LALT): 'print("cmd+alt+x")',
                 (K_x, KMOD_LMETA + KMOD_LALT + KMOD_LSHIFT): 'print("cmd+alt+shift+x")',
+                (K_q, 0): 'App.running = False',
+                (K_f, KMOD_LALT): 'self.toggle_fullscreen()',
+                (K_r, KMOD_LALT): 'self.toggle_resizeable()',
+                (K_g, KMOD_LALT): 'self.toggle_frame()',
                 }   
 
     def run(self):
@@ -71,6 +76,22 @@ class App:
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
+
+    def toggle_fullscreen(self):
+        """Toggle between full screen and windowed screen."""
+        self.flags ^= FULLSCREEN
+        pygame.display.set_mode((0, 0), self.flags)
+
+    def toggle_resizeable(self):
+        """Toggle between resizable and fixed size window."""
+        self.flags ^= RESIZABLE
+        pygame.display.set_mode(self.rect.size, self.flags)
+
+    def toggle_frame(self):
+        """Toggle between frame and no frame window."""
+        self.flags ^= NOFRAME
+        pygame.display.set_mode(self.rect.size, self.flags)
+
 
 if __name__ == "__main__":
     App().run()
