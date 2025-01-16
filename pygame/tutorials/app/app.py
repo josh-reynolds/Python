@@ -10,6 +10,8 @@ class Text:
         self.text = text
         self.pos = pos
 
+        App.scene.nodes.append(self)
+
         self.fontname = None
         self.fontsize = 72
         self.fontcolor = Color('black')
