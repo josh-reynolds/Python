@@ -29,7 +29,32 @@ class Text:
     def draw(self):
         """Draw the image to the screen."""
         App.screen.blit(self.img, self.rect)
-            
+
+class Scene:
+    """Create a new scene (room, level, view)."""
+    id = 0
+    bg = Color('gray')
+
+    def __init__(self, *args, **kwargs):
+        """Append the new scene and make it the current scene."""
+        App.scenes.append(self)
+        App.scene = self
+
+        # set the instance id and increment the class id
+        self.id = Scene.id
+        Scene.id += 1
+        self.nodes = []
+        self.bg = Scene.bg
+
+    def draw(self):
+        """Draw all objects in the scene."""
+        App.screen.fill(self.bg)
+        for node in self.nodes:
+            node.draw()
+        pygame.display.flip()
+
+    def __str__(self):
+        return 'Scene {}'.format(self.id)
         
 class App:
     """Create a single-window app with multiple scenes."""
@@ -40,7 +65,6 @@ class App:
         self.flags = RESIZABLE
         self.rect = Rect(0, 0, 640, 240)
         App.screen = pygame.display.set_mode(self.rect.size, self.flags)
-        App.t = Text('Pygame App', pos = (20, 20))
         App.running = True
         self.shortcuts = {
                 (K_x, KMOD_LMETA): 'print("cmd+x")',
@@ -53,6 +77,7 @@ class App:
                 (K_f, KMOD_LALT): 'self.toggle_fullscreen()',
                 (K_r, KMOD_LALT): 'self.toggle_resizeable()',
                 (K_g, KMOD_LALT): 'self.toggle_frame()',
+                (K_n, 0): 'self.next_scene()',
                 }   
 
     def run(self):
@@ -65,7 +90,7 @@ class App:
                     self.do_shortcut(event)
 
             App.screen.fill(Color('gray'))
-            App.t.draw()
+            App.scene.draw()
             pygame.display.update()
 
         pygame.quit()
@@ -92,6 +117,11 @@ class App:
         self.flags ^= NOFRAME
         pygame.display.set_mode(self.rect.size, self.flags)
 
+    def next_scene(self):
+        """Change to the next scene in the scenes list."""
+        current_scene = App.scene.id
+        next_scene = (current_scene + 1) % len(App.scenes)
+        App.scene = App.scenes[next_scene]
 
 if __name__ == "__main__":
     App().run()
