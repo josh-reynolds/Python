@@ -48,6 +48,10 @@ class Scene:
         self.nodes = []
         self.bg = Scene.bg
 
+        if kwargs:
+            for key,value in kwargs.items():
+                self.__dict__[key] = value
+
     def draw(self):
         """Draw all objects in the scene."""
         App.screen.fill(self.bg)
