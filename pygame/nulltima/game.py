@@ -1,6 +1,52 @@
 import pygame
 from pygame.locals import *
 
+class Level:
+    options = {
+            'id': 0,
+            'bg': Color('gray'),
+            'file': '',
+            'caption': '',
+            }
+
+    def __init__(self, *args, **options):
+        Game.levels.append(self)
+        Game.level = self
+
+        self.id = Level.options['id']
+        Level.options['id'] += 1
+        self.nodes = []
+        self.bg = Level.options['bg']
+        self.file = Level.options['file']
+        self.caption = Level.options['caption']
+
+        if options:
+            for key,value in options.items():
+                self.__dict__[key] = value
+
+        self.rect = Game.screen.get_rect()
+        if self.file != '':
+            self.img = pygame.image.load(self.file)
+            size = Game.screen.get_size()
+            self.img = pygame.transform.smoothscale(self.img, size)
+        else:
+            self.img = pygame.Surface(self.rect.size)
+            self.img.fill(self.bg)
+
+        self.enter()
+
+    def draw(self):
+        Game.screen.blit(self.img, self.rect)
+        for node in self.nodes:
+            node.draw()
+        pygame.display.flip()
+
+    def enter(self):
+        pygame.display.set_caption(self.caption)
+
+    def __str__(self):
+        return 'Scene {}'.format(self.id)
+
 class Game:
     level = None
     levels = []
@@ -28,7 +74,7 @@ class Game:
                     self.do_shortcut(event)
 
             Game.screen.fill(Color('gray'))
-            #Game.level.draw()
+            Game.level.draw()
             pygame.display.update()
 
         pygame.quit()
@@ -41,4 +87,6 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game().run()
+    g = Game()
+    Level()
+    g.run()
