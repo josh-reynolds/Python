@@ -6,16 +6,13 @@ class Demo(App):
     def __init__(self):
         super().__init__()
 
-        App.scene = None
-        App.scenes =[]
+        Scene(file='./bg_1.png', caption='Intro')
+        Text('Scene 0', pos=(20,20), fontcolor=Color('white'))
+        Text('Introduction screen', pos=(20,60), fontcolor=Color('white'))
 
-        Scene(caption='Intro')
-        Text('Scene 0', pos=(20,20))
-        Text('Introduction screen', pos=(20,60))
-
-        Scene(bg=Color('yellow'), caption='Options')
-        Text('Scene 1', pos=(20,20))
-        Text('Option screen', pos=(20,60))
+        Scene(file='./bg_2.png', bg=Color('yellow'), caption='Options')
+        Text('Scene 1', pos=(20,20), fontcolor=Color('blue'))
+        Text('Option screen', pos=(20,60), fontcolor=Color('blue'))
 
         Scene(bg=Color('green'), caption='Main')
         Text('Scene 2', pos=(20,20))

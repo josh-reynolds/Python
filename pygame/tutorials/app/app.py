@@ -15,6 +15,11 @@ class Text:
         self.fontname = None
         self.fontsize = 72
         self.fontcolor = Color('black')
+
+        if options:
+            for key,value in options.items():
+                self.__dict__[key] = value
+
         self.set_font()
         self.render()
 
@@ -34,8 +39,10 @@ class Text:
 
 class Scene:
     """Create a new scene (room, level, view)."""
-    id = 0
-    bg = Color('gray')
+    options = { 'id': 0,
+                'bg': Color('gray'),
+                'file' : '',
+            }
 
     def __init__(self, *args, **kwargs):
         """Append the new scene and make it the current scene."""
@@ -43,27 +50,47 @@ class Scene:
         App.scene = self
 
         # set the instance id and increment the class id
-        self.id = Scene.id
-        Scene.id += 1
+        self.id = Scene.options['id']
+        Scene.options['id'] += 1
         self.nodes = []
-        self.bg = Scene.bg
+        self.bg = Scene.options['bg']
+        self.file = Scene.options['file']
 
         if kwargs:
             for key,value in kwargs.items():
                 self.__dict__[key] = value
 
+        print(self.__dict__)
+
+        self.rect = App.screen.get_rect()
+        if self.file != '':
+            self.img = pygame.image.load(self.file)
+            size = App.screen.get_size()
+            self.img = pygame.transform.smoothscale(self.img, size)
+        else:
+            self.img = pygame.Surface(self.rect.size)
+            self.img.fill(self.bg)
+
+        self.enter()
+
     def draw(self):
         """Draw all objects in the scene."""
-        App.screen.fill(self.bg)
+        App.screen.blit(self.img, self.rect)
         for node in self.nodes:
             node.draw()
         pygame.display.flip()
+
+    def enter(self):
+        """Enter a scene."""
+        pygame.display.set_caption(self.caption)
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
         
 class App:
     """Create a single-window app with multiple scenes."""
+    scene = None
+    scenes = []
 
     def __init__(self):
         """Initialize pygame and the application."""
@@ -128,6 +155,7 @@ class App:
         current_scene = App.scene.id
         next_scene = (current_scene + 1) % len(App.scenes)
         App.scene = App.scenes[next_scene]
+        App.scene.enter()
 
 if __name__ == "__main__":
     App().run()
