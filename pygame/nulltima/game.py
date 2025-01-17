@@ -38,7 +38,7 @@ class Level:
     def draw(self):
         Game.screen.blit(self.img, self.rect)
         for node in self.nodes:
-            node.draw()
+            node.draw(Game.screen)
         pygame.display.flip()
 
     def enter(self):
@@ -50,6 +50,7 @@ class Level:
 class Game:
     level = None
     levels = []
+    screen = None
 
     def __init__(self):
         pygame.init()
@@ -58,10 +59,10 @@ class Game:
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True
         self.shortcuts = {
-                (K_LEFT, 0): '',
-                (K_RIGHT, 0): '',
-                (K_UP, 0): '',
-                (K_DOWN, 0): '',
+                (K_LEFT, 0): 'Game.level.nodes[0].move(-1,0)',
+                (K_RIGHT, 0): 'Game.level.nodes[0].move(1,0)',
+                (K_UP, 0): 'Game.level.nodes[0].move(0,-1)',
+                (K_DOWN, 0): 'Game.level.nodes[0].move(0,1)',
                 (K_q, 0): 'Game.running = False',
                 }
 
@@ -84,7 +85,6 @@ class Game:
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
-
 
 if __name__ == "__main__":
     g = Game()

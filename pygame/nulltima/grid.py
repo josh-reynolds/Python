@@ -3,6 +3,7 @@ import math
 from common import *
 from world import world, terrains
 from player import player
+from game import Game
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width, cell_height):
@@ -27,7 +28,7 @@ class Grid:
 
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
-    def draw(self, screen):
+    def draw(self, screen=Game.screen):
         player_image = pygame.image.load("./images/player.png")
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
