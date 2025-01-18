@@ -6,7 +6,7 @@ from player import player
 from game import Game
 
 class Grid:
-    def __init__(self, width, height, left, top, cell_width, cell_height):
+    def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
         self.width = width
         self.height = height
         self.left = left
@@ -18,6 +18,9 @@ class Grid:
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.player = player()
+
+        self.file = 'large_world.txt'
+        self.world.open_file(self.file)
 
         Game.level.nodes.append(self)
 
@@ -110,7 +113,7 @@ class Grid:
         return self[self.center[0] + dx, 
                     self.center[1] + dy][1]
 
-def grid(width, height, left, top, cell_width, cell_height):
+def grid(width, height, left, top, cell_width=32, cell_height=32):
     return Grid(width, height, left, top, cell_width, cell_height)
 
 class GridTestCase(unittest.TestCase):
