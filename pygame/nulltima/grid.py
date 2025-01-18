@@ -19,6 +19,8 @@ class Grid:
         self.center = (self.width//2, self.height//2)
         self.player = player()
 
+        Game.level.nodes.append(self)
+
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
                                    index[0] + self.offset[0])
