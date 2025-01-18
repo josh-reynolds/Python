@@ -114,14 +114,11 @@ class Grid:
         return self[self.center[0] + dx, 
                     self.center[1] + dy][1]
 
-def grid(width, height, left, top, cell_width=32, cell_height=32):
-    return Grid(width, height, left, top, cell_width, cell_height)
-
 class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = Game()
         Level()
-        self.g = grid(3, 3, 11, 9, cell_width=4, cell_height=3)
+        self.g = Grid(3, 3, 11, 9, cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
                                 [0, 1, 1, 1, 0],
@@ -165,7 +162,7 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.can_move(-1,0), False)
 
     def test_bresenham_calculation(self):
-        g = grid (11, 11, 5, 5, 5, 5)
+        g = Grid(11, 11, 5, 5, 5, 5)
         g.world.contents = [[0 for x in range(20)] for x in range(20)]
 
         b = g.bresenham(0,0)
