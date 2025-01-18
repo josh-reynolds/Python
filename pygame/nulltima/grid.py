@@ -28,7 +28,7 @@ class Grid:
 
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
-    def draw(self, screen=Game.screen):
+    def draw(self):
         player_image = pygame.image.load("./images/player.png")
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
@@ -36,11 +36,11 @@ class Grid:
                 image = pygame.image.load("./images/" + self[ix,iy][3])
                 if self.is_occluded(ix,iy):
                     image = pygame.image.load("./images/tile_0.png")
-                screen.blit(image, coord)
+                Game.screen.blit(image, coord)
                 #pygame.draw.rect(screen, cell, coord, 1)
 
         player_position = self.index_to_screen(self.center[0], self.center[1])
-        screen.blit(player_image, player_position)
+        Game.screen.blit(player_image, player_position)
 
     def is_occluded(self, ix, iy):
         cells = self.bresenham(ix, iy)

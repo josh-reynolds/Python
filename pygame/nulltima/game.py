@@ -27,7 +27,7 @@ class Text:
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
-    def draw(self, screen):
+    def draw(self):
         Game.screen.blit(self.img, self.rect)
 
 class Level:
@@ -67,7 +67,7 @@ class Level:
     def draw(self):
         Game.screen.blit(self.img, self.rect)
         for node in self.nodes:
-            node.draw(Game.screen)
+            node.draw()
         pygame.display.flip()
 
     def enter(self):
