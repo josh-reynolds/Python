@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 from world import world, terrains
 from player import player
-from game import Game
+from game import Game, Level
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
@@ -119,7 +119,9 @@ def grid(width, height, left, top, cell_width=32, cell_height=32):
 
 class GridTestCase(unittest.TestCase):
     def setUp(self):
-        self.g = grid(3, 3, 11, 9, 4, 3)
+        self.game = Game()
+        Level()
+        self.g = grid(3, 3, 11, 9, cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
                                 [0, 1, 1, 1, 0],
