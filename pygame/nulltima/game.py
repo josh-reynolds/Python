@@ -1,6 +1,35 @@
 import pygame
 from pygame.locals import *
 
+class Text:
+    def __init__(self, text, pos, **options):
+        self.text = text
+        self.pos = pos
+
+        Game.level.nodes.append(self)
+
+        self.fontname = None
+        self.fontsize = 24
+        self.fontcolor = Color('black')
+
+        if options:
+            for key,value in options.items():
+                self.__dict__[key] = value
+
+        self.set_font()
+        self.render()
+
+    def set_font(self):
+        self.font = pygame.font.Font(self.fontname, self.fontsize)
+
+    def render(self):
+        self.img = self.font.render(self.text, True, self.fontcolor)
+        self.rect = self.img.get_rect()
+        self.rect.topleft = self.pos
+
+    def draw(self, screen):
+        Game.screen.blit(self.img, self.rect)
+
 class Level:
     options = {
             'id': 0,
