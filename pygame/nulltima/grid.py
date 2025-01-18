@@ -1,6 +1,7 @@
 import unittest
 import math
-from common import *
+import pygame
+from pygame.locals import *
 from world import world, terrains
 from player import player
 from game import Game
@@ -13,7 +14,7 @@ class Grid:
         self.top = top
         self.cell_width = cell_width
         self.cell_height = cell_height
-        self.contents = [[BLACK for x in range(width)] for x in range(height)]
+        self.contents = [[Color('black') for x in range(width)] for x in range(height)]
         self.world = world()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)

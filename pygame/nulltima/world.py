@@ -1,5 +1,4 @@
 import unittest
-from common import *
 
 # terrain fields: name, passable?, opaque?, image
 #    I don't think these yet merit a full class - tuple 
