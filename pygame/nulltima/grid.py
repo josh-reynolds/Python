@@ -24,6 +24,7 @@ class Grid:
         self.world.open_file(self.file)
 
         Game.level.nodes.append(self)
+        Game.level.grid = self
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 

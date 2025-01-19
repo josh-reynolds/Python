@@ -49,10 +49,10 @@ class Level:
         self.file = Level.options['file']
         self.caption = Level.options['caption']
         self.shortcuts = {
-                (K_LEFT, 0): 'Game.level.nodes[0].move(-1,0)',
-                (K_RIGHT, 0): 'Game.level.nodes[0].move(1,0)',
-                (K_UP, 0): 'Game.level.nodes[0].move(0,-1)',
-                (K_DOWN, 0): 'Game.level.nodes[0].move(0,1)',
+                (K_LEFT, 0): 'self.grid.move(-1,0)',
+                (K_RIGHT, 0): 'self.grid.move(1,0)',
+                (K_UP, 0): 'self.grid.move(0,-1)',
+                (K_DOWN, 0): 'self.grid.move(0,1)',
                 }
 
         if options:
