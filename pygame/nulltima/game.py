@@ -48,6 +48,12 @@ class Level:
         self.bg = Level.options['bg']
         self.file = Level.options['file']
         self.caption = Level.options['caption']
+        self.shortcuts = {
+                (K_LEFT, 0): 'Game.level.nodes[0].move(-1,0)',
+                (K_RIGHT, 0): 'Game.level.nodes[0].move(1,0)',
+                (K_UP, 0): 'Game.level.nodes[0].move(0,-1)',
+                (K_DOWN, 0): 'Game.level.nodes[0].move(0,1)',
+                }
 
         if options:
             for key,value in options.items():
@@ -73,6 +79,16 @@ class Level:
     def enter(self):
         pygame.display.set_caption(self.caption)
 
+    def do_event(self, event):
+        if event.type == KEYDOWN:
+            self.do_shortcut(event)
+
+    def do_shortcut(self, event):
+        k = event.key
+        m = event.mod
+        if (k, m) in self.shortcuts:
+            exec(self.shortcuts[k, m])
+
     def __str__(self):
         return 'Scene {}'.format(self.id)
 
@@ -88,10 +104,6 @@ class Game:
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True
         self.shortcuts = {
-                (K_LEFT, 0): 'Game.level.nodes[0].move(-1,0)',
-                (K_RIGHT, 0): 'Game.level.nodes[0].move(1,0)',
-                (K_UP, 0): 'Game.level.nodes[0].move(0,-1)',
-                (K_DOWN, 0): 'Game.level.nodes[0].move(0,1)',
                 (K_q, 0): 'Game.running = False',
                 }
 
@@ -102,6 +114,8 @@ class Game:
                     Game.running = False
                 if event.type == KEYDOWN:
                     self.do_shortcut(event)
+
+                Game.level.do_event(event)
 
             Game.screen.fill(Color('gray'))
             Game.level.draw()
