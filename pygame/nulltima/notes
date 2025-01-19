@@ -10,7 +10,7 @@ Overworld mode
 [OK] map data to separate file
 [  ] incorporate terrain data into world file?
 [OK] basic terrain graphics
-[  ] better terrain graphics
+[..] better terrain graphics
 [  ] sprite/tile sheet
 [OK] basic player image
 [  ] player sprite & animation
@@ -22,7 +22,7 @@ Overworld mode
 [  ] music
 [  ] world actions: move, attack, spell, enter, ?
 [  ] status display
-[  ] move counter
+[..] move counter
 [  ] food and starvation
 [  ] action feedback & console
 

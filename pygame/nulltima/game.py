@@ -48,6 +48,7 @@ class Level:
         self.bg = Level.options['bg']
         self.file = Level.options['file']
         self.caption = Level.options['caption']
+        self.moved = False
         self.shortcuts = {
                 (K_LEFT, 0): 'self.grid.move(-1,0)',
                 (K_RIGHT, 0): 'self.grid.move(1,0)',
@@ -82,12 +83,19 @@ class Level:
     def do_event(self, event):
         if event.type == KEYDOWN:
             self.do_shortcut(event)
+            self.moved = True
 
     def do_shortcut(self, event):
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
+
+    def check_move(self):
+        if self.moved:
+            self.moved = False
+            return True
+        return False
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
@@ -96,6 +104,7 @@ class Game:
     level = None
     levels = []
     screen = None
+    moves = 0
 
     def __init__(self):
         pygame.init()
@@ -116,6 +125,9 @@ class Game:
                     self.do_shortcut(event)
 
                 Game.level.do_event(event)
+                if Game.level.check_move():
+                    Game.moves += 1
+                    print("Moves: {}".format(Game.moves))
 
             Game.screen.fill(Color('gray'))
             Game.level.draw()
