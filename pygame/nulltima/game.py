@@ -27,7 +27,21 @@ class Text:
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
+    def update(self):
+        pass
+
     def draw(self):
+        Game.screen.blit(self.img, self.rect)
+
+class Status(Text):
+    def __init__(self, pos):
+        super().__init__('moves: ', pos)
+
+    def update(self):
+        self.text = 'moves: ' + str(Game.moves)
+
+    def draw(self):
+        self.render()
         Game.screen.blit(self.img, self.rect)
 
 class Level:
@@ -70,6 +84,10 @@ class Level:
             self.img.fill(self.bg)
 
         self.enter()
+
+    def update(self):
+        for node in self.nodes:
+            node.update()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
@@ -127,7 +145,8 @@ class Game:
                 Game.level.do_event(event)
                 if Game.level.check_move():
                     Game.moves += 1
-                    print("Moves: {}".format(Game.moves))
+
+            Game.level.update()
 
             Game.screen.fill(Color('gray'))
             Game.level.draw()
@@ -140,6 +159,9 @@ class Game:
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
+
+    def get_moves():
+        return Game.moves
 
 if __name__ == "__main__":
     g = Game()
