@@ -180,6 +180,14 @@ class Game:
     def get_moves():
         return Game.moves
 
+class ScreenMock():
+    def get_rect(self):
+        return pygame.Rect(0,0,100,100)
+
+class GameMock(Game):
+    def __init__(self):
+        Game.screen = ScreenMock()
+
 if __name__ == "__main__":
     g = Game()
     Level()

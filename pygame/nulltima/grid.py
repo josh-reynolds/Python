@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 from world import world, terrains
 from player import player
-from game import Game, Level
+from game import Game, Level, GameMock
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
@@ -126,7 +126,7 @@ class Grid:
 
 class GridTestCase(unittest.TestCase):
     def setUp(self):
-        self.game = Game()
+        self.game = GameMock()
         Level()
         self.g = Grid(3, 3, 11, 9, cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
@@ -176,16 +176,16 @@ class GridTestCase(unittest.TestCase):
         g = Grid(11, 11, 5, 5, 5, 5)
         g.world.contents = [[0 for x in range(20)] for x in range(20)]
 
-        b = g.bresenham(0,0)
+        b = g.bresenham((0,0))
         self.assertEqual(b, [(4,4), (3,3), (2,2), (1,1)])
 
-        b = g.bresenham(10,10)
+        b = g.bresenham((10,10))
         self.assertEqual(b, [(6,6), (7,7), (8,8), (9,9)])
 
-        b = g.bresenham(0,10)
+        b = g.bresenham((0,10))
         self.assertEqual(b, [(4,6), (3,7), (2,8), (1,9)])
 
-        b = g.bresenham(10,0)
+        b = g.bresenham((10,0))
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
 # ---------------------------------------------------------------------------
