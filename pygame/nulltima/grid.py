@@ -42,18 +42,17 @@ class Grid:
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
                 image = pygame.image.load("./images/" + self[grid_coord][3])
-                if self.is_occluded(ix,iy):
+                if self.is_occluded(grid_coord):
                     image = pygame.image.load("./images/tile_0.png")
                 Game.screen.blit(image, screen_coord)
-                #pygame.draw.rect(screen, cell, coord, 1)
 
         player_position = self.to_screen(self.center)
         Game.screen.blit(player_image, player_position)
 
-    def is_occluded(self, ix, iy):
-        cells = self.bresenham(ix, iy)
+    def is_occluded(self, coordinate):
+        cells = self.bresenham(coordinate)
         for cell in cells:
-            if self[cell[0], cell[1]][2]:        # field codes getting too 'magic numbery'
+            if self[cell][2]:        # field codes getting too 'magic numbery'
                 return True
         return False
 
@@ -62,13 +61,13 @@ class Grid:
     # the top-left corner and are only dealing with one cartesian quadrant
     # (plus it's upside down) - may need to adjust, and possibly simplify.
     # starting with the full algorithm
-    def bresenham(self, ix, iy):
+    def bresenham(self, coordinate):
         cells = []
 
         x = self.center[0]
         y = self.center[1]
-        dx = ix - x
-        dy = iy - y
+        dx = coordinate[0] - x
+        dy = coordinate[1] - y
         ax = 2 * abs(dx)
         ay = 2 * abs(dy)
         sx = math.copysign(1, dx)
@@ -77,9 +76,9 @@ class Grid:
         if ax > ay:
             d = ay - ax/2
             while True:
-                if self.not_endpoint(x, y, ix, iy):
+                if self.not_endpoint(x, y, coordinate[0], coordinate[1]):
                     cells.append((int(x), int(y)))
-                if x == ix:
+                if x == coordinate[0]:
                     return cells
                 if d >= 0:
                     y = y + sy
@@ -89,9 +88,9 @@ class Grid:
         else:
             d = ax - ay/2
             while True:
-                if self.not_endpoint(x, y, ix, iy):
+                if self.not_endpoint(x, y, coordinate[0], coordinate[1]):
                     cells.append((int(x), int(y)))
-                if y == iy:
+                if y == coordinate[1]:
                     return cells
                 if d >= 0:
                     x = x + sx
