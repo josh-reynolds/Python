@@ -14,7 +14,7 @@ Overworld mode
 [  ] sprite/tile sheet
 [OK] basic player image
 [  ] player sprite & animation
-[  ] monster spawning
+[..] monster spawning
 [  ] monster sprites & animation
 [  ] monster movement & world clock ('pass' action)
 [  ] monster persistence & despawning
@@ -73,6 +73,8 @@ Optional
 [  ] attract mode
 [  ] mouse control
 [  ] controller control
+[  ] moon phases / day-night cycle
+[  ] moon gates
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
