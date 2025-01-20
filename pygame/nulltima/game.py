@@ -99,7 +99,7 @@ class Level:
         for monster in self.monsters:
             if self.grid.can_view(monster):
                 grid_coord = self.grid.world_to_grid(monster)
-                screen_coord = self.grid.index_to_screen(grid_coord[0], grid_coord[1])
+                screen_coord = self.grid.to_screen(grid_coord)
                 pygame.draw.ellipse(Game.screen, Color('red'), screen_coord)
 
         pygame.display.flip()

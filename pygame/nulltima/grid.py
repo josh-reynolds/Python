@@ -39,14 +39,15 @@ class Grid:
         player_image = pygame.image.load("./images/player.png")
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
-                coord = self.index_to_screen(ix,iy)
-                image = pygame.image.load("./images/" + self[ix,iy][3])
+                grid_coord = (ix,iy)
+                screen_coord = self.to_screen(grid_coord)
+                image = pygame.image.load("./images/" + self[grid_coord][3])
                 if self.is_occluded(ix,iy):
                     image = pygame.image.load("./images/tile_0.png")
-                Game.screen.blit(image, coord)
+                Game.screen.blit(image, screen_coord)
                 #pygame.draw.rect(screen, cell, coord, 1)
 
-        player_position = self.index_to_screen(self.center[0], self.center[1])
+        player_position = self.to_screen(self.center)
         Game.screen.blit(player_image, player_position)
 
     def is_occluded(self, ix, iy):
@@ -110,9 +111,9 @@ class Grid:
         return (grid_coord[0] > 0 and grid_coord[0] < self.width and
                 grid_coord[1] > 0 and grid_coord[1] < self.height)
 
-    def index_to_screen(self, ix, iy):
-        return (ix * self.cell_width + self.left,
-                iy * self.cell_height + self.top,
+    def to_screen(self, coordinate):
+        return (coordinate[0] * self.cell_width + self.left,
+                coordinate[1] * self.cell_height + self.top,
                 self.cell_width,
                 self.cell_height)
 
@@ -158,7 +159,8 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.offset, (1, 2))
 
     def test_converting_grid_coords_to_screen(self):
-        coords = self.g.index_to_screen(1,1)
+        grid_coord = (1, 1)
+        coords = self.g.to_screen(grid_coord)
 
         self.assertEqual(coords[0], 15)
         self.assertEqual(coords[1], 12)
