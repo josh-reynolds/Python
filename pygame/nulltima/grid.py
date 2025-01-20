@@ -101,6 +101,15 @@ class Grid:
     def not_endpoint(self, x1, y1, x2, y2):
         return (x1,y1) != (x2,y2) and (x1,y1) != (self.center[0], self.center[1])
 
+    def world_to_grid(self, coordinate):
+        return (coordinate[0] - self.offset[0],
+                coordinate[1] - self.offset[1])
+
+    def can_view(self, coordinate):
+        grid_coord = self.world_to_grid(coordinate)
+        return (grid_coord[0] > 0 and grid_coord[0] < self.width and
+                grid_coord[1] > 0 and grid_coord[1] < self.height)
+
     def index_to_screen(self, ix, iy):
         return (ix * self.cell_width + self.left,
                 iy * self.cell_height + self.top,
