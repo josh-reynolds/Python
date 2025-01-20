@@ -1,3 +1,4 @@
+import random
 import pygame
 from pygame.locals import *
 
@@ -63,6 +64,7 @@ class Level:
         self.file = Level.options['file']
         self.caption = Level.options['caption']
         self.moved = False
+        self.monsters = []
         self.shortcuts = {
                 (K_LEFT, 0): 'self.grid.move(-1,0)',
                 (K_RIGHT, 0): 'self.grid.move(1,0)',
@@ -112,8 +114,16 @@ class Level:
     def check_move(self):
         if self.moved:
             self.moved = False
+            self.spawn()
             return True
         return False
+
+    def spawn(self):
+        if random.random() < 0.1:
+            self.monsters.append((random.randint(0,self.grid.width-1) + self.grid.offset[0],
+                                  random.randint(0,self.grid.height-1) + self.grid.offset[1]))
+            print("Spawning monster!")
+            print(self.monsters)
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
