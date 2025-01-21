@@ -12,6 +12,9 @@ class Monster:
 
     def move(self, dx, dy):
         pass
+    
+    def __repr__(self):
+        return "Monster({})".format(self.pos)
 
 def monster(coordinate):
     return Monster(coordinate)
