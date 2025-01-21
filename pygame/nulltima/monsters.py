@@ -14,7 +14,8 @@ class Monster:
         if self.level.grid.can_view(self.pos):
             grid_coord = self.level.grid.world_to_grid(self.pos)
             screen_coord = self.level.grid.to_screen(grid_coord)
-            pygame.draw.ellipse(game.Game.screen, pygame.Color('red'), screen_coord)
+            image = pygame.image.load("./images/monster.png")
+            game.Game.screen.blit(image, screen_coord)
 
     def move(self, dx, dy):
         pass
