@@ -130,7 +130,7 @@ class Level:
         if random.random() < 0.1:
             coordinate = (random.randint(0,self.grid.width-1) + self.grid.offset[0],
                           random.randint(0,self.grid.height-1) + self.grid.offset[1])
-            self.monsters.append(monster(coordinate))
+            self.monsters.append(monster(coordinate, self))
             print("Spawning monster!")
             print(self.monsters)
 
