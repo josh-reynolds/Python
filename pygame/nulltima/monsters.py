@@ -12,7 +12,7 @@ class Monster:
 
     def draw(self):
         if self.level.grid.can_view(self.pos):
-            grid_coord = self.level.grid.world_to_grid(self.pos)
+            grid_coord = self.level.grid.from_world(self.pos)
             screen_coord = self.level.grid.to_screen(grid_coord)
             image = pygame.image.load("./images/monster.png")
             game.Game.screen.blit(image, screen_coord)

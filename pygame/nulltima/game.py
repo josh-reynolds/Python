@@ -126,8 +126,8 @@ class Level:
     def spawn(self):
         if random.random() < 0.1:
             grid_coordinate = random.choice(self.grid.edges)
-            coordinate = self.grid.grid_to_world(grid_coordinate)
-            self.monsters.append(monster(coordinate, self))
+            world_coordinate = self.grid.to_world(grid_coordinate)
+            self.monsters.append(monster(world_coordinate, self))
             print("Spawning monster!")
             print(self.monsters)
 
