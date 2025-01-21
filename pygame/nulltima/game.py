@@ -1,6 +1,7 @@
 import random
 import pygame
 from pygame.locals import *
+from monsters import monster
 
 class Text:
     def __init__(self, text, pos, **options):
@@ -97,8 +98,8 @@ class Level:
             node.draw()
 
         for monster in self.monsters:
-            if self.grid.can_view(monster):
-                grid_coord = self.grid.world_to_grid(monster)
+            if self.grid.can_view(monster.pos):
+                grid_coord = self.grid.world_to_grid(monster.pos)
                 screen_coord = self.grid.to_screen(grid_coord)
                 pygame.draw.ellipse(Game.screen, Color('red'), screen_coord)
 
@@ -127,8 +128,9 @@ class Level:
 
     def spawn(self):
         if random.random() < 0.1:
-            self.monsters.append((random.randint(0,self.grid.width-1) + self.grid.offset[0],
-                                  random.randint(0,self.grid.height-1) + self.grid.offset[1]))
+            coordinate = (random.randint(0,self.grid.width-1) + self.grid.offset[0],
+                          random.randint(0,self.grid.height-1) + self.grid.offset[1])
+            self.monsters.append(monster(coordinate))
             print("Spawning monster!")
             print(self.monsters)
 
