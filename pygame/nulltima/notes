@@ -10,19 +10,20 @@ Overworld mode
 [OK] map data to separate file
 [  ] incorporate terrain data into world file?
 [OK] basic terrain graphics
-[..] better terrain graphics
+[OK] better terrain graphics
 [  ] sprite/tile sheet
 [OK] basic player image
 [  ] player sprite & animation
-[..] monster spawning
+[OK] monster spawning
+[  ] aquatic monsters
 [  ] monster sprites & animation
 [  ] monster movement & world clock ('pass' action)
 [  ] monster persistence & despawning
 [  ] sound effects
 [  ] music
 [  ] world actions: move, attack, spell, enter, ?
-[  ] status display
-[..] move counter
+[..] status display
+[OK] move counter
 [  ] food and starvation
 [  ] action feedback & console
 
@@ -75,6 +76,7 @@ Optional
 [  ] controller control
 [  ] moon phases / day-night cycle
 [  ] moon gates
+[  ] flying monsters
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even

@@ -42,6 +42,9 @@ class Grid:
                     edges.append((ix,iy))
         return edges
 
+    def spawnable(self):
+        return [x for x in self.edges if self[x][1]]
+
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
     def draw(self):
