@@ -18,6 +18,7 @@ class Grid:
         self.world = world()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
+        self.edges = self.find_edges()
         self.player = player()
 
         self.file = 'large_world.txt'
@@ -32,6 +33,14 @@ class Grid:
 
     def update(self):
         pass
+
+    def find_edges(self):
+        edges = []
+        for iy,row in enumerate(self.contents):
+            for ix,cell in enumerate(row):
+                if ix == 0 or iy == 0 or ix == self.width-1 or iy == self.height-1:
+                    edges.append((ix,iy))
+        return edges
 
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
@@ -187,6 +196,16 @@ class GridTestCase(unittest.TestCase):
 
         b = g.bresenham((10,0))
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
+
+    def test_calculating_edge_cells(self):
+        g = Grid(5, 5, 3, 3, 3, 3)
+
+        e = g.edges
+        self.assertEqual(e, [(0,0), (1,0), (2,0), (3,0), (4,0),
+                             (0,1), (4,1),
+                             (0,2), (4,2),
+                             (0,3), (4,3),
+                             (0,4), (1,4), (2,4), (3,4), (4,4)])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
