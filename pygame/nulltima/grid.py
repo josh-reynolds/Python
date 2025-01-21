@@ -114,6 +114,10 @@ class Grid:
         return (coordinate[0] - self.offset[0],
                 coordinate[1] - self.offset[1])
 
+    def grid_to_world(self, coordinate):
+        return (coordinate[0] + self.offset[0],
+                coordinate[1] + self.offset[1])
+
     def can_view(self, coordinate):
         grid_coord = self.world_to_grid(coordinate)
         return (grid_coord[0] > 0 and grid_coord[0] < self.width and
