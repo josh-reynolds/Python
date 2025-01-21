@@ -98,10 +98,7 @@ class Level:
             node.draw()
 
         for monster in self.monsters:
-            if self.grid.can_view(monster.pos):
-                grid_coord = self.grid.world_to_grid(monster.pos)
-                screen_coord = self.grid.to_screen(grid_coord)
-                pygame.draw.ellipse(Game.screen, Color('red'), screen_coord)
+            monster.draw()
 
         pygame.display.flip()
 
