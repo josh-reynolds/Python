@@ -41,6 +41,10 @@ class Status(Text):
 
     def update(self):
         self.text = 'moves: ' + str(Game.moves)
+        coordinate = Game.level.grid.to_world(Game.level.grid.center)
+        self.text += '\ncoordinate: ' + str(coordinate)     # unfortunately pygame font.render
+                                                            # does not support newlines
+                                                            # will need to break this up
 
     def draw(self):
         self.render()
