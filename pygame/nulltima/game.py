@@ -124,6 +124,8 @@ class Level:
         if self.moved:
             self.moved = False
             self.spawn()
+            for monster in self.monsters:
+                monster.think()
             return True
         return False
 
