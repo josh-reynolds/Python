@@ -146,7 +146,6 @@ class Grid:
     def no_action(self):
         pass
 
-
 class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = GameMock()

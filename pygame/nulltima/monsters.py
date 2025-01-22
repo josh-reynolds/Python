@@ -43,8 +43,16 @@ class Monster:
             self.move(rx, ry)
 
     def move(self, dx, dy):
-        self.pos = (self.pos[0] + dx,
-                    self.pos[1] + dy)
+        if self.can_move(dx, dy):
+            self.pos = (self.pos[0] + dx,
+                        self.pos[1] + dy)
+
+    def can_move(self, dx, dy):
+        grid_coord = self.level.grid.from_world(self.pos)
+        destination = (grid_coord[0] + dx,
+                       grid_coord[1] + dy)
+
+        return self.level.grid[destination][1]
     
     def __repr__(self):
         return "Monster({})".format(self.pos)
