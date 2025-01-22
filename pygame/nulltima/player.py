@@ -1,8 +1,12 @@
 import unittest
+import pygame
 
 class Player:
+    image = None
+
     def __init__(self):
-        pass
+        if not Player.image:
+            Player.image = pygame.image.load("./images/player.png")
 
     def update(self):
         pass

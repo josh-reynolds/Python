@@ -3,7 +3,7 @@ import math
 import pygame
 from pygame.locals import *
 from world import world, terrains
-from player import player
+from player import player, Player
 from game import Game, Level, GameMock
 
 class Grid:
@@ -48,7 +48,6 @@ class Grid:
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
     def draw(self):
-        player_image = pygame.image.load("./images/player.png")
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
@@ -59,7 +58,7 @@ class Grid:
                 Game.screen.blit(image, screen_coord)
 
         player_position = self.to_screen(self.center)
-        Game.screen.blit(player_image, player_position)
+        Game.screen.blit(Player.image, player_position)
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
