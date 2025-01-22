@@ -18,7 +18,9 @@ Overworld mode
 [  ] aquatic monsters
 [  ] multiple monster types
 [  ] monster sprites & animation
-[  ] monster movement & world clock ('pass' action)
+[..] monster movement
+[  ] monster collisions w/ monsters/player/terrain
+[..] world clock (automatic 'pass' action)
 [  ] monster persistence & despawning
 [  ] sound effects
 [  ] music

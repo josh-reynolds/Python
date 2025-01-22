@@ -75,6 +75,7 @@ class Level:
                 (K_RIGHT, 0): 'self.grid.move(1,0)',
                 (K_UP, 0): 'self.grid.move(0,-1)',
                 (K_DOWN, 0): 'self.grid.move(0,1)',
+                (K_SPACE, 0): 'self.grid.no_action()',
                 }
 
         if options:

@@ -143,6 +143,10 @@ class Grid:
         return self[self.center[0] + dx, 
                     self.center[1] + dy][1]
 
+    def no_action(self):
+        pass
+
+
 class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = GameMock()
