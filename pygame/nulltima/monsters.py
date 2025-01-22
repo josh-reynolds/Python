@@ -51,8 +51,10 @@ class Monster:
         grid_coord = self.level.grid.from_world(self.pos)
         destination = (grid_coord[0] + dx,
                        grid_coord[1] + dy)
+        passable = self.level.grid[destination][1]
+        vacant = self.level.grid.is_vacant(self.level.grid.to_world(destination))
 
-        return self.level.grid[destination][1]
+        return passable and vacant
     
     def __repr__(self):
         return "Monster({})".format(self.pos)
