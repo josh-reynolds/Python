@@ -16,6 +16,7 @@ Overworld mode
 [  ] player sprite & animation
 [OK] monster spawning
 [  ] aquatic monsters
+[  ] multiple monster types
 [  ] monster sprites & animation
 [  ] monster movement & world clock ('pass' action)
 [  ] monster persistence & despawning
