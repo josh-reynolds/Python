@@ -121,10 +121,14 @@ class Grid:
         return (coordinate[0] + self.offset[0],
                 coordinate[1] + self.offset[1])
 
-    def can_view(self, coordinate):
+    def on_grid(self, coordinate):
         grid_coord = self.from_world(coordinate)
         return (grid_coord[0] >= 0 and grid_coord[0] < self.width and
                 grid_coord[1] >= 0 and grid_coord[1] < self.height)
+
+    def can_view(self, coordinate):
+        grid_coord = self.from_world(coordinate)
+        return self.on_grid(coordinate) and not self.is_occluded(grid_coord)
 
     def to_screen(self, coordinate):
         return (coordinate[0] * self.cell_width + self.left,
