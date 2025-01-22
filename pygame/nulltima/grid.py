@@ -140,8 +140,17 @@ class Grid:
             self.offset = self.offset[0] + dx, self.offset[1] + dy
 
     def can_move(self, dx, dy):
-        return self[self.center[0] + dx, 
-                    self.center[1] + dy][1]
+        grid_coordinate = (self.center[0] + dx, self.center[1] + dy)
+        passable = self[grid_coordinate][1]
+        vacant = self.is_vacant(self.to_world(grid_coordinate))
+
+        return passable and vacant
+
+    def is_vacant(self, coordinate):
+        for monster in Game.level.monsters:
+            if monster.pos == coordinate:
+                return False
+        return True
 
     def no_action(self):
         pass
