@@ -70,10 +70,11 @@ class Display:
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
-        text1 = self.font.render("Some text", True, self.fontcolor)
+        text1 = self.font.render("moves: " + str(Game.moves), True, self.fontcolor)
         self.img.blit(text1, (10,10))
         
-        text2 = self.font.render("Some more text", True, self.fontcolor)
+        coordinate = Game.level.grid.to_world(Game.level.grid.center)
+        text2 = self.font.render("coordinates: " + str(coordinate), True, self.fontcolor)
         self.img.blit(text2, (10,24))
 
     def draw(self):
