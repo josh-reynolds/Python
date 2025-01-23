@@ -50,6 +50,39 @@ class Status(Text):
         self.render()
         Game.screen.blit(self.img, self.rect)
 
+class Display:
+    def __init__(self, pos):
+        self.pos = pos
+        Game.level.nodes.append(self)
+        self.fontname = None
+        self.fontsize = 24
+        self.fontcolor = Color('black')
+        self.set_font()
+        self.render()
+
+    def set_font(self):
+        self.font = pygame.font.Font(self.fontname, self.fontsize)
+
+    def render(self):
+        self.width = 200
+        self.img = pygame.Surface((self.width, 60))
+        self.img.fill(Color('white'))
+        self.rect = self.img.get_rect()
+        self.rect.topleft = self.pos
+
+        text1 = self.font.render("Some text", True, self.fontcolor)
+        self.img.blit(text1, (10,10))
+        
+        text2 = self.font.render("Some more text", True, self.fontcolor)
+        self.img.blit(text2, (10,24))
+
+    def draw(self):
+        self.render()
+        Game.screen.blit(self.img, self.rect)
+
+    def update(self):
+        pass
+
 class Level:
     options = {
             'id': 0,
