@@ -50,17 +50,21 @@ class StatusDisplay:
 
     def render(self):
         self.width = 200
-        self.img = pygame.Surface((self.width, 60))
+
+        moves = str(Game.moves)
+        coordinate = str(Game.level.grid.to_world(Game.level.grid.center))
+        contents = ["moves: " + moves, 
+                    "coordinates: " + coordinate]
+        maxlines = len(contents) + 1
+
+        self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
         self.img.fill(Color('white'))
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
-        text1 = self.font.render("moves: " + str(Game.moves), True, self.fontcolor)
-        self.img.blit(text1, (10,10))
-        
-        coordinate = Game.level.grid.to_world(Game.level.grid.center)
-        text2 = self.font.render("coordinates: " + str(coordinate), True, self.fontcolor)
-        self.img.blit(text2, (10,24))
+        for i,line in enumerate(contents):
+            text = self.font.render(line, True, self.fontcolor)
+            self.img.blit(text, (10, 10 + i * self.fontsize))
 
     def draw(self):
         self.render()
@@ -96,7 +100,7 @@ class Console:
 
         for i,line in enumerate(self.lines):
             text = self.font.render(line, True, self.fontcolor)
-            self.img.blit(text, (10,10 + i * self.fontsize))
+            self.img.blit(text, (10, 10 + i * self.fontsize))
 
     def add(self, text=None):
         if self.lines:
@@ -204,8 +208,6 @@ class Level:
             grid_coordinate = random.choice(self.grid.spawnable())
             world_coordinate = self.grid.to_world(grid_coordinate)
             self.monsters.append(monster(world_coordinate, self))
-            print("Spawning monster!")
-            print(self.monsters)
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
