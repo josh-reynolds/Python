@@ -77,6 +77,8 @@ class Console:
         self.fontsize = 24
         self.fontcolor = Color('black')
         self.set_font()
+        self.lines = ["one", "two", "three", "four"]
+        self.maxlines = 5
         self.render()
 
     def set_font(self):
@@ -88,6 +90,11 @@ class Console:
         self.img.fill(Color('cadetblue3'))
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
+
+        for i,line in enumerate(self.lines):
+            text = self.font.render(line, True, self.fontcolor)
+            self.img.blit(text, (10,10 + i * 24))
+
 
     def draw(self):
         self.render()
