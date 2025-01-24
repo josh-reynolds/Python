@@ -4,7 +4,8 @@ import pygame
 class Player:
     images = []
 
-    def __init__(self):
+    def __init__(self, coordinate):
+        self.pos = coordinate
         if not Player.images:
             Player.images = [pygame.image.load("./images/player_0.png"),
                              pygame.image.load("./images/player_1.png")]
@@ -21,13 +22,13 @@ class Player:
                 self.current_image = 0
 
     def draw(self, screen):
-        pass
+        Game.screen.blit(Player.images[self.current_image], self.player_position)
 
     def move(self, dx, dy):
         pass
 
-def player():
-    return Player()
+def player(coordinate):
+    return Player(coordinate)
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):

@@ -19,7 +19,7 @@ class Grid:
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.edges = self.find_edges()
-        self.player = player()
+        self.player = player(self.to_screen(self.center))
 
         self.file = 'large_world.txt'
         self.world.open_file(self.file)
@@ -57,8 +57,7 @@ class Grid:
                     image = pygame.image.load("./images/tile_0.png")
                 Game.screen.blit(image, screen_coord)
 
-        player_position = self.to_screen(self.center)
-        Game.screen.blit(Player.images[self.player.current_image], player_position)
+        Game.screen.blit(Player.images[self.player.current_image], self.player.pos)
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
