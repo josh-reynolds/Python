@@ -4,22 +4,31 @@ import pygame
 import game
 
 class Monster:
-    image = None
+    images = []
 
     def __init__(self, coordinate, level):
         self.pos = coordinate
         self.level = level
-        if not Monster.image:
-            Monster.image = pygame.image.load("./images/monster.png")
+        if not Monster.images:
+            Monster.images = [pygame.image.load("./images/monster_0.png"),
+                              pygame.image.load("./images/monster_1.png")]
+        self.time = 0
+        self.current_image = 0
 
     def update(self):
-        pass
+        self.time += 1
+        if self.time > 25:
+            self.time = 0
+            if self.current_image == 0:
+                self.current_image = 1
+            else:
+                self.current_image = 0
 
     def draw(self):
         if self.level.grid.can_view(self.pos):
             grid_coord = self.level.grid.from_world(self.pos)
             screen_coord = self.level.grid.to_screen(grid_coord)
-            game.Game.screen.blit(Monster.image, screen_coord)
+            game.Game.screen.blit(Monster.images[self.current_image], screen_coord)
 
     def think(self):
         if self.level.grid.can_view(self.pos):

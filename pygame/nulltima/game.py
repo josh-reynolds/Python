@@ -165,6 +165,8 @@ class Level:
     def update(self):
         for node in self.nodes:
             node.update()
+        for monster in self.monsters:
+            monster.update()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
