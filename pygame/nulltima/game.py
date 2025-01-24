@@ -77,8 +77,10 @@ class Console:
         self.fontsize = 24
         self.fontcolor = Color('black')
         self.set_font()
-        self.lines = ["one", "two", "three", "four", "five", "six"]
+        self.lines = []
         self.maxlines = 5
+        self.prompt = '|>  '
+        self.add()
         self.render()
 
     def set_font(self):
@@ -86,18 +88,21 @@ class Console:
 
     def render(self):
         self.width = 200
-        self.img = pygame.Surface((self.width, 200))
+        self.img = pygame.Surface((self.width, 20 + self.maxlines * self.fontsize))
         self.img.fill(Color('cadetblue3'))
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
         for i,line in enumerate(self.lines):
-            line = '|>  ' + line
             text = self.font.render(line, True, self.fontcolor)
             self.img.blit(text, (10,10 + i * self.fontsize))
 
-    def add(self, text):
-        self.lines.append(text)
+    def add(self, text=None):
+        if self.lines:
+            self.lines.pop()
+        if text:
+            self.lines.append(self.prompt + text)
+        self.lines.append(self.prompt)
 
     def draw(self):
         self.render()
