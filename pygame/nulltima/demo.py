@@ -10,6 +10,7 @@ class Demo(Game):
         Text('Arrow keys to move', pos=(420, 60))
         Text('q to quit', pos=(420, 80))
         StatusDisplay(pos=(420,100))
+        Console(pos=(420, 160))
 
 if __name__ == '__main__':
     Demo().run()
