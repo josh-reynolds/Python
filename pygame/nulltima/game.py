@@ -73,6 +73,7 @@ class Console:
     def __init__(self, pos):
         self.pos = pos
         Game.level.nodes.append(self)
+        Game.level.console = self
         self.fontname = None
         self.fontsize = 24
         self.fontcolor = Color('black')
@@ -131,6 +132,8 @@ class Level:
         self.file = Level.options['file']
         self.caption = Level.options['caption']
         self.moved = False
+        self.last_move = ''
+        self.console = None
         self.monsters = []
         self.shortcuts = {
                 (K_LEFT, 0): ('self.grid.move(-1,0)', 'West'),
@@ -181,7 +184,9 @@ class Level:
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
-            exec(self.shortcuts[k, m][0])
+            action = self.shortcuts[k,m]
+            exec(action[0])
+            self.last_move = action[1]
 
     def check_move(self):
         if self.moved:
@@ -189,6 +194,8 @@ class Level:
             self.spawn()
             for monster in self.monsters:
                 monster.think()
+            if self.console:
+                self.console.add(self.last_move)
             return True
         return False
 

@@ -25,10 +25,11 @@ Overworld mode
 [  ] sound effects
 [  ] music
 [  ] world actions: move, attack, spell, enter, ?
-[..] status display
+[OK] status display
 [OK] move counter
 [  ] food and starvation
-[  ] action feedback & console
+[OK] action feedback & console
+[  ] observer or subscriber model for events & actions
 
 Combat mode
 [  ] mode switching
