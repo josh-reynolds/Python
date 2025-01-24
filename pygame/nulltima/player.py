@@ -2,14 +2,23 @@ import unittest
 import pygame
 
 class Player:
-    image = None
+    images = []
 
     def __init__(self):
-        if not Player.image:
-            Player.image = pygame.image.load("./images/player.png")
+        if not Player.images:
+            Player.images = [pygame.image.load("./images/player_0.png"),
+                             pygame.image.load("./images/player_1.png")]
+        self.time = 0
+        self.current_image = 0
 
     def update(self):
-        pass
+        self.time += 1
+        if self.time > 25:
+            self.time = 0
+            if self.current_image == 0:
+                self.current_image = 1
+            else:
+                self.current_image = 0
 
     def draw(self, screen):
         pass

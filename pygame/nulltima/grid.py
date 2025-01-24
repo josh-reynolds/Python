@@ -32,7 +32,7 @@ class Grid:
                                    index[0] + self.offset[0])
 
     def update(self):
-        pass
+        self.player.update()
 
     def find_edges(self):
         edges = []
@@ -58,7 +58,7 @@ class Grid:
                 Game.screen.blit(image, screen_coord)
 
         player_position = self.to_screen(self.center)
-        Game.screen.blit(Player.image, player_position)
+        Game.screen.blit(Player.images[self.player.current_image], player_position)
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
