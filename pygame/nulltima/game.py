@@ -133,11 +133,11 @@ class Level:
         self.moved = False
         self.monsters = []
         self.shortcuts = {
-                (K_LEFT, 0): 'self.grid.move(-1,0)',
-                (K_RIGHT, 0): 'self.grid.move(1,0)',
-                (K_UP, 0): 'self.grid.move(0,-1)',
-                (K_DOWN, 0): 'self.grid.move(0,1)',
-                (K_SPACE, 0): 'self.grid.no_action()',
+                (K_LEFT, 0): ('self.grid.move(-1,0)', 'West'),
+                (K_RIGHT, 0): ('self.grid.move(1,0)', 'East'),
+                (K_UP, 0): ('self.grid.move(0,-1)', 'North'),
+                (K_DOWN, 0): ('self.grid.move(0,1)', 'South'),
+                (K_SPACE, 0): ('self.grid.no_action()', 'Pass'),
                 }
 
         if options:
@@ -181,7 +181,7 @@ class Level:
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
-            exec(self.shortcuts[k, m])
+            exec(self.shortcuts[k, m][0])
 
     def check_move(self):
         if self.moved:
