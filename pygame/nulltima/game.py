@@ -77,7 +77,7 @@ class Console:
         self.fontsize = 24
         self.fontcolor = Color('black')
         self.set_font()
-        self.lines = ["one", "two", "three", "four"]
+        self.lines = ["one", "two", "three", "four", "five", "six"]
         self.maxlines = 5
         self.render()
 
@@ -92,16 +92,20 @@ class Console:
         self.rect.topleft = self.pos
 
         for i,line in enumerate(self.lines):
+            line = '|>  ' + line
             text = self.font.render(line, True, self.fontcolor)
-            self.img.blit(text, (10,10 + i * 24))
+            self.img.blit(text, (10,10 + i * self.fontsize))
 
+    def add(self, text):
+        self.lines.append(text)
 
     def draw(self):
         self.render()
         Game.screen.blit(self.img, self.rect)
 
     def update(self):
-        pass
+        if len(self.lines) > self.maxlines:
+            self.lines.pop(0)
 
 class Level:
     options = {
