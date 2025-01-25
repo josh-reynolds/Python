@@ -25,7 +25,7 @@ class Grid:
 
         Game.level.nodes.append(self)
         Game.level.grid = self
-        Game.level.player = player(self.to_screen(self.center))
+        Game.level.player = player(self.to_world(self.center), Game.level)
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
