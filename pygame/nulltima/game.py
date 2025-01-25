@@ -2,6 +2,7 @@ import random
 import pygame
 from pygame.locals import *
 import monsters
+import player
 
 class Text:
     def __init__(self, text, pos, **options):
@@ -154,7 +155,7 @@ class Level:
         self.last_move = ''
         self.console = None
         self.monsters = []
-        self.player = None
+        self.player = player.player((15,15), self)
         self.shortcuts = {
                 (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
                 (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
