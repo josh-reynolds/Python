@@ -18,15 +18,6 @@ class Player(Actor):
             screen_coord = self.level.grid.to_screen(grid_coord)
             game.Game.screen.blit(Player.images[self.current_image], screen_coord)
 
-    def can_move(self, dx, dy):
-        grid_coord = self.level.grid.from_world(self.pos)
-        destination = (grid_coord[0] + dx,
-                       grid_coord[1] + dy)
-        passable = self.level.grid[destination][1]
-        vacant = self.level.grid.is_vacant(self.level.grid.to_world(destination))
-
-        return passable and vacant
-
     def no_action(self):
         pass
 
