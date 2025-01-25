@@ -1,7 +1,7 @@
 import random
 import pygame
 from pygame.locals import *
-from monsters import monster
+import monsters
 
 class Text:
     def __init__(self, text, pos, **options):
@@ -226,7 +226,7 @@ class Level:
         if random.random() < 0.1:
             grid_coordinate = random.choice(self.grid.spawnable())
             world_coordinate = self.grid.to_world(grid_coordinate)
-            self.monsters.append(monster(world_coordinate, self))
+            self.monsters.append(monsters.monster(world_coordinate, self))
 
     def __str__(self):
         return 'Scene {}'.format(self.id)

@@ -1,8 +1,8 @@
 import unittest
 import pygame
-from actor import Actor
+import actor
 
-class Player(Actor):
+class Player(actor.Actor):
     images = []
 
     def __init__(self, coordinate, level):

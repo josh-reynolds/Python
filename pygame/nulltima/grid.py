@@ -2,9 +2,9 @@ import unittest
 import math
 import pygame
 from pygame.locals import *
-from world import world, terrains
-from player import player
-from game import Game, Level, GameMock
+import game
+import world
+import player
 
 class Grid:
     def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
@@ -15,7 +15,7 @@ class Grid:
         self.cell_width = cell_width
         self.cell_height = cell_height
         self.contents = [[Color('red') for x in range(width)] for x in range(height)]
-        self.world = world()
+        self.world = world.world()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.edges = self.find_edges()
@@ -23,9 +23,9 @@ class Grid:
         self.file = 'large_world.txt'
         self.world.open_file(self.file)
 
-        Game.level.nodes.append(self)
-        Game.level.grid = self
-        Game.level.player = player(self.to_world(self.center), Game.level)
+        game.Game.level.nodes.append(self)
+        game.Game.level.grid = self
+        game.Game.level.player = player.player(self.to_world(self.center), game.Game.level)
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
@@ -55,7 +55,7 @@ class Grid:
                 image = pygame.image.load("./images/" + self[grid_coord][3])
                 if self.is_occluded(grid_coord):
                     image = pygame.image.load("./images/tile_0.png")
-                Game.screen.blit(image, screen_coord)
+                game.Game.screen.blit(image, screen_coord)
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
@@ -133,19 +133,19 @@ class Grid:
                 self.cell_height)
 
     def recenter(self):
-        self.offset = (Game.level.player.pos[0] - self.center[0],
-                       Game.level.player.pos[1] - self.center[1])
+        self.offset = (game.Game.level.player.pos[0] - self.center[0],
+                       game.Game.level.player.pos[1] - self.center[1])
 
     def is_vacant(self, coordinate):
-        for monster in Game.level.monsters:
+        for monster in game.Game.level.monsters:
             if monster.pos == coordinate:
                 return False
         return True
 
 class GridTestCase(unittest.TestCase):
     def setUp(self):
-        self.game = GameMock()
-        Level()
+        self.game = game.GameMock()
+        game.Level()
         self.g = Grid(3, 3, 11, 9, cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
@@ -163,12 +163,12 @@ class GridTestCase(unittest.TestCase):
 
     def test_coordinate_mapping_to_world(self):
 
-        self.assertEqual(self.g[2,2], terrains[1])
+        self.assertEqual(self.g[2,2], world.terrains[1])
 
     def test_coordinate_offset(self):
         self.g.offset = (1,1)
 
-        self.assertEqual(self.g[1,1], terrains[1])
+        self.assertEqual(self.g[1,1], world.terrains[1])
 
     #def test_moving_a_grid(self):
         #self.g.move(1,2)

@@ -1,9 +1,10 @@
 import math
 import unittest
 import pygame
-from actor import Actor
+import game
+import actor
 
-class Monster(Actor):
+class Monster(actor.Actor):
     images = []
 
     def __init__(self, coordinate, level):
