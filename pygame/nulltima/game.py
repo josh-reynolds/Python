@@ -15,6 +15,9 @@ class Component:
 
     def set_font(self):
         self.font = pygame.font.Font(self.fontname, self.fontsize)
+
+    def update(self):
+        pass
         
 class Text(Component):
     def __init__(self, text, pos, **options):
@@ -31,9 +34,6 @@ class Text(Component):
         self.img = self.font.render(self.text, True, self.fontcolor)
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
-
-    def update(self):
-        pass
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
@@ -65,9 +65,6 @@ class StatusDisplay(Component):
     def draw(self):
         self.render()
         Game.screen.blit(self.img, self.rect)
-
-    def update(self):
-        pass
 
 class Console(Component):
     def __init__(self, pos):

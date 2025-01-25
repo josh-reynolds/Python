@@ -29,9 +29,6 @@ class Grid(game.Component):
         return self.world.get_cell(index[1] + self.offset[1], 
                                    index[0] + self.offset[0])
 
-    def update(self):
-        pass
-
     def find_edges(self):
         edges = []
         for iy,row in enumerate(self.contents):
