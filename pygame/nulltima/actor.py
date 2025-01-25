@@ -15,3 +15,8 @@ class Actor:
                 self.current_image = 1
             else:
                 self.current_image = 0
+
+    def move(self, dx, dy):
+        if self.can_move(dx, dy):
+            self.pos = (self.pos[0] + dx,
+                        self.pos[1] + dy)

@@ -40,11 +40,6 @@ class Monster(Actor):
     
             self.move(rx, ry)
 
-    def move(self, dx, dy):
-        if self.can_move(dx, dy):
-            self.pos = (self.pos[0] + dx,
-                        self.pos[1] + dy)
-
     def can_move(self, dx, dy):
         grid_coord = self.level.grid.from_world(self.pos)
         destination = (grid_coord[0] + dx,
