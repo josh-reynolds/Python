@@ -13,15 +13,6 @@ class Monster(Actor):
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]
 
-    def update(self):
-        self.time += 1
-        if self.time > 25:
-            self.time = 0
-            if self.current_image == 0:
-                self.current_image = 1
-            else:
-                self.current_image = 0
-
     def draw(self):
         if self.level.grid.can_view(self.pos):
             grid_coord = self.level.grid.from_world(self.pos)
