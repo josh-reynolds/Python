@@ -15,7 +15,7 @@ terrains = {0:("Occluded", False, False, "tile_0.png"),
             9:("Out of Bounds", False, False, "tile_9.png")}
 
 class World:
-    def __init__(self, contents):
+    def __init__(self, contents=[]):
         self.contents = contents
 
     def get_cell(self, x, y):
@@ -41,22 +41,19 @@ class World:
     def height(self):
         return len(self.contents)
 
-def world(contents=[]):
-    return World(contents)
-
 class WorldTestCase(unittest.TestCase):
     def test_constructing_a_world(self):
         contents = [1]
-        w = world(contents)
+        w = World(contents)
         self.assertEqual(w.contents, [1])
 
     def test_loading_a_world_file(self):
-        w = world()
+        w = World()
         w.open_file("test_world.txt")
         self.assertEqual(w.get_cell(1,1), terrains[3])
 
     def test_world_width_and_height(self):
-        w = world()
+        w = World()
         w.open_file("test_world.txt")
         self.assertEqual(w.width(), 10)
         self.assertEqual(w.height(), 10)

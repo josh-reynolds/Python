@@ -38,15 +38,12 @@ class Monster(actor.Actor):
     def __repr__(self):
         return "Monster({})".format(self.pos)
 
-def monster(coordinate, level):
-    return Monster(coordinate, level)
-
 class MonsterTestCase(unittest.TestCase):
     def setUp(self):
         game.GameMock()
         level = game.Level()
         coordinate = (5,5)
-        self.m = monster(coordinate, level)
+        self.m = Monster(coordinate, level)
 
     def test_constructing_a_monster(self):
         self.assertEqual(self.m.pos, (5,5))

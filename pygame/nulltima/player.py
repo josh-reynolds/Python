@@ -15,12 +15,9 @@ class Player(actor.Actor):
     def no_action(self):
         pass
 
-def player(coordinate, level):
-    return Player(coordinate, level)
-
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.p = player((100,100), None)
+        self.p = Player((100,100), None)
 
     def test_constructing_a_player(self):
         pass

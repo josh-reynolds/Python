@@ -155,7 +155,7 @@ class Level:
         self.last_move = ''
         self.console = None
         self.monsters = []
-        self.player = player.player((15,15), self)
+        self.player = player.Player((15,15), self)
         self.shortcuts = {
                 (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
                 (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
@@ -227,7 +227,7 @@ class Level:
         if random.random() < 0.1:
             grid_coordinate = random.choice(self.grid.spawnable())
             world_coordinate = self.grid.to_world(grid_coordinate)
-            self.monsters.append(monsters.monster(world_coordinate, self))
+            self.monsters.append(monsters.Monster(world_coordinate, self))
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
