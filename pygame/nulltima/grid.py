@@ -14,7 +14,7 @@ class Grid:
         self.top = top
         self.cell_width = cell_width
         self.cell_height = cell_height
-        self.contents = [[Color('black') for x in range(width)] for x in range(height)]
+        self.contents = [[Color('red') for x in range(width)] for x in range(height)]
         self.world = world()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)

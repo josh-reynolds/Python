@@ -12,7 +12,7 @@ class Text:
 
         self.fontname = None
         self.fontsize = 24
-        self.fontcolor = Color('black')
+        self.fontcolor = Color('white')
 
         if options:
             for key,value in options.items():
@@ -41,7 +41,8 @@ class StatusDisplay:
         Game.level.nodes.append(self)
         self.fontname = None
         self.fontsize = 24
-        self.fontcolor = Color('black')
+        self.fontcolor = Color('white')
+        self.bg = Color('gray33')
         self.set_font()
         self.render()
 
@@ -58,7 +59,7 @@ class StatusDisplay:
         maxlines = len(contents) + 1
 
         self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
-        self.img.fill(Color('white'))
+        self.img.fill(self.bg)
         self.rect = self.img.get_rect()
         self.rect.topleft = self.pos
 
@@ -80,8 +81,8 @@ class Console:
         Game.level.console = self
         self.fontname = None
         self.fontsize = 24
-        self.fontcolor = Color('black')
-        self.bg = Color('cadetblue3')
+        self.fontcolor = Color('white')
+        self.bg = Color('gray50')
         self.set_font()
         self.lines = []
         self.maxlines = 5
@@ -109,10 +110,10 @@ class Console:
 
     def add(self, text=None):
         if self.lines:
-            self.lines.pop()
+            self.lines.pop()                  # remove the empty prompt line
         if text:
             self.lines.append(self.prompt + text)
-        self.lines.append(self.prompt)
+        self.lines.append(self.prompt)        # and put it back again...
 
     def draw(self):
         self.render()
@@ -134,7 +135,7 @@ class Console:
 class Level:
     options = {
             'id': 0,
-            'bg': Color('gray'),
+            'bg': Color('black'),
             'file': '',
             'caption': '',
             }
@@ -233,6 +234,7 @@ class Game:
     levels = []
     screen = None
     moves = 0
+    bg = Color('gray')
 
     def __init__(self):
         pygame.init()
@@ -258,7 +260,7 @@ class Game:
 
             Game.level.update()
 
-            Game.screen.fill(Color('gray'))
+            Game.screen.fill(Game.bg)
             Game.level.draw()
             pygame.display.update()
 
