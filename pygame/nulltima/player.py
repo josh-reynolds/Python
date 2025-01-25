@@ -1,8 +1,9 @@
 import unittest
 import pygame
 import game
+from actor import Actor
 
-class Player:
+class Player(Actor):
     images = []
 
     def __init__(self, coordinate, level):
@@ -24,9 +25,10 @@ class Player:
                 self.current_image = 0
 
     def draw(self):
-        grid_coord = self.level.grid.from_world(self.pos)
-        screen_coord = self.level.grid.to_screen(grid_coord)
-        game.Game.screen.blit(Player.images[self.current_image], screen_coord)
+        if self.level.grid.can_view(self.pos):
+            grid_coord = self.level.grid.from_world(self.pos)
+            screen_coord = self.level.grid.to_screen(grid_coord)
+            game.Game.screen.blit(Player.images[self.current_image], screen_coord)
 
     def move(self, dx, dy):
         if self.can_move(dx, dy):

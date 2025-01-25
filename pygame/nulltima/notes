@@ -30,7 +30,7 @@ Overworld mode
 [  ] food and starvation
 [OK] action feedback & console
 [  ] observer or subscriber model for events & actions
-[  ] refactor class hierarchy
+[..] refactor class hierarchy
 
 Combat mode
 [  ] mode switching

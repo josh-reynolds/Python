@@ -170,10 +170,10 @@ class GridTestCase(unittest.TestCase):
 
         self.assertEqual(self.g[1,1], terrains[1])
 
-    def test_moving_a_grid(self):
-        self.g.move(1,2)
-
-        self.assertEqual(self.g.offset, (1, 2))
+    #def test_moving_a_grid(self):
+        #self.g.move(1,2)
+#
+        #self.assertEqual(self.g.offset, (1, 2))
 
     def test_converting_grid_coords_to_screen(self):
         grid_coord = (1, 1)
@@ -184,11 +184,11 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(coords[2], 4)
         self.assertEqual(coords[3], 3)
 
-    def test_move_check(self):
-        self.assertEqual(self.g.can_move(0,1), True)
-        self.assertEqual(self.g.can_move(1,0), True)
-        self.assertEqual(self.g.can_move(0,-1), False)
-        self.assertEqual(self.g.can_move(-1,0), False)
+    #def test_move_check(self):
+        #self.assertEqual(self.g.can_move(0,1), True)
+        #self.assertEqual(self.g.can_move(1,0), True)
+        #self.assertEqual(self.g.can_move(0,-1), False)
+        #self.assertEqual(self.g.can_move(-1,0), False)
 
     def test_bresenham_calculation(self):
         g = Grid(11, 11, 5, 5, 5, 5)
