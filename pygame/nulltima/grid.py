@@ -132,16 +132,9 @@ class Grid:
                 self.cell_width,
                 self.cell_height)
 
-    def move(self, dx, dy):
-        if self.can_move(dx, dy):
-            self.offset = self.offset[0] + dx, self.offset[1] + dy
-
-    def can_move(self, dx, dy):
-        grid_coordinate = (self.center[0] + dx, self.center[1] + dy)
-        passable = self[grid_coordinate][1]
-        vacant = self.is_vacant(self.to_world(grid_coordinate))
-
-        return passable and vacant
+    def recenter(self):
+        self.offset = (Game.level.player.pos[0] - self.center[0],
+                       Game.level.player.pos[1] - self.center[1])
 
     def is_vacant(self, coordinate):
         for monster in Game.level.monsters:

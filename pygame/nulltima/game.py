@@ -218,6 +218,7 @@ class Level:
                 monster.think()
             if self.console:
                 self.console.add(self.last_move)
+            self.grid.recenter()
             return True
         return False
 
