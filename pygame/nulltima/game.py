@@ -10,8 +10,12 @@ class Component:
         self.fontname = None
         self.fontsize = 24
         self.fontcolor = Color('white')
+        self.set_font()
         Game.level.components.append(self)
 
+    def set_font(self):
+        self.font = pygame.font.Font(self.fontname, self.fontsize)
+        
 class Text(Component):
     def __init__(self, text, pos, **options):
         super().__init__(pos)
@@ -21,11 +25,7 @@ class Text(Component):
             for key,value in options.items():
                 self.__dict__[key] = value
 
-        self.set_font()
         self.render()
-
-    def set_font(self):
-        self.font = pygame.font.Font(self.fontname, self.fontsize)
 
     def render(self):
         self.img = self.font.render(self.text, True, self.fontcolor)
@@ -42,11 +42,7 @@ class StatusDisplay(Component):
     def __init__(self, pos):
         super().__init__(pos)
         self.bg = Color('gray33')
-        self.set_font()
         self.render()
-
-    def set_font(self):
-        self.font = pygame.font.Font(self.fontname, self.fontsize)
 
     def render(self):
         self.width = 200
@@ -78,7 +74,6 @@ class Console(Component):
         super().__init__(pos)
         Game.level.console = self
         self.bg = Color('gray50')
-        self.set_font()
         self.lines = []
         self.maxlines = 5
         self.prompt = '|>  '
@@ -87,9 +82,6 @@ class Console(Component):
         self.time = 0
         self.add()
         self.render()
-
-    def set_font(self):
-        self.font = pygame.font.Font(self.fontname, self.fontsize)
 
     def render(self):
         self.width = 200
@@ -278,6 +270,7 @@ class ScreenMock():
 
 class GameMock(Game):
     def __init__(self):
+        pygame.init()
         Game.screen = ScreenMock()
 
 if __name__ == "__main__":
