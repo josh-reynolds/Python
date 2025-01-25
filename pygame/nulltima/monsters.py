@@ -8,13 +8,10 @@ class Monster(Actor):
     images = []
 
     def __init__(self, coordinate, level):
-        self.pos = coordinate
-        self.level = level
+        super().__init__(coordinate, level)
         if not Monster.images:
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]
-        self.time = 0
-        self.current_image = 0
 
     def update(self):
         self.time += 1
