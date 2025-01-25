@@ -183,15 +183,15 @@ class Level:
             node.update()
         for monster in self.monsters:
             monster.update()
+        self.player.update()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
         for node in self.nodes:
             node.draw()
-
         for monster in self.monsters:
             monster.draw()
-
+        self.player.draw()
         pygame.display.flip()
 
     def enter(self):

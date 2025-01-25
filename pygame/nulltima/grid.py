@@ -32,7 +32,7 @@ class Grid:
                                    index[0] + self.offset[0])
 
     def update(self):
-        Game.level.player.update()
+        pass
 
     def find_edges(self):
         edges = []
@@ -56,8 +56,6 @@ class Grid:
                 if self.is_occluded(grid_coord):
                     image = pygame.image.load("./images/tile_0.png")
                 Game.screen.blit(image, screen_coord)
-
-        Game.level.player.draw()
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
