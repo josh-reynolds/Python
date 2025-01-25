@@ -156,11 +156,11 @@ class Level:
         self.monsters = []
         self.player = None
         self.shortcuts = {
-                (K_LEFT, 0): ('self.grid.move(-1,0)', 'West'),
-                (K_RIGHT, 0): ('self.grid.move(1,0)', 'East'),
-                (K_UP, 0): ('self.grid.move(0,-1)', 'North'),
-                (K_DOWN, 0): ('self.grid.move(0,1)', 'South'),
-                (K_SPACE, 0): ('self.grid.no_action()', 'Pass'),
+                (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
+                (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
+                (K_UP, 0): ('self.player.move(0,-1)', 'North'),
+                (K_DOWN, 0): ('self.player.move(0,1)', 'South'),
+                (K_SPACE, 0): ('self.player.no_action()', 'Pass'),
                 }
 
         if options:
