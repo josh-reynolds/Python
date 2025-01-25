@@ -4,7 +4,10 @@ from pygame.locals import *
 import monsters
 import player
 
-class Text:
+class Component:
+    pass
+
+class Text(Component):
     def __init__(self, text, pos, **options):
         self.text = text
         self.pos = pos
@@ -36,7 +39,7 @@ class Text:
     def draw(self):
         Game.screen.blit(self.img, self.rect)
 
-class StatusDisplay:
+class StatusDisplay(Component):
     def __init__(self, pos):
         self.pos = pos
         Game.level.nodes.append(self)
@@ -75,7 +78,7 @@ class StatusDisplay:
     def update(self):
         pass
 
-class Console:
+class Console(Component):
     def __init__(self, pos):
         self.pos = pos
         Game.level.nodes.append(self)

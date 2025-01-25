@@ -6,7 +6,7 @@ import game
 import world
 import player
 
-class Grid:
+class Grid(game.Component):
     def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
         self.width = width
         self.height = height
