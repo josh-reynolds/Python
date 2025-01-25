@@ -6,7 +6,7 @@ class Demo(Game):
         super().__init__()
 
         Level(caption="<====!~ NulltimA ~!====>")
-        Grid(11, 11, 60, 60)
+        Grid(11, 11, pos=(60, 60))
         Text('Arrow keys to move', pos=(420, 60))
         Text('q to quit', pos=(420, 80))
         StatusDisplay(pos=(420,100))

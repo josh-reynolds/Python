@@ -7,20 +7,18 @@ import world
 import player
 
 class Grid(game.Component):
-    def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
-        super().__init__((left, top))
+    def __init__(self, width, height, pos, cell_width=32, cell_height=32):
+        super().__init__(pos)
         self.width = width
         self.height = height
-        self.left = self.pos[0]
-        self.top = self.pos[1]
         self.cell_width = cell_width
         self.cell_height = cell_height
         self.contents = [[Color('red') for x in range(width)] for x in range(height)]
-        self.world = world.World()
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.edges = self.find_edges()
 
+        self.world = world.World()
         self.file = 'large_world.txt'
         self.world.open_file(self.file)
 
@@ -127,8 +125,8 @@ class Grid(game.Component):
         return self.on_grid(coordinate) and not self.is_occluded(grid_coord)
 
     def to_screen(self, coordinate):
-        return (coordinate[0] * self.cell_width + self.left,
-                coordinate[1] * self.cell_height + self.top,
+        return (coordinate[0] * self.cell_width + self.pos[0],
+                coordinate[1] * self.cell_height + self.pos[1],
                 self.cell_width,
                 self.cell_height)
 
@@ -146,7 +144,7 @@ class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = game.GameMock()
         game.Level()
-        self.g = Grid(3, 3, 11, 9, cell_width=4, cell_height=3)
+        self.g = Grid(3, 3, pos=(11, 9), cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
                                 [0, 1, 1, 1, 0],
@@ -156,8 +154,7 @@ class GridTestCase(unittest.TestCase):
     def test_constructing_a_grid(self):
         self.assertEqual(self.g.width, 3)
         self.assertEqual(self.g.height, 3)
-        self.assertEqual(self.g.left, 11)
-        self.assertEqual(self.g.top, 9)
+        self.assertEqual(self.g.pos, (11, 9))
         self.assertEqual(self.g.cell_width, 4)
         self.assertEqual(self.g.cell_height, 3)
 
@@ -190,7 +187,7 @@ class GridTestCase(unittest.TestCase):
         #self.assertEqual(self.g.can_move(-1,0), False)
 
     def test_bresenham_calculation(self):
-        g = Grid(11, 11, 5, 5, 5, 5)
+        g = Grid(11, 11, pos=(5, 5), cell_width=5, cell_height=5)
         g.world.contents = [[0 for x in range(20)] for x in range(20)]
 
         b = g.bresenham((0,0))
@@ -206,7 +203,7 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
     def test_calculating_edge_cells(self):
-        g = Grid(5, 5, 3, 3, 3, 3)
+        g = Grid(5, 5, pos=(3, 3), cell_width=3, cell_height=3)
 
         e = g.edges
         self.assertEqual(e, [(0,0), (1,0), (2,0), (3,0), (4,0),
