@@ -57,7 +57,7 @@ class Grid:
                     image = pygame.image.load("./images/tile_0.png")
                 Game.screen.blit(image, screen_coord)
 
-        Game.screen.blit(Player.images[self.player.current_image], self.player.pos)
+        self.player.draw()
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)

@@ -1,5 +1,6 @@
 import unittest
 import pygame
+import game
 
 class Player:
     images = []
@@ -21,8 +22,8 @@ class Player:
             else:
                 self.current_image = 0
 
-    def draw(self, screen):
-        Game.screen.blit(Player.images[self.current_image], self.player_position)
+    def draw(self):
+        game.Game.screen.blit(Player.images[self.current_image], self.pos)
 
     def move(self, dx, dy):
         pass
