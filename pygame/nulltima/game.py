@@ -154,6 +154,7 @@ class Level:
         self.last_move = ''
         self.console = None
         self.monsters = []
+        self.player = None
         self.shortcuts = {
                 (K_LEFT, 0): ('self.grid.move(-1,0)', 'West'),
                 (K_RIGHT, 0): ('self.grid.move(1,0)', 'East'),

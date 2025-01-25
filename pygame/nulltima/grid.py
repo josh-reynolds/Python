@@ -3,7 +3,7 @@ import math
 import pygame
 from pygame.locals import *
 from world import world, terrains
-from player import player, Player
+from player import player
 from game import Game, Level, GameMock
 
 class Grid:
@@ -19,20 +19,20 @@ class Grid:
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.edges = self.find_edges()
-        self.player = player(self.to_screen(self.center))
 
         self.file = 'large_world.txt'
         self.world.open_file(self.file)
 
         Game.level.nodes.append(self)
         Game.level.grid = self
+        Game.level.player = player(self.to_screen(self.center))
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
                                    index[0] + self.offset[0])
 
     def update(self):
-        self.player.update()
+        Game.level.player.update()
 
     def find_edges(self):
         edges = []
@@ -57,7 +57,7 @@ class Grid:
                     image = pygame.image.load("./images/tile_0.png")
                 Game.screen.blit(image, screen_coord)
 
-        self.player.draw()
+        Game.level.player.draw()
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)

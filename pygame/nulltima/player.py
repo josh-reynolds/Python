@@ -33,7 +33,7 @@ def player(coordinate):
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.p = player()
+        self.p = player((100,100))
 
     def test_constructing_a_player(self):
         pass
