@@ -1,7 +1,6 @@
 import math
 import unittest
 import pygame
-import game
 from actor import Actor
 
 class Monster(Actor):
@@ -12,12 +11,7 @@ class Monster(Actor):
         if not Monster.images:
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]
-
-    def draw(self):
-        if self.level.grid.can_view(self.pos):
-            grid_coord = self.level.grid.from_world(self.pos)
-            screen_coord = self.level.grid.to_screen(grid_coord)
-            game.Game.screen.blit(Monster.images[self.current_image], screen_coord)
+        self.images = Monster.images
 
     def think(self):
         if self.level.grid.can_view(self.pos):

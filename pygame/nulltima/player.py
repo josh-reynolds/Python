@@ -1,6 +1,5 @@
 import unittest
 import pygame
-import game
 from actor import Actor
 
 class Player(Actor):
@@ -11,12 +10,7 @@ class Player(Actor):
         if not Player.images:
             Player.images = [pygame.image.load("./images/player_0.png"),
                              pygame.image.load("./images/player_1.png")]
-
-    def draw(self):
-        if self.level.grid.can_view(self.pos):
-            grid_coord = self.level.grid.from_world(self.pos)
-            screen_coord = self.level.grid.to_screen(grid_coord)
-            game.Game.screen.blit(Player.images[self.current_image], screen_coord)
+        self.images = Player.images
 
     def no_action(self):
         pass

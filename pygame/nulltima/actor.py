@@ -1,4 +1,4 @@
-
+import game
 
 class Actor:
     def __init__(self, coordinate, level):
@@ -15,6 +15,12 @@ class Actor:
                 self.current_image = 1
             else:
                 self.current_image = 0
+
+    def draw(self):
+        if self.level.grid.can_view(self.pos):
+            grid_coord = self.level.grid.from_world(self.pos)
+            screen_coord = self.level.grid.to_screen(grid_coord)
+            game.Game.screen.blit(self.images[self.current_image], screen_coord)
 
     def move(self, dx, dy):
         if self.can_move(dx, dy):
