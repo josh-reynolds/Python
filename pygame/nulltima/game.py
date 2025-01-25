@@ -10,7 +10,7 @@ class Component:
         self.fontname = None
         self.fontsize = 24
         self.fontcolor = Color('white')
-        Game.level.nodes.append(self)
+        Game.level.components.append(self)
 
 class Text(Component):
     def __init__(self, text, pos, **options):
@@ -141,7 +141,7 @@ class Level:
 
         self.id = Level.options['id']
         Level.options['id'] += 1
-        self.nodes = []
+        self.components = []
         self.bg = Level.options['bg']
         self.file = Level.options['file']
         self.caption = Level.options['caption']
@@ -174,16 +174,16 @@ class Level:
         self.enter()
 
     def update(self):
-        for node in self.nodes:
-            node.update()
+        for component in self.components:
+            component.update()
         for monster in self.monsters:
             monster.update()
         self.player.update()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
-        for node in self.nodes:
-            node.draw()
+        for component in self.components:
+            component.draw()
         for monster in self.monsters:
             monster.draw()
         self.player.draw()
