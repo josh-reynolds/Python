@@ -224,7 +224,7 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.flags = RESIZABLE
+        self.flags = RESIZABLE                   # not handling resize properly yet
         self.rect = Rect(0, 0, 640, 480)
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True

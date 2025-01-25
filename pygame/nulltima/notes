@@ -31,6 +31,12 @@ Overworld mode
 [OK] action feedback & console
 [  ] observer or subscriber model for events & actions
 [..] refactor class hierarchy
+[  ] scrub magic numbers and fix
+[  ] ...especially terrain index values
+[  ] mark 'private' methods
+[  ] move terrain image loading out of Grid.draw()
+[  ] scrub dead code from app model, not using here
+[  ] improve test coverage
 
 Combat mode
 [  ] mode switching
