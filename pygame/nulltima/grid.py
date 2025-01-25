@@ -8,10 +8,11 @@ import player
 
 class Grid(game.Component):
     def __init__(self, width, height, left, top, cell_width=32, cell_height=32):
+        super().__init__((left, top))
         self.width = width
         self.height = height
-        self.left = left
-        self.top = top
+        self.left = self.pos[0]
+        self.top = self.pos[1]
         self.cell_width = cell_width
         self.cell_height = cell_height
         self.contents = [[Color('red') for x in range(width)] for x in range(height)]
@@ -23,7 +24,6 @@ class Grid(game.Component):
         self.file = 'large_world.txt'
         self.world.open_file(self.file)
 
-        game.Game.level.nodes.append(self)
         game.Game.level.grid = self
         self.recenter()
 

@@ -5,18 +5,17 @@ import monsters
 import player
 
 class Component:
-    pass
-
-class Text(Component):
-    def __init__(self, text, pos, **options):
-        self.text = text
+    def __init__(self, pos):
         self.pos = pos
-
-        Game.level.nodes.append(self)
-
         self.fontname = None
         self.fontsize = 24
         self.fontcolor = Color('white')
+        Game.level.nodes.append(self)
+
+class Text(Component):
+    def __init__(self, text, pos, **options):
+        super().__init__(pos)
+        self.text = text
 
         if options:
             for key,value in options.items():
@@ -41,11 +40,7 @@ class Text(Component):
 
 class StatusDisplay(Component):
     def __init__(self, pos):
-        self.pos = pos
-        Game.level.nodes.append(self)
-        self.fontname = None
-        self.fontsize = 24
-        self.fontcolor = Color('white')
+        super().__init__(pos)
         self.bg = Color('gray33')
         self.set_font()
         self.render()
@@ -80,12 +75,8 @@ class StatusDisplay(Component):
 
 class Console(Component):
     def __init__(self, pos):
-        self.pos = pos
-        Game.level.nodes.append(self)
+        super().__init__(pos)
         Game.level.console = self
-        self.fontname = None
-        self.fontsize = 24
-        self.fontcolor = Color('white')
         self.bg = Color('gray50')
         self.set_font()
         self.lines = []
