@@ -48,16 +48,16 @@ class Text(Component):
 class StatusDisplay(Component):
     def __init__(self, pos):
         super().__init__(pos)
+        Game.level.status = self
         self.bg = Color('gray33')
+        self.on_notify(0, Game.level.player.pos)
         self.render()
 
     def render(self):
         self.width = 200
 
-        moves = str(Game.moves)
-        coordinate = str(Game.level.grid.to_world(Game.level.grid.center))
-        contents = ["moves: " + moves, 
-                    "coordinates: " + coordinate]
+        contents = ["moves: " + str(self.moves), 
+                    "coordinates: " + str(self.player_position)]
         maxlines = len(contents) + 1
 
         self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
@@ -72,6 +72,10 @@ class StatusDisplay(Component):
     def draw(self):
         self.render()
         Game.screen.blit(self.img, self.rect)
+
+    def on_notify(self, moves, player_position):
+        self.moves = moves
+        self.player_position = player_position
 
 class Console(Component):
     def __init__(self, pos):
@@ -209,7 +213,9 @@ class Level:
                 monster.on_notify()
             if self.console:
                 self.console.on_notify(self.last_move)
-            self.grid.on_notify()
+            if self.status:
+                self.status.on_notify(Game.moves+1, self.player.pos)
+            self.grid.on_notify(self.player.pos)
             return True
         return False
 

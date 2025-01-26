@@ -22,7 +22,7 @@ class Grid(game.Component):
         self.world.open_file(self.file)
 
         game.Game.level.grid = self
-        self.on_notify()
+        self.on_notify(game.Game.level.player.pos)
 
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
@@ -51,9 +51,9 @@ class Grid(game.Component):
     def spawnable(self):
         return [x for x in self.edges if self[x][1]]
 
-    def on_notify(self):
-        self.offset = (game.Game.level.player.pos[0] - self.center[0],
-                       game.Game.level.player.pos[1] - self.center[1])
+    def on_notify(self, player_position):
+        self.offset = (player_position[0] - self.center[0],
+                       player_position[1] - self.center[1])
 
     def _is_occluded(self, coordinate):
         cells = self._bresenham(coordinate)
