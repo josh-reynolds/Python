@@ -6,13 +6,13 @@ import game
 import world
 
 class Grid(game.Component):
-    def __init__(self, width, height, pos, cell_width=32, cell_height=32):
+    def __init__(self, size, pos, cell_width=32, cell_height=32):
         super().__init__(pos)
-        self.width = width
-        self.height = height
+        self.width = size[0]
+        self.height = size[1]
         self.cell_width = cell_width
         self.cell_height = cell_height
-        self.contents = [[Color('red') for x in range(width)] for x in range(height)]
+        self.contents = [[Color('red') for x in range(self.width)] for x in range(self.height)]
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
         self.edges = self.find_edges()
@@ -140,7 +140,7 @@ class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = game.GameMock()
         game.Level()
-        self.g = Grid(3, 3, pos=(11, 9), cell_width=4, cell_height=3)
+        self.g = Grid(size=(3, 3), pos=(11, 9), cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
                                 [0, 1, 1, 1, 0],
@@ -183,7 +183,7 @@ class GridTestCase(unittest.TestCase):
         #self.assertEqual(self.g.can_move(-1,0), False)
 
     def test_bresenham_calculation(self):
-        g = Grid(11, 11, pos=(5, 5), cell_width=5, cell_height=5)
+        g = Grid(size=(11, 11), pos=(5, 5), cell_width=5, cell_height=5)
         g.world.contents = [[0 for x in range(20)] for x in range(20)]
 
         b = g.bresenham((0,0))
@@ -199,7 +199,7 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
     def test_calculating_edge_cells(self):
-        g = Grid(5, 5, pos=(3, 3), cell_width=3, cell_height=3)
+        g = Grid(size=(5, 5), pos=(3, 3), cell_width=3, cell_height=3)
 
         e = g.edges
         self.assertEqual(e, [(0,0), (1,0), (2,0), (3,0), (4,0),

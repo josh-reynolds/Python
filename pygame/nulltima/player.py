@@ -17,10 +17,11 @@ class Player(actor.Actor):
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
-        self.p = Player((100,100), None)
+        coordinate = (100, 100)
+        self.p = Player(coordinate, None)
 
     def test_constructing_a_player(self):
-        pass
+        self.assertEqual(self.p.pos, (100,100))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

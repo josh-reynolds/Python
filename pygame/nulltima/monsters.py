@@ -1,7 +1,6 @@
 import math
 import unittest
 import pygame
-import game
 import actor
 
 class Monster(actor.Actor):
@@ -40,10 +39,8 @@ class Monster(actor.Actor):
 
 class MonsterTestCase(unittest.TestCase):
     def setUp(self):
-        game.GameMock()
-        level = game.Level()
         coordinate = (5,5)
-        self.m = Monster(coordinate, level)
+        self.m = Monster(coordinate, None)
 
     def test_constructing_a_monster(self):
         self.assertEqual(self.m.pos, (5,5))

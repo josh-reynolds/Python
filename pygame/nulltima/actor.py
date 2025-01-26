@@ -1,3 +1,4 @@
+import unittest
 import game
 
 class Actor:
@@ -35,3 +36,15 @@ class Actor:
         vacant = self.level.grid.is_vacant(self.level.grid.to_world(destination))
 
         return passable and vacant
+
+class ActorTestCase(unittest.TestCase):
+    def setUp(self):
+        coordinate = (100, 100)
+        self.a = Actor(coordinate, None)
+
+    def test_constructing_an_actor(self):
+        self.assertEqual(self.a.pos, (100,100))
+
+# ---------------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

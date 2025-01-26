@@ -1,6 +1,7 @@
 import random
 import pygame
 from pygame.locals import *
+import actor
 import monsters
 import player
 

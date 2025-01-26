@@ -11,6 +11,7 @@ Overworld mode
 [  ] incorporate terrain data into world file?
 [OK] basic terrain graphics
 [OK] better terrain graphics
+[  ] terrain animation
 [  ] sprite/tile sheet
 [OK] basic player image
 [..] player sprite & animation
@@ -37,6 +38,7 @@ Overworld mode
 [  ] move terrain image loading out of Grid.draw()
 [  ] scrub dead code from app model, not using here
 [  ] improve test coverage
+[  ] scrub import statements
 
 Combat mode
 [  ] mode switching
