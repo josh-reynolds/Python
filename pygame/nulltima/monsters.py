@@ -13,7 +13,7 @@ class Monster(actor.Actor):
                               pygame.image.load("./images/monster_1.png")]
         self.images = Monster.images
 
-    def think(self):
+    def on_notify(self):
         if self.level.grid.can_view(self.pos):
             grid_coord = self.level.grid.from_world(self.pos)
             dx = grid_coord[0] - self.level.grid.center[0]

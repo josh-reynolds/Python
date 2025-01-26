@@ -84,7 +84,7 @@ class Console(Component):
         self.prompt_pos = 0
         self.prompt_color = self.bg
         self.time = 0
-        self.add()
+        self.on_notify()
         self.render()
 
     def update(self):
@@ -116,7 +116,7 @@ class Console(Component):
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
-    def add(self, text=None):
+    def on_notify(self, text=None):
         if self.lines:
             self.lines.pop()                  # remove the empty prompt line
         if text:
@@ -206,10 +206,10 @@ class Level:
             self.moved = False
             self.spawn()
             for monster in self.monsters:
-                monster.think()
+                monster.on_notify()
             if self.console:
-                self.console.add(self.last_move)
-            self.grid.recenter()
+                self.console.on_notify(self.last_move)
+            self.grid.on_notify()
             return True
         return False
 

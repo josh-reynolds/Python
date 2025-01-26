@@ -22,7 +22,7 @@ class Grid(game.Component):
         self.world.open_file(self.file)
 
         game.Game.level.grid = self
-        self.recenter()
+        self.on_notify()
 
     # will move the image loading pieces - don't need to keep doing that
     # every frame...
@@ -51,7 +51,7 @@ class Grid(game.Component):
     def spawnable(self):
         return [x for x in self.edges if self[x][1]]
 
-    def recenter(self):
+    def on_notify(self):
         self.offset = (game.Game.level.player.pos[0] - self.center[0],
                        game.Game.level.player.pos[1] - self.center[1])
 
