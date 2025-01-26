@@ -15,7 +15,7 @@ class Grid(game.Component):
         self.contents = [[Color('red') for x in range(self.width)] for x in range(self.height)]
         self.offset = (0,0)
         self.center = (self.width//2, self.height//2)
-        self.edges = self.find_edges()
+        self.edges = self._find_edges()
 
         self.world = world.World()
         self.file = 'large_world.txt'
@@ -32,7 +32,7 @@ class Grid(game.Component):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
                 image = pygame.image.load("./images/" + self[grid_coord][3])
-                if self.is_occluded(grid_coord):
+                if self._is_occluded(grid_coord):
                     image = pygame.image.load("./images/tile_0.png")
                 game.Game.screen.blit(image, screen_coord)
 
@@ -40,7 +40,7 @@ class Grid(game.Component):
         return self.world.get_cell(index[1] + self.offset[1], 
                                    index[0] + self.offset[0])
 
-    def find_edges(self):
+    def _find_edges(self):
         edges = []
         for iy,row in enumerate(self.contents):
             for ix,cell in enumerate(row):
@@ -55,8 +55,8 @@ class Grid(game.Component):
         self.offset = (game.Game.level.player.pos[0] - self.center[0],
                        game.Game.level.player.pos[1] - self.center[1])
 
-    def is_occluded(self, coordinate):
-        cells = self.bresenham(coordinate)
+    def _is_occluded(self, coordinate):
+        cells = self._bresenham(coordinate)
         for cell in cells:
             if self[cell][2]:        # field codes getting too 'magic numbery'
                 return True
@@ -67,7 +67,7 @@ class Grid(game.Component):
     # the top-left corner and are only dealing with one cartesian quadrant
     # (plus it's upside down) - may need to adjust, and possibly simplify.
     # starting with the full algorithm
-    def bresenham(self, coordinate):
+    def _bresenham(self, coordinate):
         cells = []
 
         x = self.center[0]
@@ -82,7 +82,7 @@ class Grid(game.Component):
         if ax > ay:
             d = ay - ax/2
             while True:
-                if self.not_endpoint(x, y, coordinate[0], coordinate[1]):
+                if self._not_endpoint(x, y, coordinate[0], coordinate[1]):
                     cells.append((int(x), int(y)))
                 if x == coordinate[0]:
                     return cells
@@ -94,7 +94,7 @@ class Grid(game.Component):
         else:
             d = ax - ay/2
             while True:
-                if self.not_endpoint(x, y, coordinate[0], coordinate[1]):
+                if self._not_endpoint(x, y, coordinate[0], coordinate[1]):
                     cells.append((int(x), int(y)))
                 if y == coordinate[1]:
                     return cells
@@ -104,7 +104,7 @@ class Grid(game.Component):
                 y = y + sy
                 d = d + ax
 
-    def not_endpoint(self, x1, y1, x2, y2):
+    def _not_endpoint(self, x1, y1, x2, y2):
         return (x1,y1) != (x2,y2) and (x1,y1) != (self.center[0], self.center[1])
 
     def from_world(self, coordinate):
@@ -121,14 +121,14 @@ class Grid(game.Component):
                 self.cell_width,
                 self.cell_height)
 
-    def on_grid(self, coordinate):
+    def _on_grid(self, coordinate):
         grid_coord = self.from_world(coordinate)
         return (grid_coord[0] >= 0 and grid_coord[0] < self.width and
                 grid_coord[1] >= 0 and grid_coord[1] < self.height)
 
     def can_view(self, coordinate):
         grid_coord = self.from_world(coordinate)
-        return self.on_grid(coordinate) and not self.is_occluded(grid_coord)
+        return self._on_grid(coordinate) and not self._is_occluded(grid_coord)
 
     def is_vacant(self, coordinate):
         for monster in game.Game.level.monsters:
@@ -186,16 +186,16 @@ class GridTestCase(unittest.TestCase):
         g = Grid(size=(11, 11), pos=(5, 5), cell_width=5, cell_height=5)
         g.world.contents = [[0 for x in range(20)] for x in range(20)]
 
-        b = g.bresenham((0,0))
+        b = g._bresenham((0,0))
         self.assertEqual(b, [(4,4), (3,3), (2,2), (1,1)])
 
-        b = g.bresenham((10,10))
+        b = g._bresenham((10,10))
         self.assertEqual(b, [(6,6), (7,7), (8,8), (9,9)])
 
-        b = g.bresenham((0,10))
+        b = g._bresenham((0,10))
         self.assertEqual(b, [(4,6), (3,7), (2,8), (1,9)])
 
-        b = g.bresenham((10,0))
+        b = g._bresenham((10,0))
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
     def test_calculating_edge_cells(self):
