@@ -19,6 +19,12 @@ class Component:
 
     def update(self):
         pass
+
+    def render(self):
+        pass
+
+    def draw(self):
+        pass
         
 class Text(Component):
     def __init__(self, text, pos, **options):
@@ -81,6 +87,17 @@ class Console(Component):
         self.add()
         self.render()
 
+    def update(self):
+        if len(self.lines) > self.maxlines:
+            self.lines.pop(0)
+        self.time += 1
+        if self.time > 10:
+            self.time = 0
+            if self.prompt_color == self.bg:
+                self.prompt_color = self.fontcolor
+            else:
+                self.prompt_color = self.bg
+
     def render(self):
         self.width = 200
         self.img = pygame.Surface((self.width, 20 + self.maxlines * self.fontsize))
@@ -93,29 +110,18 @@ class Console(Component):
             text = self.font.render(line, True, self.fontcolor)
             self.img.blit(text, (10, 10 + i * self.fontsize))
 
-    def add(self, text=None):
-        if self.lines:
-            self.lines.pop()                  # remove the empty prompt line
-        if text:
-            self.lines.append(self.prompt + text)
-        self.lines.append(self.prompt)        # and put it back again...
-
     def draw(self):
         self.render()
         cursor_rect = (30, self.prompt_pos, self.fontsize/6, self.fontsize)
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
-    def update(self):
-        if len(self.lines) > self.maxlines:
-            self.lines.pop(0)
-        self.time += 1
-        if self.time > 10:
-            self.time = 0
-            if self.prompt_color == self.bg:
-                self.prompt_color = self.fontcolor
-            else:
-                self.prompt_color = self.bg
+    def add(self, text=None):
+        if self.lines:
+            self.lines.pop()                  # remove the empty prompt line
+        if text:
+            self.lines.append(self.prompt + text)
+        self.lines.append(self.prompt)        # and put it back again...
 
 class Level:
     options = {

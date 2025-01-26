@@ -24,6 +24,18 @@ class Grid(game.Component):
         game.Game.level.grid = self
         self.recenter()
 
+    # will move the image loading pieces - don't need to keep doing that
+    # every frame...
+    def draw(self):
+        for iy, row in enumerate(self.contents):
+            for ix, cell in enumerate(row):
+                grid_coord = (ix,iy)
+                screen_coord = self.to_screen(grid_coord)
+                image = pygame.image.load("./images/" + self[grid_coord][3])
+                if self.is_occluded(grid_coord):
+                    image = pygame.image.load("./images/tile_0.png")
+                game.Game.screen.blit(image, screen_coord)
+
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
                                    index[0] + self.offset[0])
@@ -42,18 +54,6 @@ class Grid(game.Component):
     def recenter(self):
         self.offset = (game.Game.level.player.pos[0] - self.center[0],
                        game.Game.level.player.pos[1] - self.center[1])
-
-    # will move the image loading pieces - don't need to keep doing that
-    # every frame...
-    def draw(self):
-        for iy, row in enumerate(self.contents):
-            for ix, cell in enumerate(row):
-                grid_coord = (ix,iy)
-                screen_coord = self.to_screen(grid_coord)
-                image = pygame.image.load("./images/" + self[grid_coord][3])
-                if self.is_occluded(grid_coord):
-                    image = pygame.image.load("./images/tile_0.png")
-                game.Game.screen.blit(image, screen_coord)
 
     def is_occluded(self, coordinate):
         cells = self.bresenham(coordinate)
