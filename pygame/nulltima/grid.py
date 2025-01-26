@@ -22,6 +22,7 @@ class Grid(game.Component):
         self.world.open_file(self.file)
 
         game.Game.level.grid = self
+        Game.level.add_observer(self)
         self.on_notify(game.Game.level.player.pos)
 
     # will move the image loading pieces - don't need to keep doing that

@@ -8,6 +8,7 @@ class Monster(actor.Actor):
 
     def __init__(self, coordinate, level):
         super().__init__(coordinate, level)
+        Game.level.add_observer(self)
         if not Monster.images:
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]

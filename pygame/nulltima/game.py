@@ -49,6 +49,7 @@ class StatusDisplay(Component):
     def __init__(self, pos):
         super().__init__(pos)
         Game.level.status = self
+        Game.level.add_observer(self)
         self.bg = Color('gray33')
         self.on_notify(0, Game.level.player.pos)
         self.render()
@@ -81,6 +82,7 @@ class Console(Component):
     def __init__(self, pos):
         super().__init__(pos)
         Game.level.console = self
+        Game.level.add_observer(self)
         self.bg = Color('gray50')
         self.lines = []
         self.maxlines = 5
@@ -150,6 +152,7 @@ class Level:
         self.console = None
         self.monsters = []
         self.player = player.Player((15,15), self)
+        self.observers = []
         self.shortcuts = {
                 (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
                 (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
@@ -204,6 +207,9 @@ class Level:
             action = self.shortcuts[k,m]
             exec(action[0])
             self.last_move = action[1]
+
+    def add_observer(self, observer):
+        self.observers.append(observer)
 
     def check_move(self):
         if self.moved:
