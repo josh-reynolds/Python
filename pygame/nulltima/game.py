@@ -89,6 +89,7 @@ class Console(Component):
         self.prompt_pos = 0
         self.prompt_color = self.bg
         self.time = 0
+        self.animation_delay = 40
         self.on_notify(last_move=None, player_position=None)
         self.render()
 
@@ -96,7 +97,7 @@ class Console(Component):
         if len(self.lines) > self.maxlines:
             self.lines.pop(0)
         self.time += 1
-        if self.time > 10:
+        if self.time > self.animation_delay:
             self.time = 0
             if self.prompt_color == self.bg:
                 self.prompt_color = self.fontcolor

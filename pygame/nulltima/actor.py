@@ -7,10 +7,11 @@ class Actor:
         self.level = level
         self.time = 0
         self.current_image = 0
+        self.animation_delay = 60
 
     def update(self):
         self.time += 1
-        if self.time > 25:
+        if self.time > self.animation_delay:
             self.time = 0
             if self.current_image == 0:
                 self.current_image = 1
