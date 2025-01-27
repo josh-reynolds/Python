@@ -148,7 +148,6 @@ class Level:
         self.bg = Level.options['bg']
         self.file = Level.options['file']
         self.caption = Level.options['caption']
-        self.moved = False
         self.last_move = ''
         self.console = None
         self.monsters = []
@@ -199,7 +198,9 @@ class Level:
     def do_event(self, event):
         if event.type == KEYDOWN:
             self.do_shortcut(event)
-            self.moved = True
+            for observer in self.observers:
+                observer.on_notify(self.last_move, self.player.pos)
+            self.spawn()
 
     def do_shortcut(self, event):
         k = event.key
@@ -211,20 +212,6 @@ class Level:
 
     def add_observer(self, observer):
         self.observers.append(observer)
-
-    def check_move(self):
-        if self.moved:
-            self.moved = False
-            self.spawn()
-            for monster in self.monsters:
-                monster.on_notify(self.last_move, self.player.pos)
-            if self.console:
-                self.console.on_notify(self.last_move, self.player.pos)
-            if self.status:
-                self.status.on_notify(self.last_move, self.player.pos)
-            self.grid.on_notify(self.last_move, self.player.pos)
-            return True
-        return False
 
     def spawn(self):
         if random.random() < 0.1:
@@ -260,8 +247,6 @@ class Game:
                     self.do_shortcut(event)
 
                 Game.level.do_event(event)
-                if Game.level.check_move():
-                    pass
 
             Game.level.update()
 
