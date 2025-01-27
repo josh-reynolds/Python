@@ -11,6 +11,20 @@ class Player(actor.Actor):
             Player.images = [pygame.image.load("./images/player_0.png"),
                              pygame.image.load("./images/player_1.png")]
         self.images = Player.images
+        self.name = "Lord McGonigal"
+        self.hit_points = 100
+        self.observers = []
+
+    def update(self):
+        super().update()
+        for observer in self.observers:
+            observer.on_notify(self.name, self.hit_points)
+
+    def move(self, dx, dy):
+        super().move(dx, dy)
+
+    def add_observer(self, observer):
+        self.observers.append(observer)
 
     def no_action(self):
         pass

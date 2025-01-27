@@ -78,6 +78,40 @@ class StatusDisplay(Component):
         self.moves += 1
         self.player_position = player_position
 
+class PlayerStatusDisplay(Component):
+    def __init__(self, pos):
+        super().__init__(pos)
+        Game.level.player.add_observer(self)
+        self.bg = Color('gray50')
+        self.name = ""
+        self.hit_points = ""
+        self.on_notify(Game.level.player.name, Game.level.player.hit_points)
+        self.render()
+
+    def render(self):
+        self.width = 200
+
+        contents = ["name: " + str(self.name), 
+                    "hit points: " + str(self.hit_points)]
+        maxlines = len(contents) + 1
+
+        self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
+        self.img.fill(self.bg)
+        self.rect = self.img.get_rect()
+        self.rect.topleft = self.pos
+        
+        for i,line in enumerate(contents):
+            text = self.font.render(line, True, self.fontcolor)
+            self.img.blit(text, (10, 10 + i * self.fontsize))
+
+    def draw(self):
+        self.render()
+        Game.screen.blit(self.img, self.rect)
+
+    def on_notify(self, name, hit_points):
+        self.name = name
+        self.hit_points = hit_points
+
 class Console(Component):
     def __init__(self, pos):
         super().__init__(pos)
