@@ -1,6 +1,7 @@
 import math
 import unittest
 import pygame
+import game
 import actor
 
 class Monster(actor.Actor):
@@ -8,13 +9,13 @@ class Monster(actor.Actor):
 
     def __init__(self, coordinate, level):
         super().__init__(coordinate, level)
-        Game.level.add_observer(self)
+        game.Game.level.add_observer(self)
         if not Monster.images:
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]
         self.images = Monster.images
 
-    def on_notify(self):
+    def on_notify(self, last_move, player_position):
         if self.level.grid.can_view(self.pos):
             grid_coord = self.level.grid.from_world(self.pos)
             dx = grid_coord[0] - self.level.grid.center[0]

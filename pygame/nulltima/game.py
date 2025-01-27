@@ -51,7 +51,8 @@ class StatusDisplay(Component):
         Game.level.status = self
         Game.level.add_observer(self)
         self.bg = Color('gray33')
-        self.on_notify(0, Game.level.player.pos)
+        self.moves = -1
+        self.on_notify(last_move=None, player_position=Game.level.player.pos)
         self.render()
 
     def render(self):
@@ -74,8 +75,8 @@ class StatusDisplay(Component):
         self.render()
         Game.screen.blit(self.img, self.rect)
 
-    def on_notify(self, moves, player_position):
-        self.moves = moves
+    def on_notify(self, last_move, player_position):
+        self.moves += 1
         self.player_position = player_position
 
 class Console(Component):
@@ -90,7 +91,7 @@ class Console(Component):
         self.prompt_pos = 0
         self.prompt_color = self.bg
         self.time = 0
-        self.on_notify()
+        self.on_notify(last_move=None, player_position=None)
         self.render()
 
     def update(self):
@@ -122,11 +123,11 @@ class Console(Component):
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
-    def on_notify(self, text=None):
+    def on_notify(self, last_move, player_position):
         if self.lines:
             self.lines.pop()                  # remove the empty prompt line
-        if text:
-            self.lines.append(self.prompt + text)
+        if last_move:
+            self.lines.append(self.prompt + last_move)
         self.lines.append(self.prompt)        # and put it back again...
 
 class Level:
@@ -216,12 +217,12 @@ class Level:
             self.moved = False
             self.spawn()
             for monster in self.monsters:
-                monster.on_notify()
+                monster.on_notify(self.last_move, self.player.pos)
             if self.console:
-                self.console.on_notify(self.last_move)
+                self.console.on_notify(self.last_move, self.player.pos)
             if self.status:
-                self.status.on_notify(Game.moves+1, self.player.pos)
-            self.grid.on_notify(self.player.pos)
+                self.status.on_notify(self.last_move, self.player.pos)
+            self.grid.on_notify(self.last_move, self.player.pos)
             return True
         return False
 
@@ -238,7 +239,6 @@ class Game:
     level = None
     levels = []
     screen = None
-    moves = 0
     bg = Color('gray')
 
     def __init__(self):
@@ -261,7 +261,7 @@ class Game:
 
                 Game.level.do_event(event)
                 if Game.level.check_move():
-                    Game.moves += 1
+                    pass
 
             Game.level.update()
 
