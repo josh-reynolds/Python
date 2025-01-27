@@ -1,4 +1,5 @@
 import unittest
+import pygame
 
 # terrain fields: name, passable?, opaque?, image
 #    I don't think these yet merit a full class - tuple 
@@ -14,9 +15,20 @@ terrains = {0:("Occluded", False, False, "tile_0.png"),
             8:("Mountains", False, True, "tile_8.png"),
             9:("Out of Bounds", False, False, "tile_9.png")}
 
+class Terrain:
+    def __init__(self, data):
+        self.name = data[0]
+        self.is_passable = data[1]
+        self.is_opaque = data[2]
+        self.file = data[3]
+        self.image = pygame.image.load('./images/' + self.file)
+
 class World:
     def __init__(self, contents=[]):
         self.contents = contents
+        self.terrains = {}
+        for index in terrains:
+            self.terrains[index] = Terrain(terrains[index])
 
     def get_cell(self, x, y):
         if (x >= 0 and x < len(self.contents[0]) and
