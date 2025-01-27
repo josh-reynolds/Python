@@ -30,7 +30,7 @@ Overworld mode
 [OK] move counter
 [  ] food and starvation
 [OK] action feedback & console
-[  ] observer or subscriber model for events & actions
+[OK] observer or subscriber model for events & actions
 [..] refactor class hierarchy
 [  ] scrub magic numbers and fix
 [  ] ...especially terrain index values

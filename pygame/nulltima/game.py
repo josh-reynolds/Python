@@ -48,7 +48,6 @@ class Text(Component):
 class StatusDisplay(Component):
     def __init__(self, pos):
         super().__init__(pos)
-        Game.level.status = self
         Game.level.add_observer(self)
         self.bg = Color('gray33')
         self.moves = -1
@@ -82,7 +81,6 @@ class StatusDisplay(Component):
 class Console(Component):
     def __init__(self, pos):
         super().__init__(pos)
-        Game.level.console = self
         Game.level.add_observer(self)
         self.bg = Color('gray50')
         self.lines = []
@@ -144,15 +142,16 @@ class Level:
 
         self.id = Level.options['id']
         Level.options['id'] += 1
-        self.components = []
         self.bg = Level.options['bg']
         self.file = Level.options['file']
         self.caption = Level.options['caption']
         self.last_move = ''
-        self.console = None
+
+        self.components = []
         self.monsters = []
         self.player = player.Player((15,15), self)
         self.observers = []
+
         self.shortcuts = {
                 (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
                 (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
@@ -248,9 +247,8 @@ class Game:
 
                 Game.level.do_event(event)
 
-            Game.level.update()
-
             Game.screen.fill(Game.bg)
+            Game.level.update()
             Game.level.draw()
             pygame.display.update()
 
@@ -261,9 +259,6 @@ class Game:
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
-
-    def get_moves():
-        return Game.moves
 
 class ScreenMock():
     def get_rect(self):
