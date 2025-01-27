@@ -25,16 +25,14 @@ class Grid(game.Component):
         game.Game.level.add_observer(self)
         self.on_notify(last_move=None, player_position=game.Game.level.player.pos)
 
-    # will move the image loading pieces - don't need to keep doing that
-    # every frame...
     def draw(self):
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
-                image = pygame.image.load("./images/" + self[grid_coord][3])
+                image = self[grid_coord].image
                 if self._is_occluded(grid_coord):
-                    image = pygame.image.load("./images/tile_0.png")
+                    image = self.world.get_occluded().image
                 game.Game.screen.blit(image, screen_coord)
 
     def __getitem__(self, index):
@@ -50,7 +48,7 @@ class Grid(game.Component):
         return edges
 
     def spawnable(self):
-        return [x for x in self.edges if self[x][1]]
+        return [x for x in self.edges if self[x].is_passable]
 
     def on_notify(self, last_move, player_position):
         self.offset = (player_position[0] - self.center[0],
@@ -59,7 +57,7 @@ class Grid(game.Component):
     def _is_occluded(self, coordinate):
         cells = self._bresenham(coordinate)
         for cell in cells:
-            if self[cell][2]:        # field codes getting too 'magic numbery'
+            if self[cell].is_opaque:
                 return True
         return False
 
@@ -161,7 +159,7 @@ class GridTestCase(unittest.TestCase):
     def test_coordinate_offset(self):
         self.g.offset = (1,1)
 
-        self.assertEqual(self.g[1,1], world.terrains[1])
+        self.assertEqual(self.g[1,1], self.g.world.terrains[1])
 
     #def test_moving_a_grid(self):
         #self.g.move(1,2)

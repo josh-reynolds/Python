@@ -33,9 +33,13 @@ class World:
     def get_cell(self, x, y):
         if (x >= 0 and x < len(self.contents[0]) and
             y >= 0 and y < len(self.contents)):
-                return terrains[self.contents[x][y]]
+                index = self.contents[x][y]
+                return self.terrains[index]
         else:
-            return terrains[9]
+            return self.terrains[9]
+
+    def get_occluded(self):
+        return self.terrains[0]
 
     def open_file(self, filename):
         f = open(filename, 'r')
@@ -62,7 +66,7 @@ class WorldTestCase(unittest.TestCase):
     def test_loading_a_world_file(self):
         w = World()
         w.open_file("test_world.txt")
-        self.assertEqual(w.get_cell(1,1), terrains[3])
+        self.assertEqual(w.get_cell(1,1), w.terrains[3])
 
     def test_world_width_and_height(self):
         w = World()
