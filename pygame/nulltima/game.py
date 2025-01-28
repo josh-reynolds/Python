@@ -46,19 +46,26 @@ class Text(Component):
         Game.screen.blit(self.img, self.rect)
 
 class StatusDisplay(Component):
-    def __init__(self, pos):
+    pass
+
+class GameStatusDisplay(StatusDisplay):
+    def __init__(self, pos, target):
         super().__init__(pos)
-        Game.level.add_observer(self)
+        self.target = target
+        target.add_observer(self)
         self.bg = Color('gray33')
         self.moves = -1
-        self.on_notify(last_move=None, player_position=Game.level.player.pos)
+        self.on_notify(last_move=None, player_position=self.target.player.pos)
         self.render()
+
+    def generate_contents(self):
+        return ["moves: " + str(self.moves), 
+                "coordinates: " + str(self.player_position)]
 
     def render(self):
         self.width = 200
 
-        contents = ["moves: " + str(self.moves), 
-                    "coordinates: " + str(self.player_position)]
+        contents = self.generate_contents()
         maxlines = len(contents) + 1
 
         self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
@@ -78,21 +85,25 @@ class StatusDisplay(Component):
         self.moves += 1
         self.player_position = player_position
 
-class PlayerStatusDisplay(Component):
-    def __init__(self, pos):
+class PlayerStatusDisplay(StatusDisplay):
+    def __init__(self, pos, target):
         super().__init__(pos)
-        Game.level.player.add_observer(self)
+        self.target = target
+        target.add_observer(self)
         self.bg = Color('gray50')
         self.name = ""
         self.hit_points = ""
-        self.on_notify(Game.level.player.name, Game.level.player.hit_points)
+        self.on_notify(self.target.name, self.target.hit_points)
         self.render()
+
+    def generate_contents(self):
+        return ["name: " + str(self.name), 
+                "hit points: " + str(self.hit_points)]
 
     def render(self):
         self.width = 200
 
-        contents = ["name: " + str(self.name), 
-                    "hit points: " + str(self.hit_points)]
+        contents = self.generate_contents()
         maxlines = len(contents) + 1
 
         self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
