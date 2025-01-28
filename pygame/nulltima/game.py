@@ -46,59 +46,12 @@ class Text(Component):
         Game.screen.blit(self.img, self.rect)
 
 class StatusDisplay(Component):
-    pass
-
-class GameStatusDisplay(StatusDisplay):
     def __init__(self, pos, target):
         super().__init__(pos)
         self.target = target
         target.add_observer(self)
-        self.bg = Color('gray33')
-        self.moves = -1
-        self.on_notify(last_move=None, player_position=self.target.player.pos)
+        self.on_notify(None, None)
         self.render()
-
-    def generate_contents(self):
-        return ["moves: " + str(self.moves), 
-                "coordinates: " + str(self.player_position)]
-
-    def render(self):
-        self.width = 200
-
-        contents = self.generate_contents()
-        maxlines = len(contents) + 1
-
-        self.img = pygame.Surface((self.width, 20 + maxlines * self.fontsize))
-        self.img.fill(self.bg)
-        self.rect = self.img.get_rect()
-        self.rect.topleft = self.pos
-
-        for i,line in enumerate(contents):
-            text = self.font.render(line, True, self.fontcolor)
-            self.img.blit(text, (10, 10 + i * self.fontsize))
-
-    def draw(self):
-        self.render()
-        Game.screen.blit(self.img, self.rect)
-
-    def on_notify(self, last_move, player_position):
-        self.moves += 1
-        self.player_position = player_position
-
-class PlayerStatusDisplay(StatusDisplay):
-    def __init__(self, pos, target):
-        super().__init__(pos)
-        self.target = target
-        target.add_observer(self)
-        self.bg = Color('gray50')
-        self.name = ""
-        self.hit_points = ""
-        self.on_notify(self.target.name, self.target.hit_points)
-        self.render()
-
-    def generate_contents(self):
-        return ["name: " + str(self.name), 
-                "hit points: " + str(self.hit_points)]
 
     def render(self):
         self.width = 200
@@ -119,9 +72,34 @@ class PlayerStatusDisplay(StatusDisplay):
         self.render()
         Game.screen.blit(self.img, self.rect)
 
+class GameStatusDisplay(StatusDisplay):
+    def __init__(self, pos, target):
+        self.bg = Color('gray33')
+        self.moves = -1
+        super().__init__(pos, target)
+
+    def generate_contents(self):
+        return ["moves: " + str(self.moves), 
+                "coordinates: " + str(self.player_position)]
+
+    def on_notify(self, last_move, player_position):
+        self.moves += 1
+        self.player_position = self.target.player.pos
+
+class PlayerStatusDisplay(StatusDisplay):
+    def __init__(self, pos, target):
+        self.bg = Color('gray50')
+        self.name = ""
+        self.hit_points = ""
+        super().__init__(pos, target)
+
+    def generate_contents(self):
+        return ["name: " + str(self.name), 
+                "hit points: " + str(self.hit_points)]
+
     def on_notify(self, name, hit_points):
-        self.name = name
-        self.hit_points = hit_points
+        self.name = self.target.name
+        self.hit_points = self.target.hit_points
 
 class Console(Component):
     def __init__(self, pos):
