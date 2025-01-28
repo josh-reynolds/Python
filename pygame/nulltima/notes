@@ -23,6 +23,7 @@ Overworld mode
 [OK] monster collisions w/ monsters/player/terrain
 [..] world clock (automatic 'pass' action)
 [  ] monster persistence & despawning
+[..] monster attacks
 [  ] sound effects
 [  ] music
 [  ] world actions: move, attack, spell, enter, ?
@@ -39,6 +40,7 @@ Overworld mode
 [  ] scrub dead code from app model, not using here
 [  ] improve test coverage
 [  ] scrub import statements
+[  ] player death
 
 Combat mode
 [  ] mode switching

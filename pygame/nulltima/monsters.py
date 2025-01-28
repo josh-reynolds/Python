@@ -34,7 +34,12 @@ class Monster(actor.Actor):
                 if abs(dy) == max_dist:
                     ry = sy
     
-            self.move(rx, ry)
+                self.move(rx, ry)
+            else:
+                self.attack(game.Game.level.player)
+
+    def attack(self, target):
+        target.hit_points -= 1
     
     def __repr__(self):
         return "Monster({})".format(self.pos)
