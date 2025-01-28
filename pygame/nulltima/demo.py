@@ -9,8 +9,8 @@ class Demo(Game):
         Grid(size=(11, 11), pos=(60, 60))
         Text(text='Arrow keys to move', pos=(420, 60))
         Text(text='q to quit', pos=(420, 80))
-        PlayerStatusDisplay(pos=(420,100), target=self.level.player)
-        GameStatusDisplay(pos=(420,160), target=self.level)
+        PlayerStatusDisplay(pos=(420,100))
+        GameStatusDisplay(pos=(420,160))
         Console(pos=(420, 220))
 
 if __name__ == '__main__':

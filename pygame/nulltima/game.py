@@ -46,10 +46,9 @@ class Text(Component):
         Game.screen.blit(self.img, self.rect)
 
 class StatusDisplay(Component):
-    def __init__(self, pos, target):
+    def __init__(self, pos):
         super().__init__(pos)
-        self.target = target
-        target.add_observer(self)
+        self.target.add_observer(self)
         self.on_notify(None, None)
         self.render()
 
@@ -73,10 +72,11 @@ class StatusDisplay(Component):
         Game.screen.blit(self.img, self.rect)
 
 class GameStatusDisplay(StatusDisplay):
-    def __init__(self, pos, target):
+    def __init__(self, pos):
         self.bg = Color('gray33')
         self.moves = -1
-        super().__init__(pos, target)
+        self.target = Game.level
+        super().__init__(pos)
 
     def generate_contents(self):
         return ["moves: " + str(self.moves), 
@@ -87,11 +87,12 @@ class GameStatusDisplay(StatusDisplay):
         self.player_position = self.target.player.pos
 
 class PlayerStatusDisplay(StatusDisplay):
-    def __init__(self, pos, target):
+    def __init__(self, pos):
         self.bg = Color('gray50')
         self.name = ""
         self.hit_points = ""
-        super().__init__(pos, target)
+        self.target = Game.level.player
+        super().__init__(pos)
 
     def generate_contents(self):
         return ["name: " + str(self.name), 
