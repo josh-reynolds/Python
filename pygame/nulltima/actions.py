@@ -74,7 +74,7 @@ class Attack(Action):
                       self.target.pos[1] + direction[1])
         for monster in game.Game.level.monsters:
             if monster.pos == coordinate:
-                print("Attacking monster at {}".format(coordinate))
+                print("Attacking {}".format(monster))
                 self.target.attack(monster)
                 return
         print("No target")

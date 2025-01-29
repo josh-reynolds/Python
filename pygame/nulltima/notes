@@ -26,7 +26,13 @@ Overworld mode
 [..] monster attacks
 [  ] sound effects
 [  ] music
-[  ] world actions: move, attack, spell, enter, ?
+[OK] world actions: move
+[..] world actions: attack
+[OK] world actions: pass
+[  ] world actions: cast spell
+[  ] world actions: enter
+[  ] world actions: get chest
+[  ] world actions: mix reagents
 [OK] status display
 [OK] move counter
 [  ] food and starvation
@@ -41,6 +47,9 @@ Overworld mode
 [  ] improve test coverage
 [  ] scrub import statements
 [  ] player death
+[  ] monster death
+[  ] loot & chests
+[  ] status effects from terrain
 
 Combat mode
 [  ] mode switching
@@ -120,3 +129,472 @@ Assumptions:
 * world data format is space-delimited integers, probably low range, but not necessarily single-digit
     * after putting together a couple world files manually, numbers are tedious to look at
     * may want some tooling to help generate maps
+
+1/29/25
+Folding in some scratch notes....
+
+-------------------------------------------------------------------------------------
+Grid.contents[y][x]                     - array indices, 0-based
+Grid[(x,y)]                             - array indices, 0-based
+    World.get_cell(index + offset)      - lookup via World.contents[x][y]
+        World.contents[y][x]            - array indices, 0-based    
+
+Grid.draw()
+    Grid.grid_to_screen(x,y)            - currently uses above indices
+    Grid.index_to_screen(x,y)           - renaming previous to clarify
+
+Grid.move(dx,dy)                        - invoked by key events, +/- 1 four-way directions
+                                          adjusts Grid.offset value
+
+Grid.offset                             - currently maps top-left cell to world location
+Grid.center                             - 'offset' from top-left to center cell of grid
+                                          currently fixed at half grid width + height
+
+Execution -------------------------------------------------------------------
+
+g = grid(w,h,...)
+    Grid(w,h,...)                       - sets fields and populates contents array of w * h dimensions
+                                        - sets Grid.offset to (0,0)
+                                        - sets Grid.center to (w//2, h//2)
+        world()                         
+	    World()                     - creates an empty World
+g.world.open_file("foo")                - populates World.contents with file data
+
+LOOP
+    on KEYDOWN
+        g.move(dx,dy)                   - adjusts g.offset
+	    g.can_move(dx,dy)           - checks terrain value at center + dx,dy
+	        bounds check
+		offset = new_coord
+
+    g.draw()
+        loop through contents           - retrieve cells and index coordinates
+	    index_to_screen(ix,iy)      - calculates screen Rect from index values
+	    g[ix,iy][0]                 - gets color value from terrains tuple
+	        world.get_cell(i + off)
+		    w.contents[x][y]    - retrieves key value into terrains hash
+		    terrains[key]       - gets terrain tuple
+	index_to_screen(center)         - calculate player Rect
+
+-------------------------------------------------------------------------------------
+
+line from 3,2 to origin
+
+y = 2x/3
+
+y = 1 ... x = 3/2
+
+
++---+---+---+---+---+---+---+---+---+---+---X
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+---+-X-+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---X---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+-X-+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---O---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+-X-+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---X---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++-X-+---+---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+---+---+---+
+
+-------------------------------------------------------------------
+0,0     1,0     2,0     3,0     4,0
+
+
+0,1                             4,1
+
+
+0,2             2,2             4,2
+
+
+0,3                             4,3
+
+
+0,4     1,4     2,4     3,4     4,4
+
+
+case 0,0: dx=-2, dy=-2   direction=(1,1)      BALANCE
+case 4,0: dx=2, dy=-2    direction=(-1,1)     BALANCE
+case 0,4: dx=-2, dy=2    direction=(1,-1)     BALANCE
+case 4,4: dx=2, dy=2     direction=(-1,-1)    BALANCE
+
+case 2,0: dx=0, dy=-2    direction=(0,1)      Y DOM
+case 0,2: dx=-2, dy=0    direction=(1,0)      X DOM
+case 4,2: dx=2, dy=0     direction=(-1,0)     X DOM
+case 2,4: dx=0, dy=2     direction=(0,-1)     Y DOM
+
+case 1,0: dx=-1, dy=-2   direction=(0,1)      Y DOM
+case 3,0: dx=1, dy=-2    direction=(0,1)      Y DOM
+case 0,1: dx=-2, dy=-1   direction=(1,0)      X DOM
+case 0,3: dx=-2, dy=1    direction=(1,0)      X DOM
+case 4,1: dx=2, dy=-1    direction=(-1,0)     X DOM
+case 4,3: dx=2, dy=1     direction=(-1,0)     X DOM
+case 1,4: dx=-1, dy=2    direction=(0,-1)     Y DOM
+case 3,4: dx=1, dy=2     direction=(0,-1)     Y DOM
+
+
+-------------------------------------------------------------------
+Demo().run()
+    Demo.__init__()
+        Game.__init__()
+	    pygame.init()
+	    <set instance and class fields>
+	Level.__init__()
+	    Game.levels.append(self)
+	    <set instance and class fields>
+	    <load background image>
+	    Level.enter()
+	        pygame.display.set_caption()
+	Grid.__init__()
+	    <set instance and class fields>
+	    world.world()
+	        World.__init__()
+	            <set instance and class fields>
+	    Grid.find_edges()
+	    player.player()
+	        Player.__init__()
+	            <set instance and class fields>
+	    World.open_file()
+	        <load world data>
+	    Game.level.nodes.append(self)
+	Text.__init__() # twice
+	    <set instance and class fields>
+	    Game.level.nodes.append(self)
+	    Text.set_font()
+	    Text.render()
+	StatusDisplay.__init__()
+	    <set instance and class fields>
+	    Game.level.nodes.append(self)
+	    StatusDisplay.set_font()
+	    StatusDisplay.render()
+	        <retrieve status data>
+	Console.__init__()
+	    <set instance and class fields>
+	    Game.level.nodes.append(self)
+	    Console.set_font()
+	    Console.add()
+	    Console.render()
+    Demo.run()
+        <handle events>
+	    Game.do_shortcut()
+	    Game.level.do_event()
+	        Game.level.do_shortcut()
+	    Game.level.check_move()
+	        Game.level.spawn()
+		    monster()
+		        Monster.__init__()
+	                    <set instance and class fields>
+		Monster.think() for monster in monsters
+		    Monster.move()
+	Game.level.update()
+	    .update() for node in nodes
+		<pass or animate>
+	    monster.update() for monster in monsters
+	        <animate>
+	Game.level.draw()
+	    .draw() for node in nodes
+		node.render()
+		<draw to screen>
+	    monster.draw() for monster in monsters
+		<draw to screen>
+
+Two loops running through the game:
+    - game loop running at frame rate
+        - governs animations
+    - action loop
+        - only advances when player takes action
+	- updates corresponding status displays
+	- prompts other actors to act
+
+Keep these clear, and if necessary clarify through class interfaces
+
+For GUI elements, three categories:
+    - static, rendered once (Text)
+    - state information, updated and rendered on action (StatusDisplay)
+    - animated, updated and rendered on draw (Console)
+
+Three coordinate systems in play:
+    - screen coordinates
+    - grid coordinates
+    - world coordinates
+Grid currently has responsibility for keeping the latter two straight
+
+--------------------------------------------------------------------------
+Current class structure in nulltima:
+
+Demo(Game) -------------------------------
+  __init__()
+Game -------------------------------
+  level    (class)    -> Level
+  levels   (class)    -> Level
+  screen   (class)
+  moves    (class)
+  running  (class)
+  flags
+  rect
+  shortcuts
+
+  __init__()
+  run()
+  do_shortcut()
+  get_moves()
+Text ------------------------------- NODE
+  text
+  pos             (screen coordinate)
+  fontname
+  fontsize
+  fontcolor
+  font
+  img
+  rect
+
+  __init__()
+  set_font()
+  render()
+  update()
+  draw()
+StatusDisplay ---------------------- NODE
+  pos               (screen coordinate)
+  fontname
+  fontsize
+  fontcolor
+  font
+  width
+  img
+  rect
+
+  __init__()
+  set_font()
+  render()
+  update()
+  draw()
+Console ---------------------------- NODE
+  pos              (screen coordinate)
+  fontname
+  fontsize
+  fontcolor
+  bg
+  lines
+  maxlines
+  prompt
+  prompt_pos
+  prompt_color
+  time
+  font
+  width
+  img
+  rect
+
+  __init__()
+  set_font()
+  render()
+  add()
+  update()
+  draw()
+Level -------------------------------
+  options (class)
+  id
+  nodes        -> (nodes)
+  bg
+  file
+  caption
+  moved
+  last_move
+  console      -> Console
+  monsters     -> Monster
+  shortcuts
+  rect
+  grid         -> Grid
+
+  __init__()
+  update()
+  draw()
+  enter()
+  do_event()
+  do_shortcut()
+  check_move()
+  spawn()
+  __str__()
+Grid -------------------------------
+  width
+  height
+  left
+  top
+  cell_width
+  cell_height
+  contents
+  world      --> World
+  offset
+  center
+  edges
+  player     --> Player
+  file
+  
+  __init__()
+  __getitem__()
+  update()
+  find_edges()
+  spawnable()
+  draw()
+  is_occluded()
+  bresenham()
+  not_endpoint()
+  from_world()
+  to_world()
+  on_grid()
+  can_view()
+  to_screen()
+  move()
+  can_move()
+  is_vacant()
+  no_action()
+Monster -------------------------------
+  images (class)
+  pos         (world coordinate)
+  level      -> Level (back reference)
+  time
+  current_image
+
+  __init__()
+  update()
+  draw()
+  think()
+  move()
+  can_move()
+  __repr__()
+Player -------------------------------
+  images (class)
+  pos         (screen coordinate)
+  time
+  current_image
+
+  __init__()
+  update()
+  draw()
+  move()
+World -------------------------------
+  contents
+  
+  __init__()
+  get_cell()
+  open_file()
+  width()
+  height()
+Terrain ------------------------- 'struct'
+  index
+  name
+  passable?
+  opaque?
+  image
+
+Opportunities:
+ -OK- introduce Node base class and move duplicate code up
+ -..- make Grid conform to Node hierarchy
+ -OK- take player responsibilities away from Grid
+ -  - additional decomposition of Grid 'god class'
+ -OK- introduce Actor base class and move duplicate code up
+ -..- see if we can eliminate the upward coupling to Game class
+ -  - class for grid cells?
+ -OK- class for terrain handling?   flyweights?
+
+ [DONE] remove redundant ctor functions
+ [DONE] create Actor base class and parent Monster/Player to it
+ [DONE] recenter Grid after Player move
+ [DONE] make Player responsible for movement & coordinates
+ [DONE] change Player to use world coordinates
+ [DONE] move Player ownership out of Grid to Level
+ [DONE] create Component (formerly Node) base class and parent GUI elements to it
+ [DONE] move duplicate GUI code up to Component
+
+next up, creating Node hierarchy
+
+(inherited that nomenclature from tutorial model... changing over to 'Component' from
+here out, seems more accurate to me)
+
+We now have two basic kinds of elements:
+  - Components - GUI pieces, live in screen space
+  - Actors - game pieces, live in world space
+
+There are also a few different containers:
+  - World - manages information about world space
+  - Level - manages GUI and action loop
+
+And at the base level:
+  - Game - manages game loop driving animations
+
+---------------------------------------
+recentering the grid:
+
+at start under original model:
+  Grid.offset = (0,0)
+  Grid.to_world((0,0)) == (0,0)
+  Grid.width = 11
+  Grid.height = 11
+  Grid.center = (5,5) == (Grid.width//2, Grid.height//2)
+  Grid.to_world((5,5)) == (5,5)
+  Player.pos = Grid.to_world((5,5))
+
+so... offset == Player.pos - Grid.center
+
+---------------------------------------
+Observer model for actions. Currently five classes react to player action, and this
+interplay is the core of the second game loop.
+
+  - StatusDisplay - retrieves move count from Game and render() 
+  - Grid - needs to recenter() if player has moved, needs Player.pos data
+  - Console - add() action name to its list and prunes to fit
+  - Monster - think()
+  - Level - action handler, also spawn() Monsters
+
+Currently these are handled via logic in Level.check_move() and blackboard variables in 
+Game. If we unify the method call names and have the consumers register with Level instead,
+it could clean this up.
+
+ -DONE- unify the method names
+ -DONE- standardize the arguments, if necessary create an event object
+          StatusDisplay needs current move count and player position post-action
+          Grid needs player position post-action
+	  Console needs action name
+	  Monster doesn't need any data
+	  Level doesn't need any data
+ -DONE- add a list to subject (Level) and method to subscribe to notifications
+
+All done, and this cleaned up the extra method (check_moves) and coupling up to Game.
+
+---------------------------------------
+All the above is working OK - next challenge is interaction between monsters and the
+player, starting with the attack action. Wiring this up for the monsters is simple enough
+(though I haven't sorted out death conditions yet). But player attacks pose a challenge - 
+in the original games, attack (and some other commands) is a two-step process: first press
+'a' to start the attack action, then an arrow key for direction. My current loop immediately
+executes the action on keypress, with no opening to prompt for a second key.
+
+Smaller issue: the original console displays all sorts of information, not just the last
+player action, and it is coming from multiple sources. At the moment I'm thinking about 
+'monster attacks... Hit!' sort of thing.
+
+I put together a working attack action, which embeds a second key capture loop inside itself.
+This actually works, with one small hitch: the game animations pause while waiting for player
+input. Not ideal. Also, I have a feeling this won't scale nicely to later, more complex commands.
+
+Both of these issues can probably be handled with the same solution: an Event/Message Queue.
+Going to try that for the console first, since it should be the simpler application. Once these
+are both working, I think monster death and spawing a loot chest is next.
+
