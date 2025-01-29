@@ -178,14 +178,14 @@ class Level:
         self.player = player.Player((15,15), self)
         self.observers = []
 
-        self.shortcuts = {
-                (K_LEFT, 0): ('self.left.execute()', 'West'),
-                (K_RIGHT, 0): ('self.right.execute()', 'East'),
-                (K_UP, 0): ('self.up.execute()', 'North'),
-                (K_DOWN, 0): ('self.down.execute()', 'South'),
-                (K_SPACE, 0): ('self.space.execute()', 'Pass'),
-                }
         self.define_actions()
+        self.shortcuts = {
+                (K_LEFT, 0): self.left,
+                (K_RIGHT, 0): self.right,
+                (K_UP, 0): self.up,
+                (K_DOWN, 0): self.down,
+                (K_SPACE, 0): self.space,
+                }
 
         if options:
             for key,value in options.items():
@@ -232,9 +232,8 @@ class Level:
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
-            action = self.shortcuts[k,m]
-            exec(action[0])
-            self.last_move = action[1]
+            self.shortcuts[k,m].execute()
+            self.last_move = self.shortcuts[k,m].name
 
     def add_observer(self, observer):
         self.observers.append(observer)
@@ -267,10 +266,10 @@ class Game:
         self.rect = Rect(0, 0, 640, 480)
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True
-        self.shortcuts = {
-                (K_q, 0): 'self.q.execute()',
-                }
         self.define_actions()
+        self.shortcuts = {
+                (K_q, 0): self.q,
+                }
 
     def run(self):
         while Game.running:
@@ -293,7 +292,8 @@ class Game:
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
-            exec(self.shortcuts[k, m])
+            self.shortcuts[k,m].execute()
+            self.last_move = self.shortcuts[k,m].name
 
     def define_actions(self):
         self.q = actions.Quit(Game)
