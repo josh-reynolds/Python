@@ -108,7 +108,7 @@ class Console(Component):
         super().__init__(pos)
         self.bg = Color('gray50')
         self.lines = []
-        self.maxlines = 5
+        self.maxlines = 8
         self.prompt = '|>  '
         self.prompt_pos = 0
         self.prompt_color = self.bg
@@ -118,7 +118,7 @@ class Console(Component):
         self.render()
 
     def update(self):
-        for item in Game.message_queue:
+        for item in reversed(Game.message_queue):
             if self.lines:
                 self.lines.pop()                  # remove the empty prompt line
             self.lines.append(self.prompt + item)

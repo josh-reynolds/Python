@@ -1,4 +1,5 @@
 import math
+import random
 import unittest
 import pygame
 import game
@@ -40,8 +41,14 @@ class Monster(actor.Actor):
                 self.attack(game.Game.level.player)
 
     def attack(self, target):
-        target.hit_points -= 1
-        game.Game.message_queue.append("{} attacks!".format(self))
+        if random.random() < 0.5:
+            target.hit_points -= 1
+            game.Game.message_queue.append("Hit!")
+        else:
+            game.Game.message_queue.append("Miss")
+        game.Game.message_queue.append("{} attacks".format(self)) # showing in console out of
+                                                                  # order, so small temporary
+                                                                  # hack here
     
     def __repr__(self):
         return "Monster({})".format(self.pos)
