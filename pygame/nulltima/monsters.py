@@ -41,6 +41,7 @@ class Monster(actor.Actor):
 
     def attack(self, target):
         target.hit_points -= 1
+        game.Game.message_queue.append("{} attacks!".format(self))
     
     def __repr__(self):
         return "Monster({})".format(self.pos)
