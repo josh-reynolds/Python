@@ -4,6 +4,7 @@ from pygame.locals import *
 import actor
 import monsters
 import player
+import actions
 
 class Component:
     def __init__(self, pos):
@@ -178,12 +179,13 @@ class Level:
         self.observers = []
 
         self.shortcuts = {
-                (K_LEFT, 0): ('self.player.move(-1,0)', 'West'),
-                (K_RIGHT, 0): ('self.player.move(1,0)', 'East'),
-                (K_UP, 0): ('self.player.move(0,-1)', 'North'),
-                (K_DOWN, 0): ('self.player.move(0,1)', 'South'),
-                (K_SPACE, 0): ('self.player.no_action()', 'Pass'),
+                (K_LEFT, 0): ('self.left.execute()', 'West'),
+                (K_RIGHT, 0): ('self.right.execute()', 'East'),
+                (K_UP, 0): ('self.up.execute()', 'North'),
+                (K_DOWN, 0): ('self.down.execute()', 'South'),
+                (K_SPACE, 0): ('self.space.execute()', 'Pass'),
                 }
+        self.define_actions()
 
         if options:
             for key,value in options.items():
@@ -246,6 +248,13 @@ class Level:
     def __str__(self):
         return 'Scene {}'.format(self.id)
 
+    def define_actions(self):
+        self.left = actions.West(self.player)
+        self.right = actions.East(self.player)
+        self.up = actions.North(self.player)
+        self.down = actions.South(self.player)
+        self.space = actions.Pass(self.player)
+
 class Game:
     level = None
     levels = []
@@ -259,8 +268,9 @@ class Game:
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True
         self.shortcuts = {
-                (K_q, 0): 'Game.running = False',
+                (K_q, 0): 'self.q.execute()',
                 }
+        self.define_actions()
 
     def run(self):
         while Game.running:
@@ -284,6 +294,9 @@ class Game:
         m = event.mod
         if (k, m) in self.shortcuts:
             exec(self.shortcuts[k, m])
+
+    def define_actions(self):
+        self.q = actions.Quit(Game)
 
 class ScreenMock():
     def get_rect(self):
