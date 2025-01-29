@@ -20,14 +20,8 @@ class Player(actor.Actor):
         for observer in self.observers:
             observer.on_notify(self.name, self.hit_points)
 
-    def move(self, dx, dy):
-        super().move(dx, dy)
-
     def add_observer(self, observer):
         self.observers.append(observer)
-
-    def no_action(self):
-        pass
 
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
