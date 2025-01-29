@@ -180,6 +180,7 @@ class Level:
 
         self.define_actions()
         self.shortcuts = {
+                (K_a, 0): self.a,
                 (K_LEFT, 0): self.left,
                 (K_RIGHT, 0): self.right,
                 (K_UP, 0): self.up,
@@ -248,6 +249,7 @@ class Level:
         return 'Scene {}'.format(self.id)
 
     def define_actions(self):
+        self.a = actions.Attack(self.player)
         self.left = actions.West(self.player)
         self.right = actions.East(self.player)
         self.up = actions.North(self.player)

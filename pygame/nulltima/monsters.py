@@ -14,6 +14,7 @@ class Monster(actor.Actor):
             Monster.images = [pygame.image.load("./images/monster_0.png"),
                               pygame.image.load("./images/monster_1.png")]
         self.images = Monster.images
+        self.hit_points = 1
 
     def on_notify(self, last_move, player_position):
         if self.level.grid.can_view(self.pos):

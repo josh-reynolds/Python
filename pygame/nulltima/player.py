@@ -23,6 +23,9 @@ class Player(actor.Actor):
     def add_observer(self, observer):
         self.observers.append(observer)
 
+    def attack(self, target):
+        target.hit_points -= 1
+
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
         coordinate = (100, 100)
