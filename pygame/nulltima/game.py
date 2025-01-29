@@ -106,7 +106,6 @@ class PlayerStatusDisplay(StatusDisplay):
 class Console(Component):
     def __init__(self, pos):
         super().__init__(pos)
-        Game.level.add_observer(self)
         self.bg = Color('gray50')
         self.lines = []
         self.maxlines = 5
@@ -115,10 +114,16 @@ class Console(Component):
         self.prompt_color = self.bg
         self.time = 0
         self.animation_delay = 40
-        self.on_notify(last_move=None, player_position=None)
+        Game.message_queue.append('Start')
         self.render()
 
     def update(self):
+        for item in Game.message_queue:
+            if self.lines:
+                self.lines.pop()                  # remove the empty prompt line
+            self.lines.append(self.prompt + item)
+            self.lines.append(self.prompt)        # and put it back again...
+            Game.message_queue.remove(item)
         if len(self.lines) > self.maxlines:
             self.lines.pop(0)
         self.time += 1
@@ -146,13 +151,6 @@ class Console(Component):
         cursor_rect = (30, self.prompt_pos, self.fontsize/6, self.fontsize)
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
-
-    def on_notify(self, last_move, player_position):
-        if self.lines:
-            self.lines.pop()                  # remove the empty prompt line
-        if last_move:
-            self.lines.append(self.prompt + last_move)
-        self.lines.append(self.prompt)        # and put it back again...
 
 class Level:
     options = {
@@ -225,6 +223,7 @@ class Level:
     def do_event(self, event):
         if event.type == KEYDOWN:
             self.do_shortcut(event)
+            Game.message_queue.append(self.last_move)
             for observer in self.observers:
                 observer.on_notify(self.last_move, self.player.pos)
             self.spawn()
@@ -261,6 +260,7 @@ class Game:
     levels = []
     screen = None
     bg = Color('gray')
+    message_queue = []
 
     def __init__(self):
         pygame.init()
