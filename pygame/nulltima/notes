@@ -33,7 +33,7 @@ Overworld mode
 [  ] world actions: cast spell
 [  ] world actions: enter
 [  ] world actions: get chest
-[  ] world actions: mix reagents
+[  ] world actions: mix reagents (need review - when was this introduced? IV?)
 [OK] status display
 [OK] move counter
 [  ] food and starvation
@@ -51,7 +51,7 @@ Overworld mode
 [  ] monster death
 [  ] loot & chests
 [  ] status effects from terrain
-[  ] non-prompt text to console
+[OK] non-prompt text to console
 [  ] line-wrap in console
 
 Combat mode

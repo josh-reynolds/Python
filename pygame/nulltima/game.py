@@ -114,14 +114,19 @@ class Console(Component):
         self.prompt_color = self.bg
         self.time = 0
         self.animation_delay = 40
-        Game.message_queue.append('Start')
+        Game.message_queue.append(('Start', False))
         self.render()
 
     def update(self):
         for item in reversed(Game.message_queue):
             if self.lines:
                 self.lines.pop()                  # remove the empty prompt line
-            self.lines.append(self.prompt + item)
+
+            if item[1]:
+                self.lines.append(self.prompt + item[0])
+            else:
+                self.lines.append(item[0])
+
             self.lines.append(self.prompt)        # and put it back again...
             Game.message_queue.remove(item)
         if len(self.lines) > self.maxlines:
@@ -226,7 +231,7 @@ class Level:
     def do_event(self, event):
         if event.type == KEYDOWN:
             self.do_shortcut(event)
-            Game.message_queue.append(self.last_move)
+            Game.message_queue.append((self.last_move, True))
             for observer in self.observers:
                 observer.on_notify(self.last_move, self.player.pos)
             self.spawn()
@@ -242,7 +247,7 @@ class Level:
                 self.last_move = action.name
             elif key_count == 2 and not self.action_queue:
                 self.action_queue.append(k)     # NOTE: not preserving mod yet, deal later if needed
-                Game.message_queue.append("Direction?")
+                Game.message_queue.append(('Direction?', False))
             elif key_count == 1 and self.action_queue:
                 direction = k
                 base = self.action_queue.pop()

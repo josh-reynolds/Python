@@ -43,10 +43,10 @@ class Monster(actor.Actor):
     def attack(self, target):
         if random.random() < 0.5:
             target.hit_points -= 1
-            game.Game.message_queue.append("Hit!")
+            game.Game.message_queue.append(('Hit!', False))
         else:
-            game.Game.message_queue.append("Miss")
-        game.Game.message_queue.append("{} attacks".format(self)) # showing in console out of
+            game.Game.message_queue.append(('Miss', False))
+        game.Game.message_queue.append(('{} attacks'.format(self), False)) # showing in console out of
                                                                   # order, so small temporary
                                                                   # hack here
     
