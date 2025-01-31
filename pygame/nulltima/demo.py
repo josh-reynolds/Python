@@ -10,8 +10,8 @@ class Demo(Game):
         Text(text='Arrow keys to move', pos=(420, 60))
         Text(text='q to quit', pos=(420, 80))
         PlayerStatusDisplay(pos=(420,100))
-        GameStatusDisplay(pos=(420,160))
-        Console(pos=(420, 220))
+        GameStatusDisplay(pos=(420,180))
+        Console(pos=(420, 240))
 
 if __name__ == '__main__':
     Demo().run()

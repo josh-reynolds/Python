@@ -13,6 +13,7 @@ class Player(actor.Actor):
         self.images = Player.images
         self.name = "Lord McGonigal"
         self.hit_points = 100
+        self.experience = 0
         self.observers = []
 
     def update(self):

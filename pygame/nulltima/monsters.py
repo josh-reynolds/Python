@@ -55,9 +55,11 @@ class Monster(actor.Actor):
         if self.hit_points < 1:
             game.Game.level.monsters.remove(self)
             game.Game.level.remove_observer(self)
+            game.Game.level.player.experience += 1
+
 
     def __repr__(self):
-        return "Monster({})".format(self.pos)
+        return "Monster{}".format(self.pos)
 
 class MonsterTestCase(unittest.TestCase):
     def setUp(self):

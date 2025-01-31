@@ -14,21 +14,21 @@ Overworld mode
 [  ] terrain animation
 [  ] sprite/tile sheet
 [OK] basic player image
-[..] player sprite & animation
+[OK] player sprite & animation
 [OK] monster spawning
 [  ] aquatic monsters
 [  ] multiple monster types
-[..] monster sprites & animation
+[OK] monster sprites & animation
 [OK] monster movement
 [OK] monster collisions w/ monsters/player/terrain
 [..] world clock (automatic 'pass' action)
 [  ] monster persistence & despawning
-[..] monster attacks
+[OK] monster attacks
 [  ] attack animations
 [  ] sound effects
 [  ] music
 [OK] world actions: move
-[..] world actions: attack
+[OK] world actions: attack
 [OK] world actions: pass
 [  ] world actions: cast spell
 [  ] world actions: enter
@@ -49,6 +49,7 @@ Overworld mode
 [  ] scrub import statements
 [  ] player death
 [OK] monster death
+[OK] player experience
 [  ] loot & chests
 [  ] status effects from terrain
 [OK] non-prompt text to console
@@ -661,3 +662,7 @@ OK, simple version appears to work. Need to poke at it some more to be sure ther
 
 But already this now resembles a game. How many monsters can you whack before you succumb? This would be 
 a good milestone to reach. Need a 'score' - xp in the Player. And a death condition.
+
+Another observation - should add some delays between updates in the action queue. Right now everything 
+happens immediately after keypress. Would be more aesthetically pleasing to see them happen 
+sequentially on-screen.

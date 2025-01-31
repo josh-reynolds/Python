@@ -92,16 +92,19 @@ class PlayerStatusDisplay(StatusDisplay):
         self.bg = Color('gray50')
         self.name = ""
         self.hit_points = ""
+        self.experience = ""
         self.target = Game.level.player
         super().__init__(pos)
 
     def generate_contents(self):
         return ["name: " + str(self.name), 
-                "hit points: " + str(self.hit_points)]
+                "hit points: " + str(self.hit_points),
+                "experience: " + str(self.experience)]
 
     def on_notify(self, name, hit_points):
         self.name = self.target.name
         self.hit_points = self.target.hit_points
+        self.experience = self.target.experience
 
 class Console(Component):
     def __init__(self, pos):
