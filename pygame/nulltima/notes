@@ -24,6 +24,7 @@ Overworld mode
 [..] world clock (automatic 'pass' action)
 [  ] monster persistence & despawning
 [..] monster attacks
+[  ] attack animations
 [  ] sound effects
 [  ] music
 [OK] world actions: move
@@ -50,6 +51,8 @@ Overworld mode
 [  ] monster death
 [  ] loot & chests
 [  ] status effects from terrain
+[  ] non-prompt text to console
+[  ] line-wrap in console
 
 Combat mode
 [  ] mode switching
@@ -598,3 +601,42 @@ Both of these issues can probably be handled with the same solution: an Event/Me
 Going to try that for the console first, since it should be the simpler application. Once these
 are both working, I think monster death and spawing a loot chest is next.
 
+---------------------------------------
+Message queue for the console is running - mostly OK, though there's a weird quirk with how
+messages are ordered that I haven't figured out yet. Doesn't seem to matter if I read the queue
+forwards or backwards. The ordering in the monster attack routine does the trick, and there it's
+seemingly backwards, but works. Needs a deeper look.
+
+But first, thinking through queue for key commands. This one is trickier. I think two main goals
+for the design:
+
+- first, allow for multiple key combinations, don't just fire off an Action on keypress
+- second, don't block the animation thread
+
+The animation thread is the main game loop - do_event(), update(), draw(). It runs continuously at
+maximum 'frame rate' speed.
+
+As noted above, there's a second conceptual loop here - it ticks forward every time a key is pressed.
+
+So first question, is that informal loop enough, or do we need to keep a little loop spinning 
+independently of the main loop, that periodically polls our action queue?
+
+Rather not have a second (potentially zombie) loop, so will try to get the former model working first.
+
+Sequencing is:
+  - player presses a key
+  - main loop dispatches it to another (non-blocking how?) method and continues spinning
+  - other method either:
+    - immediately invokes an action if it's single-key variety, then returns
+    - posts a prompt to console and saves state (previous keystroke) otherwise, then returns
+
+So the queue is only used in the latter scenario. I think I was initially envisioning a long stream
+of keystrokes, and a parser moving along taking small bites. But the consumer (pokes from the main loop)
+is probably going to move _much_ faster than the producer (human keystrokes), so we'll never accumulate
+much of a queue.
+
+Don't want to insert a bunch of special case logic - seems like we could note the action type and 
+cue off that (action metadata in self.shortcuts?). Let's give it a go.
+
+Inserting this into Level for now. Long term, I don't think I like having this live there, or having
+it split up with Game, so it may all get consolidated into another place.

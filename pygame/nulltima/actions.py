@@ -54,22 +54,16 @@ class Attack(Action):
     def __init__(self, target):
         self.name = 'Attack'
         self.target = target
-    def execute(self):
-        print("Getting direction")
-        direction = (0,0)
-        capturing = True
-        while capturing:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN:
-                    if event.key == K_UP:
-                        direction = (0,-1)
-                    if event.key == K_DOWN:
-                        direction = (0,1)
-                    if event.key == K_LEFT:
-                        direction = (-1,0)
-                    if event.key == K_RIGHT:
-                        direction = (1,0)
-                    capturing = False
+
+    def execute(self, direction_key):
+        if direction_key == K_UP:
+            direction = (0,-1)
+        if direction_key == K_DOWN:
+            direction = (0,1)
+        if direction_key == K_LEFT:
+            direction = (-1,0)
+        if direction_key == K_RIGHT:
+            direction = (1,0)
         coordinate = (self.target.pos[0] + direction[0],
                       self.target.pos[1] + direction[1])
         for monster in game.Game.level.monsters:

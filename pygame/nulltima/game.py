@@ -178,13 +178,13 @@ class Level:
 
         self.define_actions()
         self.shortcuts = {
-                (K_a, 0): self.a,
-                (K_LEFT, 0): self.left,
-                (K_RIGHT, 0): self.right,
-                (K_UP, 0): self.up,
-                (K_DOWN, 0): self.down,
-                (K_SPACE, 0): self.space,
-                (K_d, 0): self.d,
+                (K_a, 0): (self.a, 2),
+                (K_LEFT, 0): (self.left, 1),
+                (K_RIGHT, 0): (self.right, 1),
+                (K_UP, 0): (self.up, 1),
+                (K_DOWN, 0): (self.down, 1),
+                (K_SPACE, 0): (self.space, 1),
+                (K_d, 0): (self.d, 1),
                 }
 
         self.action_queue = []
@@ -235,9 +235,20 @@ class Level:
         k = event.key
         m = event.mod
         if (k, m) in self.shortcuts:
-            self.shortcuts[k,m].execute()
-            self.last_move = self.shortcuts[k,m].name
-            self.action_queue.append(pygame.key.name(k))
+            action = self.shortcuts[k,m][0]
+            key_count = self.shortcuts[k,m][1]
+            if key_count == 1 and not self.action_queue:
+                action.execute()
+                self.last_move = action.name
+            elif key_count == 2 and not self.action_queue:
+                self.action_queue.append(k)     # NOTE: not preserving mod yet, deal later if needed
+                Game.message_queue.append("Direction?")
+            elif key_count == 1 and self.action_queue:
+                direction = k
+                base = self.action_queue.pop()
+                action = self.shortcuts[base,m][0]
+                action.execute(direction)
+                self.last_move = action.name
 
     def add_observer(self, observer):
         self.observers.append(observer)
