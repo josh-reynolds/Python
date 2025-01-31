@@ -258,6 +258,9 @@ class Level:
     def add_observer(self, observer):
         self.observers.append(observer)
 
+    def remove_observer(self, observer):
+        self.observers.remove(observer)
+
     def spawn(self):
         if random.random() < 0.1:
             grid_coordinate = random.choice(self.grid.spawnable())

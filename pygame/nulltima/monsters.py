@@ -50,6 +50,12 @@ class Monster(actor.Actor):
                                                                   # order, so small temporary
                                                                   # hack here
     
+    def update(self):
+        super().update()
+        if self.hit_points < 1:
+            game.Game.level.monsters.remove(self)
+            game.Game.level.remove_observer(self)
+
     def __repr__(self):
         return "Monster({})".format(self.pos)
 

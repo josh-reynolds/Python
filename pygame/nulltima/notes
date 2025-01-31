@@ -48,7 +48,7 @@ Overworld mode
 [  ] improve test coverage
 [  ] scrub import statements
 [  ] player death
-[  ] monster death
+[OK] monster death
 [  ] loot & chests
 [  ] status effects from terrain
 [OK] non-prompt text to console
@@ -104,6 +104,10 @@ Optional
 [  ] moon phases / day-night cycle
 [  ] moon gates
 [  ] flying monsters
+[  ] wind direction
+[  ] whirlpools/waterspouts
+[  ] monster morale
+[  ] party / multiple characters
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
@@ -342,7 +346,7 @@ Grid currently has responsibility for keeping the latter two straight
 --------------------------------------------------------------------------
 Current class structure in nulltima:
 
-Demo(Game) -------------------------------
+Demo(Game) -------------------------
   __init__()
 Game -------------------------------
   level    (class)    -> Level
@@ -640,3 +644,20 @@ cue off that (action metadata in self.shortcuts?). Let's give it a go.
 
 Inserting this into Level for now. Long term, I don't think I like having this live there, or having
 it split up with Game, so it may all get consolidated into another place.
+
+---------------------------------------
+Queues are working, more or less. Slightly kludgy, will want some cleanup refactoring, but functionally 
+everything looks correct.
+
+Next challenge: monster death. On the surface seems simple - when hit points go to zero, remove the
+entity from the monster list in Level. But changing a list that might have an iterator traversing it can 
+lead to all sorts of bugs. Second concern is making sure there are no references and the thing gets
+garbage collected. Pretty sure the reference in Level.monsters is the only one, but should review.
+
+I'll try the dead simple version first just to see what happens. Ah! Monsters are also observers, need
+to deal with that reference too.
+
+OK, simple version appears to work. Need to poke at it some more to be sure there are no bugs lurking.
+
+But already this now resembles a game. How many monsters can you whack before you succumb? This would be 
+a good milestone to reach. Need a 'score' - xp in the Player. And a death condition.
