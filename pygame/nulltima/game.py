@@ -184,7 +184,10 @@ class Level:
                 (K_UP, 0): self.up,
                 (K_DOWN, 0): self.down,
                 (K_SPACE, 0): self.space,
+                (K_d, 0): self.d,
                 }
+
+        self.action_queue = []
 
         if options:
             for key,value in options.items():
@@ -234,6 +237,7 @@ class Level:
         if (k, m) in self.shortcuts:
             self.shortcuts[k,m].execute()
             self.last_move = self.shortcuts[k,m].name
+            self.action_queue.append(pygame.key.name(k))
 
     def add_observer(self, observer):
         self.observers.append(observer)
@@ -254,6 +258,7 @@ class Level:
         self.up = actions.North(self.player)
         self.down = actions.South(self.player)
         self.space = actions.Pass(self.player)
+        self.d = actions.Debug(self)
 
 class Game:
     level = None

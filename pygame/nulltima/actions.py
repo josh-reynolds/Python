@@ -79,3 +79,9 @@ class Attack(Action):
                 return
         print("No target")
 
+class Debug(Action):
+    def __init__(self, target):
+        self.name = 'Debug'
+        self.target = target
+    def execute(self):
+        print(self.target.action_queue)
