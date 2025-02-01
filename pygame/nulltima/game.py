@@ -184,6 +184,9 @@ class EndScreen:
     def update(self):
         for component in self.components:
             component.update()
+        # super-kludgy reference to score line here...
+        self.components[1].text = 'Your score is {}.'.format(Game.score)
+        self.components[1].render()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
