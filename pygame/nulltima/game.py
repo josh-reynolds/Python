@@ -155,7 +155,14 @@ class Console(Component):
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
-class EndScreen:
+class Level:
+    options = {
+            'id': 0,
+            'bg': Color('black'),
+            'file': '',
+            'caption': '',
+            }
+
     def __init__(self, **options):
         Game.levels.append(self)
         Game.level = self
@@ -163,11 +170,7 @@ class EndScreen:
         Level.options['id'] += 1
         self.bg = Level.options['bg']
         self.caption = Level.options['caption']
-
         self.components = []
-
-        self.define_actions()
-        self.shortcuts = {}
 
         if options:
             self.__dict__.update(options)
@@ -175,8 +178,16 @@ class EndScreen:
         self.rect = Game.screen.get_rect()
         self.img = pygame.Surface(self.rect.size)
         self.img.fill(self.bg)
-
         self.enter()
+
+    def enter(self):
+        pygame.display.set_caption(self.caption)
+
+class EndScreen(Level):
+    def __init__(self, **options):
+        super().__init__(**options)
+        self.define_actions()
+        self.shortcuts = {}
 
     def update(self):
         for component in self.components:
@@ -191,34 +202,17 @@ class EndScreen:
             component.draw()
         pygame.display.flip()
 
-    def enter(self):
-        pygame.display.set_caption(self.caption)
-
     def define_actions(self):
         pass
 
     def do_event(self, event):
         pass
 
-class Level:
-    options = {
-            'id': 0,
-            'bg': Color('black'),
-            'file': '',
-            'caption': '',
-            }
-
+class Overworld(Level):
     def __init__(self, **options):
-        Game.levels.append(self)
-        Game.level = self
-
-        self.id = Level.options['id']
-        Level.options['id'] += 1
-        self.bg = Level.options['bg']
-        self.caption = Level.options['caption']
+        super().__init__(**options)
         self.last_move = ''
-
-        self.components = []
+        self.action_queue = []
         self.monsters = []
         self.player = player.Player((15,15), self)
         self.observers = []
@@ -233,17 +227,6 @@ class Level:
                 K_SPACE: (self.space, 1),
                 K_d: (self.d, 1),
                 }
-
-        self.action_queue = []
-
-        if options:
-            self.__dict__.update(options)
-
-        self.rect = Game.screen.get_rect()
-        self.img = pygame.Surface(self.rect.size)
-        self.img.fill(self.bg)
-
-        self.enter()
 
     def update(self):
         for component in self.components:
@@ -260,9 +243,6 @@ class Level:
             monster.draw()
         self.player.draw()
         pygame.display.flip()
-
-    def enter(self):
-        pygame.display.set_caption(self.caption)
 
     def do_event(self, event):
         if event.type == KEYDOWN:
