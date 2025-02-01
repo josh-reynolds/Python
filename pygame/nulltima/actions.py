@@ -79,3 +79,10 @@ class Debug(Action):
         self.target = target
     def execute(self):
         print(self.target.action_queue)
+
+class NextLevel(Action):
+    def __init__(self, target):
+        self.name = 'NextLevel'
+        self.target = target
+    def execute(self):
+        self.target.level = self.target.levels[1]

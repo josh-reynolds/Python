@@ -13,5 +13,13 @@ class Demo(Game):
         GameStatusDisplay(pos=(420,180))
         Console(pos=(420, 240))
 
+        EndScreen(caption='Game Over')
+        Text(text='You are dead.', pos=(200, 60))
+        Text(text='Your score is {}'.format(Game.score), pos=(200, 80))
+        Text(text='Press space to restart', pos=(200, 100))
+        Text(text='or q to quit', pos=(200, 120))
+
+        Game.level = Game.levels[0]
+
 if __name__ == '__main__':
     Demo().run()

@@ -160,6 +160,46 @@ class Console(Component):
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
+class EndScreen:
+    def __init__(self, *args, **options):
+        Game.levels.append(self)
+        Game.level = self
+        self.id = Level.options['id']
+        Level.options['id'] += 1
+        self.bg = Level.options['bg']
+        self.file = Level.options['file']
+        self.caption = Level.options['caption']
+
+        self.components = []
+
+        self.define_actions()
+        self.shortcuts = {}
+
+        self.rect = Game.screen.get_rect()
+        self.img = pygame.Surface(self.rect.size)
+        self.img.fill(self.bg)
+
+        self.enter()
+
+    def update(self):
+        for component in self.components:
+            component.update()
+
+    def draw(self):
+        Game.screen.blit(self.img, self.rect)
+        for component in self.components:
+            component.draw()
+        pygame.display.flip()
+
+    def enter(self):
+        pygame.display.set_caption(self.caption)
+
+    def define_actions(self):
+        pass
+
+    def do_event(self, event):
+        pass
+
 class Level:
     options = {
             'id': 0,
@@ -288,6 +328,7 @@ class Game:
     screen = None
     bg = Color('gray')
     message_queue = []
+    score = 0
 
     def __init__(self):
         pygame.init()
@@ -298,6 +339,7 @@ class Game:
         self.define_actions()
         self.shortcuts = {
                 (K_q, 0): self.q,
+                (K_n, 0): self.n,
                 }
 
     def run(self):
@@ -326,6 +368,7 @@ class Game:
 
     def define_actions(self):
         self.q = actions.Quit(Game)
+        self.n = actions.NextLevel(Game)
 
 class ScreenMock():
     def get_rect(self):
