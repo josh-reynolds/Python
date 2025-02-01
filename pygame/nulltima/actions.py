@@ -55,6 +55,9 @@ class Attack(Action):
         self.name = 'Attack'
         self.target = target
 
+    # might be better if these classes know nothing
+    # about explicit keys - should pass the direction
+    # in instead...
     def execute(self, direction_key):
         if direction_key == K_UP:
             direction = (0,-1)
@@ -87,3 +90,4 @@ class NextLevel(Action):
     def execute(self):
         self.target.score = self.target.level.player.experience
         self.target.level = self.target.levels[1]
+        self.target.level.enter()

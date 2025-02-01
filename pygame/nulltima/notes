@@ -44,10 +44,10 @@ Overworld mode
 [OK] ...especially terrain index values
 [..] mark 'private' methods
 [OK] move terrain image loading out of Grid.draw()
-[  ] scrub dead code from app model, not using here
+[OK] scrub dead code from app model, not using here
 [  ] improve test coverage
 [  ] scrub import statements
-[  ] player death
+[..] player death
 [OK] monster death
 [OK] player experience
 [  ] loot & chests
@@ -666,3 +666,18 @@ a good milestone to reach. Need a 'score' - xp in the Player. And a death condit
 Another observation - should add some delays between updates in the action queue. Right now everything 
 happens immediately after keypress. Would be more aesthetically pleasing to see them happen 
 sequentially on-screen.
+
+---------------------------------------
+Cleaning up cruft left over from the tutorial framework - it's good stuff, but the functionality isn't
+being used right now and is getting in the way. Making note of the features here, so if I change my 
+mind I can retrieve it without needing to re-invent.
+
+  - **options args on Text (for passing in bold, italic, etc. May well want this later.)
+  - file field on EndScreen - used for background image
+  - same on Level, as well as the code that draws the background image
+  - key mods in do_shortcut (Level, Game) - just using single keys, and the mod occasionally 
+    messes me up (accidentially have NumLock on, and game stops responding)
+  - resizeable window in Game - not handling, should make this fixed
+
+---------------------------------------
+

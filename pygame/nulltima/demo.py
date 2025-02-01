@@ -20,6 +20,7 @@ class Demo(Game):
         Text(text='or q to quit', pos=(200, 120))
 
         Game.level = Game.levels[0]
+        Game.level.enter()
 
 if __name__ == '__main__':
     Demo().run()

@@ -28,14 +28,9 @@ class Component:
         pass
         
 class Text(Component):
-    def __init__(self, text, pos, **options):
+    def __init__(self, text, pos):
         super().__init__(pos)
         self.text = text
-
-        if options:
-            for key,value in options.items():
-                self.__dict__[key] = value
-
         self.render()
 
     def render(self):
@@ -161,19 +156,21 @@ class Console(Component):
         Game.screen.blit(self.img, self.rect)
 
 class EndScreen:
-    def __init__(self, *args, **options):
+    def __init__(self, **options):
         Game.levels.append(self)
         Game.level = self
         self.id = Level.options['id']
         Level.options['id'] += 1
         self.bg = Level.options['bg']
-        self.file = Level.options['file']
         self.caption = Level.options['caption']
 
         self.components = []
 
         self.define_actions()
         self.shortcuts = {}
+
+        if options:
+            self.__dict__.update(options)
 
         self.rect = Game.screen.get_rect()
         self.img = pygame.Surface(self.rect.size)
@@ -211,14 +208,13 @@ class Level:
             'caption': '',
             }
 
-    def __init__(self, *args, **options):
+    def __init__(self, **options):
         Game.levels.append(self)
         Game.level = self
 
         self.id = Level.options['id']
         Level.options['id'] += 1
         self.bg = Level.options['bg']
-        self.file = Level.options['file']
         self.caption = Level.options['caption']
         self.last_move = ''
 
@@ -229,29 +225,23 @@ class Level:
 
         self.define_actions()
         self.shortcuts = {
-                (K_a, 0): (self.a, 2),
-                (K_LEFT, 0): (self.left, 1),
-                (K_RIGHT, 0): (self.right, 1),
-                (K_UP, 0): (self.up, 1),
-                (K_DOWN, 0): (self.down, 1),
-                (K_SPACE, 0): (self.space, 1),
-                (K_d, 0): (self.d, 1),
+                K_a: (self.a, 2),
+                K_LEFT: (self.left, 1),
+                K_RIGHT: (self.right, 1),
+                K_UP: (self.up, 1),
+                K_DOWN: (self.down, 1),
+                K_SPACE: (self.space, 1),
+                K_d: (self.d, 1),
                 }
 
         self.action_queue = []
 
         if options:
-            for key,value in options.items():
-                self.__dict__[key] = value
+            self.__dict__.update(options)
 
         self.rect = Game.screen.get_rect()
-        if self.file != '':
-            self.img = pygame.image.load(self.file)
-            size = Game.screen.get_size()
-            self.img = pygame.transform.smoothscale(self.img, size)
-        else:
-            self.img = pygame.Surface(self.rect.size)
-            self.img.fill(self.bg)
+        self.img = pygame.Surface(self.rect.size)
+        self.img.fill(self.bg)
 
         self.enter()
 
@@ -284,20 +274,19 @@ class Level:
 
     def do_shortcut(self, event):
         k = event.key
-        m = event.mod
-        if (k, m) in self.shortcuts:
-            action = self.shortcuts[k,m][0]
-            key_count = self.shortcuts[k,m][1]
+        if k in self.shortcuts:
+            action = self.shortcuts[k][0]
+            key_count = self.shortcuts[k][1]
             if key_count == 1 and not self.action_queue:
                 action.execute()
                 self.last_move = action.name
             elif key_count == 2 and not self.action_queue:
-                self.action_queue.append(k)     # NOTE: not preserving mod yet, deal later if needed
+                self.action_queue.append(k)
                 Game.message_queue.append(('Direction?', False))
             elif key_count == 1 and self.action_queue:
                 direction = k
                 base = self.action_queue.pop()
-                action = self.shortcuts[base,m][0]
+                action = self.shortcuts[base][0]
                 action.execute(direction)
                 self.last_move = action.name
 
@@ -335,14 +324,14 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.flags = RESIZABLE                   # not handling resize properly yet
+        self.flags = 0
         self.rect = Rect(0, 0, 640, 480)
         Game.screen = pygame.display.set_mode(self.rect.size, self.flags)
         Game.running = True
         self.define_actions()
         self.shortcuts = {
-                (K_q, 0): self.q,
-                (K_n, 0): self.n,
+                K_q: self.q,
+                K_n: self.n,
                 }
 
     def run(self):
@@ -364,10 +353,9 @@ class Game:
 
     def do_shortcut(self, event):
         k = event.key
-        m = event.mod
-        if (k, m) in self.shortcuts:
-            self.shortcuts[k,m].execute()
-            self.last_move = self.shortcuts[k,m].name
+        if k in self.shortcuts:
+            self.shortcuts[k].execute()
+            self.last_move = self.shortcuts[k].name
 
     def define_actions(self):
         self.q = actions.Quit(Game)

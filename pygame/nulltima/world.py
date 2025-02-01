@@ -2,8 +2,6 @@ import unittest
 import pygame
 
 # terrain fields: name, passable?, opaque?, image
-#    I don't think these yet merit a full class - tuple 
-#    data records are enough for now
 terrains = {0:("Occluded", False, False, "tile_0.png"),
             1:("Plains", True, False, "tile_1.png"), 
             2:("Light Forest", True, False, "tile_2.png"), 
