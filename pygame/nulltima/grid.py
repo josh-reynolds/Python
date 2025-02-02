@@ -138,7 +138,7 @@ class Grid(game.Component):
 class GridTestCase(unittest.TestCase):
     def setUp(self):
         self.game = game.GameMock()
-        game.Level()
+        game.Overworld()
         self.g = Grid(size=(3, 3), pos=(11, 9), cell_width=4, cell_height=3)
         self.g.world.contents = [[0, 0, 0, 0, 0],
                                 [0, 1, 1, 1, 0],
@@ -198,6 +198,8 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(b, [(6,4), (7,3), (8,2), (9,1)])
 
     def test_calculating_edge_cells(self):
+        self.game = game.GameMock()
+        game.Overworld()
         g = Grid(size=(5, 5), pos=(3, 3), cell_width=3, cell_height=3)
 
         e = g.edges

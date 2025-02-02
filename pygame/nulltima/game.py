@@ -159,7 +159,6 @@ class Level:
     options = {
             'id': 0,
             'bg': Color('black'),
-            'file': '',
             'caption': '',
             }
 
@@ -183,6 +182,15 @@ class Level:
     def enter(self):
         pygame.display.set_caption(self.caption)
 
+    def update(self):
+        pass
+    def draw(self):
+        pass
+    def define_actions(self):
+        pass
+    def do_event(self, event):
+        pass
+
 class EndScreen(Level):
     def __init__(self, **options):
         super().__init__(**options)
@@ -201,12 +209,6 @@ class EndScreen(Level):
         for component in self.components:
             component.draw()
         pygame.display.flip()
-
-    def define_actions(self):
-        pass
-
-    def do_event(self, event):
-        pass
 
 class Overworld(Level):
     def __init__(self, **options):
