@@ -74,7 +74,7 @@ class Attack(Action):
             if monster.pos == coordinate:
                 print("Attacking {}".format(monster))
                 self.target.attack(monster)
-                game.Game.level.effects.append(effects.MeleeAttack(coordinate))
+                game.Game.level.effects.append(effects.MeleeAttack(coordinate, game.Game.level))
                 return
         print("No target")
 

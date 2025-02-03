@@ -43,7 +43,7 @@ class Monster(actor.Actor):
                 self.attack(game.Game.level.player)
 
     def attack(self, target):
-        game.Game.level.effects.append(effects.MeleeAttack(target.pos))
+        game.Game.level.effects.append(effects.MeleeAttack(target.pos, self.level))
         if random.random() < 0.5:
             target.hit_points -= 1
             game.Game.message_queue.append(('Hit!', False))
