@@ -15,9 +15,13 @@ class MeleeAttack(Effect):
         if not MeleeAttack.image:
             MeleeAttack.image = pygame.image.load("./images/attack.png")
         self.image = MeleeAttack.image
+        self.time = 0
+        self.lifespan = 20
     
     def update(self):
-        pass
+        self.time += 1
+        if self.time > self.lifespan:
+            self.level.effects.remove(self)
 
     def draw(self):
         if self.level.grid.can_view(self.pos):
