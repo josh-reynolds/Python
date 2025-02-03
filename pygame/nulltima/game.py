@@ -217,6 +217,7 @@ class Overworld(Level):
         self.action_queue = []
         self.monsters = []
         self.player = player.Player((15,15), self)
+        self.effects = []
         self.observers = []
 
         self.define_actions()
@@ -236,6 +237,8 @@ class Overworld(Level):
         for monster in self.monsters:
             monster.update()
         self.player.update()
+        for effect in self.effects:
+            effect.update()
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
@@ -244,6 +247,8 @@ class Overworld(Level):
         for monster in self.monsters:
             monster.draw()
         self.player.draw()
+        for effect in self.effects:
+            effect.draw()
         pygame.display.flip()
 
     def do_event(self, event):

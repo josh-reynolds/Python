@@ -681,4 +681,21 @@ mind I can retrieve it without needing to re-invent.
   - resizeable window in Game - not handling, should make this fixed
 
 ---------------------------------------
+Thinking about 'polish' features now for a 'v0.1' type release. Very basic overworld-only, attack 
+and move actions only, etc. But all the core there. Started with an end screen to display on player
+death, and will add a title screen. Need some additional animations for attacks at least, and sound 
+effects.
+
+For the animation, I am considering a separate 'Effect' class. The issue is z-ordering. Currently, 
+the draw loop in Overworld draws components, then monsters, then the player. If we attach the 
+effect animation to any of those layers (except the latter) then they will sit underneath (unless 
+we somehow break the animation loop sequencing, which seems like a bad idea). So, what if we add
+a layer above player for effects? These would be short animations that play, then delete themselves. 
+The attack animation from the original games visually works like this. We could also attach the 
+sound effects to this object.
+
+(Side note - in some of the original games, there is also a screen inversion for some activities, 
+usuallly magic. Could also fit in here, but need to research engine capabilities - instead of an 
+animation we draw on the screen, this would be a processing of the composited screen image as a 
+whole.)
 
