@@ -6,27 +6,63 @@ terrains = {0:("Occluded", False, False, "tile_0.png"),
             1:("Plains", True, False, "tile_1.png"), 
             2:("Light Forest", True, False, "tile_2.png"), 
             3:("Deep Forest", True, True, "tile_3.png"), 
-            4:("Water", False, False, "tile_4.png"),
+            4:("Water", False, False, ["tile_4_1.png", "tile_4_2.png"]),
             5:("Desert", True, False, "tile_5.png"), 
             6:("Swamp", True, False, "tile_6.png"), 
             7:("Hills", True, False, "tile_7.png"),
             8:("Mountains", False, True, "tile_8.png"),
             9:("Out of Bounds", False, False, "tile_9.png")}
 
-class Terrain:
+class Base:        # need a better name for this one
     def __init__(self, data):
         self.name = data[0]
         self.is_passable = data[1]
         self.is_opaque = data[2]
+
+class Terrain(Base):
+    def __init__(self, data):
+        super().__init__(data)
         self.file = data[3]
         self.image = pygame.image.load('./images/' + self.file)
+
+    def get_image(self):
+        return self.image
+
+class AnimatedTerrain(Base):
+    def __init__(self, data):
+        super().__init__(data)
+        self.files = data[3]
+        self.images = [pygame.image.load('./images/' + x) for x in self.files]
+        self.time = 0
+        self.current_image = 0
+        self.animation_delay = 80
+
+    def update(self):
+        self.time += 1
+        if self.time > self.animation_delay:
+            self.time = 0
+            if self.current_image == 0:
+                self.current_image = 1
+            else:
+                self.current_image = 0
+
+    def get_image(self):
+        return self.images[self.current_image]
 
 class World:
     def __init__(self, contents=[]):
         self.contents = contents
         self.terrains = {}
         for index in terrains:
-            self.terrains[index] = Terrain(terrains[index])
+            if isinstance(terrains[index][3], list):
+                self.terrains[index] = AnimatedTerrain(terrains[index])
+            else:
+                self.terrains[index] = Terrain(terrains[index])
+
+    def update(self):
+        for index in self.terrains:
+            if isinstance(self.terrains[index], AnimatedTerrain):
+                self.terrains[index].update()
 
     def get_cell(self, x, y):
         if (x >= 0 and x < len(self.contents[0]) and

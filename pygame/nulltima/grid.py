@@ -25,12 +25,15 @@ class Grid(game.Component):
         game.Game.level.add_observer(self)
         self.on_notify(last_move=None, player_position=game.Game.level.player.pos)
 
+    def update(self):
+        self.world.update()
+
     def draw(self):
         for iy, row in enumerate(self.contents):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
-                image = self[grid_coord].image
+                image = self[grid_coord].get_image()
                 if self._is_occluded(grid_coord):
                     image = self.world.get_occluded().image
                 game.Game.screen.blit(image, screen_coord)

@@ -11,7 +11,7 @@ Overworld mode
 [  ] incorporate terrain data into world file?
 [OK] basic terrain graphics
 [OK] better terrain graphics
-[  ] terrain animation
+[..] terrain animation
 [  ] sprite/tile sheet
 [OK] basic player image
 [OK] player sprite & animation
@@ -24,17 +24,38 @@ Overworld mode
 [..] world clock (automatic 'pass' action)
 [  ] monster persistence & despawning
 [OK] monster attacks
-[  ] attack animations
+[OK] attack animations
 [  ] sound effects
 [  ] ranged attacks
 [  ] music
 [OK] world actions: move
 [OK] world actions: attack
 [OK] world actions: pass
-[  ] world actions: cast spell
-[  ] world actions: enter
-[  ] world actions: get chest
-[  ] world actions: mix reagents (need review - when was this introduced? IV?)
+
+Commands from Ultima 1:
+    [OK] Attack
+    [na] Board (ship, horse, vehicle)      - later
+    [  ] Cast (spell)
+    [  ] Drop (item)
+    [na] Enter (town, castle, dungeon)     - later
+    [  ] Fire
+    [  ] Get (item)
+    [na] Hyperjump                         - out of scope?
+    [  ] Inform
+    [na] Klimb (ladders up/down)           - later (dungeon mode)
+    [  ] Noise (toggle sound)
+    [na] Open (coffins)                    - later (dungeon mode)
+    [  ] Quit & Save
+    [  ] Ready (weapon, armor, spell)
+    [na] Steal                             - later (town mode)
+    [na] Transact                          - later (town mode)
+    [na] Unlock                            - later (town mode)
+    [na] View                              - out of scope?
+    [na] Xit (ship, horse, vehicle)        - later
+    [  ] Ztats
+    [OK] SPACE (Pass)
+    [OK] ARROW KEYS (Move)
+
 [OK] status display
 [OK] move counter
 [  ] food and starvation
@@ -87,7 +108,7 @@ Design
 [  ] separate code & data
 [  ] separate model & view components a la MVC
 [  ] file layout
-[  ] world map / procedural?
+[  ] world map / procedural? / infinite?
 [  ] town maps
 [  ] dungeon maps
 [  ] dialogue content
@@ -110,6 +131,7 @@ Optional
 [  ] whirlpools/waterspouts
 [  ] monster morale
 [  ] party / multiple characters
+[  ] textured 1P dungeons / raycast dungeons
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
@@ -699,3 +721,19 @@ usuallly magic. Could also fit in here, but need to research engine capabilities
 animation we draw on the screen, this would be a processing of the composited screen image as a 
 whole.)
 
+---------------------------------------
+Basic effect class in place, with a simple attack animation. Looking very much like an Actor, so
+need to consider the interfaces and class hierarchies here.
+
+As a diversion, have started on animated terrains. Basic idea is that the terrain data list can 
+contain either a single image file name, or a list. Depending on the data, we'll create a Terrain
+or an AnimatedTerrain class. Issue, though, is in drawing.
+
+For similar entities (i.e. Actors), the class owns its animation loop timer and draw method. Terrains 
+as currently implemented are just a dumb data class (and Flyweight to boot). Draw method actually lives 
+in Grid - need to ponder.
+
+Thinking out loud... so, in a 'normal' class we want every instance to be independent, so in the case 
+of animations they are all doing their own thing. But for terrains, we actually want them to be syncronized,
+so running this through a single flyweight instance could be just what we want. Only issue off the top of 
+my head is we don't yet invoke update() on terrains to advance the animation counter...
