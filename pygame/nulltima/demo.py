@@ -5,6 +5,8 @@ class Demo(Game):
     def __init__(self):
         super().__init__()
 
+        TitleScreen(caption='Welcome to Nulltima!')
+
         Overworld(caption='<====!~ NulltimA ~!====>')
         Grid(size=(11, 11), pos=(60, 60))
         Text(text='Arrow keys to move,', pos=(420, 60))

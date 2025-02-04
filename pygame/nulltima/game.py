@@ -191,6 +191,18 @@ class Level:
     def do_event(self, event):
         pass
 
+class TitleScreen(Level):
+    def __init__(self, **options):
+        super().__init__(**options)
+        self.define_actions()
+        self.shortcuts = {}
+        self.img = pygame.image.load('./images/title.png')
+        self.rect = self.img.get_rect()
+
+    def draw(self):
+        Game.screen.blit(self.img, self.rect)
+        pygame.display.flip()
+
 class EndScreen(Level):
     def __init__(self, **options):
         super().__init__(**options)
@@ -304,6 +316,7 @@ class Overworld(Level):
 class Game:
     level = None
     levels = []
+    current_level = 0
     screen = None
     bg = Color('gray')
     message_queue = []
@@ -347,6 +360,14 @@ class Game:
     def define_actions(self):
         self.q = actions.Quit(Game)
         self.n = actions.NextLevel(Game)
+
+    @classmethod
+    def next_level(cls):
+        cls.current_level += 1
+        if cls.current_level == len(cls.levels):
+            cls.current_level = len(cls.levels) - 1
+        cls.level = cls.levels[cls.current_level]
+        cls.level.enter()
 
 class ScreenMock():
     def get_rect(self):

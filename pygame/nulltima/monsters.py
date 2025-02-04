@@ -59,6 +59,7 @@ class Monster(actor.Actor):
             game.Game.level.monsters.remove(self)
             game.Game.level.remove_observer(self)
             game.Game.level.player.experience += 1
+            game.Game.score += 1
 
 
     def __repr__(self):

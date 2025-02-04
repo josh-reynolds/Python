@@ -90,6 +90,4 @@ class NextLevel(Action):
         self.name = 'NextLevel'
         self.target = target
     def execute(self):
-        self.target.score = self.target.level.player.experience
-        self.target.level = self.target.levels[1]
-        self.target.level.enter()
+        self.target.next_level()

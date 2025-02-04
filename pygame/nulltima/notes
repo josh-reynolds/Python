@@ -25,7 +25,7 @@ Overworld mode
 [  ] monster persistence & despawning
 [OK] monster attacks
 [OK] attack animations
-[  ] sound effects
+[..] sound effects
 [  ] ranged attacks
 [  ] music
 [OK] world actions: move
@@ -89,6 +89,7 @@ Combat mode
 Menus
 [  ] character creation
 [  ] save/load game state
+[OK] title screen
 
 Town mode
 [  ] town map files
@@ -132,6 +133,7 @@ Optional
 [  ] monster morale
 [  ] party / multiple characters
 [  ] textured 1P dungeons / raycast dungeons
+[  ] 'smart tiles' for roads/rivers/borders
 
 Notes:
 Just checked out Ultima III Exodus for a refresher; it has been many years. Might want to start with an even
@@ -146,6 +148,10 @@ advanced than I recall. A huge step up. All of the core features above are prese
 mode. There's only one character involved, so combat occurs on the world map. But towns, wireframe dungeons, 
 and so on are all there. This might be a good feature set to target. Take it in stages - get the overworld
 working first.
+
+(I realize now that my version of Ultima I is the updated re-release from 1987, with nicer graphics. AFAIK
+gameplay is the same. My version of Ultima III is much closer to the original, most likely. There are some 
+retrospective videos on YouTube that show them all in action.)
 
 Assumptions:
 * grid is square
@@ -717,7 +723,7 @@ The attack animation from the original games visually works like this. We could 
 sound effects to this object.
 
 (Side note - in some of the original games, there is also a screen inversion for some activities, 
-usuallly magic. Could also fit in here, but need to research engine capabilities - instead of an 
+usually magic. Could also fit in here, but need to research engine capabilities - instead of an 
 animation we draw on the screen, this would be a processing of the composited screen image as a 
 whole.)
 
