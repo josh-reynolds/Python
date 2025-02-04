@@ -9,11 +9,9 @@ class Demo(Game):
 
         Overworld(caption='<====!~ NulltimA ~!====>')
         Grid(size=(11, 11), pos=(60, 60))
-        Text(text='Arrow keys to move,', pos=(420, 60))
-        Text(text='q to quit', pos=(420, 80))
-        PlayerStatusDisplay(pos=(420,100))
-        GameStatusDisplay(pos=(420,180))
-        Console(pos=(420, 240))
+        PlayerStatusDisplay(pos=(420,60))
+        GameStatusDisplay(pos=(420,140))
+        Console(pos=(420, 200))
 
         EndScreen(caption='Game Over')
         Text(text='You are dead.', pos=(200, 60))

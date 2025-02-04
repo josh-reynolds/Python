@@ -69,7 +69,7 @@ Commands from Ultima 1:
 [OK] scrub dead code from app model, not using here
 [  ] improve test coverage
 [  ] scrub import statements
-[..] player death
+[OK] player death
 [OK] monster death
 [OK] player experience
 [  ] loot & chests

@@ -205,6 +205,10 @@ class TitleScreen(Level):
         Game.screen.blit(self.img, self.rect)
         pygame.display.flip()
 
+    def do_event(self, event):
+        if event.type == KEYDOWN:
+            Game.next_level()
+
 class EndScreen(Level):
     def __init__(self, **options):
         super().__init__(**options)
@@ -333,7 +337,6 @@ class Game:
         self.define_actions()
         self.shortcuts = {
                 K_q: self.q,
-                K_n: self.n,
                 }
 
     def run(self):
@@ -361,7 +364,6 @@ class Game:
 
     def define_actions(self):
         self.q = actions.Quit(Game)
-        self.n = actions.NextLevel(Game)
 
     @classmethod
     def next_level(cls):
