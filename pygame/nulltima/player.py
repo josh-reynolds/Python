@@ -12,7 +12,7 @@ class Player(actor.Actor):
                              pygame.image.load("./images/player_1.png")]
         self.images = Player.images
         self.name = "Lord McGonigal"
-        self.hit_points = 100
+        self.hit_points = 10
         self.experience = 0
         self.observers = []
 

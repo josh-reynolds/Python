@@ -11,7 +11,7 @@ Overworld mode
 [  ] incorporate terrain data into world file?
 [OK] basic terrain graphics
 [OK] better terrain graphics
-[..] terrain animation
+[OK] terrain animation
 [  ] sprite/tile sheet
 [OK] basic player image
 [OK] player sprite & animation
@@ -25,7 +25,7 @@ Overworld mode
 [  ] monster persistence & despawning
 [OK] monster attacks
 [OK] attack animations
-[..] sound effects
+[OK] sound effects
 [  ] ranged attacks
 [  ] music
 [OK] world actions: move

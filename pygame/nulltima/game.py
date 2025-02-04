@@ -100,6 +100,8 @@ class PlayerStatusDisplay(StatusDisplay):
         self.name = self.target.name
         self.hit_points = self.target.hit_points
         self.experience = self.target.experience
+        if self.hit_points < 1:
+            Game.next_level()
 
 class Console(Component):
     def __init__(self, pos):
