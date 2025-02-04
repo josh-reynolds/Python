@@ -6,6 +6,7 @@ class Actor:
         self.pos = coordinate
         self.level = level
         self.time = 0
+        self.images = []
         self.current_image = 0
         self.animation_delay = 60
 
@@ -13,10 +14,7 @@ class Actor:
         self.time += 1
         if self.time > self.animation_delay:
             self.time = 0
-            if self.current_image == 0:
-                self.current_image = 1
-            else:
-                self.current_image = 0
+            self.current_image = (self.current_image + 1) % len(self.images)
 
     def draw(self):
         if self.level.grid.can_view(self.pos):
