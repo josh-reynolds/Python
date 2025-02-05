@@ -808,3 +808,11 @@ OK! That works. Bit ugly, and I think I have a bug in the image layout (wrong ti
 some positions) - but the basic idea is viable. Going to want to refactor (and fix the bug of course). 
 Currently this calculation lives in Grid - might make more sense in World.
 
+Investigating the bug. Wrote a test in Grid to validate the neighbor count calculation. Initially some
+issues there, but via some other tests I realized that player position is now a factor. Neighbor
+values look good to me. Second theory was I mixed up the tiles somehow, but a quick visual scan shows
+they're as expected. So need to dig deeper.
+
+Adjusted the Debug command to dump out neighbor count at the player position (and threw in a GodMode 
+so testing is less annoying). Looks like the numbers match the tiles, so that's not it - but don't yet
+see why we're getting those values. By the map, shouldn't be...

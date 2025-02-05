@@ -247,6 +247,7 @@ class Overworld(Level):
                 K_DOWN: (self.down, 1),
                 K_SPACE: (self.space, 1),
                 K_d: (self.d, 1),
+                K_g: (self.g, 1),
                 }
 
     def update(self):
@@ -318,6 +319,7 @@ class Overworld(Level):
         self.down = actions.South(self.player)
         self.space = actions.Pass(self.player)
         self.d = actions.Debug(self)
+        self.g = actions.GodMode(self)
 
 class Game:
     level = None

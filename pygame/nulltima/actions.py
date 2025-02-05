@@ -83,7 +83,14 @@ class Debug(Action):
         self.name = 'Debug'
         self.target = target
     def execute(self):
-        print(self.target.action_queue)
+        print(self.target.components[0].count_matching_neighbors(self.target.player.pos))
+
+class GodMode(Action):
+    def __init__(self, target):
+        self.name = 'God Mode'
+        self.target = target
+    def execute(self):
+        self.target.player.hit_points = 1000   # hack, if needed we should do a real god mode
 
 class NextLevel(Action):
     def __init__(self, target):
