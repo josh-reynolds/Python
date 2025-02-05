@@ -743,3 +743,66 @@ Thinking out loud... so, in a 'normal' class we want every instance to be indepe
 of animations they are all doing their own thing. But for terrains, we actually want them to be syncronized,
 so running this through a single flyweight instance could be just what we want. Only issue off the top of 
 my head is we don't yet invoke update() on terrains to advance the animation counter...
+
+---------------------------------------
+We now have a title screen, overworld, and end screen, and mechanisms to move through. Restart hasn't 
+been implemented, but otherwise the basic flow is there. A very simple (and admittedly not very fun) game.
+Should prioritize changes that make this a complete version, leave out bells and whistles.
+
+We'll just have a non-customizable character moving around on the overworld, fighting randomly spawning 
+monsters (melee only?) an accumulating a score until death, which ends the game. We still need:
+
+  * restart functionality from end screen
+  * one or two more monster types
+  * improve engineering: refactor, better tests and structure
+  * more interesting world map
+  * input of player name
+  * review art/audio assets, improve selectively
+  * fix: action completion & monster response after two-step actions (i.e. attack)
+  * design fix: monster movement and attacks from diagonal
+  * optional: slow down action sequence after keypress
+  * optional: high score tracking
+  * optional: ranged attacks
+  * optional: gain health from victory
+
+But of course, I'm first going to do something fun. Want to see if I can get a simple smart tile 
+system going. Seems wih a bit switch we can easily map neighbor combinations to 16 values, 0000 through 
+1111, and select the appropriate tile graphic from the set. Giving it a go.
+
+Not sure whether we should go clockwise around the compass (NESW), or opposing points (NSEW), or what. 
+Play around with some schemes below before we mock up some tiles...
+
+0000 - 00 - .... - ....
+0001 - 01 - N... - N...
+0010 - 02 - .E.. - .S..
+0011 - 03 - NE.. - NS..
+0100 - 04 - ..S. - ..E.
+0101 - 05 - N.S. - N.E.
+0110 - 06 - .ES. - .SE.
+0111 - 07 - NES. - NSE.
+1000 - 08 - ...W - ...W
+1001 - 09 - N..W - N..W
+1010 - 10 - .E.W - .S.W
+1011 - 11 - NE.W - NS.W
+1100 - 12 - ..SW - ..EW
+1101 - 13 - N.SW - N.EW
+1110 - 14 - .ESW - .SEW
+1111 - 15 - NESW - NSEW
+
+Seems arbitrary, though looking at some tiles might change that impression. So, just going with clockwise. 
+That means N=1, E=2, S=4, W=8.
+
+Got a set of tiles created - ugly but serviceable. And created a new SmartTerrain class that loads the
+set. But there's a problem I need to mull over. Current terrain model is set up as Flyweights, meaning
+there's just one instance of each individual terrain. And to do that, they don't know anything about
+locations on the grid. But the smart tile calculation needs coordinate information.
+
+If I go this route, it probably means breaking the Flyweight. In this particular game, wouldn't matter
+too much to have individual objects per cell. Best option would be to have them live only while 
+onscreen, and would need to destruct when they move off.
+
+What if instead there's a 'magic number' that the lookup can pass in, pre-chewing the calculation? Most
+terrains could ignore this parameter, but it would have meaning for SmartTerrain. Let's see...
+
+
+

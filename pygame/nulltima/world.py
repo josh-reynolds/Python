@@ -1,28 +1,30 @@
 import unittest
 import pygame
 
-# terrain fields: name, passable?, opaque?, image
-terrains = {0:("Occluded", False, False, "tile_0.png"),
-            1:("Plains", True, False, "tile_1.png"), 
-            2:("Light Forest", True, False, "tile_2.png"), 
-            3:("Deep Forest", True, True, "tile_3.png"), 
-            4:("Water", False, False, ["tile_4_1.png", "tile_4_2.png"]),
-            5:("Desert", True, False, "tile_5.png"), 
-            6:("Swamp", True, False, "tile_6.png"), 
-            7:("Hills", True, False, "tile_7.png"),
-            8:("Mountains", False, True, "tile_8.png"),
-            9:("Out of Bounds", False, False, "tile_9.png")}
+# terrain fields: name, passable?, opaque?, smart?, image
+terrains = {0:("Occluded", False, False, False, "tile_0.png"),
+            1:("Plains", True, False, False, "tile_1.png"), 
+            2:("Brush", True, False, False, "tile_2.png"), 
+            3:("Forest", True, True, False, "tile_3.png"), 
+            4:("Water", False, False, False, ["tile_4_1.png", "tile_4_2.png"]),
+            5:("Desert", True, False, False, "tile_5.png"), 
+            6:("Swamp", True, False, False, "tile_6.png"), 
+            7:("Hills", True, False, False, "tile_7.png"),
+            8:("Mountains", False, True, False, "tile_8.png"),
+            9:("Out of Bounds", False, False, False, "tile_9.png"),
+            10:("Road", True, False, True, "road_")}
 
 class Base:        # need a better name for this one
     def __init__(self, data):
         self.name = data[0]
         self.is_passable = data[1]
         self.is_opaque = data[2]
+        self.is_smart = data[3]
 
 class Terrain(Base):
     def __init__(self, data):
         super().__init__(data)
-        self.file = data[3]
+        self.file = data[4]
         self.image = pygame.image.load('./images/' + self.file)
 
     def get_image(self):
@@ -31,7 +33,7 @@ class Terrain(Base):
 class AnimatedTerrain(Base):
     def __init__(self, data):
         super().__init__(data)
-        self.files = data[3]
+        self.files = data[4]
         self.images = [pygame.image.load('./images/' + x) for x in self.files]
         self.time = 0
         self.current_image = 0
@@ -46,13 +48,26 @@ class AnimatedTerrain(Base):
     def get_image(self):
         return self.images[self.current_image]
 
+class SmartTerrain(Base):
+    def __init__(self, data):
+        super().__init__(data)
+        self.file_base = './images/' + data[4]
+        self.images = []
+        for filename in [self.file_base + f'{x:02}' + '.png' for x in range(16)]:
+            self.images.append(pygame.image.load(filename))
+
+    def get_image(self):
+        return self.images[0]
+
 class World:
     def __init__(self, contents=[]):
         self.contents = contents
         self.terrains = {}
         for index in terrains:
-            if isinstance(terrains[index][3], list):
+            if isinstance(terrains[index][4], list):
                 self.terrains[index] = AnimatedTerrain(terrains[index])
+            elif terrains[index][3]:
+                self.terrains[index] = SmartTerrain(terrains[index])
             else:
                 self.terrains[index] = Terrain(terrains[index])
 
