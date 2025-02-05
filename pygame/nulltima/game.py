@@ -306,7 +306,7 @@ class Overworld(Level):
         if random.random() < 0.1:
             grid_coordinate = random.choice(self.grid.spawnable())
             world_coordinate = self.grid.to_world(grid_coordinate)
-            self.monsters.append(monsters.Monster(world_coordinate, self))
+            self.monsters.append(monsters.Monster(world_coordinate, self, 0))
 
     def __str__(self):
         return 'Scene {}'.format(self.id)

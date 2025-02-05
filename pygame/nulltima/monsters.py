@@ -6,18 +6,25 @@ import game
 import actor
 import effects
 
+# monster fields: name, hit_points, damage, images
+monsters = {0:('Orc', 1, 1, ['monster_0.png', 'monster_1.png'])}
+
+# will want a flyweight-type class to hold images...
+
 class Monster(actor.Actor):
     images = []
 
-    def __init__(self, coordinate, level):
+    def __init__(self, coordinate, level, monster_type):
         super().__init__(coordinate, level)
         if level:
             level.add_observer(self)
+        self.name = monsters[monster_type][0]
+        self.hit_points = monsters[monster_type][1]
+        self.damage = monsters[monster_type][2]
         if not Monster.images:
-            Monster.images = [pygame.image.load("./images/monster_0.png"),
-                              pygame.image.load("./images/monster_1.png")]
+            image_files = monsters[monster_type][3]
+            Monster.images = [pygame.image.load('./images/' + x) for x in image_files]
         self.images = Monster.images
-        self.hit_points = 1
 
     def on_notify(self, last_move, player_position):
         if self.level.grid.can_view(self.pos):
@@ -45,11 +52,11 @@ class Monster(actor.Actor):
     def attack(self, target):
         game.Game.level.effects.append(effects.MeleeAttack(target.pos, self.level))
         if random.random() < 0.5:
-            target.hit_points -= 1
+            target.hit_points -= self.damage
             game.Game.message_queue.append(('Hit!', False))
         else:
             game.Game.message_queue.append(('Miss', False))
-        game.Game.message_queue.append(('{} attacks'.format(self), False)) # showing in console out of
+        game.Game.message_queue.append(('{} attacks'.format(self.name), False)) # showing in console out of
                                                                   # order, so small temporary
                                                                   # hack here
     
@@ -61,17 +68,17 @@ class Monster(actor.Actor):
             game.Game.level.player.experience += 1
             game.Game.score += 1
 
-
     def __repr__(self):
         return "Monster{}".format(self.pos)
 
 class MonsterTestCase(unittest.TestCase):
     def setUp(self):
         coordinate = (5,5)
-        self.m = Monster(coordinate, None)
+        self.m = Monster(coordinate, None, 0)
 
     def test_constructing_a_monster(self):
         self.assertEqual(self.m.pos, (5,5))
+        self.assertEqual(self.name, 'Orc')
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
