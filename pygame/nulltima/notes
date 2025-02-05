@@ -804,5 +804,7 @@ onscreen, and would need to destruct when they move off.
 What if instead there's a 'magic number' that the lookup can pass in, pre-chewing the calculation? Most
 terrains could ignore this parameter, but it would have meaning for SmartTerrain. Let's see...
 
-
+OK! That works. Bit ugly, and I think I have a bug in the image layout (wrong tiles being placed for
+some positions) - but the basic idea is viable. Going to want to refactor (and fix the bug of course). 
+Currently this calculation lives in Grid - might make more sense in World.
 

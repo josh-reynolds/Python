@@ -27,7 +27,7 @@ class Terrain(Base):
         self.file = data[4]
         self.image = pygame.image.load('./images/' + self.file)
 
-    def get_image(self):
+    def get_image(self, neighbors=0):
         return self.image
 
 class AnimatedTerrain(Base):
@@ -45,7 +45,7 @@ class AnimatedTerrain(Base):
             self.time = 0
             self.current_image = (self.current_image + 1) % len(self.images)
 
-    def get_image(self):
+    def get_image(self, neighbors=0):
         return self.images[self.current_image]
 
 class SmartTerrain(Base):
@@ -56,8 +56,11 @@ class SmartTerrain(Base):
         for filename in [self.file_base + f'{x:02}' + '.png' for x in range(16)]:
             self.images.append(pygame.image.load(filename))
 
-    def get_image(self):
-        return self.images[0]
+    # neighbors is a bit flag count of four orthogonal neighbors going
+    # clockwse: N=1, E=2, S=4, W=8
+    # so this is a four-bit number ranging from 0 to 15
+    def get_image(self, neighbors):
+        return self.images[neighbors]
 
 class World:
     def __init__(self, contents=[]):

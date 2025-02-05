@@ -33,10 +33,21 @@ class Grid(game.Component):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
-                image = self[grid_coord].get_image()
+                neighbors = self.count_matching_neighbors(self.to_world(grid_coord))
+                image = self[grid_coord].get_image(neighbors)
                 if self._is_occluded(grid_coord):
                     image = self.world.get_occluded().image
                 game.Game.screen.blit(image, screen_coord)
+
+    def count_matching_neighbors(self, world_coord):
+        current_terrain = self.world.get_cell(world_coord[0], world_coord[1])
+        count = 0
+        for direction in [(0,-1,1), (1,0,2), (0,1,4), (-1,0,8)]:
+            neighbor_coord = (world_coord[0] + direction[0],
+                              world_coord[1] + direction[1])
+            if self.world.get_cell(neighbor_coord[0], neighbor_coord[1]) == current_terrain:
+                count += direction[2]
+        return count
 
     def __getitem__(self, index):
         return self.world.get_cell(index[1] + self.offset[1], 
