@@ -169,8 +169,9 @@ class GridTestCase(unittest.TestCase):
         self.assertEqual(self.g.cell_width, 4)
         self.assertEqual(self.g.cell_height, 3)
 
-    #def test_coordinate_mapping_to_world(self):
-        #self.assertEqual(self.g[2,2], world.terrains[1])
+    def test_coordinate_mapping_to_world(self):
+        self.g.on_notify(None, (1,1))    # we need to move the player position now...
+        self.assertEqual(self.g[2,2], self.g.world.get_cell(1,1))
 
     def test_coordinate_offset(self):
         self.g.offset = (1,1)
