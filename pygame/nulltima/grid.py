@@ -41,14 +41,20 @@ class Grid(game.Component):
                 game.Game.screen.blit(image, screen_coord)
 
     # TO_DO: think about edge conditions...
-    def count_matching_neighbors(self, world_coord):
-        current_terrain = self.world.get_cell(world_coord[0], world_coord[1])
+    def count_matching_neighbors(self, world_coord, debug=False):
+        current_terrain = self.world.get_cell(world_coord[1], world_coord[0])
+        if debug:
+            print('terrain = {}, coord = {}'.format(current_terrain, world_coord))
         count = 0
         for direction in [(0,-1,1), (1,0,2), (0,1,4), (-1,0,8)]:
+            if debug:
+                print('direction = {}'.format(direction))
             neighbor_coord = (world_coord[0] + direction[0],
                               world_coord[1] + direction[1])
-            if self.world.get_cell(neighbor_coord[0], neighbor_coord[1]) == current_terrain:
+            if self.world.get_cell(neighbor_coord[1], neighbor_coord[0]) == current_terrain:
                 count += direction[2]
+            if debug:
+                print('count = {}'.format(count))
         return count
 
     def __getitem__(self, index):

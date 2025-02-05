@@ -88,10 +88,10 @@ class World:
             if isinstance(self.terrains[index], AnimatedTerrain):
                 self.terrains[index].update()
 
-    def get_cell(self, x, y):
+    def get_cell(self, y, x):
         if (x >= 0 and x < len(self.contents[0]) and
             y >= 0 and y < len(self.contents)):
-                index = self.contents[x][y]
+                index = self.contents[y][x]
                 return self.terrains[index]
         else:
             return self.terrains[9]

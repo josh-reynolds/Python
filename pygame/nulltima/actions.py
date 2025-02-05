@@ -83,7 +83,7 @@ class Debug(Action):
         self.name = 'Debug'
         self.target = target
     def execute(self):
-        print(self.target.components[0].count_matching_neighbors(self.target.player.pos))
+        print(self.target.components[0].count_matching_neighbors(self.target.player.pos, debug=True))
 
 class GodMode(Action):
     def __init__(self, target):

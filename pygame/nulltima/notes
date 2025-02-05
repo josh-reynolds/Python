@@ -816,3 +816,18 @@ they're as expected. So need to dig deeper.
 Adjusted the Debug command to dump out neighbor count at the player position (and threw in a GodMode 
 so testing is less annoying). Looks like the numbers match the tiles, so that's not it - but don't yet
 see why we're getting those values. By the map, shouldn't be...
+
+---------------------------------------
+Figured it out. Debug showed that during count neigbors, it was thinking it was a different terrain type, 
+and so generating a bogus count. And that was because I was transposing coordinates. It's natural to think 
+in terms of x/y, but accessing a 2D array, it should be y/x. Grid.__getitem__() was already doing the 
+right thing, but I fell back into the trap when implementing count_matching_neighbors().
+
+Temporarily renamed the parameters in World.get_cell() to reflect this, but long term would be better to
+encapsulate this confusion in that method, and let the rest of the application think x/y.
+
+And oh yeah, the debug command is a good trick. Adding a flag to the method signature (with a default of
+False) means we can dump out internal variable data. Will definitely make use of this again. Will be a 
+question of crufting things up too much - for now leaving this as an instructive model, but if it spreads 
+will want to clean up after each bug is addressed (and write a test!).
+
