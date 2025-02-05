@@ -30,6 +30,9 @@ class Terrain(Base):
     def get_image(self, neighbors=0):
         return self.image
 
+    def __repr__(self):
+        return f'Terrain({self.name})'
+
 class AnimatedTerrain(Base):
     def __init__(self, data):
         super().__init__(data)
@@ -48,6 +51,9 @@ class AnimatedTerrain(Base):
     def get_image(self, neighbors=0):
         return self.images[self.current_image]
 
+    def __repr__(self):
+        return f'AnimatedTerrain({self.name})'
+
 class SmartTerrain(Base):
     def __init__(self, data):
         super().__init__(data)
@@ -61,6 +67,9 @@ class SmartTerrain(Base):
     # so this is a four-bit number ranging from 0 to 15
     def get_image(self, neighbors):
         return self.images[neighbors]
+
+    def __repr__(self):
+        return f'SmartTerrain({self.name})'
 
 class World:
     def __init__(self, contents=[]):

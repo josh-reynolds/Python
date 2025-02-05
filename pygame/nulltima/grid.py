@@ -33,12 +33,14 @@ class Grid(game.Component):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
+                # TO_DO: should only do this if cell type is SmartTerrain
                 neighbors = self.count_matching_neighbors(self.to_world(grid_coord))
                 image = self[grid_coord].get_image(neighbors)
                 if self._is_occluded(grid_coord):
                     image = self.world.get_occluded().image
                 game.Game.screen.blit(image, screen_coord)
 
+    # TO_DO: think about edge conditions...
     def count_matching_neighbors(self, world_coord):
         current_terrain = self.world.get_cell(world_coord[0], world_coord[1])
         count = 0
@@ -222,6 +224,21 @@ class GridTestCase(unittest.TestCase):
                              (0,2), (4,2),
                              (0,3), (4,3),
                              (0,4), (1,4), (2,4), (3,4), (4,4)])
+
+    def test_neighbor_count(self):
+        self.g = Grid(size=(5, 5), pos=(1, 1), cell_width=1, cell_height=1)
+        self.g.world.contents = [[ 0,  0, 10,  0, 10],
+                                 [ 0,  1, 10,  1,  0],
+                                 [10, 10, 10, 10, 10],
+                                 [ 0,  1, 10,  1,  0],
+                                 [ 0,  0, 10,  0,  0]]
+        self.assertEqual(self.g.count_matching_neighbors((2,2)), 15)
+        self.assertEqual(self.g.count_matching_neighbors((1,2)), 10)
+        self.assertEqual(self.g.count_matching_neighbors((3,2)), 10)
+        self.assertEqual(self.g.count_matching_neighbors((2,1)), 5)
+        self.assertEqual(self.g.count_matching_neighbors((2,3)), 5)
+        self.assertEqual(self.g.count_matching_neighbors((0,4)), 0)
+        #self.assertEqual(self.g.count_matching_neighbors((2,0)), 2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
