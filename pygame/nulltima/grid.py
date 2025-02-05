@@ -228,18 +228,23 @@ class GridTestCase(unittest.TestCase):
 
     def test_neighbor_count(self):
         self.g = Grid(size=(5, 5), pos=(1, 1), cell_width=1, cell_height=1)
-        self.g.world.contents = [[ 0,  0, 10,  0, 10],
-                                 [ 0,  1, 10,  1,  0],
+        self.g.world.contents = [[ 0,  6, 10,  6, 10],
+                                 [ 6,  1, 10,  1,  6],
                                  [10, 10, 10, 10, 10],
-                                 [ 0,  1, 10,  1,  0],
-                                 [ 0,  0, 10,  0,  0]]
+                                 [ 6,  1, 10,  1,  6],
+                                 [ 0,  6, 10,  6,  0]]
+        self.g.on_notify(None, (2,2))    # we need to move the player position now...
+
         self.assertEqual(self.g.count_matching_neighbors((2,2)), 15)
         self.assertEqual(self.g.count_matching_neighbors((1,2)), 10)
         self.assertEqual(self.g.count_matching_neighbors((3,2)), 10)
         self.assertEqual(self.g.count_matching_neighbors((2,1)), 5)
         self.assertEqual(self.g.count_matching_neighbors((2,3)), 5)
-        self.assertEqual(self.g.count_matching_neighbors((0,4)), 0)
-        #self.assertEqual(self.g.count_matching_neighbors((2,0)), 2)
+        self.assertEqual(self.g.count_matching_neighbors((4,0)), 0)
+        self.assertEqual(self.g.count_matching_neighbors((2,0)), 4)
+        self.assertEqual(self.g.count_matching_neighbors((0,2)), 2)
+        self.assertEqual(self.g.count_matching_neighbors((4,2)), 8)
+        self.assertEqual(self.g.count_matching_neighbors((2,4)), 1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
