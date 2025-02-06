@@ -72,11 +72,9 @@ class Attack(Action):
                       self.target.pos[1] + direction[1])
         for monster in game.Game.level.monsters:
             if monster.pos == coordinate:
-                print("Attacking {}".format(monster))
                 self.target.attack(monster)
                 game.Game.level.effects.append(effects.MeleeAttack(coordinate, game.Game.level))
                 return
-        print("No target")
 
 class Debug(Action):
     def __init__(self, target):
