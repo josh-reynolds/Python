@@ -6,9 +6,9 @@ import game
 import actor
 import effects
 
-# monster fields: name, hit_points, damage, images
-monsters = {0:('Orc', 1, 1, ['orc_0.png', 'orc_1.png']),
-            1:('Broo', 2, 2, ['broo_0.png', 'broo_1.png'])}
+# monster fields: name, hit_points, damage, experience, images
+monsters = {0:('Orc', 1, 1, 1, ['orc_0.png', 'orc_1.png']),
+            1:('Broo', 2, 2, 2, ['broo_0.png', 'broo_1.png'])}
 
 class Monster(actor.Actor):
     images = {}
@@ -20,8 +20,9 @@ class Monster(actor.Actor):
         self.name = monsters[monster_type][0]
         self.hit_points = monsters[monster_type][1]
         self.damage = monsters[monster_type][2]
+        self.experience = monsters[monster_type][3]
         if self.name not in Monster.images:
-            image_files = monsters[monster_type][3]
+            image_files = monsters[monster_type][4]
             Monster.images[self.name] = [pygame.image.load('./images/' + x) for x in image_files]
         self.images = Monster.images[self.name]
 
@@ -64,8 +65,8 @@ class Monster(actor.Actor):
         if self.hit_points < 1:
             game.Game.level.monsters.remove(self)
             game.Game.level.remove_observer(self)
-            game.Game.level.player.experience += 1
-            game.Game.score += 1
+            game.Game.level.player.experience += self.experience
+            game.Game.score += self.experience
 
     def __repr__(self):
         return "Monster{}".format(self.pos)

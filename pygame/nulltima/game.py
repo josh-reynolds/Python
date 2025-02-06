@@ -312,6 +312,14 @@ class Overworld(Level):
                 monster_type = 1
             self.monsters.append(monsters.Monster(world_coordinate, self, monster_type))
 
+    def restart(self):
+        self.last_move = ''
+        self.action_queue = []
+        self.monsters = []
+        self.player = player.Player((15,15), self)
+        self.effects = []
+        self.enter()
+
     def __str__(self):
         return 'Scene {}'.format(self.id)
 
