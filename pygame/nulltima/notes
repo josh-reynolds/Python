@@ -752,19 +752,19 @@ Should prioritize changes that make this a complete version, leave out bells and
 We'll just have a non-customizable character moving around on the overworld, fighting randomly spawning 
 monsters (melee only?) an accumulating a score until death, which ends the game. We still need:
 
-  * restart functionality from end screen
-  * one or two more monster types
-  * improve engineering: refactor, better tests and structure
-  * more interesting world map
-  * input of player name
-  * review art/audio assets, improve selectively
-  * clean up system console output
-  * fix: action completion & monster response after two-step actions (i.e. attack)
-  * design fix: monster movement and attacks from diagonal
-  * optional: slow down action sequence after keypress
-  * optional: high score tracking
-  * optional: ranged attacks
-  * optional: gain health from victory
+  * [  ] restart functionality from end screen
+  * [OK] one or two more monster types
+  * [  ] improve engineering: refactor, better tests and structure
+  * [  ] more interesting world map
+  * [  ] input of player name
+  * [  ] review art/audio assets, improve selectively
+  * [  ] clean up system console output
+  * [  ] fix: action completion & monster response after two-step actions (i.e. attack)
+  * [  ] design fix: monster movement and attacks from diagonal
+  * [  ] optional: slow down action sequence after keypress
+  * [  ] optional: high score tracking
+  * [  ] optional: ranged attacks
+  * [  ] optional: gain health from victory
 
 But of course, I'm first going to do something fun. Want to see if I can get a simple smart tile 
 system going. Seems wih a bit switch we can easily map neighbor combinations to 16 values, 0000 through 
