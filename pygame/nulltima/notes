@@ -759,7 +759,7 @@ monsters (melee only?) an accumulating a score until death, which ends the game.
   * [  ] input of player name
   * [  ] review art/audio assets, improve selectively
   * [OK] clean up system console output
-  * [  ] fix: action completion & monster response after two-step actions (i.e. attack)
+  * [OK] fix: action completion & monster response after two-step actions (i.e. attack)
   * [  ] design fix: monster movement and attacks from diagonal
   * [  ] optional: slow down action sequence after keypress
   * [  ] optional: high score tracking

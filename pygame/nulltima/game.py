@@ -300,8 +300,6 @@ class Overworld(Level):
         if event.type == KEYDOWN:
             self.do_shortcut(event)
             Game.message_queue.append((self.last_move, True))
-            for observer in self.observers:
-                observer.on_notify(self.last_move, self.player.pos)
             self.spawn()
 
     def do_shortcut(self, event):
@@ -310,8 +308,8 @@ class Overworld(Level):
             action = self.shortcuts[k][0]
             key_count = self.shortcuts[k][1]
             if key_count == 1 and not self.action_queue:
-                action.execute()
                 self.last_move = action.name
+                self.do_action(action)
             elif key_count == 2 and not self.action_queue:
                 self.action_queue.append(k)
                 Game.message_queue.append(('Direction?', False))
@@ -319,8 +317,16 @@ class Overworld(Level):
                 direction = k
                 base = self.action_queue.pop()
                 action = self.shortcuts[base][0]
-                action.execute(direction)
                 self.last_move = action.name
+                self.do_action(action, direction)
+
+    def do_action(self, action, direction=None):
+        if direction:
+            action.execute(direction)
+        else:
+            action.execute()
+        for observer in self.observers:
+            observer.on_notify(self.last_move, self.player.pos)
 
     def add_observer(self, observer):
         self.observers.append(observer)
