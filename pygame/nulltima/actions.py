@@ -98,3 +98,14 @@ class NextLevel(Action):
         self.target = target
     def execute(self):
         self.target.next_level()
+
+class Restart(Action):
+    def __init__(self, target):
+        self.name = 'Restart'
+        self.target = target
+    def execute(self):
+        self.target.restart()
+
+
+
+

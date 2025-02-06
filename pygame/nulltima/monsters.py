@@ -56,7 +56,7 @@ class Monster(actor.Actor):
             game.Game.message_queue.append(('Hit!', False))
         else:
             game.Game.message_queue.append(('Miss', False))
-        game.Game.message_queue.append(('{} attacks'.format(self.name), False)) # showing in console out of
+        game.Game.message_queue.append(('{} attacks'.format(self), False)) # showing in console out of
                                                                   # order, so small temporary
                                                                   # hack here
     
@@ -68,8 +68,8 @@ class Monster(actor.Actor):
             game.Game.level.player.experience += self.experience
             game.Game.score += self.experience
 
-    def __repr__(self):
-        return "Monster{}".format(self.pos)
+    def __str__(self):
+        return "{}{}".format(self.name, self.pos)
 
 class MonsterTestCase(unittest.TestCase):
     def setUp(self):

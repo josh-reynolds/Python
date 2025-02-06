@@ -40,7 +40,6 @@ class Grid(game.Component):
                     image = self.world.get_occluded().image
                 game.Game.screen.blit(image, screen_coord)
 
-    # TO_DO: think about edge conditions...
     def count_matching_neighbors(self, world_coord, debug=False):
         current_terrain = self.world.get_cell(world_coord[1], world_coord[0])
         if debug:

@@ -27,6 +27,11 @@ class Player(actor.Actor):
     def attack(self, target):
         target.hit_points -= 1
 
+    def restart(self):
+        self.pos = (15, 15)
+        self.hit_points = 10
+        self.experience = 0
+
 class PlayerTestCase(unittest.TestCase):
     def setUp(self):
         coordinate = (100, 100)

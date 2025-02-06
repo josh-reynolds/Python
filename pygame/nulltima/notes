@@ -752,7 +752,7 @@ Should prioritize changes that make this a complete version, leave out bells and
 We'll just have a non-customizable character moving around on the overworld, fighting randomly spawning 
 monsters (melee only?) an accumulating a score until death, which ends the game. We still need:
 
-  * [  ] restart functionality from end screen
+  * [OK] restart functionality from end screen
   * [OK] one or two more monster types
   * [  ] improve engineering: refactor, better tests and structure
   * [  ] more interesting world map

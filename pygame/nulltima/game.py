@@ -26,6 +26,9 @@ class Component:
 
     def draw(self):
         pass
+
+    def restart(self):
+        pass
         
 class Text(Component):
     def __init__(self, text, pos):
@@ -81,6 +84,9 @@ class GameStatusDisplay(StatusDisplay):
     def on_notify(self, last_move, player_position):
         self.moves += 1
         self.player_position = self.target.player.pos
+
+    def restart(self):
+        self.moves = -1
 
 class PlayerStatusDisplay(StatusDisplay):
     def __init__(self, pos):
@@ -157,6 +163,11 @@ class Console(Component):
         pygame.draw.rect(self.img, self.prompt_color, cursor_rect)
         Game.screen.blit(self.img, self.rect)
 
+    def restart(self):
+        self.lines = []
+        self.prompt_pos = 0
+        Game.message_queue.append(('Start', False))
+
 class Level:
     options = {
             'id': 0,
@@ -213,7 +224,9 @@ class EndScreen(Level):
     def __init__(self, **options):
         super().__init__(**options)
         self.define_actions()
-        self.shortcuts = {}
+        self.shortcuts = {
+                K_SPACE: (self.space, 1),
+                }
 
     def update(self):
         for component in self.components:
@@ -227,6 +240,19 @@ class EndScreen(Level):
         for component in self.components:
             component.draw()
         pygame.display.flip()
+
+    def do_event(self, event):
+        if event.type == KEYDOWN:
+            self.do_shortcut(event)
+
+    def do_shortcut(self, event):
+        k = event.key
+        if k in self.shortcuts:
+            action = self.shortcuts[k][0]
+            action.execute()
+
+    def define_actions(self):
+        self.space = actions.Restart(Game)
 
 class Overworld(Level):
     def __init__(self, **options):
@@ -315,10 +341,15 @@ class Overworld(Level):
     def restart(self):
         self.last_move = ''
         self.action_queue = []
-        self.monsters = []
-        self.player = player.Player((15,15), self)
         self.effects = []
-        self.enter()
+        for monster in reversed(self.monsters):
+            self.monsters.remove(monster)
+            self.remove_observer(monster)
+        self.player.restart()
+        for component in self.components:
+            component.restart()
+        for observer in self.observers:
+            observer.on_notify(self.last_move, self.player.pos)
 
     def __str__(self):
         return 'Scene {}'.format(self.id)
@@ -385,6 +416,14 @@ class Game:
         if cls.current_level == len(cls.levels):
             cls.current_level = len(cls.levels) - 1
         cls.level = cls.levels[cls.current_level]
+        cls.level.enter()
+
+    @classmethod
+    def restart(cls):
+        cls.score = 0
+        cls.current_level = 1
+        cls.level = cls.levels[cls.current_level]
+        cls.level.restart()
         cls.level.enter()
 
 class ScreenMock():
