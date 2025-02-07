@@ -19,8 +19,7 @@ class Demo(Game):
         Text(text='Press space to restart,', pos=(200, 100))
         Text(text='or q to quit', pos=(200, 120))
 
-        Game.level = Game.levels[0]
-        Game.level.enter()
+        self.start()
 
 if __name__ == '__main__':
     Demo().run()

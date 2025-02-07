@@ -407,6 +407,10 @@ class Game:
 
         pygame.quit()
 
+    def start(self):
+        Game.level = Game.levels[0]
+        Game.level.enter()
+
     def do_shortcut(self, event):
         k = event.key
         if k in self.shortcuts:
