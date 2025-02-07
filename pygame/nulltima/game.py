@@ -314,7 +314,14 @@ class Overworld(Level):
                 self.action_queue.append(k)
                 Game.message_queue.append(('Direction?', False))
             elif key_count == 1 and self.action_queue:
-                direction = k
+                if k == K_UP:
+                    direction = (0,-1)
+                if k == K_DOWN:
+                    direction = (0,1)
+                if k == K_LEFT:
+                    direction = (-1,0)
+                if k == K_RIGHT:
+                    direction = (1,0)
                 base = self.action_queue.pop()
                 action = self.shortcuts[base][0]
                 self.last_move = action.name

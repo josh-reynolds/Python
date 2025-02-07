@@ -832,3 +832,36 @@ False) means we can dump out internal variable data. Will definitely make use of
 question of crufting things up too much - for now leaving this as an instructive model, but if it spreads 
 will want to clean up after each bug is addressed (and write a test!).
 
+---------------------------------------
+Engineering opportunities and code smells
+
+ * [OK] Attack action shouldn't know about key codes
+ * [  ] Action classes aren't used uniformly, esp. in Monster
+ * [  ] GodMode is a hacky implementation, other opportunities for cheats
+ * [  ] test coverage has fallen waaaay behind
+ * [  ] too much content in game module - split up
+ * [  ] configuration data magic numbers embedded all over
+ * [  ] in general, think about designer role and expose just enough for them
+ * [  ] awkward reference to game score line in EndScreen
+ * [  ] general overuse of global values in Game class
+ * [  ] Effect interface looks a lot like an Actor - merge?
+ * [  ] Grid is better, but still a bit 'God Class' - move coordinate stuff out?
+ * [  ] coordinates in general could be better covered test-wise, easy to get confused
+ * [  ] not sure World should be owned by Grid
+ * [  ] on_notify() thinking in Monster should be more modular to allow variation
+ * [  ] still an issue with ordering of Monster messages in the Console
+ * [  ] still a circular dependency issue wth tests in Actor
+ * [  ] too many long references running through Game object: game.Game.level.blah.blah
+
+ Designer role and types of changes:
+ * adding new monsters
+ * adding new terrains
+ * changing world map
+ * customizing player start conditions
+ * customizing screens and layouts
+ * adding new graphics and animations
+ * adding new sound effects and music
+ * future - adding NPCs and dialogue
+ * future - adding towns
+ * future - adding dungeons
+
