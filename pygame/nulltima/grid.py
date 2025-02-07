@@ -33,11 +33,16 @@ class Grid(game.Component):
             for ix, cell in enumerate(row):
                 grid_coord = (ix,iy)
                 screen_coord = self.to_screen(grid_coord)
-                # TO_DO: should only do this if cell type is SmartTerrain
-                neighbors = self.count_matching_neighbors(self.to_world(grid_coord))
+
+                if isinstance(self[grid_coord], world.SmartTerrain):
+                    neighbors = self.count_matching_neighbors(self.to_world(grid_coord))
+                else:
+                    neighbors = 0
                 image = self[grid_coord].get_image(neighbors)
+
                 if self._is_occluded(grid_coord):
                     image = self.world.get_occluded().image
+
                 game.Game.screen.blit(image, screen_coord)
 
     def count_matching_neighbors(self, world_coord, debug=False):
