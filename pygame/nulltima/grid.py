@@ -41,7 +41,7 @@ class Grid(game.Component):
                 game.Game.screen.blit(image, screen_coord)
 
     def count_matching_neighbors(self, world_coord, debug=False):
-        current_terrain = self.world.get_cell(world_coord[1], world_coord[0])
+        current_terrain = self.world.get_cell(world_coord[0], world_coord[1])
         if debug:
             print('terrain = {}, coord = {}'.format(current_terrain, world_coord))
         count = 0
@@ -50,15 +50,15 @@ class Grid(game.Component):
                 print('direction = {}'.format(direction))
             neighbor_coord = (world_coord[0] + direction[0],
                               world_coord[1] + direction[1])
-            if self.world.get_cell(neighbor_coord[1], neighbor_coord[0]) == current_terrain:
+            if self.world.get_cell(neighbor_coord[0], neighbor_coord[1]) == current_terrain:
                 count += direction[2]
             if debug:
                 print('count = {}'.format(count))
         return count
 
     def __getitem__(self, index):
-        return self.world.get_cell(index[1] + self.offset[1], 
-                                   index[0] + self.offset[0])
+        return self.world.get_cell(index[0] + self.offset[0], 
+                                   index[1] + self.offset[1])
 
     def _find_edges(self):
         edges = []
