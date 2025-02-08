@@ -1,4 +1,5 @@
 import unittest
+import pygame
 import game
 import effects
 
@@ -95,13 +96,15 @@ class Restart(Action):
 # ---------------------------------------------------------------------------
 class PlayerMock():
     def __init__(self):
-        self.hit_points =0
+        self.hit_points = 0
+        self.pos = (1,0)
 
 class TargetMock():
     def __init__(self):
         self.restarted = False
         self.level = 0
         self.player = PlayerMock()
+        self.pos = (0,0)
 
     def move(self, dx, dy):
         self.pos = (dx, dy)
@@ -111,6 +114,21 @@ class TargetMock():
 
     def next_level(self):
         self.level = 1
+
+    def attack(self, target):
+        target.hit_points = -999
+
+class LevelMock():
+    def __init__(self):
+        self.monsters = []
+        self.player = PlayerMock()
+        self.effects = []
+
+class GameMock():
+    def __init__(self):
+        pygame.init()
+        self.level = LevelMock()
+        self.levels = []
 
 # ---------------------------------------------------------------------------
 class ActionTestCase(unittest.TestCase):
@@ -188,9 +206,12 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(a.name, "Attack")
         self.assertEqual(a.target, t)
 
-    def test_executing_an_attack(self):      # saving for later...
+    def test_executing_an_attack(self):
         t = TargetMock()
+        game.Game = GameMock()
         a = Attack(t)
+        a.execute((1,0))
+        self.assertEqual(game.Game.level.player.hit_points, -999)
 
     def test_constructing_a_debug(self):
         t = TargetMock()
