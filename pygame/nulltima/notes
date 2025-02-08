@@ -757,7 +757,7 @@ monsters (melee only?) an accumulating a score until death, which ends the game.
   * [OK] input of player name
   * [OK] clean up system console output
   * [OK] fix: action completion & monster response after two-step actions (i.e. attack)
-  * [  ] improve engineering: refactor, better tests and structure
+  * [..] improve engineering: refactor, better tests and structure
   * [  ] more interesting world map
   * [  ] review art/audio assets, improve selectively
   * [  ] optional: design fix: monster movement and attacks from diagonal
@@ -850,7 +850,7 @@ Engineering opportunities and code smells
  * [  ] not sure World should be owned by Grid
  * [  ] on_notify() thinking in Monster should be more modular to allow variation
  * [  ] still an issue with ordering of Monster messages in the Console
- * [  ] still a circular dependency issue wth tests in Actor
+ * [OK] still a circular dependency issue wth tests in Actor
  * [  ] too many long references running through Game object: game.Game.level.blah.blah
  * [  ] kludgy passing of Player name from TitleScreen through Game to Overworld
 

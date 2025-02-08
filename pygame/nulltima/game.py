@@ -1,11 +1,11 @@
 import random
 import pygame
 from pygame.locals import *
-import actor
 import monsters
 import player
 import actions
 import components
+import actor
 
 class Level:
     options = {
