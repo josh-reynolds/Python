@@ -61,7 +61,10 @@ class EditableText(Component):
 
     def do_event(self, event):
         if event.type == KEYDOWN:
-            self.insert_text(event.unicode)
+            if event.key == K_BACKSPACE:
+                self.text = self.text[:-1]
+            else:
+                self.insert_text(event.unicode)
 
     def insert_text(self, text):
         self.text += text

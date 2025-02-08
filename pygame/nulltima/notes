@@ -756,7 +756,7 @@ monsters (melee only?) an accumulating a score until death, which ends the game.
   * [OK] one or two more monster types
   * [  ] improve engineering: refactor, better tests and structure
   * [  ] more interesting world map
-  * [  ] input of player name
+  * [..] input of player name
   * [  ] review art/audio assets, improve selectively
   * [OK] clean up system console output
   * [OK] fix: action completion & monster response after two-step actions (i.e. attack)
