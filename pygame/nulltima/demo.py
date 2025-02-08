@@ -6,6 +6,8 @@ class Demo(Game):
         super().__init__()
 
         TitleScreen(caption='Welcome to Nulltima!')
+        Text(text='Character name: ', pos=(60, 360))
+        EditableText(text='D. Falt', pos=(210, 360))
 
         Overworld(caption='<====!~ NulltimA ~!====>')
         Grid(size=(11, 11), pos=(60, 60))

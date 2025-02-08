@@ -44,6 +44,20 @@ class Text(Component):
     def draw(self):
         Game.screen.blit(self.img, self.rect)
 
+class EditableText(Component):
+    def __init__(self, text, pos):
+        super().__init__(pos)
+        self.text = text
+        self.render()
+
+    def render(self):
+        self.img = self.font.render(self.text, True, self.fontcolor)
+        self.rect = self.img.get_rect()
+        self.rect.topleft = self.pos
+
+    def draw(self):
+        Game.screen.blit(self.img, self.rect)
+
 class StatusDisplay(Component):
     def __init__(self, pos):
         super().__init__(pos)
@@ -214,6 +228,8 @@ class TitleScreen(Level):
 
     def draw(self):
         Game.screen.blit(self.img, self.rect)
+        for component in self.components:
+            component.draw()
         pygame.display.flip()
 
     def do_event(self, event):
