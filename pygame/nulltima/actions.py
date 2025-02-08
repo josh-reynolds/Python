@@ -81,7 +81,7 @@ class GodMode(Action):
 
 class NextLevel(Action):
     def __init__(self, target):
-        self.name = 'NextLevel'
+        self.name = 'Next Level'
         self.target = target
     def execute(self):
         self.target.next_level()
@@ -152,12 +152,68 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(p.name, "Pass")
         self.assertEqual(p.target, t)
 
-# Quit
-# Attack
-# Debug
-# GodMode
-# NextLevel
-# Restart
+    def test_constructing_a_quit(self):
+        t = TargetMock()
+        q = Quit(t)
+        self.assertEqual(q.name, "Quit")
+        self.assertEqual(q.target, t)
+
+    def test_executing_a_quit(self):
+        t = TargetMock()
+        q = Quit(t)
+        q.execute()
+        self.assertEqual(t.running, False)
+
+    def test_constructing_an_attack(self):
+        t = TargetMock()
+        a = Attack(t)
+        self.assertEqual(a.name, "Attack")
+        self.assertEqual(a.target, t)
+
+    def test_executing_an_attack(self):      # saving for later...
+        t = TargetMock()
+        a = Attack(t)
+
+    def test_constructing_a_debug(self):
+        t = TargetMock()
+        d = Debug(t)
+        self.assertEqual(d.name, "Debug")
+        self.assertEqual(d.target, t)
+
+    def test_executing_a_debug(self):      # saving for later...
+        t = TargetMock()
+        d = Debug(t)
+
+    def test_constructing_a_godmode(self):
+        t = TargetMock()
+        g = GodMode(t)
+        self.assertEqual(g.name, "God Mode")
+        self.assertEqual(g.target, t)
+
+    def test_executing_a_godmode(self):      # saving for later...
+        t = TargetMock()
+        g = GodMode(t)
+
+    def test_constructing_a_nextlevel(self):
+        t = TargetMock()
+        n = NextLevel(t)
+        self.assertEqual(n.name, "Next Level")
+        self.assertEqual(n.target, t)
+
+    def test_executing_a_nextlevel(self):      # saving for later...
+        t = TargetMock()
+        n = NextLevel(t)
+
+    def test_constructing_a_restart(self):
+        t = TargetMock()
+        r = Restart(t)
+        self.assertEqual(r.name, "Restart")
+        self.assertEqual(r.target, t)
+
+    def test_executing_a_restart(self):      # saving for later...
+        t = TargetMock()
+        r = Restart(t)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
