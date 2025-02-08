@@ -63,6 +63,8 @@ class EditableText(Component):
         if event.type == KEYDOWN:
             if event.key == K_BACKSPACE:
                 self.text = self.text[:-1]
+            elif event.key == K_RETURN:
+                Game.next_level()
             else:
                 self.insert_text(event.unicode)
 
