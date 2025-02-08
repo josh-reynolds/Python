@@ -754,13 +754,13 @@ monsters (melee only?) an accumulating a score until death, which ends the game.
 
   * [OK] restart functionality from end screen
   * [OK] one or two more monster types
-  * [  ] improve engineering: refactor, better tests and structure
-  * [  ] more interesting world map
-  * [..] input of player name
-  * [  ] review art/audio assets, improve selectively
+  * [OK] input of player name
   * [OK] clean up system console output
   * [OK] fix: action completion & monster response after two-step actions (i.e. attack)
-  * [  ] design fix: monster movement and attacks from diagonal
+  * [  ] improve engineering: refactor, better tests and structure
+  * [  ] more interesting world map
+  * [  ] review art/audio assets, improve selectively
+  * [  ] optional: design fix: monster movement and attacks from diagonal
   * [  ] optional: slow down action sequence after keypress
   * [  ] optional: high score tracking
   * [  ] optional: ranged attacks
@@ -852,6 +852,7 @@ Engineering opportunities and code smells
  * [  ] still an issue with ordering of Monster messages in the Console
  * [  ] still a circular dependency issue wth tests in Actor
  * [  ] too many long references running through Game object: game.Game.level.blah.blah
+ * [  ] kludgy passing of Player name from TitleScreen through Game to Overworld
 
  Designer role and types of changes:
  * adding new monsters
@@ -865,3 +866,12 @@ Engineering opportunities and code smells
  * future - adding towns
  * future - adding dungeons
 
+---------------------------------------
+Finished input component to allow player name to be set. Very basic - cribbed some from the tutorial project, 
+though they have a ton of functionality I haven't included. For the 'alpha v0.1' release, that's feature
+complete. Would like to clean up some of the uglier code, and spruce up art assets, then it's done and 
+on to the next milestone.
+
+Tons of ideas for what _could_ be done with this engine, simple as it is. But trying to stick to an Ultima
+baseline for now. As noted above, there are a LOT of ideas from the rest of videogame history, as well as 
+genre or scale tweaks.

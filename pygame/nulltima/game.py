@@ -248,8 +248,6 @@ class TitleScreen(Level):
 
     def do_event(self, event):
         self.components[1].do_event(event)
-        #if event.type == KEYDOWN:
-            #Game.next_level()
 
 class EndScreen(Level):
     def __init__(self, **options):
