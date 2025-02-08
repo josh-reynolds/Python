@@ -3,6 +3,7 @@ import unittest
 def suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
+    suite.addTests(loader.loadTestsFromName('actions'))
     suite.addTests(loader.loadTestsFromName('grid'))
     suite.addTests(loader.loadTestsFromName('monsters'))
     suite.addTests(loader.loadTestsFromName('player'))

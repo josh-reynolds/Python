@@ -836,10 +836,10 @@ will want to clean up after each bug is addressed (and write a test!).
 Engineering opportunities and code smells
 
  * [OK] Attack action shouldn't know about key codes
- * [  ] Action classes aren't used uniformly, esp. in Monster
+ * [..] Action classes aren't used uniformly, esp. in Monster
  * [  ] GodMode is a hacky implementation, other opportunities for cheats
- * [  ] test coverage has fallen waaaay behind
- * [  ] too much content in game module - split up
+ * [..] test coverage has fallen waaaay behind
+ * [..] too much content in game module - split up
  * [  ] configuration data magic numbers embedded all over
  * [  ] in general, think about designer role and expose just enough for them
  * [  ] awkward reference to game score line in EndScreen

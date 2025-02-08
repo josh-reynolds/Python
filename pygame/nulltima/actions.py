@@ -1,3 +1,4 @@
+import unittest
 import pygame
 import game
 import effects
@@ -58,9 +59,9 @@ class Attack(Action):
     def execute(self, direction):
         coordinate = (self.target.pos[0] + direction[0],
                       self.target.pos[1] + direction[1])
-        for monster in game.Game.level.monsters:
-            if monster.pos == coordinate:
-                self.target.attack(monster)
+        for entity in game.Game.level.monsters + [game.Game.level.player]:
+            if entity.pos == coordinate:
+                self.target.attack(entity)
                 game.Game.level.effects.append(effects.MeleeAttack(coordinate, game.Game.level))
                 return
 
@@ -92,6 +93,72 @@ class Restart(Action):
     def execute(self):
         self.target.restart()
 
+class TargetMock():
+    def move(self, dx, dy):
+        self.pos = (dx, dy)
 
+class ActionTestCase(unittest.TestCase):
+    def test_constructing_a_north(self):
+        t = TargetMock()
+        n = North(t)
+        self.assertEqual(n.name, "North")
+        self.assertEqual(n.target, t)
 
+    def test_executing_a_north(self):
+        t = TargetMock()
+        n = North(t)
+        n.execute()
+        self.assertEqual(t.pos, (0, -1))
+
+    def test_constructing_a_south(self):
+        t = TargetMock()
+        s = South(t)
+        self.assertEqual(s.name, "South")
+        self.assertEqual(s.target, t)
+
+    def test_executing_a_south(self):
+        t = TargetMock()
+        s = South(t)
+        s.execute()
+        self.assertEqual(t.pos, (0, 1))
+
+    def test_constructing_an_east(self):
+        t = TargetMock()
+        e = East(t)
+        self.assertEqual(e.name, "East")
+        self.assertEqual(e.target, t)
+
+    def test_executing_an_east(self):
+        t = TargetMock()
+        e = East(t)
+        e.execute()
+        self.assertEqual(t.pos, (1, 0))
+
+    def test_constructing_a_west(self):
+        t = TargetMock()
+        w = West(t)
+        self.assertEqual(w.name, "West")
+        self.assertEqual(w.target, t)
+
+    def test_executing_a_west(self):
+        t = TargetMock()
+        w = West(t)
+        w.execute()
+        self.assertEqual(t.pos, (-1, 0))
+
+    def test_constructing_a_pass(self):
+        t = TargetMock()
+        p = Pass(t)
+        self.assertEqual(p.name, "Pass")
+        self.assertEqual(p.target, t)
+
+# Quit
+# Attack
+# Debug
+# GodMode
+# NextLevel
+# Restart
+# ---------------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()
 
