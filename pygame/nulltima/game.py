@@ -56,7 +56,15 @@ class EditableText(Component):
         self.rect.topleft = self.pos
 
     def draw(self):
+        self.render()
         Game.screen.blit(self.img, self.rect)
+
+    def do_event(self, event):
+        if event.type == KEYDOWN:
+            self.insert_text(event.unicode)
+
+    def insert_text(self, text):
+        self.text += text
 
 class StatusDisplay(Component):
     def __init__(self, pos):
@@ -233,8 +241,9 @@ class TitleScreen(Level):
         pygame.display.flip()
 
     def do_event(self, event):
-        if event.type == KEYDOWN:
-            Game.next_level()
+        self.components[1].do_event(event)
+        #if event.type == KEYDOWN:
+            #Game.next_level()
 
 class EndScreen(Level):
     def __init__(self, **options):
