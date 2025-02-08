@@ -64,6 +64,7 @@ class EditableText(Component):
             if event.key == K_BACKSPACE:
                 self.text = self.text[:-1]
             elif event.key == K_RETURN:
+                Game.player_name = self.text
                 Game.next_level()
             else:
                 self.insert_text(event.unicode)
@@ -407,6 +408,9 @@ class Overworld(Level):
         self.d = actions.Debug(self)
         self.g = actions.GodMode(self)
 
+    def set_player_name(self):
+        self.player.name = Game.player_name
+
 class Game:
     level = None
     levels = []
@@ -415,6 +419,7 @@ class Game:
     bg = Color('gray')
     message_queue = []
     score = 0
+    player_name = ''
 
     def __init__(self):
         pygame.init()
@@ -463,6 +468,8 @@ class Game:
         if cls.current_level == len(cls.levels):
             cls.current_level = len(cls.levels) - 1
         cls.level = cls.levels[cls.current_level]
+        if isinstance(cls.level, Overworld):
+            cls.level.set_player_name()
         cls.level.enter()
 
     @classmethod
