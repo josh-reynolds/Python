@@ -1,5 +1,4 @@
 import unittest
-import pygame
 import game
 import effects
 
@@ -93,10 +92,27 @@ class Restart(Action):
     def execute(self):
         self.target.restart()
 
+# ---------------------------------------------------------------------------
+class PlayerMock():
+    def __init__(self):
+        self.hit_points =0
+
 class TargetMock():
+    def __init__(self):
+        self.restarted = False
+        self.level = 0
+        self.player = PlayerMock()
+
     def move(self, dx, dy):
         self.pos = (dx, dy)
 
+    def restart(self):
+        self.restarted = True
+
+    def next_level(self):
+        self.level = 1
+
+# ---------------------------------------------------------------------------
 class ActionTestCase(unittest.TestCase):
     def test_constructing_a_north(self):
         t = TargetMock()
@@ -152,6 +168,8 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(p.name, "Pass")
         self.assertEqual(p.target, t)
 
+    # pass execution doesn't need testing
+
     def test_constructing_a_quit(self):
         t = TargetMock()
         q = Quit(t)
@@ -180,9 +198,8 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(d.name, "Debug")
         self.assertEqual(d.target, t)
 
-    def test_executing_a_debug(self):      # saving for later...
-        t = TargetMock()
-        d = Debug(t)
+    # debug action will change ad hoc as needed
+    # not worth writing a unit test
 
     def test_constructing_a_godmode(self):
         t = TargetMock()
@@ -190,9 +207,11 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(g.name, "God Mode")
         self.assertEqual(g.target, t)
 
-    def test_executing_a_godmode(self):      # saving for later...
+    def test_executing_a_godmode(self):
         t = TargetMock()
         g = GodMode(t)
+        g.execute()
+        self.assertEqual(t.player.hit_points, 1000)
 
     def test_constructing_a_nextlevel(self):
         t = TargetMock()
@@ -200,9 +219,11 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(n.name, "Next Level")
         self.assertEqual(n.target, t)
 
-    def test_executing_a_nextlevel(self):      # saving for later...
+    def test_executing_a_nextlevel(self):
         t = TargetMock()
         n = NextLevel(t)
+        n.execute()
+        self.assertEqual(t.level, 1)
 
     def test_constructing_a_restart(self):
         t = TargetMock()
@@ -210,9 +231,11 @@ class ActionTestCase(unittest.TestCase):
         self.assertEqual(r.name, "Restart")
         self.assertEqual(r.target, t)
 
-    def test_executing_a_restart(self):      # saving for later...
+    def test_executing_a_restart(self):
         t = TargetMock()
         r = Restart(t)
+        r.execute()
+        self.assertEqual(t.restarted, True)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
