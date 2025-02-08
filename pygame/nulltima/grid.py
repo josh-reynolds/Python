@@ -4,8 +4,9 @@ import pygame
 from pygame.locals import *
 import game
 import world
+import components
 
-class Grid(game.Component):
+class Grid(components.Component):
     def __init__(self, size, pos, cell_width=32, cell_height=32):
         super().__init__(pos)
         self.width = size[0]

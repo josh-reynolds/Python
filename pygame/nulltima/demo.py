@@ -1,4 +1,5 @@
 from game import *
+from components import *
 from grid import Grid
 
 class Demo(Game):
