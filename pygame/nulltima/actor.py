@@ -40,9 +40,25 @@ class ActorTestCase(unittest.TestCase):
     def setUp(self):
         coordinate = (100, 100)
         self.a = Actor(coordinate, None)
+        self.a.images = [0, 1, 2]
 
     def test_constructing_an_actor(self):
         self.assertEqual(self.a.pos, (100,100))
+        self.assertEqual(self.a.level, None)
+        self.assertEqual(self.a.time, 0)
+        self.assertEqual(self.a.images, [0, 1, 2])
+        self.assertEqual(self.a.current_image, 0)
+        self.assertEqual(self.a.animation_delay, 60)
+
+    def test_updating_an_actor(self):
+        self.a.update()
+        self.assertEqual(self.a.time, 1)
+
+    def test_updating_an_actor(self):
+        for i in range(self.a.animation_delay + 1):
+            self.a.update()
+        self.assertEqual(self.a.time, 0)
+        self.assertEqual(self.a.current_image, 1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
