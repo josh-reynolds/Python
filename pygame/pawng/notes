@@ -1,0 +1,96 @@
+ Converting Pygame Zero projects to 'raw' Pygame
+
+ I'm working on NixOS, and there isn't a package available for Pygame Zero (and PIP
+ doesn't play nice either), so I thought I'd try to backfill the missing pieces. Worst 
+ case I should be able to pull pgz from GitHub, but giving this a go first. (Not 
+ attempting to duplicate all of pgz - just enough to get the sample games working.)
+
+ Overall it looks very similar to Processing. The client programmer writes a script
+ with update() and draw() functions, and runs with pgz - that handles the game loop
+ and event handling.
+
+ I have coded up the first project from 'Code the Classics Vol. 1' and added a little
+ game loop at the end. Goal is to hook these together - right now it runs without 
+ errors, but only shows a blank window. I'll also need to download and/or create
+ art and sound assets to get this working.
+
+ Once the first project is converted, I should have a roadmap for doing the rest.
+
+ Reviewing pgz docs for requirements:
+
+ * pgz expects images in an 'images' subfolder (and AFAIK also assumes png format)
+ * Actor class holds sprites, and has pos and height fields, and a draw() method
+ * Additional fields: topright, left, right
+ * pgz automatically calls script draw() and update() once per frame
+ * pgz automatically calls event handlers if defined - on_mouse_down()
+ * Actor class method: collidepoint()
+ * pgz defines constants for mouse buttons and keys: mouse.LEFT
+ * pgz expects audio files in a 'sounds' subfolder (format expected is wav?)
+ * built in sounds module plays sound files by name (autoloads and creates wrapper objs?)
+ * built in Clock can schedule func calls for later
+ * Built in objects:
+     * Screen - wraps pygame screen
+     * Rect - directly from pygame
+     * images / sounds - loads files on demand from images/sounds dirs
+         * filenames lowercase/numbers/underscores only, start w/ letter
+	 * .png/.gif/.jpg formats for images
+	 * name passed to Actor is image file name (w/o extension)
+	 * .wav/.ogg formats for audio
+     * music - plays longer audio clips from music dir
+         * plays one at a time
+     * Clock - schedule function calls for later
+     * Actor - holds moving images
+         * constructed with an image name
+	 * some fields: x, image, right, pos, etc.
+	 * some methods: draw(),
+	 * same fields/methods as Rect
+	 * anchor field - by default center but can be moved
+	 * angle field - rotate the image around anchor - also changes width & height
+	 * distance_to() and angle_to() methods
+    * keyboard - attributes matching every key, with True/False values
+    * animate() built in function, returns an Animation instance
+    * tone - generates tones w/ built-in synthesizer
+ * event hooks:
+    * draw()
+    * update()
+    * on_mouse_*()
+    * on_key_*()
+	 
+--------------------------------------------------------------
+step by step - Pawng!
+* basic pygame.init and setting up display
+* basic pygame game loop, and pgzrun.go() removed
+* only event handlers for quitting game (window control and 'q')
+* adding update() to game loop
+* [comment out for now] adding draw() to game loop
+* ISSUE: keyboard not defined
+* create a simple keyboard class - need to add a couple boolean fields (space, down)
+* loop is running, but can't yet respond to key events
+* adding interaction between game loop and keyboard, and mechanism to reset between keypresses
+* loop runs and can advance out of the menu state - still blank white screen
+* next step - uncommenting draw() call - fails on screen.blit syntax
+    pygame blit expects a surface, pgz wrapper screen can take an image name and autoload it
+    need to create an image once that wrapper is running
+* created a wrapper Screen class and started filling interface
+* next error - 'Bat' object has no attribute 'draw' - need to fill in Actor, stub for now
+* next error - missing another image, will fill these in as needed... just dummies for now
+* OK, screen is drawing with some dummy images on white background, need to probe to see what's next...
+    will switch from State.MENU to State.PLAY, but no visible activity
+* in update for State.MENU, we now need to play sounds - will need another wrapper class
+    created a very simple Sounds class that loads in audio files and exposes for playback, it works
+* filling in Actor.draw() stub with very simple graphic to see what's happening next
+    also having actors load their image in ctor
+* tracing through calls now - three tricks:
+    * add pygame.time.Clock().tick(1) to game loop to slow things waaaay down
+    * add print statements at start of primary function/method calls 
+    * add __repr__() to Actor classes
+
+
+
+
+
+
+
+
+
+

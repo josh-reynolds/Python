@@ -23,10 +23,18 @@ def normalized(x, y):
 def sign(x):
     return -1 if x < 0 else 1
 
+
+#--------------------------------------------------------
 class Actor:                        # replacing Pygame Zero code
-    def __init__(self, name, pos):
-        self.name = name
+    def __init__(self, image, pos):
+        self.image = image
         self.pos = pos
+
+    def draw(self):
+        print(str(self) + ".draw()")
+        screen.blit(self.image, self.pos)
+
+#--------------------------------------------------------
 
 class Impact(Actor):
     def __init__(self, pos):
@@ -34,8 +42,12 @@ class Impact(Actor):
         self.time = 0
 
     def update(self):
+        print("Impact.update()")
         self.image = "impact" + str(self.time // 2)
         self.time += 1
+
+    def __repr__(self):
+        return "Impact(" + self.pos + ")"
 
 class Ball(Actor):
     def __init__(self, dx):
@@ -45,6 +57,7 @@ class Ball(Actor):
         self.speed = 5
 
     def update(self):
+        print("Ball.update()")
         for i in range(self.speed):
             original_x = self.x
             self.x += self.dx
@@ -88,7 +101,11 @@ class Ball(Actor):
                     game.play_sound("bounce_synth", 1)
 
     def out(self):
+        print("Ball.out()")
         return self.x < 0 or self.x > WIDTH
+
+    def __repr__(self):
+        return "Ball(" + str(self.dx) + ")"
 
 class Bat(Actor):
     def __init__(self, player, move_func=None):
@@ -107,6 +124,7 @@ class Bat(Actor):
         self.timer = 0
 
     def update(self):
+        print("Bat.update()")
         self.timer -= 1
         y_movement = self.move_func()
         self.y = min(400, max(80, self.y + y_movement))
@@ -121,6 +139,7 @@ class Bat(Actor):
         self.image = 'bat' + str(self.player) + str(frame)
 
     def ai(self):
+        print("Bat.ai()")
         x_distance = abs(game.ball.x - self.x)
         target_y_1 = HALF_HEIGHT
         target_y_2 = game.ball.y + game.ai_offset
@@ -129,14 +148,21 @@ class Bat(Actor):
         target_y = (weight1 * target_y_1) + (weight2 * target_y_2)
         return min(MAX_AI_SPEED, max(-MAX_AI_SPEED, target_y - self.y))
 
+    def __repr__(self):
+        return "Bat(" + str(self.player) + ", move_func)"
+
 class Game:
     def __init__(self, controls=(None, None)):
+        print("Game({})".format(controls))
         self.bats = [Bat(0, controls[0]), Bat(1, controls[1])]
         self.ball = Ball(-1)
         self.impacts = []
         self.ai_offset = 0
 
     def update(self):
+        print("Game.update()")
+        print(self.bats)
+        print(self.ball)
         for obj in self.bats + [self.ball] + self.impacts:
             obj.update
 
@@ -158,6 +184,7 @@ class Game:
                 self.ball = Ball(direction)
 
     def draw(self):
+        print("Game.draw()")
         screen.blit("table", (0,0))
 
         for p in (0,1):
@@ -179,6 +206,7 @@ class Game:
                 screen.blit(image, (255 + (160 * p) + (i * 55), 46))
 
     def play_sound(self, name, count=1):
+        print("Game.play_sound()")
         if self.bats[0].move_func != self.bats[0].ai:
             try:
                 getattr(sounds, name + str(random.randint(0, count - 1))).play()
@@ -187,6 +215,7 @@ class Game:
 
 def p1_controls():
     move = 0
+    print("p1_controls()")
     if keyboard.z or keyboard.down:
         move = PLAYER_SPEED
     elif keyboard.a or keyboard.up:
@@ -195,6 +224,7 @@ def p1_controls():
 
 def p2_controls():
     move = 0
+    print("p2_controls()")
     if keyboard.m:
         move = PLAYER_SPEED
     elif keyboard.k:
@@ -211,6 +241,8 @@ space_down = False
 
 def update():
     global state, game, num_players, space_down
+    print("update()")
+    print(state)
     space_pressed = False
     if keyboard.space and not space_down:
         space_pressed = True
@@ -233,7 +265,7 @@ def update():
             game.update()
 
     elif state == State.PLAY:
-        if max(game.bats[0].score, game.bats[i].score) >= 9:
+        if max(game.bats[0].score, game.bats[1].score) >= 9:
             state = State.GAME_OVER
         else:
             game.update()
@@ -245,6 +277,7 @@ def update():
             game = Game()
 
 def draw():
+    print("draw()")
     game.draw()
 
     if state == State.MENU:
@@ -266,22 +299,79 @@ except:
 state = State.MENU
 game = Game()
 
-#pgzrun.go()
-
 #--------------------------------------------------------
+class Keyboard:
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.space = False
+        self.up = False
+        self.down = False
+        self.a = False
+        self.k = False
+        self.m = False
+        self.z = False
+
+    def __repr__(self):
+        return("Keyboard: {}, {}, {}, {}, {}, {}, {}".format(self.space, self.up,
+                                                             self.down, self.a,
+                                                             self.k, self.m, self.z))
+
+class Screen:
+    def __init__(self, size):
+        self.display = pygame.display.set_mode(size)
+        self.images = {}
+
+    def fill(self, color):
+        self.display.fill(color)
+
+    def blit(self, image, position):
+        if image not in self.images:
+            image_name = './images/' + image + '.png'
+            self.images[image] = pygame.image.load(image_name)
+        self.display.blit(self.images[image], position)
+
+class Sounds:
+    def __init__(self):
+        self.up = pygame.mixer.Sound('./sounds/up.wav')
+        self.down = pygame.mixer.Sound('./sounds/down.wav')
+
 pygame.init()
-screen = pygame.display.set_mode(SIZE)
+screen = Screen(SIZE)
+keyboard = Keyboard()
+sounds = Sounds()
 
 running = True
 while running:
+    pygame.time.Clock().tick(1)     # slowing down for debugging purposes only
+    keyboard.reset()
     for event in pygame.event.get():
+        print(event)
         if event.type == QUIT:
             running = False
         if event.type == KEYDOWN:
             if event.key == K_q:
                 running = False
+            if event.key == K_SPACE:
+                keyboard.space = True
+            if event.key == K_UP:
+                keyboard.up = True
+            if event.key == K_DOWN:
+                keyboard.down = True
+            if event.key == K_a:
+                keyboard.a = True
+            if event.key == K_k:
+                keyboard.k = True
+            if event.key == K_m:
+                keyboard.m = True
+            if event.key == K_z:
+                keyboard.z = True
+            print(keyboard)
 
     screen.fill(Color('white'))
+    update()
+    draw()
     pygame.display.update()
 
 pygame.quit()
