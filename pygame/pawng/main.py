@@ -28,11 +28,12 @@ def sign(x):
 class Actor:                        # replacing Pygame Zero code
     def __init__(self, image, pos):
         self.image = image
-        self.pos = pos
+        self.x = pos[0]
+        self.y = pos[1]
 
     def draw(self):
         print(str(self) + ".draw()")
-        screen.blit(self.image, self.pos)
+        screen.blit(self.image, (self.x, self.y))
 
 #--------------------------------------------------------
 
