@@ -64,6 +64,7 @@ class Ball(Actor):
             original_x = self.x
             self.x += self.dx
             self.y += self.dy
+            self.pos = (self.x, self.y)
 
             if abs(self.x - HALF_WIDTH) >= 344 and abs(original_x - HALF_WIDTH) < 344:
                 if self.x < HALF_WIDTH:

@@ -89,6 +89,11 @@ step by step - Pawng!
 * next error - fail to create an Impact when ball reaches bat - ah, missing parens again
     (I typed in the project code from the book, didn't download - apparently I added some typos)
 * now hitting a bunch of missing errors, filling in with dummies...
+* the AI is now successfully playing on the menu screen, until the ball goes out of bounds
+* next error - 'Ball' object has not attribute 'pos' - Impact() when ball goes off top/bottom of screen
+    adding the fix to Ball.update() - seems like pgz Actor was probably handling, but current
+    code isn't calling super.update() either, so...
+* [observation for later] - Game.play_sound() doesn't seem to get called, needs investigation...
 
 
 
