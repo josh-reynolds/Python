@@ -85,6 +85,10 @@ step by step - Pawng!
     * add print statements at start of primary function/method calls 
     * add __repr__() to Actor classes
 * D'oh, dumb typo stalling me out - no parentheses on call to obj.update !!
+* OK, that got the basics working - ball moves, bats respond to key commands
+* next error - fail to create an Impact when ball reaches bat - ah, missing parens again
+    (I typed in the project code from the book, didn't download - apparently I added some typos)
+* now hitting a bunch of missing errors, filling in with dummies...
 
 
 

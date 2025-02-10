@@ -3,6 +3,7 @@
 # to 'raw' Pygame instead
 
 import math
+import random
 import pygame
 from pygame.locals import *
 from enum import Enum
@@ -39,7 +40,7 @@ class Actor:                        # replacing Pygame Zero code
 
 class Impact(Actor):
     def __init__(self, pos):
-        super.__init__("blank", pos)
+        super().__init__("blank", pos)
         self.time = 0
 
     def update(self):
@@ -48,11 +49,11 @@ class Impact(Actor):
         self.time += 1
 
     def __repr__(self):
-        return "Impact(" + self.pos + ")"
+        return "Impact(" + str(self.x) + "," + str(self.y) + ")"
 
 class Ball(Actor):
     def __init__(self, dx):
-        super().__init__('ball', (0,0))
+        super().__init__("ball", (0,0))
         self.x, self.y = HALF_WIDTH, HALF_HEIGHT
         self.dx, self.dy = dx, 0
         self.speed = 5
@@ -345,7 +346,7 @@ sounds = Sounds()
 
 running = True
 while running:
-    pygame.time.Clock().tick(10)     # slowing down for debugging purposes only
+    pygame.time.Clock().tick(30)     # slowing down for debugging purposes only
     keyboard.reset()
     for event in pygame.event.get():
         print(event)
