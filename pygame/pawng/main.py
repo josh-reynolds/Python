@@ -330,6 +330,10 @@ class Screen:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
         self.display.blit(self.images[image], position)
+        pygame.draw.line(self.display, Color('red'), (40,0), (40,HEIGHT))
+        pygame.draw.line(self.display, Color('red'), (760,0), (760,HEIGHT))
+        pygame.draw.line(self.display, Color('red'), (HALF_WIDTH,0), (HALF_WIDTH,HEIGHT))
+        pygame.draw.line(self.display, Color('red'), (0,HALF_HEIGHT), (WIDTH,HALF_HEIGHT))
 
 class Sounds:
     def __init__(self):
