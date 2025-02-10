@@ -108,6 +108,13 @@ step by step - Pawng!
     wav files. However, now that I've made the change, not getting any sounds at all...
 * Ah! My hacked up Sounds class doesn't have any accessors for the other sounds, need to add.
 * Also caught a typo in my window size - too short, that's why everything was truncated. Fixed.
+* Almost there - remaining issues:
+    Music is not playing (have not implemented a Music class)
+    Bat hit boxes not aligned with graphic (my half-assed Actor class probably to blame)
+    Player 2 bat not appearing at all (is it offscreen?)
+* Once that's all done, would be good to separate this out into a re-usable module to make the rest
+    of the ports easier
+* Music working - now to deal with Actor
 
 
 

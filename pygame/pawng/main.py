@@ -36,6 +36,19 @@ class Actor:                        # replacing Pygame Zero code
         #print(str(self) + ".draw()")
         screen.blit(self.image, (self.x, self.y))
 
+class Music:
+    def __init__(self):
+        pass
+
+    def play(self, song):
+        filename = './music/' + song + '.ogg'
+        pygame.mixer.music.load(filename)
+        pygame.mixer.music.play(-1)     # repeat indefinitely
+
+    def set_volume(self, volume):
+        pygame.mixer.music.set_volume(volume)
+
+music = Music()
 #--------------------------------------------------------
 
 class Impact(Actor):
@@ -64,7 +77,7 @@ class Ball(Actor):
             original_x = self.x
             self.x += self.dx
             self.y += self.dy
-            self.pos = (self.x, self.y)
+            self.pos = (self.x, self.y)       # added this line, not from original sources
 
             if abs(self.x - HALF_WIDTH) >= 344 and abs(original_x - HALF_WIDTH) < 344:
                 if self.x < HALF_WIDTH:
