@@ -112,6 +112,7 @@ step by step - Pawng!
     Music is not playing (have not implemented a Music class)
     Bat hit boxes not aligned with graphic (my half-assed Actor class probably to blame)
     Player 2 bat not appearing at all (is it offscreen?)
+    I think the ball is supposed to bounce of top/bottom edges, doesn't seem to be happening...
 * Once that's all done, would be good to separate this out into a re-usable module to make the rest
     of the ports easier
 * Music working - now to deal with Actor

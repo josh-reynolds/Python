@@ -24,7 +24,6 @@ def normalized(x, y):
 def sign(x):
     return -1 if x < 0 else 1
 
-
 #--------------------------------------------------------
 class Actor:                        # replacing Pygame Zero code
     def __init__(self, image, pos):
@@ -320,6 +319,7 @@ class Keyboard:
 class Screen:
     def __init__(self, size):
         self.display = pygame.display.set_mode(size)
+        pygame.display.set_caption(TITLE)
         self.images = {}
 
     def fill(self, color):
