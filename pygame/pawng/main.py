@@ -60,13 +60,11 @@ class Ball(Actor):
     def update(self):
         print("Ball.update()")
         for i in range(self.speed):
-            print(i)
             original_x = self.x
             self.x += self.dx
             self.y += self.dy
 
             if abs(self.x - HALF_WIDTH) >= 344 and abs(original_x - HALF_WIDTH) < 344:
-                print("check collision")
                 if self.x < HALF_WIDTH:
                     new_dir_x = 1
                     bat = game.bats[0]
@@ -80,7 +78,7 @@ class Ball(Actor):
                     self.dx = -self.dx
                     self.dy += difference_y / 128
                     self.dy = min(max(self.dy, -1), 1)
-                    self.dx, self.dy = normalised(self.dx, self.dy)
+                    self.dx, self.dy = normalized(self.dx, self.dy)
                     game.impacts.append(Impact((self.x - new_dir_x * 10, self.y)))
                     self.speed += 1
                     game.ai_offset = random.randint(-10, 10)
@@ -347,7 +345,7 @@ sounds = Sounds()
 
 running = True
 while running:
-    pygame.time.Clock().tick(1)     # slowing down for debugging purposes only
+    pygame.time.Clock().tick(10)     # slowing down for debugging purposes only
     keyboard.reset()
     for event in pygame.event.get():
         print(event)
