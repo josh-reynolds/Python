@@ -94,6 +94,17 @@ step by step - Pawng!
     adding the fix to Ball.update() - seems like pgz Actor was probably handling, but current
     code isn't calling super.update() either, so...
 * [observation for later] - Game.play_sound() doesn't seem to get called, needs investigation...
+* tried taking out Clock debugging line, and it runs super fast - pgz probably slows things to 60 fps,
+    so going to leave that in
+* suppressed a lot of debugging spew, and can see that Game.play_sound() is being called, but 
+    because of try/catch it is silently doing nothing - just as well, haven't stubbed in sound files yet
+* similar issue with the music built-in, haven't created it yet
+* all the digit images are a drag, only hit the error after the score has gone up enough - I think it's 
+    time to download the project assets so we can get past that and winkle out remaining bugs
+* OK, cloned the original off to the side, and copied over image files (with attribution) - game works
+    mostly correct, but sizing of everything is off - first guess is my Actor implementation is lacking
+    will probably need to check out the pgz sources, but tackling audio and music assets first
+
 
 
 

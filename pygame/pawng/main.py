@@ -33,7 +33,7 @@ class Actor:                        # replacing Pygame Zero code
         self.y = pos[1]
 
     def draw(self):
-        print(str(self) + ".draw()")
+        #print(str(self) + ".draw()")
         screen.blit(self.image, (self.x, self.y))
 
 #--------------------------------------------------------
@@ -44,7 +44,7 @@ class Impact(Actor):
         self.time = 0
 
     def update(self):
-        print("Impact.update()")
+        #print("Impact.update()")
         self.image = "impact" + str(self.time // 2)
         self.time += 1
 
@@ -59,7 +59,7 @@ class Ball(Actor):
         self.speed = 5
 
     def update(self):
-        print("Ball.update()")
+        #print("Ball.update()")
         for i in range(self.speed):
             original_x = self.x
             self.x += self.dx
@@ -104,7 +104,7 @@ class Ball(Actor):
                     game.play_sound("bounce_synth", 1)
 
     def out(self):
-        print("Ball.out()")
+        #print("Ball.out()")
         return self.x < 0 or self.x > WIDTH
 
     def __repr__(self):
@@ -127,7 +127,7 @@ class Bat(Actor):
         self.timer = 0
 
     def update(self):
-        print("Bat.update()")
+        #print("Bat.update()")
         self.timer -= 1
         y_movement = self.move_func()
         self.y = min(400, max(80, self.y + y_movement))
@@ -142,7 +142,7 @@ class Bat(Actor):
         self.image = 'bat' + str(self.player) + str(frame)
 
     def ai(self):
-        print("Bat.ai()")
+        #print("Bat.ai()")
         x_distance = abs(game.ball.x - self.x)
         target_y_1 = HALF_HEIGHT
         target_y_2 = game.ball.y + game.ai_offset
@@ -156,16 +156,16 @@ class Bat(Actor):
 
 class Game:
     def __init__(self, controls=(None, None)):
-        print("Game({})".format(controls))
+        #print("Game({})".format(controls))
         self.bats = [Bat(0, controls[0]), Bat(1, controls[1])]
         self.ball = Ball(-1)
         self.impacts = []
         self.ai_offset = 0
 
     def update(self):
-        print("Game.update()")
-        print(self.bats)
-        print(self.ball)
+        #print("Game.update()")
+        #print(self.bats)
+        #print(self.ball)
         for obj in self.bats + [self.ball] + self.impacts:
             obj.update()
 
@@ -187,7 +187,7 @@ class Game:
                 self.ball = Ball(direction)
 
     def draw(self):
-        print("Game.draw()")
+        #print("Game.draw()")
         screen.blit("table", (0,0))
 
         for p in (0,1):
@@ -209,7 +209,7 @@ class Game:
                 screen.blit(image, (255 + (160 * p) + (i * 55), 46))
 
     def play_sound(self, name, count=1):
-        print("Game.play_sound()")
+        #print("Game.play_sound()")
         if self.bats[0].move_func != self.bats[0].ai:
             try:
                 getattr(sounds, name + str(random.randint(0, count - 1))).play()
@@ -218,7 +218,7 @@ class Game:
 
 def p1_controls():
     move = 0
-    print("p1_controls()")
+    #print("p1_controls()")
     if keyboard.z or keyboard.down:
         move = PLAYER_SPEED
     elif keyboard.a or keyboard.up:
@@ -227,7 +227,7 @@ def p1_controls():
 
 def p2_controls():
     move = 0
-    print("p2_controls()")
+    #print("p2_controls()")
     if keyboard.m:
         move = PLAYER_SPEED
     elif keyboard.k:
@@ -244,8 +244,8 @@ space_down = False
 
 def update():
     global state, game, num_players, space_down
-    print("update()")
-    print(state)
+    #print("update()")
+    #print(state)
     space_pressed = False
     if keyboard.space and not space_down:
         space_pressed = True
@@ -280,7 +280,7 @@ def update():
             game = Game()
 
 def draw():
-    print("draw()")
+    #print("draw()")
     game.draw()
 
     if state == State.MENU:
@@ -347,10 +347,10 @@ sounds = Sounds()
 
 running = True
 while running:
-    pygame.time.Clock().tick(30)     # slowing down for debugging purposes only
+    pygame.time.Clock().tick(60)
     keyboard.reset()
     for event in pygame.event.get():
-        print(event)
+        #print(event)
         if event.type == QUIT:
             running = False
         if event.type == KEYDOWN:
@@ -370,7 +370,7 @@ while running:
                 keyboard.m = True
             if event.key == K_z:
                 keyboard.z = True
-            print(keyboard)
+            #print(keyboard)
 
     screen.fill(Color('white'))
     update()
