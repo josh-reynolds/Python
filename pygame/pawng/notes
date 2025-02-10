@@ -104,6 +104,10 @@ step by step - Pawng!
 * OK, cloned the original off to the side, and copied over image files (with attribution) - game works
     mostly correct, but sizing of everything is off - first guess is my Actor implementation is lacking
     will probably need to check out the pgz sources, but tackling audio and music assets first
+* One tweak required to the script - downloaded audio assets are ogg format, and I had hardcoded for 
+    wav files. However, now that I've made the change, not getting any sounds at all...
+
+
 
 
 

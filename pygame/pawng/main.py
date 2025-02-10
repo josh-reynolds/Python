@@ -337,8 +337,8 @@ class Screen:
 
 class Sounds:
     def __init__(self):
-        self.up = pygame.mixer.Sound('./sounds/up.wav')
-        self.down = pygame.mixer.Sound('./sounds/down.wav')
+        self.up = pygame.mixer.Sound('./sounds/up.ogg')
+        self.down = pygame.mixer.Sound('./sounds/down.ogg')
 
 pygame.init()
 screen = Screen(SIZE)
