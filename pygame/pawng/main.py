@@ -60,11 +60,13 @@ class Ball(Actor):
     def update(self):
         print("Ball.update()")
         for i in range(self.speed):
+            print(i)
             original_x = self.x
             self.x += self.dx
             self.y += self.dy
 
             if abs(self.x - HALF_WIDTH) >= 344 and abs(original_x - HALF_WIDTH) < 344:
+                print("check collision")
                 if self.x < HALF_WIDTH:
                     new_dir_x = 1
                     bat = game.bats[0]
@@ -165,7 +167,7 @@ class Game:
         print(self.bats)
         print(self.ball)
         for obj in self.bats + [self.ball] + self.impacts:
-            obj.update
+            obj.update()
 
         for i in range(len(self.impacts) - 1, -1, -1):
             if self.impacts[i].time >= 10:

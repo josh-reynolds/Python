@@ -84,6 +84,7 @@ step by step - Pawng!
     * add pygame.time.Clock().tick(1) to game loop to slow things waaaay down
     * add print statements at start of primary function/method calls 
     * add __repr__() to Actor classes
+* D'oh, dumb typo stalling me out - no parentheses on call to obj.update !!
 
 
 
