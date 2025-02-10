@@ -8,7 +8,7 @@ import pygame
 from pygame.locals import *
 from enum import Enum
 
-SIZE = (800, 400)
+SIZE = (800, 480)
 WIDTH, HEIGHT = SIZE
 TITLE = "Pawng!"
 

@@ -106,6 +106,8 @@ step by step - Pawng!
     will probably need to check out the pgz sources, but tackling audio and music assets first
 * One tweak required to the script - downloaded audio assets are ogg format, and I had hardcoded for 
     wav files. However, now that I've made the change, not getting any sounds at all...
+* Ah! My hacked up Sounds class doesn't have any accessors for the other sounds, need to add.
+* Also caught a typo in my window size - too short, that's why everything was truncated. Fixed.
 
 
 
