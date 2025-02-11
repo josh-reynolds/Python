@@ -112,7 +112,7 @@ step by step - Pawng!
     [OK] Music is not playing (have not implemented a Music class)
     [OK] Bat hit boxes not aligned with graphic (my half-assed Actor class probably to blame)
     [OK] Player 2 bat not appearing at all (is it offscreen?)
-    [  ] I think the ball is supposed to bounce of top/bottom edges, doesn't seem to be happening...
+    [OK] I think the ball is supposed to bounce of top/bottom edges, doesn't seem to be happening...
 * Once that's all done, would be good to separate this out into a re-usable module to make the rest
     of the ports easier
 * Music working - now to deal with Actor
@@ -125,8 +125,35 @@ step by step - Pawng!
 * Just realized I can handle this all in my bespoke Actor & Screen classes with an option 'center'
     parameter to the blit() call. Only the call from Actor sets to True - the other non-actor images
     use the default False value and everything looks correct now.
-* I think just the top/bottom edge issue is left now.
+* I think just the top/bottom edge issue is left now. Lot of magic numbers in the collision routine,
+    let's decipher.
+    * Table size is 800 x 480
+    * Half values are 400 and 240
+    * Ball image is 24x24, though the graphic itself is only 14x14 or so (alpha edges)
+    * Bat image is 160x160 - graphic itself is about 25x118 (alpha edges and shadow)
+    * Bats are positioned at 40 and 760
+    * Collision detection first checks if the ball has crossed the center line of either bat, 
+        calculated as 344 from the field midpoint (HALF_WIDTH)
+	* Bat 760 - HALF 400 = 360 - Ball/bat half width 16 = 344
+	* abs(Bat 40 - HALF 400) = 360 - Ball/bat half width 16 = 344
+    * Then it checks if the potential collision point lies between the ends of the bat
+        * -64 < (ball.y - bat.y) < 64     (so estimating bat as ~ 128 px high)
+    * All that appears to be working fine
+    * Finally, it checks if the ball has passed the top or bottom edges
+        * abs(ball - HALF_HEIGHT) > 220    (gives a 20 px border top and bottom)
+    * While it is entering this block and seems to be setting the y & dy values correctly, the
+        ball continues to travel offscreen until it crosses the left/right edges and scores a point.
+	It does not bounce.
+    * Careful comparison with text, no obvious errors.
+    * Tried playing a game and observing carefully, and it _might_ be bouncing near the ends of the
+        table, but not in the middle. Ah! Is this if statement indented one level too far?
+    * That's it! (Tricky seeing the indentation in a book listing FWIW.)
 
+* OK, this has reached a good point. Next steps:
+    * Review against project code, ideally the only changes are removing pgz import and pgzrun
+    * Extract my bespoke pgz to a separate module and get this running with minimal changes to script
+    * Longer term, my classes are nowhere close to as robust as the real thing - add as we go, the
+       later projects will no doubt force me to adapt.
 
 
 

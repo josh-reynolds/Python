@@ -105,12 +105,12 @@ class Ball(Actor):
                     else:
                         game.play_sound("hit_veryfast", 1)
 
-                if abs(self.y - HALF_HEIGHT) > 220:
-                    self.dy = -self.dy
-                    self.y += self.dy
-                    game.impacts.append(Impact(self.pos))
-                    game.play_sound("bounce", 5)
-                    game.play_sound("bounce_synth", 1)
+            if abs(self.y - HALF_HEIGHT) > 220:
+                self.dy = -self.dy
+                self.y += self.dy
+                game.impacts.append(Impact(self.pos))
+                game.play_sound("bounce", 5)
+                game.play_sound("bounce_synth", 1)
 
     def out(self):
         return self.x < 0 or self.x > WIDTH
