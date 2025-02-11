@@ -32,7 +32,7 @@ class Actor:                        # replacing Pygame Zero code
         self.y = pos[1]
 
     def draw(self):
-        screen.blit(self.image, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y), center=True)
 
 class Music:
     def __init__(self):
@@ -280,10 +280,10 @@ def draw():
 
     if state == State.MENU:
         menu_image = "menu" + str(num_players - 1)
-        screen.blit(menu_image, (0, 0))
+        screen.blit(menu_image, (0,0))
 
     elif state == State.GAME_OVER:
-        screen.blit("over", (0, 0))
+        screen.blit("over", (0,0))
 
 try:
     pygame.mixer.quit()
@@ -325,10 +325,13 @@ class Screen:
     def fill(self, color):
         self.display.fill(color)
 
-    def blit(self, image, position):
+    def blit(self, image, position, center=False):
         if image not in self.images:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
+        if center:
+            c = self.images[image].get_rect().center       # may want to cache this too
+            position = (position[0] - c[0], position[1] - c[1])
         self.display.blit(self.images[image], position)
         pygame.draw.line(self.display, Color('red'), (40,0), (40,HEIGHT))
         pygame.draw.line(self.display, Color('red'), (760,0), (760,HEIGHT))

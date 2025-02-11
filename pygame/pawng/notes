@@ -109,13 +109,24 @@ step by step - Pawng!
 * Ah! My hacked up Sounds class doesn't have any accessors for the other sounds, need to add.
 * Also caught a typo in my window size - too short, that's why everything was truncated. Fixed.
 * Almost there - remaining issues:
-    Music is not playing (have not implemented a Music class)
-    Bat hit boxes not aligned with graphic (my half-assed Actor class probably to blame)
-    Player 2 bat not appearing at all (is it offscreen?)
-    I think the ball is supposed to bounce of top/bottom edges, doesn't seem to be happening...
+    [OK] Music is not playing (have not implemented a Music class)
+    [OK] Bat hit boxes not aligned with graphic (my half-assed Actor class probably to blame)
+    [OK] Player 2 bat not appearing at all (is it offscreen?)
+    [  ] I think the ball is supposed to bounce of top/bottom edges, doesn't seem to be happening...
 * Once that's all done, would be good to separate this out into a re-usable module to make the rest
     of the ports easier
 * Music working - now to deal with Actor
+* Theory - Actor draws based on the center-point of the image, but I am using a simple blit command from
+    the top-left. Everything seems to be offset to the right and down, so this would add up.
+* OK, that corrected the issues with bat and ball location, but now the table and menu graphics are 
+    in the wrong location. And bounce still isn't working, handle that separately.
+* Simple fix is to change their pos in the blit() call to (HALF_WIDTH, HALF_HEIGHT) instead of (0,0).
+    Possibly pgz is using Actor anchor here, not sure. Leaving this hack for now, can investigate later.
+* Just realized I can handle this all in my bespoke Actor & Screen classes with an option 'center'
+    parameter to the blit() call. Only the call from Actor sets to True - the other non-actor images
+    use the default False value and everything looks correct now.
+* I think just the top/bottom edge issue is left now.
+
 
 
 
