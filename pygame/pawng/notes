@@ -158,6 +158,17 @@ step by step - Pawng!
 * Adding a property to Actor allows me to remove the one edit I made to the original sources (setting
     Ball.pos during update()). I don't use Python properties very often, good to add to the bag of tricks.
 
+* Moved all my custom classes to an engine module, mostly smooth process. Just the game loop left to
+    move, which might be trickier.
+
+* Also don't like my Sounds implementation. Currently very tied to this project via hard-coded audio file
+    names. Will want to dynamically load the contents of the directory instead.
+
+* And another small wrinkle - Actor was unhappy in the new module because 'screen' was not defined. But
+    adding that needs SIZE from the client script. So I put in a temporary definition, and everything
+    works, but on startup, the window is in the bottom-right quadrant of the screen. Needs investigation.
+
+
 
 
 
