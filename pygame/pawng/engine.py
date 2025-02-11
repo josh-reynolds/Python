@@ -1,3 +1,4 @@
+import os
 import pygame
 
 TITLE = ""
@@ -17,6 +18,7 @@ class Actor:
 
 class Screen:
     def __init__(self, size):
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.display = pygame.display.set_mode(size)
         pygame.display.set_caption(TITLE)
         self.images = {}
