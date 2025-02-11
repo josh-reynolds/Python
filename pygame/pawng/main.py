@@ -6,9 +6,8 @@ import math
 import sys
 import random
 import pygame
-from pygame.locals import *                                   ###
 from enum import Enum
-from engine import Actor, Screen, music, keyboard, sounds     ###
+from engine import Actor, screen, music, keyboard, sounds, run     ###
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -270,37 +269,4 @@ state = State.MENU
 game = Game()
 
 #--------------------------------------------------------
-screen = Screen(WIDTH, HEIGHT)
-pygame.display.set_caption(TITLE)
-
-running = True
-while running:
-    pygame.time.Clock().tick(60)
-    keyboard.reset()
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
-        if event.type == KEYDOWN:
-            if event.key == K_q:
-                running = False
-            if event.key == K_SPACE:
-                keyboard.space = True
-            if event.key == K_UP:
-                keyboard.up = True
-            if event.key == K_DOWN:
-                keyboard.down = True
-            if event.key == K_a:
-                keyboard.a = True
-            if event.key == K_k:
-                keyboard.k = True
-            if event.key == K_m:
-                keyboard.m = True
-            if event.key == K_z:
-                keyboard.z = True
-
-    screen.fill(Color("white"))
-    update()
-    draw()
-    pygame.display.update()
-
-pygame.quit()
+run(WIDTH, HEIGHT, TITLE, update, draw)

@@ -179,7 +179,25 @@ step by step - Pawng!
     * [FIXED]     Window caption is not being set correctly with the move to the engine module
     * [     ]     Still want to fix the coupling of the Sounds class
     * [WON'T FIX] No key repeat, so the player moves very slowly - game is slightly challenging
-    * [     ]     Game loop and imports still in main script - move to engine
+    * [FIXED]     Game loop and imports still in main script - move to engine
+
+* Moving the game loop. Slightly tricky - it needs to reference update() and draw(), which are
+    defined in the main script. 
+    * If we define dummy functions in engine module, they mask the real ones, and we get a blank 
+      screen with just music running.
+    * If we import main (or just those two functions), we get a circular dependency error.
+    * Probably need to study pgz sources to see how they pull this off.
+    * OK, their solution does a lot of things and is very involved. Study later, but do something
+      simpler for now.
+    * Experimented with visibility into importing script from engine module via sys.modules
+      dictionary, but the update/draw functions were not visible there. Also tried inspect
+      module. Just realized, though, that maybe the __main__ module hadn't been loaded yet - 
+      my print statements are happening when the engine module is imported at the top... need
+      to circle back.
+    * In the meantime, I can pass in the functions to my run() loop and deal that way. The main
+      goal is preserved - minimal change to original script, just import line and run. Not entirely
+      happy with this function's signature, but it will do for now.
+
 
 
 

@@ -1,7 +1,6 @@
 import os
 import pygame
-
-TITLE = ''
+from pygame.locals import *
 
 class Actor:
     def __init__(self, image, pos):
@@ -20,7 +19,6 @@ class Screen:
     def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.display = pygame.display.set_mode((width, height))
-        pygame.display.set_caption(TITLE)
         self.images = {}
 
     def fill(self, color):
@@ -91,3 +89,41 @@ screen = Screen(1,1)
 music = Music()
 keyboard = Keyboard()
 sounds = Sounds()
+
+def run(width, height, title, update_func, draw_func):
+    update = update_func
+    draw = draw_func
+    screen = Screen(width, height)
+    pygame.display.set_caption(title)
+    running = True
+    while running:
+        pygame.time.Clock().tick(60)
+        keyboard.reset()
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
+            if event.type == KEYDOWN:
+                if event.key == K_q:
+                    running = False
+                if event.key == K_SPACE:
+                    keyboard.space = True
+                if event.key == K_UP:
+                    keyboard.up = True
+                if event.key == K_DOWN:
+                    keyboard.down = True
+                if event.key == K_a:
+                    keyboard.a = True
+                if event.key == K_k:
+                    keyboard.k = True
+                if event.key == K_m:
+                    keyboard.m = True
+                if event.key == K_z:
+                    keyboard.z = True
+    
+        screen.fill(Color("white"))
+        update()
+        draw()
+        pygame.display.update()
+    
+    pygame.quit()
+    
