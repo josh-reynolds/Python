@@ -5,12 +5,14 @@
 import math
 import random
 import pygame
-from pygame.locals import *
+from pygame.locals import *                                   ###
 from enum import Enum
-from engine import Actor, Screen, music, keyboard, sounds
+from engine import Actor, Screen, music, keyboard, sounds     ###
 
-SIZE = (800, 480)
-WIDTH, HEIGHT = SIZE
+# intentionally omitting version check section
+
+WIDTH = 800
+HEIGHT = 480
 TITLE = "Pawng!"
 
 HALF_WIDTH = WIDTH // 2
@@ -33,9 +35,6 @@ class Impact(Actor):
     def update(self):
         self.image = "impact" + str(self.time // 2)
         self.time += 1
-
-    def __repr__(self):
-        return "Impact(" + str(self.x) + "," + str(self.y) + ")"
 
 class Ball(Actor):
     def __init__(self, dx):
@@ -90,9 +89,6 @@ class Ball(Actor):
     def out(self):
         return self.x < 0 or self.x > WIDTH
 
-    def __repr__(self):
-        return "Ball(" + str(self.dx) + ")"
-
 class Bat(Actor):
     def __init__(self, player, move_func=None):
         x = 40 if player == 0 else 760
@@ -121,7 +117,7 @@ class Bat(Actor):
             else:
                 frame = 1
 
-        self.image = 'bat' + str(self.player) + str(frame)
+        self.image = "bat" + str(self.player) + str(frame)
 
     def ai(self):
         x_distance = abs(game.ball.x - self.x)
@@ -131,9 +127,6 @@ class Bat(Actor):
         weight2 = 1 - weight1
         target_y = (weight1 * target_y_1) + (weight2 * target_y_2)
         return min(MAX_AI_SPEED, max(-MAX_AI_SPEED, target_y - self.y))
-
-    def __repr__(self):
-        return "Bat(" + str(self.player) + ", move_func)"
 
 class Game:
     def __init__(self, controls=(None, None)):
@@ -264,7 +257,7 @@ try:
     pygame.mixer.quit()
     pygame.mixer.init(44100, -16, 2, 1024)
 
-    music.play('theme')
+    music.play("theme")
     music.set_volume(0.3)
 except:
     pass
@@ -273,7 +266,7 @@ state = State.MENU
 game = Game()
 
 #--------------------------------------------------------
-screen = Screen(SIZE)
+screen = Screen(WIDTH, HEIGHT)
 
 running = True
 while running:
@@ -300,7 +293,7 @@ while running:
             if event.key == K_z:
                 keyboard.z = True
 
-    screen.fill(Color('white'))
+    screen.fill(Color("white"))
     update()
     draw()
     pygame.display.update()

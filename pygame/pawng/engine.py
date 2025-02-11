@@ -17,9 +17,9 @@ class Actor:
         return (self.x, self.y)
 
 class Screen:
-    def __init__(self, size):
+    def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
-        self.display = pygame.display.set_mode(size)
+        self.display = pygame.display.set_mode((width, height))
         pygame.display.set_caption(TITLE)
         self.images = {}
 
@@ -60,11 +60,6 @@ class Keyboard:
         self.m = False
         self.z = False
 
-    def __repr__(self):
-        return("Keyboard: {}, {}, {}, {}, {}, {}, {}".format(self.space, self.up,
-                                                             self.down, self.a,
-                                                             self.k, self.m, self.z))
-
 class Sounds:
     def __init__(self):
         self.bounce0 = pygame.mixer.Sound('./sounds/bounce0.ogg')
@@ -88,7 +83,7 @@ class Sounds:
         self.up = pygame.mixer.Sound('./sounds/up.ogg')
 
 pygame.init()
-screen = Screen((1,1))
+screen = Screen(1,1)
 music = Music()
 keyboard = Keyboard()
 sounds = Sounds()
