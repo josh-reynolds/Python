@@ -34,6 +34,10 @@ class Actor:                        # replacing Pygame Zero code
     def draw(self):
         screen.blit(self.image, (self.x, self.y), center=True)
 
+    @property
+    def pos(self):
+        return (self.x, self.y)
+
 class Music:
     def __init__(self):
         pass
@@ -73,7 +77,6 @@ class Ball(Actor):
             original_x = self.x
             self.x += self.dx
             self.y += self.dy
-            self.pos = (self.x, self.y)       # added this line, not from original sources
 
             if abs(self.x - HALF_WIDTH) >= 344 and abs(original_x - HALF_WIDTH) < 344:
                 if self.x < HALF_WIDTH:

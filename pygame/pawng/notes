@@ -155,6 +155,10 @@ step by step - Pawng!
     * Longer term, my classes are nowhere close to as robust as the real thing - add as we go, the
        later projects will no doubt force me to adapt.
 
+* Adding a property to Actor allows me to remove the one edit I made to the original sources (setting
+    Ball.pos during update()). I don't use Python properties very often, good to add to the bag of tricks.
+
+
 
 
 
