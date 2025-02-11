@@ -3,13 +3,17 @@
 # to 'raw' Pygame instead
 
 import math
+import sys
 import random
 import pygame
 from pygame.locals import *                                   ###
 from enum import Enum
 from engine import Actor, Screen, music, keyboard, sounds     ###
 
-# intentionally omitting version check section
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
 
 WIDTH = 800
 HEIGHT = 480
@@ -267,6 +271,7 @@ game = Game()
 
 #--------------------------------------------------------
 screen = Screen(WIDTH, HEIGHT)
+pygame.display.set_caption(TITLE)
 
 running = True
 while running:

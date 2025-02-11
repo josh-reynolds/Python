@@ -1,7 +1,7 @@
 import os
 import pygame
 
-TITLE = ""
+TITLE = ''
 
 class Actor:
     def __init__(self, image, pos):
@@ -26,12 +26,13 @@ class Screen:
     def fill(self, color):
         self.display.fill(color)
 
+    # TO_DO: handle other image formats (png/gif/jpg)
     def blit(self, image, position, center=False):
         if image not in self.images:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
         if center:
-            c = self.images[image].get_rect().center       # may want to cache this too
+            c = self.images[image].get_rect().center
             position = (position[0] - c[0], position[1] - c[1])
         self.display.blit(self.images[image], position)
 
@@ -51,6 +52,7 @@ class Keyboard:
     def __init__(self):
         self.reset()
 
+    # TO_DO: add support for full set of keys
     def reset(self):
         self.space = False
         self.up = False
@@ -60,6 +62,8 @@ class Keyboard:
         self.m = False
         self.z = False
 
+# TO_DO: hardcoded to Pawng sound effect files - make ths dynamic
+#        also add support for wav files
 class Sounds:
     def __init__(self):
         self.bounce0 = pygame.mixer.Sound('./sounds/bounce0.ogg')

@@ -167,7 +167,19 @@ step by step - Pawng!
 * And another small wrinkle - Actor was unhappy in the new module because 'screen' was not defined. But
     adding that needs SIZE from the client script. So I put in a temporary definition, and everything
     works, but on startup, the window is in the bottom-right quadrant of the screen. Needs investigation.
+    And fixed!
 
+* Almost there. The main script matches the book text except for expected changes:
+    * Stripped out pgz imports, version check and pgzrun.go() call
+    * Added import of my engine module, and game loop at end of script (will try to move latter out)
+    * Game loop also requires pygame.locals import, hopefully moves out as well
+
+* Remaining work:
+    * [WON'T FIX] Although I renamed the project, the menu screen art asset still says 'Boing!'
+    * [FIXED]     Window caption is not being set correctly with the move to the engine module
+    * [     ]     Still want to fix the coupling of the Sounds class
+    * [WON'T FIX] No key repeat, so the player moves very slowly - game is slightly challenging
+    * [     ]     Game loop and imports still in main script - move to engine
 
 
 
