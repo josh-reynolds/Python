@@ -35,3 +35,6 @@ code. As written, this logic always returns true, regardless of whether the key 
 I verified my engine code is not sending out spurious key press events. So now, it is immediately
 moving to a blank screen in State.PLAY (good part is it forces me to add a few more stubs, but 
 still...).
+
+Fixed. Trivial, really - they had the wrong indentation on the else clause. Not me this time. And
+this is why some people really hate Python...
