@@ -31,10 +31,12 @@ class Game():
     def draw(self):
         pass
 
-CHAR_WIDTH = [27]
+CHAR_WIDTH = [27, 26, 25, 26, 25, 25, 26, 25, 12, 26, 26, 25, 33, 25, 26,
+              25, 27, 26, 26, 25, 26, 26, 38, 25, 25, 25]
 
 def char_width(char):
-    return 10
+    index = max(0, ord(char) - 65)
+    return CHAR_WIDTH[index]
 
 def draw_text(text, y, x=None):
     if x == None:
