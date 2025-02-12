@@ -14,6 +14,15 @@ if sys.version_info < (3,6):
           "it from www.python.org")
     sys.exit()
 
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [0,1]:
+    print(f"This game requires at least version 0.1 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
+
 WIDTH = 800
 HEIGHT = 480
 TITLE = "Pawng!"

@@ -38,3 +38,23 @@ still...).
 
 Fixed. Trivial, really - they had the wrong indentation on the else clause. Not me this time. And
 this is why some people really hate Python...
+
+This has been working well so far, very rapid progress and the game is in a running state at all
+time (though nothing interesting is happening yet, really). I've needed to make a few small changes
+to the engine, as expected, and it occurs to me that I ought to start versioning this thing.
+
+I implemented a very simple __version__ attribute for the module, and added back the pgz version
+checks, pointing to the engine instead. (Small bug in their code here too - they use a multi-line
+f-string for the version error message, but leave off the 'f' on the second line, so it doesn't 
+interpolate the variable value.) Also, due to my slightly wonky import trickery, I need to 
+grab the module object.
+
+One small can of worms this opens up: ideally versions should be backward-compatible. At least the
+simple 'less than' check used right now implies so. And that means I ought to test older projects
+with the latest engine version. We'll see.
+
+I may want to set up a separate directory for just the engine, so I can keep it all in one place. And
+conceptually, I think I'll use minor versions per project (0.1, 0.2, etc.) and push the major version
+at the end of the book - two volumes so far, so I'd expect to have a 1.0 and 2.0 release. Not sure
+if the pace of changes will slow down after the first few projects.
+

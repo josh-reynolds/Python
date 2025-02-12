@@ -3,6 +3,8 @@ import sys
 import pygame
 from pygame.locals import *
 
+__version__ = "0.1"
+
 class Actor:
     def __init__(self, image, pos):
         self.image = image
