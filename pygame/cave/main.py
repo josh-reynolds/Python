@@ -2,7 +2,7 @@ import sys
 from random import choice, randint, random, shuffle
 from enum import Enum
 import pygame
-from engine import Actor, music, keyboard
+from engine import Actor, music, keyboard, sounds
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -159,7 +159,12 @@ class Game():
                 obj.draw()
 
     def play_sound(self, name, count=1):
-        pass
+        if self.player:
+            try:
+                sound = getattr(sounds, name + str(randint(0, count - 1)))
+                sound.play()
+            except Exception as e:
+                print(e)
 
 CHAR_WIDTH = [27, 26, 25, 26, 25, 25, 26, 25, 12, 26, 26, 25, 33, 25, 26,
               25, 27, 26, 26, 25, 26, 26, 38, 25, 25, 25]
