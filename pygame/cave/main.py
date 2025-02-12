@@ -63,10 +63,15 @@ class Player(GravityActor):
         super().__init__((0,0))
         self.lives = 2
         self.score = 0
-        self.health = 1              #####
 
     def reset(self):
-        pass
+        self.pos = (WIDTH / 2, 100)
+        self.vel_y = 0
+        self.direction_x = 1
+        self.fire_timer = 0
+        self.hurt_timer = 100
+        self.health = 3
+        self.blowing_orb = None
 
     def update(self):
         pass

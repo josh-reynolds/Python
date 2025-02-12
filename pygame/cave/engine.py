@@ -19,6 +19,10 @@ class Actor:
     def pos(self):
         return (self.x, self.y)
 
+    @pos.setter
+    def pos(self, new_pos):
+        self.x, self.y = new_pos
+
     @property
     def top(self):
         return self.rect.top
