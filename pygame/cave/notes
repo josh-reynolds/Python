@@ -1,0 +1,15 @@
+Tackling the second project in Code the Classics Vol. 1: Cavern, a Bubble Bobble clone.
+
+I implemented a working Pygame Zero-like engine module that is compatible with these projects
+for the first project (Pawng!/Boing!). Very likely will need extension or fixes as we implement
+this one.
+
+First step is to get the framework in place:
+    * engine.py present
+    * game script, named main.py (engine expects this name)
+    * sounds/music/images dirs
+
+Goal is to exactly duplicate the book text, only removing the pgz import, version check and run
+lines, and adding in references to my own engine module:
+    * import classes at the top
+    * import just the run function at the bottom and call it
