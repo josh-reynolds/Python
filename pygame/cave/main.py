@@ -38,20 +38,6 @@ class GravityActor(CollideActor):
     def move(self, a, b, c):
         pass
 
-class Player(GravityActor):
-    def __init__(self):
-        super().__init__((0,0))
-        self.lives = 3
-        self.score = 0
-        self.health = 1
-        self.image = 'player'
-
-    def reset(self):
-        pass
-
-    def update(self):
-        pass
-
 class Bolt():
     def __init__(self, pos, direction):
         self.active = True
@@ -70,6 +56,19 @@ class Fruit():
         pass
 
     def draw(self):
+        pass
+
+class Player(GravityActor):
+    def __init__(self):
+        super().__init__((0,0))
+        self.lives = 2
+        self.score = 0
+        self.health = 1              #####
+
+    def reset(self):
+        pass
+
+    def update(self):
         pass
 
 class Robot(GravityActor):
