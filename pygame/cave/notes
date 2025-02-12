@@ -13,3 +13,15 @@ Goal is to exactly duplicate the book text, only removing the pgz import, versio
 lines, and adding in references to my own engine module:
     * import classes at the top
     * import just the run function at the bottom and call it
+
+I have a very minimal version set up - it runs, just showing a blank white screen. Now to get the
+game working.
+
+I see two ways to approach this:
+    * type it up from top to bottom
+    * start with the hooks invoked by the engine (update & draw), and fill in stubs as necessary
+        to keep it running without errors
+
+The first seems pretty boring, won't see any results until the whole thing is typed up, and then
+will have to debug it as a whole. I think I'll give the second approach a go.
+
