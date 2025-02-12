@@ -16,9 +16,12 @@ TITLE = "Cave"
 
 class Game():
     def __init__(self):
-        pass
+        self.timer = 0
 
     def update(self):
+        pass
+    
+    def draw(self):
         pass
 
 def space_pressed():
@@ -52,7 +55,19 @@ def update():
             game = Game()
 
 def draw():
-    pass
+    game.draw()
+
+    if state == State.MENU:
+        screen.blit("title", (0,0))
+        anim_frame = min(((game.timer + 40) % 160) // 4, 9)
+        screen.blit("space" + str(anim_frame), (130, 280))
+        
+    elif state == State.PLAY:
+        draw_status()
+
+    elif state == State.GAME_OVER:
+        draw_status()
+        screen.blit("over", (0,0))
 
 state = State.MENU
 game = Game()
