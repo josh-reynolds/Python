@@ -22,10 +22,12 @@ GRID_BLOCK_SIZE = 1
 LEVELS = [["0000"]]
 
 class CollideActor(Actor):
-    pass
+    def __init__(self, pos):
+        super().__init__("blank", pos)
 
 class GravityActor(CollideActor):
-    pass
+    def __init__(self, pos):
+        super().__init__(pos)
 
 class Player(GravityActor):
     def __init__(self):
@@ -56,9 +58,16 @@ class Robot(GravityActor):
     TYPE_AGGRESSIVE = 1
 
     def __init__(self, pos, robot_type):
+        super().__init__(pos)
+
+        self.type = robot_type
+
+        self.speed = randint(1, 3)
+        self.direction_x = 1
         self.alive = True
-        self.image = 'robot'
-        self.x, self.y = pos
+
+        self.change_dir_timer = 0
+        self.fire_timer = 100
 
     def update(self):
         pass
