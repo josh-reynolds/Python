@@ -60,17 +60,18 @@ class Keyboard:
         self.m = False
         self.z = False
 
-# TO_DO: hardcoded to Pawng sound effect files - make ths dynamic
-#        also add support for wav files
 class Sounds:
     def __init__(self):
-        for name in ('up', 'down', 'bounce0', 'bounce1',
-                     'bounce2', 'bounce3', 'bounce4', 'bounce_synth0',
-                     'hit0', 'hit1', 'hit2', 'hit3', 'hit4',
-                     'hit_fast0', 'hit_medium0', 'hit_slow0', 'hit_synth0',
-                     'hit_veryfast0', 'score_goal0'):
-            filename = './sounds/' + name + '.ogg'
-            setattr(self, name, pygame.mixer.Sound(filename))
+        files = []
+        for entry in os.listdir('./sounds/'):
+            if os.path.isfile('./sounds/' + entry):
+                name, extension = entry.split('.')
+                if extension == 'ogg' or extension == 'wav':
+                    files.append((name,extension))
+
+        for file in files:
+            filename = './sounds/' + file[0] + '.' + file[1]
+            setattr(self, file[0], pygame.mixer.Sound(filename))
 
 pygame.init()
 screen = Screen(1,1)
@@ -78,6 +79,7 @@ music = Music()
 keyboard = Keyboard()
 sounds = Sounds()
 
+# TO_DO: trim back this signature, ideally no-arg call
 def run(width, height, title, update_func, draw_func):
     update = update_func
     draw = draw_func
@@ -90,6 +92,7 @@ def run(width, height, title, update_func, draw_func):
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
+            # TO_DO: add support for full set of keys
             if event.type == KEYDOWN:
                 if event.key == K_q:
                     running = False

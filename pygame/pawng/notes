@@ -177,7 +177,7 @@ step by step - Pawng!
 * Remaining work:
     * [WON'T FIX] Although I renamed the project, the menu screen art asset still says 'Boing!'
     * [FIXED]     Window caption is not being set correctly with the move to the engine module
-    * [     ]     Still want to fix the coupling of the Sounds class
+    * [FIXED]     Still want to fix the coupling of the Sounds class
     * [WON'T FIX] No key repeat, so the player moves very slowly - game is slightly challenging
     * [FIXED]     Game loop and imports still in main script - move to engine
 
@@ -198,17 +198,10 @@ step by step - Pawng!
       goal is preserved - minimal change to original script, just import line and run. Not entirely
       happy with this function's signature, but it will do for now.
 
+* Cleaned up the Sounds class - now auto-populates attributes from contents of sounds dir. And also
+      supports wav files.
 
-
-
-
-
-
-
-
-
-
-
-
-
+I think this one is done. I should be able to drop this engine module into any of the future projects,
+and have it work with minimal effort, and no significant change to the project script. I'll keep
+evolving and smoothing the thing as we go, of course, and adding functionality as required.
 
