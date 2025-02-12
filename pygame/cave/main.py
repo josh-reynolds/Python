@@ -31,8 +31,9 @@ class CollideActor(Actor):
 class GravityActor(CollideActor):
     def __init__(self, pos):
         super().__init__(pos)
+        self.landed = False
 
-    def update(self):
+    def update(self, detect=True):
         pass
 
     def move(self, a, b, c):
@@ -73,8 +74,32 @@ class Player(GravityActor):
         self.health = 3
         self.blowing_orb = None
 
-    def update(self):
+    def hit_test():
         pass
+
+    def update(self):
+        super().update(self.health > 0)
+
+        self.fire_timer -= 1
+        self.hurt_timer -= 1
+
+        if self.landed:
+            self.hurt_timer = min(self.hurt_timer, 100)
+
+        if self.hurt_timer > 100:
+            if self.health > 0:
+                self.move(self.direction_x, 0, 4)
+            else:
+                if self.top >= HEIGHT*1.5:
+                    sel.lives -= 1
+                    self.reset()
+        else:
+            dx = 0
+            if keyboard.left:
+                dx = -1
+            elif keyboard.right:
+                dx = 1
+
 
 class Robot(GravityActor):
     TYPE_NORMAL = 0

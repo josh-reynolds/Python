@@ -72,6 +72,8 @@ class Keyboard:
         self.space = False
         self.up = False
         self.down = False
+        self.left = False
+        self.right = False
         self.a = False
         self.k = False
         self.m = False
@@ -117,6 +119,10 @@ def run():
                     keyboard.up = True
                 if event.key == K_DOWN:
                     keyboard.down = True
+                if event.key == K_LEFT:
+                    keyboard.left = True
+                if event.key == K_RIGHT:
+                    keyboard.right = True
                 if event.key == K_a:
                     keyboard.a = True
                 if event.key == K_k:
