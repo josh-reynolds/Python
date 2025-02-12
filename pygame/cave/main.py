@@ -13,17 +13,67 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Cave"
 
-class Player():
+LEVELS = [[0]]
+
+class CollideActor(Actor):
+    pass
+
+class GravityActor(CollideActor):
+    pass
+
+class Player(GravityActor):
     def __init__(self):
         self.lives = 3
         self.score = 0
         self.health = 1
 
+    def reset(self):
+        pass
+
+class Robot(GravityActor):
+    TYPE_NORMAL = 0
+    TYPE_AGGRESSIVE = 1
+
 class Game():
     def __init__(self, player=None):
-        self.timer = 0
         self.player = player
-        self.level = 0
+        self.level_color = -1
+        self.level = -1
+        self.next_level()
+
+    def fire_probability(self):
+        return 0.001 + (0.0001 * min(100, self.level))
+
+    def max_enemies(self):
+        return min((self.level + 6) // 2, 8)
+
+    def next_level(self):
+        self.level_color = (self.level_color +1) % 4
+        self.level += 1
+        self.grid = LEVELS[self.level % len(LEVELS)]
+        self.grid = self.grid + [self.grid[0]]
+        self.timer = -1
+
+        if self.player:
+            self.player.reset()
+
+        self.fruits = []
+        self.bolts = []
+        self.enemies = []
+        self.pops = []
+        self.orbs = []
+
+        num_enemies = 10 + self.level
+        num_strong_enemies = 1 + int(self.level / 1.5)
+        num_weak_enemies = num_enemies - num_strong_enemies
+        self.pending_enemies = num_strong_enemies * [Robot.TYPE_AGGRESSIVE] + \
+                               num_weak_enemies * [Robot.TYPE_NORMAL]
+
+        shuffle(self.pending_enemies)
+        self.play_sound("level", 1)
+
+    def play_sound(self, name, count=1):
+        pass
 
     def update(self):
         pass
