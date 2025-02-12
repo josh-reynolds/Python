@@ -64,25 +64,13 @@ class Keyboard:
 #        also add support for wav files
 class Sounds:
     def __init__(self):
-        self.bounce0 = pygame.mixer.Sound('./sounds/bounce0.ogg')
-        self.bounce1 = pygame.mixer.Sound('./sounds/bounce1.ogg')
-        self.bounce2 = pygame.mixer.Sound('./sounds/bounce2.ogg')
-        self.bounce3 = pygame.mixer.Sound('./sounds/bounce3.ogg')
-        self.bounce4 = pygame.mixer.Sound('./sounds/bounce4.ogg')
-        self.bounce_synth0 = pygame.mixer.Sound('./sounds/bounce_synth0.ogg')
-        self.down = pygame.mixer.Sound('./sounds/down.ogg')
-        self.hit0 = pygame.mixer.Sound('./sounds/hit0.ogg')
-        self.hit1 = pygame.mixer.Sound('./sounds/hit1.ogg')
-        self.hit2 = pygame.mixer.Sound('./sounds/hit2.ogg')
-        self.hit3 = pygame.mixer.Sound('./sounds/hit3.ogg')
-        self.hit4 = pygame.mixer.Sound('./sounds/hit4.ogg')
-        self.hit_fast0 = pygame.mixer.Sound('./sounds/hit_fast0.ogg')
-        self.hit_medium0 = pygame.mixer.Sound('./sounds/hit_medium0.ogg')
-        self.hit_slow0 = pygame.mixer.Sound('./sounds/hit_slow0.ogg')
-        self.hit_synth0 = pygame.mixer.Sound('./sounds/hit_synth0.ogg')
-        self.hit_veryfast0 = pygame.mixer.Sound('./sounds/hit_veryfast0.ogg')
-        self.score_goal0 = pygame.mixer.Sound('./sounds/score_goal0.ogg')
-        self.up = pygame.mixer.Sound('./sounds/up.ogg')
+        for name in ('up', 'down', 'bounce0', 'bounce1',
+                     'bounce2', 'bounce3', 'bounce4', 'bounce_synth0',
+                     'hit0', 'hit1', 'hit2', 'hit3', 'hit4',
+                     'hit_fast0', 'hit_medium0', 'hit_slow0', 'hit_synth0',
+                     'hit_veryfast0', 'score_goal0'):
+            filename = './sounds/' + name + '.ogg'
+            setattr(self, name, pygame.mixer.Sound(filename))
 
 pygame.init()
 screen = Screen(1,1)
