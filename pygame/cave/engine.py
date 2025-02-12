@@ -5,16 +5,27 @@ from pygame.locals import *
 
 class Actor:
     def __init__(self, image, pos):
-        self.image = image
+        self.image_name = image
+        self.image = pygame.image.load('./images/' + image + '.png')
         self.x = pos[0]
         self.y = pos[1]
+        self.rect = self.image.get_rect()
 
+    # TO_DO: reconcile with duplication in Screen.blit()
     def draw(self):
-        screen.blit(self.image, (self.x, self.y), center=True)
+        screen.blit(self.image_name, (self.x, self.y), center=True)
 
     @property
     def pos(self):
         return (self.x, self.y)
+
+    @property
+    def top(self):
+        return self.rect.top
+
+    @property
+    def bottom(self):
+        return self.rect.bottom
 
 class Screen:
     def __init__(self, width, height):
@@ -26,6 +37,7 @@ class Screen:
         self.display.fill(color)
 
     # TO_DO: handle other image formats (png/gif/jpg)
+    # TO_DO: split image handling for Actors and non-Actors, and shift as needed
     def blit(self, image, position, center=False):
         if image not in self.images:
             image_name = './images/' + image + '.png'

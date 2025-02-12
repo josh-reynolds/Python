@@ -21,6 +21,9 @@ GRID_BLOCK_SIZE = 1
 
 LEVELS = [["0000"]]
 
+def sign(x):
+    pass
+
 class CollideActor(Actor):
     def __init__(self, pos):
         super().__init__("blank", pos)
@@ -29,13 +32,16 @@ class GravityActor(CollideActor):
     def __init__(self, pos):
         super().__init__(pos)
 
+    def update(self):
+        pass
+
 class Player(GravityActor):
     def __init__(self):
+        super().__init__((0,0))
         self.lives = 3
         self.score = 0
         self.health = 1
         self.image = 'player'
-        self.x, self.y = 10,10
 
     def reset(self):
         pass
@@ -70,7 +76,42 @@ class Robot(GravityActor):
         self.fire_timer = 100
 
     def update(self):
+        super().update()
+
+        self.change_dir_timer -= 1
+        self.fire_timer += 1
+
+        if self.move(self.direction_x, 0, self.speed):
+            self.change_dir_timer = 0
+
+        if self.change_dir_timer <= 0:
+            directions = [-1, 1]
+            if game.player:
+                directions.append(sign(game.player.x - self.x))
+            self.direction_x = choice(directions)
+            self.change_dir_timer = randint(100, 250)
+
+        if self.type == Robot.TYPE_AGGRESSIVE and self.fire_timer >= 24:
+            for orb in game.orbs:
+                if orb.y >= self.top and orb.y < self.bottom and \
+                        abs(orb.x - self.x) < 200:
+                    self.direction_x = sign(orb.x - self.x)
+                    self.fire_timer = 0
+                    break
+
+        if self.fire_timer >= 12:
+            fire_probability = game.fire_probability()
+            if game.player and self.top < game.player.bottom and \
+                    self.bottom > game.player.top:
+                fire_probability *= 10
+            if random() < fire_probability:
+                self.fire_timer = 0
+                game.play_sound("laser", 4)
+
+    def move(self, a, b, c):
         pass
+
+
 
 class Game():
     def __init__(self, player=None):
