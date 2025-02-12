@@ -2,7 +2,7 @@ import sys
 from random import choice, randint, random, shuffle
 from enum import Enum
 import pygame
-from engine import Actor
+from engine import Actor, music
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -68,6 +68,12 @@ def draw():
     elif state == State.GAME_OVER:
         draw_status()
         screen.blit("over", (0,0))
+
+pygame.mixer.quit()
+pygame.mixer.init(44100, -16, 2, 1024)
+
+music.play("theme")
+music.set_volume(0.1)
 
 state = State.MENU
 game = Game()
