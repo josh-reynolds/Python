@@ -13,7 +13,11 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Cave"
 
+NUM_ROWS = 1
 NUM_COLUMNS = 1
+
+LEVEL_X_OFFSET = 1
+GRID_BLOCK_SIZE = 1
 
 LEVELS = [["0000"]]
 
@@ -28,6 +32,8 @@ class Player(GravityActor):
         self.lives = 3
         self.score = 0
         self.health = 1
+        self.image = 'player'
+        self.x, self.y = 10,10
 
     def reset(self):
         pass
@@ -42,12 +48,17 @@ class Fruit():
     def update(self):
         pass
 
+    def draw(self):
+        pass
+
 class Robot(GravityActor):
     TYPE_NORMAL = 0
     TYPE_AGGRESSIVE = 1
 
     def __init__(self, pos, robot_type):
         self.alive = True
+        self.image = 'robot'
+        self.x, self.y = pos
 
     def update(self):
         pass
@@ -128,7 +139,24 @@ class Game():
                 self.next_level()
     
     def draw(self):
-        pass
+        screen.blit("bg%d" % self.level_color, (0,0))
+
+        block_sprite = "block" + str(self.level % 4)
+
+        for row_y in range(NUM_ROWS):
+            row = self.grid[row_y]
+            if len(row) > 0:
+                x = LEVEL_X_OFFSET
+                for block in row:
+                    if block != ' ':
+                        screen.blit(block_sprite, (x, row_y * GRID_BLOCK_SIZE))
+                        x += GRID_BLOCK_SIZE
+
+        all_objs = self.fruits + self.bolts + self.enemies + self.pops + self.orbs
+        all_objs.append(self.player)
+        for obj in all_objs:
+            if obj:
+                obj.draw()
 
     def play_sound(self, name, count=1):
         pass
