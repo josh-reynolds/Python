@@ -2,7 +2,7 @@ import sys
 from random import choice, randint, random, shuffle
 from enum import Enum
 import pygame
-from engine import Actor, music
+from engine import Actor, music, keyboard
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -13,10 +13,14 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Cave"
 
+class Player():
+    def __init__(self):
+        self.lives = 1
 
 class Game():
-    def __init__(self):
+    def __init__(self, player=None):
         self.timer = 0
+        self.player = player
 
     def update(self):
         pass
@@ -24,8 +28,19 @@ class Game():
     def draw(self):
         pass
 
-def space_pressed():
+def draw_status():
     pass
+
+space_down = False
+
+def space_pressed():
+    global space_down
+    if keyboard.space:
+        if space_down:
+            return False
+    else:
+        space_down = True
+        return True
 
 class State(Enum):
     MENU = 1

@@ -25,3 +25,13 @@ I see two ways to approach this:
 The first seems pretty boring, won't see any results until the whole thing is typed up, and then
 will have to debug it as a whole. I think I'll give the second approach a go.
 
+Going smoothly so far. We start at the bottom with update() and draw(), and have been stubbing up
+from there. I created some placeholder images, too. When it came time to wire up music, though, it
+seemed easier to just bring in the real thing. So right now it sits on the menu screen with music
+playing and no interactivity.
+
+But now I am filling in the stub for space_pressed(), and I think they have a bug in the printed
+code. As written, this logic always returns true, regardless of whether the key is pressed or not.
+I verified my engine code is not sending out spurious key press events. So now, it is immediately
+moving to a blank screen in State.PLAY (good part is it forces me to add a few more stubs, but 
+still...).
