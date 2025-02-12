@@ -7,7 +7,7 @@ import sys
 import random
 import pygame
 from enum import Enum
-from engine import Actor, screen, music, keyboard, sounds, run     ###
+from engine import Actor, screen, music, keyboard, sounds ###
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -269,4 +269,5 @@ state = State.MENU
 game = Game()
 
 #--------------------------------------------------------
-run(WIDTH, HEIGHT, TITLE, update, draw)
+from engine import run
+run()

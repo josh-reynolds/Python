@@ -1,4 +1,5 @@
 import os
+import sys
 import pygame
 from pygame.locals import *
 
@@ -79,12 +80,10 @@ music = Music()
 keyboard = Keyboard()
 sounds = Sounds()
 
-# TO_DO: trim back this signature, ideally no-arg call
-def run(width, height, title, update_func, draw_func):
-    update = update_func
-    draw = draw_func
-    screen = Screen(width, height)
-    pygame.display.set_caption(title)
+def run():
+    parent = sys.modules['__main__']
+    parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
+    pygame.display.set_caption(parent.TITLE)
     running = True
     while running:
         pygame.time.Clock().tick(60)
@@ -112,8 +111,8 @@ def run(width, height, title, update_func, draw_func):
                     keyboard.z = True
     
         screen.fill(Color("white"))
-        update()
-        draw()
+        parent.update()
+        parent.draw()
         pygame.display.update()
     
     pygame.quit()
