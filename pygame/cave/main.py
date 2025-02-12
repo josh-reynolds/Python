@@ -22,7 +22,7 @@ GRID_BLOCK_SIZE = 1
 LEVELS = [["0000"]]
 
 def sign(x):
-    pass
+    return -1
 
 class CollideActor(Actor):
     def __init__(self, pos):
@@ -33,6 +33,9 @@ class GravityActor(CollideActor):
         super().__init__(pos)
 
     def update(self):
+        pass
+
+    def move(self, a, b, c):
         pass
 
 class Player(GravityActor):
@@ -47,6 +50,16 @@ class Player(GravityActor):
         pass
 
     def update(self):
+        pass
+
+class Bolt():
+    def __init__(self, pos, direction):
+        self.active = True
+    
+    def update(self):
+        pass
+
+    def draw(self):
         pass
 
 class Fruit():
@@ -108,10 +121,25 @@ class Robot(GravityActor):
                 self.fire_timer = 0
                 game.play_sound("laser", 4)
 
-    def move(self, a, b, c):
-        pass
+        elif self.fire_timer == 8:
+            game.bolts.append(Bolt((self.x + self.direction_x * 20, self.y - 38),
+                                   self.direction_x))
 
+        for orb in game.orbs:
+            if orb.trapped_enemy_type == None and self.collidepoint(orb.center):
+                self.alive = False
+                orb.floating = True
+                orb.trapped_enemy_type = self.type
+                game.play_sound("trap", 4)
+                break
 
+        direction_idx = "1" if self.direction_x > 0 else "0"
+        image = "robot" + str(self.type) + direction_idx
+        if self.fire_timer < 12:
+            image += str(5 + (self.fire_timer // 4))
+        else:
+            image += str(1 + ((game.timer // 4) % 4))
+        self.image = image
 
 class Game():
     def __init__(self, player=None):
