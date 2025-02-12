@@ -15,12 +15,15 @@ TITLE = "Cave"
 
 class Player():
     def __init__(self):
-        self.lives = 1
+        self.lives = 3
+        self.score = 0
+        self.health = 1
 
 class Game():
     def __init__(self, player=None):
         self.timer = 0
         self.player = player
+        self.level = 0
 
     def update(self):
         pass
@@ -28,8 +31,29 @@ class Game():
     def draw(self):
         pass
 
-def draw_status():
+CHAR_WIDTH = [27]
+
+def draw_text(a, b, c=None):
     pass
+
+IMAGE_WIDTH = {"life":44, "plus":40, "health":40}
+
+def draw_status():
+    number_width = CHAR_WIDTH[0]
+    s = str(game.player.score)
+    draw_text(s, 451, WIDTH - 2 - (number_width * len(s)))
+    draw_text("LEVEL " + str(game.level + 1), 451)
+
+    lives_health = ["life"] * min(2, game.player.lives)
+    if game.player.lives > 2:
+        lives_health.append("plus")
+    if game.player.lives >= 0:
+        lives_health += ["health"] * game.player.health
+
+    x = 0
+    for image in lives_health:
+        screen.blit(image, (x, 450))
+        x += IMAGE_WIDTH[image]
 
 space_down = False
 
