@@ -13,7 +13,9 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Cave"
 
-LEVELS = [[0]]
+NUM_COLUMNS = 1
+
+LEVELS = [["0000"]]
 
 class CollideActor(Actor):
     pass
@@ -30,9 +32,25 @@ class Player(GravityActor):
     def reset(self):
         pass
 
+    def update(self):
+        pass
+
+class Fruit():
+    def __init__(self, pos):
+        self.time_to_live = 10
+
+    def update(self):
+        pass
+
 class Robot(GravityActor):
     TYPE_NORMAL = 0
     TYPE_AGGRESSIVE = 1
+
+    def __init__(self, pos, robot_type):
+        self.alive = True
+
+    def update(self):
+        pass
 
 class Game():
     def __init__(self, player=None):
@@ -72,13 +90,47 @@ class Game():
         shuffle(self.pending_enemies)
         self.play_sound("level", 1)
 
-    def play_sound(self, name, count=1):
-        pass
+    def get_robot_spawn_x(self):
+        r = randint(0, NUM_COLUMNS-1)
+
+        for i in range(NUM_COLUMNS):
+            grid_x = (r+i) % NUM_COLUMNS
+            if self.grid[0][grid_x] == ' ':
+                return GRID_BLOCK_SIZE * grid_x + LEVEL_X_OFFSET + 12
+
+        return WIDTH/2
 
     def update(self):
-        pass
+        self.timer += 1
+
+        for obj in self.fruits + self.bolts + self.enemies + self.pops + \
+                   [self.player] + self.orbs:
+            if obj:
+                obj.update()
+
+        self.fruits = [f for f in self.fruits if f.time_to_live > 0]
+        self.bolts = [b for b in self.bolts if b.active]
+        self.enemies = [e for e in self.enemies if e.alive]
+        self.pops = [p for p in self.pops if p.tmer < 12]
+        self.orbs = [o for o in self.orbs if o.timer < 250 and o.y > -40]
+
+        if self.timer % 100 == 0 and len(self.pending_enemies + self.enemies) > 0:
+            self.fruits.append(Fruit((randint(70, 730), randint(75, 400))))
+
+        if self.timer % 81 == 0 and len(self.pending_enemies) > 0 and \
+                len(self.enemies) < self.max_enemies():
+            robot_type = self.pending_enemies.pop()
+            pos = (self.get_robot_spawn_x(), -30)
+            self.enemies.append(Robot(pos, robot_type))
+
+        if len(self.pending_enemies + self.fruits + self.enemies + self.pops) == 0:
+            if len([orb for ob in self.orbs if orb.trapped_enemy_type != None]) == 0:
+                self.next_level()
     
     def draw(self):
+        pass
+
+    def play_sound(self, name, count=1):
         pass
 
 CHAR_WIDTH = [27, 26, 25, 26, 25, 25, 26, 25, 12, 26, 26, 25, 33, 25, 26,
