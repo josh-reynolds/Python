@@ -33,8 +33,16 @@ class Game():
 
 CHAR_WIDTH = [27]
 
-def draw_text(a, b, c=None):
-    pass
+def char_width(char):
+    return 10
+
+def draw_text(text, y, x=None):
+    if x == None:
+        x = (WIDTH - sum([char_width(c) for c in text])) // 2
+
+    for char in text:
+        screen.blit("font0" + str(ord(char)), (x, y))
+        x += char_width(char)
 
 IMAGE_WIDTH = {"life":44, "plus":40, "health":40}
 
