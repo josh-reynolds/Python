@@ -550,9 +550,9 @@ def space_pressed():
     if keyboard.space:
         if space_down:
             return False
-    else:
-        space_down = True
-        return True
+        else:
+            space_down = True
+            return True
 
 class State(Enum):
     MENU = 1

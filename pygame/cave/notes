@@ -78,9 +78,18 @@ So, from this point, next steps are:
 
 Suspected bugs in the engine code:
   
-  * Not handling anchors properly, so things are drawing in weird locations (I think)
-  * Not handling key repeats, so bubble blowing isn't happening, and as with the previous game,
+  * [FIXED?] Not handling anchors properly, so things are drawing in weird locations (I think)
+  * [FIXED] Not handling key repeats, so bubble blowing isn't happening, and as with the previous game,
      movement is very slow and awkward.
 
 OK, I undid my fix to the space_pressed() function on a whim - still think that is a bug - and it
    now tries to spawn an Orb, so I am driven to add the stub by my own rules. Might as well...
+
+I spun off a separate engine project to make it easier to work on, and fixed both the key repeat issue
+and implemented anchors for Actor. Also undid the undo of the space_pressed() fix. Still getting strange
+behavior, and I can't tell if my fixes are good in this context - only thing I know for sure is the 
+interface hasn't changed (and I _can_ see key repeats firing via the sounds error message - jump/up
+spams the console with 'can't find jump.ogg' messages).
+
+I think bringing in the real assets is next. And then either scrub against the text, or debug issue
+by issue. Mixing it up probably to keep it interesting.
