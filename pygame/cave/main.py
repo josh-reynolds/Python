@@ -157,7 +157,19 @@ class Player(GravityActor):
         self.blowing_orb = None
 
     def hit_test(self, other):
-        pass
+        if self.collidepoint(other.pos) and self.hurt_timer < 0:
+            self.hurt_timer = 200
+            self.health -= 1
+            self.vel_y = -12
+            self.landed = False
+            self.direction_x = other.direction_x
+            if self.health > 0:
+                game.play_sound("ouch", 4)
+            else:
+                game.play_sound("die")
+            return True
+        else:
+            return False
 
     def update(self):
         super().update(self.health > 0)
