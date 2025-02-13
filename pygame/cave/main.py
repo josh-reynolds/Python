@@ -33,11 +33,17 @@ ANCHOR_CENTER = 1
 
 LEVELS = [["0000"]]
 
-def block(a, b):
-    pass
+def block(x, y):
+    grid_x = (x - LEVEL_X_OFFSET) // GRID_BLOCK_SIZE
+    grid_y = y // GRID_BLOCK_SIZE
+    if grid_y > 0 and grid_y < NUM_ROWS:
+        row = game.grid[grid_y]
+        return grid_x >= 0 and grid_x < NUM_COLUMNS and len(row) > 0 and row[grid_x] != " "
+    else:
+        return False
 
 def sign(x):
-    return -1
+    return -1 if x < 0 else 1
 
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
