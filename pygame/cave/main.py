@@ -33,6 +33,9 @@ ANCHOR_CENTER = 1
 
 LEVELS = [["0000"]]
 
+def block(a, b):
+    pass
+
 def sign(x):
     return -1
 
@@ -40,8 +43,24 @@ class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
         super().__init__("blank", pos, anchor)
 
-    def move(self, a, b, c):
-        pass
+    def move(self, dx, dy, speed):
+        new_x, new_y = int(self.x), int(self.y)
+
+        for i in range(speed):
+            new_x, new_y = new_x + dx, new_y + dy
+
+            if new_x < 70 or new_x > 730:
+                return True
+
+            if ((dy > 0 and new_y % GRID_BLOCK_SIZE == 0 or
+                 dx > 0 and new_x % GRID_BLOCK_SIZE == 0 or
+                 dx < 0 and new_x % GRID_BLOCK_SIZE == GRID_BLOCK_SIZE - 1)
+                and block(new_x, new_y)):
+                return True
+
+            self.pos = new_x, new_y
+
+        return False
 
 class Bolt(CollideActor):
     SPEED = 7
