@@ -97,13 +97,22 @@ class CollideActor(Actor):
         return False
 
 class Orb(CollideActor):
+    MAX_TIMER = 250
+
     def __init__(self, pos, dir_x):
         super().__init__(pos)
-        self.timer = -1
+
+        self.direction_x = dir_x
+        self.floating = False
         self.trapped_enemy_type = None
+        self.timer = -1
+        self.blown_frames = 6
 
     def hit_test(self, bolt):
-        pass
+        collided = self.collidepoint(bolt.pos)
+        if collided:
+            self.timer = Orb.MAX_TIMER - 1
+        return collided
 
     def update(self):
         pass
