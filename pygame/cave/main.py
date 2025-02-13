@@ -83,9 +83,6 @@ class Player(GravityActor):
         self.health = 3
         self.blowing_orb = None
 
-    def hit_test():
-        pass
-
     def update(self):
         super().update(self.health > 0)
 
@@ -109,6 +106,48 @@ class Player(GravityActor):
             elif keyboard.right:
                 dx = 1
 
+            if dx != 0:
+                self.direction_x = dx
+
+                if self.fire_timer < 10:
+                    self.move(dx, 0, 4)
+
+            if space_pressed() and self.fire_timer <= 0 and len(game.orbs) < 5:
+                x = min(730, max(70, self.x + self.direction_x * 38))
+                y = self.y - 15
+                self.bowing_orb = Orb((x,y), self.direction_x)
+                game.orbs.append(self.blowing_orb)
+                game.play_sound("blow", 4)
+                self.fire_timer = 20
+
+            if keyboard.up and self.vel_y == 0 and self.landed:
+                self.vel_y = -16
+                self.landed = False
+                game.play_sound("jump")
+
+        if keyboard.space:
+            if self.blowing_orb:
+                self.blowing_orb.blown_frames += 4
+                if self.blowing_orb.blown_frames >= 120:
+                    self.bloing_orb = None
+        else:
+            self.blowing_orb = None
+
+        self.image = "blank"
+        if self.hurt_timer <= 0 or self.hurt_timer % 2 == 1:
+            dir_index = "1" if self.direction_x > 0 else "0"
+
+            if self.hurt_timer > 100:
+                if self.health > 0:
+                    self.image = "recoil" + dir_index
+                else:
+                    self.image = "fall" + str((game.timer // 4) % 2)
+            elif self.fire_timer > 0:
+                self.image = "blow" + dir_index
+            elif dx == 0:
+                self.image = "still"
+            else:
+                self.image = "run" + dir_index + str((game.timer // 8) % 4)
 
 class Robot(GravityActor):
     TYPE_NORMAL = 0
