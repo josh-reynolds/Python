@@ -22,16 +22,44 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Cave"
 
-NUM_ROWS = 1
-NUM_COLUMNS = 1
+NUM_ROWS = 18
+NUM_COLUMNS = 28
 
-LEVEL_X_OFFSET = 1
-GRID_BLOCK_SIZE = 1
+LEVEL_X_OFFSET = 50
+GRID_BLOCK_SIZE = 25
 
-ANCHOR_CENTER_BOTTOM = 1
-ANCHOR_CENTER = 1
+ANCHOR_CENTER = ("center", "center")
+ANCHOR_CENTER_BOTTOM = ("center", "bottom")
 
-LEVELS = [["0000"]]
+LEVELS = [["XXXXX     XXXXXXXX     XXXXX",
+           "","","","",
+           "   XXXXXXX        XXXXXXX   ",
+           "","","",
+           "   XXXXXXXXXXXXXXXXXXXXXX   ",
+           "","","",
+           "XXXXXXXXX          XXXXXXXXX",
+           "","",""],
+
+          ["XXXX    XXXXXXXXXXXX    XXXX",
+           "","","","",
+           "    XXXXXXXXXXXXXXXXXXXX    ",
+           "","","",
+           "XXXXXX                XXXXXX",
+           "      X              X      ",
+           "       X            X       ",
+           "        X          X        ",
+           "         X        X         ",
+           "","",""],
+
+          ["XXXX    XXXX    XXXX    XXXX",
+           "","","","",
+           "  XXXXXXXX        XXXXXXXX  ",
+           "","","",
+           "XXXX      XXXXXXXX      XXXX",
+           "","","",
+           "    XXXXXX        XXXXXX    ",
+           "","",""]]
+
 
 def block(x, y):
     grid_x = (x - LEVEL_X_OFFSET) // GRID_BLOCK_SIZE
