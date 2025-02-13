@@ -115,7 +115,32 @@ class Orb(CollideActor):
         return collided
 
     def update(self):
-        pass
+        self.timer += 1
+
+        if self.floating:
+            self.move(0, -1, randint(1, 2))
+        else:
+            if self.move(self.direction_x, 0, 4):
+                self.floating = True
+
+        if self.timer == self.blown_frames:
+            self.floating = True
+        elif self.timer >= Orb.MAX_TIMER or self.y <= -40:
+            game.pops.append(Pop(self.pos, 1))
+            if self.trapped_enemy_type != None:
+                game.fruits.append(Fruit(self.pos, self.trapped_enemy_type))
+            game.play_sound("pop", 4)
+
+        if self.timer < 9:
+            self.image = "orb" + str(self.timer // 3)
+        else:
+            if self.trapped_enemy_type != None:
+                self.image = "trap" + str(self.trapped_enemy_type) + \
+                             str((self.timer // 4) % 8)
+            else:
+                self.image = "orb" + str(3 + (((self.timer - 9) // 8) % 4))
+
+
 
 class Bolt(CollideActor):
     SPEED = 7
@@ -453,7 +478,7 @@ class Game():
             self.enemies.append(Robot(pos, robot_type))
 
         if len(self.pending_enemies + self.fruits + self.enemies + self.pops) == 0:
-            if len([orb for ob in self.orbs if orb.trapped_enemy_type != None]) == 0:
+            if len([orb for orb in self.orbs if orb.trapped_enemy_type != None]) == 0:
                 self.next_level()
     
     def draw(self):
