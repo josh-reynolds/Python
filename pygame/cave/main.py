@@ -28,25 +28,16 @@ NUM_COLUMNS = 1
 LEVEL_X_OFFSET = 1
 GRID_BLOCK_SIZE = 1
 
+ANCHOR_CENTER_BOTTOM = 1
+
 LEVELS = [["0000"]]
 
 def sign(x):
     return -1
 
 class CollideActor(Actor):
-    def __init__(self, pos):
+    def __init__(self, pos, x):
         super().__init__("blank", pos)
-
-class GravityActor(CollideActor):
-    def __init__(self, pos):
-        super().__init__(pos)
-        self.landed = False
-
-    def update(self, detect=True):
-        pass
-
-    def move(self, a, b, c):
-        pass
 
 class Pop():
     def __init__(self, a, b):
@@ -66,6 +57,19 @@ class Bolt():
         pass
 
     def draw(self):
+        pass
+
+class GravityActor(CollideActor):
+    def __init__(self, pos):
+        super().__init__(pos, ANCHOR_CENTER_BOTTOM)
+
+        self.vel_y = 0
+        self.landed = False
+
+    def update(self, detect=True):
+        pass
+
+    def move(self, a, b, c):
         pass
 
 class Fruit(GravityActor):
