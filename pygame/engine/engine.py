@@ -22,13 +22,6 @@ class Actor:
         return self.rect.collidepoint(point)
 
     @property
-    def x(self):
-        return self.rect.x
-
-    def y(self):
-        return self.rect.y
-
-    @property
     def pos(self):
         return (self.rect.x, self.rect.y)
 
@@ -47,6 +40,9 @@ class Actor:
             self.rect.y = new_pos[1] - self.rect.height//2
         if self.anchor[1] == "bottom":
             self.rect.y = new_pos[1] - self.rect.height
+
+        self.x = self.rect.x
+        self.y = self.rect.y
 
     @property
     def top(self):
