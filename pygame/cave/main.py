@@ -29,6 +29,7 @@ LEVEL_X_OFFSET = 1
 GRID_BLOCK_SIZE = 1
 
 ANCHOR_CENTER_BOTTOM = 1
+ANCHOR_CENTER = 1
 
 LEVELS = [["0000"]]
 
@@ -36,8 +37,8 @@ def sign(x):
     return -1
 
 class CollideActor(Actor):
-    def __init__(self, pos, x=1):
-        super().__init__("blank", pos)
+    def __init__(self, pos, anchor=ANCHOR_CENTER):
+        super().__init__("blank", pos, anchor)
 
     def move(self, a, b, c):
         pass

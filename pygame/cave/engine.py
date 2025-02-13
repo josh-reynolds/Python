@@ -6,7 +6,8 @@ from pygame.locals import *
 __version__ = "0.2"
 
 class Actor:
-    def __init__(self, image, pos):
+    # TO_DO: implement anchor setting and usage
+    def __init__(self, image, pos, anchor=("center", "center")):
         self.image_name = image
         self.image = pygame.image.load('./images/' + image + '.png')
         self.x = pos[0]
