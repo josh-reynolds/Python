@@ -17,6 +17,9 @@ class Actor:
     def draw(self):
         screen.blit(self.image_name, (self.x, self.y), center=True)
 
+    def collidepoint(self, point):
+        return self.rect.collidepoint(point)
+
     @property
     def pos(self):
         return (self.x, self.y)
@@ -32,6 +35,10 @@ class Actor:
     @property
     def bottom(self):
         return self.rect.bottom
+
+    @property
+    def center(self):
+        return self.rect.center
 
 class Screen:
     def __init__(self, width, height):

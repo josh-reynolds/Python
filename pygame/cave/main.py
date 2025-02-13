@@ -48,6 +48,16 @@ class GravityActor(CollideActor):
     def move(self, a, b, c):
         pass
 
+class Pop():
+    def __init__(self, a, b):
+        self.timer = 1
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
+
 class Bolt():
     def __init__(self, pos, direction):
         self.active = True
@@ -79,10 +89,27 @@ class Fruit(GravityActor):
         self.time_to_live = 500
 
     def update(self):
-        pass
+        super().update()
 
-    def draw(self):
-        pass
+        if game.player and game.player.collidepoint(self.center):
+            if self.type == Fruit.EXTRA_HEALTH:
+                game.player.health = min(3, game.player.health + 1)
+                game.play_sound("bonus")
+            elif self.type == Fruit.EXTRA_LIFE:
+                game.player.lives += 1
+                game.play_sound("bonus")
+            else:
+                game.player.score += (self.type + 1) * 100
+                game.play_sound("score")
+                self.time_to_live = 0
+        else:
+            self.time_to_live -= 1
+
+        if self.time_to_live <= 0:
+            game.pops.append(Pop((self.x, self.y - 27), 0))
+
+        anim_frame = str([0, 1, 2, 1][(game.timer // 6) % 4])
+        self.image = "fruit" + str(self.type) + anim_frame
 
 class Player(GravityActor):
     def __init__(self):
@@ -293,7 +320,7 @@ class Game():
         self.fruits = [f for f in self.fruits if f.time_to_live > 0]
         self.bolts = [b for b in self.bolts if b.active]
         self.enemies = [e for e in self.enemies if e.alive]
-        self.pops = [p for p in self.pops if p.tmer < 12]
+        self.pops = [p for p in self.pops if p.timer < 12]
         self.orbs = [o for o in self.orbs if o.timer < 250 and o.y > -40]
 
         if self.timer % 100 == 0 and len(self.pending_enemies + self.enemies) > 0:
