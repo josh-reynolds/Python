@@ -96,6 +96,18 @@ class CollideActor(Actor):
 
         return False
 
+class Orb(CollideActor):
+    def __init__(self, pos, dir_x):
+        super().__init__(pos)
+        self.timer = -1
+        self.trapped_enemy_type = None
+
+    def hit_test(self, bolt):
+        pass
+
+    def update(self):
+        pass
+
 class Bolt(CollideActor):
     SPEED = 7
 
@@ -257,7 +269,7 @@ class Player(GravityActor):
             if space_pressed() and self.fire_timer <= 0 and len(game.orbs) < 5:
                 x = min(730, max(70, self.x + self.direction_x * 38))
                 y = self.y - 15
-                self.bowing_orb = Orb((x,y), self.direction_x)
+                self.blowing_orb = Orb((x,y), self.direction_x)
                 game.orbs.append(self.blowing_orb)
                 game.play_sound("blow", 4)
                 self.fire_timer = 20
@@ -504,9 +516,9 @@ def space_pressed():
     if keyboard.space:
         if space_down:
             return False
-        else:
-            space_down = True
-            return True
+    else:
+        space_down = True
+        return True
 
 class State(Enum):
     MENU = 1

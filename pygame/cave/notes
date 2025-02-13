@@ -58,3 +58,29 @@ conceptually, I think I'll use minor versions per project (0.1, 0.2, etc.) and p
 at the end of the book - two volumes so far, so I'd expect to have a 1.0 and 2.0 release. Not sure
 if the pace of changes will slow down after the first few projects.
 
+Done with the first phase. It runs (strangely) with placeholder graphics - very difficult to tell what
+is going on, but other than the missing sound file exception (expected) there are no errors. The approach
+until now was:
+
+1) Starting from a minimal script that runs the engine, add placeholders & stubs to eliminate errors
+   thrown when running the game.
+2) Moving from the bottom to the top, fill in stubs with real code
+3) Go to 1
+
+That means only code that gets called has a stub, and there potentially are gaps. In this project,
+everything but the Orb class needed to be added. I suspect that's due to a bug in my engine (below).
+
+So, from this point, next steps are:
+
+  * Drop in the real images & audio so we can see what's going on
+  * Debug and fix
+  * Scrub against book code for typos and omissions (already aware of Orb class)
+
+Suspected bugs in the engine code:
+  
+  * Not handling anchors properly, so things are drawing in weird locations (I think)
+  * Not handling key repeats, so bubble blowing isn't happening, and as with the previous game,
+     movement is very slow and awkward.
+
+OK, I undid my fix to the space_pressed() function on a whim - still think that is a bug - and it
+   now tries to spawn an Orb, so I am driven to add the stub by my own rules. Might as well...
