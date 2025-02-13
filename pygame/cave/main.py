@@ -58,9 +58,25 @@ class Bolt():
     def draw(self):
         pass
 
-class Fruit():
-    def __init__(self, pos):
-        self.time_to_live = 10
+class Fruit(GravityActor):
+    APPLE = 0
+    RASPBERRY = 1
+    LEMON = 2
+    EXTRA_HEALTH = 3
+    EXTRA_LIFE = 4
+
+    def __init__(self, pos, trapped_enemy_type=0):
+        super().__init__(pos)
+
+        if trapped_enemy_type == Robot.TYPE_NORMAL:
+            self.type = choice([Fruit.APPLE, Fruit.RASPBERRY, Fruit.LEMON])
+        else:
+            types = 10 * [Fruit.APPLE, Fruit.RASPBERRY, Fruit.LEMON]
+            types += 9 * [Fruit.EXTRA_HEALTH]
+            types += [Fruit.EXTRA_LIFE]
+            self.type = choice(types)
+
+        self.time_to_live = 500
 
     def update(self):
         pass
