@@ -3,20 +3,43 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 class Actor:
-    def __init__(self, image, pos):
-        self.image = image
+    # TO_DO: implement anchor setting and usage
+    def __init__(self, image, pos, anchor=("center", "center")):
+        self.image_name = image
+        self.image = pygame.image.load('./images/' + image + '.png')
         self.x = pos[0]
         self.y = pos[1]
+        self.rect = self.image.get_rect()
 
+    # TO_DO: reconcile with duplication in Screen.blit()
     def draw(self):
-        screen.blit(self.image, (self.x, self.y), center=True)
+        screen.blit(self.image_name, (self.x, self.y), center=True)
+
+    def collidepoint(self, point):
+        return self.rect.collidepoint(point)
 
     @property
     def pos(self):
         return (self.x, self.y)
+
+    @pos.setter
+    def pos(self, new_pos):
+        self.x, self.y = new_pos
+
+    @property
+    def top(self):
+        return self.rect.top
+
+    @property
+    def bottom(self):
+        return self.rect.bottom
+
+    @property
+    def center(self):
+        return self.rect.center
 
 class Screen:
     def __init__(self, width, height):
@@ -28,6 +51,7 @@ class Screen:
         self.display.fill(color)
 
     # TO_DO: handle other image formats (png/gif/jpg)
+    # TO_DO: split image handling for Actors and non-Actors, and shift as needed
     def blit(self, image, position, center=False):
         if image not in self.images:
             image_name = './images/' + image + '.png'
@@ -58,6 +82,8 @@ class Keyboard:
         self.space = False
         self.up = False
         self.down = False
+        self.left = False
+        self.right = False
         self.a = False
         self.k = False
         self.m = False
@@ -103,6 +129,10 @@ def run():
                     keyboard.up = True
                 if event.key == K_DOWN:
                     keyboard.down = True
+                if event.key == K_LEFT:
+                    keyboard.left = True
+                if event.key == K_RIGHT:
+                    keyboard.right = True
                 if event.key == K_a:
                     keyboard.a = True
                 if event.key == K_k:
