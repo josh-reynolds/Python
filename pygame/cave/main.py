@@ -39,6 +39,9 @@ class CollideActor(Actor):
     def __init__(self, pos, x):
         super().__init__("blank", pos)
 
+    def move(self, a, b, c):
+        pass
+
 class Pop():
     def __init__(self, a, b):
         self.timer = 1
@@ -60,6 +63,8 @@ class Bolt():
         pass
 
 class GravityActor(CollideActor):
+    MAX_FALL_SPEED = 10
+
     def __init__(self, pos):
         super().__init__(pos, ANCHOR_CENTER_BOTTOM)
 
@@ -67,10 +72,18 @@ class GravityActor(CollideActor):
         self.landed = False
 
     def update(self, detect=True):
-        pass
+        self.vel_y = min(self.vel_y + 1, GravityActor.MAX_FALL_SPEED)
 
-    def move(self, a, b, c):
-        pass
+        if detect:
+            if self.move(0, sign(self.vel_y), abs(self.vel_y)):
+                self.vel_y = 0
+                self.landed = True
+
+            if self.top >= HEIGHT:
+                self.y = 1
+
+        else:
+            self.y += self.vel_y
 
 class Fruit(GravityActor):
     APPLE = 0
