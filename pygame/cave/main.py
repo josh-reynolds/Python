@@ -43,6 +43,8 @@ class CollideActor(Actor):
         pass
 
 class Bolt(CollideActor):
+    SPEED = 7
+
     def __init__(self, pos, dir_x):
         super().__init__(pos)
 
@@ -50,10 +52,17 @@ class Bolt(CollideActor):
         self.active = True
     
     def update(self):
-        pass
+        if self.move(self.direction_x, 0, Bolt.SPEED):
+            self.active = False
+        else:
+            for obj in game.orbs + [game.player]:
+                if obj and obj.hit_test(self):
+                    self.active = False
+                    break
 
-    def draw(self):
-        pass
+        direction_idx = "1" if self.direction_x > 0 else "0"
+        anim_frame = str((game.timer // 4) % 2)
+        self.image = "bolt" + direction_idx + anim_frame
 
 class Pop(Actor):
     def __init__(self, pos, pop_type):
@@ -146,6 +155,9 @@ class Player(GravityActor):
         self.hurt_timer = 100
         self.health = 3
         self.blowing_orb = None
+
+    def hit_test(self, other):
+        pass
 
     def update(self):
         super().update(self.health > 0)
