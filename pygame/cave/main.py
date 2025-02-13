@@ -36,14 +36,17 @@ def sign(x):
     return -1
 
 class CollideActor(Actor):
-    def __init__(self, pos, x):
+    def __init__(self, pos, x=1):
         super().__init__("blank", pos)
 
     def move(self, a, b, c):
         pass
 
-class Bolt():
-    def __init__(self, pos, direction):
+class Bolt(CollideActor):
+    def __init__(self, pos, dir_x):
+        super().__init__(pos)
+
+        self.direction_x = dir_x
         self.active = True
     
     def update(self):
