@@ -112,6 +112,7 @@ def run():
     parent = sys.modules['__main__']
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
+    pygame.key.set_repeat(50,50)
     running = True
     while running:
         pygame.time.Clock().tick(60)

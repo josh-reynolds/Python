@@ -11,7 +11,7 @@ v0.2 (released with Cave)
 ----------------------------------------
 * [     ] only handles png images - needs support for gif & jpg
 * [     ] only handles very limited set of keys - needs support for full keyboard
-* [     ] does not handle repeat when key is held down
+* [FIXED] does not handle repeat when key is held down
 * [     ] no doc strings at all
 * [     ] image loading code duplication between Screen and Actor
 * [     ] Actor does not support anchors, always set to center,center
