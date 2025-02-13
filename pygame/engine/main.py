@@ -11,8 +11,6 @@ HALF_HEIGHT = HEIGHT // 2
 class Box(Actor):
     def __init__(self, pos, anchor=('center','center')):
         super().__init__("box", pos, anchor)
-        self.pos = pos
-        self.anchor = anchor
 
     def update(self):
         pass
@@ -20,15 +18,20 @@ class Box(Actor):
     def __repr__(self):
         return f"Box({self.pos})"
 
-box = Box((HALF_WIDTH, HALF_HEIGHT))
+boxes = []
+for x in ('left', 'center', 'right'):
+    for y in ('top', 'center', 'bottom'):
+        boxes.append(Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)))
 
 def update():
-    box.update()
+    for box in boxes:
+        box.update()
 
 def draw():
     screen.draw_line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
     screen.draw_line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
-    box.draw()
+    for box in boxes:
+        box.draw()
 
 from engine import run
 run()

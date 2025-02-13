@@ -6,28 +6,47 @@ from pygame.locals import *
 __version__ = "0.2"
 
 class Actor:
-    # TO_DO: implement anchor setting and usage
     def __init__(self, image, pos, anchor=("center", "center")):
         self.image_name = image
+        # TO_DO: reconcile with duplication in Screen.blit()
         self.image = pygame.image.load('./images/' + image + '.png')
-        self.x = pos[0]
-        self.y = pos[1]
         self.rect = self.image.get_rect()
 
-    # TO_DO: reconcile with duplication in Screen.blit()
+        self.anchor = anchor
+        self.pos = pos
+
     def draw(self):
-        screen.blit(self.image_name, (self.x, self.y), center=True)
+        screen.blit(self.image_name, self.pos)
 
     def collidepoint(self, point):
         return self.rect.collidepoint(point)
 
     @property
+    def x(self):
+        return self.rect.x
+
+    def y(self):
+        return self.rect.y
+
+    @property
     def pos(self):
-        return (self.x, self.y)
+        return (self.rect.x, self.rect.y)
 
     @pos.setter
     def pos(self, new_pos):
-        self.x, self.y = new_pos
+        if self.anchor[0] == "left":
+            self.rect.x = new_pos[0]
+        if self.anchor[0] == "center":
+            self.rect.x = new_pos[0] - self.rect.width//2
+        if self.anchor[0] == "right":
+            self.rect.x = new_pos[0] - self.rect.width
+
+        if self.anchor[1] == "top":
+            self.rect.y = new_pos[1]
+        if self.anchor[1] == "center":
+            self.rect.y = new_pos[1] - self.rect.height//2
+        if self.anchor[1] == "bottom":
+            self.rect.y = new_pos[1] - self.rect.height
 
     @property
     def top(self):
@@ -52,13 +71,10 @@ class Screen:
 
     # TO_DO: handle other image formats (png/gif/jpg)
     # TO_DO: split image handling for Actors and non-Actors, and shift as needed
-    def blit(self, image, position, center=False):
+    def blit(self, image, position):
         if image not in self.images:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
-        if center:
-            c = self.images[image].get_rect().center
-            position = (position[0] - c[0], position[1] - c[1])
         self.display.blit(self.images[image], position)
 
     def draw_line(self, color, start, end):
