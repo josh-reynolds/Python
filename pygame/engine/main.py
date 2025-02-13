@@ -5,11 +5,30 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Test Bed"
 
+HALF_WIDTH = WIDTH // 2
+HALF_HEIGHT = HEIGHT // 2
+
+class Box(Actor):
+    def __init__(self, pos, anchor=('center','center')):
+        super().__init__("box", pos, anchor)
+        self.pos = pos
+        self.anchor = anchor
+
+    def update(self):
+        pass
+
+    def __repr__(self):
+        return f"Box({self.pos})"
+
+box = Box((HALF_WIDTH, HALF_HEIGHT))
+
 def update():
-    pass
+    box.update()
 
 def draw():
-    pass
+    screen.draw_line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
+    screen.draw_line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
+    box.draw()
 
 from engine import run
 run()

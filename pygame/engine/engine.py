@@ -61,6 +61,9 @@ class Screen:
             position = (position[0] - c[0], position[1] - c[1])
         self.display.blit(self.images[image], position)
 
+    def draw_line(self, color, start, end):
+        pygame.draw.line(self.display, color, start, end)
+
 class Music:
     def __init__(self):
         pass
