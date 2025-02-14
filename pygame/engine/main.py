@@ -18,10 +18,9 @@ class Box(Actor):
     def __repr__(self):
         return f"Box({self.pos})"
 
-boxes = []
-for x in ('left', 'center', 'right'):
-    for y in ('top', 'center', 'bottom'):
-        boxes.append(Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)))
+xs = ('left', 'center', 'right')
+ys = ('top', 'center', 'bottom')
+boxes = [Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)) for x in xs for y in ys]
 
 def update():
     for box in boxes:
