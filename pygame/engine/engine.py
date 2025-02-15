@@ -6,11 +6,12 @@ from pygame.locals import *
 __version__ = "0.2"
 
 class Actor:
+    anchor = ("left", "top")
+
     def __init__(self, image, pos, anchor=("center", "center")):
-        self.anchor = anchor
         self.rect = Rect((0,0), (0,0))
         self.image = image
-        self.pos = pos
+        self.initialize_position(pos, anchor)
 
     def draw(self):
         screen.blit(self.image_name, self.rect.topleft)
@@ -27,25 +28,34 @@ class Actor:
         # TO_DO: reconcile with duplication in Screen.blit()
         self.image_name = image_name
         self._image = pygame.image.load('./images/' + image_name + '.png')
+        self.update_position()
 
+    def initialize_position(self, pos, anchor):
+        self.anchor = anchor
+        self.pos = pos
+    
+    def update_position(self):
         current_position = self.pos
         self.rect.width, self.rect.height = self._image.get_size()
 
+        anchor_x, anchor_y = self.anchor_value()
+        self.pos = current_position
+
     @property
     def x(self):
-        return self.rect.x
+        return self.rect.left + self.anchor_value()[0]
 
     @x.setter
     def x(self, new_x):
-        self.rect.x = new_x
+        self.rect.left = new_x - self.anchor_value()[0]
 
     @property
     def y(self):
-        return self.rect.y
+        return self.rect.top + self.anchor_value()[0]
 
     @y.setter
     def y(self, new_y):
-        self.rect.y = new_y
+        self.rect.top = new_y - self.anchor_value()[1]
 
     @property
     def pos(self):
