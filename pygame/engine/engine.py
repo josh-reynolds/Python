@@ -137,6 +137,7 @@ keyboard = Keyboard()
 sounds = Sounds()
 
 def run():
+    #sys.setprofile(trace_function)
     parent = sys.modules['__main__']
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
@@ -177,4 +178,16 @@ def run():
         pygame.display.update()
     
     pygame.quit()
+
+def trace_function(frame, event, arg, indent=[0]):
+    if event == "call":
+        indent[0] += 2
+        print("-" * indent[0] + "> call function", frame.f_code.co_qualname)
+    elif event == "return":
+        print("<" + "-" * indent[0], "exit function", frame.f_code.co_qualname)
+        indent[0] -= 2
+    return trace_function
+
+
+
     
