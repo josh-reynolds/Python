@@ -15,7 +15,7 @@ class Actor:
         self.pos = pos
 
     def draw(self):
-        screen.blit(self.image_name, self.pos)
+        screen.blit(self.image_name, self.rect.topleft)
 
     def collidepoint(self, point):
         return self.rect.collidepoint(point)
