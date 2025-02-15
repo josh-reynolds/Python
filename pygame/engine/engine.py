@@ -47,23 +47,25 @@ class Actor:
 
     @property
     def pos(self):
-        return (self.rect.x, self.rect.y)
+        anchor_x, anchor_y = self.anchor_value()
+
+        return (self.rect.topleft[0] + anchor_x, 
+                self.rect.topleft[1] + anchor_y)
 
     @pos.setter
     def pos(self, new_pos):
-        if self.anchor[0] == "left":
-            self.rect.x = new_pos[0]
-        if self.anchor[0] == "center":
-            self.rect.x = new_pos[0] - self.rect.width//2
-        if self.anchor[0] == "right":
-            self.rect.x = new_pos[0] - self.rect.width
+        anchor_x, anchor_y = self.anchor_value()
 
-        if self.anchor[1] == "top":
-            self.rect.y = new_pos[1]
-        if self.anchor[1] == "center":
-            self.rect.y = new_pos[1] - self.rect.height//2
-        if self.anchor[1] == "bottom":
-            self.rect.y = new_pos[1] - self.rect.height
+        self.rect.topleft = (new_pos[0] - anchor_x,
+                             new_pos[1] - anchor_y)
+
+    def anchor_value(self):
+        iw = self.image.get_width()
+        xs = {"left":0, "center":iw//2, "right":iw}
+        ih = self.image.get_height()
+        ys = {"top":0, "center":ih//2, "bottom":ih}
+
+        return (xs[self.anchor[0]], ys[self.anchor[1]])
 
     @property
     def top(self):
