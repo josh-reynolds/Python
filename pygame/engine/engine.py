@@ -7,11 +7,9 @@ __version__ = "0.2"
 
 class Actor:
     def __init__(self, image, pos, anchor=("center", "center")):
-        self.image = image
-        # TO_DO: reconcile with duplication in Screen.blit()
-        self.rect = self.image.get_rect()
-
         self.anchor = anchor
+        self.rect = Rect((0,0), (0,0))
+        self.image = image
         self.pos = pos
 
     def draw(self):
@@ -26,8 +24,12 @@ class Actor:
 
     @image.setter
     def image(self, image_name):
+        # TO_DO: reconcile with duplication in Screen.blit()
         self.image_name = image_name
         self._image = pygame.image.load('./images/' + image_name + '.png')
+
+        current_position = self.pos
+        self.rect.width, self.rect.height = self._image.get_size()
 
     @property
     def x(self):
