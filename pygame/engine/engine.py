@@ -7,9 +7,8 @@ __version__ = "0.2"
 
 class Actor:
     def __init__(self, image, pos, anchor=("center", "center")):
-        self.image_name = image
+        self.image = image
         # TO_DO: reconcile with duplication in Screen.blit()
-        self.image = pygame.image.load('./images/' + image + '.png')
         self.rect = self.image.get_rect()
 
         self.anchor = anchor
@@ -20,6 +19,15 @@ class Actor:
 
     def collidepoint(self, point):
         return self.rect.collidepoint(point)
+
+    @property
+    def image(self):
+        return self._image
+
+    @image.setter
+    def image(self, image_name):
+        self.image_name = image_name
+        self._image = pygame.image.load('./images/' + image_name + '.png')
 
     @property
     def x(self):
