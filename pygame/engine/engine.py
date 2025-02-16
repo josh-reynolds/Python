@@ -6,17 +6,22 @@ from pygame.locals import *
 __version__ = "0.2"
 
 class Actor:
-    anchor = ("left", "top")
 
     def __init__(self, image, pos, anchor=("center", "center")):
+        #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+        self.anchor = ("left", "top")
+        self.anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
+
         self.image = image
         self.initialize_position(pos, anchor)
 
     def draw(self):
+        #print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
         screen.blit(self.image_name, self.rect.topleft)
 
     def collidepoint(self, point):
+        #print(f"collidepoint({point})")
         return self.rect.collidepoint(point)
 
     @property
@@ -25,59 +30,67 @@ class Actor:
 
     @image.setter
     def image(self, image_name):
+        #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
         # TO_DO: reconcile with duplication in Screen.blit()
         self.image_name = image_name
         self._image = pygame.image.load('./images/' + image_name + '.png')
         self.update_position()
 
     def initialize_position(self, pos, anchor):
+        #print(f"initialize_position({pos}, {anchor})")
         self.anchor = anchor
+        self.calculate_anchor()
         self.pos = pos
     
     def update_position(self):
+        #print("update_position()")
         current_position = self.pos
         self.rect.width, self.rect.height = self._image.get_size()
-
-        anchor_x, anchor_y = self.anchor_value()
+        self.calculate_anchor()
         self.pos = current_position
 
     @property
     def x(self):
-        return self.rect.left + self.anchor_value()[0]
+        return self.rect.left + self.anchor_value[0]
 
     @x.setter
     def x(self, new_x):
-        self.rect.left = new_x - self.anchor_value()[0]
+        #print(f"set_x({new_x})")
+        self.rect.left = new_x - self.anchor_value[0]
 
     @property
     def y(self):
-        return self.rect.top + self.anchor_value()[0]
+        return self.rect.top + self.anchor_value[1]
 
     @y.setter
     def y(self, new_y):
-        self.rect.top = new_y - self.anchor_value()[1]
+        #print(f"set_y({new_y})")
+        self.rect.top = new_y - self.anchor_value[1]
 
     @property
     def pos(self):
-        anchor_x, anchor_y = self.anchor_value()
+        anchor_x, anchor_y = self.anchor_value
 
         return (self.rect.topleft[0] + anchor_x, 
                 self.rect.topleft[1] + anchor_y)
 
     @pos.setter
     def pos(self, new_pos):
-        anchor_x, anchor_y = self.anchor_value()
+        #print(f"set_pos({new_pos})")
+        anchor_x, anchor_y = self.anchor_value
 
         self.rect.topleft = (new_pos[0] - anchor_x,
                              new_pos[1] - anchor_y)
 
-    def anchor_value(self):
+
+    def calculate_anchor(self):
+        #print("calculate_anchor()")
         iw = self.image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
         ih = self.image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
-        return (xs[self.anchor[0]], ys[self.anchor[1]])
+        self.anchor_value = (xs[self.anchor[0]], ys[self.anchor[1]])
 
     @property
     def top(self):
@@ -164,6 +177,10 @@ def run():
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
     pygame.key.set_repeat(50,50)
+
+    #screen.fill(Color("white"))
+    #parent.once()
+
     running = True
     while running:
         pygame.time.Clock().tick(60)
@@ -210,6 +227,3 @@ def trace_function(frame, event, arg, indent=[0]):
         indent[0] -= 2
     return trace_function
 
-
-
-    
