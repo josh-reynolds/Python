@@ -285,7 +285,7 @@ class Player(GravityActor):
                 self.move(self.direction_x, 0, 4)
             else:
                 if self.top >= HEIGHT*1.5:
-                    sel.lives -= 1
+                    self.lives -= 1
                     self.reset()
         else:
             dx = 0

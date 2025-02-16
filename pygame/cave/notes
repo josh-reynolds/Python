@@ -93,3 +93,25 @@ spams the console with 'can't find jump.ogg' messages).
 
 I think bringing in the real assets is next. And then either scrub against the text, or debug issue
 by issue. Mixing it up probably to keep it interesting.
+
+-------------------------------------------------------------------
+Turns out my anchor solution above was badly flawed. It worked OK as long as the Actor's image didn't
+change, then it was garbling the various coordinates stored in the internal Rect. I worked on it over in
+the engine project and believe it is now correct. Along the way I've also brought over the official
+images and sounds.
+
+The game plays now, though still a bit strangely. Issues:
+
+* platform blocks don't seem to match the layout in the source file
+* platform graphics and hit boxes don't seem to be aligned
+* bubble blowing isn't happening at all
+* player sprite flickers terribly when moving left/right
+
+On the plus side, a lot of it _is_ working:
+
+* title screen with attract mode
+* music and sound effects playing
+* robots spawning, moving and shooting apparently correctly
+* fruit spawning and scoring when picked up
+* player health/lives decrementing when hit by blasts
+* end of game when out of lives/health, with end screen
