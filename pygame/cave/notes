@@ -78,7 +78,7 @@ So, from this point, next steps are:
 
 Suspected bugs in the engine code:
   
-  * [FIXED?] Not handling anchors properly, so things are drawing in weird locations (I think)
+  * [FIXED] Not handling anchors properly, so things are drawing in weird locations (I think)
   * [FIXED] Not handling key repeats, so bubble blowing isn't happening, and as with the previous game,
      movement is very slow and awkward.
 
@@ -132,7 +132,7 @@ slightly.)
 Played again to test, and the previously mentioned issues are all there, but it _is_ a playable game.
 The block placement issue is the big one. A couple other issues I noticed this time through:
 
-* [     ] health & life power-ups don't disappear when picked up, and can be grabbed multiple times
+* [FIXED] health & life power-ups don't disappear when picked up, and can be grabbed multiple times
 * [     ] code implies that the bubbles are pushed along if the key is held down, until the limit is
             reached, but I'm not getting that behaviour. Instead a series of bubbles are produced, and
 	    they all immediately start floating.
@@ -144,4 +144,8 @@ the code from GitHub again.
 Found the issue with the platform blocks - indentation error again, one I introduced. Block layout is 
 now correct and aligned with hit boxes.
 
+...and same for health/life pickups not disappearing. (In fairness this one was split across pages, so
+very hard to see the indent alignment.) 
 
+I think all the remaining issues come down to how we're handling repeat key presses. Fix that, and this 
+one is done.

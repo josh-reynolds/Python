@@ -229,7 +229,7 @@ class Fruit(GravityActor):
             else:
                 game.player.score += (self.type + 1) * 100
                 game.play_sound("score")
-                self.time_to_live = 0
+            self.time_to_live = 0
         else:
             self.time_to_live -= 1
 
