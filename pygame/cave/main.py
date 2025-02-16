@@ -553,6 +553,9 @@ def space_pressed():
         else:
             space_down = True
             return True
+    else:
+        space_down = False
+        return False
 
 class State(Enum):
     MENU = 1

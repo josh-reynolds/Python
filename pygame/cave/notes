@@ -102,10 +102,10 @@ images and sounds.
 
 The game plays now, though still a bit strangely. Issues:
 
-* platform blocks don't seem to match the layout in the source file
-* platform graphics and hit boxes don't seem to be aligned
-* bubble blowing isn't happening at all
-* player sprite flickers terribly when moving left/right
+* [     ] platform blocks don't seem to match the layout in the source file
+* [     ] platform graphics and hit boxes don't seem to be aligned
+* [FIXED] bubble blowing isn't happening at all
+* [     ] player sprite flickers terribly when moving left/right
 
 On the plus side, a lot of it _is_ working:
 
@@ -115,3 +115,14 @@ On the plus side, a lot of it _is_ working:
 * fruit spawning and scoring when picked up
 * player health/lives decrementing when hit by blasts
 * end of game when out of lives/health, with end screen
+* advance to next game level
+
+I double-checked space_pressed() against the book, and I didn't introduce a typo. And if I undo my fix,
+the game registers a continuous keypress, so it goes immediately into the game and bubbles spawn repeatedly.
+So I checked out the source from GitHub, and yeah, the book version has a nasty omission - a whole else
+clause as well as bad indentation on the one they preserved. Fixed up my script, and bubble blowing now
+works as expected.
+
+
+
+
