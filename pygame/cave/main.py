@@ -491,7 +491,7 @@ class Game():
                 for block in row:
                     if block != ' ':
                         screen.blit(block_sprite, (x, row_y * GRID_BLOCK_SIZE))
-                        x += GRID_BLOCK_SIZE
+                    x += GRID_BLOCK_SIZE
 
         all_objs = self.fruits + self.bolts + self.enemies + self.pops + self.orbs
         all_objs.append(self.player)

@@ -102,8 +102,8 @@ images and sounds.
 
 The game plays now, though still a bit strangely. Issues:
 
-* [     ] platform blocks don't seem to match the layout in the source file
-* [     ] platform graphics and hit boxes don't seem to be aligned
+* [FIXED] platform blocks don't seem to match the layout in the source file
+* [FIXED] platform graphics and hit boxes don't seem to be aligned
 * [FIXED] bubble blowing isn't happening at all
 * [     ] player sprite flickers terribly when moving left/right
 
@@ -123,6 +123,25 @@ So I checked out the source from GitHub, and yeah, the book version has a nasty 
 clause as well as bad indentation on the one they preserved. Fixed up my script, and bubble blowing now
 works as expected.
 
+- - - - 
+I scrubbed my code against the book text, and caught a couple very small typos. Otherwise it matches
+AFAIK, other than the previously mentioned bug fix in space_pressed(). (Also they use 'type' as a 
+parameter name in a couple methods, but I don't like using a language keyword like that, so altered
+slightly.)
 
+Played again to test, and the previously mentioned issues are all there, but it _is_ a playable game.
+The block placement issue is the big one. A couple other issues I noticed this time through:
+
+* [     ] health & life power-ups don't disappear when picked up, and can be grabbed multiple times
+* [     ] code implies that the bubbles are pushed along if the key is held down, until the limit is
+            reached, but I'm not getting that behaviour. Instead a series of bubbles are produced, and
+	    they all immediately start floating.
+
+Going to see about debugging the open issues myself. If I can't see what's going on, I'll compare against
+the code from GitHub again.
+
+- - - - 
+Found the issue with the platform blocks - indentation error again, one I introduced. Block layout is 
+now correct and aligned with hit boxes.
 
 
