@@ -140,8 +140,6 @@ class Orb(CollideActor):
             else:
                 self.image = "orb" + str(3 + (((self.timer - 9) // 8) % 4))
 
-
-
 class Bolt(CollideActor):
     SPEED = 7
 
@@ -302,7 +300,7 @@ class Player(GravityActor):
 
             if space_pressed() and self.fire_timer <= 0 and len(game.orbs) < 5:
                 x = min(730, max(70, self.x + self.direction_x * 38))
-                y = self.y - 15
+                y = self.y - 35
                 self.blowing_orb = Orb((x,y), self.direction_x)
                 game.orbs.append(self.blowing_orb)
                 game.play_sound("blow", 4)
@@ -317,7 +315,7 @@ class Player(GravityActor):
             if self.blowing_orb:
                 self.blowing_orb.blown_frames += 4
                 if self.blowing_orb.blown_frames >= 120:
-                    self.bloing_orb = None
+                    self.blowing_orb = None
         else:
             self.blowing_orb = None
 
@@ -420,7 +418,7 @@ class Game():
         return min((self.level + 6) // 2, 8)
 
     def next_level(self):
-        self.level_color = (self.level_color +1) % 4
+        self.level_color = (self.level_color + 1) % 4
         self.level += 1
         self.grid = LEVELS[self.level % len(LEVELS)]
         self.grid = self.grid + [self.grid[0]]
@@ -603,7 +601,7 @@ pygame.mixer.quit()
 pygame.mixer.init(44100, -16, 2, 1024)
 
 music.play("theme")
-music.set_volume(0.1)
+music.set_volume(0.3)
 
 state = State.MENU
 game = Game()
