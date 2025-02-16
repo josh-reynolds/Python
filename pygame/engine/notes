@@ -7,11 +7,19 @@ v0.1 (released with Pawng)
 * [DEFER] does not handle repeat when key is held down
 * [DEFER] no doc strings at all
 
-v0.2 (in development with Cave)
+v0.2 (released with Cave)
+----------------------------------------
+* [DEFER] only handles png images - needs support for gif & jpg
+* [DEFER] only handles very limited set of keys - needs support for full keyboard
+* [FIXED] does not handle repeat when key is held down
+* [DEFER] no doc strings at all
+* [DEFER] image loading code duplication between Screen and Actor
+* [FIXED] Actor does not support anchors, always set to center,center
+* [FIXED] key repeat too slow causing flickering animated sprites
+
+v0.3 (in development with RabbitRun)
 ----------------------------------------
 * [     ] only handles png images - needs support for gif & jpg
 * [     ] only handles very limited set of keys - needs support for full keyboard
-* [FIXED] does not handle repeat when key is held down
 * [     ] no doc strings at all
 * [     ] image loading code duplication between Screen and Actor
-* [FIXED] Actor does not support anchors, always set to center,center

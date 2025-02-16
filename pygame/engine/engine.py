@@ -176,7 +176,7 @@ def run():
     parent = sys.modules['__main__']
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
-    pygame.key.set_repeat(50,50)
+    pygame.key.set_repeat(10,10)
 
     #screen.fill(Color("white"))
     #parent.once()

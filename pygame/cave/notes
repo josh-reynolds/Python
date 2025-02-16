@@ -149,3 +149,7 @@ very hard to see the indent alignment.)
 
 I think all the remaining issues come down to how we're handling repeat key presses. Fix that, and this 
 one is done.
+
+Yep. Changing the key_repeat() call to a lower value cleared up both issues. Researching online, I saw
+repeated recommendations for (50,50), but dropping this down to (10,10) is what I needed here. Calling 
+this project done.

@@ -3,7 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 class Actor:
 
