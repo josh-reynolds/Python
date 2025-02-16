@@ -205,3 +205,46 @@ I think this one is done. I should be able to drop this engine module into any o
 and have it work with minimal effort, and no significant change to the project script. I'll keep
 evolving and smoothing the thing as we go, of course, and adding functionality as required.
 
+-------------------------------
+I added versioning to the engine - the version that 'ships' with Pawng is 0.1. Also put the version
+check code back, just testing engine instead of pgz, of course.
+
+Backward compatibility is a concern, so now I am testing with v0.2 (still in development). The game
+runs _almost_ correctly - all static graphics, sounds and music as well as keyboard inputs are unchanged. 
+But none of the Actors are visible during gameplay. Collisions are working - I get bounce sound effects, 
+and scoring.
+
+Need to debug. Goal is to get this working again without touching the main script - just engine fixes.
+
+I changed Actor.x and Actor.y back to properties and added setters - this has the Ball drawing, but not 
+the Bats or Impacts. Tricky situation here... I had previously changed these to properties. Then in the
+Cave project, there was an issue - it has code that reads:
+
+    new_x, new_y = int(self.x), int(self.y)
+
+This throws an error, stating you can't convert a Method object to an int.
+
+Ah! Some more experimentation - the previous happens if you only have a getter. But if you include a 
+setter as well, the issue goes away. So... we're back to properties, and one step closer.
+
+Remaining issue is the Bats and Impacts are invisible. Everything else appears correct.
+
+OK, after fiddling with this, I think I know what's happening. Both Impact and Bat are initialized with a 1x1 
+pixel 'blank' image in their ctor. Ball is initialized with its regular image. My current Actor implementation 
+does not reset its rect when its image changes.
+
+I initially thought to convert image to a property as well, but there's a hitch: it can only take one 
+argument since it mimics a field assignment in the client code (I guess I could get tricky by assigning and 
+unpacking a tuple, but the goal is to preserve the book version of the code as is, so no go). Since we can
+only get a single value, which is a string image name, we don't know the position to move the new rect to. 
+My attempts so far have been hitting chicken and egg errors between the ctor and the property. But I'm 
+close to a solution, I think.
+
+-------------------------------------------
+Alright, this was a bit tricky. I worked on it in a separate project just for the engine module. The 
+anchors, position, image and rect all interact with one another, and need to be reset properly if any
+one of them changes. I think this is working now - at any rate, this game plays normally with the current
+engine drop. Not going to check that in here until the Cave project is completed; we'll keep testing drops
+here until it is stable.
+
+Added bonus, we now have key repeat support.
