@@ -9,7 +9,7 @@ TITLE = "Run Rabbit Run"
 
 ROW_HEIGHT = 10
 
-DEBUG_SHOW_ROW_BOUNDARIES = False
+DEBUG_SHOW_ROW_BOUNDARIES = True
 
 class keys:
     SPACE = "space"
@@ -21,6 +21,7 @@ class Grass(Row):
     def __init__(self, predecessor, index, y):
         self.x = 1
         self.y = y
+        self.index = 0
 
     def next(self):
         return Grass(self, 0, self.y - ROW_HEIGHT)
@@ -96,7 +97,8 @@ class Game:
         if DEBUG_SHOW_ROW_BOUNDARIES:
             for obj in all_objs:
                 if obj and isinstance(obj, Row):
-                    pygame.draw.rect(screen.surface, (255,255,255),
+                    # TO_DO: temporarily setting to black, since screen is white at this point in development
+                    pygame.draw.rect(screen.surface, (0,0,0),
                                      pygame.Rect(obj.x, obj.y - int(self.scroll_pos),
                                                  screen.surface.get_width(), ROW_HEIGHT), 1)
                     # engine implements this as draw_text, not draw.text
