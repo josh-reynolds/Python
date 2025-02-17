@@ -1,5 +1,5 @@
 import pygame
-from random import random
+from random import random, randint
 from enum import Enum
 from engine import keyboard, Actor
 
@@ -36,12 +36,12 @@ class Hedge():
         pass
 
 def generate_hedge_mask():
-    return [1,2,3,4,5,6,7,8,9,10]
+    mask = [random() < 0.01 for i in range(12)]
+    mask[randint(0,11)] = True
+    mask = [sum(mask[max(0, i-1):min(12, i+ 2)]) > 0 for i in range(12)]
+    return [mask[0]] + mask + 2 * [mask[-1]]
 
 def classify_hedge_segment(mask, previous_mid_segment):
-    # - - - - temporary to unblock interpreter
-    mask = [1,2,3,4,5,6]
-    # - - - - 
     if mask[1]:
         sprite_x = None
     else:
