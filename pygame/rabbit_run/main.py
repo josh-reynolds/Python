@@ -6,11 +6,19 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Run Rabbit Run"
 
+ROW_HEIGHT = 10
+
 class keys:
     SPACE = "space"
 
 class Grass():
-    def __init__(self, a, b, c):
+    def __init__(self, predecessor, index, y):
+        self.y = y
+
+    def next(self):
+        return Grass(self, 0, self.y - ROW_HEIGHT)
+
+    def update(self):
         pass
 
 class Game:
@@ -33,7 +41,31 @@ class Game:
         self.scroll_pos = -HEIGHT
 
     def update(self):
-        pass
+        if self.rabbit:
+            self.scroll_pos -= max(1, min(3, float(self.scroll_pos + HEIGHT -
+                                                   self.rabbit.y) / (HEIGHT // 4)))
+        else:
+            self.scroll_pos -= 1
+
+        self.rows = [row for row in self.rows if row.y < int(self.scroll_pos) +
+                     HEIGHT + ROW_HEIGHT * 2]
+
+        while self.rows[-1].y > int(self.scroll_pos) + ROW_HEIGHT:
+            new_row = self.rows[-1].next()
+            self.rows.append(new_row)
+
+        for obj in self.rows + [self.rabbit, self.eagle]:
+            if obj:
+                obj.update()
+
+        if self.rabbit:
+            for name, count, row_class in [("river", 2, Water), ("traffic", 3, Road)]:
+                volume = sum([16.0 / max(16.0, abs(r.y - self.rabbit.y)) for r in 
+                              self.rows if isinstance(r, row_class)]) - 0.2
+                volume = min(0.4, volume)
+                self.loop_sound(name, count, volume)
+
+        return self
 
     def draw(self):
         pass
