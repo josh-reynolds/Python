@@ -18,11 +18,28 @@ class keys:
 class MyActor(Actor):
     def __init__(self, image, pos, anchor=("center","bottom")):
         super().__init__(image, pos, anchor)
+        self.children = []
 
 class Row(MyActor):
     def __init__(self, base_image, index, y):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
         self.index = 0
+
+    def update(self):
+        pass
+
+    def draw(self, a, b):
+        pass
+
+class Hedge():
+    def __init__(self, x, y, pos):
+        pass
+
+def generate_hedge_mask():
+    return []
+
+def classify_hedge_segment(a,b):
+    return 1,1
 
 class Grass(Row):
     def __init__(self, predecessor, index, y):
@@ -49,13 +66,18 @@ class Grass(Row):
                                                (i * 40 - 20, 0)))
 
     def next(self):
-        return Grass(self, 0, self.y - ROW_HEIGHT)
+        if self.index <= 5:
+            row_class, index = Grass, self.index + 8
+        elif self.index == 6:
+            row_class, index = Grass, 7
+        elif self.index == 7:
+            row_class, index = Grass, 15
+        elif self.index >= 8 and self.index <= 14:
+            row_class, index = Grass, self.index + 1
+        else:
+            row_class, index = choice((Road, Water)), 0
 
-    def update(self):
-        pass
-
-    def draw(self, a, b):
-        pass
+        return row_class(self, index, self.y - ROW_HEIGHT)
 
 class Game:
     def __init__(self, rabbit=None):
