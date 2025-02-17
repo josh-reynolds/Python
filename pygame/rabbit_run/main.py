@@ -188,12 +188,14 @@ class Rail(Row):
                 game.play_sound("bell")
                 game.play_sound("train", 2)
 
-
     def next(self):
-        return Grass(self, 0, 0)
+        if self.index < 3:
+            row_class, index = Rail, self.index + 1
+        else:
+            item = choice( ((Road, 0), (Water, 0)) )
+            row_class, index = item[0], item[1]
 
-    def draw(self, a, b):
-        pass
+        return row_class(self, index, self.y - ROW_HEIGHT)
 
 class Game:
     def __init__(self, rabbit=None):
