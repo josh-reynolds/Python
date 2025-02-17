@@ -9,10 +9,28 @@ TITLE = "Run Rabbit Run"
 class keys:
     SPACE = "space"
 
+class Grass():
+    def __init__(self, a, b, c):
+        pass
 
-class Game():
-    def __init__(self):
-        self.scroll_pos = 1
+class Game:
+    def __init__(self, rabbit=None):
+        self.rabbit = rabbit
+        self.looped_sounds = {}
+
+        try:
+            if rabbit:
+                music.set_volume(0.4)
+            else:
+                music.play("theme")
+                music.set_volume(1)
+        except:
+            pass
+
+        self.eagle = None
+        self.frame = 0
+        self.rows = [Grass(None, 0, 0)]
+        self.scroll_pos = -HEIGHT
 
     def update(self):
         pass
