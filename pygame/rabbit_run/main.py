@@ -121,7 +121,7 @@ class Grass(Row):
 
 class Water(ActiveRow):
     def __init__(self, predecessor, index, y):
-        dxs = [0]
+        dxs = [-2,-1] * (predecessor.dx >= 0) + [1,2] * (predecessor.dx <= 0)
         super().__init__(Log, dxs, "water", index, y)
 
     def next(self):
@@ -130,7 +130,7 @@ class Water(ActiveRow):
 
 class Road(ActiveRow):
     def __init__(self, predecessor, index, y):
-        dxs = [0]
+        dxs = list(set(range(-5,6)) - set([0, predecessor.dx]))
         super().__init__(Car, dxs, "road", index, y)
 
     def next(self):
