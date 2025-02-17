@@ -107,11 +107,18 @@ class Actor:
 class Screen:
     def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
-        self.display = pygame.display.set_mode((width, height))
+        self.surface = pygame.display.set_mode((width, height))
         self.images = {}
+        
+        # TO_DO: make this customizeable 
+        # TO_DO: also, maybe shouldn't be directly in Screen...
+        self.fontname = None
+        self.fontsize = 24
+        self.fontcolor = Color('black')
+        self.set_font()
 
     def fill(self, color):
-        self.display.fill(color)
+        self.surface.fill(color)
 
     # TO_DO: handle other image formats (png/gif/jpg)
     # TO_DO: split image handling for Actors and non-Actors, and shift as needed
@@ -119,10 +126,19 @@ class Screen:
         if image not in self.images:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
-        self.display.blit(self.images[image], position)
+        self.surface.blit(self.images[image], position)
 
     def draw_line(self, color, start, end):
-        pygame.draw.line(self.display, color, start, end)
+        pygame.draw.line(self.surface, color, start, end)
+
+    def draw_text(self, text, pos):
+        img = self.font.render(text, True, self.fontcolor)
+        # TO_DO: address duplication with Screen.blit()
+        self.surface.blit(img, pos)
+
+    def set_font(self):
+        self.font = pygame.font.Font(self.fontname, self.fontsize)
+
 
 class Music:
     def __init__(self):

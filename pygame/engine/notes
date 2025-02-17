@@ -23,3 +23,5 @@ v0.3 (in development with RabbitRun)
 * [     ] only handles very limited set of keys - needs support for full keyboard
 * [     ] no doc strings at all
 * [     ] image loading code duplication between Screen and Actor
+* [     ] font defaults are hard-coded in Screen ctor and not customizeable
+* [     ] blit code duplication between Screen.draw_text() and Screen.blit()

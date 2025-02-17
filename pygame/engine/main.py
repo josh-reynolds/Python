@@ -32,7 +32,8 @@ def draw():
     screen.draw_line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
     for box in boxes:
         box.draw()
-    pass
+    screen.draw_text("Lorem Ipsum Dolor Sit Amet", (20, 20))
+    #pass
 
 def print_box(b):
     print(f'screen center = {HALF_WIDTH}, {HALF_HEIGHT}')
