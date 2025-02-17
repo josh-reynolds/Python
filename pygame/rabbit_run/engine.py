@@ -152,6 +152,12 @@ class Keyboard:
         self.m = False
         self.z = False
 
+    def __getitem__(self, key):
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            raise LookupError
+
 class Sounds:
     def __init__(self):
         files = []

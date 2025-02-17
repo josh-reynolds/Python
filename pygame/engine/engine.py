@@ -3,7 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 class Actor:
 
@@ -151,6 +151,12 @@ class Keyboard:
         self.k = False
         self.m = False
         self.z = False
+
+    def __getitem__(self, key):
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            raise LookupError
 
 class Sounds:
     def __init__(self):
