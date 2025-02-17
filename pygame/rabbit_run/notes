@@ -1,0 +1,7 @@
+Getting started on project 3 from Code the Classics Vol. 1. It's a Frogger clone named 'Infinite
+Bunner.' I'm calling my version 'Run Rabbit Run.'
+
+This will include any necessary changes to my Pygame Zero clone engine for version 0.3.
+
+We're ready to go: v0.2 of the engine in place, version incremented, and the bare minimum scaffolding
+set up. Project runs to a blank white screen.
