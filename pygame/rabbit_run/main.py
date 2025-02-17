@@ -31,9 +31,9 @@ class Row(MyActor):
     def draw(self, a, b):
         pass
 
-class Hedge():
+class Hedge(MyActor):
     def __init__(self, x, y, pos):
-        pass
+        super().__init__("bush"+str(x)+str(y), pos)
 
 def generate_hedge_mask():
     mask = [random() < 0.01 for i in range(12)]
