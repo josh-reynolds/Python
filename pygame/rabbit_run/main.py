@@ -1,4 +1,5 @@
 from enum import Enum
+from engine import keyboard
 
 
 WIDTH = 800
@@ -6,10 +7,8 @@ HEIGHT = 480
 TITLE = "Run Rabbit Run"
 
 class keys:
-    SPACE = None
+    SPACE = "space"
 
-def key_just_pressed(x):
-    pass
 
 class Game():
     def __init__(self):
@@ -20,6 +19,19 @@ class Game():
 
     def draw(self):
         pass
+
+key_status = {}
+
+def key_just_pressed(key):
+    result = False
+    prev_status = key_status.get(key, False)
+
+    if not prev_status and keyboard[key]:
+        result = True
+
+    key_status[key] = keyboard[key]
+
+    return result
 
 class State(Enum):
     MENU = 1,
