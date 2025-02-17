@@ -157,9 +157,9 @@ class Road(ActiveRow):
 
         return row_class(self, index, self.y - ROW_HEIGHT)
 
-class Pavement():
-    def __init__(self, a, b, c):
-        self.y = c
+class Pavement(Row):
+    def __init__(self, predecessor, index, y):
+        super().__init__("side", index, y)
 
     def next(self):
         return Grass(self, 0, 0)
@@ -170,9 +170,10 @@ class Pavement():
     def draw(self, a, b):
         pass
 
-class Rail():
-    def __init__(self, a, b, c):
-        self.y = c
+class Rail(Row):
+    def __init__(self, predecessor, index, y):
+        super().__init__("rail", index, y)
+        self.predecessor = predecessor
 
     def next(self):
         return Grass(self, 0, 0)
