@@ -5,3 +5,21 @@ This will include any necessary changes to my Pygame Zero clone engine for versi
 
 We're ready to go: v0.2 of the engine in place, version incremented, and the bare minimum scaffolding
 set up. Project runs to a blank white screen.
+
+- - - -
+Going smoothly so far. I'm being even stricter about following the method this time through - starting
+with the first two stubs (update & draw), only fill in new stubs as needed to get it to run. On the last
+project I filled in things from the bottom up regardless.
+
+I've had to add a couple minor things to the engine: making Keyboard subscriptable, and implementing a
+basic Screen.draw_text(). The latter will need fleshing out; we'll get to that later. I also renamed
+Screen.display to Screen.surface for compatibility - it was only being used internally in the class to
+this point, so it was a trivial change.
+
+Right now we have a white screen with a couple placeholder images for the menu, and a perpetually
+scrolling background (from enabling the DEBUG settings).
+
+There are blocks of code that haven't been triggered yet, so the interpreter hasn't had a chance
+to complain (and force the corresponding stub work). The basic keyboard support is there, so once 
+I finish the current skeleton, a key press will push it into State.PLAY and stubbing will start all
+over.

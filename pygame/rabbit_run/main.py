@@ -1,6 +1,7 @@
 import pygame
+from random import random
 from enum import Enum
-from engine import keyboard
+from engine import keyboard, Actor
 
 
 WIDTH = 800
@@ -14,14 +15,38 @@ DEBUG_SHOW_ROW_BOUNDARIES = True
 class keys:
     SPACE = "space"
 
-class Row():
-    pass
+class MyActor(Actor):
+    def __init__(self, image, pos, anchor=("center","bottom")):
+        super().__init__(image, pos, anchor)
+
+class Row(MyActor):
+    def __init__(self, base_image, index, y):
+        super().__init__(base_image + str(index), (0,y), ("left","bottom"))
+        self.index = 0
 
 class Grass(Row):
     def __init__(self, predecessor, index, y):
-        self.x = 1
-        self.y = y
-        self.index = 0
+        super().__init__("grass", index, y)
+        self.hedge_row_index = None
+        self.hedge_mask = None
+                         
+        if not isinstance(predecessor, Grass) or predecessor.hedge_row_index == None:
+            if random() < 0.5 and index > 7 and index < 14:
+                self.hedge_mask = generate_hedge_mask()
+                self.hedge_row_index = 0
+        elif predecessor.hedge_row_index == None:
+            self.hedge_mask = predecessor.hedge_mask
+            self.hedge_row_index = 1
+        
+        if self.hedge_row_index != None:
+            previous_mid_segment = None
+            for i in range(1,13):
+                sprite_x, previous_mid_segment = \
+                        classify_hedge_segment(self.hedge_mask[i-1:i+3],
+                                               previous_mid_segment)
+                if sprite_x != None:
+                    self.children.append(Hedge(sprite_x, self.hedge_row_index,
+                                               (i * 40 - 20, 0)))
 
     def next(self):
         return Grass(self, 0, self.y - ROW_HEIGHT)
@@ -104,7 +129,6 @@ class Game:
                     # engine implements this as draw_text, not draw.text
                     screen.draw_text(str(obj.index), (obj.x, obj.y -
                                                       int(self.scroll_pos) - ROW_HEIGHT))
-
 
 key_status = {}
 
