@@ -162,13 +162,12 @@ class Pavement(Row):
         super().__init__("side", index, y)
 
     def next(self):
-        return Grass(self, 0, 0)
+        if self.index < 2:
+            row_class, index = Pavement, self.index + 1
+        else:
+            row_class, index = Road, 0
 
-    def update(self):
-        pass
-
-    def draw(self, a, b):
-        pass
+        return row_class(self, index, self.y - ROW_HEIGHT)
 
 class Rail(Row):
     def __init__(self, predecessor, index, y):
