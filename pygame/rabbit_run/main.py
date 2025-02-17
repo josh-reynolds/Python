@@ -175,11 +175,22 @@ class Rail(Row):
         super().__init__("rail", index, y)
         self.predecessor = predecessor
 
+    def update(self):
+        super().update()
+
+        if self.index == 1:
+            self.children = [c for c in self.children if c.x > -1000
+                             and c.x < WIDTH + 1000]
+
+            if self.y < game.scroll_pos+HEIGHT and len(self.children) == 0 and random() < 0.01:
+                dx = choice([-20, 20])
+                self.children.append(Train(dx, (WIDTH + 1000 if dx < 0 else -1000, -13)))
+                game.play_sound("bell")
+                game.play_sound("train", 2)
+
+
     def next(self):
         return Grass(self, 0, 0)
-
-    def update(self):
-        pass
 
     def draw(self, a, b):
         pass
