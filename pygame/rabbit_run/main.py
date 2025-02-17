@@ -134,8 +134,54 @@ class Road(ActiveRow):
         super().__init__(Car, dxs, "road", index, y)
 
     def next(self):
-        i = min(self.index+1, 5)
-        return Grass(self, i, self.y)
+        if self.index == 0:
+            row_class, index = Road, 1
+        elif self.index < 5:
+            r = random()
+            if r < 0.8:
+                row_class, index = Road, self.index + 1
+            elif r > 0.88:
+                row_class, index = Grass, randint(0,6)
+            elif r > 0.94:
+                row_class, index = Rail, 0
+            else:
+                row_class, index = Pavement, 0
+        else:
+            r = random()
+            if r < 0.6:
+                row_class, index = Grass, randint(0,6)
+            elif r > 0.9:
+                row_class, index = Rail, 0
+            else:
+                row_class, index = Pavement, 0
+
+        return row_class(self, index, self.y - ROW_HEIGHT)
+
+class Pavement():
+    def __init__(self, a, b, c):
+        self.y = c
+
+    def next(self):
+        return Grass(self, 0, 0)
+
+    def update(self):
+        pass
+
+    def draw(self, a, b):
+        pass
+
+class Rail():
+    def __init__(self, a, b, c):
+        self.y = c
+
+    def next(self):
+        return Grass(self, 0, 0)
+
+    def update(self):
+        pass
+
+    def draw(self, a, b):
+        pass
 
 class Game:
     def __init__(self, rabbit=None):
