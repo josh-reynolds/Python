@@ -36,10 +36,28 @@ class Hedge():
         pass
 
 def generate_hedge_mask():
-    return []
+    return [1,2,3,4,5,6,7,8,9,10]
 
-def classify_hedge_segment(a,b):
-    return 1,1
+def classify_hedge_segment(mask, previous_mid_segment):
+    # - - - - temporary to unblock interpreter
+    mask = [1,2,3,4,5,6]
+    # - - - - 
+    if mask[1]:
+        sprite_x = None
+    else:
+        sprite_x = 3 - 2 * mask[0] - mask[2]
+
+    if sprite_x == 3:
+        if previous_mid_segment == 4 and mask[3]:
+            return 5, None
+        else:
+            if previous_mid_segment == None or previous_mid_segment == 4:
+                sprite_x = 3
+            elif previous_mid_segment == 3:
+                sprite_x = 4
+            return sprite_x, sprite_x
+    else:
+        return sprite_x, None
 
 class Grass(Row):
     def __init__(self, predecessor, index, y):
