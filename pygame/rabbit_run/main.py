@@ -1,3 +1,4 @@
+import pygame
 from enum import Enum
 from engine import keyboard
 
@@ -8,17 +9,26 @@ TITLE = "Run Rabbit Run"
 
 ROW_HEIGHT = 10
 
+DEBUG_SHOW_ROW_BOUNDARIES = False
+
 class keys:
     SPACE = "space"
 
-class Grass():
+class Row():
+    pass
+
+class Grass(Row):
     def __init__(self, predecessor, index, y):
+        self.x = 1
         self.y = y
 
     def next(self):
         return Grass(self, 0, self.y - ROW_HEIGHT)
 
     def update(self):
+        pass
+
+    def draw(self, a, b):
         pass
 
 class Game:
@@ -68,7 +78,31 @@ class Game:
         return self
 
     def draw(self):
-        pass
+        all_objs = list(self.rows)
+
+        if self.rabbit:
+            all_objs.append(self.rabbit)
+
+        def sort_key(obj):
+            return (obj.y + 39) // ROW_HEIGHT
+
+        all_objs.sort(key=sort_key)
+        all_objs.append(self.eagle)
+
+        for obj in all_objs:
+            if obj:
+                obj.draw(0, -int(self.scroll_pos))
+
+        if DEBUG_SHOW_ROW_BOUNDARIES:
+            for obj in all_objs:
+                if obj and isinstance(obj, Row):
+                    pygame.draw.rect(screen.surface, (255,255,255),
+                                     pygame.Rect(obj.x, obj.y - int(self.scroll_pos),
+                                                 screen.surface.get_width(), ROW_HEIGHT), 1)
+                    # engine implements this as draw_text, not draw.text
+                    screen.draw_text(str(obj.index), (obj.x, obj.y -
+                                                      int(self.scroll_pos) - ROW_HEIGHT))
+
 
 key_status = {}
 
