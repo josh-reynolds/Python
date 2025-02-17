@@ -1,5 +1,5 @@
 import pygame
-from random import random, randint
+from random import random, randint, choice
 from enum import Enum
 from engine import keyboard, Actor
 
@@ -20,16 +20,38 @@ class MyActor(Actor):
         super().__init__(image, pos, anchor)
         self.children = []
 
+class Car():
+    def __init__(self, a, b):
+        pass
+
+class Log():
+    def __init__(self, a, b):
+        pass
+
 class Row(MyActor):
     def __init__(self, base_image, index, y):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
-        self.index = 0
+        self.index = index
+        self.dx = 0
 
     def update(self):
         pass
 
     def draw(self, a, b):
         pass
+
+class ActiveRow(Row):
+    def __init__(self, child_type, dxs, base_image, index, y):
+        super().__init__(base_image, index, y)
+        self.child_type = child_type
+        self.timer = 0
+        self.dx = choice(dxs)
+
+        x = -WIDTH / 2 - 70
+        while x < WIDTH / 2 + 70:
+            x += randint(240,480)
+            pos = (WIDTH / 2 + (x if self.dx > 0 else -x), 0)
+            self.children.append(self.child_type(self.dx, pos))
 
 class Hedge(MyActor):
     def __init__(self, x, y, pos):
@@ -96,6 +118,24 @@ class Grass(Row):
             row_class, index = choice((Road, Water)), 0
 
         return row_class(self, index, self.y - ROW_HEIGHT)
+
+class Water(ActiveRow):
+    def __init__(self, predecessor, index, y):
+        dxs = [0]
+        super().__init__(Log, dxs, "water", index, y)
+
+    def next(self):
+        i = min(self.index+1, 7)
+        return Grass(self, i, self.y)
+
+class Road(ActiveRow):
+    def __init__(self, predecessor, index, y):
+        dxs = [0]
+        super().__init__(Car, dxs, "road", index, y)
+
+    def next(self):
+        i = min(self.index+1, 5)
+        return Grass(self, i, self.y)
 
 class Game:
     def __init__(self, rabbit=None):
