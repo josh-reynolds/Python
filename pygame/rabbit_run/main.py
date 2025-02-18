@@ -295,7 +295,7 @@ class Game:
                     screen.draw_text(str(obj.index), (obj.x, obj.y -
                                                       int(self.scroll_pos) - ROW_HEIGHT))
     def score(self):
-        pass
+        return 0
 
     def loop_sound(self, a, b, c):
         pass
@@ -313,8 +313,10 @@ def key_just_pressed(key):
 
     return result
 
-def display_number(a, b, c, d):
-    pass
+def display_number(n, color, x, align):
+    n = str(n)
+    for i in range(len(n)):
+        screen.blit("digit" + str(color) + n[i], (x + (i - len(n) * align) * 25, 0))
 
 class State(Enum):
     MENU = 1,
