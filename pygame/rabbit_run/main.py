@@ -1,7 +1,7 @@
 import pygame
 from random import random, randint, choice
 from enum import Enum
-from engine import keyboard, Actor
+from engine import keyboard, Actor, sounds
 
 WIDTH = 480
 HEIGHT = 800
@@ -297,8 +297,20 @@ class Game:
     def score(self):
         return 0
 
-    def loop_sound(self, a, b, c):
-        pass
+    def loop_sound(self, name, count, volume):
+        if volume > 0 and not name in self.looped_sounds:
+            full_name = name + str(randint(0, count-1))
+            sound = getattr(sounds, full_name)
+            sound.play(-1)
+            self.looped_sounds[name] = sound
+
+        if name in self.looped_sounds:
+            sound = self.looped_sounds[name]
+            if volume > 0:
+                sound.set_volume(volume)
+            else:
+                sound.stop()
+                del self.looped_sounds[name]
 
 key_status = {}
 
