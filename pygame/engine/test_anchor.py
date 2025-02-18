@@ -134,6 +134,30 @@ class ActorTestCase(unittest.TestCase):
         self.assertEqual(a.x, 100)
         self.assertEqual(a.y, 100)
 
+    def test_changing_to_a_larger_image(self):
+        a = Actor('box', (100,100), anchor=('center','center'))
+        a.image = 'big_box'
+        self.assertEqual(a.pos, (100,100))
+        self.assertEqual(a.anchor, ('center','center'))
+        self.assertEqual(a.anchor_value, (64,64))
+        self.assertEqual(a.rect.topleft, (36,36))
+        self.assertEqual(a.rect.left, 36)
+        self.assertEqual(a.rect.top, 36)
+        self.assertEqual(a.x, 100)
+        self.assertEqual(a.y, 100)
+
+    def test_changing_to_a_smaller_image(self):
+        a = Actor('big_box', (100,100), anchor=('center','center'))
+        a.image = 'box'
+        self.assertEqual(a.pos, (100,100))
+        self.assertEqual(a.anchor, ('center','center'))
+        self.assertEqual(a.anchor_value, (16,16))
+        self.assertEqual(a.rect.topleft, (84,84))
+        self.assertEqual(a.rect.left, 84)
+        self.assertEqual(a.rect.top, 84)
+        self.assertEqual(a.x, 100)
+        self.assertEqual(a.y, 100)
+
 # --------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
