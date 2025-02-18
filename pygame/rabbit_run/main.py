@@ -61,6 +61,9 @@ class Log(Mover):
         image = "log" + str(randint(0,1))
         super().__init__(dx, image, pos)
 
+class Train(Mover):
+    pass
+
 class Row(MyActor):
     def __init__(self, base_image, index, y):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
@@ -146,14 +149,36 @@ class Grass(Row):
 
         return row_class(self, index, self.y - ROW_HEIGHT)
 
+class Dirt(Row):
+    def __init__(self, predecessor, index, y):
+        super().__init__("dirt", index, y)
+
+    def next(self):
+        if self.index <= 5:
+            row_class, index = Dirt, self.index + 8
+        elif self.index == 6:
+            row_class, index = Dirt, 7
+        elif self.index == 7:
+            row_class, index = Dirt, 15
+        elif self.index >= 8 and self.index <= 14:
+            row_class, index = Dirt, self.index + 1
+        else:
+            row_class, index = choice((Road, Water)), 0
+
+        return row_class(self, index, self.y - ROW_HEIGHT)
+
 class Water(ActiveRow):
     def __init__(self, predecessor, index, y):
         dxs = [-2,-1] * (predecessor.dx >= 0) + [1,2] * (predecessor.dx <= 0)
         super().__init__(Log, dxs, "water", index, y)
 
     def next(self):
-        i = min(self.index+1, 7)
-        return Grass(self, i, self.y)
+        if self.index == 7 or (self.index >= 1 and random() < 0.5):
+            row_class, index = Dirt, randint(4,6)
+        else:
+            row_class, index = Water, self.index + 1
+
+        return row_class(self, index, self.y - ROW_HEIGHT)
 
 class Road(ActiveRow):
     def __init__(self, predecessor, index, y):
