@@ -23,3 +23,14 @@ There are blocks of code that haven't been triggered yet, so the interpreter has
 to complain (and force the corresponding stub work). The basic keyboard support is there, so once 
 I finish the current skeleton, a key press will push it into State.PLAY and stubbing will start all
 over.
+
+- - - -
+First pass is complete. The game 'runs' on the menu screen with a continuously scrolling background - 
+only placeholder images right now, so it doesn't look like much. And no sounds playing yet.
+
+Second pass is to hit space and push into State.PLAY, then deal with that round of stubbery. Third pass
+will be to walk the text and fill in anything I missed to that point. Besides the issues mentioned above,
+there are some code blocks that only trigger rarely via RNG, so just luck whether I hit them before
+pass three.
+
+So far the engine has required very minimal changes, noted above.

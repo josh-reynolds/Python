@@ -3,15 +3,14 @@ from random import random, randint, choice
 from enum import Enum
 from engine import keyboard, Actor
 
-
-WIDTH = 800
-HEIGHT = 480
+WIDTH = 480
+HEIGHT = 800
 TITLE = "Run Rabbit Run"
 
-ROW_HEIGHT = 10
-
+ROW_HEIGHT = 40
 DEBUG_SHOW_ROW_BOUNDARIES = True
 
+# this should come from the engine
 class keys:
     SPACE = "space"
 
