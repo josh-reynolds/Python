@@ -20,11 +20,20 @@ class MyActor(Actor):
         super().__init__(image, pos, anchor)
         self.children = []
 
-    def draw(self, a, b):
-        pass
+    def draw(self, offset_x, offset_y):
+        self.x += offset_x
+        self.y += offset_y
+
+        super().draw()
+        for child_obj in self.children:
+            child_obj.draw(self.x, self.y)
+
+        self.x -= offset_x
+        self.y -= offset_y
 
     def update(self):
-        pass
+        for child_obj in self.children:
+            child_obj.update()
 
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
