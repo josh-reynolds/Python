@@ -366,7 +366,11 @@ def draw():
     elif state == State.GAME_OVER:
         screen.blit("gameover", (0,0))
 
-high_score = 100
+try:
+    with open("high.txt", "r") as f:
+        high_score = int(f.read())
+except:
+    high_score = 0
 
 state = State.MENU
 game = Game()
