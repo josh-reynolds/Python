@@ -34,6 +34,15 @@ class MyActor(Actor):
         for child_obj in self.children:
             child_obj.update()
 
+class PlayerState(Enum):
+    ALIVE = 0,
+
+class Rabbit(MyActor):
+    def __init__(self, pos):
+        super().__init__("blank", pos)
+        self.state = None
+        self.timer = 0
+
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
         super().__init__(image, pos)
@@ -285,6 +294,11 @@ class Game:
                     # engine implements this as draw_text, not draw.text
                     screen.draw_text(str(obj.index), (obj.x, obj.y -
                                                       int(self.scroll_pos) - ROW_HEIGHT))
+    def score(self):
+        pass
+
+    def loop_sound(self, a, b, c):
+        pass
 
 key_status = {}
 
@@ -298,6 +312,9 @@ def key_just_pressed(key):
     key_status[key] = keyboard[key]
 
     return result
+
+def display_number(a, b, c, d):
+    pass
 
 class State(Enum):
     MENU = 1,
@@ -348,6 +365,8 @@ def draw():
 
     elif state == State.GAME_OVER:
         screen.blit("gameover", (0,0))
+
+high_score = 100
 
 state = State.MENU
 game = Game()
