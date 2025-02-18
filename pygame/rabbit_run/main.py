@@ -42,6 +42,7 @@ class Rabbit(MyActor):
         super().__init__("blank", pos)
         self.state = None
         self.timer = 0
+        self.min_y = -400
 
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
@@ -294,8 +295,9 @@ class Game:
                     # engine implements this as draw_text, not draw.text
                     screen.draw_text(str(obj.index), (obj.x, obj.y -
                                                       int(self.scroll_pos) - ROW_HEIGHT))
+
     def score(self):
-        return 0
+        return int(-320 - game.rabbit.min_y) // 40
 
     def loop_sound(self, name, count, volume):
         if volume > 0 and not name in self.looped_sounds:
