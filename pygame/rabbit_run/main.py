@@ -30,9 +30,12 @@ class Mover():
     def __init__(self, dx, image, pos):
         pass
 
-class Car():
-    def __init__(self, a, b):
-        pass
+class Car(Mover):
+    def __init__(self, dx, pos):
+        image = "car" + str(randint(0,3)) + ("0" if dx < 0 else "1")
+        super().__init__(dx, image, pos)
+        self.played = [False, False]
+        self.sounds = [("zoom", 6), ("honk", 4)]
 
 class Log(Mover):
     def __init__(self, dx, pos):
