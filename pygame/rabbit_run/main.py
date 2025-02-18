@@ -26,9 +26,10 @@ class MyActor(Actor):
     def update(self):
         pass
 
-class Mover():
+class Mover(MyActor):
     def __init__(self, dx, image, pos):
-        pass
+        super().__init__(image, pos)
+        self.dx = dx
 
 class Car(Mover):
     def __init__(self, dx, pos):
