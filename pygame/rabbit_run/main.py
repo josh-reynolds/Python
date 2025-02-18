@@ -20,25 +20,30 @@ class MyActor(Actor):
         super().__init__(image, pos, anchor)
         self.children = []
 
+    def draw(self, a, b):
+        pass
+
+    def update(self):
+        pass
+
+class Mover():
+    def __init__(self, dx, image, pos):
+        pass
+
 class Car():
     def __init__(self, a, b):
         pass
 
-class Log():
-    def __init__(self, a, b):
-        pass
+class Log(Mover):
+    def __init__(self, dx, pos):
+        image = "log" + str(randint(0,1))
+        super().__init__(dx, image, pos)
 
 class Row(MyActor):
     def __init__(self, base_image, index, y):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
         self.index = index
         self.dx = 0
-
-    def update(self):
-        pass
-
-    def draw(self, a, b):
-        pass
 
 class ActiveRow(Row):
     def __init__(self, child_type, dxs, base_image, index, y):
