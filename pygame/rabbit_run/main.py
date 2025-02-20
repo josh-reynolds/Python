@@ -1,14 +1,29 @@
+import sys
 import pygame
 from random import random, randint, choice
 from enum import Enum
 from engine import keyboard, Actor, sounds
+
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [0,3]:
+    print(f"This game requires at least version 0.3 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH = 480
 HEIGHT = 800
 TITLE = "Run Rabbit Run"
 
 ROW_HEIGHT = 40
-DEBUG_SHOW_ROW_BOUNDARIES = True
+DEBUG_SHOW_ROW_BOUNDARIES = True                #---------- temp
 
 # this should come from the engine
 class keys:

@@ -34,3 +34,10 @@ there are some code blocks that only trigger rarely via RNG, so just luck whethe
 pass three.
 
 So far the engine has required very minimal changes, noted above.
+
+- - - -
+Second pass is done. Still some big gaps missing from the text, and the game itself isn't much more
+interesting. I'll be passing through the text now and adding what's missing. Then real resources,
+debugging and hopefully done.
+
+
