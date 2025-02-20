@@ -28,6 +28,10 @@ DEBUG_SHOW_ROW_BOUNDARIES = True                #---------- temp
 # this should come from the engine
 class keys:
     SPACE = "space"
+    UP = "up"
+    RIGHT = "right"
+    DOWN = "down"
+    LEFT = "left"
 
 class MyActor(Actor):
     def __init__(self, image, pos, anchor=("center","bottom")):
@@ -63,7 +67,19 @@ class PlayerState(Enum):
     SPLASH = 2,
     EAGLE = 3
 
+DIRECTION_UP = 0
+DIRECTION_RIGHT = 1
+DIRECTION_DOWN = 2
+DIRECTION_LEFT = 3
+
+direction_keys = [keys.UP, keys.RIGHT, keys.DOWN, keys.LEFT]
+
+DX = [0, 4, 0, -4]
+DY = [-4, 0, 4, 0]
+
 class Rabbit(MyActor):
+    MOVE_DISTANCE = 10
+
     def __init__(self, pos):
         super().__init__("blank", pos)
         self.state = PlayerState.ALIVE
