@@ -88,6 +88,14 @@ class Rabbit(MyActor):
         self.input_queue = []
         self.min_y = self.y
 
+    def handle_input(self, direction):
+        for row in game.rows:
+            if row.y == self.y + Rabbit.MOVE_DISTANCE * DY[direction]:
+                self.direction = direction
+                self.timer = Rabbit.MOVE_DISTANCE
+                game.play_sound("jump", 1)
+                return
+
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
         super().__init__(image, pos)
