@@ -40,4 +40,6 @@ Second pass is done. Still some big gaps missing from the text, and the game its
 interesting. I'll be passing through the text now and adding what's missing. Then real resources,
 debugging and hopefully done.
 
-
+Pretty bad bug in the text - the update() method for the Eagle class is outdented so it looks like
+the module's method - but that is present much later on in the script. Fixing in my version, will
+likely check against GitHub later.

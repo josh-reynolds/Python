@@ -49,6 +49,14 @@ class MyActor(Actor):
         for child_obj in self.children:
             child_obj.update()
 
+class Eagle(MyActor):
+    def __init__(self, pos):
+        super().__init__("eagles", pos)
+        self.children.append(MyActor("eagle", (0, -32)))
+
+    def update(self):
+        self.y += 12
+
 class PlayerState(Enum):
     ALIVE = 0,
     SPLAT = 1,
