@@ -62,7 +62,9 @@ class Log(Mover):
         super().__init__(dx, image, pos)
 
 class Train(Mover):
-    pass
+    def __init__(self, dx, pos):
+        image = "train" + str(randint(0,2)) + ("0" if dx < 0 else "1")
+        super().__init__(dx, image, pos)
 
 class Row(MyActor):
     def __init__(self, base_image, index, y):
