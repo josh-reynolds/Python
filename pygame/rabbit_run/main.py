@@ -36,13 +36,18 @@ class MyActor(Actor):
 
 class PlayerState(Enum):
     ALIVE = 0,
+    SPLAT = 1,
+    SPLASH = 2,
+    EAGLE = 3
 
 class Rabbit(MyActor):
     def __init__(self, pos):
         super().__init__("blank", pos)
-        self.state = None
+        self.state = PlayerState.ALIVE
+        self.direction = 2
         self.timer = 0
-        self.min_y = -400
+        self.input_queue = []
+        self.min_y = self.y
 
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
