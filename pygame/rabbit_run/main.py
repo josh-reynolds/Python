@@ -96,6 +96,63 @@ class Rabbit(MyActor):
                 game.play_sound("jump", 1)
                 return
 
+    def update(self):
+        for direction in range(4):
+            if key_just_pressed(direction_keys[direction]):
+                self.input_queue.append(direction)
+
+        if self.state == PlayerState.ALIVE:
+            if self.timer == 0 and len(self.input_queue) > 0:
+                self.handle_input(self.input_queue.pop(0))
+
+            land = False
+
+            if self.timer > 0:
+                self.x += DX[self.direction]
+                self.y += DY[self.direction]
+                self.timer -= 1
+                land = self.timer == 0
+
+            current_row = None
+            for row in game.rows:
+                if row.y == self.y:
+                    current_row = row
+                    break
+
+            if current_row:
+                self.state, dead_obj_y_offset = current_row.check_collision(self.x)
+
+                if self.state == PlayerState.ALIVE: 
+                    self.x += current_row.push() 
+                    if land:
+                        current_row.play_sound()
+                else:
+                    if self.state == PlayerState.SPLAT:
+                        current_row.children.insert(0, MyActor("splat" + \
+                                str(self.direction), (self.x, dead_obj_y_offset)))
+                    self.timer = 100
+            else:
+                if self.y > game.scroll_pos + HEIGHT + 80:
+                    game.eagle = Eagle((self.x, game.scroll_pos))
+                    self.state = PlayerState.EAGLE
+                    self.timer = 150
+                    game.play_sound("eagle")
+
+            self.x = max(16, min(WIDTH -16, self.x))
+
+        else:
+            self.timer -= 1
+            self.min_y = min(self.min_y, self.y)
+            self.image = "blank"
+
+            if self.state == PlayerState.ALIVE:
+                if self.timer > 0:
+                    self.image = "jump" + str(self.direction)
+                else:
+                    self.image = "sit" + str(self.direction)
+            elif self.state == PlayerState.SPLASH and self.timer > 84:
+                self.image = "splash" + str(int((100 - self.timer) / 2))
+
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
         super().__init__(image, pos)
@@ -123,6 +180,12 @@ class Row(MyActor):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
         self.index = index
         self.dx = 0
+    
+    def push(self):
+        return 0
+
+    def check_collision(self, x):
+        return PlayerState.ALIVE, 0
 
 class ActiveRow(Row):
     def __init__(self, child_type, dxs, base_image, index, y):
@@ -377,6 +440,11 @@ class Game:
 
     def score(self):
         return int(-320 - game.rabbit.min_y) // 40
+
+    def play_sound(self, name, count=1):
+        if self.rabbit:
+            sound = getattr(sounds, name + str(randint(0, count - 1)))
+            sound.play()
 
     def loop_sound(self, name, count, volume):
         if volume > 0 and not name in self.looped_sounds:
