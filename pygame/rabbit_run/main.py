@@ -224,6 +224,16 @@ class ActiveRow(Row):
             pos = (WIDTH / 2 + (x if self.dx > 0 else -x), 0)
             self.children.append(self.child_type(self.dx, pos))
 
+    def update(self):
+        super().update()
+        self.children = [c for c in self.children if c.x > -70 and c.x < WIDTH + 70]
+        self.timer -= 1
+
+        if self.timer < 0:
+            pos = (WIDTH + 70 if self.dx < 0 else -70, 0)
+            self.children.append(self.child_type(self.dx, pos))
+            self.timer = (1.0 + random()) * (240.0 / abs(self.dx))
+
 class Hedge(MyActor):
     def __init__(self, x, y, pos):
         super().__init__("bush"+str(x)+str(y), pos)
