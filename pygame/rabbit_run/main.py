@@ -158,6 +158,9 @@ class Mover(MyActor):
         super().__init__(image, pos)
         self.dx = dx
 
+    def update(self):
+        self.x += self.dx
+
 class Car(Mover):
     def __init__(self, dx, pos):
         image = "car" + str(randint(0,3)) + ("0" if dx < 0 else "1")
