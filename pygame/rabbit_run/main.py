@@ -285,6 +285,10 @@ class Grass(Row):
                 if sprite_x != None:
                     self.children.append(Hedge(sprite_x, self.hedge_row_index,
                                                (i * 40 - 20, 0)))
+
+    def allow_movement(self, x):
+        return super().allow_movement(x) and not self.collide(x, 8)
+
     def play_sound(self):
         game.play_sound("grass", 1)
 
