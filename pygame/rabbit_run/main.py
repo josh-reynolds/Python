@@ -191,12 +191,25 @@ class Row(MyActor):
         super().__init__(base_image + str(index), (0,y), ("left","bottom"))
         self.index = index
         self.dx = 0
-    
+
+    def next(self):
+        return
+
+    def collide(self, x, margin=0):
+        for child_obj in self.children:
+            if x >= child_obj.x - (child_obj.width / 2) - margin \
+                    and x < child_obj.x + (child_obj.width / 2) + margin:
+                        return child_obj
+        return None
+
     def push(self):
         return 0
 
     def check_collision(self, x):
         return PlayerState.ALIVE, 0
+
+    def allow_movement(self, x):
+        return x >= 16 and x <= WIDTH - 16
 
 class ActiveRow(Row):
     def __init__(self, child_type, dxs, base_image, index, y):
