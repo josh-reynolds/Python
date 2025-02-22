@@ -251,6 +251,8 @@ class Grass(Row):
                 if sprite_x != None:
                     self.children.append(Hedge(sprite_x, self.hedge_row_index,
                                                (i * 40 - 20, 0)))
+    def play_sound(self):
+        game.play_sound("grass", 1)
 
     def next(self):
         if self.index <= 5:
@@ -269,6 +271,9 @@ class Grass(Row):
 class Dirt(Row):
     def __init__(self, predecessor, index, y):
         super().__init__("dirt", index, y)
+
+    def play_sound(self):
+        game.play_sound("dirt", 1)
 
     def next(self):
         if self.index <= 5:
@@ -289,6 +294,9 @@ class Water(ActiveRow):
         dxs = [-2,-1] * (predecessor.dx >= 0) + [1,2] * (predecessor.dx <= 0)
         super().__init__(Log, dxs, "water", index, y)
 
+    def play_sound(self):
+        game.play_sound("log", 1)
+
     def next(self):
         if self.index == 7 or (self.index >= 1 and random() < 0.5):
             row_class, index = Dirt, randint(4,6)
@@ -301,6 +309,9 @@ class Road(ActiveRow):
     def __init__(self, predecessor, index, y):
         dxs = list(set(range(-5,6)) - set([0, predecessor.dx]))
         super().__init__(Car, dxs, "road", index, y)
+
+    def play_sound(self):
+        game.play_sound("road", 1)
 
     def next(self):
         if self.index == 0:
@@ -330,6 +341,9 @@ class Pavement(Row):
     def __init__(self, predecessor, index, y):
         super().__init__("side", index, y)
 
+    def play_sound(self):
+        game.play_sound("sidewalk", 1)
+
     def next(self):
         if self.index < 2:
             row_class, index = Pavement, self.index + 1
@@ -355,6 +369,9 @@ class Rail(Row):
                 self.children.append(Train(dx, (WIDTH + 1000 if dx < 0 else -1000, -13)))
                 game.play_sound("bell")
                 game.play_sound("train", 2)
+
+    def play_sound(self):
+        game.play_sound("grass", 1)
 
     def next(self):
         if self.index < 3:
@@ -460,6 +477,11 @@ class Game:
             else:
                 sound.stop()
                 del self.looped_sounds[name]
+
+    def stop_looped_sounds(self):
+        for sound in self.looped_sounds.values():
+            sound.stop()
+        self.looped_sounds.clear()
 
 key_status = {}
 
