@@ -332,6 +332,19 @@ class Water(ActiveRow):
         dxs = [-2,-1] * (predecessor.dx >= 0) + [1,2] * (predecessor.dx <= 0)
         super().__init__(Log, dxs, "water", index, y)
 
+    def update(self):
+        super().update()
+
+        for log in self.children:
+            if game.rabbit and self.y == game.rabbit.y \
+                    and log == self.collide(game.rabbit.x, -4):
+                        log.y = 2
+            else:
+                log.y = 0
+
+    def push(self):
+        return self.dx
+
     def play_sound(self):
         game.play_sound("log", 1)
 
