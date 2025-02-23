@@ -25,6 +25,10 @@ class Actor:
         return self.rect.collidepoint(point)
 
     @property
+    def width(self):
+        return self.rect.width
+
+    @property
     def image(self):
         return self._image
 
