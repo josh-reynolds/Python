@@ -91,10 +91,11 @@ class Rabbit(MyActor):
     def handle_input(self, direction):
         for row in game.rows:
             if row.y == self.y + Rabbit.MOVE_DISTANCE * DY[direction]:
-                self.direction = direction
-                self.timer = Rabbit.MOVE_DISTANCE
-                game.play_sound("jump", 1)
-                return
+                if row.allow_movement(self.x + Rabbit.MOVE_DISTANCE * DX[direction]):
+                    self.direction = direction
+                    self.timer = Rabbit.MOVE_DISTANCE
+                    game.play_sound("jump", 1)
+                    return
 
     def update(self):
         for direction in range(4):

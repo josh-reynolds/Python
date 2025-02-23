@@ -56,7 +56,7 @@ All official resources are in place with proper attribution. On initial playtest
 issues:
 
 * [FIXED] Rabbit sprite is invisible
-* [     ] Rabbit does not seem to collide with hedges
+* [FIXED] Rabbit does not seem to collide with hedges
 * [FIXED] Theme music is not playing
 * [     ] Debugging display is still enabled
 * [     ] keys dictionary is in the game script, not engine
@@ -74,3 +74,9 @@ wrapped in try/catch. On to the next...
 The invisible rabbit issue looks like another indentation error in the book. The block at the end of
 Rabbit.update() that sets the image to anything other than 'blank' was indented too far and never
 executing. Double-checked, I did not introduce this - the text is clearly wrong.
+
+...and figured out the hedge collision issue. I missed an entire line in the Rabbit.handle_input(), so it
+was not checking the Grass.allow_movement() method. Fixed.
+
+At this point, all known gameplay issues are fixed. There are some engineering fit and finish tasks, and 
+I'd still like to scrub against the published sources one more time. Almost done.
