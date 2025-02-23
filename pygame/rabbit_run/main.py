@@ -23,7 +23,7 @@ HEIGHT = 800
 TITLE = "Run Rabbit Run"
 
 ROW_HEIGHT = 40
-DEBUG_SHOW_ROW_BOUNDARIES = True                #---------- temp
+DEBUG_SHOW_ROW_BOUNDARIES = False
 
 # this should come from the engine
 class keys:
@@ -534,8 +534,7 @@ class Game:
         if DEBUG_SHOW_ROW_BOUNDARIES:
             for obj in all_objs:
                 if obj and isinstance(obj, Row):
-                    # TO_DO: temporarily setting to black, since screen is white at this point in development
-                    pygame.draw.rect(screen.surface, (0,0,0),
+                    pygame.draw.rect(screen.surface, (255,255,255),
                                      pygame.Rect(obj.x, obj.y - int(self.scroll_pos),
                                                  screen.surface.get_width(), ROW_HEIGHT), 1)
                     # engine implements this as draw_text, not draw.text

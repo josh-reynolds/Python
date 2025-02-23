@@ -58,7 +58,7 @@ issues:
 * [FIXED] Rabbit sprite is invisible
 * [FIXED] Rabbit does not seem to collide with hedges
 * [FIXED] Theme music is not playing
-* [     ] Debugging display is still enabled
+* [FIXED] Debugging display is still enabled
 * [     ] keys dictionary is in the game script, not engine
 * [     ] engine implements draw_text, not draw.text
 
