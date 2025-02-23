@@ -55,9 +55,12 @@ Next to bring in all official assets. Then playtesting and debugging.
 All official resources are in place with proper attribution. On initial playtesting, I see the following
 issues:
 
-* Rabbit sprite is invisible
-* Rabbit does not seem to collide with hedges
-* Theme music is not playing
+* [FIXED] Rabbit sprite is invisible
+* [     ] Rabbit does not seem to collide with hedges
+* [FIXED] Theme music is not playing
+* [     ] Debugging display is still enabled
+* [     ] keys dictionary is in the game script, not engine
+* [     ] engine implements draw_text, not draw.text
 
 More to come, probably, but until that first one is fixed this is very tricky to playtest. A couple other
 things I'll be trying:
@@ -65,3 +68,9 @@ things I'll be trying:
 * Double-checking against the book text
 * Comparing with the github version
 
+So the music one was easy - just needed an import reference. I wasn't seeing the error because this is
+wrapped in try/catch. On to the next...
+
+The invisible rabbit issue looks like another indentation error in the book. The block at the end of
+Rabbit.update() that sets the image to anything other than 'blank' was indented too far and never
+executing. Double-checked, I did not introduce this - the text is clearly wrong.

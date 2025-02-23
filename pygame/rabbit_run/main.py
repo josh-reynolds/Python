@@ -145,13 +145,13 @@ class Rabbit(MyActor):
             self.min_y = min(self.min_y, self.y)
             self.image = "blank"
 
-            if self.state == PlayerState.ALIVE:
-                if self.timer > 0:
-                    self.image = "jump" + str(self.direction)
-                else:
-                    self.image = "sit" + str(self.direction)
-            elif self.state == PlayerState.SPLASH and self.timer > 84:
-                self.image = "splash" + str(int((100 - self.timer) / 2))
+        if self.state == PlayerState.ALIVE:
+            if self.timer > 0:
+                self.image = "jump" + str(self.direction)
+            else:
+                self.image = "sit" + str(self.direction)
+        elif self.state == PlayerState.SPLASH and self.timer > 84:
+            self.image = "splash" + str(int((100 - self.timer) / 2))
 
 class Mover(MyActor):
     def __init__(self, dx, image, pos):
