@@ -345,6 +345,13 @@ class Water(ActiveRow):
     def push(self):
         return self.dx
 
+    def check_collision(self, x):
+        if self.collide(x, -4):
+            return PlayerState.ALIVE, 0
+        else:
+            game.play_sound("splash")
+            return PlayerState.SPLASH, 0
+
     def play_sound(self):
         game.play_sound("log", 1)
 
