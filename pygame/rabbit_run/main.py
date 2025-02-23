@@ -638,6 +638,13 @@ def draw():
         screen.blit("gameover", (0,0))
 
 try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 512)
+    pygame.mixer.set_num_channels(16)
+except:
+    pass
+
+try:
     with open("high.txt", "r") as f:
         high_score = int(f.read())
 except:

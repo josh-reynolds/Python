@@ -43,3 +43,10 @@ debugging and hopefully done.
 Pretty bad bug in the text - the update() method for the Eagle class is outdented so it looks like
 the module's method - but that is present much later on in the script. Fixing in my version, will
 likely check against GitHub later.
+
+- - - -
+Finished the third pass - all text from the book is in place, though it may well need a review to catch
+any typos. The game is sort of playable now, though with placeholders it's difficult to know what's going
+on.
+
+Next to bring in all official assets. Then playtesting and debugging.
