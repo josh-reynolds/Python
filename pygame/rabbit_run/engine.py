@@ -9,8 +9,8 @@ class Actor:
 
     def __init__(self, image, pos, anchor=("center", "center")):
         #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
-        self.anchor = ("left", "top")
-        self.anchor_value = (0,0)
+        self._anchor = ("left", "top")
+        self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
 
         self.image = image
@@ -38,7 +38,7 @@ class Actor:
 
     def initialize_position(self, pos, anchor):
         #print(f"initialize_position({pos}, {anchor})")
-        self.anchor = anchor
+        self._anchor = anchor
         self.calculate_anchor()
         self.pos = pos
     
@@ -51,25 +51,25 @@ class Actor:
 
     @property
     def x(self):
-        return self.rect.left + self.anchor_value[0]
+        return self.rect.left + self._anchor_value[0]
 
     @x.setter
     def x(self, new_x):
         #print(f"set_x({new_x})")
-        self.rect.left = new_x - self.anchor_value[0]
+        self.rect.left = new_x - self._anchor_value[0]
 
     @property
     def y(self):
-        return self.rect.top + self.anchor_value[1]
+        return self.rect.top + self._anchor_value[1]
 
     @y.setter
     def y(self, new_y):
         #print(f"set_y({new_y})")
-        self.rect.top = new_y - self.anchor_value[1]
+        self.rect.top = new_y - self._anchor_value[1]
 
     @property
     def pos(self):
-        anchor_x, anchor_y = self.anchor_value
+        anchor_x, anchor_y = self._anchor_value
 
         return (self.rect.topleft[0] + anchor_x, 
                 self.rect.topleft[1] + anchor_y)
@@ -77,11 +77,19 @@ class Actor:
     @pos.setter
     def pos(self, new_pos):
         #print(f"set_pos({new_pos})")
-        anchor_x, anchor_y = self.anchor_value
+        anchor_x, anchor_y = self._anchor_value
 
         self.rect.topleft = (new_pos[0] - anchor_x,
                              new_pos[1] - anchor_y)
 
+    @property
+    def anchor(self):
+        return self._anchor
+
+    @anchor.setter
+    def anchor(self, new_anchor):
+        self._anchor = new_anchor
+        self.update_position()
 
     def calculate_anchor(self):
         #print("calculate_anchor()")
@@ -90,7 +98,7 @@ class Actor:
         ih = self.image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
-        self.anchor_value = (xs[self.anchor[0]], ys[self.anchor[1]])
+        self._anchor_value = (xs[self._anchor[0]], ys[self._anchor[1]])
 
     @property
     def top(self):
