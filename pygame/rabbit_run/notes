@@ -50,3 +50,18 @@ any typos. The game is sort of playable now, though with placeholders it's diffi
 on.
 
 Next to bring in all official assets. Then playtesting and debugging.
+
+- - - -
+All official resources are in place with proper attribution. On initial playtesting, I see the following
+issues:
+
+* Rabbit sprite is invisible
+* Rabbit does not seem to collide with hedges
+* Theme music is not playing
+
+More to come, probably, but until that first one is fixed this is very tricky to playtest. A couple other
+things I'll be trying:
+
+* Double-checking against the book text
+* Comparing with the github version
+
