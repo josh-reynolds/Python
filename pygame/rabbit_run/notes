@@ -60,8 +60,8 @@ issues:
 * [FIXED] Theme music is not playing
 * [FIXED] Debugging display is still enabled
 * [FIXED] keys dictionary is in the game script, not engine
+* [FIXED] current score stays at zero until death
 * [     ] engine implements draw_text, not draw.text
-* [     ] current score stays at zero until death
 
 More to come, probably, but until that first one is fixed this is very tricky to playtest. A couple other
 things I'll be trying:
@@ -81,3 +81,11 @@ was not checking the Grass.allow_movement() method. Fixed.
 
 At this point, all known gameplay issues are fixed. There are some engineering fit and finish tasks, and 
 I'd still like to scrub against the published sources one more time. Almost done.
+
+OK, in scrubbing against the GitHub sources (only up through the Car class so far), I caught a couple
+more indent issues. One may have been trivial, but the other was causing the current score issue mentioned
+above. Fixed. This one ties with the earlier 'invisible rabbit' indentation problem - they may in fact
+have been correct after all, but this indentation change is across a page boundary again, hence the 
+error.
+
+

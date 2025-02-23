@@ -87,7 +87,7 @@ class Rabbit(MyActor):
                     self.direction = direction
                     self.timer = Rabbit.MOVE_DISTANCE
                     game.play_sound("jump", 1)
-                    return
+                return
 
     def update(self):
         for direction in range(4):
@@ -135,9 +135,10 @@ class Rabbit(MyActor):
 
         else:
             self.timer -= 1
-            self.min_y = min(self.min_y, self.y)
-            self.image = "blank"
+        
+        self.min_y = min(self.min_y, self.y)
 
+        self.image = "blank"
         if self.state == PlayerState.ALIVE:
             if self.timer > 0:
                 self.image = "jump" + str(self.direction)
