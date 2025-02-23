@@ -186,6 +186,13 @@ class Keyboard:
         else:
             raise LookupError
 
+class keys:
+    SPACE = "space"
+    UP = "up"
+    RIGHT = "right"
+    DOWN = "down"
+    LEFT = "left"
+
 class Sounds:
     def __init__(self):
         files = []

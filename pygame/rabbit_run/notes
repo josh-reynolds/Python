@@ -59,8 +59,9 @@ issues:
 * [FIXED] Rabbit does not seem to collide with hedges
 * [FIXED] Theme music is not playing
 * [FIXED] Debugging display is still enabled
-* [     ] keys dictionary is in the game script, not engine
+* [FIXED] keys dictionary is in the game script, not engine
 * [     ] engine implements draw_text, not draw.text
+* [     ] current score stays at zero until death
 
 More to come, probably, but until that first one is fixed this is very tricky to playtest. A couple other
 things I'll be trying:

@@ -2,7 +2,7 @@ import sys
 import pygame
 from random import random, randint, choice
 from enum import Enum
-from engine import keyboard, Actor, sounds, music
+from engine import keyboard, keys, Actor, sounds, music
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -24,14 +24,6 @@ TITLE = "Run Rabbit Run"
 
 ROW_HEIGHT = 40
 DEBUG_SHOW_ROW_BOUNDARIES = False
-
-# this should come from the engine
-class keys:
-    SPACE = "space"
-    UP = "up"
-    RIGHT = "right"
-    DOWN = "down"
-    LEFT = "left"
 
 class MyActor(Actor):
     def __init__(self, image, pos, anchor=("center","bottom")):
