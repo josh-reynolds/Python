@@ -449,6 +449,13 @@ class Rail(Row):
                 game.play_sound("bell")
                 game.play_sound("train", 2)
 
+    def check_collision(self, x):
+        if self.index == 2 and self.predecessor.collide(x):
+            game.play_sound("splat", 1)
+            return PlayerState.SPLAT, 8
+        else:
+            return PlayerState.ALIVE, 0
+
     def play_sound(self):
         game.play_sound("grass", 1)
 
