@@ -368,6 +368,27 @@ class Road(ActiveRow):
         dxs = list(set(range(-5,6)) - set([0, predecessor.dx]))
         super().__init__(Car, dxs, "road", index, y)
 
+    def update(self):
+        super().update()
+
+        for y_offset, car_sound_num in [(-ROW_HEIGHT, Car.SOUND_ZOOM),
+                                        (0, Car.SOUND_HONK),
+                                        (ROW_HEIGHT, Car.SOUND_ZOOM)]:
+            if game.rabbit and game.rabbit.y == self.y + y_offset:
+                for child_obj in self.children:
+                    if isinstance(child_obj, Car):
+                        dx = child_obj.x - game.rabbit.x
+                        if abs(dx) < 100 and ((child_obj.dx < 0) != (dx < 0)) \
+                                and (y_offset == 0 or abs(child_obj.dx) > 1):
+                                    child_obj.play_sound(car_sound_num)
+
+    def check_collision(self, x):
+        if self.collide(x):
+            game.play_sound("splat", 1)
+            return PlayerState.SPLAT, 0
+        else:
+            return PlayerState.ALIVE, 0
+
     def play_sound(self):
         game.play_sound("road", 1)
 
