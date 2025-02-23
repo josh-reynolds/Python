@@ -25,3 +25,13 @@ v0.3 (in development with RabbitRun)
 * [     ] image loading code duplication between Screen and Actor
 * [     ] font defaults are hard-coded in Screen ctor and not customizeable
 * [     ] blit code duplication between Screen.draw_text() and Screen.blit()
+
+
+
+
+    # image + anchor -> anchor_value
+    # topleft + anchor_value -> position
+
+    # change image, need to recalculate anchor_value and position
+    # change anchor, need to recalculat anchor_value and position
+    # change position, need to recalculate topleft
