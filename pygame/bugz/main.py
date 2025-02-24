@@ -19,18 +19,31 @@ class FlyingEnemy:
     def update(self):
         pass
 
+    def draw(self):
+        pass
+
+class Explosion:
+    pass
+
 class Segment:
     def __init__(self, a, b, c, d, e):
         self.health = 1     ###
+        self.y = 1           ###
 
     def update(self):
+        pass
+
+    def draw(self):
         pass
 
 class Rock:
     def __init__(self, a, b):
-        pass
+        self.y = 1           ###
 
     def update(self):
+        pass
+
+    def draw(self):
         pass
 
 class Game:
@@ -98,7 +111,18 @@ class Game:
         return self
 
     def draw(self):
-        pass
+        screen.blit("bg" + str(max(self.wave, 0) % 3), (0,0))
+        all_objs = sum(self.grid, self.bullets + self.segments + self.explosions + [self.player])
+
+        def sort_key(obj):
+            return (isinstance(obj, Explosion), obj.y if obj else 0)
+
+        all_objs.sort(key=sort_key)
+        all_objs.append(self.flying_enemy)
+
+        for obj in all_objs:
+            if obj:
+                obj.draw()
 
     def play_sound(self, a):
         pass
