@@ -1,0 +1,12 @@
+Starting on the fourth project from Code the Classics Vol. 1. This is a Centipede clone called
+'Myriapod' - I'm going to call my version 'Bugz.'
+
+This project will also produce v0.4 of my Pygame Zero clone engine.
+
+Engine and main script in place, version incremented, and after running main.py, the starting
+scaffolding is ready: an empty sounds directory, a __pycache__ directory filtered out in .gitignore,
+WIDTH/HEIGHT/TITLE defined in main, along with stubs for update() and draw(). Project runs to a blank 
+white screen - we're ready to go.
+
+- - - -
+

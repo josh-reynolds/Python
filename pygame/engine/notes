@@ -27,6 +27,14 @@ v0.3 (released with RabbitRun)
 * [DEFER] blit code duplication between Painter.text() and Screen.blit()
 * [FIXED] interface mismatch with Pygame Zero for Screen.draw methods
 
+v0.4 (under development with Bugz)
+----------------------------------------
+* [     ] only handles png images - needs support for gif & jpg
+* [     ] only handles very limited set of keys - needs support for full keyboard
+* [     ] no doc strings at all
+* [     ] image loading code duplication between Screen and Actor
+* [     ] font defaults are hard-coded in Painter class and not customizeable
+* [     ] blit code duplication between Painter.text() and Screen.blit()
 
 
 
