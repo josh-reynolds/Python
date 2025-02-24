@@ -8,16 +8,41 @@ class Game():
     def __init__(self):
         self.time = 0
 
+    def update(self):
+        pass
+
     def draw(self):
         pass
 
-def update():
+def space_pressed():
     pass
 
 class State(Enum):
     MENU = 1,
     PLAY = 2,
     GAME_OVER = 3
+
+def update():
+    global state, game
+
+    if state == State.MENU:
+        if space_pressed():
+            state = State.PLAY
+            game = Game(Player((240, 768)))
+
+        game.update()
+
+    elif state == State.PLAY:
+        if game.player.lives == 0 and game.player.timer == 100:
+            sounds.gameover.play()
+            sstate = State.GAME_OVER
+        else:
+            game.update()
+
+    elif state == State.GAME_OVER:
+        if space_pressed():
+            state = State.MENU
+            game = Game()
 
 def draw():
     game.draw()
