@@ -28,11 +28,11 @@ def update():
     #pass
 
 def draw():
-    screen.draw_line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
-    screen.draw_line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
+    screen.draw.line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
+    screen.draw.line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
     for box in boxes:
         box.draw()
-    screen.draw_text("Lorem Ipsum Dolor Sit Amet", (20, 20))
+    screen.draw.text("Lorem Ipsum Dolor Sit Amet", (20, 20))
     #pass
 
 def print_box(b):
@@ -47,8 +47,8 @@ def print_box(b):
     print(f'box rect top = {b.rect.top}')
     
 def once():
-    screen.draw_line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
-    screen.draw_line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
+    screen.draw.line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
+    screen.draw.line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
 
     b = Box((HALF_WIDTH, HALF_HEIGHT), anchor=('center','center'))
     b.update()

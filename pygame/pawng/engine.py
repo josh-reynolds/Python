@@ -3,14 +3,14 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 class Actor:
 
     def __init__(self, image, pos, anchor=("center", "center")):
         #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
-        self.anchor = ("left", "top")
-        self.anchor_value = (0,0)
+        self._anchor = ("left", "top")
+        self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
 
         self.image = image
@@ -23,6 +23,10 @@ class Actor:
     def collidepoint(self, point):
         #print(f"collidepoint({point})")
         return self.rect.collidepoint(point)
+
+    @property
+    def width(self):
+        return self.rect.width
 
     @property
     def image(self):
@@ -38,7 +42,7 @@ class Actor:
 
     def initialize_position(self, pos, anchor):
         #print(f"initialize_position({pos}, {anchor})")
-        self.anchor = anchor
+        self._anchor = anchor
         self.calculate_anchor()
         self.pos = pos
     
@@ -51,25 +55,25 @@ class Actor:
 
     @property
     def x(self):
-        return self.rect.left + self.anchor_value[0]
+        return self.rect.left + self._anchor_value[0]
 
     @x.setter
     def x(self, new_x):
         #print(f"set_x({new_x})")
-        self.rect.left = new_x - self.anchor_value[0]
+        self.rect.left = new_x - self._anchor_value[0]
 
     @property
     def y(self):
-        return self.rect.top + self.anchor_value[1]
+        return self.rect.top + self._anchor_value[1]
 
     @y.setter
     def y(self, new_y):
         #print(f"set_y({new_y})")
-        self.rect.top = new_y - self.anchor_value[1]
+        self.rect.top = new_y - self._anchor_value[1]
 
     @property
     def pos(self):
-        anchor_x, anchor_y = self.anchor_value
+        anchor_x, anchor_y = self._anchor_value
 
         return (self.rect.topleft[0] + anchor_x, 
                 self.rect.topleft[1] + anchor_y)
@@ -77,11 +81,19 @@ class Actor:
     @pos.setter
     def pos(self, new_pos):
         #print(f"set_pos({new_pos})")
-        anchor_x, anchor_y = self.anchor_value
+        anchor_x, anchor_y = self._anchor_value
 
         self.rect.topleft = (new_pos[0] - anchor_x,
                              new_pos[1] - anchor_y)
 
+    @property
+    def anchor(self):
+        return self._anchor
+
+    @anchor.setter
+    def anchor(self, new_anchor):
+        self._anchor = new_anchor
+        self.update_position()
 
     def calculate_anchor(self):
         #print("calculate_anchor()")
@@ -90,7 +102,7 @@ class Actor:
         ih = self.image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
-        self.anchor_value = (xs[self.anchor[0]], ys[self.anchor[1]])
+        self._anchor_value = (xs[self._anchor[0]], ys[self._anchor[1]])
 
     @property
     def top(self):
@@ -107,11 +119,12 @@ class Actor:
 class Screen:
     def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
-        self.display = pygame.display.set_mode((width, height))
+        self.surface = pygame.display.set_mode((width, height))
         self.images = {}
+        self.draw = Painter(self.surface)
 
     def fill(self, color):
-        self.display.fill(color)
+        self.surface.fill(color)
 
     # TO_DO: handle other image formats (png/gif/jpg)
     # TO_DO: split image handling for Actors and non-Actors, and shift as needed
@@ -119,10 +132,27 @@ class Screen:
         if image not in self.images:
             image_name = './images/' + image + '.png'
             self.images[image] = pygame.image.load(image_name)
-        self.display.blit(self.images[image], position)
+        self.surface.blit(self.images[image], position)
 
-    def draw_line(self, color, start, end):
-        pygame.draw.line(self.display, color, start, end)
+class Painter:
+    def __init__(self, surface):
+        # TO_DO: make this customizeable 
+        self.surface = surface
+        self.fontname = None
+        self.fontsize = 24
+        self.fontcolor = Color('black')
+        self.set_font()
+
+    def set_font(self):
+        self.font = pygame.font.Font(self.fontname, self.fontsize)
+
+    def text(self, text, pos):
+        img = self.font.render(text, True, self.fontcolor)
+        # TO_DO: address duplication with Screen.blit()
+        self.surface.blit(img, pos)
+
+    def line(self, color, start, end):
+        pygame.draw.line(self.surface, color, start, end)
 
 class Music:
     def __init__(self):
@@ -151,6 +181,19 @@ class Keyboard:
         self.k = False
         self.m = False
         self.z = False
+
+    def __getitem__(self, key):
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            raise LookupError
+
+class keys:
+    SPACE = "space"
+    UP = "up"
+    RIGHT = "right"
+    DOWN = "down"
+    LEFT = "left"
 
 class Sounds:
     def __init__(self):

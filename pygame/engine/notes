@@ -17,21 +17,23 @@ v0.2 (released with Cave)
 * [FIXED] Actor does not support anchors, always set to center,center
 * [FIXED] key repeat too slow causing flickering animated sprites
 
-v0.3 (in development with RabbitRun)
+v0.3 (released with RabbitRun)
 ----------------------------------------
-* [     ] only handles png images - needs support for gif & jpg
-* [     ] only handles very limited set of keys - needs support for full keyboard
-* [     ] no doc strings at all
-* [     ] image loading code duplication between Screen and Actor
-* [     ] font defaults are hard-coded in Screen ctor and not customizeable
-* [     ] blit code duplication between Screen.draw_text() and Screen.blit()
+* [DEFER] only handles png images - needs support for gif & jpg
+* [DEFER] only handles very limited set of keys - needs support for full keyboard
+* [DEFER] no doc strings at all
+* [DEFER] image loading code duplication between Screen and Actor
+* [DEFER] font defaults are hard-coded in Painter class and not customizeable
+* [DEFER] blit code duplication between Painter.text() and Screen.blit()
+* [FIXED] interface mismatch with Pygame Zero for Screen.draw methods
 
 
 
 
-    # image + anchor -> anchor_value
-    # topleft + anchor_value -> position
+----------------------------------------
+# image + anchor -> anchor_value
+# topleft + anchor_value -> position
 
-    # change image, need to recalculate anchor_value and position
-    # change anchor, need to recalculat anchor_value and position
-    # change position, need to recalculate topleft
+# change image, need to recalculate anchor_value and position
+# change anchor, need to recalculat anchor_value and position
+# change position, need to recalculate topleft

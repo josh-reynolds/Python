@@ -121,13 +121,7 @@ class Screen:
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.surface = pygame.display.set_mode((width, height))
         self.images = {}
-        
-        # TO_DO: make this customizeable 
-        # TO_DO: also, maybe shouldn't be directly in Screen...
-        self.fontname = None
-        self.fontsize = 24
-        self.fontcolor = Color('black')
-        self.set_font()
+        self.draw = Painter(self.surface)
 
     def fill(self, color):
         self.surface.fill(color)
@@ -140,17 +134,25 @@ class Screen:
             self.images[image] = pygame.image.load(image_name)
         self.surface.blit(self.images[image], position)
 
-    def draw_line(self, color, start, end):
-        pygame.draw.line(self.surface, color, start, end)
-
-    def draw_text(self, text, pos):
-        img = self.font.render(text, True, self.fontcolor)
-        # TO_DO: address duplication with Screen.blit()
-        self.surface.blit(img, pos)
+class Painter:
+    def __init__(self, surface):
+        # TO_DO: make this customizeable 
+        self.surface = surface
+        self.fontname = None
+        self.fontsize = 24
+        self.fontcolor = Color('black')
+        self.set_font()
 
     def set_font(self):
         self.font = pygame.font.Font(self.fontname, self.fontsize)
 
+    def text(self, text, pos):
+        img = self.font.render(text, True, self.fontcolor)
+        # TO_DO: address duplication with Screen.blit()
+        self.surface.blit(img, pos)
+
+    def line(self, color, start, end):
+        pygame.draw.line(self.surface, color, start, end)
 
 class Music:
     def __init__(self):
@@ -185,6 +187,13 @@ class Keyboard:
             return getattr(self, key)
         else:
             raise LookupError
+
+class keys:
+    SPACE = "space"
+    UP = "up"
+    RIGHT = "right"
+    DOWN = "down"
+    LEFT = "left"
 
 class Sounds:
     def __init__(self):
