@@ -1,12 +1,24 @@
 from enum import Enum
+from engine import keyboard
 
 WIDTH = 480
 HEIGHT = 800
 TITLE = "Bugz!"
 
+num_grid_rows = 10
+num_grid_cols = 10
+
 class Game():
-    def __init__(self):
+    def __init__(self, player=None):
+        self.wave = -1
         self.time = 0
+        self.player = player
+        self.grid = [[None] * num_grid_cols for y in range(num_grid_rows)]
+        self.bullets = []
+        self.explosions = []
+        self.segments = []
+        self.flying_enemy = None
+        self.score = 0
 
     def update(self):
         pass
@@ -15,7 +27,14 @@ class Game():
         pass
 
 def space_pressed():
-    pass
+    global space_down
+    if keyboard.space:
+        if not space_down:
+            space_down = True
+            return True
+    else:
+        space_down = False
+        return False
 
 class State(Enum):
     MENU = 1,
