@@ -124,8 +124,13 @@ class Game:
             if obj:
                 obj.draw()
 
-    def play_sound(self, a):
-        pass
+    def play_sound(self, name, count=1):
+        if self.player:
+            try:
+                sound = getattr(sounds, name + str(randint(0, count - 1)))
+                sound.play()
+            except Exception as e:
+                print(e)
 
 def space_pressed():
     global space_down
