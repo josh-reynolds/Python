@@ -33,6 +33,9 @@ class Rock:
     def __init__(self, a, b):
         self.y = 1           ###
 
+    def damage(self, a, b):
+        pass
+
     def update(self):
         pass
 
@@ -138,8 +141,14 @@ class Game:
         self.flying_enemy = None
         self.score = 0
 
-    def damage(self, a, b, c):
-        pass
+    def damage(self, cell_x, cell_y, amount, from_bullet=False):
+        rock = self.grid[cell_y][cell_x]
+
+        if rock != None:
+            if rock.damage(amount, from_bullet):
+                self.grid[cell_y][cell_x] = None
+
+        return rock != None
 
     def update(self):
         self.time += (2 if self.wave % 4 == 3 else 1)
