@@ -8,8 +8,12 @@ TITLE = "Bugz!"
 
 DEBUG_TEST_RANDOM_POSITIONS = True    ###
 
+
 num_grid_rows = 10    ###
 num_grid_cols = 10    ###
+
+def cell2pos(a, b, c, d):
+    return [1,1,1,1]              ####
 
 class FlyingEnemy:
     def __init__(self, a):
@@ -35,9 +39,22 @@ class Rock:
     def draw(self):
         pass
 
+SECONDARY_AXIS_POSITIONS = [x for x in range(16)]        ###
+SECONDARY_AXIS_SPEED = [x for x in range(16)]        ###
+
 DIRECTION_UP = 0
 DIRECTION_RIGHT = 1
+DIRECTION_DOWN = 2
 DIRECTION_LEFT = 3
+
+DX = [0, 1, 0, -1]
+DY = [-1, 0, 1, 0]
+
+def inverse_direction(direction):
+    return 1                                  ###
+
+def is_horizontal(direction):
+    pass
 
 class Segment(Actor):
     def __init__(self, cx, cy, health, fast, head):
@@ -54,11 +71,60 @@ class Segment(Actor):
         self.disallow_direction = DIRECTION_UP
         self.previous_x_direction = 1
 
-    def update(self):
-        pass
+    def rank(self):
+        def inner(a):                ###
+            return 1                ###
+        return inner                ###
 
-    def draw(self):
-        pass
+    def update(self):
+        phase = game.time % 16
+
+        if phase == 0:
+            self.cell_x += DX[self.out_edge]
+            self.cell_y += DY[self.out_edge]
+            self.in_edge = inverse_direction(self.out_edge)
+
+            if self.cell_y == (18 if game.player else 0):
+                self.disallow_direction = DIRECTION_UP
+            if self.cell_y == num_grid_rows-1:
+                self.disallow_direction = DIRECTION_DOWN
+        elif phase == 4:
+            self.out_edge = min(range(4), key=self.rank())
+
+            if is_horizontal(self.out_edge):
+                self.previous_x_direction = self.out_edge
+
+            new_cell_x = self.cell_x + DX[self.out_edge]
+            new_cell_y = self.cell_y + DY[self.out_edge]
+
+            if new_cell_x >= 0 and new_cell_x < num_grid_cols:
+                game.damage(new_cell_x, new_cell_y, 5)
+
+            game.occupied.add((new_cell_x, new_cell_y))
+            game.occupied.add((new_cell_x, new_cell_y, inverse_direction(self.out_edge)))
+
+        turn_idx = (self.out_edge - self.in_edge) % 4
+
+        offset_x = SECONDARY_AXIS_POSITIONS[phase] * (2 - turn_idx)
+        stolen_y_movement = (turn_idx % 2) * SECONDARY_AXIS_POSITIONS[phase]
+        offset_y = -16 + (phase * 2) - stolen_y_movement
+
+        rotation_matrices = [[1,0,0,1],[0,-1,1,0],[-1,0,0,-1],[0,1,-1,0]]
+        rotation_matrix = rotation_matrices[self.in_edge]
+        offset_x, offset_y = offset_x * rotation_matrix[0] \
+                           + offset_y * rotation_matrix[1], \
+                             offset_x * rotation_matrix[2] \
+                           + offset_y * rotation_matrix[3] \
+
+        self.pos = cell2pos(self.cell_x, self.cell_y, offset_x, offset_y)
+
+        direction = ((SECONDARY_AXIS_SPEED[phase] * (turn_idx - 2)) \
+                  + (self.in_edge * 2) + 4) % 8
+
+        leg_frame = phase // 4
+
+        self.image = "seg" + str(int(self.fast)) + str(int(self.health == 2)) \
+                   + str(int(self.head)) + str(direction) + str(leg_frame)
 
 class Game:
     def __init__(self, player=None):
@@ -71,6 +137,9 @@ class Game:
         self.segments = []
         self.flying_enemy = None
         self.score = 0
+
+    def damage(self, a, b, c):
+        pass
 
     def update(self):
         self.time += (2 if self.wave % 4 == 3 else 1)
