@@ -530,8 +530,7 @@ class Game:
                     pygame.draw.rect(screen.surface, (255,255,255),
                                      pygame.Rect(obj.x, obj.y - int(self.scroll_pos),
                                                  screen.surface.get_width(), ROW_HEIGHT), 1)
-                    # engine implements this as draw_text, not draw.text
-                    screen.draw_text(str(obj.index), (obj.x, obj.y -
+                    screen.draw.text(str(obj.index), (obj.x, obj.y -
                                                       int(self.scroll_pos) - ROW_HEIGHT))
 
     def score(self):

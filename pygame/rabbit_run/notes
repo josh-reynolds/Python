@@ -61,7 +61,7 @@ issues:
 * [FIXED] Debugging display is still enabled
 * [FIXED] keys dictionary is in the game script, not engine
 * [FIXED] current score stays at zero until death
-* [     ] engine implements draw_text, not draw.text
+* [FIXED] engine implements draw_text, not draw.text
 
 More to come, probably, but until that first one is fixed this is very tricky to playtest. A couple other
 things I'll be trying:
