@@ -266,7 +266,7 @@ class Grass(Row):
             if random() < 0.5 and index > 7 and index < 14:
                 self.hedge_mask = generate_hedge_mask()
                 self.hedge_row_index = 0
-        elif predecessor.hedge_row_index == None:
+        elif predecessor.hedge_row_index == 0:
             self.hedge_mask = predecessor.hedge_mask
             self.hedge_row_index = 1
         
@@ -393,9 +393,9 @@ class Road(ActiveRow):
             r = random()
             if r < 0.8:
                 row_class, index = Road, self.index + 1
-            elif r > 0.88:
+            elif r < 0.88:
                 row_class, index = Grass, randint(0,6)
-            elif r > 0.94:
+            elif r < 0.94:
                 row_class, index = Rail, 0
             else:
                 row_class, index = Pavement, 0
@@ -403,7 +403,7 @@ class Road(ActiveRow):
             r = random()
             if r < 0.6:
                 row_class, index = Grass, randint(0,6)
-            elif r > 0.9:
+            elif r < 0.9:
                 row_class, index = Rail, 0
             else:
                 row_class, index = Pavement, 0
@@ -538,29 +538,38 @@ class Game:
         return int(-320 - game.rabbit.min_y) // 40
 
     def play_sound(self, name, count=1):
-        if self.rabbit:
-            sound = getattr(sounds, name + str(randint(0, count - 1)))
-            sound.play()
+        try:
+            if self.rabbit:
+                sound = getattr(sounds, name + str(randint(0, count - 1)))
+                sound.play()
+        except:
+            pass
 
     def loop_sound(self, name, count, volume):
-        if volume > 0 and not name in self.looped_sounds:
-            full_name = name + str(randint(0, count-1))
-            sound = getattr(sounds, full_name)
-            sound.play(-1)
-            self.looped_sounds[name] = sound
+        try:
+            if volume > 0 and not name in self.looped_sounds:
+                full_name = name + str(randint(0, count-1))
+                sound = getattr(sounds, full_name)
+                sound.play(-1)
+                self.looped_sounds[name] = sound
 
-        if name in self.looped_sounds:
-            sound = self.looped_sounds[name]
-            if volume > 0:
-                sound.set_volume(volume)
-            else:
-                sound.stop()
-                del self.looped_sounds[name]
+            if name in self.looped_sounds:
+                sound = self.looped_sounds[name]
+                if volume > 0:
+                    sound.set_volume(volume)
+                else:
+                    sound.stop()
+                    del self.looped_sounds[name]
+        except:
+            pass
 
     def stop_looped_sounds(self):
-        for sound in self.looped_sounds.values():
-            sound.stop()
-        self.looped_sounds.clear()
+        try:
+            for sound in self.looped_sounds.values():
+                sound.stop()
+            self.looped_sounds.clear()
+        except:
+            pass
 
 key_status = {}
 

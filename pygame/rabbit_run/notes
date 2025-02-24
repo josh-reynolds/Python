@@ -88,4 +88,7 @@ above. Fixed. This one ties with the earlier 'invisible rabbit' indentation prob
 have been correct after all, but this indentation change is across a page boundary again, hence the 
 error.
 
-
+Final scrub, against the GitHub sources. I introduced a couple typos, inverting a few '<' and substituting a None for a zero. The first was fairly harmless, just affecting the frequency of objects spawning (and thereby possibly the game difficulty). The second meant that hedges were only ever generating as a single row wide, which is 
+hard to spot if you don't know they're always supposed to be two wide. Also, the GitHub version wraps all
+sound and filesystem interaction in try/catch, so picking that up as well. Going to work on the draw_text
+issue, and this project is done.
