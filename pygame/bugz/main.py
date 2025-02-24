@@ -75,9 +75,37 @@ class Segment(Actor):
         self.previous_x_direction = 1
 
     def rank(self):
-        def inner(a):                ###
-            return 1                ###
-        return inner                ###
+        def inner(proposed_out_edge):
+            new_cell_x = self.cell_x + DX[proposed_out_edge]
+            new_cell_y = self.cell_y + DY[proposed_out_edge]
+
+            out = new_cell_x < 0 or new_cell_x > num_grid_cols - 1 \
+                    or new_cell_y > 0 or new_cell_y > num_grid_rows - 1
+
+            turning_back_on_self = proposed_out_edge == self.in_edge
+            direction_disallowed = proposed_out_edge == self.disallow_direction
+
+            if out or (new_cell_y == 0 and new_cell_x < 0):
+                rock = None
+            else:
+                rock = game.grid[new_cell_y][new_cell_x]
+
+            rock_present = rock != None
+
+            occupied_by_segment = (new_cell_x, new_cell_y) in game.occupied \
+                    or (self.cell_x, self.cell_y, proposed_out_edge) in game.occupied
+
+            if rock_present:
+                horizontal_blocked = is_horizontal(proposed_out_edge)
+            else:
+                horizontal_blocked = not is_horizontal(proposed_out_edge)
+
+            same_as_previous_x_direction = proposed_out_edge == self.previous_x_direction
+
+            return (out, turning_back_on_self, direction_disallowed, occupied_by_segment,
+                    rock_present, horizontal_blocked, same_as_previous_x_direction)
+
+        return inner 
 
     def update(self):
         phase = game.time % 16
