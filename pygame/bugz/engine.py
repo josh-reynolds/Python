@@ -7,7 +7,7 @@ __version__ = "0.4"
 
 class Actor:
 
-    def __init__(self, image, pos, anchor=("center", "center")):
+    def __init__(self, image, pos=(0,0), anchor=("center", "center")):
         #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)

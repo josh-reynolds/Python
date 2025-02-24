@@ -1,6 +1,6 @@
 from enum import Enum
 from random import random, randint
-from engine import keyboard
+from engine import keyboard, Actor
 
 WIDTH = 480    ###
 HEIGHT = 800    ###
@@ -25,9 +25,8 @@ class FlyingEnemy:
 class Explosion:
     pass
 
-class Segment:
-    def __init__(self, a, b, c, d, e):
-        self.health = 1     ###
+class Rock:
+    def __init__(self, a, b):
         self.y = 1           ###
 
     def update(self):
@@ -36,9 +35,24 @@ class Segment:
     def draw(self):
         pass
 
-class Rock:
-    def __init__(self, a, b):
-        self.y = 1           ###
+DIRECTION_UP = 0
+DIRECTION_RIGHT = 1
+DIRECTION_LEFT = 3
+
+class Segment(Actor):
+    def __init__(self, cx, cy, health, fast, head):
+        super().__init__("blank")
+        self.cell_x = cx
+        self.cell_y = cy
+        self.health = health
+        self.fast = fast
+        self.head = head
+
+        self.in_edge = DIRECTION_LEFT
+        self.out_edge = DIRECTION_RIGHT
+
+        self.disallow_direction = DIRECTION_UP
+        self.previous_x_direction = 1
 
     def update(self):
         pass
