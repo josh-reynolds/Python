@@ -7,6 +7,7 @@ HEIGHT = 800    ###
 TITLE = "Bugz!"
 
 DEBUG_TEST_RANDOM_POSITIONS = True    ###
+CENTER_ANCHOR = ("center","center")
 
 
 num_grid_rows = 10    ###
@@ -26,8 +27,13 @@ class FlyingEnemy:
     def draw(self):
         pass
 
-class Explosion:
-    pass
+class Explosion(Actor):
+    def __init__(self, a, b):
+        super().__init__("blank",(0,0))     ###
+        self.timer = 0                      ###
+
+    def update(self):
+        pass
 
 class Rock(Actor):
     def __init__(self, a, b):
@@ -37,8 +43,22 @@ class Rock(Actor):
         self.health = 0                     ###
         self.type = 0                       ###
 
-    def damage(self, a, b):
-        pass
+    def damage(self, amount, damaged_by_bullet=False):
+        if damaged_by_bullet and self.health == 5:
+            game.play_sound("totem_destroy")
+            game.score += 100
+        else:
+            if amount > self.health - 1:
+                game.play_sound("rock_destroy")
+            else:
+                game.play_sound("hit", 4)
+
+        game.explosions.append(Explosion(self.pos, 2 * (self.health == 5)))
+        self.health -= amount
+        self.show_health = self.health
+        self.anchor, self.pos = CENTER_ANCHOR, self.pos
+
+        return self.health < 1
 
     def update(self):
         self.timer += 1
