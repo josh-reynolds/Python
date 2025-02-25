@@ -2,19 +2,18 @@ from enum import Enum
 from random import random, randint, choice
 from engine import keyboard, Actor
 
-WIDTH = 480    ###
-HEIGHT = 800    ###
+WIDTH = 480
+HEIGHT = 800
 TITLE = "Bugz!"
 
-DEBUG_TEST_RANDOM_POSITIONS = True    ###
+DEBUG_TEST_RANDOM_POSITIONS = False
 CENTER_ANCHOR = ("center","center")
 
+num_grid_rows = 25
+num_grid_cols = 14
 
-num_grid_rows = 10    ###
-num_grid_cols = 10    ###
-
-def cell2pos(a, b, c=0, d=0):
-    return [1,1,1,1]              ####
+def cell2pos(cell_x, cell_y, x_offset=0, y_offset=0):
+    return [(cell_x * 32) + 32 + x_offset, (cell_y * 32) + 16 + y_offset]
 
 class Explosion(Actor):
     def __init__(self, pos, exp_type):

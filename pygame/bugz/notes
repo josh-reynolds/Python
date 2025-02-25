@@ -9,4 +9,9 @@ WIDTH/HEIGHT/TITLE defined in main, along with stubs for update() and draw(). Pr
 white screen - we're ready to go.
 
 - - - -
+The first pass is complete - all stubs filled in for State.MENU to be running without error. Very
+minimal change needed to the engine so far, just a default parameter added to the Actor ctor.
+
+Next step is to press space and push into State.PLAY, then deal with stubbery. After that, it's 
+scrubbing against the test and GitHub, and debugging.
 
