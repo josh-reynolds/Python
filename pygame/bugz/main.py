@@ -42,8 +42,8 @@ class Rock:
     def draw(self):
         pass
 
-SECONDARY_AXIS_POSITIONS = [x for x in range(16)]        ###
-SECONDARY_AXIS_SPEED = [x for x in range(16)]        ###
+SECONDARY_AXIS_SPEED = [0]*4 + [1]*8 + [2]*4
+SECONDARY_AXIS_POSITIONS = [sum(SECONDARY_AXIS_SPEED[:i]) for i in range(16)]
 
 DIRECTION_UP = 0
 DIRECTION_RIGHT = 1
@@ -54,10 +54,17 @@ DX = [0, 1, 0, -1]
 DY = [-1, 0, 1, 0]
 
 def inverse_direction(direction):
-    return 1                                  ###
+    if direction == DIRECTION_UP:
+        return DIRECTION_DOWN
+    elif direction == DIRECTION_RIGHT:
+        return DIRECTION_LEFT
+    elif direction == DIRECTION_DOWN:
+        return DIRECTION_UP
+    elif direction == DIRECTION_LEFT:
+        return DIRECTION_RIGHT
 
 def is_horizontal(direction):
-    pass
+    return direction == DIRECTION_LEFT or direction == DIRECTION_RIGHT
 
 class Segment(Actor):
     def __init__(self, cx, cy, health, fast, head):
