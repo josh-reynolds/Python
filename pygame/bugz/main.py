@@ -12,6 +12,9 @@ CENTER_ANCHOR = ("center","center")
 num_grid_rows = 25
 num_grid_cols = 14
 
+def pos2cell(a,b):
+    return (1,1)          ####
+
 def cell2pos(cell_x, cell_y, x_offset=0, y_offset=0):
     return [(cell_x * 32) + 32 + x_offset, (cell_y * 32) + 16 + y_offset]
 
@@ -27,6 +30,7 @@ class Explosion(Actor):
 
 class Player(Actor):
     INVULNERABILITY_TIME = 100
+    RESPAWN_TIME = 100
     RELOAD_TIME = 10
 
     def __init__(self, pos):
@@ -175,7 +179,33 @@ class Bullet(Actor):
         self.done = False
 
     def update(self):
-        pass
+        self.y -= 24
+        grid_cell = pos2cell(*self.pos)
+
+        if game.damage(*grid_cell, 1, True):
+            self.done = True
+        else:
+            for obj in game.segments + [game.flying_enemy]:
+                if obj and obj.collidepoint(self.pos):
+                    game.explosions.append(Explosion(obj.pos, 2))
+                    obj.health -= 1
+
+                    if isinstance(obj, Segment):
+                        if obj.health == 0 \
+                                and not game.grid[obj.cell_y][obj.cell_x] \
+                                and game.allow_movement(game.player.x, game.player.y, 
+                                                        obj.cell_x, obj.cell_y):
+                                    rock = Rock(obj.cell_x, obj.cell_y, random() < 0.2)
+                                    game.grid[obj.cell_y][obj.cell_x] = rock
+                        game.play_sound("segment_explode")
+                        game.score += 10
+                    else:
+                        game.play_sound("meanie_explode")
+                        game.score += 20
+
+                    self.done = True
+
+                    return
 
 SECONDARY_AXIS_SPEED = [0]*4 + [1]*8 + [2]*4
 SECONDARY_AXIS_POSITIONS = [sum(SECONDARY_AXIS_SPEED[:i]) for i in range(16)]
@@ -319,6 +349,9 @@ class Game:
                 self.grid[cell_y][cell_x] = None
 
         return rock != None
+
+    def allow_movement(self, a, b, c, d):
+        pass
 
     def update(self):
         self.time += (2 if self.wave % 4 == 3 else 1)
