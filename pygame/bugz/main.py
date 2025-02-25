@@ -29,18 +29,29 @@ class FlyingEnemy:
 class Explosion:
     pass
 
-class Rock:
+class Rock(Actor):
     def __init__(self, a, b):
-        self.y = 1           ###
+        super().__init__("blank",(0,0))     ###
+        self.timer = 0                      ###
+        self.show_health = 0                ###
+        self.health = 0                     ###
+        self.type = 0                       ###
 
     def damage(self, a, b):
         pass
 
     def update(self):
-        pass
+        self.timer += 1
 
-    def draw(self):
-        pass
+        if self.timer % 2 == 1 and self.show_health < self.health:
+            self.show_health += 1
+
+        if self.health == 5 and self.timer > 200:
+            self.damage(1)
+
+        color = str(max(game.wave, 0) % 3)
+        health = str(max(self.show_health - 1, 0))
+        self.image = "rock" + color + str(self.type) + health
 
 SECONDARY_AXIS_SPEED = [0]*4 + [1]*8 + [2]*4
 SECONDARY_AXIS_POSITIONS = [sum(SECONDARY_AXIS_SPEED[:i]) for i in range(16)]
