@@ -1,5 +1,5 @@
 from enum import Enum
-from random import random, randint
+from random import random, randint, choice
 from engine import keyboard, Actor
 
 WIDTH = 480    ###
@@ -25,14 +25,15 @@ class Explosion(Actor):
         pass
 
 class FlyingEnemy(Actor):
-    def __init__(self, a):
-        super().__init__("blank", (0,0))    ###
-        self.health = 1     ###
-        self.dx = 1          ###
-        self.dy = 1          ###
-        self.moving_x = 1          ###
-        self.timer = 0      ###
-        self.type = 0        ###
+    def __init__(self, player_x):
+        side = 1 if player_x < 160 else 0 if player_x > 320 else randint(0,1)
+        super().__init__("blank", (550*side-35,688))
+        self.moving_x = 1
+        self.dx = 1 - 2 * side
+        self.dy = choice([-1,1])         
+        self.type = randint(0,2)
+        self.health = 1
+        self.timer = 0
 
     def update(self):
         self.timer += 1
