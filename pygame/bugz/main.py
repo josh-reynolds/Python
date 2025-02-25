@@ -1,6 +1,6 @@
 from enum import Enum
 from random import random, randint, choice
-from engine import keyboard, Actor
+from engine import keyboard, Actor, sounds
 
 WIDTH = 480
 HEIGHT = 800
@@ -24,6 +24,14 @@ class Explosion(Actor):
     def update(self):
         self.timer += 1
         self.image = "exp" + str(self.type) + str(self.timer // 4)
+
+class Player(Actor):
+    def __init__(self, pos):
+        super().__init__("blank", pos)
+        self.lives = 1    ###
+
+    def update(self):
+        pass
 
 class FlyingEnemy(Actor):
     def __init__(self, player_x):
