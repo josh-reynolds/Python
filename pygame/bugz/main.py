@@ -17,12 +17,14 @@ def cell2pos(a, b, c=0, d=0):
     return [1,1,1,1]              ####
 
 class Explosion(Actor):
-    def __init__(self, a, b):
-        super().__init__("blank",(0,0))     ###
-        self.timer = 0                      ###
+    def __init__(self, pos, exp_type):
+        super().__init__("blank", pos)
+        self.type = exp_type
+        self.timer = 0
 
     def update(self):
-        pass
+        self.timer += 1
+        self.image = "exp" + str(self.type) + str(self.timer // 4)
 
 class FlyingEnemy(Actor):
     def __init__(self, player_x):
