@@ -26,12 +26,79 @@ class Explosion(Actor):
         self.image = "exp" + str(self.type) + str(self.timer // 4)
 
 class Player(Actor):
+    INVULNERABILITY_TIME = 100
+    RELOAD_TIME = 10
+
     def __init__(self, pos):
         super().__init__("blank", pos)
         self.lives = 1    ###
+        self.timer = 1    ###
+        self.alive = True    ###
+        self.fire_timer = 1    ###
+        self.frame = 1    ###
+        self.direction = 0   ###
+
+    def move(self, a, b, c):
+        pass
 
     def update(self):
-        pass
+        self.timer += 1
+
+        if self.alive:
+            dx = 0
+            if keyboard.left:
+                dx = -1
+            elif keyboard.right:
+                dx = 1
+
+            dy = 0
+            if keyboard.up:
+                dy = -1
+            elif keyboard.down:
+                dy = 1
+
+            self.move(dx, 0, 3 - abs(dy))
+            self.move(0, dy, 3 - abs(dx))
+            directions = [7,0,1,6,-1,2,5,4,3]
+            direction = directions[dx+3*dy+4]
+
+            if self.timer % 2 == 0 and direction >= 0:
+                difference = (direction - self.direction)
+                rotation_table = [0, 1, 1, -1]
+                rotation = rotation_table[difference % 4]
+                self.direction = (self.direction + rotation) % 4
+
+            self.fire_timer -= 1
+
+            if self.fire_timer < 0 and (self.frame > 0 or keyboard.space):
+                if self.frame == 0:
+                    game.play_sound("laser")
+                    game.bullets.append(Bullet((self.x, self.y - 8)))
+                self.frame = (self.frame + 1) % 3
+                self.fire_timre = Player.RELOAD_TIME
+
+            all_enemies = game.segments + [game.flying_enemy]
+
+            for enemy in all_enemies:
+                if enemy and enemy.collidepoint(self.pos):
+                    if self.timer > Player.INVULNERABILITY_TIME:
+                        game.play_sound("player_explode")
+                        game.explosions.append(Explosion(self.pos, 1))
+                        self.alive = False
+                        self.timer = 0
+                        self.lives -= 1
+        else:
+            if self.timer > Player.RESPAWN_TIME:
+                self.alive = True
+                self.timer = 0
+                self.pos = (240, 768)
+                game.clear_rocks_for_respawn(*self.pos)
+
+        invulnerable = self.timer > Player.INVULNERABILITY_TIME
+        if self.alive and (invulnerable or self.timer % 2 == 0):
+            self.image = "player" + str(self.direction) + str(self.frame)
+        else:
+            self.image = "blank"
 
 class FlyingEnemy(Actor):
     def __init__(self, player_x):
@@ -101,6 +168,14 @@ class Rock(Actor):
         color = str(max(game.wave, 0) % 3)
         health = str(max(self.show_health - 1, 0))
         self.image = "rock" + color + str(self.type) + health
+
+class Bullet(Actor):
+    def __init__(self, pos):
+        super().__init__("blank", pos)
+        self.done = False
+
+    def update(self):
+        pass
 
 SECONDARY_AXIS_SPEED = [0]*4 + [1]*8 + [2]*4
 SECONDARY_AXIS_POSITIONS = [sum(SECONDARY_AXIS_SPEED[:i]) for i in range(16)]
