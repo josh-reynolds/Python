@@ -16,17 +16,6 @@ num_grid_cols = 10    ###
 def cell2pos(a, b, c=0, d=0):
     return [1,1,1,1]              ####
 
-class FlyingEnemy:
-    def __init__(self, a):
-        self.health = 1     ###
-        self.x = 1          ###
-
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
-
 class Explosion(Actor):
     def __init__(self, a, b):
         super().__init__("blank",(0,0))     ###
@@ -34,6 +23,28 @@ class Explosion(Actor):
 
     def update(self):
         pass
+
+class FlyingEnemy(Actor):
+    def __init__(self, a):
+        super().__init__("blank", (0,0))    ###
+        self.health = 1     ###
+        self.dx = 1          ###
+        self.dy = 1          ###
+        self.moving_x = 1          ###
+        self.timer = 0      ###
+        self.type = 0        ###
+
+    def update(self):
+        self.timer += 1
+        self.x += self.dx * self.moving_x * (3 - abs(self.dy))
+        self.y += self.dy * (3 - abs(self.dx * self.moving_x))
+
+        if self.y < 592 or self.y > 784:
+            self.moving_x = randint(0,1)
+            self.dy = -self.dy
+
+        anim_frame = str([0,2,1,2][(self.timer //4) % 4])
+        self.image = "meanie" + str(self.type) + anim_frame
 
 class Rock(Actor):
     def __init__(self, x, y, totem=False):
