@@ -13,7 +13,7 @@ CENTER_ANCHOR = ("center","center")
 num_grid_rows = 10    ###
 num_grid_cols = 10    ###
 
-def cell2pos(a, b, c, d):
+def cell2pos(a, b, c=0, d=0):
     return [1,1,1,1]              ####
 
 class FlyingEnemy:
@@ -36,12 +36,20 @@ class Explosion(Actor):
         pass
 
 class Rock(Actor):
-    def __init__(self, a, b):
-        super().__init__("blank",(0,0))     ###
-        self.timer = 0                      ###
-        self.show_health = 0                ###
-        self.health = 0                     ###
-        self.type = 0                       ###
+    def __init__(self, x, y, totem=False):
+        anchor = (24,60) if totem else CENTER_ANCHOR
+        super().__init__("blank", cell2pos(x,y), anchor=anchor)
+        self.type = randint(0, 3)
+
+        if totem:
+            game.play_sound("totem_create")
+            self.health = 5
+            self.show_health = 5
+        else:
+            self.health = randint(3,4)
+            self.show_health = 1
+        
+        self.timer = 1
 
     def damage(self, amount, damaged_by_bullet=False):
         if damaged_by_bullet and self.health == 5:
@@ -318,7 +326,7 @@ def update():
     elif state == State.PLAY:
         if game.player.lives == 0 and game.player.timer == 100:
             sounds.gameover.play()
-            sstate = State.GAME_OVER
+            state = State.GAME_OVER
         else:
             game.update()
 
