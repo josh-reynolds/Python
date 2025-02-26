@@ -12,8 +12,8 @@ CENTER_ANCHOR = ("center","center")
 num_grid_rows = 25
 num_grid_cols = 14
 
-def pos2cell(a,b):
-    return (1,1)          ####
+def pos2cell(x, y):
+    return ((int(x)-16)//32, int(y)//32)
 
 def cell2pos(cell_x, cell_y, x_offset=0, y_offset=0):
     return [(cell_x * 32) + 32 + x_offset, (cell_y * 32) + 16 + y_offset]
@@ -366,6 +366,14 @@ class Game:
                     return False
 
         return True
+
+    def clear_rocks_for_respawn(self, x, y):
+        x0, y0 = pos2cell(x-18, y-10)
+        x1, y1 = pos2cell(x+18, y+10)
+
+        for yi in range(y0, y1+1):
+            for xi in range(x0, x1+1):
+                self.damage(xi, yi, 5)
 
     def update(self):
         self.time += (2 if self.wave % 4 == 3 else 1)
