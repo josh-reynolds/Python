@@ -350,8 +350,19 @@ class Game:
 
         return rock != None
 
-    def allow_movement(self, a, b, c, d):
-        pass
+    def allow_movement(self, x, y, ax=-1, ay=-1):
+        if x < 40 or x > 440 or y < 592 or y > 784:
+            return False
+
+        x0, y0 = pos2cell(x-18, y-10)
+        x1, y1 = pos2cell(x+18, y+10)
+
+        for yi in range(y0, y1+1):
+            for xi in range(x0, x1+1):
+                if self.grid[yi][xi] or xi == ax and yi == ay:
+                    return False
+
+        return True
 
     def update(self):
         self.time += (2 if self.wave % 4 == 3 else 1)

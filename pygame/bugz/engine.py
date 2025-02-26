@@ -102,7 +102,17 @@ class Actor:
         ih = self.image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
-        self._anchor_value = (xs[self._anchor[0]], ys[self._anchor[1]])
+        if str(self._anchor[0]).isnumeric():
+            new_x = self._anchor[0]
+        else:
+            new_x = xs[self._anchor[0]]
+
+        if str(self._anchor[1]).isnumeric():
+            new_y = self._anchor[1]
+        else:
+            new_y = ys[self._anchor[1]]
+
+        self._anchor_value = (new_x, new_y)
 
     @property
     def top(self):
