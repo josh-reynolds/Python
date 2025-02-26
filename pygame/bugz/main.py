@@ -35,15 +35,18 @@ class Player(Actor):
 
     def __init__(self, pos):
         super().__init__("blank", pos)
-        self.lives = 1    ###
-        self.timer = 1    ###
-        self.alive = True    ###
-        self.fire_timer = 1    ###
-        self.frame = 1    ###
-        self.direction = 0   ###
+        self.direction = 0
+        self.frame = 0
+        self.lives = 3
+        self.alive = True
+        self.timer = 0
+        self.fire_timer = 0
 
-    def move(self, a, b, c):
-        pass
+    def move(self, dx, dy, speed):
+        for i in range(speed):
+            if game.allow_movement(self.x + dx, self.y + dy):
+                self.x += dx
+                self.y += dy
 
     def update(self):
         self.timer += 1
