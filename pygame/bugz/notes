@@ -15,3 +15,12 @@ minimal change needed to the engine so far, just a default parameter added to th
 Next step is to press space and push into State.PLAY, then deal with stubbery. After that, it's 
 scrubbing against the test and GitHub, and debugging.
 
+- - - -
+Finished with the second pass, all stubs completed, and the game is running - sort of - in all
+three modes. Given the sheer number of some of the sprite types, I copied in some of the offical
+graphics, but not all. Still some strange behavior to debug, of course.
+
+- - - -
+Just completed a scrub against the book text - caught a couple typos in my code. Checking this in. Then
+final steps will be bringing in official resources, scrubbing against the GitHub source, and
+playtesting/debugging.

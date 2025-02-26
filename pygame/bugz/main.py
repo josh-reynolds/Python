@@ -1,6 +1,21 @@
+import sys
 from enum import Enum
 from random import random, randint, choice
-from engine import keyboard, Actor, sounds
+from engine import keyboard, Actor, sounds, music
+
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [0,4]:
+    print(f"This game requires at least version 0.4 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH = 480
 HEIGHT = 800
@@ -127,7 +142,7 @@ class FlyingEnemy(Actor):
             self.moving_x = randint(0,1)
             self.dy = -self.dy
 
-        anim_frame = str([0,2,1,2][(self.timer //4) % 4])
+        anim_frame = str([0,2,1,2][(self.timer // 4) % 4])
         self.image = "meanie" + str(self.type) + anim_frame
 
 class Rock(Actor):
@@ -178,7 +193,7 @@ class Rock(Actor):
 
 class Bullet(Actor):
     def __init__(self, pos):
-        super().__init__("blank", pos)
+        super().__init__("bullet", pos)
         self.done = False
 
     def update(self):
@@ -404,7 +419,7 @@ class Game:
                         num_rocks += 1
             if num_rocks < 31 + self.wave:
                 while True:
-                    x, y = randint(0, num_grid_cols-1), randint(1, num_grid_rows-1)
+                    x, y = randint(0, num_grid_cols-1), randint(1, num_grid_rows-3)
                     if self.grid[y][x] == None:
                         self.grid[y][x] = Rock(x, y)
                         break
@@ -420,7 +435,7 @@ class Game:
                     else:
                         cell_x, cell_y = -1-i, 0
 
-                    health = [[1,1],[1,2],[2,2],[1.1]][self.wave % 4][i % 2]
+                    health = [[1,1],[1,2],[2,2],[1,1]][self.wave % 4][i % 2]
                     fast = self.wave % 4 == 3
                     head = i == 0
                     self.segments.append(Segment(cell_x, cell_y, health, fast, head))
@@ -448,6 +463,8 @@ class Game:
                 sound.play()
             except Exception as e:
                 print(e)
+
+space_down = False
 
 def space_pressed():
     global space_down
@@ -491,7 +508,7 @@ def draw():
 
     if state == State.MENU:
         screen.blit("title", (0,0))
-        screen.blit("space" + str((game.time // 4) % 14), (0, 240))
+        screen.blit("space" + str((game.time // 4) % 14), (0, 420))
 
     elif state == State.PLAY:
         for i in range(game.player.lives):
@@ -505,6 +522,15 @@ def draw():
 
     elif state == State.GAME_OVER:
         screen.blit("over", (0,0))
+
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 1024)
+
+    music.play("theme")
+    music.set_volume(0.4)
+except:
+    pass
 
 state = State.MENU
 game = Game()
