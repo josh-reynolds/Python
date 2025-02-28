@@ -1,0 +1,15 @@
+On to the fifth project from Code the Classics Vol. 1. This is a soccer game - I'm branding mine
+'Futbol.'
+
+And this advances the engine to v0.5. After this project completes, I'll look at any remaining 
+issues and put together a v1.0 release. We'll repeat the process for Vol. 2, and eventually
+have a v2.0. The pace of engine changes really slowed in the last project, so it's unclear how 
+much more I'll have to do - though I have accumulated a short list of known issues that should
+be dealt wit
+
+Engine and main script in place, version incremented, and after running main.py, the starting
+scaffolding is ready: an empty sounds directory, a __pycache__ directory filtered out in .gitignore,
+WIDTH/HEIGHT/TITLE defined in main, along with stubs for update() and draw(). Project runs to a blank 
+white screen - we're ready to go.
+
+- - - -
