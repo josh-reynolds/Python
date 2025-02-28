@@ -1,12 +1,18 @@
 from enum import Enum
+from engine import keys
 
 WIDTH = 400    ###
 HEIGHT = 400    ###
 TITLE = "Futbol"
 
 class Game():
+    def update(self):
+        pass
     def draw(self):
         pass
+
+def key_just_pressed(key):
+    pass
 
 class State(Enum):
     MENU = 0,
@@ -18,7 +24,47 @@ class MenuState(Enum):
     DIFFICULTY = 1
 
 def update():
-    pass
+    global state, game, menu_state, menu_num_players, menu_difficulty
+
+    if state == State.MENU:
+        if key_just_pressed(keys.SPACE):
+            if menu_state == MenuState.NUM_PLAYERS:
+                if menu_num_players == 1:
+                    menu_state = MenuState.DIFFICULTY
+                else:
+                    state = State.PLAY
+                    menu_state = None
+                    game = Game(Controls(0), Controls(1))
+            else:
+                state = State.PLAY
+                menu_state = None
+                game = Game(Controls(0), None, menu_difficulty)
+        else:
+            selection_change = 0
+            if key_just_pressed(keys.DOWN):
+                selection_change = 1
+            elif key_just_pressed(keys.UP):
+                selection_change = -1
+            if selection_change != 0:
+                sounds.move.play()
+                if menu_state == MenuState.NUM_PLAYERS:
+                    menu_num_players == 2 if menu_num_players == 1 else 1
+                else:
+                    menu_difficulty = (menu_difficulty + selection_change) % 3
+
+        game.update()
+
+    elif state == State.PLAY:
+        if max([team.score for team in game.teams]) == 9 and game.score_timer == 1:
+            state = State.GAME_OVER
+        else:
+            game.update()
+
+    elif state == State.GAME_OVER:
+        if key_just_pressed(keys.SPACE):
+            state = State.MENU
+            menu_state = MenuState.NUM_PLAYERS
+            game = Game()
 
 def draw():
     game.draw()
