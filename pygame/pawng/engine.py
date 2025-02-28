@@ -3,11 +3,11 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.3"
+__version__ = "0.4"
 
 class Actor:
 
-    def __init__(self, image, pos, anchor=("center", "center")):
+    def __init__(self, image, pos=(0,0), anchor=("center", "center")):
         #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)
@@ -102,7 +102,17 @@ class Actor:
         ih = self.image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
-        self._anchor_value = (xs[self._anchor[0]], ys[self._anchor[1]])
+        if str(self._anchor[0]).isnumeric():
+            new_x = self._anchor[0]
+        else:
+            new_x = xs[self._anchor[0]]
+
+        if str(self._anchor[1]).isnumeric():
+            new_y = self._anchor[1]
+        else:
+            new_y = ys[self._anchor[1]]
+
+        self._anchor_value = (new_x, new_y)
 
     @property
     def top(self):
