@@ -24,3 +24,20 @@ graphics, but not all. Still some strange behavior to debug, of course.
 Just completed a scrub against the book text - caught a couple typos in my code. Checking this in. Then
 final steps will be bringing in official resources, scrubbing against the GitHub source, and
 playtesting/debugging.
+
+In playtesting, the game seems to mostly work, but a few issues are present:
+
+* [FIXED] Centipede never moves downscreen, always moves up instead of down after first pass
+* [     ] Player movement controls sometimes stop responding
+* [     ] Sometimes there seem to be invisible rocks blocking player movement
+
+Scrubbed against the GitHub source, and caught a few discrepancies. A few I introduced during
+transcription, but the most significant was causing the centipede movement bug above, and was present
+in the book text: one of the comparisons in Segment.rank() was inverted from '< 0' to '> 0.' They also
+changed the logic in space_pressed() slightly, though I don't think this altered anything in my playtest.
+(The game previously had a very fast fire rate, but I think that was due to a typo I made when 
+resetting the Player.fire_timer.)
+
+The other two bugs listed above are more difficult to repro, though they seemed to happen every time
+previously, so I should at least be able to discern if the frequency has changed.
+

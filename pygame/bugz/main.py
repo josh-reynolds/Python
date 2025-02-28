@@ -31,7 +31,7 @@ def pos2cell(x, y):
     return ((int(x)-16)//32, int(y)//32)
 
 def cell2pos(cell_x, cell_y, x_offset=0, y_offset=0):
-    return [(cell_x * 32) + 32 + x_offset, (cell_y * 32) + 16 + y_offset]
+    return ((cell_x * 32) + 32 + x_offset, (cell_y * 32) + 16 + y_offset)
 
 class Explosion(Actor):
     def __init__(self, pos, exp_type):
@@ -97,7 +97,7 @@ class Player(Actor):
                     game.play_sound("laser")
                     game.bullets.append(Bullet((self.x, self.y - 8)))
                 self.frame = (self.frame + 1) % 3
-                self.fire_timre = Player.RELOAD_TIME
+                self.fire_timer = Player.RELOAD_TIME
 
             all_enemies = game.segments + [game.flying_enemy]
 
@@ -270,7 +270,7 @@ class Segment(Actor):
             new_cell_y = self.cell_y + DY[proposed_out_edge]
 
             out = new_cell_x < 0 or new_cell_x > num_grid_cols - 1 \
-                    or new_cell_y > 0 or new_cell_y > num_grid_rows - 1
+                    or new_cell_y < 0 or new_cell_y > num_grid_rows - 1
 
             turning_back_on_self = proposed_out_edge == self.in_edge
             direction_disallowed = proposed_out_edge == self.disallow_direction
@@ -469,7 +469,9 @@ space_down = False
 def space_pressed():
     global space_down
     if keyboard.space:
-        if not space_down:
+        if space_down:
+            return False
+        else:
             space_down = True
             return True
     else:
