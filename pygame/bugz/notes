@@ -28,8 +28,8 @@ playtesting/debugging.
 In playtesting, the game seems to mostly work, but a few issues are present:
 
 * [FIXED] Centipede never moves downscreen, always moves up instead of down after first pass
-* [     ] Player movement controls sometimes stop responding
-* [     ] Sometimes there seem to be invisible rocks blocking player movement
+* [NO REPRO] Player movement controls sometimes stop responding
+* [NO REPRO] Sometimes there seem to be invisible rocks blocking player movement
 
 Scrubbed against the GitHub source, and caught a few discrepancies. A few I introduced during
 transcription, but the most significant was causing the centipede movement bug above, and was present
@@ -41,3 +41,5 @@ resetting the Player.fire_timer.)
 The other two bugs listed above are more difficult to repro, though they seemed to happen every time
 previously, so I should at least be able to discern if the frequency has changed.
 
+OK, after several playtest games with the scrubbed version, I am not seeing those issues. Marking them
+'no repro.' This project is complete.
