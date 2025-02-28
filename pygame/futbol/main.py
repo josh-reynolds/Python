@@ -1,18 +1,42 @@
 from enum import Enum
-from engine import keys
+from engine import keys, keyboard
 
 WIDTH = 400    ###
 HEIGHT = 400    ###
 TITLE = "Futbol"
 
+HALF_WINDOW_W = 100
+
+class Team():                 ###
+    def __init__(self):       ###
+        self.score = 0        ###
+
 class Game():
+    def __init__(self, a=None, b=None, c=None):
+        self.teams = [Team(),Team()]        ###
+        self.score_timer = 0                ###
     def update(self):
         pass
     def draw(self):
         pass
 
+key_status = {}
+
 def key_just_pressed(key):
-    pass
+    result = False
+
+    prev_status = key_status.get(key, False)
+
+    if not prev_status and keyboard[key]:
+        result = True
+
+    key_status[key] = keyboard[key]
+
+    return result
+
+class Controls:
+    def __init__(self, a, b=None):
+        pass
 
 class State(Enum):
     MENU = 0,
@@ -96,6 +120,7 @@ def draw():
 state = State.MENU
 menu_state = MenuState.NUM_PLAYERS
 menu_num_players = 1
+menu_difficulty = 0
 
 game = Game()
 
