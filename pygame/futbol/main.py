@@ -1,24 +1,114 @@
 from enum import Enum
+import pygame
+from pygame.math import Vector2
 from engine import keys, keyboard
 
 WIDTH = 400    ###
 HEIGHT = 400    ###
 TITLE = "Futbol"
 
-HALF_WINDOW_W = 100
+HALF_WINDOW_W = 100     ###
 
-class Team():                 ###
-    def __init__(self):       ###
+LEVEL_W = 100   ###
+LEVEL_H = 100   ###
+
+DEBUG_SHOW_LEADS = True                    ####
+DEBUG_SHOW_TARGETS = True                    ####
+DEBUG_SHOW_PEERS = True                    ####
+DEBUG_SHOW_SHOOT_TARGET = True                    ####
+DEBUG_SHOW_COSTS = False                    ####
+
+class Mock:                 ###
+    def __init__(self, child=False):       ###
         self.score = 0        ###
+        self.x = 1                 ###
+        self.y = 1                 ###
+        self.vpos = Vector2(0,0)         ###
+        self.debug_target = Vector2(0,0)    ###
+        self.lead = False                     ###
+        self.team = 1                          ###
+        if not child:                ###
+            self.shadow = Mock(child=True)        ###
+            self.active_control_player = Mock(child=True)     ###
+            self.peer = Mock(child=True)     ###
+            self.owner = Mock(child=True)                  ###
 
-class Game():
+    def draw(self, a, b):            ###
+        pass                         ###
+
+    def human(self):                ###
+        return True                ###
+
+def cost(a, b):           ###
+    return (0,0)           ###
+
+class Game:
     def __init__(self, a=None, b=None, c=None):
-        self.teams = [Team(),Team()]        ###
+        self.teams = [Mock(),Mock()]        ###
         self.score_timer = 0                ###
+        self.camera_focus = Mock()               ###
+        self.ball = Mock()                       ###
+        self.players = [Mock(), Mock()]     ###
+        self.goals = [Mock(), Mock()]        ###
+        self.debug_shoot_target = False      ###
+
     def update(self):
         pass
+
     def draw(self):
-        pass
+        offset_x = max(0, min(LEVEL_W - WIDTH, self.camera_focus.x - WIDTH / 2))
+        offset_y = max(0, min(LEVEL_H - HEIGHT, self.camera_focus.y - HEIGHT / 2))
+        offset = Vector2(offset_x, offset_y)
+
+        screen.blit("pitch",(-offset_x, -offset_y))
+
+        objects = sorted([self.ball] + self.players, key=lambda obj: obj.y)
+        objects = objects + [obj.shadow for obj in objects]
+        objects = [self.goals[0]] + objects + [self.goals[1]]
+
+        for obj in objects:
+            obj.draw(offset_x, offset_y)
+
+        for t in range(2):
+            if self.teams[t].human():
+                arrow_pos = self.teams[t].active_control_player.vpos - \
+                        offset - Vector2(11, 45)
+                screen.blit("arrow" + str(t), arrow_pos)
+
+        if DEBUG_SHOW_LEADS:
+            for p in self.players:
+                if game.ball.owner and p.lead:
+                    line_start = game.ball.owner.vpos - offset
+                    line_end = p.vpos - offset
+                    # Pygame Zero has draw.line, not sure why they chose to circumvent...
+                    pygame.draw.line(screen.surface, (0,0,0), line_start, line_end)
+
+        if DEBUG_SHOW_TARGETS:
+            for p in self.players:
+                line_start = p.debug_target - offset
+                line_end = p.vpos - offset
+                pygame.draw.line(screen.surface, (255,0,0), line_start, line_end)
+
+        if DEBUG_SHOW_PEERS:
+            for p in self.players:
+                line_start = p.peer.vpos - offset
+                line_end = p.vpos - offset
+                pygame.draw.line(screen.surface, (0,0,255), line_start, line_end)
+
+        if DEBUG_SHOW_SHOOT_TARGET:
+            if self.debug_shoot_target and self.ball.owner:
+                line_start = self.ball.owner.vpos - offset
+                line_end = self.debug_shoot_target - offset
+                pygame.draw.line(screen.surface, (255,0,255), line_start, line_end)
+
+        if DEBUG_SHOW_COSTS:
+            for x in range(0, LEVEL_W, 60):
+                for y in range(0, LEVEL_H, 26):
+                    c = cost(Vector2(x,y), self.ball.owner.team)[0]
+                    screen_pos = Vector2(x,y) - offset
+                    screen_pos = (screen_pos.x, screen_pos.y)
+                    # TO_DO: add support for center argument in Painter.text()
+                    screen.draw.text(f"{c:.0f}", center=screen_pos)
 
 key_status = {}
 
@@ -48,7 +138,6 @@ class Controls:
             self.key_left = keys.A
             self.key_right = keys.D
             self.key_shoot = keys.LSHIFT
-
 
 class State(Enum):
     MENU = 0,
