@@ -16,7 +16,7 @@ DEBUG_SHOW_LEADS = True                    ####
 DEBUG_SHOW_TARGETS = True                    ####
 DEBUG_SHOW_PEERS = True                    ####
 DEBUG_SHOW_SHOOT_TARGET = True                    ####
-DEBUG_SHOW_COSTS = False                    ####
+DEBUG_SHOW_COSTS = True                    ####
 
 class Mock:                 ###
     def __init__(self, child=False):       ###

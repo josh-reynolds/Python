@@ -156,10 +156,28 @@ class Painter:
     def set_font(self):
         self.font = pygame.font.Font(self.fontname, self.fontsize)
 
-    def text(self, text, pos):
+    #TO_DO: only partial positioning implemented thus far, and a bit creaky
+    # this is 'borrowed' from ptext, which is what Pygame Zero uses internally
+    def text(self, text, pos=None, center=None):
+        if center and not pos:
+            x, y = center
+            hanchor, vanchor = 0.5, 0.5
+        elif pos and not center:
+            x, y = pos
+            hanchor, vanchor = 0, 0
+        else:
+            raise Exception("Must specify either pos or center location")
+
         img = self.font.render(text, True, self.fontcolor)
+
+        x -= hanchor * img.get_width()
+        y -= vanchor * img.get_height()
+
+        x = int(round(x))
+        y = int(round(y))
+
         # TO_DO: address duplication with Screen.blit()
-        self.surface.blit(img, pos)
+        self.surface.blit(img, (x,y))
 
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
