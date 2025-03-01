@@ -1,3 +1,4 @@
+import random
 from enum import Enum
 import pygame
 from pygame.math import Vector2
@@ -8,6 +9,7 @@ HEIGHT = 400    ###
 TITLE = "Futbol"
 
 HALF_WINDOW_W = 100     ###
+HALF_LEVEL_W = 100     ###
 HALF_LEVEL_H = 100     ###
 HALF_PITCH_H = 100     ###
 
@@ -15,6 +17,8 @@ LEVEL_W = 100   ###
 LEVEL_H = 100   ###
 
 LEAD_DISTANCE_1 = 100    ###
+
+PLAYER_START_POS = [(0,0),(1,1),(2,2)]      ###
 
 
 DEBUG_SHOW_LEADS = True                    ####
@@ -33,7 +37,6 @@ class Mock:                 ###
         self.team = 1                          ###
         if not child:                ###
             self.shadow = Mock(child=True)        ###
-            self.peer = Mock(child=True)     ###
             self.owner = Mock(child=True)                  ###
 
     def shoot(self):                    ###
@@ -61,6 +64,20 @@ def dist_key(a):                   ###
 def safe_normalize(a):                ###
     return (Vector2(0,0),1)                      ###
 
+class Player:                              ####
+    def __init__(self, a, b, c):               ###
+        self.peer = Mock(child=True)     ###
+        self.shadow = Mock(child=True)        ###
+        self.team = 1                          ###
+        self.y = 1                 ###
+        self.vpos = Vector2(0,0)         ###
+
+    def update(self):                    ###
+        pass                    ###
+
+    def draw(self, a, b):            ###
+        pass                         ###
+
 class Team:
     def __init__(self, a):    ###
         self.controls = Mock(child=True)                 ###
@@ -69,6 +86,26 @@ class Team:
 
     def human(self):                ###
         return True                ###
+
+class Goal:                   ###
+    def __init__(self, a):    ###
+        pass                  ###
+
+    def draw(self, a, b):            ###
+        pass                         ###
+
+class Ball:                  ###
+    def __init__(self):
+        self.shadow = Mock(child=True)        ###
+        self.vpos = Vector2(0,0)         ####
+        self.owner = Mock(child=True)               ###
+        self.y = 1                 ###
+
+    def update(self):                    ###
+        pass                    ###
+    
+    def draw(self, a, b):            ###
+        pass                         ###
 
 class Game:
     def __init__(self, p1_controls=None, p2_controls=None, difficulty=2):
@@ -91,11 +128,27 @@ class Game:
         self.reset()
 
     def reset(self):
-        self.camera_focus = Vector2(0,0)               ###
-        self.ball = Mock()                       ###
-        self.players = [Mock(), Mock()]     ###
-        self.goals = [Mock(), Mock()]        ###
-        self.debug_shoot_target = False      ###
+        self.players = []
+        random_offset = lambda x: x + random.randint(-32,32)
+        for pos in PLAYER_START_POS:
+            self.players.append(Player(random_offset(pos[0]),
+                                       random_offset(pos[1]), 0))
+            self.players.append(Player(random_offset(LEVEL_W - pos[0]),
+                                       random_offset(LEVEL_H - pos[1]), 1))
+
+        for a, b in zip(self.players, self.players[::-1]):
+            a.peer = b
+                                                     
+        self.goals = [Goal(i) for i in range(2)]
+        self.teams[0].active_control_player = self.players[0]
+        self.teams[1].active_control_player = self.players[1]
+        other_team = 1 if self.scoring_team == 0 else 0
+        self.kickoff_player = self.players[other_team]
+        self.kickoff_player.vpos = Vector2(HALF_LEVEL_W - 30 + other_team * 60,
+                                           HALF_LEVEL_H)
+        self.ball = Ball()
+        self.camera_focus = Vector2(self.ball.vpos)
+        self.debug_shoot_target = None
 
     def update(self):
         self.score_timer -= 1
