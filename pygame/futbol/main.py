@@ -39,9 +39,6 @@ class Mock:                 ###
             self.shadow = Mock(child=True)        ###
             self.owner = Mock(child=True)                  ###
 
-    def shoot(self):                    ###
-        pass                    ###
-
     def update(self):                    ###
         pass                    ###
 
@@ -78,15 +75,6 @@ class Player:                              ####
     def draw(self, a, b):            ###
         pass                         ###
 
-class Team:
-    def __init__(self, a):    ###
-        self.controls = Mock(child=True)                 ###
-        self.active_control_player = Mock(child=True)     ###
-        self.score = 0        ###
-
-    def human(self):                ###
-        return True                ###
-
 class Goal:                   ###
     def __init__(self, a):    ###
         pass                  ###
@@ -106,6 +94,15 @@ class Ball:                  ###
     
     def draw(self, a, b):            ###
         pass                         ###
+
+class Team:
+    def __init__(self, controls):
+        self.controls = controls
+        self.active_control_player = None
+        self.score = 0
+
+    def human(self):
+        return self.controls != None
 
 class Game:
     def __init__(self, p1_controls=None, p2_controls=None, difficulty=2):
@@ -316,6 +313,9 @@ class Controls:
             self.key_left = keys.A
             self.key_right = keys.D
             self.key_shoot = keys.LSHIFT
+
+    def shoot(self):
+        pass                          ###
 
 class State(Enum):
     MENU = 0,
