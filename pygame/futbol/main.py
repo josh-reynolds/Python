@@ -8,12 +8,17 @@ HEIGHT = 400    ###
 TITLE = "Futbol"
 
 HALF_WINDOW_W = 100     ###
+HALF_LEVEL_H = 100     ###
+HALF_PITCH_H = 100     ###
 
 LEVEL_W = 100   ###
 LEVEL_H = 100   ###
 
+LEAD_DISTANCE_1 = 100    ###
+
+
 DEBUG_SHOW_LEADS = True                    ####
-DEBUG_SHOW_TARGETS = True                    ####
+DEBUG_SHOW_TARGETS = False                    ####
 DEBUG_SHOW_PEERS = True                    ####
 DEBUG_SHOW_SHOOT_TARGET = True                    ####
 DEBUG_SHOW_COSTS = True                    ####
@@ -32,6 +37,13 @@ class Mock:                 ###
             self.active_control_player = Mock(child=True)     ###
             self.peer = Mock(child=True)     ###
             self.owner = Mock(child=True)                  ###
+            self.controls = Mock(child=True)                 ###
+
+    def shoot(self):                    ###
+        pass                    ###
+
+    def update(self):                    ###
+        pass                    ###
 
     def draw(self, a, b):            ###
         pass                         ###
@@ -39,21 +51,114 @@ class Mock:                 ###
     def human(self):                ###
         return True                ###
 
+class Difficulty:
+    def __init__(self):                          ###
+        self.goalie_enabled = False                      ###
+        self.second_lead_enabled = False                      ###
+
 def cost(a, b):           ###
     return (0,0)           ###
 
+def dist_key(a):                   ###
+    return False                   ###
+
+def safe_normalize(a):                ###
+    return (Vector2(0,0),1)                      ###
+
 class Game:
-    def __init__(self, a=None, b=None, c=None):
+    def __init__(self, a=None, b=None, c=None):        ####
         self.teams = [Mock(),Mock()]        ###
         self.score_timer = 0                ###
-        self.camera_focus = Mock()               ###
+        self.camera_focus = Vector2(0,0)               ###
         self.ball = Mock()                       ###
         self.players = [Mock(), Mock()]     ###
         self.goals = [Mock(), Mock()]        ###
         self.debug_shoot_target = False      ###
+        self.difficulty = Difficulty()       ###
 
     def update(self):
-        pass
+        self.score_timer -= 1
+
+        if self.score_timer == 0:
+            self.reset()
+
+        elif self.score_timer < 0 and abs(self.ball.vpos.y - HALF_LEVEL_H) > HALF_PITCH_H:
+            game.play_sound("goal", 2)
+            self.scoring_team = 0 if self.ball.vpos.y < HALF_LEVEL_H else 1
+            self.teams[self.scoring_team].score += 1
+            self.score_timer = 60
+
+        for b in self.players:
+            b.mark = b.peer
+            b.lead = None
+            b.debug_target = None
+
+        self.debug_shoot_target = None
+
+        if self.ball.owner:
+            o = self.ball.owner
+            pos, team = o.vpos, o.team
+            owners_target_goal = game.goals[team]
+            other_team = 1 if team == 0 else 1
+
+            if self.difficulty.goalie_enabled:
+                nearest = min([p for p in self.players if p.team != team],
+                              key=dist_key(owners_target_goal.vpos))
+
+                o.peer.mark = nearest.mark
+                nearest.mark = owners_target_goal
+
+            l = sorted([p for p in self.players
+                        if p.team != team
+                        and p.timer <= 0
+                        and (not self.teams[other_team].human()
+                             or p != self.teams[other_team].active_control_player)
+                        and not isinstance(p.mark, Goal)],
+                       key=dist_key(pos))
+
+            a = [p for p in l if (p.vpos.y > pos.y if team == 0
+                                  else p.vpos.y < pos.y)]
+            b = [p for p in l if p not in a]
+
+            NONE2 = [None] * 2
+            zipped = [s for t in zip(a+NONE2, b+NONE2) for s in t if s]
+
+            # TO_DO: remove, only here temporarily to prevent a bug during development
+            zipped = [Mock(),Mock()]      #####
+            # ----------------------------------
+            
+            zipped[0].lead = LEAD_DISTANCE_1
+            if self.difficulty.second_lead_enabled:
+                zipped[1].lead = LEAD_DISTANCE_2
+
+            self.kickoff_player = None
+
+        for obj in self.players + [self.ball]:
+            obj.update()
+
+        owner = self.ball.owner
+
+        for team_num in range(2):
+            team_obj = self.teams[team_num]
+
+            if team_obj.human() and team_obj.controls.shoot():
+                def dist_key_weighted(p):
+                    dist_to_ball = (p.vpos - self.ball.vpos).length()
+                    goal_dir = (2 * team_num - 1)
+                    if owner and (p.vpos.y - self.ball.vpos.y) * goal_dir < 0:
+                        return dist_to_ball / 2
+                    else:
+                        return dist_to_ball
+
+                self.teams[team_num].active_control_player = \
+                        min([p for p in game.players
+                             if p.team == team_num], key=dist_key_weighted)
+
+        camera_ball_vec, distance = safe_normalize(self.camera_focus -
+                                                   self.ball.vpos)
+
+        if distance > 0:
+            self.camera_focus -= camera_ball_vec * min(distance, 8)
 
     def draw(self):
         offset_x = max(0, min(LEVEL_W - WIDTH, self.camera_focus.x - WIDTH / 2))
@@ -107,7 +212,6 @@ class Game:
                     c = cost(Vector2(x,y), self.ball.owner.team)[0]
                     screen_pos = Vector2(x,y) - offset
                     screen_pos = (screen_pos.x, screen_pos.y)
-                    # TO_DO: add support for center argument in Painter.text()
                     screen.draw.text(f"{c:.0f}", center=screen_pos)
 
 key_status = {}
