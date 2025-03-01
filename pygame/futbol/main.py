@@ -315,7 +315,7 @@ class Controls:
             self.key_shoot = keys.LSHIFT
 
     def shoot(self):
-        pass                          ###
+        return key_just_pressed(self.key_shoot)
 
 class State(Enum):
     MENU = 0,
