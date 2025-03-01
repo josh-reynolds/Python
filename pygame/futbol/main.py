@@ -1,7 +1,7 @@
 from enum import Enum
 import pygame
 from pygame.math import Vector2
-from engine import keys, keyboard
+from engine import keys, keyboard, music, sounds
 
 WIDTH = 400    ###
 HEIGHT = 400    ###
@@ -25,7 +25,6 @@ DEBUG_SHOW_COSTS = True                    ####
 
 class Mock:                 ###
     def __init__(self, child=False):       ###
-        self.score = 0        ###
         self.x = 1                 ###
         self.y = 1                 ###
         self.vpos = Vector2(0,0)         ###
@@ -34,10 +33,8 @@ class Mock:                 ###
         self.team = 1                          ###
         if not child:                ###
             self.shadow = Mock(child=True)        ###
-            self.active_control_player = Mock(child=True)     ###
             self.peer = Mock(child=True)     ###
             self.owner = Mock(child=True)                  ###
-            self.controls = Mock(child=True)                 ###
 
     def shoot(self):                    ###
         pass                    ###
@@ -48,13 +45,12 @@ class Mock:                 ###
     def draw(self, a, b):            ###
         pass                         ###
 
-    def human(self):                ###
-        return True                ###
-
 class Difficulty:
     def __init__(self):                          ###
         self.goalie_enabled = False                      ###
         self.second_lead_enabled = False                      ###
+
+DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 
 def cost(a, b):           ###
     return (0,0)           ###
@@ -65,16 +61,41 @@ def dist_key(a):                   ###
 def safe_normalize(a):                ###
     return (Vector2(0,0),1)                      ###
 
+class Team:
+    def __init__(self, a):    ###
+        self.controls = Mock(child=True)                 ###
+        self.active_control_player = Mock(child=True)     ###
+        self.score = 0        ###
+
+    def human(self):                ###
+        return True                ###
+
 class Game:
-    def __init__(self, a=None, b=None, c=None):        ####
-        self.teams = [Mock(),Mock()]        ###
-        self.score_timer = 0                ###
+    def __init__(self, p1_controls=None, p2_controls=None, difficulty=2):
+        self.teams = [Team(p1_controls), Team(p2_controls)] 
+        self.difficulty = DIFFICULTY[difficulty]
+        
+        try:
+            if self.teams[0].human():
+                music.fadeout(1)
+                sounds.crowd.play(-1)
+                sounds.start.play()
+            else:
+                music.play("theme")
+                sounds.crowd.stop()
+        except Exception as e:                   #### temporary while implementing
+            print(e)                             ###
+
+        self.score_timer = 0 
+        self.scoring_team = 1
+        self.reset()
+
+    def reset(self):
         self.camera_focus = Vector2(0,0)               ###
         self.ball = Mock()                       ###
         self.players = [Mock(), Mock()]     ###
         self.goals = [Mock(), Mock()]        ###
         self.debug_shoot_target = False      ###
-        self.difficulty = Difficulty()       ###
 
     def update(self):
         self.score_timer -= 1

@@ -194,6 +194,9 @@ class Music:
     def set_volume(self, volume):
         pygame.mixer.music.set_volume(volume)
 
+    def fadeout(self, time):
+        pygame.mixer.music.fadeout(time)
+
 class Keyboard:
     def __init__(self):
         self.reset()

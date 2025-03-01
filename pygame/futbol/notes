@@ -13,3 +13,38 @@ WIDTH/HEIGHT/TITLE defined in main, along with stubs for update() and draw(). Pr
 white screen - we're ready to go.
 
 - - - -
+I'm about halfway through the first pass, and it's going fine. Only one minor change to
+the engine so far (adding a center-alignment option to Painter.text()).
+
+An observation, though: I'm being even more strict this time about following the 'method' - work
+from the bottom up, filling in the lowest stub, and adding new stubs as necessary to keep it 
+running without error. But since I try to order things to align with the book text, occasionally
+the stubs are 'below' where I'm currently working - those would be candidates for the next
+implementation. Always take the lowest.
+
+But the wrinkle is I formerly unconsciously started with a class as a whole unit when I encountered
+it before, so rather than picking the 'lowest' stub method for implementation, I'd usually fill in
+the ctor first. But following the rules more closely has led to a weird stub pattern. I've needed
+more complex stubs than simple ints or lists, but don't yet know the classes in question (they're usually
+called out in the ctor). So I've made a monster Mock class that can sub in everywhere. It works, 
+but it seems like throwaway work, moreso than a simple stub.
+
+I'm going to stick with this approach to see how it plays out - it might just collapse under its own 
+weight. (I *have* had to insert a junk line to fix a case where I was getting an empty list and
+crashing - that kind of scaffolding is also annoying.) But I suspect that my 'rules' should be tweaked
+to always tackle the ctor of a class first, and then you should be able to take on the methods in any
+desired order. Bottom up if that's what you want...
+
+Also, it occurs to me that this is sort of an early to mid-first pass problem. In this case I've 
+handled upate(), draw() and some similar functions at the bottom, and Game is the first major class
+encountered. This issue bites during Game.update() and Game.draw() - once I fill in its ctor, it is
+going to start pulling the Mock class apart, I suspect, and this will be a non-issue once I reach the
+top of the file. We will see.
+
+- - - -
+Filling in Game ctor, and another observation: the authors habitually wrap most interactions with
+the system (like playing sounds, music, or reading/writing files) in try/except. And then they
+swallow the exception. This makes those code blocks useless for identifying missing stubs or other
+errors. So I think until the final scrub passes, I should at least print the exception and strive
+to keep the output clean.
+
