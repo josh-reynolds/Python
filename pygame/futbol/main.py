@@ -14,6 +14,9 @@ HALF_LEVEL_H = 100     ###
 HALF_PITCH_H = 100     ###
 HALF_GOAL_W = 100     ###
 
+PITCH_BOUNDS_X = 100     ###
+PITCH_BOUNDS_Y = 100     ###
+
 DRIBBLE_DIST_X = 10           ###
 DRIBBLE_DIST_Y = 10           ###
 
@@ -31,8 +34,11 @@ AI_MAX_Y = 10              ###
 
 LEAD_PLAYER_BASE_SPEED = 4            ###
 
+HUMAN_PLAYER_WITH_BALL_SPEED = 5         ###
 HUMAN_PLAYER_WITHOUT_BALL_SPEED = 5         ###
+CPU_PLAYER_WITH_BALL_BASE_SPEED = 5         ###
 
+PLAYER_INTERCEPT_BALL_SPEED = 5         ###
 
 DEBUG_SHOW_LEADS = True                    ####
 DEBUG_SHOW_TARGETS = False                    ####
@@ -62,8 +68,8 @@ class Mock:                 ###
         pass                         ###
 
 class MyActor(Actor):
-    def __init__(self, a, b, c, d):                            ###
-        super().__init__(a, (b,c))                 ###
+    def __init__(self, img, x=0, y=0, anchor=None):
+        super().__init__(img, (0,0))                 ###
         self.peer = Mock(child=True)     ###
         self.vpos = Vector2(0,0)         ###
 
@@ -74,6 +80,8 @@ class Difficulty:
     def __init__(self):                          ###
         self.goalie_enabled = False                      ###
         self.second_lead_enabled = False                      ###
+        self.holdoff_timer = False                      ###
+        self.speed_boost = 1                      ###
 
 DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 
@@ -95,6 +103,9 @@ def vec_to_angle(a):               ###
 def angle_to_vec(a):             ###
     return Vector2(0,0)            ##
 
+def ball_physics(a, b, c):             ##
+    return (1,1)                           ###
+
 class Goal:                   ###
     def __init__(self, a):    ###
         self.team = 0          ###
@@ -114,14 +125,14 @@ def on_pitch(a, b):              ###
 
 class Ball(MyActor):
     def __init__(self):
-        self.shadow = Mock(child=True)        ###
-        self.vpos = Vector2(0,0)         ####
-        self.owner = Mock(child=True)               ###
-        super().__init__("blank", 0, 0, (20,20))          ###
-        self.timer = 0                   ###
+        super().__init__("ball", HALF_LEVEL_W, HALF_LEVEL_H)
+        self.vel = Vector2(0,0)
+        self.owner = None
+        self.timer = 0
+        self.shadow = MyActor("balls")
 
-    def collide(self, a):              ###
-        pass                           ###
+    def collide(self, p):
+        return p.timer < 0 and (p.vpos - self.vpos).length() <= DRIBBLE_DIST_X
 
     def update(self):
         self.timer -= 1
