@@ -1,3 +1,4 @@
+import math
 import random
 from enum import Enum
 import pygame
@@ -55,25 +56,6 @@ DEBUG_SHOW_COSTS = False                    ####
 
 PLAYER_DEFAULT_SPEED = 10                    ####
 
-class Mock:                 ###
-    def __init__(self, child=False):       ###
-        self.x = 1                 ###
-        self.y = 1                 ###
-        self.vpos = Vector2(0,0)         ###
-        self.debug_target = Vector2(0,0)    ###
-        self.lead = False                     ###
-        self.team = 1                          ###
-        self.dir = 0                       ###
-        if not child:                ###
-            self.shadow = Mock(child=True)        ###
-            self.owner = Mock(child=True)                  ###
-
-    def update(self):                    ###
-        pass                    ###
-
-    def draw(self, a, b):            ###
-        pass                         ###
-
 class Difficulty:
     def __init__(self):                          ###
         self.goalie_enabled = False                      ###
@@ -84,13 +66,13 @@ class Difficulty:
 DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 
 def sin(x):
-    return 1                      ###
+    return math.sin(x*math.pi/4)
 
 def cos(x):
-    return 1                      ###
+    return sin(x+2)
 
-def vec_to_angle(a):               ###
-    return 1                      ###
+def vec_to_angle(vec):
+    return int(4 * math.atan2(vec.x, -vec.y) / math.pi + 8.5) % 8
 
 def angle_to_vec(angle):
     return Vector2(sin(angle), -cos(angle))
