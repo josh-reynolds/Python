@@ -12,6 +12,7 @@ HALF_WINDOW_W = 100     ###
 HALF_LEVEL_W = 100     ###
 HALF_LEVEL_H = 100     ###
 HALF_PITCH_H = 100     ###
+HALF_GOAL_W = 100     ###
 
 LEVEL_W = 100   ###
 LEVEL_H = 100   ###
@@ -105,8 +106,13 @@ class Ball:                  ###
     def draw(self, a, b):            ###
         pass                         ###
 
-def allow_movement(a, b):            ###
-    pass                           ###
+def allow_movement(x, y):
+    if abs(x - HALF_LEVEL_W) > HALF_LEVEL_W:
+        return False
+    elif abs(x - HALF_LEVEL_W) < HALF_GOAL_W + 20:
+        return abs(y - HALF_LEVEL_H) < HALF_PITCH_H
+    else:
+        return abs(y - HALF_LEVEL_H) < HALF_LEVEL_H
 
 def cost(pos, team, handicap=0):
     own_goal_pos = Vector2(HALF_LEVEL_W, 78 if team == 1 else LEVEL_H - 78)
