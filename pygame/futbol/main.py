@@ -73,9 +73,6 @@ class Difficulty:
 
 DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 
-def cost(a, b):           ###
-    return (0,0)           ###
-
 def dist_key(pos):
     return lambda p: (p.vpos - pos).length()
 
@@ -110,6 +107,17 @@ class Ball:                  ###
 
 def allow_movement(a, b):            ###
     pass                           ###
+
+def cost(pos, team, handicap=0):
+    own_goal_pos = Vector2(HALF_LEVEL_W, 78 if team == 1 else LEVEL_H - 78)
+    inverse_own_goal_distance = 3500 / (pos - own_goal_pos).length()
+
+    result = inverse_own_goal_distance \
+            + sum([4000 / max(24, (p.vpos - pos).length())
+                   for p in game.players if p.team != team]) \
+            + ((pos.x - HALF_LEVEL_W) ** 2 / 200 - pos.y * (4 * team - 2)) + handicap
+
+    return result, pos
 
 class Player(MyActor):
     ANCHOR = (25,37)
