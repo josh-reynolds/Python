@@ -13,6 +13,9 @@ class Actor:
         self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
 
+        if anchor == None:
+            anchor = ("center","center")
+
         self.image = image
         self.initialize_position(pos, anchor)
 

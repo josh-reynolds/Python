@@ -74,15 +74,6 @@ class Mock:                 ###
     def draw(self, a, b):            ###
         pass                         ###
 
-class MyActor(Actor):
-    def __init__(self, img, x=0, y=0, anchor=None):
-        super().__init__(img, (0,0))                 ###
-        self.peer = Mock(child=True)     ###
-        self.vpos = Vector2(0,0)         ###
-
-    def draw(self, a, b):                    ###
-        pass                             ###
-
 class Difficulty:
     def __init__(self):                          ###
         self.goalie_enabled = False                      ###
@@ -109,6 +100,15 @@ def vec_to_angle(a):               ###
 
 def angle_to_vec(a):             ###
     return Vector2(0,0)            ##
+
+class MyActor(Actor):
+    def __init__(self, img, x=0, y=0, anchor=None):
+        super().__init__(img, (0,0), anchor=anchor)
+        self.vpos = Vector2(x,y)
+
+    def draw(self, offset_x, offset_y):
+        self.pos = (self.vpos.x - offset_x, self.vpos.y - offset_y)
+        super().draw()
 
 KICK_STRENGTH = 11.5
 DRAG = 0.98
