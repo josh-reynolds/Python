@@ -2,7 +2,7 @@ import random
 from enum import Enum
 import pygame
 from pygame.math import Vector2
-from engine import keys, keyboard, music, sounds
+from engine import keys, keyboard, music, sounds, Actor
 
 WIDTH = 400    ###
 HEIGHT = 400    ###
@@ -27,6 +27,8 @@ DEBUG_SHOW_PEERS = True                    ####
 DEBUG_SHOW_SHOOT_TARGET = True                    ####
 DEBUG_SHOW_COSTS = True                    ####
 
+PLAYER_DEFAULT_SPEED = 10                    ####
+
 class Mock:                 ###
     def __init__(self, child=False):       ###
         self.x = 1                 ###
@@ -45,6 +47,13 @@ class Mock:                 ###
     def draw(self, a, b):            ###
         pass                         ###
 
+class MyActor(Actor):
+    def __init__(self, a, b, c, d):                            ###
+        super().__init__(a, (b,c))                 ###
+
+    def draw(self, a, b):                    ###
+        pass                             ###
+
 class Difficulty:
     def __init__(self):                          ###
         self.goalie_enabled = False                      ###
@@ -61,19 +70,8 @@ def dist_key(a):                   ###
 def safe_normalize(a):                ###
     return (Vector2(0,0),1)                      ###
 
-class Player:                              ####
-    def __init__(self, a, b, c):               ###
-        self.peer = Mock(child=True)     ###
-        self.shadow = Mock(child=True)        ###
-        self.team = 1                          ###
-        self.y = 1                 ###
-        self.vpos = Vector2(0,0)         ###
-
-    def update(self):                    ###
-        pass                    ###
-
-    def draw(self, a, b):            ###
-        pass                         ###
+def vec_to_angle(a):               ###
+    return 1                      ###
 
 class Goal:                   ###
     def __init__(self, a):    ###
@@ -94,6 +92,122 @@ class Ball:                  ###
     
     def draw(self, a, b):            ###
         pass                         ###
+
+def allow_movement(a, b):            ###
+    pass                           ###
+
+class Player(MyActor):
+    def __init__(self, a, b, c):               ###
+        self.peer = Mock(child=True)     ###
+        self.shadow = Mock(child=True)        ###
+        self.team = 1                          ###
+        self.vpos = Vector2(0,0)         ###
+        super().__init__("blank", 0, 0, None)     ###
+        self.timer = 0         ###
+        self.home = (0,0)        ###
+        self.anim_frame = 0            ###
+        self.dir = 0              ###
+
+    def active(self):
+        pass
+
+    def update(self):
+        self.timer -= 1
+        target = Vector2(self.home)
+        speed = PLAYER_DEFAULT_SPEED
+        my_team = game.teams[self.team]
+        pre_kickoff = game.kickoff_player != None
+        i_am_kickoff_player = self == game.kickoff_player
+        ball = game.ball
+
+        if self == game.teams[self.team].active_control_player and \
+                my_team.human() and (not pre_kickoff or i_am_kickoff_player):
+                    if ball.owner == self:
+                        speed = HUMAN_PLAYER_WITH_BALL_SPEED
+                    else:
+                        speed = HUMAN_PLAYER_WITHOUT_BALL_SPEED
+
+                    target = self.vpos + my_team_controls.move(speed)
+
+        elif ball.owner != None:
+            if ball.owner == self:
+                costs = [cost(self.vpos + angle_to_vec(self.dir + d) * 3,
+                              self.team, abs(d)) for d in range(-2,3)]
+
+                _, target = min(costs, key=lambda element: element[0])
+                speed = CPU_PLAYER_WITH_BALL_BASE_SPEED + game.difficulty.speed_boost
+
+            elif ball.owner.team == self.team:
+                if self.active():
+                    direction = -1 if self.team == 0 else 1
+                    target.x = (ball.vpos.x + target.x) / 2
+                    target.y = (ball.vpos.y + 400 * direction + target.y) / 2
+
+            else:
+                if self.lead is not None:
+                    target = ball.owner.vpos + angle_to_vec(ball.owner.dir) * self.lead
+                    target.x = max(AI_MIN_X, min(AI_MAX_X, target.x))
+                    target.y = max(AI_MIN_Y, min(AI_MAX_Y, target.y))
+
+                    other_team = 1 if self.team == 0 else 1
+                    speed = LEAD_PLAYER_BASE_SPEED
+                    if game.teams[other_team].human():
+                        speed += game.difficulty.speed_boost
+
+                elif self.mark.active():
+                    if my_team.human():
+                        target = Vector2(ball.vpos)
+                    else:
+                        vec, length = safe_normalize(ball.vpos - self.mark.vpos)
+
+                        if isinstance(self.mark, Goal):
+                            length = min(150, length)
+                        else:
+                            length /= 2
+
+                        target = sel.mark.vpos + vec * length
+        else:
+            if (pre_kickoff and i_am_kickoff_player) or (not pre_kickoff and self.active()):
+                target = Vector2(ball.vpos)
+                vel = Vector2(ball.vel)
+                frame = 0
+
+                while (target - self.vpos).length() > PLAYER_INTERCEPT_BALL_SPEED * frame \
+                                                  + DRIBBLE_DIST_X and vel.length() > 0.5:
+                    target += vel
+                    vel *= DRAG
+                    frame += 1
+
+                speed = PLAYER_INTERCEPT_BALL_SPEED
+
+            elif pre_kickoff:
+                target.y = self.vpos.y
+
+        vec, distance = safe_normalize(target - self.vpos)
+        self.debug_target = Vector2(target)
+
+        if distance > 0:
+            distance = min(distance, speed)
+            target_dir = vec_to_angle(vec)
+
+            if allow_movement(self.vpos.x + vec.x * distance, self.vpos.y):
+                self.vpos.x += vec.x * distance
+            if allow_movement(self.vpos.x, self.vpos.y + vec.y * distance):
+                self.vpos.y += vec.y * distance
+
+            self.anim_frame = (self.anim_frame + max(distance, 1.5)) % 72
+        else:
+            target_dir = vec_to_angle(ball.vpos - self.vpos)
+            self.anim_frame -= 1
+
+        dir_diff = (target_dir - self.dir)
+        self.dir = (self.dir + [0, 1, 1, 1, 1, 7, 7, 7][dir_diff %8]) % 8
+
+        suffix = str(self.dir) + str((int(self.anim_frame) // 18) + 1)   # todo  ??? from the book?
+
+        self.image = "player" + str(self.team) + suffix
+        self.shadow.image = "players" + suffix
+        self.shadow.vpos = Vector2(self.vpos)
 
 class Team:
     def __init__(self, controls):

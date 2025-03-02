@@ -48,3 +48,13 @@ swallow the exception. This makes those code blocks useless for identifying miss
 errors. So I think until the final scrub passes, I should at least print the exception and strive
 to keep the output clean.
 
+- - - -
+Still going OK. This one is much more complicated - or at least is has much longer methods.
+
+I think there is an indentation error on line 368 in the book - pretty sure the while loop should be 
+nested under the preceding if statement - it's the only way the following elif statment makes
+sense. I am going to code it that way. Later can confirm against GitHub.
+
+...line 400 has a '# todo' comment. Hrm. Again, will need to check GitHub...
+
+
