@@ -127,7 +127,7 @@ class Goal(MyActor):
         self.team = team
 
     def active(self):
-        pass
+        return abs(game.ball.vpos.y - self.vpos.y) < 500
 
 def targetable(target, source):
     v0, d0 = safe_normalize(target.vpos - source.vpos)
