@@ -66,3 +66,10 @@ more and I'll debug (with GitHub as a fallback resource).
 Also think I spotted another typo on line 48 - they have goal_bounds_x[0] but I suspect that should 
 be a '1' to match the Y value later on the same line.
 
+OK. The GitHub sources are identical on that line, including the '# todo' comment. But I introduced
+this one with a typo a few lines up - I was decrementing the anim_frame rather than setting to -1, so
+it eventually drops down to a low enough negative value and hits the bug. Fixed now.
+
+First pass is complete. All stubs filled in and game running without errors. As before, next steps are
+copying in official resources, scrubbing against book text, GitHub, and playtesting/debugging. Then
+we'll wrap up the 0.5 initial drop to the engine and check for backwards compat.

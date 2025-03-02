@@ -372,10 +372,10 @@ class Player(MyActor):
             self.anim_frame = (self.anim_frame + max(distance, 1.5)) % 72
         else:
             target_dir = vec_to_angle(ball.vpos - self.vpos)
-            self.anim_frame -= 1
+            self.anim_frame = -1
 
         dir_diff = (target_dir - self.dir)
-        self.dir = (self.dir + [0, 1, 1, 1, 1, 7, 7, 7][dir_diff %8]) % 8
+        self.dir = (self.dir + [0, 1, 1, 1, 1, 7, 7, 7][dir_diff % 8]) % 8
 
         suffix = str(self.dir) + str((int(self.anim_frame) // 18) + 1)   # todo  ??? from the book?
 
