@@ -20,6 +20,15 @@ LEAD_DISTANCE_1 = 100    ###
 
 PLAYER_START_POS = [(0,0),(1,1),(2,2)]      ###
 
+AI_MIN_X = 10              ###
+AI_MAX_X = 10              ###
+AI_MIN_Y = 10              ###
+AI_MAX_Y = 10              ###
+
+LEAD_PLAYER_BASE_SPEED = 4            ###
+
+HUMAN_PLAYER_WITHOUT_BALL_SPEED = 5         ###
+
 
 DEBUG_SHOW_LEADS = True                    ####
 DEBUG_SHOW_TARGETS = False                    ####
@@ -37,6 +46,7 @@ class Mock:                 ###
         self.debug_target = Vector2(0,0)    ###
         self.lead = False                     ###
         self.team = 1                          ###
+        self.dir = 0                       ###
         if not child:                ###
             self.shadow = Mock(child=True)        ###
             self.owner = Mock(child=True)                  ###
@@ -50,6 +60,8 @@ class Mock:                 ###
 class MyActor(Actor):
     def __init__(self, a, b, c, d):                            ###
         super().__init__(a, (b,c))                 ###
+        self.peer = Mock(child=True)     ###
+        self.vpos = Vector2(0,0)         ###
 
     def draw(self, a, b):                    ###
         pass                             ###
@@ -64,14 +76,17 @@ DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 def cost(a, b):           ###
     return (0,0)           ###
 
-def dist_key(a):                   ###
-    return False                   ###
+def dist_key(pos):
+    return lambda p: (p.vpos - pos).length()
 
 def safe_normalize(a):                ###
     return (Vector2(0,0),1)                      ###
 
 def vec_to_angle(a):               ###
     return 1                      ###
+
+def angle_to_vec(a):             ###
+    return Vector2(0,0)            ##
 
 class Goal:                   ###
     def __init__(self, a):    ###
@@ -97,19 +112,22 @@ def allow_movement(a, b):            ###
     pass                           ###
 
 class Player(MyActor):
-    def __init__(self, a, b, c):               ###
-        self.peer = Mock(child=True)     ###
-        self.shadow = Mock(child=True)        ###
-        self.team = 1                          ###
-        self.vpos = Vector2(0,0)         ###
-        super().__init__("blank", 0, 0, None)     ###
-        self.timer = 0         ###
-        self.home = (0,0)        ###
-        self.anim_frame = 0            ###
-        self.dir = 0              ###
+    ANCHOR = (25,37)
+
+    def __init__(self, x, y, team):
+        kickoff_y = (y / 2) + 550 - (team * 400)
+        super().__init__("blank", x, kickoff_y, Player.ANCHOR)
+
+        self.home = Vector2(x, y)
+        self.team = team
+        self.dir = 0
+        self.anim_frame = -1
+        self.timer = 0
+        self.shadow = MyActor("blank", 0, 0, Player.ANCHOR)
+        self.debug_target = Vector2(0,0)
 
     def active(self):
-        pass
+        return abs(game.ball.vpos.y - self.home.y) < 400
 
     def update(self):
         self.timer -= 1
@@ -127,7 +145,7 @@ class Player(MyActor):
                     else:
                         speed = HUMAN_PLAYER_WITHOUT_BALL_SPEED
 
-                    target = self.vpos + my_team_controls.move(speed)
+                    target = self.vpos + my_team.controls.move(speed)
 
         elif ball.owner != None:
             if ball.owner == self:
@@ -165,7 +183,7 @@ class Player(MyActor):
                         else:
                             length /= 2
 
-                        target = sel.mark.vpos + vec * length
+                        target = self.mark.vpos + vec * length
         else:
             if (pre_kickoff and i_am_kickoff_player) or (not pre_kickoff and self.active()):
                 target = Vector2(ball.vpos)
@@ -308,10 +326,6 @@ class Game:
             NONE2 = [None] * 2
             zipped = [s for t in zip(a+NONE2, b+NONE2) for s in t if s]
 
-            # TO_DO: remove, only here temporarily to prevent a bug during development
-            zipped = [Mock(),Mock()]      #####
-            # ----------------------------------
-            
             zipped[0].lead = LEAD_DISTANCE_1
             if self.difficulty.second_lead_enabled:
                 zipped[1].lead = LEAD_DISTANCE_2
@@ -427,6 +441,9 @@ class Controls:
             self.key_left = keys.A
             self.key_right = keys.D
             self.key_shoot = keys.LSHIFT
+
+    def move(self, a):
+        return Vector2(0,0)                         ####
 
     def shoot(self):
         return key_just_pressed(self.key_shoot)
