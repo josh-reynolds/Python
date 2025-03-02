@@ -5,57 +5,65 @@ import pygame
 from pygame.math import Vector2
 from engine import keys, keyboard, music, sounds, Actor
 
-WIDTH = 400    ###
-HEIGHT = 400    ###
+WIDTH = 800
+HEIGHT = 480
 TITLE = "Futbol"
 
-HALF_WINDOW_W = 100     ###
-HALF_LEVEL_W = 100     ###
-HALF_LEVEL_H = 100     ###
-HALF_PITCH_H = 100     ###
-HALF_GOAL_W = 100     ###
+HALF_WINDOW_W = WIDTH / 2
 
-PITCH_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
-GOAL_0_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
-GOAL_1_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
+LEVEL_W = 1000
+LEVEL_H = 1400
+HALF_LEVEL_W = LEVEL_W // 2
+HALF_LEVEL_H = LEVEL_H // 2
 
-PITCH_BOUNDS_X = (100,100)     ###
-PITCH_BOUNDS_Y = (100,100)     ###
+HALF_PITCH_W = 442
+HALF_PITCH_H = 622
 
-GOAL_BOUNDS_X = (100,100)     ###
-GOAL_BOUNDS_Y = (100,100)     ###
+GOAL_WIDTH = 186
+GOAL_DEPTH = 20
+HALF_GOAL_W = GOAL_WIDTH // 2
 
-DRIBBLE_DIST_X = 10           ###
-DRIBBLE_DIST_Y = 10           ###
+PITCH_BOUNDS_X = (HALF_LEVEL_W - HALF_PITCH_W, HALF_LEVEL_W + HALF_PITCH_W)
+PITCH_BOUNDS_Y = (HALF_LEVEL_H - HALF_PITCH_H, HALF_LEVEL_H + HALF_PITCH_H)
 
-LEVEL_W = 100   ###
-LEVEL_H = 100   ###
+GOAL_BOUNDS_X = (HALF_LEVEL_W - HALF_GOAL_W, HALF_LEVEL_W + HALF_GOAL_W)
+GOAL_BOUNDS_Y = (HALF_LEVEL_H - HALF_PITCH_H - GOAL_DEPTH, 
+                 HALF_LEVEL_H + HALF_PITCH_H + GOAL_DEPTH)
 
-LEAD_DISTANCE_1 = 100    ###
-LEAD_DISTANCE_2 = 100    ###
+PITCH_RECT = pygame.rect.Rect(PITCH_BOUNDS_X[0], PITCH_BOUNDS_Y[0],
+                              HALF_PITCH_W * 2, HALF_PITCH_H * 2)
+GOAL_0_RECT = pygame.rect.Rect(GOAL_BOUNDS_X[0], GOAL_BOUNDS_Y[0],
+                               GOAL_WIDTH, GOAL_DEPTH)
+# looks like a typo in the book on the following line...
+GOAL_1_RECT = pygame.rect.Rect(GOAL_BOUNDS_X[1], GOAL_BOUNDS_Y[1] - GOAL_DEPTH,
+                               GOAL_WIDTH, GOAL_DEPTH)
 
-PLAYER_START_POS = [(0,0),(1,1),(2,2)]      ###
+AI_MIN_X = 78
+AI_MAX_X = LEVEL_W - 78
+AI_MIN_Y = 98
+AI_MAX_Y = LEVEL_H - 98
 
-AI_MIN_X = 10              ###
-AI_MAX_X = 10              ###
-AI_MIN_Y = 10              ###
-AI_MAX_Y = 10              ###
+PLAYER_START_POS = [(350,550), (650,450), (200,850),
+                    (500,750), (800,950), (350,1250),
+                    (650,1150)]
 
-LEAD_PLAYER_BASE_SPEED = 4            ###
+LEAD_DISTANCE_1 = 10
+LEAD_DISTANCE_2 = 50
 
-HUMAN_PLAYER_WITH_BALL_SPEED = 5         ###
-HUMAN_PLAYER_WITHOUT_BALL_SPEED = 5         ###
-CPU_PLAYER_WITH_BALL_BASE_SPEED = 5         ###
+DRIBBLE_DIST_X, DRIBBLE_DIST_Y = 18, 16
 
-PLAYER_INTERCEPT_BALL_SPEED = 5         ###
+PLAYER_DEFAULT_SPEED = 2
+CPU_PLAYER_WITH_BALL_BASE_SPEED = 2.6
+PLAYER_INTERCEPT_BALL_SPEED = 2.75
+LEAD_PLAYER_BASE_SPEED = 2.9
+HUMAN_PLAYER_WITH_BALL_SPEED = 3
+HUMAN_PLAYER_WITHOUT_BALL_SPEED = 3.3
 
-DEBUG_SHOW_LEADS = True                    ####
-DEBUG_SHOW_TARGETS = False                    ####
-DEBUG_SHOW_PEERS = True                    ####
-DEBUG_SHOW_SHOOT_TARGET = True                    ####
-DEBUG_SHOW_COSTS = False                    ####
-
-PLAYER_DEFAULT_SPEED = 10                    ####
+DEBUG_SHOW_LEADS = False
+DEBUG_SHOW_TARGETS = False
+DEBUG_SHOW_PEERS = False
+DEBUG_SHOW_SHOOT_TARGET = False
+DEBUG_SHOW_COSTS = False
 
 class Difficulty:
     def __init__(self, goalie_enabled, second_lead_enabled, 
@@ -701,4 +709,3 @@ game = Game()
 #----------------------
 from engine import run
 run()
-

@@ -57,4 +57,12 @@ sense. I am going to code it that way. Later can confirm against GitHub.
 
 ...line 400 has a '# todo' comment. Hrm. Again, will need to check GitHub...
 
+- - - -
+I think that 'todo' line is causing real problems in playtesting as I'm filling this in - it keeps 
+generating negativ numbers and looking for bogus image files. Was initially thinking my stubbed
+functions were to blame, but I've nearly replaced everything and it is still happening. Just a bit
+more and I'll debug (with GitHub as a fallback resource).
+
+Also think I spotted another typo on line 48 - they have goal_bounds_x[0] but I suspect that should 
+be a '1' to match the Y value later on the same line.
 
