@@ -14,8 +14,15 @@ HALF_LEVEL_H = 100     ###
 HALF_PITCH_H = 100     ###
 HALF_GOAL_W = 100     ###
 
+PITCH_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
+GOAL_0_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
+GOAL_1_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
+
 PITCH_BOUNDS_X = 100     ###
 PITCH_BOUNDS_Y = 100     ###
+
+GOAL_BOUNDS_X = 100     ###
+GOAL_BOUNDS_Y = 100     ###
 
 DRIBBLE_DIST_X = 10           ###
 DRIBBLE_DIST_Y = 10           ###
@@ -44,7 +51,7 @@ DEBUG_SHOW_LEADS = True                    ####
 DEBUG_SHOW_TARGETS = False                    ####
 DEBUG_SHOW_PEERS = True                    ####
 DEBUG_SHOW_SHOOT_TARGET = True                    ####
-DEBUG_SHOW_COSTS = True                    ####
+DEBUG_SHOW_COSTS = False                    ####
 
 PLAYER_DEFAULT_SPEED = 10                    ####
 
@@ -103,25 +110,38 @@ def vec_to_angle(a):               ###
 def angle_to_vec(a):             ###
     return Vector2(0,0)            ##
 
+DRAG = 1                        ###
+
 def ball_physics(a, b, c):             ##
     return (1,1)                           ###
 
 class Goal:                   ###
     def __init__(self, a):    ###
         self.team = 0          ###
-        pass                  ###
+        self.vpos = Vector2(0,0)
 
     def draw(self, a, b):            ###
         pass                         ###
 
-def targetable(a, b):           ###
-    pass                       ###
+def targetable(target, source):
+    v0, d0 = safe_normalize(target.vpos - source.vpos)
+
+    if not game.teams[source.team].human():
+        for p in game.players:
+            v1, d1 = safe_normalize(p.vpos - source.vpos)
+            if p.team != target.team and d1 > 0 and d1 < d0 and v0*v1 > 0.8:
+                return False
+
+    return target.team == source.team and d0 > 0 and d0 < 300 \
+            and v0 * angle_to_vec(source.dir) > 0.8
 
 def avg(a, b):
-    return 1                           ###
+    return b if abs(b-a) < 1 else (a+b)/2
 
-def on_pitch(a, b):              ###
-    return True                        ###
+def on_pitch(x, y):
+    return PITCH_RECT.collidepoint(x,y) \
+            or GOAL_0_RECT.collidepoint(x,y) \
+            or GOAL_1_RECT.collidepoint(x,y) \
 
 class Ball(MyActor):
     def __init__(self):
