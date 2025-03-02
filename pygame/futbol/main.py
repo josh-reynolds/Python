@@ -18,11 +18,11 @@ PITCH_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
 GOAL_0_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
 GOAL_1_RECT = pygame.Rect(0,0,WIDTH,HEIGHT)              ###
 
-PITCH_BOUNDS_X = 100     ###
-PITCH_BOUNDS_Y = 100     ###
+PITCH_BOUNDS_X = (100,100)     ###
+PITCH_BOUNDS_Y = (100,100)     ###
 
-GOAL_BOUNDS_X = 100     ###
-GOAL_BOUNDS_Y = 100     ###
+GOAL_BOUNDS_X = (100,100)     ###
+GOAL_BOUNDS_Y = (100,100)     ###
 
 DRIBBLE_DIST_X = 10           ###
 DRIBBLE_DIST_Y = 10           ###
@@ -110,10 +110,16 @@ def vec_to_angle(a):               ###
 def angle_to_vec(a):             ###
     return Vector2(0,0)            ##
 
-DRAG = 1                        ###
+KICK_STRENGTH = 11.5
+DRAG = 0.98
 
-def ball_physics(a, b, c):             ##
-    return (1,1)                           ###
+def ball_physics(pos, vel, bounds):
+    pos += vel
+
+    if pos < bounds[0] or pos > bounds[1]:
+        pos, vel = pos - vel, -vel
+
+    return pos, vel * DRAG
 
 class Goal(MyActor):
     def __init__(self, team):
@@ -554,8 +560,12 @@ class Game:
                     screen_pos = (screen_pos.x, screen_pos.y)
                     screen.draw.text(f"{c:.0f}", center=screen_pos)
 
-    def play_sound(self, a, b):             ###
-        pass                               ###
+    def play_sound(self, name, c):
+        if state != State.MENU:
+            try:
+                getattr(sounds, name+str(random.randint(0, c-1))).play()
+            except Exception as e:                   #### temporary while implementing
+                print(e)                             ###
 
 key_status = {}
 
