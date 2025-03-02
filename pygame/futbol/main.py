@@ -115,13 +115,12 @@ DRAG = 1                        ###
 def ball_physics(a, b, c):             ##
     return (1,1)                           ###
 
-class Goal:                   ###
-    def __init__(self, a):    ###
-        self.team = 0          ###
-        self.vpos = Vector2(0,0)
-
-    def draw(self, a, b):            ###
-        pass                         ###
+class Goal(MyActor):
+    def __init__(self, team):
+        x = HALF_LEVEL_W
+        y = 0 if team == 0 else LEVEL_H
+        super().__init__("goal" + str(team), x, y)
+        self.team = team
 
 def targetable(target, source):
     v0, d0 = safe_normalize(target.vpos - source.vpos)
@@ -554,6 +553,9 @@ class Game:
                     screen_pos = Vector2(x,y) - offset
                     screen_pos = (screen_pos.x, screen_pos.y)
                     screen.draw.text(f"{c:.0f}", center=screen_pos)
+
+    def play_sound(self, a, b):             ###
+        pass                               ###
 
 key_status = {}
 
