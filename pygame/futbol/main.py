@@ -32,6 +32,7 @@ LEVEL_W = 100   ###
 LEVEL_H = 100   ###
 
 LEAD_DISTANCE_1 = 100    ###
+LEAD_DISTANCE_2 = 100    ###
 
 PLAYER_START_POS = [(0,0),(1,1),(2,2)]      ###
 
@@ -57,13 +58,16 @@ DEBUG_SHOW_COSTS = False                    ####
 PLAYER_DEFAULT_SPEED = 10                    ####
 
 class Difficulty:
-    def __init__(self):                          ###
-        self.goalie_enabled = False                      ###
-        self.second_lead_enabled = False                      ###
-        self.holdoff_timer = False                      ###
-        self.speed_boost = 1                      ###
+    def __init__(self, goalie_enabled, second_lead_enabled, 
+                 speed_boost, holdoff_timer):
+        self.goalie_enabled = goalie_enabled
+        self.second_lead_enabled = second_lead_enabled
+        self.speed_boost = speed_boost
+        self.holdoff_timer = holdoff_timer
 
-DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
+DIFFICULTY = [Difficulty(False, False, 0, 120),
+              Difficulty(False, True, 0.1, 90),
+              Difficulty(True, True, 0.2, 60)]
 
 def sin(x):
     return math.sin(x*math.pi/4)
@@ -121,6 +125,9 @@ class Goal(MyActor):
         y = 0 if team == 0 else LEVEL_H
         super().__init__("goal" + str(team), x, y)
         self.team = team
+
+    def active(self):
+        pass
 
 def targetable(target, source):
     v0, d0 = safe_normalize(target.vpos - source.vpos)
