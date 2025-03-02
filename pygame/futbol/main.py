@@ -14,6 +14,9 @@ HALF_LEVEL_H = 100     ###
 HALF_PITCH_H = 100     ###
 HALF_GOAL_W = 100     ###
 
+DRIBBLE_DIST_X = 10           ###
+DRIBBLE_DIST_Y = 10           ###
+
 LEVEL_W = 100   ###
 LEVEL_H = 100   ###
 
@@ -77,6 +80,12 @@ DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 def dist_key(pos):
     return lambda p: (p.vpos - pos).length()
 
+def sin(x):
+    return 1                      ###
+
+def cos(x):
+    return 1                      ###
+
 def safe_normalize(a):                ###
     return (Vector2(0,0),1)                      ###
 
@@ -88,24 +97,112 @@ def angle_to_vec(a):             ###
 
 class Goal:                   ###
     def __init__(self, a):    ###
+        self.team = 0          ###
         pass                  ###
 
     def draw(self, a, b):            ###
         pass                         ###
 
-class Ball:                  ###
+def targetable(a, b):           ###
+    pass                       ###
+
+def avg(a, b):
+    return 1                           ###
+
+def on_pitch(a, b):              ###
+    return True                        ###
+
+class Ball(MyActor):
     def __init__(self):
         self.shadow = Mock(child=True)        ###
         self.vpos = Vector2(0,0)         ####
         self.owner = Mock(child=True)               ###
-        self.y = 1                 ###
+        super().__init__("blank", 0, 0, (20,20))          ###
+        self.timer = 0                   ###
 
-    def update(self):                    ###
-        pass                    ###
+    def collide(self, a):              ###
+        pass                           ###
+
+    def update(self):
+        self.timer -= 1
+
+        if self.owner:
+            new_x = avg(self.vpos.x, self.owner.vpos.x + DRIBBLE_DIST_X *
+                        sin(self.owner.dir))
+            new_y = avg(self.vpos.y, self.owner.vpos.y - DRIBBLE_DIST_Y *
+                        cos(self.owner.dir))
+
+            if on_pitch(new_x, new_y):
+                self.vpos = Vector2(new_x, new_y)
+            else:
+                self.owner.timer = 60
+                self.vel = angle_to_vec(self.owner.dir) * 3
+                self.owner = None
+        else:
+            if abs(self.vpos.y - HALF_LEVEL_H) > HALF_PITCH_H:
+                bounds_x = GOAL_BOUNDS_X
+            else:
+                bounds_x = PITCH_BOUNDS_X
+
+            if abs(self.vpos.x - HALF_LEVEL_W) < HALF_GOAL_W:
+                bounds_y = GOAL_BOUNDS_Y
+            else:
+                bounds_y = PITCH_BOUNDS_Y
+
+            self.vpos.x, self.vel.x = ball_physics(self.vpos.x, self.vel.x, bounds_x)
+            self.vpos.y, self.vel.y = ball_physics(self.vpos.y, self.vel.y, bounds_y)
+
+        self.shadow.vpos = Vector2(self.vpos)
+
+        for target in game.players:
+            if (not self.owner or self.owner.team != target.team) and \
+                    self.collide(target):
+                if self.owner:
+                    self.owner.timer = 60
+
+                self.timer = game.difficulty.holdoff_timer
+                game.teams[target.team].active_control_player = self.owner = target
+
+        if self.owner:
+            team = game.teams[self.owner.team]
+            targetable_players = [p for p in game.players + game.goals if p.team ==
+                                  self.owner.team and targetable(p, self.owner)]
+
+            if len(targetable_players) > 0:
+                target = min(targetable_players, key=dist_key(sef.owner.vpos))
+                game.debug_shoot_target = target.vpos
+            else:
+                target = None
+
+            if team.human():
+                do_shoot = team.controls.shoot()
+            else:
+                do_shoot = self.timer <= 0 and target and cost(target.vpos, self.owner.team) \
+                        < cost(self.owner.vpos, self.owner.team)
+
+            if do_shoot:
+                game.play_sound("kick", 4)
+
+                if target:
+                    r = 0
+                    iterations = 8 if team.human() and isinstance(target, Player) else 1
+
+                    for i in range(iterations):
+                        t = target.vpos + angle_to_vec(self.owner.dir) * r
+                        vec, length = safe_normalize(t - self.vpos)
+                        r = HUMAN_PLAYER_WITHOUT_BALL_SEED * steps(length)
+                else:
+                    vec = angle_to_vec(self.owner.dir)
+                    target = min([p for p in game.players if p.team == self.owner.team],
+                                 key=dist_key(self.vpos + (vec * 250)))
+
+                if isinstance(target, Player):
+                    game.teams[self.owner.team].active_control_player = target
+
+                self.owner.timer = 10
+                self.vel = vec * KICK_STRENGTH
+                self.owner = None
     
-    def draw(self, a, b):            ###
-        pass                         ###
-
 def allow_movement(x, y):
     if abs(x - HALF_LEVEL_W) > HALF_LEVEL_W:
         return False
