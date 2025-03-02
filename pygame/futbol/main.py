@@ -83,23 +83,27 @@ class Difficulty:
 
 DIFFICULTY = [Difficulty(),Difficulty(),Difficulty()]     ###
 
-def dist_key(pos):
-    return lambda p: (p.vpos - pos).length()
-
 def sin(x):
     return 1                      ###
 
 def cos(x):
     return 1                      ###
 
-def safe_normalize(a):                ###
-    return (Vector2(0,0),1)                      ###
-
 def vec_to_angle(a):               ###
     return 1                      ###
 
-def angle_to_vec(a):             ###
-    return Vector2(0,0)            ##
+def angle_to_vec(angle):
+    return Vector2(sin(angle), -cos(angle))
+
+def dist_key(pos):
+    return lambda p: (p.vpos - pos).length()
+
+def safe_normalize(vec):
+    length = vec.length()
+    if length == 0:
+        return Vector2(0,0), 0
+    else:
+        return vec.normalize(), length
 
 class MyActor(Actor):
     def __init__(self, img, x=0, y=0, anchor=None):
@@ -120,6 +124,14 @@ def ball_physics(pos, vel, bounds):
         pos, vel = pos - vel, -vel
 
     return pos, vel * DRAG
+
+def steps(distance):
+    steps, vel = 0, KICK_STRENGTH
+
+    while distance > 0 and vel > 0.25:
+        distance, steps, vel = distance - vel, steps + 1, vel * DRAG
+
+    return steps
 
 class Goal(MyActor):
     def __init__(self, team):
@@ -205,7 +217,7 @@ class Ball(MyActor):
                                   self.owner.team and targetable(p, self.owner)]
 
             if len(targetable_players) > 0:
-                target = min(targetable_players, key=dist_key(sef.owner.vpos))
+                target = min(targetable_players, key=dist_key(self.owner.vpos))
                 game.debug_shoot_target = target.vpos
             else:
                 target = None
@@ -226,7 +238,7 @@ class Ball(MyActor):
                     for i in range(iterations):
                         t = target.vpos + angle_to_vec(self.owner.dir) * r
                         vec, length = safe_normalize(t - self.vpos)
-                        r = HUMAN_PLAYER_WITHOUT_BALL_SEED * steps(length)
+                        r = HUMAN_PLAYER_WITHOUT_BALL_SPEED * steps(length)
                 else:
                     vec = angle_to_vec(self.owner.dir)
                     target = min([p for p in game.players if p.team == self.owner.team],
