@@ -206,14 +206,18 @@ class Keyboard:
 
     # TO_DO: add support for full set of keys
     def reset(self):
+        self.lshift = False
         self.space = False
         self.up = False
+        self.right = False
         self.down = False
         self.left = False
-        self.right = False
         self.a = False
+        self.d = False
         self.k = False
         self.m = False
+        self.s = False
+        self.w = False
         self.z = False
 
     def __getitem__(self, key):
@@ -223,11 +227,19 @@ class Keyboard:
             raise LookupError
 
 class keys:
+    LSHIFT = "lshift"
     SPACE = "space"
     UP = "up"
     RIGHT = "right"
     DOWN = "down"
     LEFT = "left"
+    A = "a"
+    D = "d"
+    K = "k"
+    M = "m"
+    S = "s"
+    W = "w"
+    Z = "z"
 
 class Sounds:
     def __init__(self):
