@@ -1,9 +1,24 @@
+import sys
 import math
 import random
 from enum import Enum
 import pygame
 from pygame.math import Vector2
 from engine import keys, keyboard, music, sounds, Actor
+
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [0,5]:
+    print(f"This game requires at least version 0.5 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH = 800
 HEIGHT = 480
