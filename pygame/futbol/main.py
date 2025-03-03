@@ -654,7 +654,7 @@ def update():
             if selection_change != 0:
                 sounds.move.play()
                 if menu_state == MenuState.NUM_PLAYERS:
-                    menu_num_players == 2 if menu_num_players == 1 else 1
+                    menu_num_players = 2 if menu_num_players == 1 else 1
                 else:
                     menu_difficulty = (menu_difficulty + selection_change) % 3
 

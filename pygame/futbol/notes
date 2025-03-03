@@ -73,3 +73,14 @@ it eventually drops down to a low enough negative value and hits the bug. Fixed 
 First pass is complete. All stubs filled in and game running without errors. As before, next steps are
 copying in official resources, scrubbing against book text, GitHub, and playtesting/debugging. Then
 we'll wrap up the 0.5 initial drop to the engine and check for backwards compat.
+
+- - - -
+After some initial playtesting, it seems to be working pretty well, even pre-scrub. Just one obvious
+issue - anything else is pretty subtle, will likely want to use the debug settings they built in. The
+known issue is:
+
+* [FIXED] Player select pointer doesn't move on keypress - just sound effect plays (but oddly the
+            difficulty setting _does_ work)
+
+Caught it! I had '==' instead of '=' in the logic in update(). Fixed now, though this opens up a new
+issue where my implementation of keys/keyboard doesn't support all the necessary keys. Yet.
