@@ -205,6 +205,8 @@ class Keyboard:
         self.reset()
 
     # TO_DO: add support for full set of keys
+    # TO_DO: rework this design - very unwieldy for full set,
+    #    and needs touches in three places
     def reset(self):
         self.lshift = False
         self.space = False
@@ -285,18 +287,24 @@ def run():
                     keyboard.space = True
                 if event.key == K_UP:
                     keyboard.up = True
+                if event.key == K_RIGHT:
+                    keyboard.right = True
                 if event.key == K_DOWN:
                     keyboard.down = True
                 if event.key == K_LEFT:
                     keyboard.left = True
-                if event.key == K_RIGHT:
-                    keyboard.right = True
                 if event.key == K_a:
                     keyboard.a = True
+                if event.key == K_d:
+                    keyboard.d = True
                 if event.key == K_k:
                     keyboard.k = True
                 if event.key == K_m:
                     keyboard.m = True
+                if event.key == K_s:
+                    keyboard.s = True
+                if event.key == K_w:
+                    keyboard.w = True
                 if event.key == K_z:
                     keyboard.z = True
     

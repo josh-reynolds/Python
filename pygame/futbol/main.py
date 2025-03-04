@@ -49,8 +49,7 @@ PITCH_RECT = pygame.rect.Rect(PITCH_BOUNDS_X[0], PITCH_BOUNDS_Y[0],
                               HALF_PITCH_W * 2, HALF_PITCH_H * 2)
 GOAL_0_RECT = pygame.rect.Rect(GOAL_BOUNDS_X[0], GOAL_BOUNDS_Y[0],
                                GOAL_WIDTH, GOAL_DEPTH)
-# looks like a typo in the book on the following line...
-GOAL_1_RECT = pygame.rect.Rect(GOAL_BOUNDS_X[1], GOAL_BOUNDS_Y[1] - GOAL_DEPTH,
+GOAL_1_RECT = pygame.rect.Rect(GOAL_BOUNDS_X[0], GOAL_BOUNDS_Y[1] - GOAL_DEPTH,
                                GOAL_WIDTH, GOAL_DEPTH)
 
 AI_MIN_X = 78

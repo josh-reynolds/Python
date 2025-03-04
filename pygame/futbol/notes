@@ -84,3 +84,8 @@ known issue is:
 
 Caught it! I had '==' instead of '=' in the logic in update(). Fixed now, though this opens up a new
 issue where my implementation of keys/keyboard doesn't support all the necessary keys. Yet.
+
+- - - -
+On consideration, the potential typo on line 48 is probably not one. GOAL_BOUNDS_X[0] is the correct
+left-side value for both goal locations. GOAL_BOUNDS_X[1] is the right-side value, and shouldn't be 
+used in setting the Rect.
