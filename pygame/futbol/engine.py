@@ -283,6 +283,8 @@ def run():
             if event.type == KEYDOWN:
                 if event.key == K_q:
                     running = False
+                if event.key == K_LSHIFT:
+                    keyboard.lshift = True
                 if event.key == K_SPACE:
                     keyboard.space = True
                 if event.key == K_UP:
