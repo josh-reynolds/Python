@@ -89,3 +89,13 @@ issue where my implementation of keys/keyboard doesn't support all the necessary
 On consideration, the potential typo on line 48 is probably not one. GOAL_BOUNDS_X[0] is the correct
 left-side value for both goal locations. GOAL_BOUNDS_X[1] is the right-side value, and shouldn't be 
 used in setting the Rect.
+
+- - - -
+Book and GitHub scrubbing is complete. There were a few errors in my trancription - fixed now - though
+the game doesn't play noticeably different.
+
+Also, after reviewing the GitHub sources, I think the stray 'todo' comment they left in isn't about the
+code on that line. They have verbose comments in those sources, which were stripped from the book
+appropriately, and have left notes for themselves when a tricky piece of code needs a deeper 
+explanation. I think that's what's going on there - they've just never come back to explain this
+line more thorougly...

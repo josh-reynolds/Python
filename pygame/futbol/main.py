@@ -337,7 +337,7 @@ class Player(MyActor):
                     target.x = max(AI_MIN_X, min(AI_MAX_X, target.x))
                     target.y = max(AI_MIN_Y, min(AI_MAX_Y, target.y))
 
-                    other_team = 1 if self.team == 0 else 1
+                    other_team = 1 if self.team == 0 else 0
                     speed = LEAD_PLAYER_BASE_SPEED
                     if game.teams[other_team].human():
                         speed += game.difficulty.speed_boost
@@ -473,7 +473,7 @@ class Game:
             o = self.ball.owner
             pos, team = o.vpos, o.team
             owners_target_goal = game.goals[team]
-            other_team = 1 if team == 0 else 1
+            other_team = 1 if team == 0 else 0
 
             if self.difficulty.goalie_enabled:
                 nearest = min([p for p in self.players if p.team != team],
@@ -582,7 +582,8 @@ class Game:
                     c = cost(Vector2(x,y), self.ball.owner.team)[0]
                     screen_pos = Vector2(x,y) - offset
                     screen_pos = (screen_pos.x, screen_pos.y)
-                    screen.draw.text(f"{c:.0f}", center=screen_pos)
+                    #screen.draw.text(f"{c:.0f}", center=screen_pos)    # from book text
+                    screen.draw.text("{0:.0f}".format(c), center = screen_pos)   # from GitHub sources
 
     def play_sound(self, name, c):
         if state != State.MENU:
@@ -667,7 +668,10 @@ def update():
             elif key_just_pressed(keys.UP):
                 selection_change = -1
             if selection_change != 0:
-                sounds.move.play()
+                try:
+                    sounds.move.play()
+                except Exception:
+                    pass
                 if menu_state == MenuState.NUM_PLAYERS:
                     menu_num_players = 2 if menu_num_players == 1 else 1
                 else:
