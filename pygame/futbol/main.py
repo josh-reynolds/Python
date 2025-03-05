@@ -391,7 +391,8 @@ class Player(MyActor):
         dir_diff = (target_dir - self.dir)
         self.dir = (self.dir + [0, 1, 1, 1, 1, 7, 7, 7][dir_diff % 8]) % 8
 
-        suffix = str(self.dir) + str((int(self.anim_frame) // 18) + 1)   # todo  ??? from the book?
+        # comment on the following line is in the book & GitHub sources
+        suffix = str(self.dir) + str((int(self.anim_frame) // 18) + 1)   # todo
 
         self.image = "player" + str(self.team) + suffix
         self.shadow.image = "players" + suffix
@@ -419,8 +420,8 @@ class Game:
             else:
                 music.play("theme")
                 sounds.crowd.stop()
-        except Exception as e:                   #### temporary while implementing
-            print(e)                             ###
+        except:
+            pass
 
         self.score_timer = 0 
         self.scoring_team = 1
@@ -575,7 +576,7 @@ class Game:
                 line_end = self.debug_shoot_target - offset
                 pygame.draw.line(screen.surface, (255,0,255), line_start, line_end)
 
-        if DEBUG_SHOW_COSTS:
+        if DEBUG_SHOW_COSTS and self.ball.owner:
             for x in range(0, LEVEL_W, 60):
                 for y in range(0, LEVEL_H, 26):
                     c = cost(Vector2(x,y), self.ball.owner.team)[0]
@@ -587,8 +588,8 @@ class Game:
         if state != State.MENU:
             try:
                 getattr(sounds, name+str(random.randint(0, c-1))).play()
-            except Exception as e:                   #### temporary while implementing
-                print(e)                             ###
+            except:
+                pass
 
 key_status = {}
 
@@ -712,6 +713,12 @@ def draw():
         for i in range(2):
             img = "l" + str(i) + str(game.teams[i].score)
             screen.blit(img, (HALF_WINDOW_W + 25 - 125 * i, 144))
+
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 1024)
+except:
+    pass
 
 state = State.MENU
 menu_state = MenuState.NUM_PLAYERS
