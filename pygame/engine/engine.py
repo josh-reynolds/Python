@@ -3,7 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.4"
+__version__ = "0.5"
 
 class Actor:
 
@@ -12,6 +12,9 @@ class Actor:
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
+
+        if anchor == None:
+            anchor = ("center","center")
 
         self.image = image
         self.initialize_position(pos, anchor)
@@ -156,10 +159,28 @@ class Painter:
     def set_font(self):
         self.font = pygame.font.Font(self.fontname, self.fontsize)
 
-    def text(self, text, pos):
+    #TO_DO: only partial positioning implemented thus far, and a bit creaky
+    # this is 'borrowed' from ptext, which is what Pygame Zero uses internally
+    def text(self, text, pos=None, center=None):
+        if center and not pos:
+            x, y = center
+            hanchor, vanchor = 0.5, 0.5
+        elif pos and not center:
+            x, y = pos
+            hanchor, vanchor = 0, 0
+        else:
+            raise Exception("Must specify either pos or center location")
+
         img = self.font.render(text, True, self.fontcolor)
+
+        x -= hanchor * img.get_width()
+        y -= vanchor * img.get_height()
+
+        x = int(round(x))
+        y = int(round(y))
+
         # TO_DO: address duplication with Screen.blit()
-        self.surface.blit(img, pos)
+        self.surface.blit(img, (x,y))
 
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
@@ -176,20 +197,29 @@ class Music:
     def set_volume(self, volume):
         pygame.mixer.music.set_volume(volume)
 
+    def fadeout(self, time):
+        pygame.mixer.music.fadeout(time)
+
 class Keyboard:
     def __init__(self):
         self.reset()
 
     # TO_DO: add support for full set of keys
+    # TO_DO: rework this design - very unwieldy for full set,
+    #    and needs touches in three places
     def reset(self):
+        self.lshift = False
         self.space = False
         self.up = False
+        self.right = False
         self.down = False
         self.left = False
-        self.right = False
         self.a = False
+        self.d = False
         self.k = False
         self.m = False
+        self.s = False
+        self.w = False
         self.z = False
 
     def __getitem__(self, key):
@@ -199,11 +229,19 @@ class Keyboard:
             raise LookupError
 
 class keys:
+    LSHIFT = "lshift"
     SPACE = "space"
     UP = "up"
     RIGHT = "right"
     DOWN = "down"
     LEFT = "left"
+    A = "a"
+    D = "d"
+    K = "k"
+    M = "m"
+    S = "s"
+    W = "w"
+    Z = "z"
 
 class Sounds:
     def __init__(self):
@@ -245,22 +283,30 @@ def run():
             if event.type == KEYDOWN:
                 if event.key == K_q:
                     running = False
+                if event.key == K_LSHIFT:
+                    keyboard.lshift = True
                 if event.key == K_SPACE:
                     keyboard.space = True
                 if event.key == K_UP:
                     keyboard.up = True
+                if event.key == K_RIGHT:
+                    keyboard.right = True
                 if event.key == K_DOWN:
                     keyboard.down = True
                 if event.key == K_LEFT:
                     keyboard.left = True
-                if event.key == K_RIGHT:
-                    keyboard.right = True
                 if event.key == K_a:
                     keyboard.a = True
+                if event.key == K_d:
+                    keyboard.d = True
                 if event.key == K_k:
                     keyboard.k = True
                 if event.key == K_m:
                     keyboard.m = True
+                if event.key == K_s:
+                    keyboard.s = True
+                if event.key == K_w:
+                    keyboard.w = True
                 if event.key == K_z:
                     keyboard.z = True
     

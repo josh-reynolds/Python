@@ -36,14 +36,27 @@ v0.4 (released with Bugz)
 * [DEFER] font defaults are hard-coded in Painter class and not customizeable
 * [DEFER] blit code duplication between Painter.text() and Screen.blit()
 
-v0.5 (under development with Futbol)
+v0.5 (released with Futbol)
+----------------------------------------
+* [DEFER] only handles png images - needs support for gif & jpg
+* [DEFER] only handles very limited set of keys - needs support for full keyboard
+* [DEFER] design of key handling very cumbersome - rework
+* [DEFER] no doc strings at all
+* [DEFER] image loading code duplication between Screen and Actor
+* [DEFER] font defaults are hard-coded in Painter class and not customizeable
+* [DEFER] blit code duplication between Painter.text() and Screen.blit()
+* [DEFER] only partial positioning implemented for Painter.text()
+
+v1.0 (under development)
 ----------------------------------------
 * [     ] only handles png images - needs support for gif & jpg
 * [     ] only handles very limited set of keys - needs support for full keyboard
+* [     ] design of key handling very cumbersome - rework
 * [     ] no doc strings at all
 * [     ] image loading code duplication between Screen and Actor
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
+* [     ] only partial positioning implemented for Painter.text()
 
 ----------------------------------------
 # image + anchor -> anchor_value

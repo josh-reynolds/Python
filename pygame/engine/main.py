@@ -1,5 +1,5 @@
 import pygame
-from engine import Actor, music, keyboard, sounds
+from engine import Actor, music, keyboard, sounds, keys
 
 WIDTH = 800
 HEIGHT = 480
@@ -25,7 +25,12 @@ boxes = [Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)) for x in xs for y in ys]
 def update():
     for box in boxes:
         box.update()
-    #pass
+
+    for k in dir(keys):
+        if k[0] != '_':
+            key = getattr(keys, k)
+            if keyboard[key]:
+                print(key)
 
 def draw():
     screen.draw.line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
@@ -33,7 +38,8 @@ def draw():
     for box in boxes:
         box.draw()
     screen.draw.text("Lorem Ipsum Dolor Sit Amet", (20, 20))
-    #pass
+    screen.draw.text("O", center=(HALF_WIDTH, 20))
+    screen.draw.text("O", center=(20,HALF_HEIGHT))
 
 def print_box(b):
     print(f'screen center = {HALF_WIDTH}, {HALF_HEIGHT}')
@@ -54,8 +60,6 @@ def once():
     b.update()
     b.draw()
     print_box(b)
-
-    #pygame.quit()
 
 from engine import run
 run()
