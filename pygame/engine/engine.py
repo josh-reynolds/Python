@@ -5,6 +5,17 @@ from pygame.locals import *
 
 __version__ = "0.5"
 
+# TO_DO: handle missing image files
+# TO_DO: handle files w/ same name but different extensions
+def load_image(image_name):
+    for entry in os.listdir('./images/'):
+        name,extension = entry.split('.')
+        if name == image_name and (extension == 'png' or
+                                   extension == 'jpg' or
+                                   extension == 'gif'):
+
+            return pygame.image.load('./images/' + image_name + '.' + extension)
+
 class Actor:
 
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
@@ -39,18 +50,8 @@ class Actor:
     def image(self, image_name):
         #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
         self.image_name = image_name
-
-        # TO_DO: reconcile with duplication in Screen.blit()
-        # TO_DO: handle missing image files
-        # TO_DO: handle files w/ same name but different extensions
-        for entry in os.listdir('./images/'):
-            name,extension = entry.split('.')
-            if name == image_name and (extension == 'png' or
-                                       extension == 'jpg' or
-                                       extension == 'gif'):
-
-                self._image = pygame.image.load('./images/' + image_name + '.' + extension)
-                self.update_position()
+        self._image = load_image(image_name)
+        self.update_position()
 
     def initialize_position(self, pos, anchor):
         #print(f"initialize_position({pos}, {anchor})")
@@ -148,23 +149,12 @@ class Screen:
     def fill(self, color):
         self.surface.fill(color)
 
-    # TO_DO: handle other image formats (png/gif/jpg)
-    # TO_DO: split image handling for Actors and non-Actors, and shift as needed
-    # TO_DO: handle missing image files
-    # TO_DO: handle files w/ same name but different extensions
     def blit(self, image, position):
         if isinstance(image, pygame.Surface):
             surf = image
         elif isinstance(image, str):
             if image not in self.images:
-                for entry in os.listdir('./images/'):
-                    name,extension = entry.split('.')
-                    if name == image and (extension == 'png' or
-                                          extension == 'jpg' or
-                                          extension == 'gif'):
-                        image_name = './images/' + image + '.' + extension
-                        self.images[image] = pygame.image.load(image_name)
-
+                self.images[image] = load_image(image)
             surf = self.images[image]
 
         self.surface.blit(surf, position)

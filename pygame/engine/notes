@@ -49,14 +49,15 @@ v0.5 (released with Futbol)
 
 v1.0 (under development)
 ----------------------------------------
-* [.....] only handles png images - needs support for gif & jpg
+* [FIXED] only handles png images - needs support for gif & jpg
 * [     ] only handles very limited set of keys - needs support for full keyboard
 * [     ] design of key handling very cumbersome - rework
 * [     ] no doc strings at all
-* [     ] image loading code duplication between Screen and Actor
+* [FIXED] image loading code duplication between Screen and Actor
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
 * [     ] only partial positioning implemented for Painter.text()
+* [     ] rudimentary debug spew still in place - remove or improve
 
 ----------------------------------------
 # image + anchor -> anchor_value

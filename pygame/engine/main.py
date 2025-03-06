@@ -24,9 +24,11 @@ boxes = [Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)) for x in xs for y in ys]
 
 image_tester = Box((100,100))
 image_tester.image = 'test'       # jpg image
+image_tester.anchor = ('left','top')
 
 image_tester2 = Box((600,100))
 image_tester2.image = 'test2'      # gif image
+image_tester2.anchor = ('left','top')
 
 def update():
     for box in boxes:
@@ -41,6 +43,11 @@ def update():
 def draw():
     screen.draw.line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
     screen.draw.line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
+
+    screen.draw.line((255,0,0), (0,100+16), (WIDTH,100+16))
+    screen.draw.line((255,0,0), (0,300+16), (WIDTH,300+16))
+    screen.draw.line((255,0,0), (100+16,0), (100+16,HEIGHT))
+    screen.draw.line((255,0,0), (600+16,0), (600+16,HEIGHT))
 
     for box in boxes:
         box.draw()
