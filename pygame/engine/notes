@@ -49,7 +49,7 @@ v0.5 (released with Futbol)
 
 v1.0 (under development)
 ----------------------------------------
-* [     ] only handles png images - needs support for gif & jpg
+* [.....] only handles png images - needs support for gif & jpg
 * [     ] only handles very limited set of keys - needs support for full keyboard
 * [     ] design of key handling very cumbersome - rework
 * [     ] no doc strings at all

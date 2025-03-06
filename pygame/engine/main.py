@@ -22,6 +22,12 @@ xs = ('left', 'center', 'right')
 ys = ('top', 'center', 'bottom')
 boxes = [Box((HALF_WIDTH, HALF_HEIGHT), anchor=(x,y)) for x in xs for y in ys]
 
+image_tester = Box((100,100))
+image_tester.image = 'test'       # jpg image
+
+image_tester2 = Box((600,100))
+image_tester2.image = 'test2'      # gif image
+
 def update():
     for box in boxes:
         box.update()
@@ -35,11 +41,18 @@ def update():
 def draw():
     screen.draw.line((0,0,255), (HALF_WIDTH,0), (HALF_WIDTH, HEIGHT))
     screen.draw.line((0,0,255), (0,HALF_HEIGHT), (WIDTH, HALF_HEIGHT))
+
     for box in boxes:
         box.draw()
+
     screen.draw.text("Lorem Ipsum Dolor Sit Amet", (20, 20))
+
     screen.draw.text("O", center=(HALF_WIDTH, 20))
     screen.draw.text("O", center=(20,HALF_HEIGHT))
+
+    image_tester.draw()
+    image_tester2.draw()
+
 
 def print_box(b):
     print(f'screen center = {HALF_WIDTH}, {HALF_HEIGHT}')

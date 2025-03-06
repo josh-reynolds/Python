@@ -21,7 +21,7 @@ class Actor:
 
     def draw(self):
         #print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
-        screen.blit(self.image_name, self.rect.topleft)
+        screen.blit(self.image, self.rect.topleft)
 
     def collidepoint(self, point):
         #print(f"collidepoint({point})")
@@ -40,8 +40,17 @@ class Actor:
         #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
         # TO_DO: reconcile with duplication in Screen.blit()
         self.image_name = image_name
-        self._image = pygame.image.load('./images/' + image_name + '.png')
-        self.update_position()
+
+        # TO_DO: handle missing image files
+        # TO_DO: handle files w/ same name but different extensions
+        for entry in os.listdir('./images/'):
+            name,extension = entry.split('.')
+            if name == image_name and (extension == 'png' or
+                                       extension == 'jpg' or
+                                       extension == 'gif'):
+
+                self._image = pygame.image.load('./images/' + image_name + '.' + extension)
+                self.update_position()
 
     def initialize_position(self, pos, anchor):
         #print(f"initialize_position({pos}, {anchor})")
@@ -142,10 +151,15 @@ class Screen:
     # TO_DO: handle other image formats (png/gif/jpg)
     # TO_DO: split image handling for Actors and non-Actors, and shift as needed
     def blit(self, image, position):
-        if image not in self.images:
-            image_name = './images/' + image + '.png'
-            self.images[image] = pygame.image.load(image_name)
-        self.surface.blit(self.images[image], position)
+        if isinstance(image, pygame.Surface):
+            surf = image
+        elif isinstance(image, str):
+            if image not in self.images:
+                image_name = './images/' + image + '.png'
+                self.images[image] = pygame.image.load(image_name)
+            surf = self.images[image]
+
+        self.surface.blit(surf, position)
 
 class Painter:
     def __init__(self, surface):
