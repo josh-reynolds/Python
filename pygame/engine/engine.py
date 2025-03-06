@@ -38,9 +38,9 @@ class Actor:
     @image.setter
     def image(self, image_name):
         #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
-        # TO_DO: reconcile with duplication in Screen.blit()
         self.image_name = image_name
 
+        # TO_DO: reconcile with duplication in Screen.blit()
         # TO_DO: handle missing image files
         # TO_DO: handle files w/ same name but different extensions
         for entry in os.listdir('./images/'):
@@ -150,13 +150,21 @@ class Screen:
 
     # TO_DO: handle other image formats (png/gif/jpg)
     # TO_DO: split image handling for Actors and non-Actors, and shift as needed
+    # TO_DO: handle missing image files
+    # TO_DO: handle files w/ same name but different extensions
     def blit(self, image, position):
         if isinstance(image, pygame.Surface):
             surf = image
         elif isinstance(image, str):
             if image not in self.images:
-                image_name = './images/' + image + '.png'
-                self.images[image] = pygame.image.load(image_name)
+                for entry in os.listdir('./images/'):
+                    name,extension = entry.split('.')
+                    if name == image and (extension == 'png' or
+                                          extension == 'jpg' or
+                                          extension == 'gif'):
+                        image_name = './images/' + image + '.' + extension
+                        self.images[image] = pygame.image.load(image_name)
+
             surf = self.images[image]
 
         self.surface.blit(surf, position)

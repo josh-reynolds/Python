@@ -53,6 +53,9 @@ def draw():
     image_tester.draw()
     image_tester2.draw()
 
+    screen.blit("image_1", (100,300))      # gif image
+    screen.blit("image_2", (600,300))      # jpg image
+
 
 def print_box(b):
     print(f'screen center = {HALF_WIDTH}, {HALF_HEIGHT}')
