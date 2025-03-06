@@ -3,7 +3,9 @@ import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.5"
+__version__ = "1.0"
+
+DEBUG_ACTOR = False
 
 # TO_DO: handle missing image files
 # TO_DO: handle files w/ same name but different extensions
@@ -17,9 +19,9 @@ def load_image(image_name):
             return pygame.image.load('./images/' + image_name + '.' + extension)
 
 class Actor:
-
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
-        #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+        if DEBUG_ACTOR: print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+        
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
@@ -31,11 +33,13 @@ class Actor:
         self.initialize_position(pos, anchor)
 
     def draw(self):
-        #print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+        if DEBUG_ACTOR: print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+
         screen.blit(self.image, self.rect.topleft)
 
     def collidepoint(self, point):
-        #print(f"collidepoint({point})")
+        if DEBUG_ACTOR: print(f"collidepoint({point})")
+
         return self.rect.collidepoint(point)
 
     @property
@@ -48,19 +52,22 @@ class Actor:
 
     @image.setter
     def image(self, image_name):
-        #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+        if DEBUG_ACTOR: print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+        
         self.image_name = image_name
         self._image = load_image(image_name)
         self.update_position()
 
     def initialize_position(self, pos, anchor):
-        #print(f"initialize_position({pos}, {anchor})")
+        if DEBUG_ACTOR: print(f"initialize_position({pos}, {anchor})")
+
         self._anchor = anchor
         self.calculate_anchor()
         self.pos = pos
     
     def update_position(self):
-        #print("update_position()")
+        if DEBUG_ACTOR: print("update_position()")
+
         current_position = self.pos
         self.rect.width, self.rect.height = self._image.get_size()
         self.calculate_anchor()
@@ -72,7 +79,8 @@ class Actor:
 
     @x.setter
     def x(self, new_x):
-        #print(f"set_x({new_x})")
+        if DEBUG_ACTOR: print(f"set_x({new_x})")
+
         self.rect.left = new_x - self._anchor_value[0]
 
     @property
@@ -81,7 +89,8 @@ class Actor:
 
     @y.setter
     def y(self, new_y):
-        #print(f"set_y({new_y})")
+        if DEBUG_ACTOR: print(f"set_y({new_y})")
+
         self.rect.top = new_y - self._anchor_value[1]
 
     @property
@@ -93,7 +102,8 @@ class Actor:
 
     @pos.setter
     def pos(self, new_pos):
-        #print(f"set_pos({new_pos})")
+        if DEBUG_ACTOR: print(f"set_pos({new_pos})")
+
         anchor_x, anchor_y = self._anchor_value
 
         self.rect.topleft = (new_pos[0] - anchor_x,
@@ -105,11 +115,14 @@ class Actor:
 
     @anchor.setter
     def anchor(self, new_anchor):
+        if DEBUG_ACTOR: print(f"set_anchor({new_anchor})")
+
         self._anchor = new_anchor
         self.update_position()
 
     def calculate_anchor(self):
-        #print("calculate_anchor()")
+        if DEBUG_ACTOR: print("calculate_anchor()")
+
         iw = self.image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
         ih = self.image.get_height()
