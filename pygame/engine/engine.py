@@ -253,6 +253,7 @@ class Keyboard:
         else:
             raise LookupError
 
+# keys = [i for i in dir() if i.startswith('K_')]
 class keys:
     LSHIFT = "lshift"
     SPACE = "space"
@@ -304,36 +305,19 @@ def run():
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-            # TO_DO: add support for full set of keys
+
             if event.type == KEYDOWN:
                 if event.key == K_q:
                     running = False
-                if event.key == K_LSHIFT:
-                    keyboard.lshift = True
-                if event.key == K_SPACE:
-                    keyboard.space = True
-                if event.key == K_UP:
-                    keyboard.up = True
-                if event.key == K_RIGHT:
-                    keyboard.right = True
-                if event.key == K_DOWN:
-                    keyboard.down = True
-                if event.key == K_LEFT:
-                    keyboard.left = True
-                if event.key == K_a:
-                    keyboard.a = True
-                if event.key == K_d:
-                    keyboard.d = True
-                if event.key == K_k:
-                    keyboard.k = True
-                if event.key == K_m:
-                    keyboard.m = True
-                if event.key == K_s:
-                    keyboard.s = True
-                if event.key == K_w:
-                    keyboard.w = True
-                if event.key == K_z:
-                    keyboard.z = True
+
+                name = pygame.key.name(event.key)
+                if name.startswith('left'):
+                    name = 'l' + name[5:]
+                if name.startswith('right'):
+                    name = 'r' + name[6:]
+
+                if hasattr(keys, name.upper()):
+                    setattr(keyboard, name, True)
     
         screen.fill(Color("white"))
         parent.update()
