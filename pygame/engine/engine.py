@@ -229,29 +229,14 @@ class Keyboard:
     def __init__(self):
         self.reset()
 
-    # TO_DO: add support for full set of keys
-    # TO_DO: rework this design - very unwieldy for full set,
-    #    and needs touches in three places
     def reset(self):
-        self.lshift = False
-        self.space = False
-        self.up = False
-        self.right = False
-        self.down = False
-        self.left = False
-        self.a = False
-        self.d = False
-        self.k = False
-        self.m = False
-        self.s = False
-        self.w = False
-        self.z = False
+        for i in dir(self):
+            if not i.startswith('__') and i != 'reset':
+                setattr(self, i, False)
 
     def __getitem__(self, key):
         if hasattr(self, key):
             return getattr(self, key)
-        else:
-            raise LookupError
 
 # keys = [i for i in dir() if i.startswith('K_')]
 class keys:
