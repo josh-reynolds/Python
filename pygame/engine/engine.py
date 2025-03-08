@@ -1,3 +1,30 @@
+"""A simple wrapper around Pygame to handle boilerplate code, based on Pygame Zero.
+
+This module contains the following:
+
+    Actor - class to handle moving graphical objects.
+    Screen - wraps the Pygame screen surface.
+    Painter - methods to draw on the screen.
+    Music - wraps the Pygame music mixer.
+    Keyboard - holds flags indicating keyboard state.
+    Sounds - wraps the Pygame audio mixer.
+
+    screen - singleton instance of Screen for use by game scripts.
+    music - singleton instance of Music for use by game scripts.
+    keyboard - singleton instance of Keyboard for use by game scripts.
+    keys - contains all keyboard key name constants.
+    sounds - singleton instance of Sounds for use by game scripts.
+
+    run() - entry point containing the core game loop.
+
+Game scripts should generally import the singleton entries, run(), and Actor. The 
+game loop will expect to find update(), draw(), and the constants WIDTH, HEIGHT, and
+TITLE defined in the game script. Invoking run() at the end of the script will start the
+game in motion, invoking the user-defined update() and run() once per frame, and
+flagging keyboard events in the keyboard object as they occur. The engine will look for
+images and sound files in the subdirectories ./images, ./sounds and ./music.
+"""
+
 import os
 import sys
 import pygame
@@ -8,7 +35,9 @@ __version__ = "1.0"
 DEBUG_ACTOR = False
 
 # TO_DO: handle files w/ same name but different extensions
-def load_image(image_name):
+def _load_image(image_name):
+    """Internal function to handle loading image files in png, jpg or gif formats."""
+
     img = None
     for entry in os.listdir('./images/'):
         name,extension = entry.split('.')
@@ -18,7 +47,7 @@ def load_image(image_name):
 
             try:
                 img = pygame.image.load('./images/' + image_name + '.' + extension)
-            except:
+            except FileNotFoundError:
                 pass
 
     if not img:
@@ -27,7 +56,10 @@ def load_image(image_name):
     else:
         return img
 
+
 class Actor:
+    """Actor - class to handle moving graphical objects."""
+
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
         if DEBUG_ACTOR: print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
         
@@ -64,7 +96,7 @@ class Actor:
         if DEBUG_ACTOR: print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
         
         self.image_name = image_name
-        self._image = load_image(image_name)
+        self._image = _load_image(image_name)
         self.update_position()
 
     def initialize_position(self, pos, anchor):
@@ -162,6 +194,8 @@ class Actor:
         return self.rect.center
 
 class Screen:
+    """Screen - wraps the Pygame screen surface."""
+
     def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.surface = pygame.display.set_mode((width, height))
@@ -176,12 +210,18 @@ class Screen:
             surf = image
         elif isinstance(image, str):
             if image not in self.images:
-                self.images[image] = load_image(image)
+                self.images[image] = _load_image(image)
             surf = self.images[image]
 
         self.surface.blit(surf, position)
 
+
 class Painter:
+    """Painter - methods to draw on the screen.
+
+    These methods are exposed via Screen.draw, and should not be directly invoked.
+    """
+
     def __init__(self, surface):
         # TO_DO: make this customizeable 
         self.surface = surface
@@ -219,7 +259,10 @@ class Painter:
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
 
+
 class Music:
+    """Music - wraps the Pygame music mixer."""
+    
     def __init__(self):
         pass
 
@@ -234,7 +277,10 @@ class Music:
     def fadeout(self, time):
         pygame.mixer.music.fadeout(time)
 
+
 class Keyboard:
+    """Keyboard - holds flags indicating keyboard state."""
+
     def __init__(self):
         self.reset()
 
@@ -247,15 +293,22 @@ class Keyboard:
         if hasattr(self, key):
             return getattr(self, key)
 
+
 class keys:
+    """keys - contains all keyboard key name constants."""
     pass
 
-key_constants = [i for i in dir() if i.startswith('K_')]
-for i in key_constants:
-    const = i[2:].upper()
+# extract all key name constants imported from pygame.locals
+# and expose via fields on keys
+_key_constants = [i for i in dir() if i.startswith('K_')]
+for i in _key_constants:
+    const = i[2:].upper()     # remove the initial 'K_'
     setattr(keys, const, const.lower())
 
+
 class Sounds:
+    """Sounds - wraps the Pygame audio mixer."""
+
     def __init__(self):
         files = []
         for entry in os.listdir('./sounds/'):
@@ -268,14 +321,25 @@ class Sounds:
             filename = './sounds/' + file[0] + '.' + file[1]
             setattr(self, file[0], pygame.mixer.Sound(filename))
 
+
 pygame.init()
+
+"""screen - singleton instance of Screen for use by game scripts."""
 screen = Screen(1,1)
+
+"""music - singleton instance of Music for use by game scripts."""
 music = Music()
+
+"""keyboard - singleton instance of Keyboard for use by game scripts."""
 keyboard = Keyboard()
+
+"""sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()
 
 def run():
-    #sys.setprofile(trace_function)
+    """run() - entry point containing the core game loop."""
+
+    #sys.setprofile(_trace_function)
     parent = sys.modules['__main__']
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
@@ -312,12 +376,14 @@ def run():
     
     pygame.quit()
 
-def trace_function(frame, event, arg, indent=[0]):
+def _trace_function(frame, event, arg, indent=[0]):
+    """Internal function to display function entry/exit while debugging."""
+
     if event == "call":
         indent[0] += 2
         print("-" * indent[0] + "> call function", frame.f_code.co_qualname)
     elif event == "return":
         print("<" + "-" * indent[0], "exit function", frame.f_code.co_qualname)
         indent[0] -= 2
-    return trace_function
+    return _trace_function
 

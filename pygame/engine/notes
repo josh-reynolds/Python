@@ -55,8 +55,11 @@ v1.0 (under development)
 * [FIXED] design of key handling very cumbersome - rework
 * [FIXED] not handling error conditions when loading image files
 * [FIXED] rudimentary debug spew still in place - remove or improve
+* [FIXED] no docstrings at all
+* [.....] no private annotation or consideration of what gets exported
+* [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
-* [     ] no doc strings at all
+* [     ] only Actor has unit test coverage
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
 * [     ] only partial positioning implemented for Painter.text()
