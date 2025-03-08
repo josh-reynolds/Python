@@ -238,21 +238,13 @@ class Keyboard:
         if hasattr(self, key):
             return getattr(self, key)
 
-# keys = [i for i in dir() if i.startswith('K_')]
 class keys:
-    LSHIFT = "lshift"
-    SPACE = "space"
-    UP = "up"
-    RIGHT = "right"
-    DOWN = "down"
-    LEFT = "left"
-    A = "a"
-    D = "d"
-    K = "k"
-    M = "m"
-    S = "s"
-    W = "w"
-    Z = "z"
+    pass
+
+key_constants = [i for i in dir() if i.startswith('K_')]
+for i in key_constants:
+    const = i[2:].upper()
+    setattr(keys, const, const.lower())
 
 class Sounds:
     def __init__(self):

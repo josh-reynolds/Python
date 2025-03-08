@@ -52,8 +52,8 @@ v1.0 (under development)
 * [FIXED] only handles png images - needs support for gif & jpg
 * [FIXED] image loading code duplication between Screen and Actor
 * [.....] rudimentary debug spew still in place - remove or improve
-* [.....] only handles very limited set of keys - needs support for full keyboard
-* [.....] design of key handling very cumbersome - rework
+* [FIXED] only handles very limited set of keys - needs support for full keyboard
+* [FIXED] design of key handling very cumbersome - rework
 * [     ] no doc strings at all
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
