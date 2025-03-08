@@ -7,16 +7,25 @@ __version__ = "1.0"
 
 DEBUG_ACTOR = False
 
-# TO_DO: handle missing image files
 # TO_DO: handle files w/ same name but different extensions
 def load_image(image_name):
+    img = None
     for entry in os.listdir('./images/'):
         name,extension = entry.split('.')
         if name == image_name and (extension == 'png' or
                                    extension == 'jpg' or
                                    extension == 'gif'):
 
-            return pygame.image.load('./images/' + image_name + '.' + extension)
+            try:
+                img = pygame.image.load('./images/' + image_name + '.' + extension)
+            except:
+                pass
+
+    if not img:
+        print(f"{image_name} not found in ./images or is not an image file.")
+        sys.exit()
+    else:
+        return img
 
 class Actor:
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):

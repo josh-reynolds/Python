@@ -35,7 +35,7 @@ def update():
         box.update()
 
     for k in dir(keys):
-        if k[0] != '_':
+        if not k.startswith('__'):
             key = getattr(keys, k)
             if keyboard[key]:
                 print(key)

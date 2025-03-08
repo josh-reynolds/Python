@@ -51,14 +51,15 @@ v1.0 (under development)
 ----------------------------------------
 * [FIXED] only handles png images - needs support for gif & jpg
 * [FIXED] image loading code duplication between Screen and Actor
-* [.....] rudimentary debug spew still in place - remove or improve
 * [FIXED] only handles very limited set of keys - needs support for full keyboard
 * [FIXED] design of key handling very cumbersome - rework
+* [FIXED] not handling error conditions when loading image files
+* [FIXED] rudimentary debug spew still in place - remove or improve
+* [     ] only Actor has debug spew coverage
 * [     ] no doc strings at all
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
 * [     ] only partial positioning implemented for Painter.text()
-* [     ] not handling error conditions when loading image files
 
 ----------------------------------------
 # image + anchor -> anchor_value
