@@ -58,7 +58,7 @@ v1.0 (released)
 * [FIXED] no docstrings at all
 * [FIXED] no private annotation or consideration of what gets exported
 
-v1.1 (under development)
+v1.1 (under development with Brikz)
 ----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
