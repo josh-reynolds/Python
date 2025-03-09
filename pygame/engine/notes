@@ -47,7 +47,7 @@ v0.5 (released with Futbol)
 * [DEFER] blit code duplication between Painter.text() and Screen.blit()
 * [DEFER] only partial positioning implemented for Painter.text()
 
-v1.0 (under development)
+v1.0 (released)
 ----------------------------------------
 * [FIXED] only handles png images - needs support for gif & jpg
 * [FIXED] image loading code duplication between Screen and Actor
@@ -57,6 +57,9 @@ v1.0 (under development)
 * [FIXED] rudimentary debug spew still in place - remove or improve
 * [FIXED] no docstrings at all
 * [FIXED] no private annotation or consideration of what gets exported
+
+v1.1 (under development)
+----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
 * [     ] only Actor has unit test coverage

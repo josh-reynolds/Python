@@ -4,7 +4,7 @@ import random
 from enum import Enum
 import pygame
 from pygame.math import Vector2
-from engine import keys, keyboard, music, sounds, Actor
+from engine import *
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -731,6 +731,4 @@ menu_difficulty = 0
 
 game = Game()
 
-#----------------------
-from engine import run
 run()

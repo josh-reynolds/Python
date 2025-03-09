@@ -1,14 +1,69 @@
+"""A simple wrapper around Pygame to handle boilerplate code, based on Pygame Zero.
+
+This module contains the following:
+
+    Actor - class to handle moving graphical objects.
+    Screen - wraps the Pygame screen surface.
+    Painter - methods to draw on the screen.
+    Music - wraps the Pygame music mixer.
+    Keyboard - holds flags indicating keyboard state.
+    Sounds - wraps the Pygame audio mixer.
+
+    screen - singleton instance of Screen for use by game scripts.
+    music - singleton instance of Music for use by game scripts.
+    keyboard - singleton instance of Keyboard for use by game scripts.
+    keys - contains all keyboard key name constants.
+    sounds - singleton instance of Sounds for use by game scripts.
+
+    run() - entry point containing the core game loop.
+
+Game scripts should generally import the singleton entries, run(), and Actor. The 
+game loop will expect to find update(), draw(), and the constants WIDTH, HEIGHT, and
+TITLE defined in the game script. Invoking run() at the end of the script will start the
+game in motion, invoking the user-defined update() and run() once per frame, and
+flagging keyboard events in the keyboard object as they occur. The engine will look for
+images and sound files in the subdirectories ./images, ./sounds and ./music.
+"""
+
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'run']
+__version__ = "1.0"
+
 import os
 import sys
 import pygame
 from pygame.locals import *
 
-__version__ = "0.5"
+DEBUG_ACTOR = False
+
+# TO_DO: handle files w/ same name but different extensions
+def _load_image(image_name):
+    """Internal function to handle loading image files in png, jpg or gif formats."""
+
+    img = None
+    for entry in os.listdir('./images/'):
+        name,extension = entry.split('.')
+        if name == image_name and (extension == 'png' or
+                                   extension == 'jpg' or
+                                   extension == 'gif'):
+
+            try:
+                img = pygame.image.load('./images/' + image_name + '.' + extension)
+            except FileNotFoundError:
+                pass
+
+    if not img:
+        print(f"{image_name} not found in ./images or is not an image file.")
+        sys.exit()
+    else:
+        return img
+
 
 class Actor:
+    """Actor - class to handle moving graphical objects."""
 
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
-        #print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+        if DEBUG_ACTOR: print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+        
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
@@ -20,11 +75,13 @@ class Actor:
         self.initialize_position(pos, anchor)
 
     def draw(self):
-        #print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
-        screen.blit(self.image_name, self.rect.topleft)
+        if DEBUG_ACTOR: print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+
+        screen.blit(self.image, self.rect.topleft)
 
     def collidepoint(self, point):
-        #print(f"collidepoint({point})")
+        if DEBUG_ACTOR: print(f"collidepoint({point})")
+
         return self.rect.collidepoint(point)
 
     @property
@@ -37,20 +94,22 @@ class Actor:
 
     @image.setter
     def image(self, image_name):
-        #print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
-        # TO_DO: reconcile with duplication in Screen.blit()
+        if DEBUG_ACTOR: print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+        
         self.image_name = image_name
-        self._image = pygame.image.load('./images/' + image_name + '.png')
+        self._image = _load_image(image_name)
         self.update_position()
 
     def initialize_position(self, pos, anchor):
-        #print(f"initialize_position({pos}, {anchor})")
+        if DEBUG_ACTOR: print(f"initialize_position({pos}, {anchor})")
+
         self._anchor = anchor
         self.calculate_anchor()
         self.pos = pos
     
     def update_position(self):
-        #print("update_position()")
+        if DEBUG_ACTOR: print("update_position()")
+
         current_position = self.pos
         self.rect.width, self.rect.height = self._image.get_size()
         self.calculate_anchor()
@@ -62,7 +121,8 @@ class Actor:
 
     @x.setter
     def x(self, new_x):
-        #print(f"set_x({new_x})")
+        if DEBUG_ACTOR: print(f"set_x({new_x})")
+
         self.rect.left = new_x - self._anchor_value[0]
 
     @property
@@ -71,7 +131,8 @@ class Actor:
 
     @y.setter
     def y(self, new_y):
-        #print(f"set_y({new_y})")
+        if DEBUG_ACTOR: print(f"set_y({new_y})")
+
         self.rect.top = new_y - self._anchor_value[1]
 
     @property
@@ -83,7 +144,8 @@ class Actor:
 
     @pos.setter
     def pos(self, new_pos):
-        #print(f"set_pos({new_pos})")
+        if DEBUG_ACTOR: print(f"set_pos({new_pos})")
+
         anchor_x, anchor_y = self._anchor_value
 
         self.rect.topleft = (new_pos[0] - anchor_x,
@@ -95,11 +157,14 @@ class Actor:
 
     @anchor.setter
     def anchor(self, new_anchor):
+        if DEBUG_ACTOR: print(f"set_anchor({new_anchor})")
+
         self._anchor = new_anchor
         self.update_position()
 
     def calculate_anchor(self):
-        #print("calculate_anchor()")
+        if DEBUG_ACTOR: print("calculate_anchor()")
+
         iw = self.image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
         ih = self.image.get_height()
@@ -130,6 +195,8 @@ class Actor:
         return self.rect.center
 
 class Screen:
+    """Screen - wraps the Pygame screen surface."""
+
     def __init__(self, width, height):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.surface = pygame.display.set_mode((width, height))
@@ -139,15 +206,23 @@ class Screen:
     def fill(self, color):
         self.surface.fill(color)
 
-    # TO_DO: handle other image formats (png/gif/jpg)
-    # TO_DO: split image handling for Actors and non-Actors, and shift as needed
     def blit(self, image, position):
-        if image not in self.images:
-            image_name = './images/' + image + '.png'
-            self.images[image] = pygame.image.load(image_name)
-        self.surface.blit(self.images[image], position)
+        if isinstance(image, pygame.Surface):
+            surf = image
+        elif isinstance(image, str):
+            if image not in self.images:
+                self.images[image] = _load_image(image)
+            surf = self.images[image]
+
+        self.surface.blit(surf, position)
+
 
 class Painter:
+    """Painter - methods to draw on the screen.
+
+    These methods are exposed via Screen.draw, and should not be directly invoked.
+    """
+
     def __init__(self, surface):
         # TO_DO: make this customizeable 
         self.surface = surface
@@ -185,7 +260,10 @@ class Painter:
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
 
+
 class Music:
+    """Music - wraps the Pygame music mixer."""
+    
     def __init__(self):
         pass
 
@@ -200,50 +278,31 @@ class Music:
     def fadeout(self, time):
         pygame.mixer.music.fadeout(time)
 
+
 class Keyboard:
+    """Keyboard - holds flags indicating keyboard state."""
+
     def __init__(self):
         self.reset()
 
-    # TO_DO: add support for full set of keys
-    # TO_DO: rework this design - very unwieldy for full set,
-    #    and needs touches in three places
     def reset(self):
-        self.lshift = False
-        self.space = False
-        self.up = False
-        self.right = False
-        self.down = False
-        self.left = False
-        self.a = False
-        self.d = False
-        self.k = False
-        self.m = False
-        self.s = False
-        self.w = False
-        self.z = False
+        for i in dir(self):
+            if not i.startswith('__') and i != 'reset':
+                setattr(self, i, False)
 
     def __getitem__(self, key):
         if hasattr(self, key):
             return getattr(self, key)
-        else:
-            raise LookupError
+
 
 class keys:
-    LSHIFT = "lshift"
-    SPACE = "space"
-    UP = "up"
-    RIGHT = "right"
-    DOWN = "down"
-    LEFT = "left"
-    A = "a"
-    D = "d"
-    K = "k"
-    M = "m"
-    S = "s"
-    W = "w"
-    Z = "z"
+    """keys - contains all keyboard key name constants."""
+    pass
+
 
 class Sounds:
+    """Sounds - wraps the Pygame audio mixer."""
+
     def __init__(self):
         files = []
         for entry in os.listdir('./sounds/'):
@@ -256,14 +315,33 @@ class Sounds:
             filename = './sounds/' + file[0] + '.' + file[1]
             setattr(self, file[0], pygame.mixer.Sound(filename))
 
+
 pygame.init()
+
+"""screen - singleton instance of Screen for use by game scripts."""
 screen = Screen(1,1)
+
+"""music - singleton instance of Music for use by game scripts."""
 music = Music()
+
+"""keyboard - singleton instance of Keyboard for use by game scripts."""
 keyboard = Keyboard()
+
+"""sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()
 
+# extract all key name constants imported from pygame.locals
+# and expose via fields on keys
+_key_constants = [i for i in dir() if i.startswith('K_')]
+for i in _key_constants:
+    const = i[2:].upper()     # remove the initial 'K_'
+    setattr(keys, const, const.lower())
+    setattr(keyboard, const.lower(), False)
+
 def run():
-    #sys.setprofile(trace_function)
+    """run() - entry point containing the core game loop."""
+
+    #sys.setprofile(_trace_function)
     parent = sys.modules['__main__']
     parent.screen = Screen(parent.WIDTH, parent.HEIGHT)
     pygame.display.set_caption(parent.TITLE)
@@ -279,36 +357,19 @@ def run():
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-            # TO_DO: add support for full set of keys
+
             if event.type == KEYDOWN:
                 if event.key == K_q:
                     running = False
-                if event.key == K_LSHIFT:
-                    keyboard.lshift = True
-                if event.key == K_SPACE:
-                    keyboard.space = True
-                if event.key == K_UP:
-                    keyboard.up = True
-                if event.key == K_RIGHT:
-                    keyboard.right = True
-                if event.key == K_DOWN:
-                    keyboard.down = True
-                if event.key == K_LEFT:
-                    keyboard.left = True
-                if event.key == K_a:
-                    keyboard.a = True
-                if event.key == K_d:
-                    keyboard.d = True
-                if event.key == K_k:
-                    keyboard.k = True
-                if event.key == K_m:
-                    keyboard.m = True
-                if event.key == K_s:
-                    keyboard.s = True
-                if event.key == K_w:
-                    keyboard.w = True
-                if event.key == K_z:
-                    keyboard.z = True
+
+                name = pygame.key.name(event.key)
+                if name.startswith('left') and len(name) > 4:
+                    name = 'l' + name[5:]
+                if name.startswith('right') and len(name) > 5:
+                    name = 'r' + name[6:]
+
+                if hasattr(keys, name.upper()):
+                    setattr(keyboard, name, True)
     
         screen.fill(Color("white"))
         parent.update()
@@ -317,12 +378,14 @@ def run():
     
     pygame.quit()
 
-def trace_function(frame, event, arg, indent=[0]):
+def _trace_function(frame, event, arg, indent=[0]):
+    """Internal function to display function entry/exit while debugging."""
+
     if event == "call":
         indent[0] += 2
         print("-" * indent[0] + "> call function", frame.f_code.co_qualname)
     elif event == "return":
         print("<" + "-" * indent[0], "exit function", frame.f_code.co_qualname)
         indent[0] -= 2
-    return trace_function
+    return _trace_function
 

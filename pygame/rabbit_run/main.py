@@ -2,7 +2,7 @@ import sys
 import pygame
 from random import random, randint, choice
 from enum import Enum
-from engine import keyboard, keys, Actor, sounds, music
+from engine import *
 
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
@@ -654,6 +654,4 @@ except:
 state = State.MENU
 game = Game()
 
-#-----------------------
-from engine import run
 run()

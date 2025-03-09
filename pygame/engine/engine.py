@@ -299,13 +299,6 @@ class keys:
     """keys - contains all keyboard key name constants."""
     pass
 
-# extract all key name constants imported from pygame.locals
-# and expose via fields on keys
-_key_constants = [i for i in dir() if i.startswith('K_')]
-for i in _key_constants:
-    const = i[2:].upper()     # remove the initial 'K_'
-    setattr(keys, const, const.lower())
-
 
 class Sounds:
     """Sounds - wraps the Pygame audio mixer."""
@@ -337,6 +330,14 @@ keyboard = Keyboard()
 """sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()
 
+# extract all key name constants imported from pygame.locals
+# and expose via fields on keys
+_key_constants = [i for i in dir() if i.startswith('K_')]
+for i in _key_constants:
+    const = i[2:].upper()     # remove the initial 'K_'
+    setattr(keys, const, const.lower())
+    setattr(keyboard, const.lower(), False)
+
 def run():
     """run() - entry point containing the core game loop."""
 
@@ -362,9 +363,9 @@ def run():
                     running = False
 
                 name = pygame.key.name(event.key)
-                if name.startswith('left'):
+                if name.startswith('left') and len(name) > 4:
                     name = 'l' + name[5:]
-                if name.startswith('right'):
+                if name.startswith('right') and len(name) > 5:
                     name = 'r' + name[6:]
 
                 if hasattr(keys, name.upper()):
