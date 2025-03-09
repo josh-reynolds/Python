@@ -25,12 +25,13 @@ flagging keyboard events in the keyboard object as they occur. The engine will l
 images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'run']
+__version__ = "1.0"
+
 import os
 import sys
 import pygame
 from pygame.locals import *
-
-__version__ = "1.0"
 
 DEBUG_ACTOR = False
 

@@ -1,5 +1,5 @@
 import pygame
-from engine import Actor, music, keyboard, sounds, keys
+from engine import *
 
 WIDTH = 800
 HEIGHT = 480
@@ -84,5 +84,4 @@ def once():
     b.draw()
     print_box(b)
 
-from engine import run
 run()

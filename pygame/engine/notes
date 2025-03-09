@@ -56,7 +56,7 @@ v1.0 (under development)
 * [FIXED] not handling error conditions when loading image files
 * [FIXED] rudimentary debug spew still in place - remove or improve
 * [FIXED] no docstrings at all
-* [.....] no private annotation or consideration of what gets exported
+* [FIXED] no private annotation or consideration of what gets exported
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
 * [     ] only Actor has unit test coverage
