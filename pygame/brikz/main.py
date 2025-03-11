@@ -5,19 +5,61 @@ HEIGHT = 480                 ###
 TITLE = 'Brikz'
 
 class AIControls:         ###
-    pass                  ###
+    def update(self):     ###
+        pass              ###
+
+class KeyboardControls:      ###
+    def fire_pressed(self):
+        pass                  ###
 
 class Game:               ###
     def __init__(self, a):   ###
         pass               ###
+    def update(self):     ###
+        pass              ###
     def draw(self):       ###
         pass              ###
+
+def setup_joystick_controls():
+    global joystick_controls
+    joystick_controls = None            ###
+
+def update_controls():
+    pass                  ###
 
 class State:               ###
     TITLE = None           ###
 
-def update():             ###
-    pass                  ###
+def update():
+    global state, game, total_frames
+    total_frames += 1
+
+    update_controls()
+
+    if state == State.TITLE:
+        ai_controls.update()
+        game.update()
+
+        for controls in (keyboard_controls, joystick_controls):
+            if controls is not None and controls.fire_pressed():
+                game = Game(controls)
+                state = State.PLAY
+                stop_music()
+                break
+
+    elif state == State.PLAY:
+        if game.lives > 0:
+            game.update()
+        else:
+            game.play_sound("game_over")
+            state = State.GAME_OVER
+
+    elif state == State.GAME_OVER:
+        for controls in (keyboard_controls, joystick_controls):
+            if controls is not None and controls.fire_pressed():
+                game = Game(ai_controls)
+                state = State.TITLE
+                play_music("title_theme")
 
 def draw():
     game.draw()
@@ -28,7 +70,9 @@ def draw():
     elif state == State.GAME_OVER:
         screen.blit(f"gameover{(total_frames // 4) % 15}", (WIDTH//2 - 450//2, 450))
 
+keyboard_controls = KeyboardControls()
 ai_controls = AIControls()
+setup_joystick_controls()
 
 state = State.TITLE
 game = Game(ai_controls)
