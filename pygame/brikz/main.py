@@ -6,6 +6,19 @@ WIDTH = 800                  ###
 HEIGHT = 480                 ###
 TITLE = 'Brikz'
 
+
+LEVELS = [0,0,0]       ###
+
+class Mock:      ###
+    def __init__(self):           ###
+        self.shadow = MockShadow()        ###
+    def draw(self):        ###
+        pass                 ###
+
+class MockShadow:           ###
+    def draw(self):        ###
+        pass                 ###
+
 class AIControls:         ###
     def update(self):     ###
         pass              ###
@@ -24,12 +37,54 @@ class Game:
         self.new_level(0)
 
     def new_level(self, a):     ####
-        pass                    ###
+        self.level_num = 0       ###
+        self.portal_frame = 0       ###
+        self.shadow_surface = "placeholder"    ###
+        self.brick_surface = "placeholder"    ###
+        self.barrels =[Mock()]          ###
+        self.balls =[Mock()]          ###
+        self.bullets =[Mock()]          ###
+        self.impacts =[Mock()]          ###
+        self.bat = Mock()                  ###
 
     def update(self):     ###
         pass              ###
-    def draw(self):       ###
-        pass              ###
+
+    def draw(self):
+        screen.blit(f"arena{self.level_num % len(LEVELS)}", (0,0))
+        screen.blit(f"portal_exit{self.portal_frame}", (WIDTH - 70 - 20, HEIGHT - 70))
+        screen.blit(f"portal_meanie00", (110,40))
+        screen.blit(f"portal_meanie10", (440,40))
+
+        screen.surface.set_clip((20, 42, 600, 598))
+
+        screen.blit(self.shadow_surface, (0, 0))
+
+        for obj in self.barrels + self.balls + [self.bat]:
+            obj.shadow.draw()
+
+        screen.blit(self.brick_surface, (0, 0))
+
+        for obj in self.balls + [self.bat] + self.barrels + self.bullets:
+            obj.draw()
+
+        screen.surface.set_clip(None)
+
+        for obj in self.impacts:
+            obj.draw()
+
+        if not self.in_demo_mode():
+            self.draw_score()
+            self.draw_lives()
+
+    def draw_score(self):
+        pass
+
+    def draw_lives(self):
+        pass
+
+    def in_demo_mode(self):
+        pass
 
 def get_joystick_if_exists():
     return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
