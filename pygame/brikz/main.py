@@ -1,3 +1,4 @@
+from enum import Enum
 from engine import *
 
 WIDTH = 800                  ###
@@ -9,6 +10,8 @@ class AIControls:         ###
         pass              ###
 
 class KeyboardControls:      ###
+    def update(self):     ###
+        pass              ###
     def fire_pressed(self):
         pass                  ###
 
@@ -20,15 +23,25 @@ class Game:               ###
     def draw(self):       ###
         pass              ###
 
+def get_joystick_if_exists():
+    pass                       ###
+
 def setup_joystick_controls():
     global joystick_controls
-    joystick_controls = None            ###
+    joystick = get_joystick_if_exists()
+    joystick_controls = JoystickControls(joystick) if joystick is not None else None
 
 def update_controls():
-    pass                  ###
+    keyboard_controls.update()
+    if joystick_controls is None:
+        setup_joystick_controls()
+    if joystick_controls is not None:
+        joystick_controls.update()
 
-class State:               ###
-    TITLE = None           ###
+class State(Enum):
+    TITLE = 1,
+    PLAY = 2,
+    GAME_OVER = 3
 
 def update():
     global state, game, total_frames
