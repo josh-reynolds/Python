@@ -16,9 +16,16 @@ class KeyboardControls:      ###
     def fire_pressed(self):
         pass                  ###
 
-class Game:               ###
-    def __init__(self, a):   ###
-        pass               ###
+class Game:
+    def __init__(self, controls=None, lives=3):
+        self.controls = controls if controls else AIControls()
+        self.lives = lives
+        self.score = 0
+        self.new_level(0)
+
+    def new_level(self, a):     ####
+        pass                    ###
+
     def update(self):     ###
         pass              ###
     def draw(self):       ###
