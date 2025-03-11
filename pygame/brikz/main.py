@@ -6,12 +6,20 @@ WIDTH = 800                  ###
 HEIGHT = 480                 ###
 TITLE = 'Brikz'
 
+PORTAL_ANIMATION_SPEED = 5       ###
 
 LEVELS = [0,0,0]       ###
 
 class Mock:      ###
     def __init__(self):           ###
         self.shadow = MockShadow()        ###
+        self.y = 1             ###
+        self.time = 0                ###
+        self.alive = True              ###
+    def is_portal_transition_complete(self):    ###
+        pass                       ###
+    def update(self):    ###
+        pass            ###
     def draw(self):        ###
         pass                 ###
 
@@ -46,9 +54,56 @@ class Game:
         self.bullets =[Mock()]          ###
         self.impacts =[Mock()]          ###
         self.bat = Mock()                  ###
+        self.portal_active = True         ###
+        self.portal_timer = 10         ###
 
-    def update(self):     ###
-        pass              ###
+    def update(self):
+        for obj in [self.bat] + self.balls:
+            obj.update()
+
+        self.balls = [obj for obj in self.balls if obj.y < HEIGHT]
+
+        if len(self.balls) == 0:
+            if self.lives > 0 or self.in_demo_mode():
+                self.lives -= 1
+                self.balls = [Ball()]
+                self.bat.change_type(BatType.NORMAL)
+
+            self.play_sound("lose_life")
+
+        for obj in self.impacts + self.barrels + self.bullets:
+            obj.update()
+
+        self.impacts = [obj for obj in self.impacts if obj.time < 16]
+        self.barrels = [obj for obj in self.barrels if obj.y < HEIGHT]
+        self.bullets = [obj for obj in self.bullets if obj.alive]
+
+        if self.portal_active:
+            if self.portal_frame < 3:
+                self.portal_timer -= 1
+                if self.portal_timer <= 0:
+                    self.portal_timer = PORTAL_ANIMATION_SPEED
+                    self.portal_frame += 1
+            elif self.bat.is_portal_transition_complete():
+                self.new_level(self.level_num + 1)
+
+        if self.detect_stuck_balls():
+            changed_any = False
+            for row in range(self.num_rows):
+                for col in range(self.num_cols):
+                    if self.bricks[row][col] == 13:
+                        self.bricks[row][col] = 12
+                        self.redraw_brick(col, row)
+                        changed_any = True
+
+            if changed_any:
+                self.play_sound("bat_small", 1)
+
+            if len(self.balls) > 0:
+                self.balls[0].time_since_touched_bat = 0
+
+    def detect_stuck_balls(self):
+        pass                       ###
 
     def draw(self):
         screen.blit(f"arena{self.level_num % len(LEVELS)}", (0,0))
