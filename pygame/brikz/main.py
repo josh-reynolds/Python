@@ -16,6 +16,7 @@ class Mock:      ###
         self.y = 1             ###
         self.time = 0                ###
         self.alive = True              ###
+        self.time_since_damaged_brick = 0                 ###
     def is_portal_transition_complete(self):    ###
         pass                       ###
     def update(self):    ###
@@ -103,7 +104,13 @@ class Game:
                 self.balls[0].time_since_touched_bat = 0
 
     def detect_stuck_balls(self):
-        pass                       ###
+        if len(self.balls) == 0:
+            return False
+        for ball in self.balls:
+            if ball.time_since_damaged_brick < 30 * 60 \
+                    or ball.time_since_touched_bat < 30 * 60:
+                        return False
+        return True
 
     def draw(self):
         screen.blit(f"arena{self.level_num % len(LEVELS)}", (0,0))
