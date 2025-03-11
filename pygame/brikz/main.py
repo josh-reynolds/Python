@@ -78,13 +78,20 @@ class Game:
             self.draw_lives()
 
     def draw_score(self):
-        pass
+        x = 0
+        for digit in str(self.score):
+            image = "digit" + digit
+            screen.blit(image, (x, 50))
+            x += 55
 
     def draw_lives(self):
-        pass
+        x = 0
+        for i in range(self.lives):
+            screen.blit("life", (x, HEIGHT-20))
+            x += 50
 
     def in_demo_mode(self):
-        pass
+        return isinstance(self.controls, AIControls)
 
 def get_joystick_if_exists():
     return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
