@@ -1,0 +1,17 @@
+Starting on Code the Classics Vol. 2. The first project is an Arkanoid clone they call
+'Kinetix.' I'm calling mine 'Brikz.'
+
+This will be based on v1.0 of my Pygame Zero clone engine, any changes required contributing
+to v1.1. I'll follow the same methodology as the previous projects:
+
+1) Starting from the bare minimum project (just stubs for draw() and update()), work bottom-up
+   filling in one stub at a time.
+2) Add new stubs and placeholder assets as necessary to keep it running without errors before 
+   checkin. Add them in the same location relative to other definitions as in the book text.
+3) Once done, again choose the stub furthest down the script and repeat.
+4) One exception - when filling in a class stub, do the ctor first, then resume bottom-up.
+5) Also apply fixes or extensions to the engine as necessary for compatibility as this progresses.
+
+
+
+
