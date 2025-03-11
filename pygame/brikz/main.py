@@ -1,5 +1,6 @@
 from enum import Enum
 import pygame
+from pygame import surface
 from engine import *
 
 WIDTH = 800                  ###
@@ -10,19 +11,8 @@ PORTAL_ANIMATION_SPEED = 5       ###
 
 LEVELS = [0,0,0]       ###
 
-class Mock:      ###
-    def __init__(self):           ###
-        self.shadow = MockShadow()        ###
-        self.y = 1             ###
-        self.time = 0                ###
-        self.alive = True              ###
-        self.time_since_damaged_brick = 0                 ###
-    def is_portal_transition_complete(self):    ###
-        pass                       ###
-    def update(self):    ###
-        pass            ###
-    def draw(self):        ###
-        pass                 ###
+def get_mirrored_level(a):          ###
+    return [['0','0'],['0','0'],['0','0']]              ###
 
 class MockShadow:           ###
     def draw(self):        ###
@@ -38,6 +28,26 @@ class KeyboardControls:      ###
     def fire_pressed(self):
         pass                  ###
 
+class Ball:      ###
+    def __init__(self):           ###
+        self.y = 1             ###
+        self.time_since_damaged_brick = 0                 ###
+        self.shadow = MockShadow()        ###
+    def update(self):    ###
+        pass            ###
+    def draw(self):        ###
+        pass                 ###
+
+class Bat:    ###
+    def __init__(self, a):           ###
+        self.shadow = MockShadow()        ###
+    def is_portal_transition_complete(self):    ###
+        pass                       ###
+    def update(self):    ###
+        pass            ###
+    def draw(self):        ###
+        pass                 ###
+
 class Game:
     def __init__(self, controls=None, lives=3):
         self.controls = controls if controls else AIControls()
@@ -45,18 +55,45 @@ class Game:
         self.score = 0
         self.new_level(0)
 
-    def new_level(self, a):     ####
-        self.level_num = 0       ###
-        self.portal_frame = 0       ###
-        self.shadow_surface = "placeholder"    ###
-        self.brick_surface = "placeholder"    ###
-        self.barrels =[Mock()]          ###
-        self.balls =[Mock()]          ###
-        self.bullets =[Mock()]          ###
-        self.impacts =[Mock()]          ###
-        self.bat = Mock()                  ###
-        self.portal_active = True         ###
-        self.portal_timer = 10         ###
+    def new_level(self, level_num):
+        self.play_sound("start_game")
+
+        if level_num >= len(LEVELS):
+            level_num = 0
+
+        self.brick_surface = surface.Surface((WIDTH, HEIGHT), flags=pygame.SRCALPHA)
+        self.brick_surface.fill((0, 0, 0, 0))
+
+        self.shadow_surface = surface.Surface((WIDTH, HEIGHT), flags=pygame.SRCALPHA)
+        self.shadow_surface.fill((0, 0, 0, 0))
+
+        level = get_mirrored_level(LEVELS[level_num])
+
+        self.num_rows, self.num_cols = len(level), len(level[0])
+
+        self.bricks = [[None if level[y][x] == " "
+                        else int(level[y][x], 16) for x in range(self.num_cols)]
+                       for y in range(self.num_rows)]
+
+        self.bricks_remaining = 0
+        for y in range(self.num_rows):
+            for x in range(self.num_cols):
+                self.redraw_brick(x, y)
+                if self.bricks[y][x] != None and self.bricks[y][x] != 13:
+                    self.bricks_remaining += 1
+
+        self.balls =[Ball()]
+        self.bat = Bat(self.controls)
+
+        self.barrels, self.bullets, self.impacts = [], [], []
+
+        self.level_num = level_num
+        self.portal_active = False
+        self.portal_frame = 0
+        self.portal_timer = 0
+
+    def redraw_brick(self, a, b):              ###
+        pass            ###
 
     def update(self):
         for obj in [self.bat] + self.balls:
@@ -151,6 +188,9 @@ class Game:
         for i in range(self.lives):
             screen.blit("life", (x, HEIGHT-20))
             x += 50
+
+    def play_sound(self, a):         ###
+        pass                          ###
 
     def in_demo_mode(self):
         return isinstance(self.controls, AIControls)
