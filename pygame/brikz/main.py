@@ -1,18 +1,23 @@
 from engine import *
 
-WIDTH = 800
-HEIGHT = 480
+WIDTH = 800                  ###
+HEIGHT = 480                 ###
 TITLE = 'Brikz'
 
-class Game:
-    def draw(self):
-        pass
+class AIControls:         ###
+    pass                  ###
 
-class State:
+class Game:               ###
+    def __init__(self, a):   ###
+        pass               ###
+    def draw(self):       ###
+        pass              ###
+
+class State:               ###
     TITLE = None           ###
 
-def update():
-    pass
+def update():             ###
+    pass                  ###
 
 def draw():
     game.draw()
@@ -23,8 +28,10 @@ def draw():
     elif state == State.GAME_OVER:
         screen.blit(f"gameover{(total_frames // 4) % 15}", (WIDTH//2 - 450//2, 450))
 
+ai_controls = AIControls()
+
 state = State.TITLE
-game = Game()         ###
+game = Game(ai_controls)
 total_frames = 0
 
 run()
