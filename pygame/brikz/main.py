@@ -8,6 +8,11 @@ HEIGHT = 480                 ###
 TITLE = 'Brikz'
 
 PORTAL_ANIMATION_SPEED = 5       ###
+BRICK_WIDTH = 20           ###
+BRICK_HEIGHT = 20           ###
+BRICKS_X_START = 20           ###
+BRICKS_Y_START = 20           ###
+SHADOW_OFFSET = 10           ###
 
 LEVELS = [0,0,0]       ###
 
@@ -92,8 +97,19 @@ class Game:
         self.portal_frame = 0
         self.portal_timer = 0
 
-    def redraw_brick(self, a, b):              ###
-        pass            ###
+    def redraw_brick(self, x, y):
+        screen_x = x * BRICK_WIDTH + BRICKS_X_START
+        screen_y = y * BRICK_HEIGHT + BRICKS_Y_START
+
+        if self.bricks[y][x] != None:
+            brick_image = getattr(images, "brick" + hex(self.bricks[y][x])[2:])
+            self.brick_surface.blit(brick_image, (screen_x, screen_y))
+            self.shadow_surface.blit(images.bricks, (screen_x + SHADOW_OFFSET,
+                                                     screen_y + SHADOW_OFFSET))
+        else:
+            self.brick_surface.fill((0,0,0,0), (screen_x, screen_y, BRICK_WIDTH, BRICK_HEIGHT))
+            self.shadow_surface.fill((0,0,0,0), (screen_x + SHADOW_OFFSET, screen_y + SHADOW_OFFSET,
+                                                 BRICK_WIDTH, BRICK_HEIGHT))
 
     def update(self):
         for obj in [self.bat] + self.balls:
