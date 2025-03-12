@@ -33,6 +33,9 @@ class KeyboardControls:      ###
     def fire_pressed(self):
         pass                  ###
 
+class BatType(Enum):            ###
+    NORMAL = 1,                ###
+
 class Ball:      ###
     def __init__(self):           ###
         self.y = 1             ###
@@ -43,9 +46,16 @@ class Ball:      ###
     def draw(self):        ###
         pass                 ###
 
-class Bat:    ###
-    def __init__(self, a):           ###
-        self.shadow = MockShadow()        ###
+class Bat(Actor):
+    def __init__(self, controls):
+        super().__init__("blank", (320, 590), anchor=("center",15))
+        self.controls = controls
+        self.fire_timer = 0
+        self.current_type = BatType.NORMAL
+        self.target_type = BatType.NORMAL
+        self.frame = 0
+        self.shadow = Actor("blank", (self.x + 16, self.y + 16), anchor=("center", 15))
+
     def is_portal_transition_complete(self):    ###
         pass                       ###
     def update(self):    ###

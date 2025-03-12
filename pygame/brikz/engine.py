@@ -8,7 +8,7 @@ This module contains the following:
     Music - wraps the Pygame music mixer.
     Keyboard - holds flags indicating keyboard state.
     Sounds - wraps the Pygame audio mixer.
-    Images - provides access to images files in ./images.
+    Images - provides access to image files in ./images.
 
     screen - singleton instance of Screen for use by game scripts.
     music - singleton instance of Music for use by game scripts.
@@ -198,7 +198,7 @@ class Actor:
 
 
 class Images:
-    """Images - provides access to images files in ./images."""
+    """Images - provides access to image files in ./images."""
 
     def __init__(self):
         files = []
