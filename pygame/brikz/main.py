@@ -1,6 +1,6 @@
 from enum import Enum, IntEnum
 import pygame
-from pygame import surface
+from pygame import surface, Vector2
 from engine import *
 
 WIDTH = 800                  ###
@@ -16,6 +16,9 @@ SHADOW_OFFSET = 10           ###
 
 BAT_MIN_X = 5         ###
 BAT_MAX_X = 15         ###
+
+BALL_START_SPEED = 5       ###
+BALL_INITIAL_OFFSET = 5       ###
 
 LEVELS = [0,0,0]       ###
 
@@ -43,15 +46,22 @@ class KeyboardControls:      ###
 class BatType(IntEnum):
     NORMAL = 1,                ###
 
-class Ball:      ###
-    def __init__(self):           ###
-        self.y = 1             ###
-        self.time_since_damaged_brick = 0                 ###
-        self.shadow = MockShadow()        ###
+class Ball(Actor):
+    def __init__(self, x=0, y=0, dir=Vector2(0,0), stuck_to_bat=True, speed=BALL_START_SPEED):
+        super().__init__("ball0", (0,0))
+        self.x = x
+        self.y = y
+        self.dir = Vector2(dir)
+        self.stuck_to_bat = stuck_to_bat
+        self.bat_offset = BALL_INITIAL_OFFSET
+        self.speed = speed
+        self.speed_up_timer = 0
+        self.time_since_touchd_bat = 0
+        self.time_since_damaged_brick = 0
+        self.shadow = Actor("balls", (self.x + 16, self.y + 16))
+
     def update(self):    ###
         pass            ###
-    def draw(self):        ###
-        pass                 ###
 
 class Bat(Actor):
     def __init__(self, controls):
