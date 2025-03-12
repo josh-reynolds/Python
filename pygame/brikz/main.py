@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 import pygame
 from pygame import surface
 from engine import *
@@ -14,6 +14,9 @@ BRICKS_X_START = 20           ###
 BRICKS_Y_START = 20           ###
 SHADOW_OFFSET = 10           ###
 
+BAT_MIN_X = 5         ###
+BAT_MAX_X = 15         ###
+
 LEVELS = [0,0,0]       ###
 
 def get_mirrored_level(a):          ###
@@ -26,6 +29,10 @@ class MockShadow:           ###
 class AIControls:         ###
     def update(self):     ###
         pass              ###
+    def fire_down(self):    ###
+        pass              ###
+    def get_x(self):    ###
+        return 1         ###
 
 class KeyboardControls:      ###
     def update(self):     ###
@@ -33,7 +40,7 @@ class KeyboardControls:      ###
     def fire_pressed(self):
         pass                  ###
 
-class BatType(Enum):            ###
+class BatType(IntEnum):
     NORMAL = 1,                ###
 
 class Ball:      ###
@@ -56,12 +63,47 @@ class Bat(Actor):
         self.frame = 0
         self.shadow = Actor("blank", (self.x + 16, self.y + 16), anchor=("center", 15))
 
-    def is_portal_transition_complete(self):    ###
-        pass                       ###
-    def update(self):    ###
-        pass            ###
-    def draw(self):        ###
-        pass                 ###
+    def update(self):
+        if self.target_type != BatType.NORMAL \
+                and self.target_type == self.current_type and self.frame < 12:
+                    self.frame += 1
+        
+        if self.target_type != self.current_type and self.frame > 0:
+            self.frame -= 1
+
+        if self.frame == 0:
+            self.current_type = self.target_type
+
+        self.image = f"bat{int(self.current_type)}{self.frame // 4}"
+
+        self.fire_timer -= 1
+        if self.controls.fire_down() and self.current_type == BatType.GUN \
+                and self.frame == 12 and self.fire_timer <= 0:
+                    self.fire_timer = FIRE_INTERVAL
+                    self.image += "f"
+                    game.bullets.append(Bullet((self.x - 20, self.y), 0))
+                    game.bullets.append(Bullet((self.x + 20, self.y), 1))
+                    game.play_sound("laser")
+
+        new_x = self.x + self.controls.get_x()
+
+        min_x = BAT_MIN_X + (self.width // 2)
+        new_x = max(min_x, new_x)
+
+        if not game.portal_active:
+            max_x = BAT_MAX_X - (self.width // 2)
+            new_x = min(max_x, new_x)
+
+        self.x = new_x
+
+        if game.portal_active and new_x == BAT_MAX_X - (self.width // 2):
+            self.portal_animation_active = True
+            self.shadow.x = self.x + 16
+            self.shadow.y = self.y + 16
+            self.shadow.image = f"bats{str(int(self.current_type))}{self.frame // 4}"
+
+    def is_portal_transition_complete(self):
+        return self.x - (self.width // 2) >= WIDTH
 
 class Game:
     def __init__(self, controls=None, lives=3):
