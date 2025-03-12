@@ -12,6 +12,21 @@ to v1.1. I'll follow the same methodology as the previous projects:
 4) One exception - when filling in a class stub, do the ctor first, then resume bottom-up.
 5) Also apply fixes or extensions to the engine as necessary for compatibility as this progresses.
 
+-----------
+Going smoothly as with previous projects. A few clarifications to the procedure above:
 
+1) If a class name is not apparent while filling in code, create a generic throwaway Mock class, to 
+   be removed once all references to it have been properly coded to the real class.
+
+2) If the original code eats exceptions (with an except: pass clause), temporarily replace with
+   a print statement to permit debugging and stubbing.
+
+3) Similarly, execute various code paths at one's discretion, by generating events via key presses
+   for instance, or setting boolean flags to True. Python won't complain about lines that won't
+   get executed, and the more coverage, the quicker the stubs will flesh out.
+
+4) At some point creating placeholder assets will become tedious. You can drop in the official assets
+   at any time.
+   
 
 

@@ -189,8 +189,12 @@ class Game:
             screen.blit("life", (x, HEIGHT-20))
             x += 50
 
-    def play_sound(self, a):         ###
-        pass                          ###
+    def play_sound(self, name, count=1):
+        if not self.in_demo_mode():
+            try:
+                getattr(sounds, name + str(randint(0, count - 1))).play()
+            except Exception as e:
+                print(e)
 
     def in_demo_mode(self):
         return isinstance(self.controls, AIControls)
