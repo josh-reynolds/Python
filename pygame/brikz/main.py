@@ -26,6 +26,12 @@ LEVELS = [0,0,0]       ###
 def get_mirrored_level(a):          ###
     return [['0','0'],['0','0'],['0','0']]              ###
 
+class KeyboardControls:      ###
+    def update(self):     ###
+        pass              ###
+    def fire_pressed(self):
+        pass                  ###
+
 class AIControls:         ###
     def update(self):     ###
         pass              ###
@@ -36,14 +42,8 @@ class AIControls:         ###
     def fire_pressed(self):
         pass                  ###
 
-class KeyboardControls:      ###
-    def update(self):     ###
-        pass              ###
-    def fire_pressed(self):
-        pass                  ###
-
 class BatType(IntEnum):
-    NORMAL = 1,                ###
+    NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
 
 class Ball(Actor):
     def __init__(self, x=0, y=0, dir=Vector2(0,0), stuck_to_bat=True, speed=BALL_START_SPEED):
@@ -196,8 +196,8 @@ class Bat(Actor):
             self.shadow.y = self.y + 16
             self.shadow.image = f"bats{str(int(self.current_type))}{self.frame // 4}"
 
-    def change_type(self, a):    ###
-        pass                    ###
+    def change_type(self, type):
+        self.target_type = type
 
     def is_portal_transition_complete(self):
         return self.x - (self.width // 2) >= WIDTH
