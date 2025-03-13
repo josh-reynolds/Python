@@ -1,3 +1,4 @@
+from abc import ABC
 from enum import Enum, IntEnum
 from random import randint
 import pygame
@@ -28,11 +29,18 @@ LEVELS = [0,0,0]       ###
 def get_mirrored_level(a):          ###
     return [['0','0'],['0','0'],['0','0']]              ###
 
-class Controls:        ###
-    def update(self):     ###
-        pass              ###
+class Controls(ABC):
+    def __init__(self):
+        self.fire_previously_down = False
+        self.is_fire_pressed = False
+
+    def update(self):
+        fire_down = self.fire_down()
+        self.is_fire_pressed = fire_down and not self.fire_previously_down
+        self.fire_previously_down = fire_down
+
     def fire_pressed(self):
-        pass                  ###
+        return self.is_fire_pressed
 
 class KeyboardControls(Controls):
     def get_x(self):
@@ -167,6 +175,9 @@ class Ball(Actor):
                                 Ball.collision_sound(CollisionType.BAT_EDGE)
 
         self.shadow.pos = (self.x + 16, self.y + 16)
+
+    def get_bat_bounce_vector(self):           ###
+        return (0,0)                           ###
 
 class Bat(Actor):
     def __init__(self, controls):
