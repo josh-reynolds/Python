@@ -1,4 +1,5 @@
 from enum import Enum, IntEnum
+from random import randint
 import pygame
 from pygame import surface, Vector2
 from engine import *
@@ -16,6 +17,7 @@ SHADOW_OFFSET = 10           ###
 
 BAT_MIN_X = 5         ###
 BAT_MAX_X = 15         ###
+BAT_SPEED = 15         ###
 
 BALL_START_SPEED = 5       ###
 BALL_INITIAL_OFFSET = 5       ###
@@ -27,7 +29,10 @@ def get_mirrored_level(a):          ###
     return [['0','0'],['0','0'],['0','0']]              ###
 
 class Controls:        ###
-    pass               ###
+    def update(self):     ###
+        pass              ###
+    def fire_pressed(self):
+        pass                  ###
 
 class KeyboardControls:      ###
     def update(self):     ###
@@ -40,14 +45,17 @@ class AIControls(Controls):
         super().__init__()
         self.offset = 0
 
-    def update(self):     ###
-        pass              ###
-    def fire_down(self):    ###
-        pass              ###
-    def get_x(self):    ###
-        return 1         ###
-    def fire_pressed(self):
-        pass                  ###
+    def get_x(self):
+        if game.portal_active:
+            return BAT_SPEED
+        else:
+            self.offset += randint(-1,1)
+            self.offset = min(max(-40, self.offset), 40)
+            return min(BAT_SPEED,
+                       max(-BAT_SPEED, game.balls[0].x - (game.bat.x + self.offset)))
+
+    def fire_down(self):
+        return randint(0,5) == 0
 
 class BatType(IntEnum):
     NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
