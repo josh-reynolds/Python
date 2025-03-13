@@ -34,11 +34,17 @@ class Controls:        ###
     def fire_pressed(self):
         pass                  ###
 
-class KeyboardControls:      ###
-    def update(self):     ###
-        pass              ###
-    def fire_pressed(self):
-        pass                  ###
+class KeyboardControls(Controls):
+    def get_x(self):
+        if keyboard.left:
+            return -BAT_SPEED
+        elif keyboard.right:
+            return BAT_SPEED
+        else:
+            return 0
+
+    def fire_down(self):
+        return keyboard.space
 
 class AIControls(Controls):
     def __init__(self):
