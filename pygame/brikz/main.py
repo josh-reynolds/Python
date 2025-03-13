@@ -1,7 +1,7 @@
 import math
 from abc import ABC
 from enum import Enum, IntEnum
-from random import randint, random
+from random import randint, random, uniform
 import pygame
 from pygame import surface, Vector2
 from engine import *
@@ -16,6 +16,7 @@ BAT_TOP_EDGE = 590
 BALL_INITIAL_OFFSET = 10
 BALL_START_SPEED, BALL_MIN_SPEED, BALL_MAX_SPEED = 5, 4, 11
 BALL_SPEED_UP_INTERVAL = 10 * 60
+BALL_SPEED_UP_INTERVAL_FAST = 15 * 60
 BALL_FAST_SPEED_THRESHOLD = 7
 BALL_RADIUS = 7
 BRICKS_X_START, BRICKS_Y_START = 20, 100
@@ -91,6 +92,8 @@ class CollisionType(Enum):          ###
     BRICK = 0,                      ###
     WALL = 1,                      ###
     BAT = 2,                      ###
+    INDESTRUCTIBLE_BRICK = 3,                      ###
+    BAT_EDGE = 4,                      ###
 
 class Barrel:            ###
     def __init__(self, a):       ###
@@ -224,8 +227,22 @@ class Ball(Actor):
         else:
             return False, Vector2(0, -1)
 
-    def collision_sound(self):                ###
-        pass                                  ###
+    @staticmethod
+    def collision_sound(collision_type):
+        if collision_type == CollisionType.BRICK or collision_type == CollisionType.INDESTRUCTIBLE_BRICK:
+            game.play_sound("hit_brick")
+        elif collision_type == CollisionType.WALL:
+            game.play_sound("hit_wall")
+        elif collision_type == CollisionType.BAT:
+            if game.bat.current_type == BatType.MAGNET:
+                game.play_sound("ball_stick")
+            else:
+                game.play_sound("hit_fast")
+        elif collision_type == CollisionType.BAT_EDGE:
+            if game.bat.current_type == BatType.MAGNET:
+                game.play_sound("ball_stick")
+            else:
+                game.play_sound("hit_veryfast")
 
 class Bat(Actor):
     def __init__(self, controls):
