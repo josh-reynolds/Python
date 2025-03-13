@@ -1,3 +1,4 @@
+import math
 from abc import ABC
 from enum import Enum, IntEnum
 from random import randint
@@ -10,6 +11,8 @@ TITLE = 'Brikz'
 
 BAT_SPEED = 8
 BAT_MIN_X, BAT_MAX_X = 35, 605
+TOP_EDGE, RIGHT_EDGE, LEFT_EDGE = 50, 617, 23
+BAT_TOP_EDGE = 590
 BALL_INITIAL_OFFSET = 10
 BALL_START_SPEED, BALL_MIN_SPEED, BALL_MAX_SPEED = 5, 4, 11
 BALL_SPEED_UP_INTERVAL = 10 * 60
@@ -85,6 +88,16 @@ class BatType(IntEnum):
 
 class CollisionType(Enum):          ###
     BRICK = 0,                      ###
+    WALL = 1,                      ###
+    BAT = 2,                      ###
+
+class Impact:         ###
+    def __init__(self, a, b):   ###
+        self.time = 0           ###
+    def update(self):    ###
+        pass                  ###
+    def draw(self):    ###
+        pass                  ###
 
 class Ball(Actor):
     def __init__(self, x=0, y=0, dir=Vector2(0,0), stuck_to_bat=True, speed=BALL_START_SPEED):
@@ -132,13 +145,13 @@ class Ball(Actor):
                     self.dir.x = -self.dir.x
                     self.x += self.dir.x
 
-                if c[1]:
-                    game.impacts.append(Impact(c[0], 0xc))
+                    if c[1]:
+                        game.impacts.append(Impact(c[0], 0xc))
 
-                if c[2] == CollisionType.BRICK:
-                    self.time_since_damaged_brick = 0
+                    if c[2] == CollisionType.BRICK:
+                        self.time_since_damaged_brick = 0
 
-                Ball.collision_sound(c[2])
+                    Ball.collision_sound(c[2])
 
                 oy = self.y
                 self.y += self.dir.y
@@ -187,6 +200,9 @@ class Ball(Actor):
                                 Ball.collision_sound(CollisionType.BAT_EDGE)
 
         self.shadow.pos = (self.x + 16, self.y + 16)
+
+    def increment_speed(self):         ###
+        pass                       ###
 
     def get_bat_bounce_vector(self):
         dx = self.x - game.bat.x
@@ -255,6 +271,9 @@ class Bat(Actor):
     def is_portal_transition_complete(self):
         return self.x - (self.width // 2) >= WIDTH
 
+def brick_collide(a, b, c, d, e):    ####
+    pass                ###
+
 class Game:
     def __init__(self, controls=None, lives=3):
         self.controls = controls if controls else AIControls()
@@ -313,8 +332,53 @@ class Game:
             self.shadow_surface.fill((0,0,0,0), (screen_x + SHADOW_OFFSET, screen_y + SHADOW_OFFSET,
                                                  BRICK_WIDTH, BRICK_HEIGHT))
 
-    def collide(self, a, b, c):    ###
-        return (None, None, None)            ###
+    def collide(self, x, y, dir_, r=BALL_RADIUS):
+        dx,dy = dir_
+        if dx < 0 and x < LEFT_EDGE + r:
+            return (LEFT_EDGE, y), True, CollisionType.WALL
+        if dx > 0 and x > RIGHT_EDGE - r:
+            return (RIGHT_EDGE,y), True, CollisionType.WALL
+        if dy < 0 and y < TOP_EDGE + r:
+            return (x, TOP_EDGE), True, CollisionType.WALL
+
+        x0 = max(0, math.floor((x-BRICKS_X_START-r)/BRICK_WIDTH))
+        y0 = max(0, math.floor((y-BRICKS_Y_START-r)/BRICK_HEIGHT))
+        x1 = min(self.num_cols - 1, math.floor((x-BRICKS_X_START+r) / BRICK_WIDTH))
+        y1 = min(self.num_rows - 1, math.floor((y-BRICKS_Y_START+r) / BRICK_HEIGHT))
+
+        for yb in range(y0, y1+1):
+            for xb in range(x0, x1+1):
+                if self.bricks[yb][xb] != None:
+                    c = brick_collide(x, y, xb, yb, r)
+                    if c is not None:
+                        center_pos = (xb * BRICK_WIDTH + BRICKS_X_START + BRICK_WIDTH // 2,
+                                      yb * BRICK_HEIGHT + BRICKS_Y_START + BRICK_HEIGHT // 2)
+                        collision_type = CollisionType.BRICK
+
+                        if self.bricks[yb][xb] >= 12:
+                            if self.bricks[yb][xb] == 13:
+                                collision_type = CollisionType.INDESTRUCTIBLE_BRICK
+                            self.impacts.append(Impact(center_pos, 13))
+                            if self.bricks[yb][xb] == 12:
+                                self.bricks[yb][xb] = 11
+                        else:
+                            self.impacts.append(Impact(center_pos, self.bricks[yb][xb]))
+
+                            if random() < POWERUP_CHANCE:
+                                self.barrels.append(Barrel(center_pos))
+
+                            self.bricks[yb][xb] = None
+                            selfredraw_brick(xb, yb)
+
+                            self.bricks_remaining -= 1
+                            if self.bricks_remaining == 0:
+                                self.activate_portal()
+
+                            self.score += 10
+
+                        return c, False, collision_type
+
+        return None
 
     def update(self):
         for obj in [self.bat] + self.balls:
