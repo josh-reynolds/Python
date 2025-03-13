@@ -5,24 +5,20 @@ import pygame
 from pygame import surface, Vector2
 from engine import *
 
-WIDTH = 800                  ###
-HEIGHT = 480                 ###
+WIDTH, HEIGHT = 640, 640
 TITLE = 'Brikz'
 
-PORTAL_ANIMATION_SPEED = 5       ###
-BRICK_WIDTH = 20           ###
-BRICK_HEIGHT = 20           ###
-BRICKS_X_START = 20           ###
-BRICKS_Y_START = 20           ###
-SHADOW_OFFSET = 10           ###
-
-BAT_MIN_X = 5         ###
-BAT_MAX_X = 15         ###
-BAT_SPEED = 15         ###
-
-BALL_START_SPEED = 5       ###
-BALL_INITIAL_OFFSET = 5       ###
-BALL_RADIUS = 5       ###
+BAT_SPEED = 8
+BAT_MIN_X, BAT_MAX_X = 35, 605
+BALL_INITIAL_OFFSET = 10
+BALL_START_SPEED, BALL_MIN_SPEED, BALL_MAX_SPEED = 5, 4, 11
+BALL_SPEED_UP_INTERVAL = 10 * 60
+BALL_FAST_SPEED_THRESHOLD = 7
+BALL_RADIUS = 7
+BRICKS_X_START, BRICKS_Y_START = 20, 100
+BRICK_WIDTH, BRICK_HEIGHT = 40, 20
+SHADOW_OFFSET = 10
+PORTAL_ANIMATION_SPEED = 5
 
 LEVELS = [
         [" "*8," "*8," "*8,
@@ -87,6 +83,9 @@ class AIControls(Controls):
 class BatType(IntEnum):
     NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
 
+class CollisionType(Enum):          ###
+    BRICK = 0,                      ###
+
 class Ball(Actor):
     def __init__(self, x=0, y=0, dir=Vector2(0,0), stuck_to_bat=True, speed=BALL_START_SPEED):
         super().__init__("ball0", (0,0))
@@ -97,7 +96,7 @@ class Ball(Actor):
         self.bat_offset = BALL_INITIAL_OFFSET
         self.speed = speed
         self.speed_up_timer = 0
-        self.time_since_touchd_bat = 0
+        self.time_since_touched_bat = 0
         self.time_since_damaged_brick = 0
         self.shadow = Actor("balls", (self.x + 16, self.y + 16))
 
@@ -197,6 +196,9 @@ class Ball(Actor):
             return True, vec
         else:
             return False, Vector2(0, -1)
+
+    def collision_sound(self):                ###
+        pass                                  ###
 
 class Bat(Actor):
     def __init__(self, controls):
@@ -310,6 +312,9 @@ class Game:
             self.brick_surface.fill((0,0,0,0), (screen_x, screen_y, BRICK_WIDTH, BRICK_HEIGHT))
             self.shadow_surface.fill((0,0,0,0), (screen_x + SHADOW_OFFSET, screen_y + SHADOW_OFFSET,
                                                  BRICK_WIDTH, BRICK_HEIGHT))
+
+    def collide(self, a, b, c):    ###
+        return (None, None, None)            ###
 
     def update(self):
         for obj in [self.bat] + self.balls:
