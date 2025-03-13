@@ -176,8 +176,14 @@ class Ball(Actor):
 
         self.shadow.pos = (self.x + 16, self.y + 16)
 
-    def get_bat_bounce_vector(self):           ###
-        return (0,0)                           ###
+    def get_bat_bounce_vector(self):
+        dx = self.x - game.bat.x
+        w = (game.bat.width // 2) + BALL_RADIUS
+        if abs(dx) < w:
+            vec = Vector2(dx / w, -0.5).normalize()
+            return True, vec
+        else:
+            return False, Vector2(0, -1)
 
 class Bat(Actor):
     def __init__(self, controls):
