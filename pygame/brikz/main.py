@@ -26,13 +26,20 @@ LEVELS = [0,0,0]       ###
 def get_mirrored_level(a):          ###
     return [['0','0'],['0','0'],['0','0']]              ###
 
+class Controls:        ###
+    pass               ###
+
 class KeyboardControls:      ###
     def update(self):     ###
         pass              ###
     def fire_pressed(self):
         pass                  ###
 
-class AIControls:         ###
+class AIControls(Controls):
+    def __init__(self):
+        super().__init__()
+        self.offset = 0
+
     def update(self):     ###
         pass              ###
     def fire_down(self):    ###
