@@ -1,7 +1,7 @@
 import math
 from abc import ABC
 from enum import Enum, IntEnum
-from random import randint
+from random import randint, random
 import pygame
 from pygame import surface, Vector2
 from engine import *
@@ -21,6 +21,7 @@ BALL_RADIUS = 7
 BRICKS_X_START, BRICKS_Y_START = 20, 100
 BRICK_WIDTH, BRICK_HEIGHT = 40, 20
 SHADOW_OFFSET = 10
+POWERUP_CHANCE = 0.2
 PORTAL_ANIMATION_SPEED = 5
 
 LEVELS = [
@@ -90,6 +91,16 @@ class CollisionType(Enum):          ###
     BRICK = 0,                      ###
     WALL = 1,                      ###
     BAT = 2,                      ###
+
+class Barrel:            ###
+    def __init__(self, a):       ###
+        self.x = 1                 ###
+        self.y = 1                 ###
+        self.shadow = Actor("balls", (self.x + 16, self.y + 16))     ###
+    def update(self):    ###
+        pass                  ###
+    def draw(self):    ###
+        pass                  ###
 
 class Impact:         ###
     def __init__(self, a, b):   ###
@@ -271,8 +282,39 @@ class Bat(Actor):
     def is_portal_transition_complete(self):
         return self.x - (self.width // 2) >= WIDTH
 
-def brick_collide(a, b, c, d, e):    ####
-    pass                ###
+def brick_collide(x, y, grid_x, grid_y, r):
+    x0, y0 = x - r, y - r
+    x1, y1 = x + r, y + r
+
+    xb0 = grid_x * BRICK_WIDTH + BRICKS_X_START
+    yb0 = grid_y * BRICK_HEIGHT + BRICKS_Y_START
+    xb1 = xb0 + BRICK_WIDTH
+    yb1 = yb0 + BRICK_HEIGHT
+    
+    xbc = (xb0+xb1) // 2
+    ybc = (yb0+yb1) // 2
+
+    if x1 > xb0 and x0 < xb1 and y > yb0 and y < yb1:
+        if x < xbc:
+            return xb0, y
+        else:
+            return xb1, y
+
+    if x > xb0 and x < xb1 and y1 > yb0 and y0 < yb1:
+        if y < ybc:
+            return x, yb0
+        else:
+            return x, yb1
+
+    pos_vector = Vector2(x, y)
+
+    closest = min([(xb0,yb0), (xb1,yb0), (xb0,yb1), (xb1,yb1)],
+                  key=lambda p: (pos_vector - Vector2(p)).length_squared())
+
+    if (pos_vector - Vector2(closest)).length() < r:
+        return closest
+    else:
+        return None
 
 class Game:
     def __init__(self, controls=None, lives=3):
@@ -368,7 +410,7 @@ class Game:
                                 self.barrels.append(Barrel(center_pos))
 
                             self.bricks[yb][xb] = None
-                            selfredraw_brick(xb, yb)
+                            self.redraw_brick(xb, yb)
 
                             self.bricks_remaining -= 1
                             if self.bricks_remaining == 0:
