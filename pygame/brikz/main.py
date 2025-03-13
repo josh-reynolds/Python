@@ -1,7 +1,7 @@
 import math
 from abc import ABC
 from enum import Enum, IntEnum
-from random import randint, random, uniform
+from random import randint, random, uniform, choice
 import pygame
 from pygame import surface, Vector2
 from engine import *
@@ -85,6 +85,17 @@ class AIControls(Controls):
     def fire_down(self):
         return randint(0,5) == 0
 
+class Powerup:       ###
+    EXTEND_BAT = 0,      ###
+    GUN = 1,      ###
+    SMALL_BAT = 2,      ###
+    MAGNET = 3,      ###
+    MULTI_BALL = 4,      ###
+    FAST_BALLS = 5,      ###
+    SLOW_BALLS = 6,      ###
+    EXTRA_LIFE = 7,      ###
+    PORTAL = 8,      ###
+
 class BatType(IntEnum):
     NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
 
@@ -95,14 +106,21 @@ class CollisionType(Enum):          ###
     INDESTRUCTIBLE_BRICK = 3,                      ###
     BAT_EDGE = 4,                      ###
 
-class Barrel:            ###
-    def __init__(self, a):       ###
-        self.x = 1                 ###
-        self.y = 1                 ###
-        self.shadow = Actor("balls", (self.x + 16, self.y + 16))     ###
+class Barrel(Actor):
+    def __init__(self, pos):
+        super().__init__("blank", pos)
+
+        weights = {Powerup.EXTEND_BAT: 6, Powerup.GUN:6, Powerup.SMALL_BAT:6,
+                   Powerup.MAGNET:6, Powerup.MULTI_BALL:6, Powerup.FAST_BALLS:6,
+                   Powerup.SLOW_BALLS:6, Powerup.EXTRA_LIFE:2,
+                   Powerup.PORTAL:0 if game.bricks_remaining > 20 or game.portal_active else 20}
+
+        types = [type_ for type_, weight in weights.items() for i in range(weight)]
+        self.type = choice(types)
+        self.time = 0
+        self.shadow = Actor("barrels", (self.x + SHADOW_OFFSET, self.y + SHADOW_OFFSET))
+
     def update(self):    ###
-        pass                  ###
-    def draw(self):    ###
         pass                  ###
 
 class Impact(Actor):
