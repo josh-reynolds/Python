@@ -105,13 +105,15 @@ class Barrel:            ###
     def draw(self):    ###
         pass                  ###
 
-class Impact:         ###
-    def __init__(self, a, b):   ###
-        self.time = 0           ###
-    def update(self):    ###
-        pass                  ###
-    def draw(self):    ###
-        pass                  ###
+class Impact(Actor):
+    def __init__(self, pos, type_):
+        super().__init__("blank", pos)
+        self.type = type_
+        self.time = 0
+
+    def update(self):
+        self.image = "impact" + hex(self.type)[2:] + str(self.time // 4)
+        self.time += 1
 
 class Ball(Actor):
     def __init__(self, x=0, y=0, dir=Vector2(0,0), stuck_to_bat=True, speed=BALL_START_SPEED):
