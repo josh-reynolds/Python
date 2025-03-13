@@ -215,8 +215,8 @@ class Ball(Actor):
 
         self.shadow.pos = (self.x + 16, self.y + 16)
 
-    def increment_speed(self):         ###
-        pass                       ###
+    def increment_speed(self):
+        self.speed = min(self.speed + 1, BALL_MAX_SPEED)
 
     def get_bat_bounce_vector(self):
         dx = self.x - game.bat.x
