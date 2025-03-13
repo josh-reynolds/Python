@@ -24,10 +24,23 @@ BALL_START_SPEED = 5       ###
 BALL_INITIAL_OFFSET = 5       ###
 BALL_RADIUS = 5       ###
 
-LEVELS = [0,0,0]       ###
+LEVELS = [
+        [" "*8," "*8," "*8,
+         "     a  ",
+         "    a7a ",
+         "     a  ",
+         "    a55 ",
+         "    444 ",
+         "   333a ",
+         "  222a  ",
+         " 111a   ",
+         "   11aa ",
+         "    111 ",
+         "    6   ",
+         "     6  "]]   ###
 
-def get_mirrored_level(a):          ###
-    return [['0','0'],['0','0'],['0','0']]              ###
+def get_mirrored_level(level):
+    return [row + row[-2::-1] for row in level]
 
 class Controls(ABC):
     def __init__(self):
