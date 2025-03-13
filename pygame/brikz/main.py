@@ -19,15 +19,12 @@ BAT_MAX_X = 15         ###
 
 BALL_START_SPEED = 5       ###
 BALL_INITIAL_OFFSET = 5       ###
+BALL_RADIUS = 5       ###
 
 LEVELS = [0,0,0]       ###
 
 def get_mirrored_level(a):          ###
     return [['0','0'],['0','0'],['0','0']]              ###
-
-class MockShadow:           ###
-    def draw(self):        ###
-        pass                 ###
 
 class AIControls:         ###
     def update(self):     ###
@@ -36,6 +33,8 @@ class AIControls:         ###
         pass              ###
     def get_x(self):    ###
         return 1         ###
+    def fire_pressed(self):
+        pass                  ###
 
 class KeyboardControls:      ###
     def update(self):     ###
@@ -60,8 +59,93 @@ class Ball(Actor):
         self.time_since_damaged_brick = 0
         self.shadow = Actor("balls", (self.x + 16, self.y + 16))
 
-    def update(self):    ###
-        pass            ###
+    def update(self):
+        self.time_since_damaged_brick += 1
+
+        if self.stuck_to_bat:
+            self.x = game.bat.x + self.bat_offset
+            self.y = game.bat.y - BALL_RADIUS
+
+            if game.controls.fire_pressed():
+                self.stuck_to_bat = False
+                _, self.dir = self.get_bat_bounce_vector()
+        else:
+            self.time_since_touched_bat += 1
+
+            self.speed_up_timer += 1
+            if self.time_since_touched_bat > 5 * 60:
+                self.speed_up_timer += 1
+            interval = BALL_SPEED_UP_INTERVAL \
+                    if self.speed < BALL_FAST_SPEED_THRESHOLD else BALL_SPEED_UP_INTERVAL_FAST
+            interval2 = interval * 0.75
+            if self.speed_up_timer > interval or (self.speed_up_timer > interval2
+                                                  and self.time_since_touched_bat > interval2):
+                self.increment_speed()
+                self.speed_up_timer = 0
+
+            for i in range(self.speed):
+                self.x += self.dir.x
+
+                c = game.collide(self.x, self.y, self.dir)
+                if c is not None:
+                    self.dir.x = -self.dir.x
+                    self.x += self.dir.x
+
+                if c[1]:
+                    game.impacts.append(Impact(c[0], 0xc))
+
+                if c[2] == CollisionType.BRICK:
+                    self.time_since_damaged_brick = 0
+
+                Ball.collision_sound(c[2])
+
+                oy = self.y
+                self.y += self.dir.y
+
+                c = game.collide(self.x, self.y, self.dir)
+                if c is not None:
+                    self.dir.y = -self.dir.y
+                    self.y += self.dir.y
+
+                    if c[1]:
+                        game.impacts.append(Impact(c[0], 0xc))
+
+                    if c[2] == CollisionType.BRICK:
+                        self.time_since_damaged_brick = 0
+
+                    Ball.collision_sound(c[2])
+
+                elif self.dir.y > 0:
+                    if oy + BALL_RADIUS <= BAT_TOP_EDGE \
+                            and self.y + BALL_RADIUS > BAT_TOP_EDGE:
+                                collided_x, new_dir = self.get_bat_bounce_vector()
+                                if collided_x:
+                                    if game.bat.current_type == BatType.MAGNET:
+                                        self.stuck_to_bat = True
+                                        self.bat_offset = self.x - game.bat.x
+                                        self.dir = Vector2(0,0)
+                                    else:
+                                        self.dir = new_dir
+
+                                    self.time_since_touched_bat = 0
+                                    game.impacts.append(Impact((self.x, self.y), 0xc))
+                                    Ball.collision_sound(CollisionType.BAT)
+
+                                    if self.stuck_to_bat:
+                                        break
+
+                    elif self.y + BALL_RADIUS > BAT_TOP_EDGE \
+                         and self.y < BAT_TOP_EDGE + 15:
+                            collided_x, _ = self.get_bat_bounce_vector()
+                            if collided_x:
+                                dx = 1 if self.x > game.bat.x else -1
+                                self.dir = Vector2(dx, uniform(-0.3, -0.1)).normalize()
+                                self.time_since_touched_bat = 0
+                                game.impacts.append(Impact((self.x, BAT_TOP_EDGE), 0xc))
+                                self.speed = min(self.speed + 4, BALL_MAX_SPEED)
+                                Ball.collision_sound(CollisionType.BAT_EDGE)
+
+        self.shadow.pos = (self.x + 16, self.y + 16)
 
 class Bat(Actor):
     def __init__(self, controls):
@@ -111,6 +195,9 @@ class Bat(Actor):
             self.shadow.x = self.x + 16
             self.shadow.y = self.y + 16
             self.shadow.image = f"bats{str(int(self.current_type))}{self.frame // 4}"
+
+    def change_type(self, a):    ###
+        pass                    ###
 
     def is_portal_transition_complete(self):
         return self.x - (self.width // 2) >= WIDTH
