@@ -85,7 +85,7 @@ class AIControls(Controls):
     def fire_down(self):
         return randint(0,5) == 0
 
-class Powerup:       ###
+class Powerup(IntEnum):       ###
     EXTEND_BAT = 0,      ###
     GUN = 1,      ###
     SMALL_BAT = 2,      ###
@@ -99,6 +99,10 @@ class Powerup:       ###
 class BatType(IntEnum):
     NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
 
+POWERUP_BAT_TYPES = { Powerup.EXTEND_BAT: BatType.EXTENDED }
+
+POWERUP_SOUNDS = {Powerup.EXTEND_BAT: "bat_extend"}     ###
+
 class CollisionType(Enum):          ###
     BRICK = 0,                      ###
     WALL = 1,                      ###
@@ -110,7 +114,7 @@ class Barrel(Actor):
     def __init__(self, pos):
         super().__init__("blank", pos)
 
-        weights = {Powerup.EXTEND_BAT: 6, Powerup.GUN:6, Powerup.SMALL_BAT:6,
+        weights = {Powerup.EXTEND_BAT:6, Powerup.GUN:6, Powerup.SMALL_BAT:6,
                    Powerup.MAGNET:6, Powerup.MULTI_BALL:6, Powerup.FAST_BALLS:6,
                    Powerup.SLOW_BALLS:6, Powerup.EXTRA_LIFE:2,
                    Powerup.PORTAL:0 if game.bricks_remaining > 20 or game.portal_active else 20}
@@ -120,8 +124,37 @@ class Barrel(Actor):
         self.time = 0
         self.shadow = Actor("barrels", (self.x + SHADOW_OFFSET, self.y + SHADOW_OFFSET))
 
-    def update(self):    ###
-        pass                  ###
+    def update(self):
+        self.time += 1
+        self.y += 1
+
+        w = (game.bat.width // 2) + BALL_RADIUS
+
+        if self.y >= BAT_TOP_EDGE - 10 and self.y <= BAT_TOP_EDGE + 30 \
+                and abs(self.x - game.bat.x) < w:
+                    game.impacts.append(Impact((self.x, self.y - 11), 14))
+
+                    if self.type in POWERUP_SOUNDS:
+                        game.play_sound(POWERUP_SOUNDS[self.type])
+
+                    self.y = HEIGHT + 100
+
+                    if self.type in POWERUP_BAT_TYPES:
+                        game.bat.change_type(POWERUP_BAT_TYPES[self.type])
+                    elif self.type == Powerup.MULTI_BALL:
+                        game.balls = [j for b in game.balls for j in b.generate_multiballs()]
+                    elif self.type == Powerup.FAST_BALLS:
+                        game.change_all_ball_speeds(3)
+                    elif self.type == Powerup.SLOW_BALLS:
+                        game.change_all_ball_speeds(-3)
+                    elif self.type == Powerup.PORTAL:
+                        game.activate_portal()
+                    elif self.type == Powerup.EXTRA_LIFE:
+                        game.lives += 1
+
+        self.image = f"barrel{int(self.type)}{self.time // 10 % 10}"
+
+        self.shadow_pos = (self.x + SHADOW_OFFSET, self.y + SHADOW_OFFSET)
 
 class Impact(Actor):
     def __init__(self, pos, type_):
