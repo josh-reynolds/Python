@@ -85,30 +85,27 @@ class AIControls(Controls):
     def fire_down(self):
         return randint(0,5) == 0
 
-class Powerup(IntEnum):       ###
-    EXTEND_BAT = 0,      ###
-    GUN = 1,      ###
-    SMALL_BAT = 2,      ###
-    MAGNET = 3,      ###
-    MULTI_BALL = 4,      ###
-    FAST_BALLS = 5,      ###
-    SLOW_BALLS = 6,      ###
-    EXTRA_LIFE = 7,      ###
-    PORTAL = 8,      ###
+class Powerup(IntEnum):
+    EXTEND_BAT, GUN, SMALL_BAT, MAGNET, MULTI_BALL = 0, 1, 2, 3, 4
+    FAST_BALLS, SLOW_BALLS, PORTAL, EXTRA_LIFE = 5, 6, 7, 8
 
 class BatType(IntEnum):
     NORMAL, MAGNET, GUN, EXTENDED, SMALL = 0, 1, 2, 3, 4
 
-POWERUP_BAT_TYPES = { Powerup.EXTEND_BAT: BatType.EXTENDED }
+POWERUP_BAT_TYPES = { 
+                     Powerup.EXTEND_BAT: BatType.EXTENDED, Powerup.GUN: BatType.GUN,
+                     Powerup.SMALL_BAT: BatType.SMALL, Powerup.MAGNET: BatType.MAGNET,
+                     }
 
-POWERUP_SOUNDS = {Powerup.EXTEND_BAT: "bat_extend"}     ###
+POWERUP_SOUNDS = {
+        Powerup.EXTEND_BAT: "bat_extend", Powerup.GUN: "bat_gun",
+        Powerup.MAGNET: "magnet", Powerup.SMALL_BAT: "bat_small",
+        Powerup.EXTRA_LIFE: "extra_life", Powerup.FAST_BALLS: "speed_up",
+        Powerup.SLOW_BALLS: "powerup", Powerup.MULTI_BALL: "multiball",
+        }
 
-class CollisionType(Enum):          ###
-    BRICK = 0,                      ###
-    WALL = 1,                      ###
-    BAT = 2,                      ###
-    INDESTRUCTIBLE_BRICK = 3,                      ###
-    BAT_EDGE = 4,                      ###
+class CollisionType(Enum):
+    WALL, BAT, BAT_EDGE, BRICK, INDESTRUCTIBLE_BRICK = 0, 1, 2, 3, 4
 
 class Barrel(Actor):
     def __init__(self, pos):
