@@ -49,4 +49,4 @@ uncovering more missing stubs to go after. Plays pretty well so far, but seeing 
 * [     ] Barrel shadows aren't moving along with them
 * [     ] Music isn't playing (easy fix, haven't added that block yet...)
 * [     ] Ball is not centered on Bat at start (not certain this is an issue)
-* [     ] Ball can get trapped moving horizontally at Bat level
+* [     ] Ball can get trapped moving horizontally (usually at Bat level, but can be anywhere via multiball)

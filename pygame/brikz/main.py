@@ -279,7 +279,13 @@ class Ball(Actor):
             return False, Vector2(0, -1)
 
     def generate_multiballs(self):
-        pass                                 ###
+        balls = []
+        for i in range(3):
+            vec = self.dir.rotate(i * 120)
+            if abs(vec.y) < 0.15:
+                vec = Vector2(uniform(-1,1), -1).normalize()
+            balls.append(Ball(self.x, self.y, vec, False, self.speed))
+        return balls
 
     @staticmethod
     def collision_sound(collision_type):
@@ -494,7 +500,8 @@ class Game:
         return None
 
     def activate_portal(self):
-        pass              ###
+        self.portal_active = True
+        self.play_sound("portal_exit")
 
     def update(self):
         for obj in [self.bat] + self.balls:
@@ -597,8 +604,9 @@ class Game:
             except Exception as e:
                 print(e)
 
-    def change_all_ball_speeds(self, a):        ###
-        pass                                    ###
+    def change_all_ball_speeds(self, change):
+        for b in self.balls:
+            b.speed = min(max(b.speed + change, BALL_MIN_SPEED), BALL_MAX_SPEED)
 
     def in_demo_mode(self):
         return isinstance(self.controls, AIControls)
@@ -663,8 +671,13 @@ def draw():
     elif state == State.GAME_OVER:
         screen.blit(f"gameover{(total_frames // 4) % 15}", (WIDTH//2 - 450//2, 450))
 
-def play_music(a):        ###
-    pass                  ###
+def play_music(name):
+    try:
+        music.play(name)
+    #except Exception:
+        #pass
+    except Exception as e:     ####
+        print(e)               ####
 
 def stop_music():
     try:
