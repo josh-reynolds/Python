@@ -28,5 +28,16 @@ Going smoothly as with previous projects. A few clarifications to the procedure 
 4) At some point creating placeholder assets will become tedious. You can drop in the official assets
    at any time.
    
+-----------
+First pass is complete (other than filling in all the level data - that's tedious, so I just have the 
+first level in place for now). The AI has been playing the game on the menu screen for a while now, and
+that has uncovered lots of stubs and placeholders, which were subsequently filled in.
 
+I haven't pushed through to the other game states yet - that will be next. Then book scrub, GitHub scrub,
+official resources, and playtest/debugging.
 
+OK, so it turns out that stop_music() was the only missing code invoked by moving to State.PLAY. And it
+required a small extension to the engine interface, so that's good. Very tedious getting to State.GAME_OVER
+'naturally' via playtest, as there are a _ton_ of missing barrel placeholders even now. And I'm ignoring 
+the sound engine errors regarding missing sound files (they don't crash the game out). So maybe it's
+time to bring in the official resources.

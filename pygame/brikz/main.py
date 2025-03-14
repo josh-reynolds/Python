@@ -653,6 +653,14 @@ def draw():
     elif state == State.GAME_OVER:
         screen.blit(f"gameover{(total_frames // 4) % 15}", (WIDTH//2 - 450//2, 450))
 
+def stop_music():
+    try:
+        music.stop()
+    #except Exception:
+        #pass
+    except Exception as e:     ####
+        print(e)               ####
+
 keyboard_controls = KeyboardControls()
 ai_controls = AIControls()
 setup_joystick_controls()
