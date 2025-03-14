@@ -41,3 +41,12 @@ required a small extension to the engine interface, so that's good. Very tedious
 'naturally' via playtest, as there are a _ton_ of missing barrel placeholders even now. And I'm ignoring 
 the sound engine errors regarding missing sound files (they don't crash the game out). So maybe it's
 time to bring in the official resources.
+
+-----------
+Resources in place, which allows smoother playtesting. Doing a little of that before book scrub - it's
+uncovering more missing stubs to go after. Plays pretty well so far, but seeing a few minor issues:
+
+* [     ] Barrel shadows aren't moving along with them
+* [     ] Music isn't playing (easy fix, haven't added that block yet...)
+* [     ] Ball is not centered on Bat at start (not certain this is an issue)
+* [     ] Ball can get trapped moving horizontally at Bat level

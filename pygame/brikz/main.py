@@ -23,6 +23,7 @@ BRICKS_X_START, BRICKS_Y_START = 20, 100
 BRICK_WIDTH, BRICK_HEIGHT = 40, 20
 SHADOW_OFFSET = 10
 POWERUP_CHANCE = 0.2
+FIRE_INTERVAL = 30
 PORTAL_ANIMATION_SPEED = 5
 
 LEVELS = [
@@ -277,6 +278,9 @@ class Ball(Actor):
         else:
             return False, Vector2(0, -1)
 
+    def generate_multiballs(self):
+        pass                                 ###
+
     @staticmethod
     def collision_sound(collision_type):
         if collision_type == CollisionType.BRICK or collision_type == CollisionType.INDESTRUCTIBLE_BRICK:
@@ -489,6 +493,9 @@ class Game:
 
         return None
 
+    def activate_portal(self):
+        pass              ###
+
     def update(self):
         for obj in [self.bat] + self.balls:
             obj.update()
@@ -590,6 +597,9 @@ class Game:
             except Exception as e:
                 print(e)
 
+    def change_all_ball_speeds(self, a):        ###
+        pass                                    ###
+
     def in_demo_mode(self):
         return isinstance(self.controls, AIControls)
 
@@ -652,6 +662,9 @@ def draw():
         screen.blit(f"start{(total_frames // 4) % 13}", (WIDTH//2 - 250//2, 530))
     elif state == State.GAME_OVER:
         screen.blit(f"gameover{(total_frames // 4) % 15}", (WIDTH//2 - 450//2, 450))
+
+def play_music(a):        ###
+    pass                  ###
 
 def stop_music():
     try:
