@@ -391,13 +391,7 @@ class Bat(Actor):
         if self.controls.fire_down() and self.current_type == BatType.GUN \
                 and self.frame == 12 and self.fire_timer <= 0:
                     self.fire_timer = FIRE_INTERVAL
-                    ### temporarily working around engine issue - implementation is
-                    ### not identical to pgz
                     self.image += "f"
-                    #img_name = self.image_name
-                    #img_name += "f"
-                    #self.image = img_name
-                    ###
                     game.bullets.append(Bullet((self.x - 20, self.y), 0))
                     game.bullets.append(Bullet((self.x + 20, self.y), 1))
                     game.play_sound("laser")
@@ -493,10 +487,10 @@ class Game:
                 if self.bricks[y][x] != None and self.bricks[y][x] != 13:
                     self.bricks_remaining += 1
 
-        self.balls =[Ball()]
+        self.balls = [Ball()]
         self.bat = Bat(self.controls)
 
-        self.barrels, self.bullets, self.impacts = [], [], []
+        self.bullets, self.barrels, self.impacts = [], [], []
 
         self.level_num = level_num
         self.portal_active = False
@@ -522,7 +516,7 @@ class Game:
         if dx < 0 and x < LEFT_EDGE + r:
             return (LEFT_EDGE, y), True, CollisionType.WALL
         if dx > 0 and x > RIGHT_EDGE - r:
-            return (RIGHT_EDGE,y), True, CollisionType.WALL
+            return (RIGHT_EDGE, y), True, CollisionType.WALL
         if dy < 0 and y < TOP_EDGE + r:
             return (x, TOP_EDGE), True, CollisionType.WALL
 
@@ -740,18 +734,22 @@ def draw():
 def play_music(name):
     try:
         music.play(name)
-    #except Exception:
-        #pass
-    except Exception as e:     ####
-        print(e)               ####
+    except Exception:
+        pass
 
 def stop_music():
     try:
         music.stop()
-    #except Exception:
-        #pass
-    except Exception as e:     ####
-        print(e)               ####
+    except Exception:
+        pass
+
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 1024)
+    play_music("title_theme")
+    music.set_volume(0.3)
+except Exception:
+    pass
 
 keyboard_controls = KeyboardControls()
 ai_controls = AIControls()

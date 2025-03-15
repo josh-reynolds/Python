@@ -47,7 +47,7 @@ Resources in place, which allows smoother playtesting. Doing a little of that be
 uncovering more missing stubs to go after. Plays pretty well so far, but seeing a few minor issues:
 
 * [FIXED] Barrel shadows aren't moving along with them
-* [     ] Music isn't playing (easy fix, haven't added that block yet...)
+* [FIXED] Music isn't playing (easy fix, haven't added that block yet...)
 * [     ] Ball is not centered on Bat at start (not certain this is an issue)
 * [     ] Ball can get trapped moving horizontally (usually at Bat level, but can be anywhere via multiball)
 
@@ -61,4 +61,7 @@ My implementation of the Actor.image property returned a Surface on get, but acc
 has worked so far, but simple fix for this one. Minor internal changes needed. Question is whether this
 creates a compat risk, but we'll figure that out later.
 
+-----------
+Book scrub is complete, except the level data. Need to fill that in, scrub against GitHub, and fix the issues
+listed above. I've aleady done a lot of playtesting during development and it looks good overall.
 
