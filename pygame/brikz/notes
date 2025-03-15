@@ -46,7 +46,11 @@ time to bring in the official resources.
 Resources in place, which allows smoother playtesting. Doing a little of that before book scrub - it's
 uncovering more missing stubs to go after. Plays pretty well so far, but seeing a few minor issues:
 
-* [     ] Barrel shadows aren't moving along with them
+* [FIXED] Barrel shadows aren't moving along with them
 * [     ] Music isn't playing (easy fix, haven't added that block yet...)
 * [     ] Ball is not centered on Bat at start (not certain this is an issue)
 * [     ] Ball can get trapped moving horizontally (usually at Bat level, but can be anywhere via multiball)
+
+Found the barrel shadow issue - simple typo, had shadow_pos instead of shadow.pos. Fixed.
+
+All stubs are filled in, so now it's time for the book scrub.

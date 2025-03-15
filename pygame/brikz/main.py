@@ -152,7 +152,7 @@ class Barrel(Actor):
 
         self.image = f"barrel{int(self.type)}{self.time // 10 % 10}"
 
-        self.shadow_pos = (self.x + SHADOW_OFFSET, self.y + SHADOW_OFFSET)
+        self.shadow.pos = (self.x + SHADOW_OFFSET, self.y + SHADOW_OFFSET)
 
 class Impact(Actor):
     def __init__(self, pos, type_):
