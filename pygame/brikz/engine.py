@@ -79,7 +79,7 @@ class Actor:
     def draw(self):
         if DEBUG_ACTOR: print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
 
-        screen.blit(self.image, self.rect.topleft)
+        screen.blit(self._image, self.rect.topleft)
 
     def collidepoint(self, point):
         if DEBUG_ACTOR: print(f"collidepoint({point})")
@@ -92,7 +92,7 @@ class Actor:
 
     @property
     def image(self):
-        return self._image
+        return self.image_name
 
     @image.setter
     def image(self, image_name):
@@ -167,9 +167,9 @@ class Actor:
     def calculate_anchor(self):
         if DEBUG_ACTOR: print("calculate_anchor()")
 
-        iw = self.image.get_width()
+        iw = self._image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
-        ih = self.image.get_height()
+        ih = self._image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
         if str(self._anchor[0]).isnumeric():

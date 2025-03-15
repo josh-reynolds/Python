@@ -1,10 +1,25 @@
+import sys
 import math
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum, IntEnum
 from random import randint, random, uniform, choice
 import pygame
 from pygame import surface, Vector2
 from engine import *
+
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [1,1]:
+    print(f"This game requires at least version 1.1 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH, HEIGHT = 640, 640
 TITLE = 'Brikz'
@@ -23,7 +38,7 @@ BRICKS_X_START, BRICKS_Y_START = 20, 100
 BRICK_WIDTH, BRICK_HEIGHT = 40, 20
 SHADOW_OFFSET = 10
 POWERUP_CHANCE = 0.2
-FIRE_INTERVAL = 30
+BULLET_SPEED, FIRE_INTERVAL = 8, 30
 PORTAL_ANIMATION_SPEED = 5
 
 LEVELS = [
@@ -54,6 +69,14 @@ class Controls(ABC):
         self.is_fire_pressed = fire_down and not self.fire_previously_down
         self.fire_previously_down = fire_down
 
+    @abstractmethod
+    def get_x(self):
+        pass
+
+    @abstractmethod
+    def fire_down(self):
+        pass
+
     def fire_pressed(self):
         return self.is_fire_pressed
 
@@ -68,6 +91,28 @@ class KeyboardControls(Controls):
 
     def fire_down(self):
         return keyboard.space
+
+class JoystickControls(Controls):
+    def __init__(self, joystick):
+        super().__init__()
+        self.joystck = joystick
+        joystick.init()
+
+    def get_x(self):
+        if self.joystick.get_numhats() > 0 and self.joystck.get_hat(0)[0] != 0:
+            return self.joystick.get_hat(0)[0] * BAT_SPEED
+
+        axis_value = self.joystick.get_axis(0)
+        if abs(axis_value) < 0.2:
+            return 0
+        else:
+            return axis_value * BAT_SPEED
+
+    def fire_down(self):
+        if selfjoystick.get_numbuttons() <= 0:
+            print("Warning: controller does not have any buttons!")
+            return False
+        return self.joystick.get_button(0) != 0
 
 class AIControls(Controls):
     def __init__(self):
@@ -107,6 +152,21 @@ POWERUP_SOUNDS = {
 
 class CollisionType(Enum):
     WALL, BAT, BAT_EDGE, BRICK, INDESTRUCTIBLE_BRICK = 0, 1, 2, 3, 4
+
+class Bullet(Actor):
+    def __init__(self, pos, side):
+        super().__init__(f"bullet{side}", pos)
+        self.alive = True
+
+    def update(self):
+        self.y -= BULLET_SPEED
+
+        c = game.collide(self.x, self.y, Vector2(0, -1), 2)
+        if c is not None:
+            self.alive = False
+            game.impacts.append(Impact(self.pos, 15))
+            if c[2] == CollisionType.BRICK or c[2] == CollisionType.INDESTRUCTIBLE_BRICK:
+                game.play_sound("bullet_hit", 4)
 
 class Barrel(Actor):
     def __init__(self, pos):
@@ -331,7 +391,13 @@ class Bat(Actor):
         if self.controls.fire_down() and self.current_type == BatType.GUN \
                 and self.frame == 12 and self.fire_timer <= 0:
                     self.fire_timer = FIRE_INTERVAL
+                    ### temporarily working around engine issue - implementation is
+                    ### not identical to pgz
                     self.image += "f"
+                    #img_name = self.image_name
+                    #img_name += "f"
+                    #self.image = img_name
+                    ###
                     game.bullets.append(Bullet((self.x - 20, self.y), 0))
                     game.bullets.append(Bullet((self.x + 20, self.y), 1))
                     game.play_sound("laser")

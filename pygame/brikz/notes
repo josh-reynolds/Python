@@ -54,3 +54,11 @@ uncovering more missing stubs to go after. Plays pretty well so far, but seeing 
 Found the barrel shadow issue - simple typo, had shadow_pos instead of shadow.pos. Fixed.
 
 All stubs are filled in, so now it's time for the book scrub.
+
+* [FIXED] engine implementation of Actor.image doesn't allow += string operation in Bat.update()
+
+My implementation of the Actor.image property returned a Surface on get, but accepted a String on set. That
+has worked so far, but simple fix for this one. Minor internal changes needed. Question is whether this
+creates a compat risk, but we'll figure that out later.
+
+
