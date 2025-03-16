@@ -65,3 +65,11 @@ creates a compat risk, but we'll figure that out later.
 Book scrub is complete, except the level data. Need to fill that in, scrub against GitHub, and fix the issues
 listed above. I've aleady done a lot of playtesting during development and it looks good overall.
 
+-----------
+Starting on the GitHub scrub. Interesting to note that they have more 'sensible' layout choices than in the 
+book. Makes sense, really. They assign constants one per line, while the book does lots of tuple expansion.
+And they lay out the level data clearly, rather than running it all together as in the book. I'm not going
+to totally reformat as part of the scrub - really just tackling errors and omissions - but where it makes
+sense I will.
+
+Level data is done. That's probably the largest piece I haven't gotten to yet.
