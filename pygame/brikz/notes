@@ -73,3 +73,16 @@ to totally reformat as part of the scrub - really just tackling errors and omiss
 sense I will.
 
 Level data is done. That's probably the largest piece I haven't gotten to yet.
+
+-----------
+Finished scrubbing against GitHub sources. Caught a handful of typos. And looks like one in their code as
+well - on line 1154, they have 'state = state.TITLE' but the second state should be capitalized.
+
+Just need to review open issues an do a little more playtesting, and this one is complete.
+
+Both issues are still present. The ball position one might be due to my Actor implementation, and how
+I'm calculating anchors. Not 100% certain it matches pgz. The second one is less clear. They have code
+to catch whether a ball is infinitely bouncing between two indestructible bricks, and to prevent
+horizontal vectors after multiball - and my code matches. But this is still happening regularly. One
+stretch - they import Pygame.math.Vector2, while I am using Pygame.Vector2. Would be surprising if this 
+matters, but maybe? (Of course, could play their version and see if the bug is present there too...)

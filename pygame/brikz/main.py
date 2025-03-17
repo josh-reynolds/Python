@@ -186,11 +186,11 @@ class KeyboardControls(Controls):
 class JoystickControls(Controls):
     def __init__(self, joystick):
         super().__init__()
-        self.joystck = joystick
+        self.joystick = joystick
         joystick.init()
 
     def get_x(self):
-        if self.joystick.get_numhats() > 0 and self.joystck.get_hat(0)[0] != 0:
+        if self.joystick.get_numhats() > 0 and self.joystick.get_hat(0)[0] != 0:
             return self.joystick.get_hat(0)[0] * BAT_SPEED
 
         axis_value = self.joystick.get_axis(0)
@@ -500,9 +500,10 @@ class Bat(Actor):
 
         if game.portal_active and new_x == BAT_MAX_X - (self.width // 2):
             self.portal_animation_active = True
-            self.shadow.x = self.x + 16
-            self.shadow.y = self.y + 16
-            self.shadow.image = f"bats{str(int(self.current_type))}{self.frame // 4}"
+
+        self.shadow.x = self.x + 16
+        self.shadow.y = self.y + 16
+        self.shadow.image = f"bats{str(int(self.current_type))}{self.frame // 4}"
 
     def change_type(self, type):
         self.target_type = type
@@ -736,7 +737,7 @@ class Game:
             self.draw_lives()
 
     def draw_score(self):
-        x = 0
+        x = 15
         for digit in str(self.score):
             image = "digit" + digit
             screen.blit(image, (x, 50))
