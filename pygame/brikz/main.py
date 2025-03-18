@@ -4,7 +4,8 @@ from abc import ABC, abstractmethod
 from enum import Enum, IntEnum
 from random import randint, random, uniform, choice
 import pygame
-from pygame import surface, Vector2
+from pygame import surface
+from pygame.math import Vector2
 from engine import *
 
 if sys.version_info < (3,6):

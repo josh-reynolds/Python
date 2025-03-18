@@ -48,8 +48,8 @@ uncovering more missing stubs to go after. Plays pretty well so far, but seeing 
 
 * [FIXED] Barrel shadows aren't moving along with them
 * [FIXED] Music isn't playing (easy fix, haven't added that block yet...)
-* [     ] Ball is not centered on Bat at start (not certain this is an issue)
-* [     ] Ball can get trapped moving horizontally (usually at Bat level, but can be anywhere via multiball)
+* [BY DESIGN] Ball is not centered on Bat at start (not certain this is an issue)
+* [WON'T FIX] Ball can get trapped moving horizontally (usually at Bat level, but can be anywhere via multiball)
 
 Found the barrel shadow issue - simple typo, had shadow_pos instead of shadow.pos. Fixed.
 
@@ -86,3 +86,14 @@ to catch whether a ball is infinitely bouncing between two indestructible bricks
 horizontal vectors after multiball - and my code matches. But this is still happening regularly. One
 stretch - they import Pygame.math.Vector2, while I am using Pygame.Vector2. Would be surprising if this 
 matters, but maybe? (Of course, could play their version and see if the bug is present there too...)
+
+-----------
+OK, investigated the two remaining issues. The first is by design, nothing to do with my Anchor 
+implementation. They have a constant, BALL_INITIAL_OFFSET, that governs placement of the ball on the
+bat. Default value is 10. Set this to zero and the ball is centered. Not sure why they want this, but
+it's working as planned.
+
+As for the second one, I shifted to pygame.math.Vector2 and no difference (as noted above, would be
+alarming if this actually did anything). I can't fix without deviating from the text, so I'm going to
+leave it be for now. If I come back to this project, or borrow for anything similar in the future, 
+should address. Possibly give the ball a tiny nudge if it is traveling in a perfectly flat vector.
