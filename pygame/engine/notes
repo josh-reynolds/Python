@@ -57,8 +57,24 @@ v1.0 (released)
 * [FIXED] rudimentary debug spew still in place - remove or improve
 * [FIXED] no docstrings at all
 * [FIXED] no private annotation or consideration of what gets exported
+* [DEFER] no docstrings for class methods
+* [DEFER] only Actor has debug spew coverage
+* [DEFER] only Actor has unit test coverage
+* [DEFER] font defaults are hard-coded in Painter class and not customizeable
+* [DEFER] blit code duplication between Painter.text() and Screen.blit()
+* [DEFER] only partial positioning implemented for Painter.text()
 
-v1.1 (under development with Brikz)
+v1.1 (released with Brikz)
+----------------------------------------
+* [DEFER] no docstrings for class methods
+* [DEFER] only Actor has debug spew coverage
+* [DEFER] only Actor has unit test coverage
+* [DEFER] font defaults are hard-coded in Painter class and not customizeable
+* [DEFER] blit code duplication between Painter.text() and Screen.blit()
+* [DEFER] only partial positioning implemented for Painter.text()
+* [DEFER] duplication between Images, _load_image(), and Screen
+
+v1.2 (under development with Invader)
 ----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
@@ -66,6 +82,7 @@ v1.1 (under development with Brikz)
 * [     ] font defaults are hard-coded in Painter class and not customizeable
 * [     ] blit code duplication between Painter.text() and Screen.blit()
 * [     ] only partial positioning implemented for Painter.text()
+* [     ] duplication between Images, _load_image(), and Screen
 
 ----------------------------------------
 # image + anchor -> anchor_value

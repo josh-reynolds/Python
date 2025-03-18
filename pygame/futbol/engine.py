@@ -8,12 +8,14 @@ This module contains the following:
     Music - wraps the Pygame music mixer.
     Keyboard - holds flags indicating keyboard state.
     Sounds - wraps the Pygame audio mixer.
+    Images - provides access to image files in ./images.
 
     screen - singleton instance of Screen for use by game scripts.
     music - singleton instance of Music for use by game scripts.
     keyboard - singleton instance of Keyboard for use by game scripts.
     keys - contains all keyboard key name constants.
     sounds - singleton instance of Sounds for use by game scripts.
+    images - singleton instance of Images for use by game scripts.
 
     run() - entry point containing the core game loop.
 
@@ -25,8 +27,8 @@ flagging keyboard events in the keyboard object as they occur. The engine will l
 images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
-__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'run']
-__version__ = "1.0"
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
+__version__ = "1.1"
 
 import os
 import sys
@@ -77,7 +79,7 @@ class Actor:
     def draw(self):
         if DEBUG_ACTOR: print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
 
-        screen.blit(self.image, self.rect.topleft)
+        screen.blit(self._image, self.rect.topleft)
 
     def collidepoint(self, point):
         if DEBUG_ACTOR: print(f"collidepoint({point})")
@@ -90,7 +92,7 @@ class Actor:
 
     @property
     def image(self):
-        return self._image
+        return self.image_name
 
     @image.setter
     def image(self, image_name):
@@ -165,9 +167,9 @@ class Actor:
     def calculate_anchor(self):
         if DEBUG_ACTOR: print("calculate_anchor()")
 
-        iw = self.image.get_width()
+        iw = self._image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
-        ih = self.image.get_height()
+        ih = self._image.get_height()
         ys = {"top":0, "center":ih//2, "bottom":ih}
 
         if str(self._anchor[0]).isnumeric():
@@ -193,6 +195,23 @@ class Actor:
     @property
     def center(self):
         return self.rect.center
+
+
+class Images:
+    """Images - provides access to image files in ./images."""
+
+    def __init__(self):
+        files = []
+        for entry in os.listdir('./images/'):
+            if os.path.isfile('./images/' + entry):
+                name, extension = entry.split('.')
+                if extension == 'png' or extension == 'gif' or extension == 'jpg':
+                    files.append((name,extension))
+
+        for file in files:
+            filename = './images/' + file[0] + '.' + file[1]
+            setattr(self, file[0], pygame.image.load(filename))
+
 
 class Screen:
     """Screen - wraps the Pygame screen surface."""
@@ -272,6 +291,9 @@ class Music:
         pygame.mixer.music.load(filename)
         pygame.mixer.music.play(-1)     # repeat indefinitely
 
+    def stop(self):
+        pygame.mixer.music.stop()
+
     def set_volume(self, volume):
         pygame.mixer.music.set_volume(volume)
 
@@ -329,6 +351,9 @@ keyboard = Keyboard()
 
 """sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()
+
+"""images - singleton instance of Images for use by game scripts."""
+images = Images()
 
 # extract all key name constants imported from pygame.locals
 # and expose via fields on keys
