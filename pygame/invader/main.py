@@ -19,10 +19,24 @@ class KeyboardControls:
             self.previously_down[button] = button_down
 
     def button_down(self, button):
-        pass                              ###
+        if button == 0:
+            return keyboard.space
 
     def button_pressed(self, button):
         return self.is_pressed[button]
+
+class Player:
+    def __init__(self, a):        ###
+        self.lives = 3                 ###
+        pass            ###
+
+class Game:
+    def __init__(self, a):        ###
+        self.player = a             ###
+    def update(self):
+        pass                 ###
+    def draw(self):
+        pass              ###
 
 class State(Enum):
     TITLE = 1
