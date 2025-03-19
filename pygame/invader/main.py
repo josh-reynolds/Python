@@ -5,15 +5,22 @@ WIDTH = 960
 HEIGHT = 540
 TITLE = "Invader"
 
-class KeyboardControls:         ###
+class KeyboardControls:
+    NUM_BUTTONS = 1
+
+    def __init__(self):
+        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+
     def update(self):
         pass                        ###
     def button_pressed(self, a):    ###
         pass                         ###
 
 class State(Enum):
-    TITLE = 1,
-    ####
+    TITLE = 1
+    PLAY = 2
+    GAME_OVER = 3
 
 def update():
     global state, game, state_timer
