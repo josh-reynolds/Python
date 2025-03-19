@@ -1,4 +1,5 @@
 from enum import Enum
+import pygame
 from engine import *
 
 WIDTH = 960
@@ -30,9 +31,27 @@ class Player:
         self.lives = 3                 ###
         pass            ###
 
+class Radar:
+    pass              ###
+
 class Game:
-    def __init__(self, a):        ###
-        self.player = a             ###
+    def __init__(self, player):
+        self.player = player
+        self.radar = Radar()
+        self.enemies, self.humans, self.lasers, self.bullets = [], [], [], []
+        self.score = 0
+        self.wave = 0
+        self.wave_timer = 0
+        self.timer = 0
+        self.player_camera_offset_x = WIDTH / 3
+        self.terrain_surface = images.terrain
+        self.terrain_mask = pygame.mask.from_surface(self.terrain_surface)
+        self.new_wave()
+        play_music("ambience")
+
+    def new_wave(self):
+        pass               ###
+
     def update(self):
         pass                 ###
     def draw(self):
@@ -86,6 +105,9 @@ def draw():
     elif state == State.GAME_OVER:
         game.dxraw()
         draw_text("GAME OVER", WIDTH // 2, (HEIGHT // 2) - 100, True)
+
+def play_music(a):               ###
+    pass                         ###
 
 keyboard_controls = KeyboardControls()
 
