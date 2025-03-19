@@ -13,9 +13,16 @@ class KeyboardControls:
         self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
 
     def update(self):
-        pass                        ###
-    def button_pressed(self, a):    ###
-        pass                         ###
+        for button in range(KeyboardControls.NUM_BUTTONS):
+            button_down = self.button_down(button)
+            self.is_pressed[button] = button_down and not self.previously_down[button]
+            self.previously_down[button] = button_down
+
+    def button_down(self, button):
+        pass                              ###
+
+    def button_pressed(self, button):
+        return self.is_pressed[button]
 
 class State(Enum):
     TITLE = 1
