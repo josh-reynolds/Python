@@ -11,6 +11,10 @@ TITLE = "Invader"
 LEVEL_WIDTH = 500               ###
 TERRAIN_OFFSET_Y = 5               ###
 
+class Mock:                    ###
+    def draw(self):               ###
+        pass                     ###
+
 class KeyboardControls:
     NUM_BUTTONS = 1
 
@@ -34,16 +38,25 @@ class KeyboardControls:
 class Player:
     def __init__(self, a):        ###
         self.lives = 3                 ###
+        self.shields = 3                 ###
+        self.extra_life_tokens = 3                 ###
         self.facing_x = 1          ###
         self.velocity = Vector2(0,0)    ###
         self.x = 1                   ###
         self.y = 1                   ###
         self.tilt_y = 1                   ###
+        self.blip = Mock()            ###
     def draw(self, a, b):               ###
         pass                     ###
 
 class Radar:
-    pass              ###
+    def __init__(self):
+        self.x = 1                   ###
+        self.y = 1                   ###
+        self.width = 10              ###
+        self.height = 10              ###
+    def draw(self):
+        pass                     ###
 
 class Game:
     def __init__(self, player):
@@ -97,7 +110,47 @@ class Game:
         self.draw_ui()
 
     def draw_ui(self):
-        pass              ###
+        self.radar.draw()
+
+        screen.surface.set_clip((self.radar.x - self.radar.width / 2, self.radar.y,
+                                 self.radar.width, self.radar.height))
+
+        for enemy in self.enemies:
+            if enemy.state == EnemyState.ALIVE:
+                enemy.blip.draw()
+
+        for human in self.humans:
+            human.blip.draw()
+
+        self.player.blip.draw()
+
+        screen.surface.set_clip(None)
+
+        for i in range(self.player.lives):
+            screen.blit("life", (20 + 20 * i, 21))
+
+        for i in range(self.player.shields):
+            screen.blit("armor", (20 + 20 * i, 52))
+
+        for i in range(self.player.extra_life_tokens):
+            frame = ((self.timer // 6) + i) % 8
+            screen.blit(f"token{frame}", (20 + 20 * i, 83))
+
+        score_text = str(self.score)
+        score_width = text_width(score_text, font="font_status")
+        draw_text(score_text, WIDTH-score_width-20, 28, font="font_status")
+
+        if self.wave_timer < 0:
+            y = (HEIGHT // 2) - 140
+            for line in self.get_wave_end_text():
+                draw_text(line, WIDTH // 2, y, True)
+                y += 65
+
+def text_width(a, font):            ###
+    return 5            ###
+
+def draw_text(a, b, c, font):        ###
+    pass                   ###
 
 class State(Enum):
     TITLE = 1
