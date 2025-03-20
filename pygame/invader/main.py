@@ -1,10 +1,15 @@
+import math
 from enum import Enum
 import pygame
+from pygame.math import Vector2
 from engine import *
 
 WIDTH = 960
 HEIGHT = 540
 TITLE = "Invader"
+
+LEVEL_WIDTH = 500               ###
+TERRAIN_OFFSET_Y = 5               ###
 
 class KeyboardControls:
     NUM_BUTTONS = 1
@@ -29,7 +34,13 @@ class KeyboardControls:
 class Player:
     def __init__(self, a):        ###
         self.lives = 3                 ###
-        pass            ###
+        self.facing_x = 1          ###
+        self.velocity = Vector2(0,0)    ###
+        self.x = 1                   ###
+        self.y = 1                   ###
+        self.tilt_y = 1                   ###
+    def draw(self, a, b):               ###
+        pass                     ###
 
 class Radar:
     pass              ###
@@ -54,7 +65,38 @@ class Game:
 
     def update(self):
         pass                 ###
+
     def draw(self):
+        if self.player.facing_x > 0:
+            target_camera_offset_x = WIDTH / 3
+        else:
+            target_camera_offset_x = 2 * WIDTH / 3
+
+        target_camera_offset_x -= self.player.velocity.x * 15
+        camera_offset_delta = min(8, max(-8, (target_camera_offset_x - self.player_camera_offset_x)/20))
+
+        self.player_camera_offset_x = math.floor(self.player_camera_offset_x + camera_offset_delta)
+
+        left = -(int(self.player.x - self.player_camera_offset_x) % LEVEL_WIDTH)
+        top = max(-int(self.player.y / 4), -100)
+
+        bg_width = images.background.get_width()
+        for i in range(5):
+            screen.blit("background", (left // 2 + bg_width * i, top // 2))
+
+        screen.blit(self.terrain_surface, (left, top + TERRAIN_OFFSET_Y))
+        screen.blit(self.terrain_surface, (left + LEVEL_WIDTH, top + TERRAIN_OFFSET_Y))
+
+        offset_x = -(self.player.x - self.player_camera_offset_x)
+
+        for obj in self.bullets + self.humans + self.enemies + \
+                (self.lasers + [self.player] if self.player.tilt_y == 1 
+                 else [self.player] + self.lasers):
+                    obj.draw(offset_x, top)
+
+        self.draw_ui()
+
+    def draw_ui(self):
         pass              ###
 
 class State(Enum):
