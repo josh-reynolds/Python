@@ -146,11 +146,21 @@ class Game:
                 draw_text(line, WIDTH // 2, y, True)
                 y += 65
 
+def get_char_image_and_width(a,b):    ###
+    return None,0         ###
+
 def text_width(a, font):            ###
     return 5            ###
 
-def draw_text(a, b, c, font):        ###
-    pass                   ###
+def draw_text(text, x, y, center=False, font="font"):
+    if center:
+        x -= text_width(text) // 2
+
+    for char in text:
+        image, width = get_char_image_and_width(char, font)
+        if image is not None:
+            screen.blit(image, (x, y))
+        x += width
 
 class State(Enum):
     TITLE = 1
