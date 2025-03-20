@@ -106,8 +106,13 @@ def draw():
         game.dxraw()
         draw_text("GAME OVER", WIDTH // 2, (HEIGHT // 2) - 100, True)
 
-def play_music(a):               ###
-    pass                         ###
+def play_music(name):
+    try:
+        music.play(name)
+    #except Exception:
+        #pass
+    except Exception as e:         ###
+        print(e)                   ###
 
 keyboard_controls = KeyboardControls()
 
