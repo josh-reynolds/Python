@@ -162,7 +162,13 @@ class Human(WrapActor):
         self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
 
     def terrain_check(self):
-        pass           ###
+        pos_terrain = (int(self.x % LEVEL_WIDTH), int(self.y - TERRAIN_OFFSET_Y))
+        mask_width, mask_height = game.terrain_mask.get_size()
+        if 0 <= pos_terrain[0] < mask_width and 0 <= pos_terrain[1] < mask_height:
+            return game.terrain_mask.get_at(pos_terrain)
+        elif pos_terrain[1] >= mask_height:
+            return True
+        return False
 
 class Game:
     def __init__(self, player):
