@@ -18,6 +18,9 @@ class Mock:                    ###
     def draw(self):               ###
         pass                     ###
 
+def forward_backward_animation_frame(a,b):   ###
+    return 0                 ###
+
 class KeyboardControls:
     NUM_BUTTONS = 1
 
@@ -45,8 +48,13 @@ class EnemyState(Enum):
     ALIVE = 1,            ###
     DEAD = 2,              ###
 
-class WrapActor:         ###
-    def __init__(self, a, b):        ###
+class WrapActor(Actor):
+    def __init__(self, image, pos):
+        super().__init__(image, pos)
+
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):    ###
         pass                ###
 
 class Player:
@@ -77,6 +85,8 @@ class Radar:
         self.height = 10              ###
     def draw(self):
         pass                     ###
+    def radar_pos(self, a):   ###
+        return (0,0)     ###
 
 class Enemy:                  ###
     def __init__(self, a, b):   ###
@@ -100,9 +110,59 @@ class Human(WrapActor):
         self.falling = False
 
     def update(self):      
-        pass             ###
-    def draw(self, a, b):               ###
-        pass                     ###
+        super().update()
+
+        self.anim_timer += 1
+
+        if self.exploding:
+            frame = self.anim_timer // 2
+            if frame >= 10:
+                self.dead = True
+            else:
+                pos = self.pos
+                self.anchor = (175,172)
+                self.image = "human_explode" + str(frame)
+                self.pos = pos
+            return
+
+        if self.carrier is None:
+            self.falling = not self.terrain_check()
+            if not self.falling and self.y_velocity > 1:
+                self.die()
+
+            if self.falling:
+                self.y_velocity += 0.05
+                self.y_velocity = min(self.y_velocity, 4)
+                self.y += self.y_velocity
+
+        self.blip.pos = game.radar.radar_pos(self.pos)
+
+        frame = self.anim_timer // 7
+        num_frames = 4
+        if self.carrier == game.player:
+            sprite = "saved"
+            num_frames = 1
+        elif self.carrier is not None:
+            sprite = "abducted"
+        elif self.falling:
+            sprite = "fall"
+            num_frames = 2
+        elif self.waving:
+            sprite = "wave"
+            num_frames = 3
+            if self.anim_timer > 100:
+                self.waving = False
+        else:
+            sprite = "stand"
+            num_frames = 1
+            if randint(0, 200) == 0:
+                self.waving = True
+                self.anim_timer = 0
+
+        self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
+
+    def terrain_check(self):
+        pass           ###
 
 class Game:
     def __init__(self, player):
