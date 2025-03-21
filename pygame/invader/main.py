@@ -146,11 +146,15 @@ class Game:
                 draw_text(line, WIDTH // 2, y, True)
                 y += 65
 
-def get_char_image_and_width(a,b):    ###
-    return None,0         ###
+def get_char_image_and_width(char, font):
+    if char == " ":
+        return None, 22
+    else:
+        image = getattr(images, font + "0" + str(ord(char)))
+        return image, image.get_width()
 
-def text_width(a, font):            ###
-    return 5            ###
+def text_width(text, font="font"):
+    return sum([get_char_image_and_width(c, font)[1] for c in text])
 
 def draw_text(text, x, y, center=False, font="font"):
     if center:
