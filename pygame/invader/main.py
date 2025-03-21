@@ -190,7 +190,7 @@ class Enemy(WrapActor):
                     if x_distance < 80:
                         max_speed = 1
                     if x_distance > 100:
-                        self.target_pos = Vector2(sel.target_human.pos) - Vector2(0, 200)
+                        self.target_pos = Vector2(self.target_human.pos) - Vector2(0, 200)
                     else:
                         self.target_pos = Vector2(self.target_human.pos)
                         distance = Vector2(self.pos - self.target_pos).length()
@@ -359,7 +359,7 @@ class Human(WrapActor):
         self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
 
     def can_be_picked_up_by_enemy(self):
-        pass                    ###
+        return self.carrier is None and not self.falling and not self.dead
 
     def terrain_check(self):
         pos_terrain = (int(self.x % LEVEL_WIDTH), int(self.y - TERRAIN_OFFSET_Y))
