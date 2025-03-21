@@ -12,6 +12,7 @@ TITLE = "Invader"
 LEVEL_WIDTH = 500               ###
 TERRAIN_OFFSET_Y = 5               ###
 WAVE_COMPLETE_SCREEN_DURATION = 20    ###
+HUMAN_START_POS = [(1,2),(1,2)]             ###
 
 class Mock:                    ###
     def draw(self):               ###
@@ -36,6 +37,30 @@ class KeyboardControls:
 
     def button_pressed(self, button):
         return self.is_pressed[button]
+
+class EnemyType(Enum):
+    LANDER = 1,            ###
+
+class EnemyState(Enum):
+    ALIVE = 1,            ###
+    DEAD = 2,              ###
+
+class Enemy:                  ###
+    def __init__(self, a, b):   ###
+        self.state = 1         ###
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):               ###
+        pass                     ###
+
+class Human:            ###
+    def __init__(self, a,):   ###
+        self.blip = Mock()            ###
+        self.dead = False          ###
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):               ###
+        pass                     ###
 
 class Player:
     def __init__(self, a):        ###
@@ -82,7 +107,33 @@ class Game:
         play_music("ambience")
 
     def new_wave(self):
-        pass               ###
+        self.wave += 1
+        num_landers = 4 + self.wave
+        num_pods = -1 + self.wave // 2
+        num_baiters = 0
+        num_mutants = 0
+        num_swarmers = 0
+        if self.wave % 5 == 0:
+            num_landers = 0
+            num_pods = 0
+            num_baiters = self.wave
+            if self.wave % 10 == 0:
+                num_swarmers = self.wave // 2
+            else:
+                num_mutants = self.wave // 2
+
+        self.enemies += [Enemy(-i * 20, EnemyType.LANDER) for i in range(num_landers)]
+        self.enemies += [Enemy(-i * 50, EnemyType.POD) for i in range(num_pods)]
+        self.enemies += [Enemy(-i * 100, EnemyType.BAITER) for i in range(num_baiters)]
+        self.enemies += [Enemy(-i * 10, EnemyType.MUTANT) for i in range(num_mutants)]
+        self.enemies += [Enemy(-i * 10, EnemyType.SWARMER) for i in range(num_swarmers)]
+
+        self.humans = []
+        for pos in HUMAN_START_POS:
+            pos = (pos[0], pos[1] + TERRAIN_OFFSET_Y)
+            self.humans.append(Human(pos))
+
+        self.play_sound("new_wave")
 
     def update(self):
         self.wave_timer += 1
