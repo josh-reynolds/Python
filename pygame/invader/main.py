@@ -1,5 +1,6 @@
 import math
 from enum import Enum
+from random import randint
 import pygame
 from pygame.math import Vector2
 from engine import *
@@ -194,8 +195,19 @@ class Game:
     def get_humans_saved(self):
         pass                ###
 
-    def play_sound(self, a):   ###
-        pass               ###
+    def play_sound(self, name, count=1, volume=1):
+        if volume <= 0 or (self.player.lives == 0 and self.player.timers[Player.Timer.HURT] < -1000):
+            return
+        try:
+            fullname = name + str(randint(0, count-1))
+            if volume < 1:
+                sound = pygame.mixer.Sound("sounds/" + fullname + ".ogg")
+                sound.set_volume(volume)
+            else:
+                sound = getattr(sounds, fullname)
+            sound.play()
+        except Exception as e:
+            print(e)
 
 def get_char_image_and_width(char, font):
     if char == " ":
