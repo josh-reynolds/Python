@@ -72,16 +72,13 @@ class Player:
     def level_ended(self, a, b):    ###
         pass            ###
 
-class Radar:
+class Radar(Actor):
     def __init__(self):
-        self.x = 1                   ###
-        self.y = 1                   ###
-        self.width = 10              ###
-        self.height = 10              ###
-    def draw(self):
-        pass                     ###
-    def radar_pos(self, a):   ###
-        return (0,0)     ###
+        super().__init__("radar", pos=(WIDTH/2, 4), anchor=('center', 'top'))
+
+    def radar_pos(self, pos):
+        return (self.left + ((int(pos[0]) % LEVEL_WIDTH) / 11.5),
+                self.y + (int(pos[1]) // 11))
 
 class EnemyState(Enum):
     START = 0,

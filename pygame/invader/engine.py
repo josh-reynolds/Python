@@ -91,6 +91,14 @@ class Actor:
         return self.rect.width
 
     @property
+    def height(self):
+        return self.rect.height
+
+    @property
+    def left(self):
+        return self.rect.left
+
+    @property
     def image(self):
         return self.image_name
 
