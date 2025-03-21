@@ -42,18 +42,6 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
-class EnemyType(Enum):
-    LANDER = 1,            ###
-    SWARMER = 2,           ###
-    MUTANT = 3,           ###
-    BAITER = 3,           ###
-
-class EnemyState(Enum):
-    ALIVE = 1,            ###
-    DEAD = 2,              ###
-    START = 3,              ###
-    EXPLODING = 4,              ###
-
 class WrapActor(Actor):
     def __init__(self, image, pos):
         super().__init__(image, pos)
@@ -94,6 +82,19 @@ class Radar:
         pass                     ###
     def radar_pos(self, a):   ###
         return (0,0)     ###
+
+class EnemyState(Enum):
+    START = 0,
+    ALIVE = 1,
+    EXPLODING = 2,
+    DEAD = 3
+
+class EnemyType(Enum):
+    LANDER = 0,
+    MUTANT = 1,
+    BAITER = 2,
+    POD = 3,
+    SWARMER = 4
 
 class Enemy(WrapActor):
     def __init__(self, start_timer=0, type=EnemyType.LANDER, pos=None, start_vel=None):
