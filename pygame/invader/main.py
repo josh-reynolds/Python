@@ -190,10 +190,10 @@ class Game:
         return ["1","2","3"]           ###
 
     def get_shield_restore_amount(self):
-        pass                ###
+        return min(self.get_humans_saved() // 2, 5)
 
     def get_humans_saved(self):
-        pass                ###
+        return len([human for human in self.humans if not human.exploding])
 
     def play_sound(self, name, count=1, volume=1):
         if volume <= 0 or (self.player.lives == 0 and self.player.timers[Player.Timer.HURT] < -1000):
