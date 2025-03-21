@@ -1,6 +1,6 @@
 import math
 from enum import Enum
-from random import randint
+from random import randint, uniform
 import pygame
 from pygame.math import Vector2
 from engine import *
@@ -10,6 +10,7 @@ HEIGHT = 540
 TITLE = "Invader"
 
 LEVEL_WIDTH = 500               ###
+LEVEL_HEIGHT = 500               ###
 TERRAIN_OFFSET_Y = 5               ###
 WAVE_COMPLETE_SCREEN_DURATION = 20    ###
 HUMAN_START_POS = [(1,2),(1,2)]             ###
@@ -43,10 +44,12 @@ class KeyboardControls:
 
 class EnemyType(Enum):
     LANDER = 1,            ###
+    SWARMER = 2,           ###
 
 class EnemyState(Enum):
     ALIVE = 1,            ###
     DEAD = 2,              ###
+    START = 3,              ###
 
 class WrapActor(Actor):
     def __init__(self, image, pos):
@@ -88,9 +91,50 @@ class Radar:
     def radar_pos(self, a):   ###
         return (0,0)     ###
 
-class Enemy:                  ###
-    def __init__(self, a, b):   ###
-        self.state = 1         ###
+class Enemy(WrapActor):
+    def __init__(self, start_timer=0, type=EnemyType.LANDER, pos=None, start_vel=None):
+        if pos is None:
+            pos = (randint(0, LEVEL_WIDTH - 1), randint(32, LEVEL_HEIGHT - 32))
+
+        super().__init__("blank", pos)
+
+        self.type = type
+
+        if self.type == EnemyType.LANDER:
+            self.max_speed = 5
+            self.acceleration = 0.1
+        elif self.type == EnemyType.MUTANT:
+            self.max_speed = 9
+            self.acceleration = 0.5
+        elif self.type == EnemyType.BAITER:
+            self.max_speed = 9
+            self.acceleration = 0.01
+        elif self.type == EnemyType.POD:
+            self.max_speed = 10
+            self.acceleration = 0.03
+        elif self.type == EnemyType.SWARMER:
+            self.max_speed = 8
+            self.acceleration = 1
+
+        self.target_pos = Vector2(self.x+uniform(-100,100), self.y+uniform(-100,100))
+        self.update_target_timer = 0
+
+        self.velocity = start_vel if start_vel is not None else Vector2(0,0)
+
+        if self.type == EnemyType.SWARMER:
+            self.state = EnemyState.ALIVE
+            self.state_timer = 0
+        else:
+            self.state = EnemyState.START
+            self.state_timer = start_timer
+
+        self.target_human = None
+        self.carrying = False
+        self.bullet_timer = randint(30, 90)
+        self.fire_angle = 0
+        self.blip = Actor("dot-red")
+        self.anim_timer = randint(0, 47)
+
     def update(self):      
         pass             ###
     def draw(self, a, b):               ###
