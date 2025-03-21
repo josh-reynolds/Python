@@ -10,6 +10,7 @@ TITLE = "Invader"
 
 LEVEL_WIDTH = 500               ###
 TERRAIN_OFFSET_Y = 5               ###
+WAVE_COMPLETE_SCREEN_DURATION = 20    ###
 
 class Mock:                    ###
     def draw(self):               ###
@@ -48,6 +49,12 @@ class Player:
         self.blip = Mock()            ###
     def draw(self, a, b):               ###
         pass                     ###
+    def update(self):      
+        pass             ###
+    def is_carrying_human(self):
+        pass             ###
+    def level_ended(self, a, b):    ###
+        pass            ###
 
 class Radar:
     def __init__(self):
@@ -77,7 +84,39 @@ class Game:
         pass               ###
 
     def update(self):
-        pass                 ###
+        self.wave_timer += 1
+        if self.wave_timer == 0:
+            self.new_wave()
+
+        self.timer += 1
+
+        if self.wave_timer > 0 and self.wave_timer % (30 * 60) == 0 and self.player.lives > 0:
+            self.enemies.append(Enemy(type=EnemyType.BAITER))
+
+        self.player.update()
+
+        self.lasers = [l for l in self.lasers if not l.update()]
+        self.bullets = [b for b in self.bullets if not b.update()]
+
+        for obj in self.enemies + self.humans:
+            obj.update()
+
+        self.humans = [h for h in self.humans if not h.dead]
+
+        prev_num_enemies = len(self.enemies)
+        self.enemies = [e for e in self.enemies if e.state != EnemyState.DEAD]
+
+        difference = prev_num_enemies - len(self.enemies)
+        if difference > 0:
+            self.score += 150 * difference
+
+        if self.wave_timer > 0 and len(self.enemies) == 0 \
+                and len([human for human in self.humans if human.falling]) == 0 \
+                and not self.player.is_carrying_human():
+                    self.wave_timer = -WAVE_COMPLETE_SCREEN_DURATION
+                    self.player.level_ended(self.get_shield_restore_amount(),
+                                            self.get_humans_saved())
+                    self.play_sound("wave_complete")
 
     def draw(self):
         if self.player.facing_x > 0:
@@ -145,6 +184,18 @@ class Game:
             for line in self.get_wave_end_text():
                 draw_text(line, WIDTH // 2, y, True)
                 y += 65
+
+    def get_wave_end_text(self):
+        return ["1","2","3"]           ###
+
+    def get_shield_restore_amount(self):
+        pass                ###
+
+    def get_humans_saved(self):
+        pass                ###
+
+    def play_sound(self, a):   ###
+        pass               ###
 
 def get_char_image_and_width(char, font):
     if char == " ":
