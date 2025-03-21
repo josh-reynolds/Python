@@ -187,7 +187,20 @@ class Game:
                 y += 65
 
     def get_wave_end_text(self):
-        return ["1","2","3"]           ###
+        saved = self.get_humans_saved()
+        i = (self.wave_timer + WAVE_COMPLETE_SCREEN_DURATION) // (WAVE_COMPLETE_SCREEN_DURATION //4)
+        lines = [f"WAVE {self.wave} COMPLETE"]
+        if i >= 1:
+            lines.append(f"{saved} HUMAN{'' if saved == 1 else 'S'} SAVED")
+        if i >= 2:
+            shields = self.get_shield_restore_amount()
+            lines.append(f"{shields} SHIELD{'' if shields == 1 else 'S'} RESTORED")
+        if i >= 3 and saved == 10:
+            if self.player.extra_life_tokens == 0:
+                lines.append("EXTRA LIFE")
+            else:
+                lines.append("LIFE TOKEN GAINED")
+        return lines
 
     def get_shield_restore_amount(self):
         return min(self.get_humans_saved() // 2, 5)
