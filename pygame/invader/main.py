@@ -45,22 +45,9 @@ class EnemyState(Enum):
     ALIVE = 1,            ###
     DEAD = 2,              ###
 
-class Enemy:                  ###
-    def __init__(self, a, b):   ###
-        self.state = 1         ###
-    def update(self):      
-        pass             ###
-    def draw(self, a, b):               ###
-        pass                     ###
-
-class Human:            ###
-    def __init__(self, a,):   ###
-        self.blip = Mock()            ###
-        self.dead = False          ###
-    def update(self):      
-        pass             ###
-    def draw(self, a, b):               ###
-        pass                     ###
+class WrapActor:         ###
+    def __init__(self, a, b):        ###
+        pass                ###
 
 class Player:
     def __init__(self, a):        ###
@@ -89,6 +76,32 @@ class Radar:
         self.width = 10              ###
         self.height = 10              ###
     def draw(self):
+        pass                     ###
+
+class Enemy:                  ###
+    def __init__(self, a, b):   ###
+        self.state = 1         ###
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):               ###
+        pass                     ###
+
+class Human(WrapActor):
+    def __init__(self, pos):
+        super().__init__("blank", pos)
+
+        self.y_velocity = 0
+        self.blip = Actor("dot-green")
+        self.anim_timer = 0
+        self.waving = False
+        self.dead = False
+        self.exploding = False
+        self.carrier = None
+        self.falling = False
+
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):               ###
         pass                     ###
 
 class Game:
