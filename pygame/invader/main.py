@@ -45,11 +45,14 @@ class KeyboardControls:
 class EnemyType(Enum):
     LANDER = 1,            ###
     SWARMER = 2,           ###
+    MUTANT = 3,           ###
+    BAITER = 3,           ###
 
 class EnemyState(Enum):
     ALIVE = 1,            ###
     DEAD = 2,              ###
     START = 3,              ###
+    EXPLODING = 4,              ###
 
 class WrapActor(Actor):
     def __init__(self, image, pos):
@@ -67,6 +70,7 @@ class Player:
         self.extra_life_tokens = 3                 ###
         self.facing_x = 1          ###
         self.velocity = Vector2(0,0)    ###
+        self.pos = (0,0)    ###
         self.x = 1                   ###
         self.y = 1                   ###
         self.tilt_y = 1                   ###
@@ -136,9 +140,158 @@ class Enemy(WrapActor):
         self.anim_timer = randint(0, 47)
 
     def update(self):      
-        pass             ###
-    def draw(self, a, b):               ###
-        pass                     ###
+        super().update()
+
+        if self.state == EnemyState.START:
+            self.state_timer+= 1
+            if self.state_timer == 1:
+                if self.type == EnemyType.MUTANT:
+                    game.play_sound("enemy_appear_mutant")
+                elif self.type == EnemyType.LANDER:
+                    game.play_sound("enemy_appear_normal")
+                elif self.type == EnemyType.BAITER:
+                    game.play_sound("enemy_appear_ufo")
+
+            if self.state_timer == 33:
+                self.state = EnemyState.ALIVE
+            elif self.state_timer >= 0:
+                self.image = "appear" + str(self.state_timer // 3)
+
+        elif self.state == EnemyState.ALIVE:
+            max_speed = self.max_speed
+
+            if self.target_human is not None and self.target_human.dead:
+                self.target_human = None
+                self.carrying = False
+
+            if self.target_human is None and self.type == EnemyType.LANDER and uniform(0,1) < 0.001:
+                target_humans = [enemy.target_human for enemy in game.enemies
+                                 if enemy.target_human is not None]
+                available_humans = [human for human in game.humans 
+                                    if human not in target_humans
+                                    and human.can_be_picked_up_by_enemy()]
+                if len(available_humans) > 0:
+                    dist = lambda human: (Vector2(human.pos) - self.pos).length_squared()
+                    self.target_human = min(available_humans, key=dist)
+
+            if self.target_human is not None:
+                if self.carrying:
+                    self.target_pos = Vector2(self.pos[0], 64)
+                    max_speed = 0.5
+
+                    if abs(self.pos[1] - self.target_pos.y) < 10:
+                        game.enemies.append(Enemy(type=EnemyType.MUTANT,
+                                                  pos=self.target_human.pos))
+                        self.target_human.die()
+                        self.target_human = None
+                        self.carrying = False
+                else:
+                    x_distance = abs(self.x - self.target_human.x)
+                    if x_distance < 80:
+                        max_speed = 1
+                    if x_distance > 100:
+                        self.target_pos = Vector2(sel.target_human.pos) - Vector2(0, 200)
+                    else:
+                        self.target_pos = Vector2(self.target_human.pos)
+                        distance = Vector2(self.pos - self.target_pos).length()
+                        if distance < 55:
+                            self.carrying = True
+                            self.target_human.picked_up(self)
+            else:
+                self.update_target_timer -= 1
+                if self.update_target_timer <= 0:
+                    self.update_target_timer = 60
+
+                    player_pos = Vector2(game.player.pos)
+
+                    max_player_distance = 500 if self.type == EnemyType.LANDER else LEVEL_WIDTH
+
+                    if (self.pos - player_pos).length() < max_player_distance:
+                        self.target_pos = player_pos
+
+                    x_range = 800 if self.type == EnemyType.BAITER else 100
+                    y_range = 300 if self.type == EnemyType.BAITER else 100
+                    self.target_pos = self.target_pos + Vector2(uniform(-x_range, x_range),
+                                                                uniform(-y_range, y_range))
+
+                    distance = (self.target_pos - self.pos).length()
+                    if distance > 0:
+                        vec = (self.target_pos - self.pos).normalize()
+                    else:
+                        vec = Vector2(0,0)
+
+                    force = vec * self.acceleration
+
+                    if self.y < 64:
+                        force.y += 0.2
+                    if self.y > LEVEL_HEIGHT-64:
+                        force.y -= 0.2
+
+                    self.velocity += force
+
+                    if self.velocity.length() > max_speed:
+                        self.velocity.scale_to_length(max(self.velocity.length()*0.9, max_speed))
+
+                    self.pos += self.velocity
+
+                    if self.carrying:
+                        self.target_human.pos = (self.pos[0], self.pos[1] + 50)
+
+                    self.bullet_timer -= 1
+                    if self.bullet_timer <= 0:
+                        if self.type == EnemyType.BAITER:
+                            velocity = Vector2(cos(self.fire_angle), sin(self.fire_angle)) * 3
+                            game.bullets.append(Bullet(self.pos, velocity))
+                            self.bullet_timer = 8
+                            self.fire_angle += 0.3
+
+                        elif game.player.lives > 0:
+                            player_vec = Vector2(game.player.pos) - self.pos
+                            player_distance = player_vec.length()
+                            if 100 < player_distance < 300:
+                                player_vec.normalize_ip()
+                                velocity = Vector2(player_vec.x + uniform(-0.5, 0.5),
+                                                   player_vec.y + uniform(-0.5, 0.5)) * 6
+                                game.bullets.append(Bullet(self.pos, velocity))
+
+                                upper_limit = 30 if self.type == EnemyType.MUTANT else 90
+                                self.bullet_timer = randint(20, upper_limit)
+
+                    if self.type == EnemyType.LANDER:
+                        frame = 0
+                        if self.target_human is not None:
+                            if self.carrying:
+                                frame = 2
+                            else:
+                                distance = (Vector2(self.pos) - self.target_human.pos).length()
+                                if distance < 90:
+                                    frame = 1
+                        self.image = "lander" + str(frame)
+                    elif self.type == EnemyType.MUTANT:
+                        self.anim_timer += 1
+                        self.image = "mutant" + str((self.anim_timer // 6) % 4)
+                    elif self.type == EnemyType.BAITER:
+                        self.anim_timer += 1
+                        self.image = "baiter" + str((self.anim_timer // 3) % 8)
+                    elif self.type == EnemyType.POD:
+                        self.anim_timer += 1
+                        frame = forward_backward_animation_frame(self.anim_timer // 6, 3)
+                        if self.velocity.x > 0:
+                            frame += 3
+                        self.image = "pod" + str(frame)
+                    elif self.type == EnemyType.SWARMER:
+                        self.anim_timer += 1
+                        self.image = "swarmer" + str((self.anim_timer // 6) % 8)
+
+                elif self.state == EnemyState.EXPLODING:
+                    self.anim_timer += 1
+                    frame = self.anim_timer // 2
+                    self.image = "enemy_explode" + str(min(9, frame))
+
+                    if frame == 10:
+                        self.state = EnemyState.DEAD
+
+                self.blip.pos = game.radar.radar_pos(self.pos)
 
 class Human(WrapActor):
     def __init__(self, pos):
@@ -204,6 +357,9 @@ class Human(WrapActor):
                 self.anim_timer = 0
 
         self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
+
+    def can_be_picked_up_by_enemy(self):
+        pass                    ###
 
     def terrain_check(self):
         pos_terrain = (int(self.x % LEVEL_WIDTH), int(self.y - TERRAIN_OFFSET_Y))
