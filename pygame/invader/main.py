@@ -19,6 +19,9 @@ class Mock:                    ###
     def draw(self):               ###
         pass                     ###
 
+def sign(a):    ###
+    return 1      ###
+
 def forward_backward_animation_frame(a,b):   ###
     return 0                 ###
 
@@ -42,6 +45,11 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
+    def get_x(self):           ###
+        return 1                   ###
+    def get_y(self):           ###
+        return 1                   ###
+
 class WrapActor(Actor):
     def __init__(self, image, pos):
         super().__init__(image, pos)
@@ -51,7 +59,20 @@ class WrapActor(Actor):
     def draw(self, a, b):    ###
         pass                ###
 
+class Laser:       ###
+    def __init__(self, a, b, c):    ###
+        pass           ###
+    def update(self):      
+        pass             ###
+    def draw(self, a, b):    ###
+        pass                ###
+
 class Player(WrapActor):
+    EXPLODE_FRAMES = 1    ###
+    EXPLODE_ANIM_SPEED = 2     ###
+    DRAG = Vector2(1,1)             ###
+    FORCE = Vector2(1,1)             ###
+
     def __init__(self, controls):
         super().__init__("blank", (WIDTH / 2, LEVEL_HEIGHT / 2))
 
@@ -77,9 +98,104 @@ class Player(WrapActor):
 
     class Timer(IntEnum):
         FIRE = 1,            ###
+        EXPLODE = 2,            ###
+        HURT = 3,            ###
 
     def update(self):      
-        pass             ###
+        self.timers = [i - 1 for i in self.timers]
+
+        if self.timers[Player.Timer.EXPLODE] > 0:
+            frame = (Player.EXPLODE_FRAMES - self.timers[Player.Timer.EXPLODE]) // Player.EXPLODE_ANIM_SPEED
+            self.image = "ship_explode" + str(frame)
+            self.thrust_sprite.image = "blank"
+
+            if self.timers[Player.Timer.EXPLODE] == 1 and self.lives > 0:
+                self.respawn()
+
+        elif self.lives == 0:
+            self.image = "blank"
+            self.thrust_sprite.image = "blank"
+
+        else:
+            x_input = self.controls.get_x()
+            y_input = self.controls.get_y()
+
+            move = Vector2(x_input, y_input)
+            self.tilt_y = y_input
+
+            if x_input != 0:
+                self.facing_x = sign(x_input)
+
+            if self.frame % 8 != 0 or sign(self.facing_x) != sign(move.x):
+                move.x = 0
+
+            self.velocity = Vector2(self.velocity.x * Player.DRAG.x + move.x * Player.FORCE.x,
+                                    self.velocity.y * Player.DRAG.y + move.y * Player.FORCE.y)
+
+            self.pos += self.velocity
+
+            self.y = max(0, min(LEVEL_HEIGHT, self.y))
+
+            self.blip.pos = game.radar.radar_pos(self.pos)
+
+            if self.carried_human is None:
+                for human in game.humans:
+                    if human.can_be_picked_up_by_player() \
+                            and (Vector2(human.pos) - self.pos).length() < 40:
+                                human.picked_up(self)
+                                self.carried_human = human
+                                break
+            else:
+                self.carried_human.pos = (self.pos[0], self.pos[1] + 50)
+                if self.carried_human.terrain_check():
+                    self.carried_human.dropped()
+                    self.carried_human = None
+                    game.play_sound("rescue_prisoner")
+
+            target = 8 if self.facing_x < 0 else 0
+
+            if self.frame == target:
+                if self.controls.button_down(0) and self.timers[Player.Timer.FIRE] <= 0:
+                    self.timers[Player.Timer.FIRE] = 10
+                    laser_vel_x = self.velocity[0] + 20 * self.facing_x
+                    laser_x = self.x + 40 * self.facing_x
+                    laser_y = self.y + self.get_laser_fire_y_offset()
+                    game.lasers.append(Laser(laser_x, laser_y, laser_vel_x))
+            else:
+                if self.timers[Player.Timer.ANIM] <= 0:
+                    self.timers[Player.Timer.ANIM] = 3
+                    self.frame = (self.frame + 1) % 16
+
+            try:
+                if self.thrust_sound is not None:
+                    if move.x != 0 and self.frame == target and not self.thrust_sound_playing:
+                        self.thrust_sound.set_volume(0.3)
+                        self.thrust_sound.play(loops=-1, fade_ms=200)
+                        self.thrust_sound_playing = True
+                    elif (move.x == 0 or self.frame != target) and self.thrust_sound_playing:
+                        self.thrust_sound.fadeout(200)
+                        self.thrust_sound_playing = False
+            #except Exception:
+                #pass
+            except Exception as e:             ###
+                print(e)                    ###
+
+            anim_type = "ship" if self.timers[Player.Timer.HURT] <= 0 else "hurt"
+            tilt = ""
+            if self.frame % 8 == 0 and self.tilt_y != 0:
+                tilt = "u" if self.tilt_y < 0 else "d"
+            self.image = anim_type + str(self.frame) + tilt
+
+            if self.frame % 8 != 0 or move.x == 0:
+                self.thrust_sprite.image = "blank"
+            else:
+                direction = 0 if move.x > 0 else 1
+                frame = (game.timer // 3) % 2
+                self.thrust_sprite.image = f"boost_{direction}_{frame}"
+                x_offset = 66
+                y_offset = -3
+                self.thrust_sprite.pos = (self.x + x_offset * -move.x,
+                                          self.y + y_offset)
 
     def flash(self, offset_x, offset_y):
         if self.frame % 8 == 0 and self.timers[Player.Timer.FIRE] > 5:
@@ -87,6 +203,9 @@ class Player(WrapActor):
             x = self.x + offset_x - 25
             y = self.y + offset_y -13 + self.get_laser_fire_y_offset()
             screen.blit(sprite, (x,y))
+
+    def get_laser_fire_y_offset(self):
+        return 1                        ###
 
     def draw(self, offset_x, offset_y):
         if self.tilt_y == 1:
@@ -393,6 +512,9 @@ class Human(WrapActor):
                 self.anim_timer = 0
 
         self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
+
+    def can_be_picked_up_by_player(self):
+        pass                   ###
 
     def can_be_picked_up_by_enemy(self):
         return self.carrier is None and not self.falling and not self.dead
