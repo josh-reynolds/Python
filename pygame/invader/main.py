@@ -1,5 +1,5 @@
 import math
-from enum import Enum
+from enum import Enum, IntEnum
 from random import randint, uniform
 import pygame
 from pygame.math import Vector2
@@ -75,10 +75,18 @@ class Player(WrapActor):
             self.thrust_sound = None
         self.thrust_sound_playing = False
 
+    class Timer(IntEnum):
+        FIRE = 1,            ###
+
     def update(self):      
         pass             ###
-    def flash(self, a, b):    ###
-        pass             ###
+
+    def flash(self, offset_x, offset_y):
+        if self.frame % 8 == 0 and self.timers[Player.Timer.FIRE] > 5:
+            sprite = "flash" + str(self.frame // 8)
+            x = self.x + offset_x - 25
+            y = self.y + offset_y -13 + self.get_laser_fire_y_offset()
+            screen.blit(sprite, (x,y))
 
     def draw(self, offset_x, offset_y):
         if self.tilt_y == 1:
