@@ -51,22 +51,34 @@ class WrapActor(Actor):
     def draw(self, a, b):    ###
         pass                ###
 
-class Player:
-    def __init__(self, a):        ###
-        self.lives = 3                 ###
-        self.shields = 3                 ###
-        self.extra_life_tokens = 3                 ###
-        self.facing_x = 1          ###
-        self.velocity = Vector2(0,0)    ###
-        self.pos = (0,0)    ###
-        self.x = 1                   ###
-        self.y = 1                   ###
-        self.tilt_y = 1                   ###
-        self.blip = Mock()            ###
-    def draw(self, a, b):               ###
-        pass                     ###
+class Player(WrapActor):
+    def __init__(self, controls):
+        super().__init__("blank", (WIDTH / 2, LEVEL_HEIGHT / 2))
+
+        self.controls = controls
+
+        self.velocity = Vector2(0,0)
+        self.lives = 5
+        self.shields = 5
+        self.extra_life_tokens = 0
+        self.facing_x = 1
+        self.tilt_y = 0
+        self.timers = [0, 0, 0, 0]
+        self.frame = 0
+        self.carried_human = None
+        self.blip = Actor("dot-white")
+        self.thrust_sprite = WrapActor("blank", (0,0))
+
+        try:
+            self.thrust_sound = sounds.thrust0
+        except Exception:
+            self.thrust_sound = None
+        self.thrust_sound_playing = False
+
     def update(self):      
         pass             ###
+    def draw(self, a, b):               ###
+        pass                     ###
     def is_carrying_human(self):
         pass             ###
     def level_ended(self, a, b):    ###
