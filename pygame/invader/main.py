@@ -15,15 +15,16 @@ TERRAIN_OFFSET_Y = 5               ###
 WAVE_COMPLETE_SCREEN_DURATION = 20    ###
 HUMAN_START_POS = [(1,2),(1,2)]             ###
 
-class Mock:                    ###
-    def draw(self):               ###
-        pass                     ###
-
 def sign(a):    ###
     return 1      ###
 
-def forward_backward_animation_frame(a,b):   ###
-    return 0                 ###
+def forward_backward_animation_frame(frame, num_frames):
+    if num_frames < 2:
+        return 0
+    frame %= (num_frames * 2) - 2
+    if frame >= num_frames:
+        frame = (num_frames - 1) * 2 - frame
+    return frame
 
 class KeyboardControls:
     NUM_BUTTONS = 1
