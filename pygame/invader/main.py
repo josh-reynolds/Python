@@ -59,9 +59,15 @@ class WrapActor(Actor):
     def draw(self, a, b):    ###
         pass                ###
 
-class Laser:       ###
-    def __init__(self, a, b, c):    ###
-        pass           ###
+class Laser(WrapActor):
+    def __init__(self, x, y, vel_x):
+        facing_idx = 0 if vel_x > 0 else 1
+        image =f"laser_{facing_idx}_0"
+        super().__init__(image, pos=(x + vel_x, y))
+        self.vel_x = vel_x
+        self.anim_timer = 0
+        game.play_sound("player_shoot")
+
     def update(self):      
         pass             ###
     def draw(self, a, b):    ###
