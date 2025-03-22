@@ -514,7 +514,7 @@ class Human(WrapActor):
         self.image = f"human_{sprite}{forward_backward_animation_frame(frame, num_frames)}"
 
     def can_be_picked_up_by_player(self):
-        pass                   ###
+        return self.carrier is None and self.falling and not self.dead
 
     def can_be_picked_up_by_enemy(self):
         return self.carrier is None and not self.falling and not self.dead
