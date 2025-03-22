@@ -55,9 +55,18 @@ class WrapActor(Actor):
         super().__init__(image, pos)
 
     def update(self):      
-        pass             ###
-    def draw(self, a, b):    ###
-        pass                ###
+        while self.x - game.player.x < -LEVEL_WIDTH/2:
+            self.relocate(LEVEL_WIDTH)
+        while self.x - game.player.x > -LEVEL_WIDTH/2:
+            self.relocate(-LEVEL_WIDTH)
+
+    def draw(self, offset_x, offset_y):
+        self.pos = (self.x + offset_x, self.y + offset_y)
+        super().draw()
+        self.pos = (self.x - offset_x, self.y - offset_y)
+
+    def relocate(self, delta):
+        self.x += delta
 
 class Laser(WrapActor):
     def __init__(self, x, y, vel_x):
