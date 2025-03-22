@@ -38,17 +38,28 @@ class KeyboardControls:
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
 
+    def get_x(self):
+        if keyboard.left:
+            return -1
+        elif keyboard.right:
+            return 1
+        else:
+            return 0
+
+    def get_y(self):
+        if keyboard.up:
+            return -1
+        elif keyboard.down:
+            return 1
+        else:
+            return 0
+
     def button_down(self, button):
         if button == 0:
             return keyboard.space
 
     def button_pressed(self, button):
         return self.is_pressed[button]
-
-    def get_x(self):           ###
-        return 1                   ###
-    def get_y(self):           ###
-        return 1                   ###
 
 class WrapActor(Actor):
     def __init__(self, image, pos):
