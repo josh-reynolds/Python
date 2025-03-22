@@ -69,9 +69,17 @@ class Laser(WrapActor):
         game.play_sound("player_shoot")
 
     def update(self):      
-        pass             ###
-    def draw(self, a, b):    ###
-        pass                ###
+        super().update()
+
+        self.x += self.vel_x
+
+        self.anim_timer += 1
+        facing_idx = 0 if self.vel_x > 0 else 1
+        self.image = f"laser_{facing_idx}_{min(1, self.anim_timer // 8)}"
+
+        too_far = abs(self.x - game.player.x) > 800
+        collisions = [obj.laser_hit_test(self.pos) for obj in game.enemies + game.humans]
+        return too_far or sum(collisions) > 0
 
 class Player(WrapActor):
     DRAG = Vector2(0.98, 0.9)
@@ -301,6 +309,9 @@ class Enemy(WrapActor):
         self.blip = Actor("dot-red")
         self.anim_timer = randint(0, 47)
 
+    def laser_hit_test(self, a):     ###
+        return False                          ###
+
     def update(self):      
         super().update()
 
@@ -467,6 +478,9 @@ class Human(WrapActor):
         self.exploding = False
         self.carrier = None
         self.falling = False
+
+    def laser_hit_test(self, a):     ###
+        return False             ###
 
     def update(self):      
         super().update()
