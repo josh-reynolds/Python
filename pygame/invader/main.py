@@ -79,10 +79,17 @@ class Player(WrapActor):
         pass             ###
     def draw(self, a, b):               ###
         pass                     ###
+
     def is_carrying_human(self):
-        pass             ###
-    def level_ended(self, a, b):    ###
-        pass            ###
+        return self.carried_human is not None
+
+    def level_ended(self, shield_restore_amount, humans_saved):
+        self.shields = min(self.shields + shield_restore_amount, 5)
+        if humans_saved == 10:
+            self.extra_life_tokens += 1
+            if self.extra_life_tokens >= 3:
+                self.lives += 1
+                self.extra_life_tokens -= 3
 
 class Radar(Actor):
     def __init__(self):
