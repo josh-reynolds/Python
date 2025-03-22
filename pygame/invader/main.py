@@ -68,10 +68,10 @@ class Laser:       ###
         pass                ###
 
 class Player(WrapActor):
-    EXPLODE_FRAMES = 1    ###
-    EXPLODE_ANIM_SPEED = 2     ###
-    DRAG = Vector2(1,1)             ###
-    FORCE = Vector2(1,1)             ###
+    DRAG = Vector2(0.98, 0.9)
+    FORCE = Vector2(0.2, 0.5)
+    EXPLODE_ANIM_SPEED = 4
+    EXPLODE_FRAMES = 18 * EXPLODE_ANIM_SPEED
 
     def __init__(self, controls):
         super().__init__("blank", (WIDTH / 2, LEVEL_HEIGHT / 2))
@@ -97,9 +97,10 @@ class Player(WrapActor):
         self.thrust_sound_playing = False
 
     class Timer(IntEnum):
-        FIRE = 1,            ###
-        EXPLODE = 2,            ###
-        HURT = 3,            ###
+        HURT = 0,
+        FIRE = 1,
+        ANIM = 2,
+        EXPLODE = 3,
 
     def update(self):      
         self.timers = [i - 1 for i in self.timers]
@@ -205,7 +206,7 @@ class Player(WrapActor):
             screen.blit(sprite, (x,y))
 
     def get_laser_fire_y_offset(self):
-        return 1                        ###
+        return [-1, 3, 2][self.tilt_y + 1]
 
     def draw(self, offset_x, offset_y):
         if self.tilt_y == 1:
