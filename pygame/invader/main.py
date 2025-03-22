@@ -309,8 +309,26 @@ class Enemy(WrapActor):
         self.blip = Actor("dot-red")
         self.anim_timer = randint(0, 47)
 
-    def laser_hit_test(self, a):     ###
-        return False                          ###
+    def laser_hit_test(self, pos):
+        if self.collidepoint(pos) and self.state == EnemyState.ALIVE:
+            self.state = EnemyState.EXPLODING
+            self.state_timer = 0
+            self.anim_timer = 0
+            if self.target_human is not None:
+                if self.carrying:
+                    self.target_human.dropped()
+                self.target_human = None
+                self.carrying = False
+            game.play_sound("enemy_explode", 6)
+
+            if self.type == EnemyType.POD:
+                for i in range(3):
+                    start_vel = Vector2(uniform(-25,25), uniform(-25,25))
+                    game.enemies.append(Enemy(0, EnemyType.SWARMER, pos, start_vel))
+
+            return True
+        else:
+            return False
 
     def update(self):      
         super().update()
@@ -479,8 +497,11 @@ class Human(WrapActor):
         self.carrier = None
         self.falling = False
 
-    def laser_hit_test(self, a):     ###
-        return False             ###
+    def laser_hit_test(self, pos):
+        if not self.exploding and self.collidepoint(pos):
+            self.die()
+            return True
+        return False
 
     def update(self):      
         super().update()
