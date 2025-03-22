@@ -77,8 +77,19 @@ class Player(WrapActor):
 
     def update(self):      
         pass             ###
-    def draw(self, a, b):               ###
-        pass                     ###
+    def flash(self, a, b):    ###
+        pass             ###
+
+    def draw(self, offset_x, offset_y):
+        if self.tilt_y == 1:
+            self.flash(offset_x, offset_y)
+
+        super().draw(offset_x, offset_y)
+
+        self.thrust_sprite.draw(offset_x, offset_y)
+
+        if self.tilt_y != 1:
+            self.flash(offset_x, offset_y)
 
     def is_carrying_human(self):
         return self.carried_human is not None
