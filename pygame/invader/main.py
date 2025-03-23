@@ -596,7 +596,9 @@ class Human(WrapActor):
         return False
 
     def die(self):
-        pass            ###
+        self.exploding = True
+        self.anim_timer = 0
+        game.play_sound("prisoner_die")
 
 class Game:
     def __init__(self, player):
