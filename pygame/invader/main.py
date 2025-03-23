@@ -9,14 +9,18 @@ WIDTH = 960
 HEIGHT = 540
 TITLE = "Invader"
 
-LEVEL_WIDTH = 500               ###
-LEVEL_HEIGHT = 500               ###
-TERRAIN_OFFSET_Y = 5               ###
-WAVE_COMPLETE_SCREEN_DURATION = 20    ###
-HUMAN_START_POS = [(1,2),(1,2)]             ###
+LEVEL_WIDTH = 4096
+LEVEL_HEIGHT = 640
+WAVE_COMPLETE_SCREEN_DURATION = 320
+HUMAN_START_POS = [(204,410), (489,209), (865,374), (1262,405), (1937,263),
+                   (2193,278), (2601,405), (2846,347), (3317,193), (3646,233)]
+TERRAIN_OFFSET_Y = 160
 
-def sign(a):    ###
-    return 1      ###
+def sign(x):
+    if x == 0:
+        return 0
+    else:
+        return -1 if x < 0 else 1
 
 def forward_backward_animation_frame(frame, num_frames):
     if num_frames < 2:
@@ -590,6 +594,9 @@ class Human(WrapActor):
         elif pos_terrain[1] >= mask_height:
             return True
         return False
+
+    def die(self):
+        pass            ###
 
 class Game:
     def __init__(self, player):
