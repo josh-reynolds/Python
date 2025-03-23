@@ -1,9 +1,24 @@
 import math
+import sys
 from enum import Enum, IntEnum
 from random import randint, uniform
 import pygame
 from pygame.math import Vector2
 from engine import *
+
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [1,2]:
+    print(f"This game requires at least version 1.2 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH = 960
 HEIGHT = 540
@@ -21,6 +36,13 @@ def sign(x):
         return 0
     else:
         return -1 if x < 0 else 1
+
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
+
+def remap_clamp(old_val, old_min, old_max, new_min, new_max):
+    lower_limit = min(new_min, new_max)
+    upper_limit = max(new_min, new_max)
 
 def forward_backward_animation_frame(frame, num_frames):
     if num_frames < 2:
@@ -84,6 +106,21 @@ class WrapActor(Actor):
     def relocate(self, delta):
         self.x += delta
 
+class Bullet(WrapActor):
+    def __init__(self, pos, velocity):
+        super().__init__("blank", pos)
+        self.velocity = velocity
+        distance = (Vector2(pos) - Vector2(game.player.pos)).length()
+        volume = remap_clamp(distance, 400, 2500, 1, 0)
+        game.play_sound("enemy_laser", volume=volume)
+
+    def update(self):
+        super().update()
+        self.pos += self.velocity
+        self.image = "bullet" + str((game.timer // 4) % 2)
+        too_far = self.x < game.player.x - WIDTH or self.x > game.player.x + WIDTH
+        return game.player.hit_test(self.pos) or too_far
+
 class Laser(WrapActor):
     def __init__(self, x, y, vel_x):
         facing_idx = 0 if vel_x > 0 else 1
@@ -112,6 +149,12 @@ class Player(WrapActor):
     EXPLODE_ANIM_SPEED = 4
     EXPLODE_FRAMES = 18 * EXPLODE_ANIM_SPEED
 
+    class Timer(IntEnum):
+        HURT = 0,
+        FIRE = 1,
+        ANIM = 2,
+        EXPLODE = 3,
+
     def __init__(self, controls):
         super().__init__("blank", (WIDTH / 2, LEVEL_HEIGHT / 2))
 
@@ -135,11 +178,35 @@ class Player(WrapActor):
             self.thrust_sound = None
         self.thrust_sound_playing = False
 
-    class Timer(IntEnum):
-        HURT = 0,
-        FIRE = 1,
-        ANIM = 2,
-        EXPLODE = 3,
+    def hit_test(self, pos):
+        if self.lives == 0 or self.timers[Player.Timer.EXPLODE] > 0:
+            return False
+
+        if abs(pos[0] - self.x) < 40 and abs(pos[1] - self.y) < 15:
+            self.timers[Player.Timer.HURT] = 60
+            self.shields -= 1
+
+            game.play_sound("player_hit")
+
+            if self.shields == 0:
+                self.lives -= 1
+                if self.lives == 0 and self.thrust_sound_playing:
+                    try:
+                        self.thrust_sound.fadeout(200)
+                    except Exception:
+                        pass
+                    self.thrust_sound_playing = False
+
+                game.play_sound("player_explode")
+                self.timers[Player.Timer.EXPLODE] = Player.EXPLODE_FRAMES
+
+                if self.carried_human is not None:
+                    self.carried_human.dropped()
+                    self.carried_human = None
+
+            return True
+        else:
+            return False
 
     def update(self):      
         self.timers = [i - 1 for i in self.timers]
@@ -215,10 +282,8 @@ class Player(WrapActor):
                     elif (move.x == 0 or self.frame != target) and self.thrust_sound_playing:
                         self.thrust_sound.fadeout(200)
                         self.thrust_sound_playing = False
-            #except Exception:
-                #pass
-            except Exception as e:             ###
-                print(e)                    ###
+            except Exception:
+                pass
 
             anim_type = "ship" if self.timers[Player.Timer.HURT] <= 0 else "hurt"
             tilt = ""
@@ -236,6 +301,30 @@ class Player(WrapActor):
                 y_offset = -3
                 self.thrust_sprite.pos = (self.x + x_offset * -move.x,
                                           self.y + y_offset)
+
+    def respawn(self):
+        self.shields = 5
+
+        best_score = 0
+        for i in range(20):
+            def wrap_distance(x1, x2):
+                x1, x2 = x1 % LEVEL_WIDTH, x2 % LEVEL_WIDTH
+                dist = abs(x1 - x2)
+                if dist < LEVEL_WIDTH / 2:
+                    return dist
+                else:
+                    return LEVEL_WIDTH - dist
+
+            random_pos = Vector2(uniform(0, LEVEL_WIDTH - 1), uniform(150,300))
+            if len(game.enemies) == 0:
+                self.pos = random_pos
+                break
+            else:
+                all_distances = [wrap_distance(enemy.x, random_pos.x) for enemy in game.enemies]
+                score = min(all_distances)
+                if score >= best_score:
+                    self.pos = random_pos
+                    best_score = score
 
     def flash(self, offset_x, offset_y):
         if self.frame % 8 == 0 and self.timers[Player.Timer.FIRE] > 5:
@@ -333,6 +422,10 @@ class Enemy(WrapActor):
         self.fire_angle = 0
         self.blip = Actor("dot-red")
         self.anim_timer = randint(0, 47)
+
+    def relocate(self, delta):
+        super().relocate(delta)
+        self.target_pos += Vector2(delta, 0)
 
     def laser_hit_test(self, pos):
         if self.collidepoint(pos) and self.state == EnemyState.ALIVE:
@@ -585,6 +678,15 @@ class Human(WrapActor):
 
     def can_be_picked_up_by_enemy(self):
         return self.carrier is None and not self.falling and not self.dead
+
+    def picked_up(self, carrier):
+        self.carrier = carrier
+        self.falling = False
+
+    def dropped(self):
+        self.carrier = None
+        self.falling = not self.terrain_check()
+        self.y_velocity = 0
 
     def terrain_check(self):
         pos_terrain = (int(self.x % LEVEL_WIDTH), int(self.y - TERRAIN_OFFSET_Y))
@@ -854,14 +956,21 @@ def draw():
 def play_music(name):
     try:
         music.play(name)
-    #except Exception:
-        #pass
-    except Exception as e:         ###
-        print(e)                   ###
+    except Exception:
+        pass
+
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 1024)
+    pygame.mixer.set_num_channels(16)
+    play_music("menu_theme")
+except Exception:
+    pass
 
 keyboard_controls = KeyboardControls()
 
 state = State.TITLE
+game = None
 state_timer = 0
 
 run()

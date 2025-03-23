@@ -7,3 +7,6 @@ stub skeleton is ready to go.
 -----
 First pass is complete. Next steps are bringing in the official resources, scrubbing against the book
 and GitHub, and playtest/debugging.
+
+Interesting - unlike every previous project, this one omits the Python & Pygame Zero version checks, at
+least in the book text. I'm bringing it in anyway.
