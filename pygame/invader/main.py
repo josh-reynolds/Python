@@ -43,6 +43,8 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 def remap_clamp(old_val, old_min, old_max, new_min, new_max):
     lower_limit = min(new_min, new_max)
     upper_limit = max(new_min, new_max)
+    return min(upper_limit,
+               max(lower_limit, remap(old_val, old_min, old_max, new_min, new_max)))
 
 def forward_backward_animation_frame(frame, num_frames):
     if num_frames < 2:
@@ -95,7 +97,7 @@ class WrapActor(Actor):
     def update(self):      
         while self.x - game.player.x < -LEVEL_WIDTH/2:
             self.relocate(LEVEL_WIDTH)
-        while self.x - game.player.x > -LEVEL_WIDTH/2:
+        while self.x - game.player.x > LEVEL_WIDTH/2:
             self.relocate(-LEVEL_WIDTH)
 
     def draw(self, offset_x, offset_y):
@@ -150,10 +152,10 @@ class Player(WrapActor):
     EXPLODE_FRAMES = 18 * EXPLODE_ANIM_SPEED
 
     class Timer(IntEnum):
-        HURT = 0,
-        FIRE = 1,
-        ANIM = 2,
-        EXPLODE = 3,
+        HURT = 0
+        FIRE = 1
+        ANIM = 2
+        EXPLODE = 3
 
     def __init__(self, controls):
         super().__init__("blank", (WIDTH / 2, LEVEL_HEIGHT / 2))
@@ -330,7 +332,7 @@ class Player(WrapActor):
         if self.frame % 8 == 0 and self.timers[Player.Timer.FIRE] > 5:
             sprite = "flash" + str(self.frame // 8)
             x = self.x + offset_x - 25
-            y = self.y + offset_y -13 + self.get_laser_fire_y_offset()
+            y = self.y + offset_y - 13 + self.get_laser_fire_y_offset()
             screen.blit(sprite, (x,y))
 
     def get_laser_fire_y_offset(self):
@@ -367,16 +369,16 @@ class Radar(Actor):
                 self.y + (int(pos[1]) // 11))
 
 class EnemyState(Enum):
-    START = 0,
-    ALIVE = 1,
-    EXPLODING = 2,
+    START = 0
+    ALIVE = 1
+    EXPLODING = 2
     DEAD = 3
 
 class EnemyType(Enum):
-    LANDER = 0,
-    MUTANT = 1,
-    BAITER = 2,
-    POD = 3,
+    LANDER = 0
+    MUTANT = 1
+    BAITER = 2
+    POD = 3
     SWARMER = 4
 
 class Enemy(WrapActor):
@@ -452,7 +454,7 @@ class Enemy(WrapActor):
         super().update()
 
         if self.state == EnemyState.START:
-            self.state_timer+= 1
+            self.state_timer += 1
             if self.state_timer == 1:
                 if self.type == EnemyType.MUTANT:
                     game.play_sound("enemy_appear_mutant")
@@ -639,7 +641,7 @@ class Human(WrapActor):
 
         if self.carrier is None:
             self.falling = not self.terrain_check()
-            if not self.falling and self.y_velocity > 1:
+            if not self.falling and self.y_velocity > 3:
                 self.die()
 
             if self.falling:
@@ -950,7 +952,7 @@ def draw():
         game.draw()
 
     elif state == State.GAME_OVER:
-        game.dxraw()
+        game.draw()
         draw_text("GAME OVER", WIDTH // 2, (HEIGHT // 2) - 100, True)
 
 def play_music(name):
