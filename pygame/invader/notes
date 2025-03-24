@@ -10,3 +10,63 @@ and GitHub, and playtest/debugging.
 
 Interesting - unlike every previous project, this one omits the Python & Pygame Zero version checks, at
 least in the book text. I'm bringing it in anyway.
+
+-----
+Book scrub is complete, and the official resources are in place. Before checking out GitHub, I'm 
+trying some playtesting - with placeholder graphics it was pretty meager, and only caught syntax
+errors and broken functionality. Now that I can see what's going on, more subtle issues are uncovered.
+
+* [FIXED] warning at start: libpng warning: iCCP: known incorrect sRGB profile
+* [     ] enemies don't move
+* [     ] on laser hit, enemy explosion is not displayed, sprite stays on-screen (sound effect does play)
+* [     ] enemies do not fire any bullets (just landers at start, do they shoot?)
+* [     ] music does not play at all, menu or in game
+* [     ] after seemingly killing all enemies, wave does not end
+
+-----
+There's a good discussion on StackOverflow (22745076) about the first issue, and how to fix it. Some of the PNG
+files contain chunks that the graphics library in Pygame (I think) is unhappy about, and it is 
+spewing a warning. Fix is to remove those chunks.
+
+You can identify the files with pngcrush (search to find and download it), and fix with mogrify (part of
+the ImageMagick suite).
+
+find . -name '*.png' -exec sh -c 'pngcrush -n -q {} 2>&1 | grep "known incorrect sRGB"' \; -print
+
+11 files are affected (output from previous command):
+
+pngcrush: iCCP: known incorrect sRGB profile
+./images/bolt1.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame5.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame0.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/bullet0.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/bullet1.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame6.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame1.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame2.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/bolt0.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame4.png
+pngcrush: iCCP: known incorrect sRGB profile
+./images/newgame3.png
+
+List is out of order, but it looks like every newgame*, bolt* and bullet* image is affected. That seems
+plausible, like it aligns with some artist's workflow, rather than randomly affecting files across the 
+full set.
+
+The fix is as simple as:
+
+for i in ./images/newgame*; do mogrify $i; done
+for i in ./images/bolt*; do mogrify $i; done
+for i in ./images/bullet*; do mogrify $i; done
+
+This is done, and on running the game the errors are gone.
+
