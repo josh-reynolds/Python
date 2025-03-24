@@ -17,11 +17,11 @@ trying some playtesting - with placeholder graphics it was pretty meager, and on
 errors and broken functionality. Now that I can see what's going on, more subtle issues are uncovered.
 
 * [FIXED] warning at start: libpng warning: iCCP: known incorrect sRGB profile
-* [     ] enemies don't move
-* [     ] on laser hit, enemy explosion is not displayed, sprite stays on-screen (sound effect does play)
-* [     ] enemies do not fire any bullets (just landers at start, do they shoot?)
-* [     ] music does not play at all, menu or in game
-* [     ] after seemingly killing all enemies, wave does not end
+* [FIXED] enemies don't move
+* [FIXED] on laser hit, enemy explosion is not displayed, sprite stays on-screen (sound effect does play)
+* [FIXED] enemies do not fire any bullets (just landers at start, do they shoot?)
+* [FIXED] music does not play at all, menu or in game
+* [FIXED] after seemingly killing all enemies, wave does not end
 
 -----
 There's a good discussion on StackOverflow (22745076) about the first issue, and how to fix it. Some of the PNG
@@ -70,3 +70,15 @@ for i in ./images/bullet*; do mogrify $i; done
 
 This is done, and on running the game the errors are gone.
 
+-----
+Scrubbing against GitHub complete, and it resolves all issues listed above. After playtesting, this looks 
+complete.
+
+The GitHub sources contain joystick controls, and make adjustments to controller handling to 
+incorporate them. They also have the version checks missing from the book text.
+
+As for the bugs, almost all are yet another indentation error, in Enemy.update(). I introduced this, should
+have checked more closely. But in my defense, this is another case of indentation changes across page
+boundaries, and even worse, the previous line has a continuation on it. Anyway, fixed.
+
+As for the music not playing, not really sure. The scrub didn't touch any of that code. But it is playing now.

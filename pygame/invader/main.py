@@ -1,11 +1,13 @@
 import math
 import sys
 from enum import Enum, IntEnum
+from abc import ABC, abstractmethod    # not present in book sources, used for controllers
 from random import randint, uniform
 import pygame
 from pygame.math import Vector2
 from engine import *
 
+# version checks not present in book sources
 if sys.version_info < (3,6):
     print("This game requires at least version 3.6 of Python. Please download"
           "it from www.python.org")
@@ -27,6 +29,9 @@ TITLE = "Invader"
 LEVEL_WIDTH = 4096
 LEVEL_HEIGHT = 640
 WAVE_COMPLETE_SCREEN_DURATION = 320
+
+SHOW_DEBUG_LINES = False      # not present in book sources
+
 HUMAN_START_POS = [(204,410), (489,209), (865,374), (1262,405), (1937,263),
                    (2193,278), (2601,405), (2846,347), (3317,193), (3646,233)]
 TERRAIN_OFFSET_Y = 160
@@ -54,19 +59,36 @@ def forward_backward_animation_frame(frame, num_frames):
         frame = (num_frames - 1) * 2 - frame
     return frame
 
-class KeyboardControls:
+# not present in book sources
+class Controls(ABC):
     NUM_BUTTONS = 1
 
     def __init__(self):
-        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
-        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.button_previously_down = [False for i in range(Controls.NUM_BUTTONS)]
+        self.is_button_pressed = [False for i in range(Controls.NUM_BUTTONS)]
 
     def update(self):
-        for button in range(KeyboardControls.NUM_BUTTONS):
+        for button in range(Controls.NUM_BUTTONS):
             button_down = self.button_down(button)
-            self.is_pressed[button] = button_down and not self.previously_down[button]
-            self.previously_down[button] = button_down
+            self.is_button_pressed[button] = button_down and not self.button_previously_down[button]
+            self.button_previously_down[button] = button_down
 
+    @abstractmethod
+    def get_x(self):
+        pass
+
+    @abstractmethod
+    def get_y(self):
+        pass
+
+    @abstractmethod
+    def button_down(self):
+        pass
+
+    def button_pressed(self, button):
+        return self.is_button_pressed[button]
+
+class KeyboardControls(Controls):
     def get_x(self):
         if keyboard.left:
             return -1
@@ -86,9 +108,36 @@ class KeyboardControls:
     def button_down(self, button):
         if button == 0:
             return keyboard.space
+        return False
 
-    def button_pressed(self, button):
-        return self.is_pressed[button]
+# not present in book sources
+class JoystickControls(Controls):
+    def __init__(self, joystick):
+        super().__init__()
+        self.joystick = joystick
+        joystick.init()
+
+    def get_axis(self, axis_num):
+        if self.joystick.get_numhats() > 0 and self.joystick.get_hat(0)[axis_num] != 0:
+            return self.joystick.get_hat(0)[axis_num] * (-1 if axis_num == 1 else 1)
+
+        axis_value = self.joystick.get_axis(axis_num)
+        if abs(axis_value) < 0.6:
+            return 0
+        else:
+            return 1 if axis_value > 0 else -1
+
+    def get_x(self):
+        return self.get_axis(0)
+
+    def get_y(self):
+        return self.get_axis(1)
+
+    def button_down(self, button):
+        if self.joystick.get_numbuttons() <= button:
+            print("Warning: main controller does not have enough buttons!")
+            return False
+        return self.joystick.get_button(button) != 0
 
 class WrapActor(Actor):
     def __init__(self, image, pos):
@@ -525,84 +574,96 @@ class Enemy(WrapActor):
                     self.target_pos = self.target_pos + Vector2(uniform(-x_range, x_range),
                                                                 uniform(-y_range, y_range))
 
-                    distance = (self.target_pos - self.pos).length()
-                    if distance > 0:
-                        vec = (self.target_pos - self.pos).normalize()
-                    else:
-                        vec = Vector2(0,0)
+            distance = (self.target_pos - self.pos).length()
+            if distance > 0:
+                vec = (self.target_pos - self.pos).normalize()
+            else:
+                vec = Vector2(0,0)
 
-                    force = vec * self.acceleration
+            force = vec * self.acceleration
 
-                    if self.y < 64:
-                        force.y += 0.2
-                    if self.y > LEVEL_HEIGHT-64:
-                        force.y -= 0.2
+            if self.y < 64:
+                force.y += 0.2
+            if self.y > LEVEL_HEIGHT-64:
+                force.y -= 0.2
 
-                    self.velocity += force
+            self.velocity += force
 
-                    if self.velocity.length() > max_speed:
-                        self.velocity.scale_to_length(max(self.velocity.length()*0.9, max_speed))
+            if self.velocity.length() > max_speed:
+                self.velocity.scale_to_length(max(self.velocity.length()*0.9, max_speed))
 
-                    self.pos += self.velocity
+            self.pos += self.velocity
 
+            if self.carrying:
+                self.target_human.pos = (self.pos[0], self.pos[1] + 50)
+
+            self.bullet_timer -= 1
+            if self.bullet_timer <= 0:
+                if self.type == EnemyType.BAITER:
+                    velocity = Vector2(math.cos(self.fire_angle), math.sin(self.fire_angle)) * 3
+                    game.bullets.append(Bullet(self.pos, velocity))
+                    self.bullet_timer = 8
+                    self.fire_angle += 0.3
+
+                elif game.player.lives > 0:
+                    player_vec = Vector2(game.player.pos) - self.pos
+                    player_distance = player_vec.length()
+                    if 100 < player_distance < 300:
+                        player_vec.normalize_ip()
+                        velocity = Vector2(player_vec.x + uniform(-0.5, 0.5),
+                                           player_vec.y + uniform(-0.5, 0.5)) * 6
+                        game.bullets.append(Bullet(self.pos, velocity))
+
+                        upper_limit = 30 if self.type == EnemyType.MUTANT else 90
+                        self.bullet_timer = randint(20, upper_limit)
+
+            if self.type == EnemyType.LANDER:
+                frame = 0
+                if self.target_human is not None:
                     if self.carrying:
-                        self.target_human.pos = (self.pos[0], self.pos[1] + 50)
+                        frame = 2
+                    else:
+                        distance = (Vector2(self.pos) - self.target_human.pos).length()
+                        if distance < 90:
+                            frame = 1
+                self.image = "lander" + str(frame)
+            elif self.type == EnemyType.MUTANT:
+                self.anim_timer += 1
+                self.image = "mutant" + str((self.anim_timer // 6) % 4)
+            elif self.type == EnemyType.BAITER:
+                self.anim_timer += 1
+                self.image = "baiter" + str((self.anim_timer // 3) % 8)
+            elif self.type == EnemyType.POD:
+                self.anim_timer += 1
+                frame = forward_backward_animation_frame(self.anim_timer // 6, 3)
+                if self.velocity.x > 0:
+                    frame += 3
+                self.image = "pod" + str(frame)
+            elif self.type == EnemyType.SWARMER:
+                self.anim_timer += 1
+                self.image = "swarmer" + str((self.anim_timer // 6) % 8)
 
-                    self.bullet_timer -= 1
-                    if self.bullet_timer <= 0:
-                        if self.type == EnemyType.BAITER:
-                            velocity = Vector2(cos(self.fire_angle), sin(self.fire_angle)) * 3
-                            game.bullets.append(Bullet(self.pos, velocity))
-                            self.bullet_timer = 8
-                            self.fire_angle += 0.3
+        elif self.state == EnemyState.EXPLODING:
+            self.anim_timer += 1
+            frame = self.anim_timer // 2
+            self.image = "enemy_explode" + str(min(9, frame))
 
-                        elif game.player.lives > 0:
-                            player_vec = Vector2(game.player.pos) - self.pos
-                            player_distance = player_vec.length()
-                            if 100 < player_distance < 300:
-                                player_vec.normalize_ip()
-                                velocity = Vector2(player_vec.x + uniform(-0.5, 0.5),
-                                                   player_vec.y + uniform(-0.5, 0.5)) * 6
-                                game.bullets.append(Bullet(self.pos, velocity))
+            if frame == 10:
+                self.state = EnemyState.DEAD
 
-                                upper_limit = 30 if self.type == EnemyType.MUTANT else 90
-                                self.bullet_timer = randint(20, upper_limit)
+        self.blip.pos = game.radar.radar_pos(self.pos)
 
-                    if self.type == EnemyType.LANDER:
-                        frame = 0
-                        if self.target_human is not None:
-                            if self.carrying:
-                                frame = 2
-                            else:
-                                distance = (Vector2(self.pos) - self.target_human.pos).length()
-                                if distance < 90:
-                                    frame = 1
-                        self.image = "lander" + str(frame)
-                    elif self.type == EnemyType.MUTANT:
-                        self.anim_timer += 1
-                        self.image = "mutant" + str((self.anim_timer // 6) % 4)
-                    elif self.type == EnemyType.BAITER:
-                        self.anim_timer += 1
-                        self.image = "baiter" + str((self.anim_timer // 3) % 8)
-                    elif self.type == EnemyType.POD:
-                        self.anim_timer += 1
-                        frame = forward_backward_animation_frame(self.anim_timer // 6, 3)
-                        if self.velocity.x > 0:
-                            frame += 3
-                        self.image = "pod" + str(frame)
-                    elif self.type == EnemyType.SWARMER:
-                        self.anim_timer += 1
-                        self.image = "swarmer" + str((self.anim_timer // 6) % 8)
+    # not present in book text
+    def draw(self, offset_x, offset_y):
+        super().draw(offset_x, offset_y)
+        if SHOW_DEBUG_LINES:
+            screen.draw.line(self.pos + Vector2(offset_x,offset_y), 
+                             self.target_pos + Vector2(offset_x,offset_y),
+                             (255,255,255))
+        #screen.draw.rect(Rect(self.left + offset_x, self.top + offset_y,
+                              #self.width, self.height),
+                         #(255,255,255))
 
-                elif self.state == EnemyState.EXPLODING:
-                    self.anim_timer += 1
-                    frame = self.anim_timer // 2
-                    self.image = "enemy_explode" + str(min(9, frame))
-
-                    if frame == 10:
-                        self.state = EnemyState.DEAD
-
-                self.blip.pos = game.radar.radar_pos(self.pos)
 
 class Human(WrapActor):
     def __init__(self, pos):
@@ -850,6 +911,15 @@ class Game:
                 draw_text(line, WIDTH // 2, y, True)
                 y += 65
 
+        # debug display from GitHub sources
+        # uncomment these lines to view
+        #screen.draw.text(f"{self.player_camera_offset_x=}", fontsize=26, topleft=(0,0))
+        #screen.draw.text(f"{self.player.velocity=}", fontsize=26, topleft=(0,20))
+        #screen.draw.text(f"{self.wave_timer=}", fontsize=26, topleft=(0,40))
+        #screen.draw.text(f"{len(self.enemies)=}", fontsize=26, topleft=(0,60))
+        #screen.draw.text(f"{self.player.pos=}", fontsize=26, topleft=(0,80))
+        #screen.draw.text(f"{[f'{obj.pos[0]:.1f}{obj.pos[1]:.1f}' for obj in [self.player]+self.humans]}", fontsize=26, topleft=(0,100))
+
     def get_wave_end_text(self):
         saved = self.get_humans_saved()
         i = (self.wave_timer + WAVE_COMPLETE_SCREEN_DURATION) // (WAVE_COMPLETE_SCREEN_DURATION //4)
@@ -911,15 +981,33 @@ class State(Enum):
     PLAY = 2
     GAME_OVER = 3
 
-def update():
-    global state, game, state_timer
+# not present in book sources
+def get_joystick_if_exists():
+    return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
 
+# not present in book sources
+def setup_joystick_controls():
+    global joystick_controls
+    joystick = get_joystick_if_exists()
+    joystick_controls = JoystickControls(joystick) if joystick is not None else None
+
+# not present in book sources
+def update_controls():
     keyboard_controls.update()
+    if joystick_controls is None:
+        setup_joystick_controls()
+    else:
+        joystick_controls.update()
+
+def update():
+    global state, game, state_timer, joystick_controls
+
+    update_controls()
 
     state_timer += 1
 
     if state == State.TITLE:
-        for controls in (keyboard_controls,):     # comments indicate GitHub has controller support too
+        for controls in (keyboard_controls, joystick_controls):
             if controls is not None and controls.button_pressed(0):
                 state = State.PLAY
                 state_timer = 0
@@ -936,7 +1024,7 @@ def update():
     elif state == State.GAME_OVER:
         game.update()
         if state_timer > 60:
-            for controls in (keyboard_controls,):     # comments indicate GitHub has controller support too
+            for controls in (keyboard_controls, joystick_controls):
                 if controls is not None and controls.button_pressed(0):
                     state = State.TITLE
                     state_timer = 0
@@ -970,6 +1058,7 @@ except Exception:
     pass
 
 keyboard_controls = KeyboardControls()
+setup_joystick_controls()
 
 state = State.TITLE
 game = None
