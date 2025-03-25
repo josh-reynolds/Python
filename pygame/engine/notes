@@ -74,7 +74,17 @@ v1.1 (released with Brikz)
 * [DEFER] only partial positioning implemented for Painter.text()
 * [DEFER] duplication between Images, _load_image(), and Screen
 
-v1.2 (under development with Invader)
+v1.2 (released with Invader)
+----------------------------------------
+* [DEFER] no docstrings for class methods
+* [DEFER] only Actor has debug spew coverage
+* [DEFER] only Actor has unit test coverage
+* [DEFER] font defaults are hard-coded in Painter class and not customizeable
+* [DEFER] blit code duplication between Painter.text() and Screen.blit()
+* [DEFER] only partial positioning implemented for Painter.text()
+* [DEFER] duplication between Images, _load_image(), and Screen
+
+v1.3 (under development with Huevos)
 ----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage

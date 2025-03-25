@@ -28,7 +28,7 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.1"
+__version__ = "1.2"
 
 import os
 import sys
@@ -89,6 +89,14 @@ class Actor:
     @property
     def width(self):
         return self.rect.width
+
+    @property
+    def height(self):
+        return self.rect.height
+
+    @property
+    def left(self):
+        return self.rect.left
 
     @property
     def image(self):
