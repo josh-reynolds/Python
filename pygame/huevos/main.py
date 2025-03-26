@@ -31,7 +31,7 @@ class KeyboardControls:
 
 class Player:
     def __init__(self, a):   ###
-        self.replay_data = 0    ###
+        self.replay_data = [0]    ###
         pass          ###
 
 class Game:
@@ -58,6 +58,9 @@ class State(Enum):
 
 def save_replays(a):   ###
     pass    ###
+
+def load_replays():
+    return [[[1]],2]    ###
 
 def update():
     global state, game, high_score, game_over_timer, all_replays, total_frames
@@ -143,8 +146,7 @@ def play_music(a, b=None):   ###
     pass   ###
 
 keyboard_controls = KeyboardControls()
-all_replays = []     ###
-high_score = 0    ###
+all_replays, high_score = load_replays()
 
 state = State.TITLE
 total_frames = 0
