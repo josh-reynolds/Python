@@ -5,11 +5,61 @@ WIDTH = 480       ###
 HEIGHT = 480      ###
 TITLE = "Huevos"
 
+class KeyboardControls:
+    def update(self):
+        pass                 ###
+    def button_pressed(self, a):    ###
+        pass                 ###
+
 class State(Enum):
     TITLE = 1
 
 def update():
-    pass         ###
+    global state, game, high_score, game_over_timer, all_replays, total_frames
+
+    total_frames += 1
+    keyboard_controls.update()
+
+    def button_pressed_controls(button_num):
+        for controls in (keyboard_controls,):
+            if controls is not None and controls.button_pressed(button_num):
+                return controls
+        return None
+
+    if state == State.TITLE:
+        if button_pressed_controls(0) is not None:
+            state = State.CONTROLS
+
+    elif state == State.CONTROLS:
+        controls = button_pressed_controls(0)
+        if controls is not None:
+            state = State.PLAY
+            game = Game(Player(controls), all_replays)
+            play_music("ingame_theme", 0.2)
+
+    elif state == State.PLAY:
+        if game.time_remaining <= 0:
+            game.play_sound("gameover")
+            state= State.GAME_OVER
+            game_over_timer = 0
+
+            all_replays.append(game.player.replay_data)
+
+            if len(all_replays) > MAX_REPLAYS:
+                all_replays.sort(key=lambda replay: len(replay), reverse=True)
+                all_replays = all_replays[:MAX_REPLAYS]
+
+            save_replays(all_replays)
+        else:
+            game.update()
+
+    elif state == State.GAME_OVER:
+        game_over_timer += 1
+        if game_over_timer > 60 and keyboard_controls.button_pressed(0) is not None:
+            if game.timer > high_score:
+                high_score = game.timer
+            state = State.TITLE
+            play_music("title_theme")
 
 def draw():
     if state == State.TITLE:
@@ -43,6 +93,8 @@ def draw():
         if game.timer > high_score:
             anim_frame = (total_frames // 5) % 8
             screen.blit(f"newrecord{anim_frame}", (WIDTH // 2 - 575 // 2, 380))
+
+keyboard_controls = KeyboardControls()
 
 state = State.TITLE
 total_frames = 0
