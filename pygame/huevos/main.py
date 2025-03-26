@@ -5,6 +5,8 @@ WIDTH = 480       ###
 HEIGHT = 480      ###
 TITLE = "Huevos"
 
+MAX_REPLAYS = 1   ###
+
 class KeyboardControls:
     NUM_BUTTONS = 2
 
@@ -18,14 +20,44 @@ class KeyboardControls:
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
 
-    def button_down(self, a):  ###
-        pass          ###
+    def button_down(self, button):
+        if button == 0:
+            return keyboard.space
+        else:
+            return keyboard.z
 
     def button_pressed(self, button):
         return self.is_pressed[button]
 
+class Player:
+    def __init__(self, a):   ###
+        self.replay_data = 0    ###
+        pass          ###
+
+class Game:
+    def __init__(self, a, b):   ###
+        self.time_remaining = 0
+        self.player = Player(1)   ###
+        self.timer = 1   ###
+    def draw(self):
+        pass     ###
+    def play_sound(self, a):   ###
+        pass    ###
+
+class TextAlign(Enum):
+    RIGHT = 0   ###
+
+def draw_text(a, b, c, align, font):   ###
+    pass   ###
+
 class State(Enum):
     TITLE = 1
+    CONTROLS = 2
+    PLAY = 3
+    GAME_OVER = 4
+
+def save_replays(a):   ###
+    pass    ###
 
 def update():
     global state, game, high_score, game_over_timer, all_replays, total_frames
@@ -107,7 +139,12 @@ def draw():
             anim_frame = (total_frames // 5) % 8
             screen.blit(f"newrecord{anim_frame}", (WIDTH // 2 - 575 // 2, 380))
 
+def play_music(a, b=None):   ###
+    pass   ###
+
 keyboard_controls = KeyboardControls()
+all_replays = []     ###
+high_score = 0    ###
 
 state = State.TITLE
 total_frames = 0
