@@ -142,8 +142,14 @@ def draw():
             anim_frame = (total_frames // 5) % 8
             screen.blit(f"newrecord{anim_frame}", (WIDTH // 2 - 575 // 2, 380))
 
-def play_music(a, b=None):   ###
-    pass   ###
+def play_music(name, volume=0.3):
+    try:
+        music.play(name)
+        music.set_volume(volume)
+    #except Exception:
+        #pass
+    except Exception as e:    ###
+        print(e)         ###
 
 keyboard_controls = KeyboardControls()
 all_replays, high_score = load_replays()
