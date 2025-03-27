@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from engine import *
 
@@ -6,6 +7,7 @@ HEIGHT = 480      ###
 TITLE = "Huevos"
 
 MAX_REPLAYS = 1   ###
+REPLAY_FILENAME = 'replays'
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -56,11 +58,33 @@ class State(Enum):
     PLAY = 3
     GAME_OVER = 4
 
+def get_save_folder():
+    return os.getcwd()        ###
+
 def save_replays(a):   ###
     pass    ###
 
 def load_replays():
-    return [[[1]],2]    ###
+    replays = []
+    try:
+        path = os.path.join(get_save_folder(), REPLAY_FILENAME)
+        if os.path.exists(path):
+            with open(path) as file:
+                for line in file:
+                    current_replay = []
+                    line = line.rstrip()
+                    entries = line.split(";")
+                    for entry in entries:
+                        elements = entry.split(",")
+                        pos = (float(elements[0]), float(elements[1]))
+                        current_replay.append( (pos, int(elements[2]), elements[3]) )
+                    replays.append(current_replay)
+    except Exception as e:
+        print(f"Error while loading replays: '{e}'. Replay data will be reset")
+        return [], 0
+
+    high_score = 0 if len(replays) == 0 else len(max(replays, key=lambda replay: len(replay)))
+    return replays, high_score
 
 def update():
     global state, game, high_score, game_over_timer, all_replays, total_frames
