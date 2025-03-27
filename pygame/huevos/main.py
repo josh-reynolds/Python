@@ -1,4 +1,5 @@
 import os
+import sys
 from enum import Enum
 from engine import *
 
@@ -59,7 +60,15 @@ class State(Enum):
     GAME_OVER = 4
 
 def get_save_folder():
-    return os.getcwd()        ###
+    current_working_folder = os.getcwd()
+    home_folder = os.path.expanduser('~')
+    if current_working_folder != home_folder:
+        return sys.path[0]
+    else:
+        path = os.path.expanduser('~/.code-the-classics-vol-2')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return path
 
 def save_replays(replays):
     try:
