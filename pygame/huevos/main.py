@@ -47,11 +47,28 @@ class Game:
     def play_sound(self, a):   ###
         pass    ###
 
-class TextAlign(Enum):
-    RIGHT = 0   ###
+def get_char_image_and_width(a, b):  ###
+    return ('foo', 1)   ###
 
-def draw_text(a, b, c, align, font):   ###
-    pass   ###
+def text_width(a, b):
+    return 1  ###
+
+class TextAlign(Enum):
+    LEFT = 0
+    CENTER = 1
+    RIGHT = 2
+
+def draw_text(text, x, y, align=TextAlign.LEFT, font="font"):
+    if align == TextAlign.CENTER:
+        x -= text_width(text, font) // 2
+    elif align == TextAlign.RIGHT:
+        x -= text_width(text, font)
+
+    for char in text:
+        image, width = get_char_image_and_width(char, font)
+        if image is not None:
+            screen.blit(image, (x, y))
+        x += width
 
 class State(Enum):
     TITLE = 1
