@@ -9,6 +9,10 @@ TITLE = "Huevos"
 
 MAX_REPLAYS = 1   ###
 REPLAY_FILENAME = 'replays'
+INITIAL_TIME_REMAINING = 0 ###
+INITIAL_PICKUP_TIME_BONUS = 0 ###
+INITIAL_LEVEL_CYCLE = 1 ###
+LEVEL_SEQUENCE = [1] ###
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -32,18 +36,47 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
-class Player:
+class Gem:      ###
+    def new_game():
+        pass           ###
+
+class Player:        ###
     def __init__(self, a):   ###
         self.replay_data = [(0,0),0,0]    ###
         pass          ###
 
+class GhostPlayer:    ###
+    def __init__(self, a):   ###
+        pass    ###
+
 class Game:
-    def __init__(self, a, b):   ###
-        self.time_remaining = 0
-        self.player = Player(1)   ###
-        self.timer = 1   ###
+    def __init__(self, player=None, replays=None):
+        self.player = player
+
+        Gem.new_game()
+
+        self.ghost_players = []
+        if replays is not None:
+            for replay in replays:
+                self.ghost_players.append(GhostPlayer(replay))
+
+        self.timer = 0
+        self.time_remaining = INITIAL_TIME_REMAINING * 60
+        self.time_pickup_bonus = INITIAL_PICKUP_TIME_BONUS
+        self.gained_time_timer = 0
+        self.level_index = (INITIAL_LEVEL_CYCLE * len(LEVEL_SEQUENCE)) - 1
+        self.level_text = ""
+        self.grid = None
+        self.tileset_image = None
+        self.background_image = None
+        self.background_y_offset = 0
+
+        self.next_level()
+
     def draw(self):
         pass     ###
+    def next_level(self):
+        pass    ###
     def play_sound(self, a):   ###
         pass    ###
 
