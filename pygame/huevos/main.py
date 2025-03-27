@@ -47,11 +47,15 @@ class Game:
     def play_sound(self, a):   ###
         pass    ###
 
-def get_char_image_and_width(a, b):  ###
-    return ('foo', 1)   ###
+def get_char_image_and_width(char, font):
+    if char == " ":
+        return None, 22
+    else:
+        image = getattr(images, f"{font}{ord(char):03d}")
+        return image, image.get_width()
 
-def text_width(a, b):
-    return 1  ###
+def text_width(text, font):
+    return sum([get_char_image_and_width(c, font)[1] for c in text])
 
 class TextAlign(Enum):
     LEFT = 0
