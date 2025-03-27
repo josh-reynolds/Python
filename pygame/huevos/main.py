@@ -33,7 +33,7 @@ class KeyboardControls:
 
 class Player:
     def __init__(self, a):   ###
-        self.replay_data = [0]    ###
+        self.replay_data = [(0,0),0,0]    ###
         pass          ###
 
 class Game:
@@ -61,8 +61,16 @@ class State(Enum):
 def get_save_folder():
     return os.getcwd()        ###
 
-def save_replays(a):   ###
-    pass    ###
+def save_replays(replays):
+    try:
+        with open(os.path.join(get_save_folder(), REPLAY_FILENAME), "w") as file:
+            for replay in replays:
+                line = ""
+                for entry in replay:
+                    line += f"{int(entry[0][0])},{int(entry[0][1])},{entry[1]},{entry[2]};"
+                file.write(line[0:-1] + "\n")
+    except Exception as e:
+        print(f"Error while saving replays: {e}")
 
 def load_replays():
     replays = []
