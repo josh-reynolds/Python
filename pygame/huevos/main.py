@@ -2,6 +2,7 @@ import os
 import sys
 from enum import Enum
 from random import randint
+from pygame import Rect
 from engine import *
 
 WIDTH = 480       ###
@@ -14,6 +15,7 @@ INITIAL_TIME_REMAINING = 0 ###
 INITIAL_PICKUP_TIME_BONUS = 0 ###
 INITIAL_LEVEL_CYCLE = 1 ###
 LEVEL_SEQUENCE = [1] ###
+GRID_BLOCK_SIZE = 32  ###
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -45,9 +47,13 @@ class Player:        ###
     def __init__(self, a):   ###
         self.replay_data = [(0,0),0,0]    ###
         pass          ###
+    def draw(self):
+        pass    ###
 
 class GhostPlayer:    ###
     def __init__(self, a):   ###
+        pass    ###
+    def draw(self):
         pass    ###
 
 class Game:
@@ -75,9 +81,42 @@ class Game:
         self.next_level()
 
     def next_level(self):
-        pass    ###
+        self.background_image = images.controls   ###
+        self.tileset_image = images.controls   ###
+        self.grid = [[0]]   ###
+        self.doors = []   ###
+        self.animations = []   ###
+        self.gems = []   ###
+        self.enemies = []   ###
+
     def draw(self):
-        pass     ###
+        screen.blit(self.background_image, (0, self.background_y_offset))
+
+        tileset_w = self.tileset_image.get_width()
+        tileset_grid_w = tileset_w // GRID_BLOCK_SIZE
+        for row_y in range(len(self.grid)):
+            row = self.grid[row_y]
+            x = 0
+            for tile in row:
+                if tile >= 0:
+                    tileset_grid_y = tile // tileset_grid_w
+                    tileset_grid_x = tile % tileset_grid_w
+                    tile_rect = Rect(tileset_grid_x * GRID_BLOCK_SIZE,
+                                     tileset_grid_y * GRID_BLOCK_SIZE,
+                                     GRID_BLOCK_SIZE, GRID_BLOCK_SIZE)
+                    screen.surface.blit(self.tileset_image,
+                                        (x, row_y * GRID_BLOCK_SIZE), area=tile_rect)
+                    x += GRID_BLOCK_SIZE
+
+        for obj in self.ghost_players + self.doors + self.animations + [self.player] \
+                + self.gems + self.enemies:
+                    if obj is not None:
+                        obj.draw()
+
+        self.draw_ui()
+
+    def draw_ui(self):
+        pass         ###
 
     def play_sound(self, name, count=1):
         if self.player:
