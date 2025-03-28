@@ -50,6 +50,10 @@ class Player:        ###
         pass          ###
     def draw(self):
         pass    ###
+    def new_player(self,a):   ###
+        pass    ###
+    def reset(self):   ###
+        pass    ###
 
 class GhostPlayer:    ###
     def __init__(self, a):   ###
@@ -82,13 +86,42 @@ class Game:
         self.next_level()
 
     def next_level(self):
+        self.level_index += 1
+
+        if self.level_index != 0 and self.level_index % len(LEVEL_SEQUENCE) == 0:
+            if self.time_pickup_bonus > 1:
+                self.time_pickup_bonus -= 1
+            elif self.time_pickup_bonus == 1:
+                self.time_pickup_bonus = 0.5
+
+        self.block_rects = []
+        self.doors = []
+        self.gems = []
+        self.enemies = []
+        self.animations = []
+        self.level_text = ""
+        self.exit_open = False
+
+        filename = LEVEL_SEQUENCE[self.level_index % len(LEVEL_SEQUENCE)]
+        player_start_pos = self.load_level(filename)
+
+        if self.player is not None:
+            self.player.new_player(player_start_pos)
+
+        self.generate_block_rects()
+
+        if self.player:
+            self.player.reset()
+
+        self.play_sound("new_wave")
+
+    def load_level(self, a):   ###
         self.background_image = images.controls   ###
         self.tileset_image = images.controls   ###
         self.grid = [[0]]   ###
-        self.doors = []   ###
-        self.animations = []   ###
-        self.gems = []   ###
-        self.enemies = []   ###
+
+    def generate_block_rects(sel):
+        pass    ###
 
     def draw(self):
         screen.blit(self.background_image, (0, self.background_y_offset))
