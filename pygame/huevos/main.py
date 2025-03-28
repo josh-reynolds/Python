@@ -2,6 +2,7 @@ import os
 import sys
 from enum import Enum
 from random import randint
+import pygame
 from pygame import Rect
 from engine import *
 
@@ -116,7 +117,14 @@ class Game:
         self.draw_ui()
 
     def draw_ui(self):
-        pass         ###
+        pygame.draw.rect(screen.surface, (0,54,255), Rect(0,500,WIDTH,5))
+        screen.blit("text_area_frame", (0, 500))
+        draw_text(self.level_text, WIDTH // 2, 508, align=TextAlign.CENTER)
+
+        screen.blit("status_back", (WIDTH // 2 - 297 // 2, 0))
+
+        font = "font" if self.gained_time_timer < 0 else "fontbr"
+        draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
 
     def play_sound(self, name, count=1):
         if self.player:
