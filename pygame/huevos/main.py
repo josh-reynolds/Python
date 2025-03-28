@@ -119,9 +119,31 @@ class Game:
         self.background_image = images.controls   ###
         self.tileset_image = images.controls   ###
         self.grid = [[0]]   ###
+        self.collision_tiles = [1,2,3]  ###
 
-    def generate_block_rects(sel):
-        pass    ###
+    def generate_block_rects(self):
+        self.block_rects = []
+        current_rect = None
+
+        def add():
+            nonlocal current_rect
+            self.block_rects.append(current_rect)
+            current_rect = None
+
+        for gy in range(len(self.grid)):
+            row = self.grid[gy]
+            for gx in range(len(row)):
+                if row[gx] in self.collision_tiles:
+                    pos_x = gx * GRID_BLOCK_SIZE
+                    pos_y = gy * GRID_BLOCK_SIZE
+                    if current_rect is None:
+                        current_rect = Rect(pos_x,pos_y, GRID_BLOCK_SIZE, GRID_BLOCK_SIZE)
+                    else:
+                        current_rect.w += GRID_BLOCK_SIZE
+                elif current_rect is not None:
+                    add()
+            if current_rect is not None:
+                add()
 
     def draw(self):
         screen.blit(self.background_image, (0, self.background_y_offset))
