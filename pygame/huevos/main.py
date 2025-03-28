@@ -1,6 +1,7 @@
 import os
 import sys
 from enum import Enum
+from random import randint
 from engine import *
 
 WIDTH = 480       ###
@@ -73,12 +74,18 @@ class Game:
 
         self.next_level()
 
-    def draw(self):
-        pass     ###
     def next_level(self):
         pass    ###
-    def play_sound(self, a):   ###
-        pass    ###
+    def draw(self):
+        pass     ###
+
+    def play_sound(self, name, count=1):
+        if self.player:
+            try:
+                sound = getattr(sounds, name + str(randint(0, count - 1)))
+                sound.play()
+            except Exception as e:
+                print(e)
 
 def get_char_image_and_width(char, font):
     if char == " ":
