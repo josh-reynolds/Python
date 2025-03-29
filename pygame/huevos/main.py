@@ -1,5 +1,6 @@
 import os
 import sys
+import xml.etree.ElementTree as ET
 from enum import Enum
 from random import randint
 import pygame
@@ -15,8 +16,11 @@ REPLAY_FILENAME = 'replays'
 INITIAL_TIME_REMAINING = 0 ###
 INITIAL_PICKUP_TIME_BONUS = 0 ###
 INITIAL_LEVEL_CYCLE = 1 ###
-LEVEL_SEQUENCE = [1] ###
-GRID_BLOCK_SIZE = 32  ###
+LEVEL_SEQUENCE = ["foo.tmx"] ###
+GRID_BLOCK_SIZE = 2  ###
+
+class Biome(Enum):
+    AUTOVERSE = 1    ###
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -115,11 +119,89 @@ class Game:
 
         self.play_sound("new_wave")
 
-    def load_level(self, a):   ###
-        self.background_image = images.controls   ###
-        self.tileset_image = images.controls   ###
-        self.grid = [[0]]   ###
-        self.collision_tiles = [1,2,3]  ###
+    def load_level(self, filename):
+        player_start_pos = (0,0)
+        level_cycle = self.level_index // len(LEVEL_SEQUENCE)
+
+        path = os.path.join(sys.path[0], "tilemaps")
+
+        map_tree = ET.parse(os.path.join(path, filename))
+        map_root = map_tree.getroot()
+
+        properties_node = map_root.find("properties")
+        bg = properties_node.find("./property[@name='Background']").attrib["value"]
+        self.background_image = bg
+        offset_node = properties_node.find("./property[@name='Background Offset Y']")
+        self.background_y_offset = int(offset_node.attrib["value"]) if offset_node is not None else 0
+
+        biome_node = properties_node.find("./property[@name='biome']")
+        biome_name = biome_node.attrib["value"] if biome_node is not None else ""
+        biome = Biome[biome_name.upper()]
+
+        self.level_text = "LEVEL " + str(self.level_index + 1)
+
+        tutorial_text_node = properties_node.find("./property[@name='TutorialText']")
+        if self.player is not None and tutorial_text_node is not None:
+            tutorial_text = tutorial_text_node.attrib["value"]
+            if level_cycle == 0 and len(tutorial_text) > 0:
+                dash_button_name = self.player.controls.button_name("dash")
+                jump_button_name = self.player.controls.button_name("jump")
+                self.level_text = tutorial_text.replace("{DASH}", dash_button_name)
+                self.level_text = self.level_text.replace("{JUMP}", jump_button_name)
+
+        layer_node = map_root.find("layer")
+        map_w = int(layer_node.attrib.get("width"))
+        map_h = int(layer_node.attrib.get("height"))
+        map_data = layer_node.find("data").text.split(",")
+
+        self.grid = []
+        for row in range(map_h):
+            row0_idx = row * map_w
+            current_row = [int(tile)-1 for tile in map_data[row0_idx:row0_idx+map_w]]
+            self.grid.append(current_row)
+
+        object_group_node = map_root.find("objectgroup")
+        if object_group_node == None:
+            for obj_node in object_group_node.findall("object"):
+                object_name = obj_node.attrib["name"]
+                object_pos = (int(float(obj_node.attrib["x"])),
+                              int(float(obj_node.attrib["y"])))
+
+                if object_name == "PlayerStart":
+                    player_start_pos = object_pos
+
+                elif object_name == "Gem":
+                    self.gems.append(Gem(object_pos))
+
+                elif "Enemy" in object_name:
+                    enemy_level_cycle = int(object_name[-1])
+                    appearance_count = (level_cycle - enemy_level_cycle) + 1
+                    if appearance_count >= 1:
+                        facing = 1 if object_name[-3] == "R" else -1
+                        enemy_type = int(object_name[-2])
+                        self.enemies.append(Enemy(object_pos, enemy_type, biome, facing, appearance_count))
+
+                elif "Door" in object_name:
+                    variant_node = obj_node.find("./properties/property[@name='Variant']")
+                    biome_node = obj_node.find("./properties/property[@name='Biome']")
+                    variant = variant_node.attrib["value"] if variant_node is not None else 0
+                    door_biome = biome_node.attrib["value"] if biome_node is not None else biome_name
+                    entrance = "Entrance" in object_name
+                    self.doors.append(Door(object_pos, door_biome, variant, entrance))
+
+        tileset_filename = map_root.find("tileset").attrib.get("source")
+
+        self.collision_tiles = set()
+        tileset_xml = ET.parse(os.path.join(path, tileset_filename))
+        for tile_node in tileset_xml.getroot().findall("tile"):
+            self.collision_tiles.add(int(tile_node.attrib["id"]))
+
+        tileset_image_filename = tileset_xml.getroot().find("image").attrib["source"]
+        if tileset_image_filename not in tileset_images:
+            tileset_images[tileset_image_filename] = pygame.image.load(os.path.join(path, tileset_image_filename))
+        self.tileset_image = tileset_images[tileset_image_filename]
+
+        return player_start_pos
 
     def generate_block_rects(self):
         self.block_rects = []
@@ -355,6 +437,7 @@ def play_music(name, volume=0.3):
     except Exception as e:    ###
         print(e)         ###
 
+tileset_images = {}
 keyboard_controls = KeyboardControls()
 all_replays, high_score = load_replays()
 
