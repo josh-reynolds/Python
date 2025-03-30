@@ -83,12 +83,34 @@ class Player(GravityActor):
         self.last_dash_sprite = "dash_horizontal_0_0"  # used for dash trails
         self.replay_data = []
 
+    def new_level(self,a):   ###
+        self.start_pos = a   ###
+        pass    ###
+
+    def reset(self):
+        self.pos = self.start_pos
+        self.vel_x = 0
+        self.vel_y = 0
+        self.facing_x = 1
+        self.hurt = False
+        self.dash_timer = Player.DASH_TIMER_TRAIL_CUTOFF
+        self.gravity_enabled = True
+        self.grabbed_wall = 0
+        self.coyote_time = 0
+        self.wall_jump_coyote_time = 0
+        self.cached_jump_input_timer = 0
+        self.enemy_stomped_timer = 0
+
+        if game is not None:
+            for enemy in game.enemies:
+                if self.distance_to(enemy) < 150:
+                    enemy.destroy()
+                    game.play_sound("enemy_death", 5)
+
     def draw(self):
-        pass    ###
-    def new_player(self,a):   ###
-        pass    ###
-    def reset(self):   ###
-        pass    ###
+        super().draw()
+        self.flame.pos = self.pos
+        self.flame.draw()
 
 class GhostPlayer(Actor):
     def __init__(self, replay_data):
@@ -146,7 +168,7 @@ class Game:
         player_start_pos = self.load_level(filename)
 
         if self.player is not None:
-            self.player.new_player(player_start_pos)
+            self.player.new_level(player_start_pos)
 
         self.generate_block_rects()
 
@@ -478,6 +500,8 @@ keyboard_controls = KeyboardControls()
 all_replays, high_score = load_replays()
 
 state = State.TITLE
+game = None
+
 total_frames = 0
 
 run()
