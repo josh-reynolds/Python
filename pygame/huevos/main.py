@@ -7,24 +7,28 @@ import pygame
 from pygame import Rect
 from engine import *
 
-WIDTH = 480       ###
-HEIGHT = 480      ###
+WIDTH = 825
+HEIGHT = 550
 TITLE = "Huevos"
 
-MAX_REPLAYS = 1   ###
-REPLAY_FILENAME = 'replays'
-INITIAL_TIME_REMAINING = 0 ###
-INITIAL_PICKUP_TIME_BONUS = 0 ###
-INITIAL_LEVEL_CYCLE = 1 ###
 LEVEL_SEQUENCE = ["foo.tmx"] ###
-GRID_BLOCK_SIZE = 2  ###
-ANCHOR_PLAYER = ("center", "center")   ###
-ANCHOR_FLAME = ("center", "center")   ###
-ANCHOR_CENTER_BOTTOM = ("center", "bottom")   ###
-ANCHOR_CENTER = ("center", "center")   ###
+
+GRID_BLOCK_SIZE = 25
+INITIAL_LEVEL_CYCLE = 0
+INITIAL_TIME_REMAINING = 15
+INITIAL_PICKUP_TIME_BONUS = 2
+
+ANCHOR_CENTER = ("center", "center")
+ANCHOR_CENTER_BOTTOM = ("center", "bottom")
+ANCHOR_PLAYER = ("center", 60)
+ANCHOR_FLAME = ("center", 78)
 
 class Biome(Enum):
-    AUTOVERSE = 1    ###
+    FOREST = 0
+    CASTLE = 1
+
+REPLAY_FILENAME = 'replays'
+MAX_REPLAYS = 10
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -44,6 +48,9 @@ class KeyboardControls:
             return keyboard.space
         else:
             return keyboard.z
+
+    def button_name(self, a): ###
+        return "foo"   ###
 
     def button_pressed(self, button):
         return self.is_pressed[button]

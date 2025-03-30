@@ -2,7 +2,7 @@
 <map>
 	<properties>
 		<property name="Background" value="background"/>
-		<property name="biome" value="Autoverse"/>
+		<property name="biome" value="Forest"/>
 		<property name="TutorialText" value="{DASH} {JUMP} and some stuff"/>
 	</properties>
 	<tileset source="foo.tsx"/>
