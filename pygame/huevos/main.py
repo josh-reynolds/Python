@@ -61,7 +61,8 @@ class GravityActor(CollideActor):
         pass   ###
 
 class Player(GravityActor):
-    DASH_TIMER_TRAIL_CUTOFF = 1   ###
+    DASH_TIMER_TRAIL_CUTOFF = -10
+
     def __init__(self, controls):
         super().__init__((0,0), anchor=ANCHOR_PLAYER)
 
@@ -83,9 +84,9 @@ class Player(GravityActor):
         self.last_dash_sprite = "dash_horizontal_0_0"  # used for dash trails
         self.replay_data = []
 
-    def new_level(self,a):   ###
-        self.start_pos = a   ###
-        pass    ###
+    def new_level(self, start_pos):
+        self.start_pos = start_pos
+        self.reset()
 
     def reset(self):
         self.pos = self.start_pos
