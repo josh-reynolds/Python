@@ -11,7 +11,7 @@ WIDTH = 825
 HEIGHT = 550
 TITLE = "Huevos"
 
-LEVEL_SEQUENCE = ["foo.tmx"] ###
+LEVEL_SEQUENCE = ["starter1.tmx"] ###
 
 GRID_BLOCK_SIZE = 25
 INITIAL_LEVEL_CYCLE = 0
@@ -315,6 +315,9 @@ class Game:
                     add()
             if current_rect is not None:
                 add()
+
+    def update(self):
+        pass   ###
 
     def draw(self):
         screen.blit(self.background_image, (0, self.background_y_offset))

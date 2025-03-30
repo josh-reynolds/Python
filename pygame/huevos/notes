@@ -4,4 +4,16 @@ My version will be named 'Huevos.'
 Version of the engine after this project will be v1.3. Skeleton is ready to go.
 
 ----
+First stub pass is complete. Game does not look like much at this point. I don't have any
+real resources. Both music and sound are throwing exception messages to the console, as 
+expected. Also, I mocked up xml level data, which is all but empty - so lots of code hasn't 
+yet lit up.
 
+This game is considerably more complex than the previous projects, at least from a level
+data perspective.
+
+Rather than bring in all resources, maybe just one set of level data files to start with, then
+deal with whatever code lights up. Then we'll scrub against the book, bring in resources, scrub
+against GitHub, and playtest/debug as usual.
+
+----
