@@ -18,6 +18,7 @@ INITIAL_PICKUP_TIME_BONUS = 0 ###
 INITIAL_LEVEL_CYCLE = 1 ###
 LEVEL_SEQUENCE = ["foo.tmx"] ###
 GRID_BLOCK_SIZE = 2  ###
+ANCHOR_PLAYER = ("center", "center")   ###
 
 class Biome(Enum):
     AUTOVERSE = 1    ###
@@ -50,7 +51,8 @@ class Gem:      ###
 
 class Player:        ###
     def __init__(self, a):   ###
-        self.replay_data = [(0,0),0,0]    ###
+        self.replay_data = [[(0,0),0,0],
+                            [(1,1),1,1]]    ###
         pass          ###
     def draw(self):
         pass    ###
@@ -59,9 +61,13 @@ class Player:        ###
     def reset(self):   ###
         pass    ###
 
-class GhostPlayer:    ###
-    def __init__(self, a):   ###
-        pass    ###
+class GhostPlayer(Actor):
+    def __init__(self, replay_data):
+        super().__init__("blank", replay_data[0][0], ANCHOR_PLAYER)
+        self.replay_data = replay_data
+        self.replay_frame = 0
+        self.level = 0
+
     def draw(self):
         pass    ###
 
