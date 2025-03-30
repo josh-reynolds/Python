@@ -99,6 +99,10 @@ class Actor:
         return self.rect.left
 
     @property
+    def centerx(self):
+        return self.rect.centerx
+
+    @property
     def image(self):
         return self.image_name
 

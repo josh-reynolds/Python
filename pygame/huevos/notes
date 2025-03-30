@@ -17,3 +17,6 @@ deal with whatever code lights up. Then we'll scrub against the book, bring in r
 against GitHub, and playtest/debug as usual.
 
 ----
+Looks like some of the images in this project also have the 'bad iCCP RGB' issue from the previous.
+I brought in the castle tileset image as required by the first level xml data, and am seeing
+that error when launching. Probably ignore for now and fix in bulk later.

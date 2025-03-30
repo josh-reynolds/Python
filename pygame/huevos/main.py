@@ -138,6 +138,9 @@ class Player(GravityActor):
                     enemy.destroy()
                     game.play_sound("enemy_death", 5)
 
+    def update(self):
+        pass   ###
+
     def draw(self):
         super().draw()
         self.flame.pos = self.pos
@@ -317,7 +320,29 @@ class Game:
                 add()
 
     def update(self):
-        pass   ###
+        self.timer += 1
+        self.gained_time_timer -= 1
+
+        if self.time_remaining > 0:
+            self.time_remaining -= 1
+
+        for obj in [self.player] + self.doors + self.animations + self.gems + self.enemies + self.ghost_players:
+            if obj:
+                obj.update()
+
+        self.enemies = [enemy for enemy in self.enemies if enemy.top < HEIGHT]
+        self.animations = [anim for anim in self.animations if not anim.finished]
+        self.gems = [gem for gem in self.gems if not gem.collected]
+
+        if self.player is not None:
+            if self.exit_open:
+                if self.player.centerx > WIDTH:
+                    self.next_level()
+
+            elif len(self.gems) == 0:
+                self.exit_open = True
+                for door in self.doors:
+                    door.open()
 
     def draw(self):
         screen.blit(self.background_image, (0, self.background_y_offset))
