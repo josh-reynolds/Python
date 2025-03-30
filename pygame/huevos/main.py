@@ -49,8 +49,11 @@ class KeyboardControls:
         else:
             return keyboard.z
 
-    def button_name(self, a): ###
-        return "foo"   ###
+    def button_name(self, button):
+        if button == "dash":
+            return "Z"
+        elif button == "jump":
+            return "SPACE"
 
     def button_pressed(self, button):
         return self.is_pressed[button]
