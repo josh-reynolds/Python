@@ -69,7 +69,8 @@ class GhostPlayer(Actor):
         self.level = 0
 
     def draw(self):
-        pass    ###
+        if self.level == game.level_index:
+            super().draw()
 
 class Game:
     def __init__(self, player=None, replays=None):
