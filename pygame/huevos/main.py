@@ -90,6 +90,12 @@ class GravityActor(CollideActor):
         self.fall_state = GravityActor.FallState.FALLING
         self.lower_gravity_timer = 0
 
+    def update(self, a):  ###
+        pass   ###
+
+    def landed(self):
+        pass   ###
+
 class Player(GravityActor):
     DASH_TIMER_TRAIL_CUTOFF = -10
 
@@ -138,7 +144,57 @@ class Player(GravityActor):
                     enemy.destroy()
                     game.play_sound("enemy_death", 5)
 
+    def get_colliding_enemies(self):
+        return []   ###
+
     def update(self):
+        was_landed = self.landed()
+        super().update(not self.hurt)
+
+        if was_landed and not self.landed():
+            self.coyote_tme = COYOTE_TIME
+            self.fall_timer = 0
+
+        if self.top >= HEIGHT:
+            self.reset()
+
+        stomped_any = False
+        for enemy in self.get_colliding_enemies():
+            enemy_rectc = enemy.get_rect()
+            threshold = enemy_rect.top + (enemy_rect.bottom - enemy_rect.top) * \
+                    (0.5 if self.vel_y > 0 else 0.2)
+            if self.y < threshold or self.stomped_last_frame:
+                enemy.stomped()
+                stomped_any = True
+                self.vel_y = -6
+                self.enemy_stomped_timer = 3
+                self.dash_allowed = True
+            else:
+                self.hurt = True
+                self.vel_y = -12
+                self.fall_state = GravityActor.FallState.FALLING
+                self.fall_timer = 0
+                self.dash_timer = Player.DASH_TIMER_TRAIL_CUTOFF
+                game.play_sound("player_death")
+                game.animations.append(Animation(self.pos, "loselife_{0}", 8, 4))
+                break
+
+        self.stomped_last_frame = stomped_any
+
+        if self.landed():
+            self.dash_allowed = True
+
+        self.dash_timer -= 1
+        self.dash_animation_timer += 1
+        self.cached_jump_input_timer -= 1
+        self.coyote_time -= 1
+        self.wall_jump_coyote_time -= 1
+
+        if self.dash_timer > Player.DASH_TIMER_TRAIL_CUTOFF:
+            if self.dash_timer % Player.DASH_TRAIL_INTERVAL == 0:
+                game.animations.append(DashTrail(self.pos, self.last_dash_sprite))
+
+
         pass   ###
 
     def draw(self):
