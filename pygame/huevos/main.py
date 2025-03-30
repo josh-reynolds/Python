@@ -19,6 +19,7 @@ INITIAL_LEVEL_CYCLE = 1 ###
 LEVEL_SEQUENCE = ["foo.tmx"] ###
 GRID_BLOCK_SIZE = 2  ###
 ANCHOR_PLAYER = ("center", "center")   ###
+ANCHOR_FLAME = ("center", "center")   ###
 
 class Biome(Enum):
     AUTOVERSE = 1    ###
@@ -49,11 +50,39 @@ class Gem:      ###
     def new_game():
         pass           ###
 
-class Player:        ###
-    def __init__(self, a):   ###
-        self.replay_data = [[(0,0),0,0],
-                            [(1,1),1,1]]    ###
-        pass          ###
+class CollideActor(Actor):
+    def __init__(self, pos, anchor):   ###
+        super().__init__("blank", pos, anchor)
+        pass   ###
+
+class GravityActor(CollideActor):
+    def __init__(self, pos, anchor):   ###
+        super().__init__(pos, anchor)
+        pass   ###
+
+class Player(GravityActor):
+    DASH_TIMER_TRAIL_CUTOFF = 1   ###
+    def __init__(self, controls):
+        super().__init__((0,0), anchor=ANCHOR_PLAYER)
+
+        self.controls = controls
+        self.flame = Actor("flame_stand_0", self.pos, anchor=ANCHOR_FLAME)
+        self.vel_x = 0
+        self.facing_x = 1
+        self.hurt = False
+        self.dash_timer = Player.DASH_TIMER_TRAIL_CUTOFF   # counts down
+        self.dash_animation_timer = 0                      # counts up
+        self.dash_allowed = False
+        self.grabbed_wall = 0
+        self.coyote_time = 0
+        self.fall_timer = 0
+        self.wall_jump_coyote_time = 0
+        self.cached_jump_input_timer = 0
+        self.enemy_stomped_timer = 0
+        self.change_direction_timer = 0
+        self.last_dash_sprite = "dash_horizontal_0_0"  # used for dash trails
+        self.replay_data = []
+
     def draw(self):
         pass    ###
     def new_player(self,a):   ###
