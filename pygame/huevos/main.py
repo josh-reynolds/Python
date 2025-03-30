@@ -20,6 +20,7 @@ LEVEL_SEQUENCE = ["foo.tmx"] ###
 GRID_BLOCK_SIZE = 2  ###
 ANCHOR_PLAYER = ("center", "center")   ###
 ANCHOR_FLAME = ("center", "center")   ###
+ANCHOR_CENTER_BOTTOM = ("center", "bottom")   ###
 
 class Biome(Enum):
     AUTOVERSE = 1    ###
@@ -56,9 +57,19 @@ class CollideActor(Actor):
         pass   ###
 
 class GravityActor(CollideActor):
-    def __init__(self, pos, anchor):   ###
+    class FallState(Enum):
+        LANDED = 0
+        FALLING = 1
+        JUMPING = 2
+        WALL_JUMPING = 3
+
+    def __init__(self, pos, gravity_enabled=True, anchor=ANCHOR_CENTER_BOTTOM):
         super().__init__(pos, anchor)
-        pass   ###
+
+        self.gravity_enabled = gravity_enabled
+        self.vel_y = 0
+        self.fall_state = GravityActor.FallState.FALLING
+        self.lower_gravity_timer = 0
 
 class Player(GravityActor):
     DASH_TIMER_TRAIL_CUTOFF = -10
