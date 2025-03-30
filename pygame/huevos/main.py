@@ -21,6 +21,7 @@ GRID_BLOCK_SIZE = 2  ###
 ANCHOR_PLAYER = ("center", "center")   ###
 ANCHOR_FLAME = ("center", "center")   ###
 ANCHOR_CENTER_BOTTOM = ("center", "bottom")   ###
+ANCHOR_CENTER = ("center", "center")   ###
 
 class Biome(Enum):
     AUTOVERSE = 1    ###
@@ -47,14 +48,22 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
-class Gem:      ###
+class Gem(Actor):
+    def __init__(self, pos):
+        super().__init__("blank", pos, ANCHOR_CENTER_BOTTOM)
+        self.type = Gem.next_type
+        Gem.next_type += 1
+        if Gem.next_type >= 5:
+            Gem.next_type = 1
+        self.collected = False
+
+    @staticmethod
     def new_game():
-        pass           ###
+        Gem.next_type = 1
 
 class CollideActor(Actor):
-    def __init__(self, pos, anchor):   ###
+    def __init__(self, pos, anchor=ANCHOR_CENTER):
         super().__init__("blank", pos, anchor)
-        pass   ###
 
 class GravityActor(CollideActor):
     class FallState(Enum):
