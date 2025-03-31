@@ -30,6 +30,11 @@ class Biome(Enum):
 REPLAY_FILENAME = 'replays'
 MAX_REPLAYS = 10
 
+def move_towards(a, b, c): ###
+    return 1 ###
+def sign(a): ###
+    return 1 ###
+
 class KeyboardControls:
     NUM_BUTTONS = 2
 
@@ -42,6 +47,9 @@ class KeyboardControls:
             button_down = self.button_down(button)
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
+
+    def get_x(self):
+        return 0   ###
 
     def button_down(self, button):
         if button == 0:
@@ -74,6 +82,8 @@ class Gem(Actor):
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
         super().__init__("blank", pos, anchor)
+    def move(self, a, b, c): ###
+        pass  ###
 
 class GravityActor(CollideActor):
     class FallState(Enum):
@@ -98,6 +108,7 @@ class GravityActor(CollideActor):
 
 class Player(GravityActor):
     DASH_TIMER_TRAIL_CUTOFF = -10
+    MAX_X_RUN_SPEED = 5
 
     def __init__(self, controls):
         super().__init__((0,0), anchor=ANCHOR_PLAYER)
@@ -193,6 +204,99 @@ class Player(GravityActor):
         if self.dash_timer > Player.DASH_TIMER_TRAIL_CUTOFF:
             if self.dash_timer % Player.DASH_TRAIL_INTERVAL == 0:
                 game.animations.append(DashTrail(self.pos, self.last_dash_sprite))
+
+        dx = 0 # x direction we tried to move this frame
+
+        jump_pressed = self.controls.button_pressed(0)
+
+        if self.hurt:
+            self.gravity_enabled = True
+            if self.top >= HEIGHT:
+                self.hurt = False
+
+        elif self.dash_timer > 0:
+            if self.dash_timer < Player.DASH_TIME:
+                if self.dash_timer % Player.DASH_TRAIL_INTERVAL == 0:
+                    game.animations.append(DashTrail(self.pos, self.last_dash_sprite))
+
+                self.move(0, sign(self.vel_y), abs(self.vel_y))
+
+                if self.move(sign(self.vel_x), 0, abs(self.vel_x)) and self.vel_y >= 0:
+                    self.dash_timer = 0
+                    self.grabbed_wall = self.facing_x
+        else:
+            dx = self.controls.get_x()
+
+            def jump():
+                self.vel_y = JUMP_VEL_Y
+                self.fall_state = GravityActor.FallState.JUMPING
+                self.coyote_time = 0
+                self.cached_jump_input_timer = 0
+                self.lower_gravity_timer = 5
+                self.fall_timer = 0
+                game.play_sound("jump")
+
+            def wall_jump(wall_direction):
+                self.vel_y = JUMP_VEL_Y
+                self.fall_state = GravityActor.FallState.WALL_JUMPING
+                self.vel_x = -wall_direction * WALL_JUMP_X_VEL
+                self.facing_x = -wall_direction
+                self.grabbed_wall = 0
+                self.previous_grabbed_wall = 0
+                self.wall_jump_coyote_time = 0
+                self.cached_jump_input_timer = 0
+                self.fall_timer = 0
+                game.play_sound("jump")
+
+            if self.grabbed_wall != 0:
+                self.gravity_enabled = False
+
+                if jump_pressed or self.cached_jump_input_timer > 0:
+                    wall_jump(self.grabbed_wall)
+                elif dx == -self.grabbed_wall:
+                    # pushing away from wall
+                    self.previous_grabbed_wall = self.grabbed_wall
+                    self.wall_jump_coyote_time = WALL_JUMP_COYOTE_TIME
+                    self.grabbed_wall = 0
+                else:
+                    # wall slide
+                    rect = self.get_rect(self.x + self.grabbed_wall, self.y)
+                    if self.move(0, 1, 1) or not game.position_blocked(rect):
+                        self.grabbed_wall = 0
+            else:
+                # not grabbing a wall
+                if jump_pressed and self.wall_jump_coyote_time > 0:
+                    wall_jump(self.previous_grabbed_wall)
+                else:
+                    # normal movement
+                    self.gravity_enabled = True
+                    if dx == 0:
+                        self.vel_x = move_towards(self.vel_x, 0, 1)
+                    else:
+                        self.facing_x = dx
+                        self.vel_x = move_towards(self.vel_x, Player.MAX_X_RUN_SPEED * dx, 1)
+
+                    # check for grabbing a wall
+                    if self.vel_x != 0 and self.move(sign(self.vel_x), 0, abs(self.vel_x)) \
+                            and self.vel_y > 0:
+                                self.grabbed_wall = sign(self.vel_x)
+                                self.vel_x = 0
+
+                    if (jump_pressed or self.cached_jump_input_timer > 0) \
+                            and (self.landed() or self.coyote_time > 0):
+                                jump()
+
+                    elif jump_pressed and not self.landed():
+                        self.cached_jump_input_timer = CACHE_JUMP_INPUT_TIME
+
+                    elif not self.landed() and self.vel_y < 0 and self.dash_timer < -10 \
+                            and not self.controls.button_down(0) \
+                            and self.enemy_stomped_timer <= 0:
+                                self.vel_y = min(self.vel_y + 1, 0)
+
+
+
+
 
 
         pass   ###
