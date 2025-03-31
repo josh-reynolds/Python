@@ -157,7 +157,7 @@ class Player(GravityActor):
                     game.play_sound("enemy_death", 5)
 
     def get_colliding_enemies(self):
-        return []   ###
+        return [enemy for enemy in game.enemies if not enemy.dying and self.hit_test(enemy)]
 
     def update(self):
         was_landed = self.landed()
