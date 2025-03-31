@@ -17,6 +17,7 @@ GRID_BLOCK_SIZE = 25
 INITIAL_LEVEL_CYCLE = 0
 INITIAL_TIME_REMAINING = 15
 INITIAL_PICKUP_TIME_BONUS = 2
+JUMP_VEL_Y = -10
 CACHE_JUMP_INPUT_TIME = 5
 
 ANCHOR_CENTER = ("center", "center")
@@ -50,6 +51,9 @@ class KeyboardControls:
             self.previously_down[button] = button_down
 
     def get_x(self):
+        return 0   ###
+
+    def get_y(self):
         return 0   ###
 
     def button_down(self, button):
@@ -98,7 +102,7 @@ class CollideActor(Actor):
         return False
 
     def get_rect(self, a, b): ###
-        pass   ###
+        return pygame.Rect(0,0,1,1)   ###
 
 class GravityActor(CollideActor):
     MAX_FALL_SPEED = 7
@@ -656,8 +660,19 @@ class Game:
         font = "font" if self.gained_time_timer < 0 else "fontbr"
         draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
 
-    def position_blocked(self, a): ###
-        pass   ###
+    def position_blocked(self, rect):
+        for block_rect in self.block_rects:
+            if rect.colliderect(block_rect):
+                return True
+
+        for door in self.doors:
+            if not door.is_fully_open() and door.colliderect(rect):
+                return True
+
+        if rect.left <= 0 or rect.top < LEVEL_Y_BOUNDARY:
+            return True
+
+        return False
 
     def play_sound(self, name, count=1):
         if self.player:
