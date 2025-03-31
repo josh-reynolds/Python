@@ -52,10 +52,20 @@ class KeyboardControls:
             self.previously_down[button] = button_down
 
     def get_x(self):
-        return 0   ###
+        if keyboard.left:
+            return -1
+        elif keyboard.right:
+            return 1
+        else:
+            return 0
 
     def get_y(self):
-        return 0   ###
+        if keyboard.up:
+            return -1
+        elif keyboard.down:
+            return 1
+        else:
+            return 0
 
     def button_down(self, button):
         if button == 0:
