@@ -14,6 +14,7 @@ TITLE = "Huevos"
 LEVEL_SEQUENCE = ["starter1.tmx"] ###
 
 GRID_BLOCK_SIZE = 25
+LEVEL_Y_BOUNDARY = -100
 INITIAL_LEVEL_CYCLE = 0
 INITIAL_TIME_REMAINING = 15
 INITIAL_PICKUP_TIME_BONUS = 2
@@ -101,8 +102,23 @@ class CollideActor(Actor):
 
         return False
 
-    def get_rect(self, a, b): ###
-        return pygame.Rect(0,0,1,1)   ###
+    def get_rect(self, center_x=None, bottom_y=None):
+        if center_x is None:
+            center_x = self.x
+        if bottom_y is None:
+            bottom_y = self.y
+        w, h = self.get_collideable_width(), self.get_collideable_height()
+        return Rect(center_x - (w // 2), bottom_y - h, w, h)
+
+    def get_collideable_width(self):
+        # overriden for Player and Enemy
+        image_surface = getattr(images, self.image)
+        return image_surface.get_width()
+
+    def get_collideable_height(self):
+        # overriden for Player and Enemy
+        image_surface = getattr(images, self.image)
+        return image_surface.get_height()
 
 class GravityActor(CollideActor):
     MAX_FALL_SPEED = 7
