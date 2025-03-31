@@ -87,6 +87,8 @@ class CollideActor(Actor):
         pass  ###
 
 class GravityActor(CollideActor):
+    MAX_FALL_SPEED = 7
+
     class FallState(Enum):
         LANDED = 0
         FALLING = 1
@@ -101,11 +103,27 @@ class GravityActor(CollideActor):
         self.fall_state = GravityActor.FallState.FALLING
         self.lower_gravity_timer = 0
 
-    def update(self, a):  ###
-        pass   ###
+    def update(self, detect=True):
+        if not self.gravity_enabled:
+            return
+
+        self.lower_gravity_timer -= 1
+
+        if game.timer % (3 if self.lower_gravity_timer > 0 else 2) == 0:
+            self.vel_y = min(self.vel_y + 1, GravityActor.MAX_FALL_SPEED)
+
+        if detect and self.vel_y != 0:
+            if self.fall_state == GravityActor.FallState.LANDED:
+                self.fall_state = GravityActor.FallState.FALLING
+            if self.vel_y != 0 and self.move(0, sign(self.vel_y), abs(self.vel_y)):
+                if self.vel_y > 0:
+                    self.vel_y = 0
+                    self.fall_state = GravityActor.FallState.LANDED
+        else:
+            self.y += self.vel_y
 
     def landed(self):
-        pass   ###
+        return self.fall_state == GravityActor.FallState.LANDED
 
 class Player(GravityActor):
     DASH_TIMER_TRAIL_CUTOFF = -10
