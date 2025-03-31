@@ -17,6 +17,7 @@ GRID_BLOCK_SIZE = 25
 INITIAL_LEVEL_CYCLE = 0
 INITIAL_TIME_REMAINING = 15
 INITIAL_PICKUP_TIME_BONUS = 2
+CACHE_JUMP_INPUT_TIME = 5
 
 ANCHOR_CENTER = ("center", "center")
 ANCHOR_CENTER_BOTTOM = ("center", "bottom")
@@ -294,12 +295,34 @@ class Player(GravityActor):
                             and self.enemy_stomped_timer <= 0:
                                 self.vel_y = min(self.vel_y + 1, 0)
 
+                    if self.dash_allowed and self.controls.button_pressed(1):
+                        dy = self.controls.get_y()
+                        if dx != 0 or dy != 0:
+                            v = pygame.math.Vector2(dx,dy).normalize() * Player.DASH_SPEED
+                            self.vel_x = int(v.x)
+                            self.vel_y = int(v.y)
+                            self.gravity_enabled = False
+                            self.dash_allowed = False
+                            self.dash_tmer = Player.DASH_TIME + Player.DASH_PAUSE_TIME
+                            self.dash_animation_timer = 0
+                            self.fall_state = GravityActor.FallState.FALLING
+                            self.wall_jump_coyote_time = 0
+                            game.play_sound("jump_long", 5)
 
+        if sign(dx) != sign(self.vel_x) and self.dash_timer <= 0:
+            self.change_direction_timer = 5
+        else:
+            self.change_direction_timer -= 1
 
+        self.determine_sprite(dx)
 
+        if not self.landed() and self.dash_timer <= 0:
+            self.fall_timer += 1
 
+        self.replay_data.append( (self.pos, game.level_index, self.image) )
 
-        pass   ###
+    def determine_sprite(self, dx):
+        pass  ###
 
     def draw(self):
         super().draw()
