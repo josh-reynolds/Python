@@ -83,8 +83,22 @@ class Gem(Actor):
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
         super().__init__("blank", pos, anchor)
-    def move(self, a, b, c): ###
-        pass  ###
+
+    def move(self, dx, dy, speed):
+        new_x, new_y = self.x, self.y
+
+        for i in range(speed):
+            new_x, new_y = new_x + dx, new_y + dy
+            rect = self.get_rect(new_x, new_y)
+            if game.position_blocked(rect):
+                return True
+
+            self.pos = new_x, new_y
+
+        return False
+
+    def get_rect(self, a, b): ###
+        pass   ###
 
 class GravityActor(CollideActor):
     MAX_FALL_SPEED = 7
@@ -641,6 +655,9 @@ class Game:
 
         font = "font" if self.gained_time_timer < 0 else "fontbr"
         draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
+
+    def position_blocked(self, a): ###
+        pass   ###
 
     def play_sound(self, name, count=1):
         if self.player:
