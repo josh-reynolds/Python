@@ -322,7 +322,68 @@ class Player(GravityActor):
         self.replay_data.append( (self.pos, game.level_index, self.image) )
 
     def determine_sprite(self, dx):
-        pass  ###
+        self.image = self.flame.image = "blank"
+        self.flame.anchor = ANCHOR_FLAME
+        if not self.hurt or game.timer % 2 == 1:
+            dir_index = "1" if self.facing_x < 0 else "0"
+            if self.hurt:
+                frame = min(self.fall_timer // 8, 5)
+                self.image = f"die_{frame}"
+                self.flame_image = "blank"
+
+            elif self.grabbed_wall != 0 and self.vel_y >= 0:
+                self.image = f"climb_{dir_index}_1"
+                self.flame.image = f"flame_climb_{dir_index}_1"
+
+            elif not self.landed():
+                if self.fall_state == GravityActor.FallState.JUMPING:
+                    frame = min(self.fall_timer // 3, 5)
+                    flame_frame = min(self.fall_timer // 3, 5) + 1
+                    self.image = f"jump_{dir_index}_{frame}"
+                    self.flame.image = f"flame_jump_{dir_index}_{flame_frame}"
+                elif self.fall_state == GravityActor.FallState.WALL_JUMPING:
+                    frame = min(self.fall_timer // 8, 2)
+                    flame_frame = min(self.fall_timer // 4, 6)
+                    self.image = f"wall_jump_{dir_index}_{frame}"
+                    self.flame.image = f"flame_wall_jump_{dir_index}_{flame_frame}"
+                elif self.dash_timer > 0:
+                    if self.dash_animation_timer < 4:
+                        flame_frame = self.dash_animation_timer // 2
+                        self.image = self.last_dash_sprite = "dash_start_" + dir_index
+                        self.flame.image = f"flame_dash_start_{dir_index}_{flame_frame}"
+                        self.flame.anchor = ANCHOR_FLAME
+                    else:
+                        timer = self.dash_animation_timer - 4
+                        frame = min(timer // 3, 2)
+                        flame_frame = min(timer // 3, 7)
+                        sprite = "dash_"
+                        if self.vel_y < 0:
+                            sprite += "up_"
+                        elif self.vel_y > 0:
+                            sprite += "down_"
+                        if self.vel_x != 0:
+                            sprite += "horizontal_"
+                        self.image = self.last_dash_sprite = f"{sprite}{dir_index}_{frame}"
+                        self.flame.image = f"flame_{sprite}{dir_index}_{flame_frame}"
+                        self.flame.anchor = ANCHOR_FLAME_DASH
+                else:
+                    frame = min(self.fall_timer // 8, 1)
+                    flame_frame = min(self.fall_timer // 8, 1) + 4
+                    self.image = f"fall_{dir_index}_{frame}"
+                    self.flame.image = f"flame_wall_jump_{dir_index}_{flame_frame}"
+            
+            elif dx == 0:
+                self.image = "stand_front"
+                self.flame.image = f"flame_stand_{(game.timer // 4) % 8}"
+
+            elif self.change_direction_timer > 0:
+                self.image = f"change_dir_{dir_index}_0"
+                self.flame.image = f"flame_change_dir_{dir_index}_{(game.timer // 4) % 3}"
+
+            else:
+                frame = (game.timer // 4) % 8
+                self.image = f"run_{dir_index}_{frame}"
+                self.flame.image = f"flame_run_{dir_index}_{(game.timer // 4) % 8}"
 
     def draw(self):
         super().draw()
