@@ -11,7 +11,11 @@ WIDTH = 825
 HEIGHT = 550
 TITLE = "Huevos"
 
-LEVEL_SEQUENCE = ["starter1.tmx"] ###
+LEVEL_SEQUENCE = ["starter1.tmx", "starter2.tmx", "starter3.tmx", "starter4.tmx",
+                  "forest1.tmx", "forest2.tmx", "forest3.tmx", "forest4.tmx", "forest9.tmx",
+                  "castle1.tmx", "castle2.tmx", "castle3.tmx", "castle4.tmx", "castle5.tmx",
+                  "castle6.tmx", "castle7.tmx", "castle8.tmx", "forest5.tmx", "forest6.tmx",
+                  "forest7.tmx", "forest8.tmx"]
 
 GRID_BLOCK_SIZE = 25
 LEVEL_Y_BOUNDARY = -100
