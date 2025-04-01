@@ -33,10 +33,17 @@ class Biome(Enum):
 REPLAY_FILENAME = 'replays'
 MAX_REPLAYS = 10
 
-def move_towards(a, b, c): ###
-    return 1 ###
-def sign(a): ###
-    return 1 ###
+def move_towards(n, target, speed):
+    if n < target:
+        return min(n + speed, target)
+    else:
+        return max(n - speed, target)
+
+def sign(x):
+    if x == 0: 
+        return 0
+    else:
+        return -1 if x < 0 else 1
 
 class KeyboardControls:
     NUM_BUTTONS = 2
