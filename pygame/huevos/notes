@@ -20,3 +20,10 @@ against GitHub, and playtest/debug as usual.
 Looks like some of the images in this project also have the 'bad iCCP RGB' issue from the previous.
 I brought in the castle tileset image as required by the first level xml data, and am seeing
 that error when launching. Probably ignore for now and fix in bulk later.
+
+----
+The tileset data activated a bunch more code. Those have been stubbed and filled in. There are still
+significant gaps, like the Enemy class. The number of image files needing placeholders is getting
+out of hand, so I'm hitting blocking errors when pressing the movement keys (jump and dash are fine).
+So probably time to bring all that in. Then we'll start from the top with the book sources.
+
