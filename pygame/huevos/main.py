@@ -22,17 +22,42 @@ LEVEL_Y_BOUNDARY = -100
 INITIAL_LEVEL_CYCLE = 0
 INITIAL_TIME_REMAINING = 15
 INITIAL_PICKUP_TIME_BONUS = 2
+STOMP_ENEMY_TIME_BONUS = 3
+COYOTE_TIME = 6
 JUMP_VEL_Y = -10
+WALL_JUMP_X_VEL = 8
+WALL_JUMP_COYOTE_TIME = 15
 CACHE_JUMP_INPUT_TIME = 5
+
+PLAYER_WIDTH = 20
+PLAYER_HEIGHT = 40
 
 ANCHOR_CENTER = ("center", "center")
 ANCHOR_CENTER_BOTTOM = ("center", "bottom")
 ANCHOR_PLAYER = ("center", 60)
 ANCHOR_FLAME = ("center", 78)
+ANCHOR_FLAME_DASH = ("center", 130)
 
 class Biome(Enum):
     FOREST = 0
     CASTLE = 1
+
+ENEMY_SPRITE_NAMES = {Biome.CASTLE: ["robot0", "robot1", "robot2", "robot3"], 
+                      Biome.FOREST: ["fly", "mghost", "triffid", "bigbloom"]}
+
+ENEMY_TYPES_FLYING = {Biome.CASTLE: [True, True, False, False],
+                      Biome.FOREST: [True, True, False, True]}
+
+ENEMY_TYPES_WIDTH_OVERRIDES = {Biome.CASTLE: [30, 50, 48, 50],
+                               Biome.FOREST: [30, 50, 50, 50]}
+ENEMY_TYPES_HEIGHT_OVERRIDES = {Biome.CASTLE: [40, 40, 60, 120],
+                                Biome.FOREST: [30, 65, 70, 90]}
+
+ENEMY_TYPES_ANCHOR_POINTS = {Biome.CASTLE: [("center", 40),("center", 40),("center", 95),("center", "bottom")],
+                             Biome.FOREST: [("center", 60)] + [ANCHOR_CENTER_BOTTOM] * 3}
+
+ENEMY_TYPES_HEALTH = [1, 3, 1, 3]
+ENEMY_TYPES_SPEED = [2, 1, 2, 1]
 
 REPLAY_FILENAME = 'replays'
 MAX_REPLAYS = 10
@@ -94,6 +119,8 @@ class KeyboardControls:
         return self.is_pressed[button]
 
 class Gem(Actor):
+    next_type = 1
+
     def __init__(self, pos):
         super().__init__("blank", pos, ANCHOR_CENTER_BOTTOM)
         self.type = Gem.next_type
@@ -102,9 +129,26 @@ class Gem(Actor):
             Gem.next_type = 1
         self.collected = False
 
+    def update(self):
+        if game.player is not None and game.player.collidepoint(self.center):
+            game.gain_time(game.time_pickup_bonus, self.centerx, self.centery)
+            game.play_sound("collect")
+            self.collected = True
+        anim_frame = str((game.timer // 6) % 4)
+        sef.image = f"gem{self.type}_{anim_frame}"
+
     @staticmethod
     def new_game():
         Gem.next_type = 1
+
+class Door(Actor):
+    pass    ###
+
+class Animation(Actor):
+    pass   ###
+
+class DashTrail(Animation):
+    pass   ###
 
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
@@ -470,9 +514,15 @@ class GhostPlayer(Actor):
         self.replay_frame = 0
         self.level = 0
 
+    def update(self):
+        pass   ###
+
     def draw(self):
         if self.level == game.level_index:
             super().draw()
+
+class Enemy(GravityActor):
+    pass    ###
 
 class Game:
     def __init__(self, player=None, replays=None):
