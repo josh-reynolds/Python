@@ -86,6 +86,11 @@ class Actor:
 
         return self.rect.collidepoint(point)
 
+    def colliderect(self, rect):
+        if DEBUG_ACTOR: print(f"colliderect({rect})")
+
+        return self.rect.colliderect(rect)
+
     @property
     def width(self):
         return self.rect.width
@@ -101,6 +106,10 @@ class Actor:
     @property
     def centerx(self):
         return self.rect.centerx
+
+    @property
+    def centery(self):
+        return self.rect.centery
 
     @property
     def image(self):

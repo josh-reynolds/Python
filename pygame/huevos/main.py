@@ -152,12 +152,25 @@ class Door(Actor):
 
     def update(self):
         pass   ###
+    def open(self):
+        pass   ###
+    def is_fully_open(self):
+        pass   ###
 
 class Animation(Actor):
-    pass   ###
+    def __init__(self, pos, image_format_str, num_frames, frame_interval,
+                 anchor=ANCHOR_CENTER, initial_dela=0, rise_time=-1):
+        pass   ###
+    def update(self):
+        pass   ###
+    def update_image(self):
+        pass   ###
+    def finished(self):
+        pass   ###
 
 class DashTrail(Animation):
-    pass   ###
+    def __init__(self, pos, image):
+        pass   ###
 
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
@@ -234,6 +247,10 @@ class GravityActor(CollideActor):
         return self.fall_state == GravityActor.FallState.LANDED
 
 class Player(GravityActor):
+    DASH_TIME = 18
+    DASH_SPEED = 10
+    DASH_PAUSE_TIME = 5
+    DASH_TRAIL_INTERVAL = 3
     DASH_TIMER_TRAIL_CUTOFF = -10
     MAX_X_RUN_SPEED = 5
 
@@ -281,6 +298,9 @@ class Player(GravityActor):
                 if self.distance_to(enemy) < 150:
                     enemy.destroy()
                     game.play_sound("enemy_death", 5)
+
+    def hit_test(self, other):
+        pass   ###
 
     def get_colliding_enemies(self):
         return [enemy for enemy in game.enemies if not enemy.dying and self.hit_test(enemy)]
@@ -516,6 +536,12 @@ class Player(GravityActor):
         self.flame.pos = self.pos
         self.flame.draw()
 
+    def get_collideable_width(self):
+        return PLAYER_WIDTH
+
+    def get_collideable_height(self):
+        return PLAYER_HEIGHT
+
 class GhostPlayer(Actor):
     def __init__(self, replay_data):
         super().__init__("blank", replay_data[0][0], ANCHOR_PLAYER)
@@ -531,7 +557,31 @@ class GhostPlayer(Actor):
             super().draw()
 
 class Enemy(GravityActor):
-    pass    ###
+    def __init__(self, pos, type_, biome, direction_x=1, appearance_count=1):
+        super().__init__(pos, gravity_enabled=not ENEMY_TYPES_FLYING[biome][type_],
+                         anchor=ENEMY_TYPES_ANCHOR_POINTS[biome][type_])
+        self.direction_x = direction_x
+        self.type = type_
+        self.biome = biome
+        self.health = ENEMY_TYPES_HEALTH[type_]
+        self.speed = ENEMY_TYPES_SPEED[type_]
+        self.dir_y = 1 if appearance_count >= 3 and not self.gravity_enabled else 0
+        self.use_directional_sprites = (biome == Biome.CASTLE and self.type >= 2) \
+                or (biome == Biome.FOREST and self.type < 1)
+        self.dying = False
+        self.stompd_timer = 0
+
+    def update(self):
+        pass    ###
+    def stomped(self):
+        pass    ###
+    def destroy(self):
+        pass    ###
+    def get_collideable_width(self):
+        return ENEMY_TYPES_WIDTH_OVERRIDES[self.biome][self.type]
+
+    def get_collideable_height(self):
+        return ENEMY_TYPES_HEIGHT_OVERRIDES[self.biome][self.type]
 
 class Game:
     def __init__(self, player=None, replays=None):
@@ -695,6 +745,11 @@ class Game:
             if current_rect is not None:
                 add()
 
+        def find_equal_width_block_below(current):
+            pass   ###
+
+        pass   ###
+
     def update(self):
         self.timer += 1
         self.gained_time_timer -= 1
@@ -755,6 +810,9 @@ class Game:
 
         font = "font" if self.gained_time_timer < 0 else "fontbr"
         draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
+
+    def gain_time(self, time, x, y):
+        pass   ###
 
     def position_blocked(self, rect):
         for block_rect in self.block_rects:
@@ -944,6 +1002,15 @@ def play_music(name, volume=0.3):
     except Exception as e:    ###
         print(e)         ###
 
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(48000, -16, 2, 1024)
+    play_music("title_theme")
+#except Exception:
+    #pass
+except Exception as e:    ###
+    print(e)         ###
+
 tileset_images = {}
 keyboard_controls = KeyboardControls()
 all_replays, high_score = load_replays()
@@ -951,6 +1018,7 @@ all_replays, high_score = load_replays()
 state = State.TITLE
 game = None
 
+game_over_timer = 0
 total_frames = 0
 
 run()
