@@ -135,14 +135,23 @@ class Gem(Actor):
             game.play_sound("collect")
             self.collected = True
         anim_frame = str((game.timer // 6) % 4)
-        sef.image = f"gem{self.type}_{anim_frame}"
+        self.image = f"gem{self.type}_{anim_frame}"
 
     @staticmethod
     def new_game():
         Gem.next_type = 1
 
 class Door(Actor):
-    pass    ###
+    def __init__(self, pos, biome="castle", variant=0, already_open=False):
+        self.biome = biome
+        self.variant = variant
+        self.opening = already_open
+        self.last_frame = 15 if biome == "castle" else 13
+        self.frame = self.last_frame if already_open else 0
+        super().__init__(f"door_{biome}_{variant}_{self.frame}", pos, anchor=(0,0))
+
+    def update(self):
+        pass   ###
 
 class Animation(Actor):
     pass   ###
@@ -620,7 +629,7 @@ class Game:
             self.grid.append(current_row)
 
         object_group_node = map_root.find("objectgroup")
-        if object_group_node == None:
+        if object_group_node is not None:
             for obj_node in object_group_node.findall("object"):
                 object_name = obj_node.attrib["name"]
                 object_pos = (int(float(obj_node.attrib["x"])),
