@@ -746,7 +746,27 @@ class Game:
                 add()
 
         def find_equal_width_block_below(current):
-            pass   ###
+            result = [rect for rect in self.block_rects if rect.x == current.x
+                      and rect.w == current.w and rect.y == current.y + current.h]
+            return result[0] if len(result) > 0 else None
+
+        any_found = True
+        while any_found:
+            any_found = False
+            for current in self.block_rects:
+                equal_below = find_equal_width_block_below(current)
+                if equal_below is not None:
+                    current.h += equal_below.h
+                    self.block_rects.remove(equal_below)
+                    any_found = True
+                    break
+
+        for rect in self.block_rects:
+            if rect.top == 0:
+                height = rect.height
+                rect.top = LEVEL_Y_BOUNDARY
+                rect.height = height + -LEVEL_Y_BOUNDARY
+
 
         pass   ###
 
