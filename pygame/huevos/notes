@@ -27,3 +27,9 @@ significant gaps, like the Enemy class. The number of image files needing placeh
 out of hand, so I'm hitting blocking errors when pressing the movement keys (jump and dash are fine).
 So probably time to bring all that in. Then we'll start from the top with the book sources.
 
+----
+Partway through the book scrub. This one is involved enough that I am taking a slighly different tack
+than a top-to-bottom line-by-line comparison: I've walked through the listing and grabbed the full 
+interface (all class, method and function definition lines). Added those as stubs, and then can tackle
+them individually. Will still probably need a close comparison for typos and especially indentation
+errors in the parts already typed out.

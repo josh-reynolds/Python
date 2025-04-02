@@ -159,7 +159,7 @@ class Door(Actor):
 
 class Animation(Actor):
     def __init__(self, pos, image_format_str, num_frames, frame_interval,
-                 anchor=ANCHOR_CENTER, initial_dela=0, rise_time=-1):
+                 anchor=ANCHOR_CENTER, initial_delay=0, rise_time=-1):
         pass   ###
     def update(self):
         pass   ###
@@ -812,7 +812,12 @@ class Game:
         draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
 
     def gain_time(self, time, x, y):
-        pass   ###
+        game.time_remaining += time * 60
+        time_added_id = "half" if time == 0.5 else str(time)
+        format_str = "timer_plus" + time_added_id + "_{0}"
+        game.animations.append(Animation((x,y), format_str, 14, 4, initial_delay=5, rise_time=34))
+        game.animations.append(Animation((x,y), "pickup_{0}", 8, 4))
+        self.gained_time_timer = 20
 
     def position_blocked(self, rect):
         for block_rect in self.block_rects:
