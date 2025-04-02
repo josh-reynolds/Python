@@ -572,11 +572,42 @@ class Enemy(GravityActor):
         self.stompd_timer = 0
 
     def update(self):
-        pass    ###
+        super().update(detect=not self.dying)
+
+        if not self.dying:
+            self.stomped_timer -= 1
+            if not self.gravity_enabled or self.fall_state != GravityActor.FallState.FALLING:
+                if self.move(self.direction_x, 0, self.speed):
+                    self.direction_x = -self.direction_x
+                if self.dir_y != 0 and self.move(0, self.dir_y, self.speed):
+                    self.dir_y = -self.dir_y
+
+        image = ENEMY_SPRITE_NAMES[self.biome][self.type]
+        if self.use_directional_sprites:
+            direction_idx = "1" if self.direction_x > 0 else "0"
+            image += "_" + str(direction_idx)
+        image += "_" + str((game.timer // 4) % 8)
+        if self.stomped_timer > 0 or self.dying:
+            image += "_hit"
+        self.image = image
+
     def stomped(self):
-        pass    ###
+        if self.stomped_timer <= 0:
+            self.health -= 1
+            if self.health <= 0:
+                self.destroy()
+                game.play_sound("enemy_death", 5)
+            else:
+                game.play_sound("enemy_take_damage", 5)
+        self.stomped_timer = 2
+
     def destroy(self):
-        pass    ###
+        self.dying = True
+        self.gravity_enabled = True
+        explosion_sprite = "explosion" if self.type > 1 else "air_explosion"
+        game.animations.append(Animation(self.pos, explosion_sprite + "_{0}", 12, 4, ANCHOR_CENTER_BOTTOM))
+        game.gain_time(STOMP_ENEMY_TIME_BONUS, self.centerx, self.centery)
+
     def get_collideable_width(self):
         return ENEMY_TYPES_WIDTH_OVERRIDES[self.biome][self.type]
 
