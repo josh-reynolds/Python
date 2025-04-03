@@ -550,7 +550,13 @@ class GhostPlayer(Actor):
         self.level = 0
 
     def update(self):
-        pass   ###
+        self.replay_frame += 1
+        if self.replay_frame < len(self.replay_data):
+            self.pos, self.level, sprite = self.replay_data[self.replay_frame]
+            if sprite == "blank":
+                self.image = "blank"
+            else:
+                self.image = "ghost_" + sprite
 
     def draw(self):
         if self.level == game.level_index:
@@ -797,9 +803,6 @@ class Game:
                 height = rect.height
                 rect.top = LEVEL_Y_BOUNDARY
                 rect.height = height + -LEVEL_Y_BOUNDARY
-
-
-        pass   ###
 
     def update(self):
         self.timer += 1
