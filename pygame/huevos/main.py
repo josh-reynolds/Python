@@ -170,7 +170,7 @@ class Animation(Actor):
 
 class DashTrail(Animation):
     def __init__(self, pos, image):
-        pass   ###
+        super().__init__(pos, image + "_trail_{0}", 6, 5, ANCHOR_PLAYER)
 
 class CollideActor(Actor):
     def __init__(self, pos, anchor=ANCHOR_CENTER):
@@ -300,7 +300,7 @@ class Player(GravityActor):
                     game.play_sound("enemy_death", 5)
 
     def hit_test(self, other):
-        pass   ###
+        return self.get_rect(self.x, self.y).colliderect(other.get_rect()) and not self.hurt
 
     def get_colliding_enemies(self):
         return [enemy for enemy in game.enemies if not enemy.dying and self.hit_test(enemy)]
