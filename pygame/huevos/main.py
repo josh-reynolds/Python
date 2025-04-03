@@ -160,13 +160,29 @@ class Door(Actor):
 class Animation(Actor):
     def __init__(self, pos, image_format_str, num_frames, frame_interval,
                  anchor=ANCHOR_CENTER, initial_delay=0, rise_time=-1):
-        pass   ###
+        super().__init__("blank", pos, anchor)
+        self.image_format_str = image_format_str
+        self.num_frames = num_frames
+        self.frame_interval = frame_interval
+        self.timer = -initial_delay
+        self.rise_time = rise_time
+        self.update_image()
+
     def update(self):
-        pass   ###
+        self.timer += 1
+        self.update_image()
+        if self.rise_time > -1 and self.timer > self.rise_time:
+            self.y -= 1
+
     def update_image(self):
-        pass   ###
+        if self.timer < 0:
+            self.image = "blank"
+        else:
+            frame = min(self.timer // self.frame_interval, self.num_frames - 1)
+            self.image = self.image_format_str.format(frame)
+
     def finished(self):
-        pass   ###
+        return self.timer // self.frame_interval >= self.num_frames
 
 class DashTrail(Animation):
     def __init__(self, pos, image):
