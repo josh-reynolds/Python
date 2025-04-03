@@ -151,11 +151,15 @@ class Door(Actor):
         super().__init__(f"door_{biome}_{variant}_{self.frame}", pos, anchor=(0,0))
 
     def update(self):
-        pass   ###
+        if self.opening and self.frame < self.last_frame and game.timer % 3 == 0:
+            self.frame += 1
+            self.image = f"door_{self.biome}_{self.variant}_{self.frame}"
+
     def open(self):
-        pass   ###
+        self.opening = True
+
     def is_fully_open(self):
-        pass   ###
+        return self.frame == self.last_frame
 
 class Animation(Actor):
     def __init__(self, pos, image_format_str, num_frames, frame_interval,
