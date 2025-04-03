@@ -91,6 +91,14 @@ class Actor:
 
         return self.rect.colliderect(rect)
 
+    def distance_to(self, other):
+        if DEBUG_ACTOR: print(f"colliderect({rect})")
+
+        pos = pygame.Vector2(self.pos)
+        target = pygame.Vector2(other.pos)
+
+        return pos.distance_to(target)
+
     @property
     def width(self):
         return self.rect.width

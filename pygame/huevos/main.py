@@ -338,7 +338,7 @@ class Player(GravityActor):
 
         stomped_any = False
         for enemy in self.get_colliding_enemies():
-            enemy_rectc = enemy.get_rect()
+            enemy_rect = enemy.get_rect()
             threshold = enemy_rect.top + (enemy_rect.bottom - enemy_rect.top) * \
                     (0.5 if self.vel_y > 0 else 0.2)
             if self.y < threshold or self.stomped_last_frame:
@@ -595,7 +595,7 @@ class Enemy(GravityActor):
         self.use_directional_sprites = (biome == Biome.CASTLE and self.type >= 2) \
                 or (biome == Biome.FOREST and self.type < 1)
         self.dying = False
-        self.stompd_timer = 0
+        self.stomped_timer = 0
 
     def update(self):
         super().update(detect=not self.dying)
