@@ -866,7 +866,7 @@ class Game:
                                      GRID_BLOCK_SIZE, GRID_BLOCK_SIZE)
                     screen.surface.blit(self.tileset_image,
                                         (x, row_y * GRID_BLOCK_SIZE), area=tile_rect)
-                    x += GRID_BLOCK_SIZE
+                x += GRID_BLOCK_SIZE
 
         for obj in self.ghost_players + self.doors + self.animations + [self.player] \
                 + self.gems + self.enemies:
