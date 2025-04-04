@@ -33,3 +33,7 @@ than a top-to-bottom line-by-line comparison: I've walked through the listing an
 interface (all class, method and function definition lines). Added those as stubs, and then can tackle
 them individually. Will still probably need a close comparison for typos and especially indentation
 errors in the parts already typed out.
+
+----
+Caught and fixed a few bugs through playtesting, and then wrapped up the book scrub. Couple more typos
+there. All that's left is scrubbing against GitHub, and a little more playtest.

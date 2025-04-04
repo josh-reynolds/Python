@@ -330,7 +330,7 @@ class Player(GravityActor):
         super().update(not self.hurt)
 
         if was_landed and not self.landed():
-            self.coyote_tme = COYOTE_TIME
+            self.coyote_time = COYOTE_TIME
             self.fall_timer = 0
 
         if self.top >= HEIGHT:
@@ -836,12 +836,12 @@ class Game:
                 obj.update()
 
         self.enemies = [enemy for enemy in self.enemies if enemy.top < HEIGHT]
-        self.animations = [anim for anim in self.animations if not anim.finished]
+        self.animations = [anim for anim in self.animations if not anim.finished()]
         self.gems = [gem for gem in self.gems if not gem.collected]
 
         if self.player is not None:
             if self.exit_open:
-                if self.player.centerx > WIDTH:
+                if self.player.centerx >= WIDTH:
                     self.next_level()
 
             elif len(self.gems) == 0:
@@ -876,7 +876,7 @@ class Game:
         self.draw_ui()
 
     def draw_ui(self):
-        pygame.draw.rect(screen.surface, (0,54,255), Rect(0,500,WIDTH,5))
+        pygame.draw.rect(screen.surface, (0,54,255), Rect(0,500,WIDTH,50))
         screen.blit("text_area_frame", (0, 500))
         draw_text(self.level_text, WIDTH // 2, 508, align=TextAlign.CENTER)
 
@@ -1076,19 +1076,15 @@ def play_music(name, volume=0.3):
     try:
         music.play(name)
         music.set_volume(volume)
-    #except Exception:
-        #pass
-    except Exception as e:    ###
-        print(e)         ###
+    except Exception:
+        pass
 
 try:
     pygame.mixer.quit()
     pygame.mixer.init(48000, -16, 2, 1024)
     play_music("title_theme")
-#except Exception:
-    #pass
-except Exception as e:    ###
-    print(e)         ###
+except Exception:
+    pass
 
 tileset_images = {}
 keyboard_controls = KeyboardControls()
