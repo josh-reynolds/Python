@@ -888,7 +888,7 @@ class Game:
     def gain_time(self, time, x, y):
         game.time_remaining += time * 60
         time_added_id = "half" if time == 0.5 else str(time)
-        format_str = "timer_plus" + time_added_id + "_{0}"
+        format_str = "timer_plus_" + time_added_id + "_{0}"
         game.animations.append(Animation((x,y), format_str, 14, 4, initial_delay=5, rise_time=34))
         game.animations.append(Animation((x,y), "pickup_{0}", 8, 4))
         self.gained_time_timer = 20
