@@ -593,7 +593,7 @@ class Enemy(GravityActor):
         self.speed = ENEMY_TYPES_SPEED[type_]
         self.dir_y = 1 if appearance_count >= 3 and not self.gravity_enabled else 0
         self.use_directional_sprites = (biome == Biome.CASTLE and self.type >= 2) \
-                or (biome == Biome.FOREST and self.type < 1)
+                or (biome == Biome.FOREST and self.type < 2)
         self.dying = False
         self.stomped_timer = 0
 
