@@ -1,11 +1,27 @@
 import os
 import sys
 import xml.etree.ElementTree as ET
+from abc import ABC, abstractmethod
 from enum import Enum
 from random import randint
 import pygame
 from pygame import Rect
 from engine import *
+
+# version checks not present in book sources
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [1,3]:
+    print(f"This game requires at least version 1.3 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
 
 WIDTH = 825
 HEIGHT = 550
@@ -62,6 +78,16 @@ ENEMY_TYPES_SPEED = [2, 1, 2, 1]
 REPLAY_FILENAME = 'replays'
 MAX_REPLAYS = 10
 
+DEBUG_SHOW_PLAYER_COLLISION_RECT = False
+DEBUG_SHOW_ENEMY_COLLISION_RECTS = False
+DEBUG_SHOW_BLOCK_COLLISION_RECTS = False
+DEBUG_SHOW_FRAME_NUMBER = False
+DEBUG_MOVEMENT = False
+DEBUG_SLOWMO = 1       # set to 2 or higher to run in slow motion, useful for testing animations
+
+SPECIAL_FONT_SYMBOLS = {'xb_a':'%', 'xb_b':'#'}
+SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
+
 def move_towards(n, target, speed):
     if n < target:
         return min(n + speed, target)
@@ -74,19 +100,39 @@ def sign(x):
     else:
         return -1 if x < 0 else 1
 
-class KeyboardControls:
+class Controls(ABC):
     NUM_BUTTONS = 2
 
     def __init__(self):
-        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
-        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.previously_down = [False for i in range(Controls.NUM_BUTTONS)]
+        self.is_button_pressed = [False for i in range(Controls.NUM_BUTTONS)]
 
     def update(self):
-        for button in range(KeyboardControls.NUM_BUTTONS):
+        for button in range(Controls.NUM_BUTTONS):
             button_down = self.button_down(button)
-            self.is_pressed[button] = button_down and not self.previously_down[button]
+            self.is_button_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
 
+    @abstractmethod
+    def get_x(self):
+        pass
+
+    @abstractmethod
+    def get_y(self):
+        pass
+
+    @abstractmethod
+    def button_down(self, button):
+        pass
+
+    def button_pressed(self, button):
+        return self.is_button_pressed[button]
+
+    @abstractmethod
+    def button_name(self, button):
+        return "?"
+
+class KeyboardControls(Controls):
     def get_x(self):
         if keyboard.left:
             return -1
@@ -114,9 +160,8 @@ class KeyboardControls:
             return "Z"
         elif button == "jump":
             return "SPACE"
-
-    def button_pressed(self, button):
-        return self.is_pressed[button]
+        else:
+            return "?"
 
 class Gem(Actor):
     next_type = 1

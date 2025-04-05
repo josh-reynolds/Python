@@ -37,3 +37,7 @@ errors in the parts already typed out.
 ----
 Caught and fixed a few bugs through playtesting, and then wrapped up the book scrub. Couple more typos
 there. All that's left is scrubbing against GitHub, and a little more playtest.
+
+----
+Starting on the GitHub sources. The three most significant things so far are version checks, debug 
+settings, and controller support, all of which are absent from the book.
