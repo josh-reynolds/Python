@@ -163,6 +163,42 @@ class KeyboardControls(Controls):
         else:
             return "?"
 
+class JoystickControls(Controls):
+    def __init__(self, joystick):
+        super().__init__()
+        self.joystick = joystick
+        joystick.init()
+
+    def get_axis(self, axis_num):
+        if self.joystick.get_numhats() > 0 and self.joystick.get_hat(0)[axis_num] != 0:
+            return self.joystick.get_hat(0)[axis_num] * (-1 if axis_num == 1 else 1)
+
+        axis_value = self.joystick.get_axis(axis_num)
+        if abs(axis_value) < 0.6:
+            return 0
+        else:
+            return 1 if axis_value > 0 else -1
+
+    def get_x(self):
+        return self.get_axis(0)
+
+    def get_y(self):
+        return self.get_axis(1)
+
+    def button_down(self, button):
+        if self.joystick.get_numbuttons() <= button:
+            print("Warning: controller does not have enough buttons!")
+            return False
+        return self.joystick.get_button(button) != 0
+
+    def button_name(self, button):
+        if button == "dash":
+            return SPECIAL_FONT_SYMBOLS["xb_b"]
+        elif button == "jump":
+            return SPECIAL_FONT_SYMBOLS["xb_a"]
+        else:
+            return "?"
+
 class Gem(Actor):
     next_type = 1
 
@@ -299,12 +335,18 @@ class GravityActor(CollideActor):
             self.vel_y = min(self.vel_y + 1, GravityActor.MAX_FALL_SPEED)
 
         if detect and self.vel_y != 0:
+            if DEBUG_MOVEMENT:
+                print("{0} detect: landed false, {1}".format(game.timer, self.vel_y))
             if self.fall_state == GravityActor.FallState.LANDED:
                 self.fall_state = GravityActor.FallState.FALLING
-            if self.vel_y != 0 and self.move(0, sign(self.vel_y), abs(self.vel_y)):
+            if self.move(0, sign(self.vel_y), abs(self.vel_y)):
+                if DEBUG_MOVEMENT:
+                    print("move returned true")
                 if self.vel_y > 0:
                     self.vel_y = 0
                     self.fall_state = GravityActor.FallState.LANDED
+                    if DEBUG_MOVEMENT:
+                        print("detect: landed true")
         else:
             self.y += self.vel_y
 
@@ -392,6 +434,8 @@ class Player(GravityActor):
                 self.vel_y = -6
                 self.enemy_stomped_timer = 3
                 self.dash_allowed = True
+                if DEBUG_MOVEMENT:
+                    print(game.timer, "stomp", self.y, threshold)
             else:
                 self.hurt = True
                 self.vel_y = -12
@@ -400,6 +444,8 @@ class Player(GravityActor):
                 self.dash_timer = Player.DASH_TIMER_TRAIL_CUTOFF
                 game.play_sound("player_death")
                 game.animations.append(Animation(self.pos, "loselife_{0}", 8, 4))
+                if DEBUG_MOVEMENT:
+                    print(game.timer, "DIE", self.y, threshold)
                 break
 
         self.stomped_last_frame = stomped_any
@@ -421,6 +467,9 @@ class Player(GravityActor):
 
         jump_pressed = self.controls.button_pressed(0)
 
+        if jump_pressed and DEBUG_MOVEMENT:
+            print(game.timer, "jump pressed")
+
         if self.hurt:
             self.gravity_enabled = True
             if self.top >= HEIGHT:
@@ -440,6 +489,8 @@ class Player(GravityActor):
             dx = self.controls.get_x()
 
             def jump():
+                if DEBUG_MOVEMENT:
+                    print(game.timer, "JUMP")
                 self.vel_y = JUMP_VEL_Y
                 self.fall_state = GravityActor.FallState.JUMPING
                 self.coyote_time = 0
@@ -449,6 +500,8 @@ class Player(GravityActor):
                 game.play_sound("jump")
 
             def wall_jump(wall_direction):
+                if DEBUG_MOVEMENT:
+                    print(game.timer, "WALL JUMP", wall_direction)
                 self.vel_y = JUMP_VEL_Y
                 self.fall_state = GravityActor.FallState.WALL_JUMPING
                 self.vel_x = -wall_direction * WALL_JUMP_X_VEL
@@ -464,17 +517,25 @@ class Player(GravityActor):
                 self.gravity_enabled = False
 
                 if jump_pressed or self.cached_jump_input_timer > 0:
+                    if DEBUG_MOVEMENT:
+                        print(game.timer, "wall jump", self.vel_x)
                     wall_jump(self.grabbed_wall)
                 elif dx == -self.grabbed_wall:
+                    if DEBUG_MOVEMENT:
+                        print(game.timer, "ungrab wall", self.grabbed_wall)
                     # pushing away from wall
                     self.previous_grabbed_wall = self.grabbed_wall
                     self.wall_jump_coyote_time = WALL_JUMP_COYOTE_TIME
                     self.grabbed_wall = 0
                 else:
+                    if DEBUG_MOVEMENT:
+                        print(game.timer, "slide", self.grabbed_wall)
                     # wall slide
                     rect = self.get_rect(self.x + self.grabbed_wall, self.y)
                     if self.move(0, 1, 1) or not game.position_blocked(rect):
                         self.grabbed_wall = 0
+                        if DEBUG_MOVEMENT:
+                            print(game.timer, "slide landed or wall gone")
             else:
                 # not grabbing a wall
                 if jump_pressed and self.wall_jump_coyote_time > 0:
