@@ -538,7 +538,13 @@ class Player(GravityActor):
                             print(game.timer, "slide landed or wall gone")
             else:
                 # not grabbing a wall
+
+                if DEBUG_MOVEMENT and self.wall_jump_coyote_time > 0:
+                    print(game.timer, "remaining wall_jump_coyote_time", self.wall_jump_coyote_time)
+
                 if jump_pressed and self.wall_jump_coyote_time > 0:
+                    if DEBUG_MOVEMENT:
+                        print(game.timer, "coyote wall jump")
                     wall_jump(self.previous_grabbed_wall)
                 else:
                     # normal movement
@@ -552,11 +558,18 @@ class Player(GravityActor):
                     # check for grabbing a wall
                     if self.vel_x != 0 and self.move(sign(self.vel_x), 0, abs(self.vel_x)) \
                             and self.vel_y > 0:
+                                if DEBUG_MOVEMENT:
+                                    print(game.timer, "grab")
                                 self.grabbed_wall = sign(self.vel_x)
                                 self.vel_x = 0
 
                     if (jump_pressed or self.cached_jump_input_timer > 0) \
                             and (self.landed() or self.coyote_time > 0):
+                                if DEBUG_MOVEMENT:
+                                    if not jump_pressed:
+                                        print(game.timer, "cached jump")
+                                    if not self.landed():
+                                        print(game.timer, f"coyote time jump {self.coyote_time}")
                                 jump()
 
                     elif jump_pressed and not self.landed():
@@ -570,6 +583,8 @@ class Player(GravityActor):
                     if self.dash_allowed and self.controls.button_pressed(1):
                         dy = self.controls.get_y()
                         if dx != 0 or dy != 0:
+                            if DEBUG_MOVEMENT:
+                                print(game.timer, "dash")
                             v = pygame.math.Vector2(dx,dy).normalize() * Player.DASH_SPEED
                             self.vel_x = int(v.x)
                             self.vel_y = int(v.y)
@@ -661,6 +676,8 @@ class Player(GravityActor):
         super().draw()
         self.flame.pos = self.pos
         self.flame.draw()
+        if DEBUG_SHOW_PLAYER_COLLISION_RECT:
+            screen.draw.rect(self.get_rect(), (255,255,255))
 
     def get_collideable_width(self):
         return PLAYER_WIDTH
