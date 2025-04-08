@@ -714,9 +714,9 @@ class Enemy(GravityActor):
         self.biome = biome
         self.health = ENEMY_TYPES_HEALTH[type_]
         self.speed = ENEMY_TYPES_SPEED[type_]
-        self.dir_y = 1 if appearance_count >= 3 and not self.gravity_enabled else 0
-        self.use_directional_sprites = (biome == Biome.CASTLE and self.type >= 2) \
-                or (biome == Biome.FOREST and self.type < 2)
+        self.direction_y = 1 if appearance_count >= 3 and not self.gravity_enabled else 0
+        self.use_directional_sprites = (self.biome == Biome.CASTLE and self.type >= 2) \
+                or (self.biome == Biome.FOREST and self.type < 2)
         self.dying = False
         self.stomped_timer = 0
 
@@ -728,8 +728,8 @@ class Enemy(GravityActor):
             if not self.gravity_enabled or self.fall_state != GravityActor.FallState.FALLING:
                 if self.move(self.direction_x, 0, self.speed):
                     self.direction_x = -self.direction_x
-                if self.dir_y != 0 and self.move(0, self.dir_y, self.speed):
-                    self.dir_y = -self.dir_y
+                if self.direction_y != 0 and self.move(0, self.direction_y, self.speed):
+                    self.direction_y = -self.direction_y
 
         image = ENEMY_SPRITE_NAMES[self.biome][self.type]
         if self.use_directional_sprites:
@@ -762,6 +762,11 @@ class Enemy(GravityActor):
 
     def get_collideable_height(self):
         return ENEMY_TYPES_HEIGHT_OVERRIDES[self.biome][self.type]
+
+    def draw(self):
+        super().draw()
+        if DEBUG_SHOW_ENEMY_COLLISION_RECTS:
+            screen.draw.rect(self.get_rect(), (255,255,255))
 
 class Game:
     def __init__(self, player=None, replays=None):
@@ -804,8 +809,8 @@ class Game:
         self.level_text = ""
         self.exit_open = False
 
-        filename = LEVEL_SEQUENCE[self.level_index % len(LEVEL_SEQUENCE)]
-        player_start_pos = self.load_level(filename)
+        level_filename = LEVEL_SEQUENCE[self.level_index % len(LEVEL_SEQUENCE)]
+        player_start_pos = self.load_level(level_filename)
 
         if self.player is not None:
             self.player.new_level(player_start_pos)
@@ -829,8 +834,8 @@ class Game:
         properties_node = map_root.find("properties")
         bg = properties_node.find("./property[@name='Background']").attrib["value"]
         self.background_image = bg
-        offset_node = properties_node.find("./property[@name='Background Offset Y']")
-        self.background_y_offset = int(offset_node.attrib["value"]) if offset_node is not None else 0
+        bg_offset_node = properties_node.find("./property[@name='Background Offset Y']")
+        self.background_y_offset = int(bg_offset_node.attrib["value"]) if bg_offset_node is not None else 0
 
         biome_node = properties_node.find("./property[@name='biome']")
         biome_name = biome_node.attrib["value"] if biome_node is not None else ""
@@ -996,6 +1001,10 @@ class Game:
                     if obj is not None:
                         obj.draw()
 
+        if DEBUG_SHOW_BLOCK_COLLISION_RECTS:
+            for rect in self.block_rects:
+                screen.draw.rect(rect, (255,255,255))
+
         self.draw_ui()
 
     def draw_ui(self):
@@ -1007,6 +1016,9 @@ class Game:
 
         font = "font" if self.gained_time_timer < 0 else "fontbr"
         draw_text(f"{self.time_remaining / 60:.1f}", WIDTH // 2, 10, align=TextAlign.CENTER, font=font)
+
+        if DEBUG_SHOW_FRAME_NUMBER:
+            draw_text(str(game.timer), WIDTH // 2, 0, align=TextAlign.CENTER)
 
     def gain_time(self, time, x, y):
         game.time_remaining += time * 60
