@@ -41,3 +41,8 @@ there. All that's left is scrubbing against GitHub, and a little more playtest.
 ----
 Starting on the GitHub sources. The three most significant things so far are version checks, debug 
 settings, and controller support, all of which are absent from the book.
+
+----
+Finished with GitHub. Last step was some playtesting, in particular trying out the new debug settings
+introduced there. I needed to extend Painter in the engine to draw rects. Everything appears to 
+be working correctly now, so I think this project is done.

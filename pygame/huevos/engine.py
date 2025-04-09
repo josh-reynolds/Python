@@ -308,6 +308,8 @@ class Painter:
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
 
+    def rect(self, rect, color, width=1):
+        pygame.draw.rect(self.surface, color, rect, width)
 
 class Music:
     """Music - wraps the Pygame music mixer."""

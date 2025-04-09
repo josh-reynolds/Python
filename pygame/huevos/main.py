@@ -1087,7 +1087,7 @@ class State(Enum):
     GAME_OVER = 4
 
 def get_joystick_if_exists():
-    reuturn pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
+    return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
 
 def setup_joystick_controls():
     global joystick_controls
