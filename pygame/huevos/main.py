@@ -1054,7 +1054,10 @@ def get_char_image_and_width(char, font):
     if char == " ":
         return None, 22
     else:
-        image = getattr(images, f"{font}{ord(char):03d}")
+        if char in SPECIAL_FONT_SYMBOLS_INVERSE:
+            image = getattr(images, SPECIAL_FONT_SYMBOLS_INVERSE[char])
+        else:
+            image = getattr(images, f"{font}{ord(char):03d}")
         return image, image.get_width()
 
 def text_width(text, font):
@@ -1082,6 +1085,21 @@ class State(Enum):
     CONTROLS = 2
     PLAY = 3
     GAME_OVER = 4
+
+def get_joystick_if_exists():
+    reuturn pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
+
+def setup_joystick_controls():
+    global joystick_controls
+    joystick = get_joystick_if_exists()
+    joystick_controls = JoystickControls(joystick) if joystick is not None else None
+
+def update_controls():
+    keyboard_controls.update()
+    if joystick_controls is None:
+        setup_joystick_controls()
+    if joystick_controls is not None:
+        joystick_controls.update()
 
 def get_save_folder():
     current_working_folder = os.getcwd()
@@ -1131,10 +1149,13 @@ def update():
     global state, game, high_score, game_over_timer, all_replays, total_frames
 
     total_frames += 1
-    keyboard_controls.update()
+    if total_frames % DEBUG_SLOWMO != 0:
+        return
+
+    update_controls()
 
     def button_pressed_controls(button_num):
-        for controls in (keyboard_controls,):
+        for controls in (keyboard_controls, joystick_controls):
             if controls is not None and controls.button_pressed(button_num):
                 return controls
         return None
@@ -1153,7 +1174,7 @@ def update():
     elif state == State.PLAY:
         if game.time_remaining <= 0:
             game.play_sound("gameover")
-            state= State.GAME_OVER
+            state = State.GAME_OVER
             game_over_timer = 0
 
             all_replays.append(game.player.replay_data)
@@ -1168,7 +1189,7 @@ def update():
 
     elif state == State.GAME_OVER:
         game_over_timer += 1
-        if game_over_timer > 60 and keyboard_controls.button_pressed(0) is not None:
+        if game_over_timer > 60 and button_pressed_controls(0) is not None:
             if game.timer > high_score:
                 high_score = game.timer
             state = State.TITLE
@@ -1223,6 +1244,7 @@ except Exception:
 
 tileset_images = {}
 keyboard_controls = KeyboardControls()
+setup_joystick_controls()
 all_replays, high_score = load_replays()
 
 state = State.TITLE
