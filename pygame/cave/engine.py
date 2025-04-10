@@ -28,7 +28,7 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.2"
+__version__ = "1.3"
 
 import os
 import sys
@@ -86,6 +86,19 @@ class Actor:
 
         return self.rect.collidepoint(point)
 
+    def colliderect(self, rect):
+        if DEBUG_ACTOR: print(f"colliderect({rect})")
+
+        return self.rect.colliderect(rect)
+
+    def distance_to(self, other):
+        if DEBUG_ACTOR: print(f"colliderect({rect})")
+
+        pos = pygame.Vector2(self.pos)
+        target = pygame.Vector2(other.pos)
+
+        return pos.distance_to(target)
+
     @property
     def width(self):
         return self.rect.width
@@ -97,6 +110,14 @@ class Actor:
     @property
     def left(self):
         return self.rect.left
+
+    @property
+    def centerx(self):
+        return self.rect.centerx
+
+    @property
+    def centery(self):
+        return self.rect.centery
 
     @property
     def image(self):
@@ -287,6 +308,8 @@ class Painter:
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
 
+    def rect(self, rect, color, width=1):
+        pygame.draw.rect(self.surface, color, rect, width)
 
 class Music:
     """Music - wraps the Pygame music mixer."""

@@ -4,7 +4,7 @@
 # note the #! - this was written and expected to run on a NixOS system
 # adjust as necessary
 
-directories="brikz bugz cave futbol invader pawng rabbit_run"
+directories="brikz bugz cave futbol huevos invader pawng rabbit_run"
 
 for i in $directories
 do
