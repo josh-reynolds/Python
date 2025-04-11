@@ -94,7 +94,7 @@ v1.3 (released with Huevos)
 * [DEFER] only partial positioning implemented for Painter.text()
 * [DEFER] duplication between Images, _load_image(), and Screen
 
-v1.4 (in development)
+v1.4 (in development with Thud)
 ----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage
