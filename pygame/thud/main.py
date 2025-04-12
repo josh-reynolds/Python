@@ -13,8 +13,27 @@ class KeyboardControls:
     def button_pressed(self, a):   ###
         pass   ###
 
-def draw_text(a, b, c, d):   ###
-    pass   ###
+def get_char_image_and_width(a): ###
+    return None,10 ###
+
+def text_width(a):  ###
+    return 10  ###
+
+def draw_text(text, x, y, center=False):
+    if center:
+        x -= text_width(text) // 2
+
+    start_x = x
+
+    for char in text:
+        if char == "\n":
+            y += 35
+            x = start_x
+        else:
+            image, width = get_char_image_and_width(char)
+            if image is not None:
+                screen.blit(image, (x,y))
+            x += width
 
 class State(Enum):
     TITLE = 1
