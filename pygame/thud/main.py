@@ -21,8 +21,15 @@ class KeyboardControls:
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
 
-    def button_down(self, a):  ###
-        pass   ###
+    def button_down(self, button):
+        if button == 0:
+            return keyboard.space or keyboard.z or keyboard.lctrl   # punch
+        elif button == 1:
+            return keyboard.x or keyboard.lalt   # kick
+        elif button == 2:
+            return keyboard.c or keyboard.lshift  # elbow
+        elif button == 3:
+            return keyboard.a   # flying kick
 
     def button_pressed(self, button):
         return self.is_pressed[button]
