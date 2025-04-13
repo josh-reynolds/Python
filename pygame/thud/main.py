@@ -9,10 +9,23 @@ SPECIAL_FONT_SYMBOLS = {'xb_a':1}       ###
 SPECIAL_FONT_SYMBOLS_INVERSE = {1:'xb_a'}  ###
 
 class KeyboardControls:
+    NUM_BUTTONS = 4
+
+    def __init__(self):
+        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+
     def update(self):
+        for button in range(KeyboardControls.NUM_BUTTONS):
+            button_down = self.button_down(button)
+            self.is_pressed[button] = button_down and not self.previously_down[button]
+            self.previously_down[button] = button_down
+
+    def button_down(self, a):  ###
         pass   ###
-    def button_pressed(self, a):   ###
-        pass   ###
+
+    def button_pressed(self, button):
+        return self.is_pressed[button]
 
 def get_char_image_and_width(char):
     if char == " ":
