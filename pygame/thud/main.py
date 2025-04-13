@@ -34,6 +34,16 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
+class Game:
+    def __init__(self, a): ###
+        self.player_lives = 1   ###
+    def check_won(self):
+        pass   ###
+    def update(self):
+        pass   ###
+    def draw(self):
+        pass   ###
+
 def get_char_image_and_width(char):
     if char == " ":
         return None, 22
@@ -65,6 +75,8 @@ def draw_text(text, x, y, center=False):
 
 class State(Enum):
     TITLE = 1
+    CONTROLS = 2
+    PLAY = 3
 
 def update():
     global state, game, total_frames
@@ -109,7 +121,7 @@ def draw():
 
     elif state == State.CONTROLS:
         screen.fill((0,0,0))
-        sreen.blit("menu_controls", (0,0))
+        screen.blit("menu_controls", (0,0))
 
     elif state == State.PLAY:
         game.draw()
