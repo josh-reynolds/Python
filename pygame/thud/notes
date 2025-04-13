@@ -2,3 +2,11 @@ Starting on the fourth game in Code the Classics Vol. 2 - a Double Dragon clone 
 I'm calling my version 'Thud.' This will be version 1.4 of the engine.
 
 ----
+First pass through the stubs is complete - very sparse. But since it includes the KeyboardControls
+class, I can now move through the game states and light up more stubs. That's next.
+
+One oddity in the text: they go to all the trouble of mapping the button symbol to an unused
+character so they can override that font graphic ('xb_a' is mapped to '%' in SPECIAL_FONT_SYMBOLS).
+But then in the text drawing routines, they just use the 'xb_a' name for the image, rather than
+the ordinal for '%' (which is 37). I can confirm by checking the GitHub sources and image files. Not
+sure why they did it this overly-complicated way - maybe they forgot midstream.

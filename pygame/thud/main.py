@@ -1,12 +1,12 @@
 from enum import Enum
 from engine import *
 
-WIDTH = 400     ###
-HEIGHT = 400    ###
+WIDTH = 800
+HEIGHT = 480
 TITLE = "Thud!"
 
-SPECIAL_FONT_SYMBOLS = {'xb_a':1}       ###
-SPECIAL_FONT_SYMBOLS_INVERSE = {1:'xb_a'}  ###
+SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
+SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
 class KeyboardControls:
     NUM_BUTTONS = 4
