@@ -5,7 +5,8 @@ WIDTH = 400     ###
 HEIGHT = 400    ###
 TITLE = "Thud!"
 
-SPECIAL_FONT_SYMBOLS = {'xb_a':1}
+SPECIAL_FONT_SYMBOLS = {'xb_a':1}       ###
+SPECIAL_FONT_SYMBOLS_INVERSE = {1:'xb_a'}  ###
 
 class KeyboardControls:
     def update(self):
@@ -13,11 +14,18 @@ class KeyboardControls:
     def button_pressed(self, a):   ###
         pass   ###
 
-def get_char_image_and_width(a): ###
-    return None,10 ###
+def get_char_image_and_width(char):
+    if char == " ":
+        return None, 22
+    else:
+        if char in SPECIAL_FONT_SYMBOLS_INVERSE:
+            image= getattr(images, SPECIAL_FONT_SYMBOLS_INVERSE[char])
+        else:
+            image = getattr(images, "font0" + str(ord(char)))
+        return image, image.get_width()
 
-def text_width(a):  ###
-    return 10  ###
+def text_width(text):
+    return sum([get_char_image_and_width(c)[1] for c in text])
 
 def draw_text(text, x, y, center=False):
     if center:
