@@ -60,6 +60,8 @@ class Player:  ###
         self.extra_life_timer = 1  ###
     def get_draw_order_offset(self):
         return 0 ###
+    def update(self):
+        pass ###
     def draw(self, a): ###
         pass ###
 
@@ -106,9 +108,59 @@ class Game:
         self.current_text = self.intro_text
         self.displayed_text = ""
 
+    def next_stage(self):
+        pass   ###
     def check_won(self):
         pass   ###
+
     def update(self):
+        self.timer += 1
+
+        if self.text_active:
+            if self.timer % 6 == 0 and len(self.displayed_text) < len(self.current_text):
+                length_to_display = min(self.timer // 6, len(self.current_text))
+                self.displayed_text = self.current_text[:length_to_display]
+                if not self.displayed_text[-1].isspace():
+                    self.play_sound("teletype")
+
+            for button in range(4):
+                if self.player.controls.button_pressed(button):
+                    self.text_active = False
+                    self.timer = 0
+
+            return
+
+        for obj in [self.player] + self.enemies + self.weapons + self.scooters + self.powerups:
+            obj.update()
+
+        if self.scrolling:
+            if self.scroll_offset.x < self.max_scroll_offset_x:
+                diff = self.max_scroll_offset_x - self.scroll_offset.x
+                scroll_speed = self.player.x / (WIDTH/4)
+                scroll_speed = min(diff, scroll_speed)
+                self.scroll_offset.x += scroll_speed
+                self.boundary.left = self.scroll_offset.x
+            else:
+                self.scrolling = Falsee
+        else:
+            begin_scroll_boundary = WIDTH - 300
+            if self.player.vpos.x - self.scroll_offset.x > begin_scroll_boundary \
+                    and self.scroll_offset.x < self.max_scroll_offset_x:
+                        self.scrolling = True
+                        if self.stage_index < len(STAGES):
+                            stage = STAGE[self.stage_index]
+                            self.create_stage_objects(stage)
+
+        self.score += sum([enemy.score for enemy in self.enemies if enemy.lives <= 0])
+        self.enemies = [enemy for enemy in self.enemies if enemy.lives > 0]
+        self.scooters = [scooter for scooter in self.scooters if scooter.frame < 200]
+        self.weapons = [weapon for weapon in self.weapons if not weapon.is_broken() and weapon.x > -200]
+        self.powerups = [powerup for powerup in self.powerups if not powerup.collected and powerup.x > -200]
+
+        if len(self.enemies) == 0 and self.scroll_offset.x == self.max_scroll_offset_x:
+            self.next_stage()
+
+
         pass   ###
 
     def draw(self):
