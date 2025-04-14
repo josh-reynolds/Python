@@ -1,5 +1,6 @@
 from enum import Enum
 from random import choice
+import pygame
 from pygame import Rect
 from pygame.math import Vector2
 from engine import *
@@ -14,6 +15,8 @@ INTRO_ENABLED = False   ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
+
+fullscreen_black_bmp = pygame.Surface((0,0))  ###
 
 class KeyboardControls:
     NUM_BUTTONS = 4
@@ -44,6 +47,11 @@ class KeyboardControls:
 class Player:  ###
     def __init__(self, a): ###
         self.lives = 1 ###
+        self.vpos = Vector2(0,0)  ###
+    def get_draw_order_offset(self):
+        return 0 ###
+    def draw(self, a): ###
+        pass ###
 
 def setup_stages():
     pass ###
@@ -92,8 +100,36 @@ class Game:
         pass   ###
     def update(self):
         pass   ###
+
     def draw(self):
-        pass   ###
+        self.draw_background()
+
+        all_objs = [self.player] + self.enemies + self.weapons + self.scooters + self.powerups
+        all_objs.sort(key=lambda obj: obj.vpos.y + obj.get_draw_order_offset())
+        for obj in all_objs:
+            if obj:
+                obj.draw(self.scroll_offset)
+
+        if self.scroll_offset.x < self.max_scroll_offset_x and (self.timer//30) % 2 == 0:
+            screen.blit("arrow", (WIDTH-450,120))
+
+        self.draw_ui()
+
+        if self.text_active or self.timer < 255:
+            if self.text_active:
+                alpha = 255
+            else:
+                alpha = max(0, 255 - self.timer)
+            fullscreen_black_bmp.set_alpha(alpha)
+            screen.blit(fullscreen_black_bmp, (0, 0))
+
+        if self.text_active:
+            draw_text(self.displayed_text, 50, 50)
+
+    def draw_ui(self):
+        pass  ###
+    def draw_background(self):
+        pass  ###
 
 def get_char_image_and_width(char):
     if char == " ":
