@@ -18,6 +18,8 @@ BACKGROUND_TILES = [] ###
 
 HEALTH_STAMINA_BAR_WIDTH = 5 ###
 
+STAGES = []  ###
+
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
@@ -58,6 +60,7 @@ class Player:  ###
         self.max_stamina = 5 ###
         self.vpos = Vector2(0,0)  ###
         self.extra_life_timer = 1  ###
+        self.controls = a   ###
     def get_draw_order_offset(self):
         return 0 ###
     def update(self):
@@ -109,9 +112,21 @@ class Game:
         self.displayed_text = ""
 
     def next_stage(self):
-        pass   ###
+        self.stage_index += 1
+        if self.stage_index < len(STAGES):
+            stage = STAGES[self.stage_index]
+            self.max_scroll_offset_x = stage.max_scroll_x
+            if self.scrolling or self.max_scroll_offset_x <= self.scroll_offset.x:
+                self.create_stage_objects(stage)
+        else:
+            if not self.text_active:
+                self.text_active = True
+                self.current_text = self.outro_text
+                self.displayed_text = ""
+                self.timer = 0
+
     def check_won(self):
-        pass   ###
+        return self.stage_index >= len(STAGES) and not self.text_active
 
     def update(self):
         self.timer += 1
@@ -159,9 +174,6 @@ class Game:
 
         if len(self.enemies) == 0 and self.scroll_offset.x == self.max_scroll_offset_x:
             self.next_stage()
-
-
-        pass   ###
 
     def draw(self):
         self.draw_background()
@@ -225,6 +237,11 @@ class Game:
             else:
                 pos.x += BACKGROUND_TILE_SPACING
 
+    def shutdown(self):
+        pass   ###
+    def play_sound(self, a):  ###
+        pass   ###
+
 def get_char_image_and_width(char):
     if char == " ":
         return None, 22
@@ -258,6 +275,7 @@ class State(Enum):
     TITLE = 1
     CONTROLS = 2
     PLAY = 3
+    GAME_OVER = 4
 
 def update():
     global state, game, total_frames
@@ -284,7 +302,7 @@ def update():
     elif state == State.PLAY:
         game.update()
         if game.player.lives <= 0 or game.check_won():
-            gaem.shutdown()
+            game.shutdown()
             state = State.GAME_OVER
 
     elif state == State.GAME_OVER:
