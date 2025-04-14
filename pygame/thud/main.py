@@ -13,6 +13,9 @@ MIN_WALK_Y = 1 ###
 
 INTRO_ENABLED = False   ###
 
+BACKGROUND_TILE_SPACING = 10 ###
+BACKGROUND_TILES = [] ###
+
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
@@ -128,8 +131,24 @@ class Game:
 
     def draw_ui(self):
         pass  ###
+
     def draw_background(self):
-        pass  ###
+        road1_x = -(self.scroll_offset.x % WIDTH)
+        road2_x = road1_x + WIDTH
+        screen.blit("road",(road1_x, 0))
+        screen.blit("road",(road2_x, 0))
+
+        pos = -self.scroll_offset
+        pos.x -= BACKGROUND_TILE_SPACING
+
+        for tile in BACKGROUND_TILES:
+            if pos.x + 417 >= 0:
+                screen.blit(tile, pos)
+                pos.x += BACKGROUND_TILE_SPACING
+                if pos.x >= WIDTH:
+                    break
+            else:
+                pos.x += BACKGROUND_TILE_SPACING
 
 def get_char_image_and_width(char):
     if char == " ":
