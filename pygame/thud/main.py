@@ -16,6 +16,8 @@ INTRO_ENABLED = False   ###
 BACKGROUND_TILE_SPACING = 10 ###
 BACKGROUND_TILES = [] ###
 
+HEALTH_STAMINA_BAR_WIDTH = 5 ###
+
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
@@ -50,7 +52,12 @@ class KeyboardControls:
 class Player:  ###
     def __init__(self, a): ###
         self.lives = 1 ###
+        self.health = 5 ###
+        self.start_health = 5 ###
+        self.stamina = 5 ###
+        self.max_stamina = 5 ###
         self.vpos = Vector2(0,0)  ###
+        self.extra_life_timer = 1  ###
     def get_draw_order_offset(self):
         return 0 ###
     def draw(self, a): ###
@@ -130,7 +137,23 @@ class Game:
             draw_text(self.displayed_text, 50, 50)
 
     def draw_ui(self):
-        pass  ###
+        full_w = HEALTH_STAMINA_BAR_WIDTH
+        health_w = int((game.player.health / game.player.start_health) * full_w)
+        screen.surface.blit(getattr(images,"health"), (48,11), Rect(0,0,health_w,full_w))
+
+        stam_w = int((game.player.stamina / game.player.max_stamina) * full_w)
+        screen.surface.blit(getattr(images,"stamina"), (517,11), Rect(0,0,stam_w,full_w))
+
+        screen.blit("status", (0,0))
+
+        for i in range(game.player.lives):
+            if game.player.extra_life_timer <= 0 or i < game.player.lives - 1:
+                sprite_idx = 9
+            else:
+                sprite_idx = min(9, (30 - game.player.extra_life_timer) // 3)
+            screen.blit("status_life" + str(sprite_idx), (i * 46 - 55, -35))
+
+        draw_text(f"{self.score:04}", WIDTH // 2, 0, True)
 
     def draw_background(self):
         road1_x = -(self.scroll_offset.x % WIDTH)
