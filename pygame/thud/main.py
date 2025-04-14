@@ -1,5 +1,5 @@
 from enum import Enum
-from random import choice
+from random import choice, randint
 import pygame
 from pygame import Rect
 from pygame.math import Vector2
@@ -98,7 +98,7 @@ class Game:
 
         self.text_active = INTRO_ENABLED
 
-        self.intro_text = "THE NOTORIOUS CRIME BOSS]NEBEN UPTON HAS STOLEN\n" \
+        self.intro_text = "THE NOTORIOUS CRIME BOSS\nEBEN UPTON HAS STOLEN\n" \
                 + choice(stolen_items) \
                 + "\n\n\nFIGHT TO RECLAIM WHAT\nHAS BEEN TAKEN!"
 
@@ -239,8 +239,10 @@ class Game:
 
     def shutdown(self):
         pass   ###
-    def play_sound(self, a):  ###
-        pass   ###
+
+    def play_sound(self, name, count=1):
+        if self.player:
+            return getattr(sounds, name + str(randint(0, count - 1)))
 
 def get_char_image_and_width(char):
     if char == " ":
