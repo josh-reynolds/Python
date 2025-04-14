@@ -1,9 +1,16 @@
 from enum import Enum
+from random import choice
+from pygame import Rect
+from pygame.math import Vector2
 from engine import *
 
 WIDTH = 800
 HEIGHT = 480
 TITLE = "Thud!"
+
+MIN_WALK_Y = 1 ###
+
+INTRO_ENABLED = False   ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
@@ -34,9 +41,53 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
-class Game:
+class Player:  ###
     def __init__(self, a): ###
-        self.player_lives = 1   ###
+        self.lives = 1 ###
+
+def setup_stages():
+    pass ###
+
+class Game:
+    def __init__(self, controls=None):
+        self.player = Player(controls)
+        self.enemies = []
+        self.weapons = []
+        self.scooters = []
+        self.powerups = []
+        self.stage_index = -1
+        self.timer = 0
+        self.score = 0
+        self.scroll_offset = Vector2(0,0)
+        self.max_scroll_offset_x = 0
+        self.scrolling = False
+        self.boundary = Rect(0, MIN_WALK_Y, WIDTH-1, HEIGHT-MIN_WALK_Y)
+
+        setup_stages()
+
+        stolen_items = ("A SHIPMENT OF RASPBERRY\nPIS",
+                        "YOUR COPY OF CODE THE\nCLASSICS VOL 2",
+                        "THE COMPLETE WORKS OF\nSHAKESPEARE",
+                        "THE BLOCKCHAIN",
+                        "THE WORLD'S ENTIRE SUPPLY\nOF COVID VACCINES",
+                        "ALL OF YOUR SAVED GAME\nFILES",
+                        "YOUR DOG'S FLEA MEDICINE")
+
+        self.text_active = INTRO_ENABLED
+
+        self.intro_text = "THE NOTORIOUS CRIME BOSS]NEBEN UPTON HAS STOLEN\n" \
+                + choice(stolen_items) \
+                + "\n\n\nFIGHT TO RECLAIM WHAT\nHAS BEEN TAKEN!"
+
+        self.outro_text = "FOLLOWING THE DEFEAT OF\nTHE EVIL GANG, HUMANITY\n" \
+                "ENTERED A NEW GOLDEN AGE\nIN WHICH CRIME BECAME A\n" \
+                "THING OF THE PAST. THE\nWORD ITSELF WAS SOON\n" \
+                "FORGOTTEN AND EVERYONE\nHAD A BIG PARTY IN YOUR\n" \
+                "HONOR.\n\nNICE JOB!"
+
+        self.current_text = self.intro_text
+        self.displayed_text = ""
+
     def check_won(self):
         pass   ###
     def update(self):
@@ -102,7 +153,7 @@ def update():
 
     elif state == State.PLAY:
         game.update()
-        if game.player_lives <= 0 or game.check_won():
+        if game.player.lives <= 0 or game.check_won():
             gaem.shutdown()
             state = State.GAME_OVER
 
