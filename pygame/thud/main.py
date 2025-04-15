@@ -67,9 +67,38 @@ class Player:  ###
         pass ###
     def draw(self, a): ###
         pass ###
+class Barrel:
+    def __init__(self, pos):  ###
+        pass  ###
+class EnemyVax:
+    def __init__(self, pos):  ###
+        pass  ###
+class EnemyHoodie:
+    def __init__(self, pos):  ###
+        pass  ###
+class EnemyScooterboy:
+    def __init__(self, pos):  ###
+        pass  ###
+class EnemyBoss:
+    def __init__(self, pos):  ###
+        pass  ###
+class Stage:
+    def __init__(self, max_scroll_x, enemies, weapons=None):  ###
+        self.max_scroll_x = max_scroll_x   ###
+        pass  ###
 
 def setup_stages():
-    pass ###
+    global STAGES
+    STAGES = (
+            Stage(max_scroll_x=300, enemies=[EnemyVax(pos=(1000,400))]),
+            Stage(max_scroll_x=600,
+                  enemies=[EnemyVax(pos=(1400,400)), EnemyHoodie(pos=(1500,500))],
+                  weapons=[Barrel((1600,400))]),
+            Stage(max_scroll_x=600, enemies=[EnemyScooterboy(pos=(200,400))]),
+            Stage(max_scroll_x=900,
+                  enemies=[EnemyBoss(pos=(1800,400)), EnemyVax(pos=(400,40))]),
+            # more stages on GitHub
+            )
 
 class Game:
     def __init__(self, controls=None):
@@ -238,7 +267,8 @@ class Game:
                 pos.x += BACKGROUND_TILE_SPACING
 
     def shutdown(self):
-        pass   ###
+        for enemy in self.enemies:
+            enemy.died()
 
     def play_sound(self, name, count=1):
         if self.player:
