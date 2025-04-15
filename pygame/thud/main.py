@@ -67,9 +67,6 @@ class Player:  ###
         pass ###
     def draw(self, a): ###
         pass ###
-class Barrel:
-    def __init__(self, pos):  ###
-        pass  ###
 class EnemyVax:
     def __init__(self, pos):  ###
         pass  ###
@@ -82,6 +79,18 @@ class EnemyScooterboy:
 class EnemyBoss:
     def __init__(self, pos):  ###
         pass  ###
+class Weapon:
+    def __init__(self, name, sprite, pos, end_pickup_frame, anchor,
+                 bounciness, ground_friction, air_friction=1, separate_shadow=False):###
+        pass  ###
+
+class Barrel(Weapon):
+    def __init__(self, pos):
+        super().__init__("barrel", "barrel_upright", pos, end_pickup_frame=2,
+                         anchor=("center",190), bounciness=0.75, ground_friction=0.96,
+                         separate_shadow=True)
+        self.last_thrower = None
+        self.frame = 0
 
 class Stage:
     def __init__(self, enemies, max_scroll_x, weapons=[], powerups=[]):
