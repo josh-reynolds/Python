@@ -72,6 +72,10 @@ class Player:  ###
         pass ###
     def draw(self, a): ###
         pass ###
+class Enemy:
+    def __init__(self, a, b, c, speed, health, stamina, start_timer,
+                 anchor_y, half_hit_area, color_variant, score):  ###
+        pass  ###
 class EnemyVax:
     def __init__(self, pos):  ###
         pass  ###
@@ -81,9 +85,14 @@ class EnemyHoodie:
 class EnemyScooterboy:
     def __init__(self, pos):  ###
         pass  ###
-class EnemyBoss:
-    def __init__(self, pos):  ###
-        pass  ###
+
+class EnemyBoss(Enemy):
+    def __init__(self, pos, start_timer=20):
+        boss_attacks = ("boss_lpunch", "boss_rpunch", "boss_kick", "boss_grab_player",)
+        super().__init__(pos, "boss", boss_attacks, speed=Vector2(0.9,0.8), health=25,
+                         stamina=1000, start_timer=start_timer, anchor_y=280,
+                         half_hit_area=Vector2(30,20), color_variant=randint(0,2),
+                         score=75)
 
 class Weapon(ScrollHeightActor):
     def __init__(self, name, sprite, pos, end_pickup_frame, anchor=ANCHOR_CENTER,
