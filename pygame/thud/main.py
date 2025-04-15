@@ -20,6 +20,8 @@ HEALTH_STAMINA_BAR_WIDTH = 5 ###
 
 ANCHOR_CENTER = ('center', 'center')
 
+ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 1 ###
+
 STAGES = []  ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
@@ -73,8 +75,10 @@ class Player:  ###
     def draw(self, a): ###
         pass ###
 class Enemy:
-    def __init__(self, a, b, c, speed, health, stamina, start_timer,
-                 anchor_y, half_hit_area, color_variant, score):  ###
+    class State(Enum):
+        RIDING_SCOOTER = 1 ###
+    def __init__(self, a, b, c, color_variant, score, start_timer, speed=1, health=1, stamina=1,
+                 anchor_y=1, half_hit_area=1, approach_player_distance=1):  ###
         pass  ###
 class EnemyVax:
     def __init__(self, pos):  ###
@@ -82,9 +86,19 @@ class EnemyVax:
 class EnemyHoodie:
     def __init__(self, pos):  ###
         pass  ###
-class EnemyScooterboy:
-    def __init__(self, pos):  ###
-        pass  ###
+
+class EnemyScooterboy(Enemy):
+    SCOOTER_SPEED_SLOW = 1  ###
+
+    def __init__(self, pos, start_timer=20):
+        attacks = ("scooterboy_attack1")
+        super().__init__(pos, "scooterboy", attacks, start_timer=start_timer,
+                         approach_player_distance=ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY,
+                         color_variant=randint(0,2), score=30)
+        self.state = Enemy.State.RIDING_SCOOTER
+        self.scooter_speed = EnemyScooterboy.SCOOTER_SPEED_SLOW
+        self.scooter_target_speed = self.scooter_speed
+        self.scooter_sound_channel = None
 
 class EnemyBoss(Enemy):
     def __init__(self, pos, start_timer=20):
