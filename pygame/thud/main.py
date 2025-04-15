@@ -18,6 +18,8 @@ BACKGROUND_TILES = [] ###
 
 HEALTH_STAMINA_BAR_WIDTH = 5 ###
 
+ANCHOR_CENTER = ('center', 'center')
+
 STAGES = []  ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
@@ -51,6 +53,9 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
+class ScrollHeightActor: ###
+    def __init__(self, a, b, anchor, separate_shadow):  ###
+        pass   ###
 class Player:  ###
     def __init__(self, a): ###
         self.lives = 1 ###
@@ -79,10 +84,18 @@ class EnemyScooterboy:
 class EnemyBoss:
     def __init__(self, pos):  ###
         pass  ###
-class Weapon:
-    def __init__(self, name, sprite, pos, end_pickup_frame, anchor,
-                 bounciness, ground_friction, air_friction=1, separate_shadow=False):###
-        pass  ###
+
+class Weapon(ScrollHeightActor):
+    def __init__(self, name, sprite, pos, end_pickup_frame, anchor=ANCHOR_CENTER,
+                 bounciness=0, ground_friction=0.5, air_friction=0.996, separate_shadow=False):
+        super().__init__(sprite, pos, anchor=anchor, separate_shadow=separate_shadow)
+        self.name = name
+        self.end_pickup_frame = end_pickup_frame
+        self.held = False
+        self.vel = Vector2(0,0)
+        self.bounciness = bounciness
+        self.ground_friction = ground_friction
+        self.air_friction = air_friction
 
 class Barrel(Weapon):
     def __init__(self, pos):
