@@ -82,10 +82,13 @@ class EnemyScooterboy:
 class EnemyBoss:
     def __init__(self, pos):  ###
         pass  ###
+
 class Stage:
-    def __init__(self, max_scroll_x, enemies, weapons=None):  ###
-        self.max_scroll_x = max_scroll_x   ###
-        pass  ###
+    def __init__(self, enemies, max_scroll_x, weapons=[], powerups=[]):
+        self.enemies = enemies
+        self.powerups = powerups
+        self.max_scroll_x = max_scroll_x
+        self.weapons = weapons
 
 def setup_stages():
     global STAGES
