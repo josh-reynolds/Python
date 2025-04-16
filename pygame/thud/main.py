@@ -59,17 +59,41 @@ class KeyboardControls:
 
 class ScrollHeightActor: ###
     def __init__(self, a, b, anchor, separate_shadow):  ###
-        pass   ###
-class Fighter: ###
-    def __init__(self, pos, anchor, speed, sprite, health, stamina=1, anim_update_rate=1,
-                 half_hit_area=1, color_variant=1, hit_sound=None, lives=1, separate_shadow=False):   ###
-        self.lives = 1 ###
-        self.health = 5 ###
-        self.start_health = 5 ###
-        self.stamina = 5 ###
-        self.max_stamina = 5 ###
         self.vpos = Vector2(0,0)  ###
         pass   ###
+class Fighter(ScrollHeightActor, ABC):
+    class FallingState(Enum):
+        STANDING = 1  ###
+
+    def __init__(self, pos, anchor, speed, sprite, health, anim_update_rate=8,
+                 stamina=500, half_hit_area=Vector2(25,20), lives=1,
+                 color_variant=None, separate_shadow=False, hit_sound=None):
+        super().__init__("blank", pos, anchor, separate_shadow=separate_shadow)
+
+        self.speed = speed
+        self.sprite = sprite
+        self.anim_update_rate = anim_update_rate
+        self.facing_x = 1
+        self.frame = 0
+        self.last_attack = None
+        self.attack_timer = 0
+        self.falling_state = Fighter.FallingState.STANDING
+        self.walking = False
+        self.vel = Vector2(0,0)
+        self.pickup_animation = None
+        self.hit_timer = 0
+        self.hit_frame = 0
+        self.stamina = stamina
+        self.max_stamina = stamina
+        self.health = health
+        self.start_health = health
+        self.lives = lives
+        self.color_variant = color_variant
+        self.hit_sound = hit_sound
+        self.weapon = None
+        self.just_knocked_off_scooter = False
+        self.use_die_animation = False
+
     def update(self): ###
         pass ###
     def get_draw_order_offset(self):
