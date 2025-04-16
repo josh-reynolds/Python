@@ -61,26 +61,37 @@ class ScrollHeightActor: ###
     def __init__(self, a, b, anchor, separate_shadow):  ###
         pass   ###
 class Fighter: ###
-    def __init__(self,a, b, speed, sprite, health, stamina, anim_update_rate,
-                 half_hit_area, color_variant, hit_sound):   ###
-        self.vpos = (1,1) ###
-        pass   ###
-class Player:  ###
-    def __init__(self, a): ###
+    def __init__(self, pos, anchor, speed, sprite, health, stamina=1, anim_update_rate=1,
+                 half_hit_area=1, color_variant=1, hit_sound=None, lives=1, separate_shadow=False):   ###
         self.lives = 1 ###
         self.health = 5 ###
         self.start_health = 5 ###
         self.stamina = 5 ###
         self.max_stamina = 5 ###
         self.vpos = Vector2(0,0)  ###
-        self.extra_life_timer = 1  ###
-        self.controls = a   ###
+        pass   ###
+    def update(self): ###
+        pass ###
     def get_draw_order_offset(self):
         return 0 ###
-    def update(self):
-        pass ###
     def draw(self, a): ###
         pass ###
+
+class Player(Fighter):
+    def __init__(self, controls):
+        super().__init__(pos=(400,400), anchor=("center",256), speed=Vector2(3,2),
+                         sprite="hero", health=30, lives=3, separate_shadow=True)
+        self.controls = controls
+        self.extra_life_timer = 0
+
+    def update(self):
+        super().update()
+
+        self.extra_life_timer -= 1
+
+        for powerup in game.powerups:
+            if (powerup.vpos - self.vpos).length() < 30:
+                powerup.collect(self)
 
 class Enemy(Fighter, ABC):
     class State(Enum):
