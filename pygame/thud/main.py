@@ -84,8 +84,15 @@ class Player:  ###
 
 class Enemy(Fighter, ABC):
     class State(Enum):
-        RIDING_SCOOTER = 1 ###
-        PAUSE = 2 ###
+        APPROACH_PLAYER = 0
+        GO_TO_POS = 1
+        GO_TO_WEAPON = 2
+        PAUSE = 3
+        KNOCKED_DOWN = 4
+        RIDING_SCOOTER = 5
+        PORTAL = 6
+        PORTAL_EXPLODE = 7
+
     def __init__(self, pos, name, attacks, start_timer,
                  speed=Vector2(1,1), 
                  health=15, 
