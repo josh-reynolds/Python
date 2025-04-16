@@ -1,5 +1,6 @@
 from enum import Enum
 from random import choice, randint
+from abc import ABC
 import pygame
 from pygame import Rect
 from pygame.math import Vector2
@@ -20,6 +21,7 @@ HEALTH_STAMINA_BAR_WIDTH = 5 ###
 
 ANCHOR_CENTER = ('center', 'center')
 
+ENEMY_APPROACH_PLAYER_DISTANCE = 1 ###
 ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 1 ###
 
 STAGES = []  ###
@@ -58,6 +60,11 @@ class KeyboardControls:
 class ScrollHeightActor: ###
     def __init__(self, a, b, anchor, separate_shadow):  ###
         pass   ###
+class Fighter: ###
+    def __init__(self,a, b, speed, sprite, health, stamina, anim_update_rate,
+                 half_hit_area, color_variant, hit_sound):   ###
+        self.vpos = (1,1) ###
+        pass   ###
 class Player:  ###
     def __init__(self, a): ###
         self.lives = 1 ###
@@ -74,12 +81,32 @@ class Player:  ###
         pass ###
     def draw(self, a): ###
         pass ###
-class Enemy:
+
+class Enemy(Fighter, ABC):
     class State(Enum):
         RIDING_SCOOTER = 1 ###
-    def __init__(self, a, b, c, color_variant, score, start_timer, speed=1, health=1, stamina=1,
-                 anchor_y=1, half_hit_area=1, approach_player_distance=1):  ###
-        pass  ###
+        PAUSE = 2 ###
+    def __init__(self, pos, name, attacks, start_timer,
+                 speed=Vector2(1,1), 
+                 health=15, 
+                 stamina=500,
+                 approach_player_distance=ENEMY_APPROACH_PLAYER_DISTANCE,
+                 anchor_y=256, 
+                 half_hit_area=Vector2(25,20),
+                 color_variant=None, 
+                 hit_sound=None,
+                 score=10):
+        super().__init__(pos, ("center", anchor_y), speed=speed, sprite=name,
+                         health=health, stamina=stamina, anim_update_rate=14,
+                         half_hit_area=half_hit_area, color_variant=color_variant,
+                         hit_sound=hit_sound)
+        self.target = Vector2(self.vpos)
+        self.target_weapon = None
+        self.state = Enemy.State.PAUSE
+        self.state_timer = start_timer
+        self.attacks = attacks
+        self.approach_player_distance = approach_player_distance
+        self.score = score
 
 class EnemyVax(Enemy):
     def __init__(self, pos, start_timer=20):
