@@ -80,15 +80,21 @@ class Enemy:
     def __init__(self, a, b, c, color_variant, score, start_timer, speed=1, health=1, stamina=1,
                  anchor_y=1, half_hit_area=1, approach_player_distance=1):  ###
         pass  ###
-class EnemyVax:
-    def __init__(self, pos):  ###
-        pass  ###
-class EnemyHoodie:
-    def __init__(self, pos):  ###
-        pass  ###
+
+class EnemyVax(Enemy):
+    def __init__(self, pos, start_timer=20):
+        attacks = ("vax_lpunch", "vax_rpunch", "vax_pound")
+        super().__init__(pos, "vax", attacks, start_timer=start_timer,
+                         color_variant=randint(0,2), score=20)
+
+class EnemyHoodie(Enemy):
+    def __init__(self, pos, start_timer=20):
+        attacks = ("hoodie_lpunch", "hoodie_rpunch", "hoodie_special")
+        super().__init__(pos, "hoodie", attacks, health=12, speed=Vector2(1.2,1),
+                         start_timer=start_timer, color_variant=randint(0,2), score=20)
 
 class EnemyScooterboy(Enemy):
-    SCOOTER_SPEED_SLOW = 1  ###
+    SCOOTER_SPEED_SLOW = 4
 
     def __init__(self, pos, start_timer=20):
         attacks = ("scooterboy_attack1")
