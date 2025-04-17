@@ -69,6 +69,10 @@ class ScrollHeightActor: ###
 class Fighter(ScrollHeightActor, ABC):
     class FallingState(Enum):
         STANDING = 1  ###
+        FALLING = 2  ###
+        GETTING_UP = 3  ###
+        GRABBED = 4  ###
+        THROWN = 5  ###
 
     def __init__(self, pos, anchor, speed, sprite, health, anim_update_rate=8,
                  stamina=500, half_hit_area=Vector2(25,20), lives=1,
@@ -107,7 +111,52 @@ class Fighter(ScrollHeightActor, ABC):
         super().draw(offset)
 
     def determine_sprite(self):
-        pass   ###
+        show = True
+
+        if self.falling_state == Fighter.FallingState.FALLING:
+            if self.frame > 60 and self.health <= 0 and (self.frame // 10) % 2 == 0:
+                show = False
+
+            if show:
+                if self.just_knocked_off_scooter:
+                    if self.frame > 10:
+                        self.just_knocked_off_scooter = False
+                        game.scooters.append(Scooter(self.vpos, self.facing_x,
+                                                     self.color_variant))
+                if self.just_knocked_off_scooter:
+                    anim_type = "knocked_off"
+                    frame = 0
+                elif self.use_die_animation:
+                    anim_type = "die"
+                    frame = min(self.frame // 20, 2)
+                else:
+                    last_frame = 3 if isinstance(self, EnemyScooterboy) else 2
+                    anim_type = "knockdown"
+                    frame = min(self.frame // 10, last_frame)
+
+        elif self.falling_state == Fighter.FallingState.GETTING_UP:
+            pass   ###
+        elif self.falling_state == Fighter.FallingState.GRABBED:
+            pass   ###
+        elif self.falling_state == Fighter.FallingState.THROWN:
+            pass   ###
+        elif self.hit_timer > 0:
+            pass   ###
+        elif self.pickup_animation is not None:
+            pass   ###
+        elif self.attack_timer > 0:
+            pass   ###
+        else:
+            pass   ###
+
+        if show:
+            image = None ###
+            pass   ###
+        else:
+            image = None ###
+            pass   ###
+
+        return image
 
 class Player(Fighter):
     def __init__(self, controls):
