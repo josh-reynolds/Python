@@ -61,6 +61,11 @@ class ScrollHeightActor: ###
     def __init__(self, a, b, anchor, separate_shadow):  ###
         self.vpos = Vector2(0,0)  ###
         pass   ###
+    def draw(self, a):  ###
+        pass ###
+    def get_draw_order_offset(self):
+        return 0 ###
+
 class Fighter(ScrollHeightActor, ABC):
     class FallingState(Enum):
         STANDING = 1  ###
@@ -96,10 +101,13 @@ class Fighter(ScrollHeightActor, ABC):
 
     def update(self): ###
         pass ###
-    def get_draw_order_offset(self):
-        return 0 ###
-    def draw(self, a): ###
-        pass ###
+
+    def draw(self, offset):
+        self.image = self.determine_sprite()
+        super().draw(offset)
+
+    def determine_sprite(self):
+        pass   ###
 
 class Player(Fighter):
     def __init__(self, controls):
