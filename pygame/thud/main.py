@@ -103,8 +103,35 @@ class Fighter(ScrollHeightActor, ABC):
         self.just_knocked_off_scooter = False
         self.use_die_animation = False
 
-    def update(self): ###
-        pass ###
+    def update(self):
+        self.attack_timer -= 1
+
+        if self.height_above_ground > 0 or self.vel.y != 0:
+            self.vpos.x += self.vel.x
+            self.vel.y += THROWN_GRAVITY if self.falling_state == Fighter.FallingState.THROWN \
+                    else JUMP_GRAVITY
+            self.height_above_ground -= self.vel.y
+            self.apply_movement_boundaries(self.vel.x, 0)
+            if self.height_above_ground < 0:
+                self.height_above_ground = 0
+                self.vel.x = 0
+                self.vel.y = 0
+                self.hit_timer = 0
+
+        if self.falling_state == Fighter.FallingState.FALLING:
+            pass ###
+        elif self.falling_state == Fighter.FallingState.GETTING_UP:
+            pass ###
+        elif self.falling_state == Fighter.FallingState.THROWN:
+            pass ###
+        elif self.hit_timer > 0:
+            pass ###
+        elif self.pickup_animation is not None:
+            pass ###
+        elif self.override_walking():
+            pass
+        elif self.falling_state == Fighter.FallingState.STANDING:
+            pass ###
 
     def draw(self, offset):
         self.image = self.determine_sprite()
