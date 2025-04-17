@@ -24,6 +24,8 @@ ANCHOR_CENTER = ('center', 'center')
 ENEMY_APPROACH_PLAYER_DISTANCE = 1 ###
 ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 1 ###
 
+JUMP_GRAVITY = 1 ###
+
 STAGES = []  ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
@@ -60,6 +62,7 @@ class KeyboardControls:
 class ScrollHeightActor: ###
     def __init__(self, a, b, anchor, separate_shadow):  ###
         self.vpos = Vector2(0,0)  ###
+        self.height_above_ground = 1 ###
         pass   ###
     def draw(self, a):  ###
         pass ###
@@ -119,17 +122,51 @@ class Fighter(ScrollHeightActor, ABC):
                 self.hit_timer = 0
 
         if self.falling_state == Fighter.FallingState.FALLING:
-            pass ###
+            self.vpos.x += self.vel.x
+            self.vel.x, _ = move_towards(self.vel.x, 0, 0.5)
+            self.apply_movement_boundaries(self.vel.x, 0)
+            self.frame += 1
+            if self.frame > 120:
+                if self.health > 0:
+                    self.falling_state = Fighter.FallingState.GETTING_UP
+                    self.frame = 0
+                    self.stamina = self.max_stamina
+                else:
+                    if self.frame > 240:
+                        self.lives -= 1
+                        if self.lives > 0:
+                            self.health = self.start_health
+                            self.falling_state = Fighter.FallingState.GETTING_UP
+                            self.frame = 0
+                            self.stamina = self.max_stamina
+                            sel.use_die_animation = False
+                        else:
+                            self.died()
+
         elif self.falling_state == Fighter.FallingState.GETTING_UP:
-            pass ###
+            self.frame += 1
+            self.vpos.x += 0.1 * self.facing_x
+            if self.frame > 20:
+                self.falling_state = Fighter.FallingState.STANDING
+                self.frame = 0
+
         elif self.falling_state == Fighter.FallingState.THROWN:
-            pass ###
+            self.frame += 1
+            if self.height_above_ground <= 0:
+                self.falling_state = Fighter.FallingState.FALLING
+                self.frame = 80
+
         elif self.hit_timer > 0:
-            pass ###
+            self.hit_timer -= 1
+
         elif self.pickup_animation is not None:
-            pass ###
+            self.frame += 1
+            if self.frame > 30:
+                self.pickup_animation = None
+
         elif self.override_walking():
             pass
+
         elif self.falling_state == Fighter.FallingState.STANDING:
             pass ###
 
@@ -202,6 +239,11 @@ class Fighter(ScrollHeightActor, ABC):
             image = "blank"
 
         return image
+
+    def override_walking(self):
+        pass  ###
+    def apply_movement_boundaries(self, a, b): ###
+        pass  ###
 
 class Player(Fighter):
     def __init__(self, controls):
