@@ -135,26 +135,44 @@ class Fighter(ScrollHeightActor, ABC):
                     frame = min(self.frame // 10, last_frame)
 
         elif self.falling_state == Fighter.FallingState.GETTING_UP:
-            pass   ###
+            anim_type = "getup"
+            frame = min(self.frame // 10, 1)
+
         elif self.falling_state == Fighter.FallingState.GRABBED:
-            pass   ###
+            show = False
+
         elif self.falling_state == Fighter.FallingState.THROWN:
-            pass   ###
+            anim_type = "thrown"
+            frame = min(self.frame // 12, 3)
+
         elif self.hit_timer > 0:
-            pass   ###
+            frame = self.hit_frame
+            anim_type = "hit"
+
         elif self.pickup_animation is not None:
-            pass   ###
+            frame = min(self.frame // 12, self.weapon.end_pickup_frame)
+            anim_type = f"pickup_{self.pickup_animation}"
+
         elif self.attack_timer > 0:
-            pass   ###
+            anim_type = self.last_attack.sprite
+            frame = self.get_attack_frame()
+
         else:
-            pass   ###
+            if self.walking:
+                anim_type = "walk"
+                frame = (self.frame // self.anim_update_rate) % 4
+            else:
+                frame = 0
+                anim_type = "walk" if self.weapon is not None else "stand"
+            anim_type += ("_" + self.weapon.name) if self.weapon is not None else ""
 
         if show:
-            image = None ###
-            pass   ###
+            facing_id = 1 if self.facing_x == 1 else 0
+            image = f"{self.sprite}_{anim_type}_{facing_id}_{frame}"
+            if self.color_variant is not None:
+                image += "_" + str(self.color_variant)
         else:
-            image = None ###
-            pass   ###
+            image = "blank"
 
         return image
 
