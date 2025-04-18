@@ -1,6 +1,6 @@
 from enum import Enum
 from random import choice, randint
-from abc import ABC
+from abc import ABC, abstractmethod
 import pygame
 from pygame import Rect
 from pygame.math import Vector2
@@ -332,8 +332,10 @@ class Fighter(ScrollHeightActor, ABC):
     def get_move_target(self): ###
         return Vector2(1,1) ###
         pass  ###
-    def get_desired_facing(self): ###
-        pass  ###
+
+    @abstractmethod
+    def get_desired_facing(self):
+        pass
 
 class Player(Fighter):
     def __init__(self, controls):
@@ -350,6 +352,9 @@ class Player(Fighter):
         for powerup in game.powerups:
             if (powerup.vpos - self.vpos).length() < 30:
                 powerup.collect(self)
+
+    def get_desired_facing(self):
+        pass ###
 
 class Enemy(Fighter, ABC):
     class State(Enum):
@@ -383,6 +388,9 @@ class Enemy(Fighter, ABC):
         self.attacks = attacks
         self.approach_player_distance = approach_player_distance
         self.score = score
+
+    def get_desired_facing(self):
+        pass ###
 
 class EnemyVax(Enemy):
     def __init__(self, pos, start_timer=20):
