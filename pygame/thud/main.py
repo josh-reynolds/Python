@@ -33,6 +33,10 @@ SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items(
 
 fullscreen_black_bmp = pygame.Surface((0,0))  ###
 
+def move_towards(a, b, c): ###
+    return (1,1) ###
+    pass ###
+
 class KeyboardControls:
     NUM_BUTTONS = 4
 
@@ -168,7 +172,86 @@ class Fighter(ScrollHeightActor, ABC):
             pass
 
         elif self.falling_state == Fighter.FallingState.STANDING:
-            pass ###
+            if self.stamina < self.max_stamina:
+                self.stamina += 1
+
+            if self.weapon is not None:
+                self.weapon.vpos = self.vpos + Vector2(self.facing_x * 20, 0)
+
+            last_attack_recovery_time = 0 if not self.last_attack else self.last_attack_recovery_time
+
+            if self.stamina <= 0:
+                last_attack_recovery_time *= 3
+            if self.attack_timer <= -last_attack_recovery_time:
+                if self.weapon is None:
+                    nearby_weapons = [weapon for weapon in game.weapons
+                                      if (weapon.vpos - self.vpos).length() < 50]
+                    if len(nearby_weapons) > 0:
+                        if self.determine_pick_up_weapon():
+                            dist = lambda weapon: (weapon.vpos - self.vpos).length_squared()
+                            nearby_weapons.sort(key=dist)
+                            for weapon in nearby_weapons:
+                                if weapon.can_be_picked_up():
+                                    self.pickup_animation = weapon.name
+                                    self.frame = 0
+                                    self.weapon = weapon
+                                    weapon.pick_up(Fighter.WEAPON_HOLD_HEIGHT)
+                                    break
+                else:
+                    if self.determine_drop_weapon():
+                        self.drop_weapon()
+
+                if self.pickup_animation is None:
+                    attack = self.determine_attack()
+                    if attack is not None:
+                        self.last_attack = attack
+                        self.attack_timer = attack.anim_time
+                        self.stamina -= attack.stamina_cost
+                        self.stamina = max(self.stamina, MIN_STAMINA)
+                        self.frame = 0
+
+                        if attack.initial_sound is not None:
+                            game.play_sound(*attack.initial_sound)
+
+                        if attack.flying_kick:
+                            self.vel.x = FLYING_KICK_VEL_X * self.facing_x
+                            self.vel.y = FLYING_KICK_VEL_Y
+
+                        if attack.grab:
+                            game.player.grabbed()
+
+            if self.attack_timer <= 0:
+                desired_facing = self.get_desired_facing()
+                if desired_facing is not None:
+                    self.facing_x = desired_facing
+
+                target = self.get_move_target()
+                if target != self.vpos:
+                    self.walking = True
+                    self.vpos.x, dx = move_towards(self.vpos.x, target.x, self.speed.x)
+                    self.vpos.y, dy = move_towards(self.vpos.y, target.y, self.speed.y)
+                    self.apply_movement_boundaries(dx,dy)
+                    self.frame += 1
+
+                else:
+                    self.walking = False
+                    self.frame = 7
+            else:
+                self.frame += 1
+
+                frame = self.get_attack_frame()
+                if frame in self.last_attack.hit_frames:
+                    if self.last_attack.throw:
+                        if self.last_attack.grab:
+                            if game.player.falling_state == Fighter.FallingState.GRABBED:
+                                game.player.hit(self, self.last_attack)
+                                game.player.thrown(self.facing_x)
+
+                        elif self.weapon is not None:
+                            self.weapon.throw(self.facing_x, self)
+                            self.weapon = None
+
+                    self.attack(self.last_attack)
 
     def draw(self, offset):
         self.image = self.determine_sprite()
@@ -243,6 +326,13 @@ class Fighter(ScrollHeightActor, ABC):
     def override_walking(self):
         pass  ###
     def apply_movement_boundaries(self, a, b): ###
+        pass  ###
+    def determine_attack(self): ###
+        pass  ###
+    def get_move_target(self): ###
+        return Vector2(1,1) ###
+        pass  ###
+    def get_desired_facing(self): ###
         pass  ###
 
 class Player(Fighter):
