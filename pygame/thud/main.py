@@ -333,8 +333,10 @@ class Fighter(ScrollHeightActor, ABC):
         pass  ###
     def apply_movement_boundaries(self, a, b): ###
         pass  ###
-    def determine_attack(self): ###
-        pass  ###
+
+    @abstractmethod
+    def determine_attack(self):
+        pass
 
     @abstractmethod
     def get_move_target(self):
@@ -359,6 +361,9 @@ class Player(Fighter):
         for powerup in game.powerups:
             if (powerup.vpos - self.vpos).length() < 30:
                 powerup.collect(self)
+
+    def determine_attack(self):
+        pass ###
 
     def get_move_target(self):
         return self.vpos + Vector2(self.controls.get_x() * self.speed.x,
@@ -403,6 +408,9 @@ class Enemy(Fighter, ABC):
         self.attacks = attacks
         self.approach_player_distance = approach_player_distance
         self.score = score
+
+    def determine_attack(self):
+        pass ###
 
     def get_move_target(self):
         if self.target is None:
