@@ -403,7 +403,10 @@ class Enemy(Fighter, ABC):
         self.score = score
 
     def get_move_target(self):
-        return Vector2(1,1) ###
+        if self.target is None:
+            return self.vpos
+        else:
+            return self.target
 
     def get_desired_facing(self):
         if self.state == Enemy.State.RIDING_SCOOTER:
