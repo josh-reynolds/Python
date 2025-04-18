@@ -390,7 +390,10 @@ class Enemy(Fighter, ABC):
         self.score = score
 
     def get_desired_facing(self):
-        pass ###
+        if self.state == Enemy.State.RIDING_SCOOTER:
+            return self.facing_x
+        else:
+            return 1 if self.vpos.x < game.player.vpos.x else -1
 
 class EnemyVax(Enemy):
     def __init__(self, pos, start_timer=20):
