@@ -36,6 +36,8 @@ fullscreen_black_bmp = pygame.Surface((0,0))  ###
 def move_towards(a, b, c): ###
     return (1,1) ###
     pass ###
+def sign(a): ###
+    return 1 ###
 
 class KeyboardControls:
     NUM_BUTTONS = 4
@@ -49,6 +51,9 @@ class KeyboardControls:
             button_down = self.button_down(button)
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
+
+    def get_x(self):
+        pass ###
 
     def button_down(self, button):
         if button == 0:
@@ -354,7 +359,11 @@ class Player(Fighter):
                 powerup.collect(self)
 
     def get_desired_facing(self):
-        pass ###
+        dx = self.controls.get_x()
+        if dx != 0:
+            self.facing_x = sign(dx)
+        else:
+            return self.facing_x
 
 class Enemy(Fighter, ABC):
     class State(Enum):
