@@ -334,9 +334,10 @@ class Fighter(ScrollHeightActor, ABC):
         pass  ###
     def determine_attack(self): ###
         pass  ###
-    def get_move_target(self): ###
-        return Vector2(1,1) ###
-        pass  ###
+
+    @abstractmethod
+    def get_move_target(self):
+        pass
 
     @abstractmethod
     def get_desired_facing(self):
@@ -357,6 +358,9 @@ class Player(Fighter):
         for powerup in game.powerups:
             if (powerup.vpos - self.vpos).length() < 30:
                 powerup.collect(self)
+
+    def get_move_target(self):
+        return Vector2(1,1) ###
 
     def get_desired_facing(self):
         dx = self.controls.get_x()
@@ -397,6 +401,9 @@ class Enemy(Fighter, ABC):
         self.attacks = attacks
         self.approach_player_distance = approach_player_distance
         self.score = score
+
+    def get_move_target(self):
+        return Vector2(1,1) ###
 
     def get_desired_facing(self):
         if self.state == Enemy.State.RIDING_SCOOTER:
