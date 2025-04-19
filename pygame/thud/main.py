@@ -330,7 +330,7 @@ class Fighter(ScrollHeightActor, ABC):
         return image
 
     def override_walking(self):
-        pass  ###
+        return False
 
     def apply_movement_boundaries(self, dx, dy):
         if dx < 0 and self.vpos.x < game.boundary.left:
