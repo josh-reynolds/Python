@@ -363,7 +363,27 @@ class Player(Fighter):
                 powerup.collect(self)
 
     def determine_attack(self):
-        pass ###
+        if self.weapon is not None:
+            if self.pickup_animation is None and self.controls.button_pressed(0):
+                return ATTACKS[self.weapon.name]
+
+        elif self.controls.button_pressed(0):
+            if self.last_attack is not None and self.last_attack.combo_next is not None \
+                    and self.attack_timer >= -30:
+                        if 0 in self.last_attack.combo_next:
+                            return ATTACKS[self.last_attack.combo_next[0]]
+            return ATTACKS["punch"]
+
+        elif self.controls.button_pressed(1):
+            return choice((ATTACKS["kick"], ATTACKS["highkick"]))
+
+        elif self.controls.button_pressed(2):
+            return ATTACKS["elbow"]
+
+        elif self.controls.button_pressed(3):
+            return ATTACKS["flyingkick"]
+
+        return None
 
     def get_move_target(self):
         return self.vpos + Vector2(self.controls.get_x() * self.speed.x,
