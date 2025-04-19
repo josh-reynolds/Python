@@ -331,8 +331,16 @@ class Fighter(ScrollHeightActor, ABC):
 
     def override_walking(self):
         pass  ###
-    def apply_movement_boundaries(self, a, b): ###
-        pass  ###
+
+    def apply_movement_boundaries(self, dx, dy):
+        if dx < 0 and self.vpos.x < game.boundary.left:
+            self.vpos.x = game.boundary.left
+        elif dx > 0 and self.vpos.x > game.boundary.right:
+            self.vpos.x = game.boundary.right
+        if dy < 0 and self.vpos.y < game.boundary.top:
+            self.vpos.y = game.boundary.top
+        elif dy > 0 and self.vpos.y > game.boundary.bottom:
+            self.vpos.y = game.boundary.bottom
 
     @abstractmethod
     def determine_attack(self):
