@@ -410,7 +410,22 @@ class Enemy(Fighter, ABC):
         self.score = score
 
     def determine_attack(self):
-        pass ###
+        px, py = game.player.vpos
+        holding_barrel = isinstance(self.weapon, Barrel)
+
+        if self.state == Enemy.State.APPROACH_PLAYER and game.player.FallingState ==\
+                Fighter.FallingState.STANDING and self.vpos.y == p.y \
+                and (self.approach_player_distance * 0.9 < abs(self.vpos.x - px) 
+                     <= self.approach_player_distance * 1.1 or holding_barrel) \
+                             and randint(0,19) == 0:
+                                 if self.weapon is not None:
+                                     return ATTACKS[self.weapon.name]
+                                 else:
+                                     chosen_attack = ATTACKS[choice(self.attacks)]
+                                     if chosen_attack.grab and game.player.last_attack is not None \
+                                             and game.player.last_attack.flying_kick:
+                                                 return None
+                                     return chosen_attack
 
     def get_move_target(self):
         if self.target is None:
