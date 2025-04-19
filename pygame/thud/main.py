@@ -81,11 +81,11 @@ class ScrollHeightActor: ###
 
 class Fighter(ScrollHeightActor, ABC):
     class FallingState(Enum):
-        STANDING = 1  ###
-        FALLING = 2  ###
-        GETTING_UP = 3  ###
-        GRABBED = 4  ###
-        THROWN = 5  ###
+        STANDING = 0
+        FALLING = 1
+        GETTING_UP = 2
+        GRABBED = 3
+        THROWN = 4
 
     def __init__(self, pos, anchor, speed, sprite, health, anim_update_rate=8,
                  stamina=500, half_hit_area=Vector2(25,20), lives=1,
