@@ -69,15 +69,27 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
-class ScrollHeightActor: ###
-    def __init__(self, a, b, anchor, separate_shadow):  ###
-        self.vpos = Vector2(0,0)  ###
-        self.height_above_ground = 1 ###
-        pass   ###
-    def draw(self, a):  ###
-        pass ###
+class ScrollHeightActor(Actor):
+    def __init__(self, img, pos, anchor=None, separate_shadow=False):
+        super().__init__(img, pos, anchor=anchor)
+        self.vpos = Vector2(pos)
+        self.height_above_ground = 0
+        if separate_shadow:
+            self.shadow_actor = Actor("blank", pos, anchor=anchor)
+        else:
+            self.shadow_actor = None
+
+    def draw(self, offset):
+        if self.shadow_actor is not None:
+            self.shadow_actor.pos = (self.vpos.x - offset.x, self.vpos.y - offset.y)
+            self.shadow_actor.image = "blank" if self.image == "blank" else self.image + "_shadow"
+            self.shadow_actor.draw()
+        self.pos = (self.vpos.x - offset.x,
+                    self.vpos.y - offset.y - self.height_above_ground)
+        super().draw()
+
     def get_draw_order_offset(self):
-        return 0 ###
+        return 0
 
 class Fighter(ScrollHeightActor, ABC):
     class FallingState(Enum):
