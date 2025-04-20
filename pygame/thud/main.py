@@ -16,17 +16,42 @@ SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items(
 
 INTRO_ENABLED = True
 HEALTH_STAMINA_BAR_WIDTH = 235
+HEALTH_STAMINA_BAR_HEIGHT = 26
+FLYING_KICK_VEL_X = 3
+FLYING_KICK_VEL_Y = -8
 JUMP_GRAVITY = 0.4
+THROWN_GRAVITY = 0.025
+WEAPON_GRAVITY = 0.5
+BARREL_THROW_VEL_X = 4
+BARREL_THROW_VEL_Y = 0
+PLAYER_THROW_VEL_X = 5
+PLAYER_THROW_VEL_Y = 0.5
+BASE_STAMINA_DAMAGE_MULTIPLIER = 100
+MIN_STAMINA = -100
 MIN_WALK_Y = 310
 ENEMY_APPROACH_PLAYER_DISTANCE = 85
 ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 140
+ENEMY_APPROACH_PLAYER_DISTANCE_BARREL = 180
 ANCHOR_CENTER = ('center', 'center')
+ANCHOR_CENTER_BOTTOM = ('center', 'bottom')
 BACKGROUND_TILE_SPACING = 290
 
 BACKGROUND_TILES = [] ###
 
 fullscreen_black_bmp = pygame.Surface((WIDTH,HEIGHT))
 fullscreen_black_bmp.fill((0,0,0))
+
+def clamp(value, min_val, max_val):
+    return min(max(value, min_val), max_val)
+
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min) * (old_val - old_min) / (old_max - old_min) + new_min
+
+def remap_clamp(old_val, old_min, old_max, new_min, new_max):
+    lower_limit = min(new_min, new_max)
+    upper_limit = max(new_min, new_max)
+    return min(upper_limit,
+               max(lower_limit, remap(old_val, old_min, old_max, new_min, new_max)))
 
 def sign(x):
     if x == 0:
