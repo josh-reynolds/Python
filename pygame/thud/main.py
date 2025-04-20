@@ -33,8 +33,11 @@ SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items(
 
 fullscreen_black_bmp = pygame.Surface((0,0))  ###
 
-def sign(a): ###
-    return 1 ###
+def sign(x):
+    if x == 0:
+        return 0
+    else:
+        return -1 if x < 0 else 1
 
 def move_towards(n, target, speed):
     if n < target:
