@@ -10,3 +10,10 @@ character so they can override that font graphic ('xb_a' is mapped to '%' in SPE
 But then in the text drawing routines, they just use the 'xb_a' name for the image, rather than
 the ordinal for '%' (which is 37). I can confirm by checking the GitHub sources and image files. Not
 sure why they did it this overly-complicated way - maybe they forgot midstream.
+
+----
+Basic pass though the stubs is complete (with the exception of the long BACKGROUND_TILES list, which will 
+require me to mock up a ton of placeholder graphics - more pragmatic to copy in resources next, and
+then maybe cut and paste this definition from GitHub sources).
+
+Anyway, scrubbing against the book and/or copying resources is next.

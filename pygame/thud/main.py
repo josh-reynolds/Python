@@ -10,28 +10,23 @@ WIDTH = 800
 HEIGHT = 480
 TITLE = "Thud!"
 
-MIN_WALK_Y = 1 ###
-
-INTRO_ENABLED = False   ###
-
-BACKGROUND_TILE_SPACING = 10 ###
-BACKGROUND_TILES = [] ###
-
-HEALTH_STAMINA_BAR_WIDTH = 5 ###
-
-ANCHOR_CENTER = ('center', 'center')
-
-ENEMY_APPROACH_PLAYER_DISTANCE = 1 ###
-ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 1 ###
-
-JUMP_GRAVITY = 1 ###
-
-STAGES = []  ###
-
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
-fullscreen_black_bmp = pygame.Surface((0,0))  ###
+
+INTRO_ENABLED = True
+HEALTH_STAMINA_BAR_WIDTH = 235
+JUMP_GRAVITY = 0.4
+MIN_WALK_Y = 310
+ENEMY_APPROACH_PLAYER_DISTANCE = 85
+ENEMY_APPROACH_PLAYER_DISTANCE_SCOOTERBOY = 140
+ANCHOR_CENTER = ('center', 'center')
+BACKGROUND_TILE_SPACING = 290
+
+BACKGROUND_TILES = [] ###
+
+fullscreen_black_bmp = pygame.Surface((WIDTH,HEIGHT))
+fullscreen_black_bmp.fill((0,0,0))
 
 def sign(x):
     if x == 0:
