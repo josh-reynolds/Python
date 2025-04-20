@@ -33,10 +33,16 @@ SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items(
 
 fullscreen_black_bmp = pygame.Surface((0,0))  ###
 
-def move_towards(a, b, c): ###
-    return (1,1) ###
 def sign(a): ###
     return 1 ###
+
+def move_towards(n, target, speed):
+    if n < target:
+        return min(n + speed, target), 1
+    elif n > target:
+        return max(n - speed, target), -1
+    else:
+        return n,0
 
 class KeyboardControls:
     NUM_BUTTONS = 4
