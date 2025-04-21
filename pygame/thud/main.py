@@ -886,14 +886,19 @@ class HealthPowerup(Powerup):
         pass ###
 
 class ExtraLifePowerup(Powerup):
-    def __init__(self, pos, name, durability):
-        pass ###
+    def __init__(self, pos):
+        super().__init__(pos, "ingame_life9")
+        self.timer = 0
 
     def update(self):
-        pass ###
+        super().update()
+        self.timer += 1
+        self.image = "ingame_life" + str((self.timer // 2) % 10)
 
     def collect(self, collector):
-        pass ###
+        super().collect(collector)
+        collector.gain_extra_life()
+        game.play_sound("health", 1)
 
 class Stage:
     def __init__(self, enemies, max_scroll_x, weapons=[], powerups=[]):
