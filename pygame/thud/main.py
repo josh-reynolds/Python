@@ -362,6 +362,51 @@ class Fighter(ScrollHeightActor, ABC):
                             if self.weapon is not None and self.weapon.is_broken():
                                 self.drop_weapon()
 
+    def hit(self, hitter, attack):
+        if self.falling_state == Fighter.FallingState.STANDING \
+                or self.falling_state == Fighter.FallingState.GRABBED:
+                    if self.hit_timer <= 0:
+                        self.stamina -= attack.strength * BASE_STAMINA_DAMAGE_MULTIPLIER \
+                                * attack.stamina_damage_multiplier
+                        self.stamina = max(self.stamina, MIN_STAMINA)
+                        self.health -= attack.strength
+                        self.hit_timer = attack.strength * 8 * attack.stun_time_multiplier
+                        self.hit_frame = randint(0,1)
+
+                        if self.attack_timer > 0 and (self.last_attack is not None 
+                                                      and not self.last_attack.flying_kick):
+                            self.attack_timer = 0
+
+                        if self.weapon is not None:
+                            self.drop_weapon()
+
+                        if attack.hit_sound is not None:
+                            game.play_sound(*attack.hit_sound)
+
+                        if self.hit_sound is not None:
+                            game.play_sound(self.hit_sound)
+
+                        if (self.stamina <= 0 or self.health <= 0) and not isinstance(self, EnemyPortal):
+                            self.falling_state = Fighter.FallingState.FALLING
+                            self.frame = 0
+                            self.hit_timer = 0
+
+                            if self.health < 3:
+                                self.health = 0
+                                self.use_die_animation = randint((0,1) == 0)
+
+                        if isinstance(hitter, Fighter) and hitter.weapon is not None:
+                            hitter.weapon.used()
+
+                    if hitter.vpos.x != self.vpos.x:
+                        self.facing_x = sign(hitter.vpos.x - self.vpos.x)
+
+                        if self.falling_state == Fighter.FallingState.FALLING and not self.use_die_animation:
+                            self.vel.x += -self.facing_x * 10
+
+    def died(self):
+        pass
+
     def draw(self, offset):
         self.image = self.determine_sprite()
         super().draw(offset)
@@ -432,8 +477,30 @@ class Fighter(ScrollHeightActor, ABC):
 
         return image
 
+    def get_attack_frame(self):
+        frame = (self.frame // self.last_attack.frame_time)
+        return min(frame, self.last_attack.frames - 1)
+
     def override_walking(self):
         return False
+
+    def drop_weapon(self):
+        self.pickup_animation = None
+        self.weapon.dropped()
+        self.weapon = None
+
+    def grabbed(self):
+        self.falling_state = Fighter.FallingState.GRABBED
+        if self.weapon is not None:
+            self.drop_weapon()
+
+    def thrown(self, dir_x):
+        self.falling_state = Fighter.FallingState.THROWN
+        self.vel.x = dir_x * PLAYER_THROW_VEL_X
+        self.vel.y = PLAYER_THROW_VEL_Y
+        self.facing_x = -dir_x
+        self.vpos.x += dir_x * 50
+        self.hieght_above_ground = 45
 
     def apply_movement_boundaries(self, dx, dy):
         if dx < 0 and self.vpos.x < game.boundary.left:
@@ -447,6 +514,18 @@ class Fighter(ScrollHeightActor, ABC):
 
     @abstractmethod
     def determine_attack(self):
+        pass
+
+    @abstractmethod
+    def determine_pick_up_weapon(self):
+        pass
+
+    @abstractmethod
+    def determine_drop_weapon(self):
+        pass
+
+    @abstractmethod
+    def get_opponents(self):
         pass
 
     @abstractmethod
@@ -496,6 +575,15 @@ class Player(Fighter):
 
         return None
 
+    def determine_pick_up_weapon(self):
+        return self.controls.button_pressed(0)
+
+    def determine_drop_weapon(self):
+        return self.weapon is not None and self.controls.button_pressed(1)
+
+    def get_opponents(self):
+        return game.enemies
+
     def get_move_target(self):
         return self.vpos + Vector2(self.controls.get_x() * self.speed.x,
                                    self.controls.get_y() * self.speed.y)
@@ -506,6 +594,13 @@ class Player(Fighter):
             self.facing_x = sign(dx)
         else:
             return self.facing_x
+
+    def get_draw_order_offset(self):
+        return 1
+
+    def gain_extra_life(self):
+        self.lives += 1
+        self.extra_life_timer = 30
 
 class Enemy(Fighter, ABC):
     class State(Enum):
@@ -540,6 +635,12 @@ class Enemy(Fighter, ABC):
         self.approach_player_distance = approach_player_distance
         self.score = score
 
+    def spawned(self):
+        pass
+
+    def update(self):
+        pass   ###
+
     def determine_attack(self):
         px, py = game.player.vpos
         holding_barrel = isinstance(self.weapon, Barrel)
@@ -558,6 +659,15 @@ class Enemy(Fighter, ABC):
                                                  return None
                                      return chosen_attack
 
+    def determine_pick_up_weapon(self):
+        return False
+
+    def determine_drop_weapon(self):
+        return False
+
+    def get_opponents(self):
+        return [game.player]
+
     def get_move_target(self):
         if self.target is None:
             return self.vpos
@@ -569,6 +679,12 @@ class Enemy(Fighter, ABC):
             return self.facing_x
         else:
             return 1 if self.vpos.x < game.player.vpos.x else -1
+
+    def hit(self, hitter, attack):
+        pass ###
+
+    def make_decision(self):
+        pass ###
 
 class EnemyVax(Enemy):
     def __init__(self, pos, start_timer=20):
@@ -582,8 +698,15 @@ class EnemyHoodie(Enemy):
         super().__init__(pos, "hoodie", attacks, health=12, speed=Vector2(1.2,1),
                          start_timer=start_timer, color_variant=randint(0,2), score=20)
 
+    def died(self):
+        super().died()
+        if randint(0,2) == 0:
+            game.weapons.append(Stick(self.vpos))
+
 class EnemyScooterboy(Enemy):
     SCOOTER_SPEED_SLOW = 4
+    SCOOTER_SPEED_FAST = 12
+    SCOOTER_ACCELERATION = 0.2
 
     def __init__(self, pos, start_timer=20):
         attacks = ("scooterboy_attack1")
@@ -595,6 +718,24 @@ class EnemyScooterboy(Enemy):
         self.scooter_target_speed = self.scooter_speed
         self.scooter_sound_channel = None
 
+    def spawned(self):
+        pass ###
+
+    def make_decision(self):
+        pass ###
+
+    def determine_sprite(self):
+        pass ###
+
+    def update(self):
+        pass ###
+
+    def override_walking(self):
+        pass ###
+
+    def died(self):
+        pass ###
+
 class EnemyBoss(Enemy):
     def __init__(self, pos, start_timer=20):
         boss_attacks = ("boss_lpunch", "boss_rpunch", "boss_kick", "boss_grab_player",)
@@ -602,6 +743,42 @@ class EnemyBoss(Enemy):
                          stamina=1000, start_timer=start_timer, anchor_y=280,
                          half_hit_area=Vector2(30,20), color_variant=randint(0,2),
                          score=75)
+
+    def make_decision(self):
+        pass ###
+
+class EnemyPortal(Enemy):
+    GENERATE_ANIMATION_FRAMES = 6
+    GENERATE_ANIMATION_DIVISOR = 16
+    GENERATE_ANIMATION_TIME = GENERATE_ANIMATION_FRAMES * GENERATE_ANIMATION_DIVISOR
+
+    def __init__(self): ###
+        pass ###
+
+    def spawned(self):
+        pass ###
+
+    def make_decision(self):
+        pass ###
+
+    def determine_sprite(self):
+        pass ###
+
+    def update(self):
+        pass ###
+
+    def override_walking(self):
+        pass ###
+
+class Scooter(ScrollHeightActor):
+    def __init__(self): ###
+        pass ###
+
+    def update(self):
+        pass ###
+
+    def get_draw_order_offset(self):
+        return -1
 
 class Weapon(ScrollHeightActor):
     def __init__(self, name, sprite, pos, end_pickup_frame, anchor=ANCHOR_CENTER,
@@ -615,6 +792,24 @@ class Weapon(ScrollHeightActor):
         self.ground_friction = ground_friction
         self.air_friction = air_friction
 
+    def update(self):
+        pass ###
+
+    def can_be_picked_up(self):
+        pass ###
+
+    def pick_up(self): ###
+        pass ###
+
+    def dropped(self):
+        self.held = False
+
+    def used(self):
+        pass
+
+    def is_broken(self):
+        return False
+
 class Barrel(Weapon):
     def __init__(self, pos):
         super().__init__("barrel", "barrel_upright", pos, end_pickup_frame=2,
@@ -622,6 +817,83 @@ class Barrel(Weapon):
                          separate_shadow=True)
         self.last_thrower = None
         self.frame = 0
+
+    def update(self):
+        pass ###
+
+    def throw(self):
+        pass ###
+
+    def dropped(self):
+        pass ###
+
+    def can_be_picked_up(self):
+        pass ###
+
+    def get_draw_order_offset(self):
+        pass ###
+
+class BreakableWeapon(Weapon):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def dropped(self):
+        pass ###
+
+    def get_draw_order_offset(self):
+        pass ###
+
+    def used(self):
+        pass ###
+
+    def is_broken(self):
+        pass ###
+
+    @abstractmethod
+    def on_break(self):
+        pass
+
+class Stick(BreakableWeapon):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def on_break(self):
+        pass ###
+
+class Chain(BreakableWeapon):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def on_break(self):
+        pass ###
+    
+class Powerup(ScrollHeightActor):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def update(self):
+        pass
+
+    @abstractmethod
+    def collect(self, collector):
+        self.collected = True
+
+class HealthPowerup(Powerup):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def collect(self, collector):
+        pass ###
+
+class ExtraLifePowerup(Powerup):
+    def __init__(self, pos, name, durability):
+        pass ###
+
+    def update(self):
+        pass ###
+
+    def collect(self, collector):
+        pass ###
 
 class Stage:
     def __init__(self, enemies, max_scroll_x, weapons=[], powerups=[]):
@@ -699,6 +971,12 @@ class Game:
 
     def check_won(self):
         return self.stage_index >= len(STAGES) and not self.text_active
+
+    def create_stage_objects(self, stage):
+        pass ###
+
+    def spawn_enemy(self, stage):
+        pass ###
 
     def update(self):
         self.timer += 1
@@ -813,9 +1091,17 @@ class Game:
         for enemy in self.enemies:
             enemy.died()
 
-    def play_sound(self, name, count=1):
+    def get_sound(self, name, count=1):
         if self.player:
             return getattr(sounds, name + str(randint(0, count - 1)))
+
+    def play_sound(self, name, count=1):
+        if self.player:
+            try:
+                sound = self.get_sound(name, count)
+                sound.play()
+            except Exception as e:
+                print(e)
 
 def get_char_image_and_width(char):
     if char == " ":
@@ -905,10 +1191,19 @@ def draw():
         screen.blit(img, (WIDTH//2 - img.get_width() // 2,
                           HEIGHT//2 - img.get_height() // 2))
 
+try:
+    mixer.quit()
+    mixer.init(44100, -16, 2, 1024)
+    music.play("theme")
+    music.set_volume(0.3)
+except Exception as e:
+    pass
+
 total_frames = 0
 
 keyboard_controls = KeyboardControls()
 
 state = State.TITLE
+game = None
 
 run()
