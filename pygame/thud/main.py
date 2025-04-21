@@ -973,10 +973,16 @@ class Game:
         return self.stage_index >= len(STAGES) and not self.text_active
 
     def create_stage_objects(self, stage):
-        pass ###
+        self.enemies = stage.enemies.copy()
+        for enemy in self.enemies:
+            enemy.spawned()
 
-    def spawn_enemy(self, stage):
-        pass ###
+        self.weapons.extend(stage.weapons)
+        self.powerups.extend(stage.powerups)
+
+    def spawn_enemy(self, enemy):
+        self.enemies.append(enemy)
+        enemy.spawned()
 
     def update(self):
         self.timer += 1
