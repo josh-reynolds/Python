@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from random import choice, randint
 from abc import ABC, abstractmethod
@@ -109,6 +110,38 @@ class KeyboardControls:
     def button_pressed(self, button):
         return self.is_pressed[button]
 
+class Attack:
+    def __init__(self, sprite=None, strength=None, anim_time=None, frame_time=5,
+                 frames=0, hit_frames=(), recovery_time=0, reach=80, throw=False,
+                 grab=False, combo_next=None, flyingkick=False, stamina_cost=10,
+                 rear_attack=False, stamina_damage_multiplier=1,
+                 stun_time_multiplier=1, initial_sound=None, hit_sound=None):
+        if combo_next is not None:
+            combo_next = {int(key):value for (key,value) in combo_next.items()}
+        self.sprite = sprite
+        self.strength = strength
+        self.recovery_time = recovery_time
+        self.anim_time = anim_time
+        self.frame_time = frame_time
+        self.frames = frames
+        self.hit_frames = hit_frames
+        self.reach = reach
+        self.throw = throw
+        self.grab = grab
+        self.combo_next = combo_next
+        self.flyingkick = flyingkick
+        self.stamina_cost = stamina_cost
+        self.rear_attack = rear_attack
+        self.stamina_damage_multiplier = stamina_damage_multiplier
+        self.stun_time_multiplier = stun_time_multiplier
+        self.initial_sound = initial_sound
+        self.hit_sound = hit_sound
+
+with open("attacks.json") as attacks_file:
+    ATTACKS = json.load(attacks_file)
+    for key, value in ATTACKS.items():
+        ATTACKS[key] = Attack(**value)
+
 class ScrollHeightActor(Actor):
     def __init__(self, img, pos, anchor=None, separate_shadow=False):
         super().__init__(img, pos, anchor=anchor)
@@ -128,10 +161,15 @@ class ScrollHeightActor(Actor):
                     self.vpos.y - offset.y - self.height_above_ground)
         super().draw()
 
+    def on_screen(self):
+        return 0 < self.x < WIDTH
+
     def get_draw_order_offset(self):
         return 0
 
 class Fighter(ScrollHeightActor, ABC):
+    WEAPON_HOLD_HEIGHT = 100
+
     class FallingState(Enum):
         STANDING = 0
         FALLING = 1
@@ -310,6 +348,19 @@ class Fighter(ScrollHeightActor, ABC):
                             self.weapon = None
 
                     self.attack(self.last_attack)
+
+    def attack(self, attack):
+        if attack.strength > 0:
+            for opponent in self.get_opponents():
+                vec = opponent.vpos - self.vpos
+                facing_correct = sign(self.facing_x) == sign(vec.x)
+                if attack.rear_attack:
+                    facing_correct = not facing_correct
+                if abs(vec.y) < opponent.half_hit_area.y and facing_correct \
+                        and abs(vec.x) < attack.reach + opponent.half_hit_area.x:
+                            opponent.hit(self, attack)
+                            if self.weapon is not None and self.weapon.is_broken():
+                                self.drop_weapon()
 
     def draw(self, offset):
         self.image = self.determine_sprite()
