@@ -835,19 +835,23 @@ class Barrel(Weapon):
 
 class BreakableWeapon(Weapon):
     def __init__(self, pos, name, durability):
-        pass ###
+        super().__init__(name, name, pos, end_pickup_frame=1, anchor=("center","center"))
+        self.break_counter = durability
 
     def dropped(self):
-        pass ###
+        super().dropped()
+        self.image = self.name
 
     def get_draw_order_offset(self):
-        pass ###
+        return -50
 
     def used(self):
-        pass ###
+        self.break_counter -= 1
+        if self.break_counter == 0:
+            self.on_break()
 
     def is_broken(self):
-        pass ###
+        return self.break_counter <= 0
 
     @abstractmethod
     def on_break(self):
