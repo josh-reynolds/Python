@@ -854,22 +854,23 @@ class BreakableWeapon(Weapon):
         pass
 
 class Stick(BreakableWeapon):
-    def __init__(self, pos, name, durability):
-        pass ###
+    def __init__(self, pos):
+        super().__init__(pos, "stick", durability=randint(12, 16))
 
     def on_break(self):
-        pass ###
+        game.play_sound("stick_break")
 
 class Chain(BreakableWeapon):
-    def __init__(self, pos, name, durability):
-        pass ###
+    def __init__(self, pos):
+        super().__init__(pos, "chain", durability=randint(18, 25))
 
     def on_break(self):
-        pass ###
+        game.play_sound("chain_break")
     
 class Powerup(ScrollHeightActor):
-    def __init__(self, pos, name, durability):
-        pass ###
+    def __init__(self, image, pos):
+        super().__init__(pos, image)
+        self.collected = False
 
     def update(self):
         pass
