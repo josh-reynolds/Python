@@ -879,11 +879,13 @@ class Powerup(ScrollHeightActor):
         self.collected = True
 
 class HealthPowerup(Powerup):
-    def __init__(self, pos, name, durability):
-        pass ###
+    def __init__(self, pos):
+        super().__init__(pos, "health_pickup")
 
     def collect(self, collector):
-        pass ###
+        super().collect(collector)
+        collector.health = min(collector.health + 20, collector.start_health)
+        game.play_sound("health", 1)
 
 class ExtraLifePowerup(Powerup):
     def __init__(self, pos):
