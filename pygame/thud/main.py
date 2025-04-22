@@ -771,11 +771,20 @@ class EnemyPortal(Enemy):
         pass ###
 
 class Scooter(ScrollHeightActor):
-    def __init__(self): ###
-        pass ###
+    def __init__(self, pos, facing_x, color_variant):
+        super().__init__("blank", pos, ("center",256))
+        self.facing_x = facing_x
+        self.color_variant = color_variant
+        self.vel_x = -facing_x * 8
+        self.frame = 0
+        game.play_sound("scooter_fall")
 
     def update(self):
-        pass ###
+        self.frame += 1
+        self.vpos.x += self.vel.x
+        self.vel_x *= 0.94
+        facing_id = 1 if self.facing_x > 0 else 0
+        self.image = f"scooterboy_bike_{facing_id}_{min(self.frame//30,2)}_{self.color_variant}"
 
     def get_draw_order_offset(self):
         return -1
