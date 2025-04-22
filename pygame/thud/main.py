@@ -819,7 +819,25 @@ class Barrel(Weapon):
         self.frame = 0
 
     def update(self):
-        pass ###
+        super().update()
+
+        if not self.held and not self.can_be_picked_up() and self.vel.x != 0:
+            for fighter in [game.player] + game.enemies:
+                BARREL_HEIGHT = 40
+                fighter_bottom_height = fighter.height_above_ground
+                barrel_bottom_height = self.height_above_ground - (BARREL_HEIGHT // 2)
+                barrel_top_height = barrel_bottom_height + BARREL_HEIGHT
+
+                if fighter is not self.last_thrower \
+                        and fighter.falling_state == Fighter.FallingState.STANDNG \
+                        and abs(fighter.vpos.y - self.vpos.y) < 30 \
+                        and abs(self.vpos.x - fighter.vpos.x) < 30 \
+                        and fighter_bottom_height < barrel_top_height:
+                            fighter.hit(self, ATTACKS["barrel"])
+
+            facing_id = 1 if self.vel.x > 0 else 0
+            self.frame += 1
+            self.image = f"barrel_roll_{facing_id}_{(self.frame // 14) % 4}"
 
     def throw(self, thrower):
         self.dropped()
