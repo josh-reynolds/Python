@@ -766,19 +766,40 @@ class EnemyPortal(Enemy):
         self.spawn_facing = 0
 
     def spawned(self):
-        pass ###
+        super().spawned()
+        game.play_sound("portal_appear")
 
     def make_decision(self):
-        pass ###
+        self.state = Enemy.State.PORTAL
 
     def determine_sprite(self):
-        pass ###
+        if self.state == Enemy.State.PAUSE and self.frame // 8 < 4:
+            return "portal_grow_" + str(min(self.frame // 8, 3))
+
+        elif self.state == Enemy.State.PORTAL_EXPLODE:
+            return "portal_destroyed_" + str(min(self.frame // 6, 7))
+
+        elif self.spawning_enemy is not None:
+            frame = self.frame // EnemyPortal.GENERATE_ANIMATION_DIVISOR
+            if frame < 3:
+                return "portal_generate_" + str(frame)
+            else:
+                frame = min(frame - 3, 2)
+                sprite = self.spawning_enemy.sprite
+                col = self.spawning_enemy.color_variant
+                return f"portal_generate_{sprite}_{self.spawn_facing}_{frame}_{col}"
+
+        elif self.hit_timer > 0:
+            return "portal_hit_0"
+
+        else:
+            return "portal_idle_" + str((self.frame // 8) % 8)
 
     def update(self):
         pass ###
 
     def override_walking(self):
-        pass ###
+        return True
 
 class Scooter(ScrollHeightActor):
     def __init__(self, pos, facing_x, color_variant):
