@@ -793,7 +793,26 @@ class Weapon(ScrollHeightActor):
         self.air_friction = air_friction
 
     def update(self):
-        pass ###
+        if not self.held:
+            if self.height_above_ground > 0 or self.vel.y != 0:
+                self.vel.y += WEAPON_GRAVITY
+                if self.vel.y > self.height_above_ground:
+                    if self.bounciness > 0 and self.vel.y > 1:
+                        self.height_above_ground = abs(self.height_above_ground - self.vel.y) * self.bounciness
+                        self.vel.y = -self.vel.y * self.bounciness
+                    else:
+                        self.height_above_ground = 0
+                        self.vel.y = 0
+                else:
+                    self.height_above_gorund -= self.vel.y
+
+            self.vpos.x += self.vel.x
+
+            friction = self.ground_friction if self.height_above_ground == 0 else self.air_friction
+
+            self.vel.x *= friction
+            if abs(self.vel.x) < 0.05:
+                self.vel.x = 0
 
     def can_be_picked_up(self):
         return not self.held and self.height_above_ground == 0
