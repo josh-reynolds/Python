@@ -796,7 +796,40 @@ class EnemyPortal(Enemy):
             return "portal_idle_" + str((self.frame // 8) % 8)
 
     def update(self):
-        pass ###
+        self.frame += 1
+
+        if self.state == Enemy.State.PORTAL:
+            if self.health <= 0:
+                self.state = Enemy.State.PORTAL_EXPLODE
+                self.frame = 0
+                game.play_sound("portal_destroyed")
+            else:
+                self.spawn_timer -= 1
+                if self.spawn_timer <= 0 and self.spawning_enemy is not None:
+                    game.spawn_enemy(self.spawning_enemy)
+
+                    self.spawning_enemy = None
+
+                    self.spawn_interval += self.spawn_interval_change
+                    self.spawn_interval = min(self.spawn_interval, self.max_spawn_interval)
+                    self.spawn_timer = self.spawn_interval
+
+                elif self.spawning_enemy is None and self.spawn_timer <= EnemyPortal.GENERATE_ANIMATION_TIME:
+                    if len(game.enemies) >= self.max_enemies:
+                        self.spawn_timer = 60
+                    else:
+                        chosen_enemy = choice(self.enemies)
+                        self.spawn_facing = 0 if self.vpos.x < game.player.vpos.x else 1
+                        self.spawning_enemy = chosen_enemy(self.vpos)
+                        self.frame = 0
+                        game.play_sound("portal_enemy_spawn")
+
+        elif self.state == Enemy.State.PORTAL_EXPLODE:
+            if self.frame > 50:
+                self.lives -= 1
+                self.died()
+
+        super().update()
 
     def override_walking(self):
         return True
