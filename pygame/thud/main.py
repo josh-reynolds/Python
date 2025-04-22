@@ -796,10 +796,13 @@ class Weapon(ScrollHeightActor):
         pass ###
 
     def can_be_picked_up(self):
-        pass ###
+        return not self.held and self.height_above_ground == 0
 
-    def pick_up(self): ###
-        pass ###
+    def pick_up(self, hold_height):
+        self.held = True
+        self.height_above_ground = hold_height
+        self.vel = Vector2(0,0)
+        self.image = "blank"
 
     def dropped(self):
         self.held = False
