@@ -752,8 +752,18 @@ class EnemyPortal(Enemy):
     GENERATE_ANIMATION_DIVISOR = 16
     GENERATE_ANIMATION_TIME = GENERATE_ANIMATION_FRAMES * GENERATE_ANIMATION_DIVISOR
 
-    def __init__(self): ###
-        pass ###
+    def __init__(self, pos, enemies, spawn_interval, spawn_interval_change=0,
+                 max_spawn_interval=600, max_enemies=5, start_timer=90):
+        super().__init__(pos, "portal", (), start_timer=start_timer, anchor_y=340,
+                         half_hit_area=Vector2(50,50), hit_sound="portal_hit")
+        self.enemies = enemies
+        self.spawn_interval = spawn_interval
+        self.spawn_timer = spawn_interval
+        self.spawn_interval_change = spawn_interval_change
+        self.max_spawn_interval = max_spawn_interval
+        self.max_enemies = max_enemies
+        self.spawning_enemy = None
+        self.spawn_facing = 0
 
     def spawned(self):
         pass ###
