@@ -821,17 +821,22 @@ class Barrel(Weapon):
     def update(self):
         pass ###
 
-    def throw(self):
-        pass ###
+    def throw(self, thrower):
+        self.dropped()
+        self.vel.x = dir_x * BARREL_THROW_VEL_X
+        self.vel.y = BARREL_THROW_VEL_Y
+        self.last_thrower = thrower
+        self.vpos.x += dir_x * 104
 
     def dropped(self):
-        pass ###
+        super().dropped()
+        self.image = "barrel_roll_0_0"
 
     def can_be_picked_up(self):
-        pass ###
+        return super().can_be_picked_up() and self.vel.length() < 1
 
     def get_draw_order_offset(self):
-        pass ###
+        return 2
 
 class BreakableWeapon(Weapon):
     def __init__(self, pos, name, durability):
