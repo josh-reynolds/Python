@@ -681,7 +681,19 @@ class Enemy(Fighter, ABC):
             return 1 if self.vpos.x < game.player.vpos.x else -1
 
     def hit(self, hitter, attack):
-        pass ###
+        if self.state == Enemy.State.KNOCKED_DOWN:
+            return
+
+        super().hit(hitter, attack)
+
+        if self.state == Enemy.State.RIDING_SCOOTER:
+            self.falling_state = Fighter.FallingState.FALLING
+            self.frame = 0
+            self.hit_timer = 0
+            self.just_knocked_off_scooter = True
+
+        if self.falling_state == Fighter.FallingState.FALLING:
+            self.state = Enemy.State.KNOCKED_DOWN
 
     def make_decision(self):
         player = game.player
