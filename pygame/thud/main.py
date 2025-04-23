@@ -639,7 +639,64 @@ class Enemy(Fighter, ABC):
         pass
 
     def update(self):
-        pass   ###
+        if self.state == EnemyState.APPROACH_PLAYER:
+            player = game.player
+
+            if player.attack_timer > 0 \
+                    and abs(self.vpos.y - player.vpos.y) < 20 \
+                    and abs(self.vpos.x - player.vpos.x) < 200 \
+                    and randint(0,500) == 0:
+                        self.target.x = self.vpos.x - self.facing_x * 90
+                        self.state = Enemy.State.GO_TO_POS
+            else:
+                if isinstance(self.weapon, Barrel):
+                    x_offset = ENEMY_APPROACH_PLAYER_DISTANCE_BARREL
+                else:
+                    x_offset = self.approach_player_distance
+                self.target.x = player.vpos.x + (x_offset * sign(self.vpos.x - player.vpos.x))
+                self.target.y = player.vpos.y
+
+        elif self.state == Enemy.State.GO_TO_POS:
+            if self.target == self.vpos:
+                self.make_decision()
+
+        elif self.state == Enemy.State.GO_TO_WEAPON:
+            if not self.target_weapon.can_be_picked_up() or not self.target_weapon.on_screen():
+                self.target_weapon = None
+                self.make_decision()
+            else:
+                self.target = Vector2(self.target_weapon.vpos)
+                if self.target == self.vpos:
+                    self.pickup_animation = self.target_weapon.name
+                    self.frame = 0
+                    self.target_weapon.pick_up(Fighter.WEAPON_HOLD_HEIGHT)
+                    self.weapon = self.target_weapon
+                    self.target_weapon = None
+                    self.make_decision()
+
+        elif self.state == Enemy.State.PAUSE:
+            self.state_timer -= 1
+            if self.state_timer <0:
+                self.make_decision()
+
+        elif self.state == Enemy.State.KNOCKED_DOWN:
+            if self.falling_state == Fighter.FallingState.STANDING:
+                self.make_decision()
+
+        if self.state == Enemy.State.APPROACH_PLAYER \
+                or self.state == Enemy.State.GO_TO_POS \
+                or self.state == Enemy.State.GO_TO_WEAPON:
+                    self.target.x = max(self.target.x, game.boundary.left)
+                    self.target.x = min(self.target.x, game.boundary.right)
+                    self.target.y = max(self.target.y, game.boundary.top)
+                    self.target.y = min(self.target.y, game.boundary.bottom)
+                    other_enemies_same_target = [enemy for enemy in game.enemies
+                                                 if enemy is not self
+                                                 and (enemy.target - self.target).length() < 20]
+                    if len(other_enemies_same_target) > 0:
+                        self.make_decision()
+
+        super().update()
 
     def determine_attack(self):
         px, py = game.player.vpos
