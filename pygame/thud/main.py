@@ -742,7 +742,56 @@ class EnemyScooterboy(Enemy):
             return super().determine_sprite()
 
     def update(self):
-        pass ###
+        if self.state == Enemy.State.RIDING_SCOOTER:
+            player = game.player
+
+            if self.scooter_sound_channel is not None:
+                left_vol = remap_clamp(abs(self.vpos.x - player.vpos.x+500), 0, 1000, 1, 0)
+                right_vol = remap_clamp(abs(self.vpos.x - player.vpos.x-500), 0, 1000, 1, 0)
+                self.scooter_sound_channel.set_volume(left_vol, right_vol)
+
+            if self.scooter_speed != self.scooter_target_speed:
+                self.scooter_speed, _ = move_towards(self.scooter_speed, 
+                                                     self.scooter_target_speed,
+                                                     EnemyScooterboy.SCOOTER_ACCELERATION)
+                self.frame += 1
+            elif self.on_screen() and randint(0,30) == 0:
+                self.scooter_target_speed = EnemyScooterboy.SCOOTER_SPEED_FAST
+                if self.scooter_sound_channel is not None:
+                    self.scooter_sound_channel.play(game.get_sound("scooter_accelerate",6),
+                                                    loops=0, fade_ms=200)
+                    self.frame = 0
+
+            self.target.x = self.vpos.x + self.facing_x * self.scooter_speed
+            self.vpos.x = self.target.x
+
+            if (self.facing_x > 0 and self.x > WIDTH + 200) or (self.facing_x < 0 and self.x < -200):
+                self.facing_x = -self.facing_x
+                self.target.y = player.vpos.y
+
+                if game.player.falling_state == Fighter.FallingState.STANDING:
+                    self.vpos.y = self.target.y
+                else:
+                    while abs(self.vpos.y - self.target.y) < 40:
+                        self.vpos.y = randint(MIN_WALK_Y, HEIGHT-1)
+
+                self.scooter_target_speed = EnemyScooterboy.SCOOTER_SPEED_SLOW
+                self.scooter_speed = self.scooter_target_speed
+
+                if self.scooter_sound_channel is not None:
+                    self.scooter_sound_channel.play(game.get_sound("scooter_slow"), loops=1, fade_ms=200)
+
+            if player.falling_state == Fighter.FallingState.STANDING \
+                    and abs(player.vpos.y - self.vpos.y) < 30 \
+                    and abs(self.vpos.x - player.vpos.x) < 60 \
+                    and player.heigh_above_ground < 20:
+                        player.hit(self, ATTACKS["scooter_hit"])
+
+        elif self.just_knocked_off_scooter and self.scooter_sound_channel is not None \
+                and self.scooter_sound_channel.get_busy():
+                    self.scooter_sound_channel.stop()
+
+        super().update()
 
     def override_walking(self):
         return self.state == Enemy.State.RIDING_SCOOTER
