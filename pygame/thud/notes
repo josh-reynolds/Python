@@ -17,3 +17,12 @@ require me to mock up a ton of placeholder graphics - more pragmatic to copy in 
 then maybe cut and paste this definition from GitHub sources).
 
 Anyway, scrubbing against the book and/or copying resources is next.
+
+----
+Book scrub is complete. It was very helpful to pass through and introduce stubs for all missing 
+definitions, then tackle them one-by-one. Bit of a tweak to 'the process.' I also brought down
+the real resource files (and as hinted above, copied the lengthy BACKGROUND_TILES list from 
+GitHub sources).
+
+Some playtesting, then scrub against GitHub and we're done. Already caught a couple minor typos. 
+

@@ -37,7 +37,18 @@ ANCHOR_CENTER = ('center', 'center')
 ANCHOR_CENTER_BOTTOM = ('center', 'bottom')
 BACKGROUND_TILE_SPACING = 290
 
-BACKGROUND_TILES = [] ###
+BACKGROUND_TILES = ["wall_end1", "wall_fill1", "wall_fill5", "wall_fill2", "alley1", "wall_end6", "wall_fill7",
+                    "wall_fill5", "alley2", "wall_end3", "wall_fill3", "wall_fill4", "wall_fill8", "alley5",
+                    "wall_end2", "alley3", "wall_end4", "wall_fill6", "alley6", "wall_end8", "wall_fill4", 
+                    "alley7", "wall_end5", "alley8", "set_pc_a1", "set_pc_a2", "alley9", "set_pc_b1", 
+                    "set_pc_b2", "set_pc_b3", "wall_end3", "wall_fill3", "alley8", "set_pc_a1", "set_pc_a2", 
+                    "wall_fill2", "con_start2", "con_end1a", "con_end2", "con_start2", "con_end1", 
+                    "con_fill1", "con_end2a", "con_start2", "con_end1a", "con_fill1a", "con_end2", 
+                    "set_pc_c1", "set_pc_c2", "set_pc_c3", "con_start1", "con_end1", "con_fill1", 
+                    "con_fill2", "con_fill1a", "con_fill2a", "wall_end1", "alley10", "steps_end1a", 
+                    "steps_fill1a", "steps_fill2a", "steps_end2a", "flats_alley1", "steps_end1", 
+                    "steps_end2", "flats_alley1",  "flats_end1a", "steps_fill2", "steps_fill1", 
+                    "flats_end2a", "flats_alley2", "set_pc_d1", "set_pc_d2", "set_pc_d3", "steps_end2a"]
 
 fullscreen_black_bmp = pygame.Surface((WIDTH,HEIGHT))
 fullscreen_black_bmp.fill((0,0,0))
@@ -129,7 +140,7 @@ class Attack:
         self.throw = throw
         self.grab = grab
         self.combo_next = combo_next
-        self.flyingkick = flyingkick
+        self.flying_kick = flyingkick
         self.stamina_cost = stamina_cost
         self.rear_attack = rear_attack
         self.stamina_damage_multiplier = stamina_damage_multiplier
@@ -197,6 +208,7 @@ class Fighter(ScrollHeightActor, ABC):
         self.hit_frame = 0
         self.stamina = stamina
         self.max_stamina = stamina
+        self.half_hit_area = half_hit_area
         self.health = health
         self.start_health = health
         self.lives = lives
@@ -274,7 +286,7 @@ class Fighter(ScrollHeightActor, ABC):
             if self.weapon is not None:
                 self.weapon.vpos = self.vpos + Vector2(self.facing_x * 20, 0)
 
-            last_attack_recovery_time = 0 if not self.last_attack else self.last_attack_recovery_time
+            last_attack_recovery_time = 0 if not self.last_attack else self.last_attack.recovery_time
 
             if self.stamina <= 0:
                 last_attack_recovery_time *= 3
@@ -393,7 +405,7 @@ class Fighter(ScrollHeightActor, ABC):
 
                             if self.health < 3:
                                 self.health = 0
-                                self.use_die_animation = randint((0,1) == 0)
+                                self.use_die_animation = (randint(0,1) == 0)
 
                         if isinstance(hitter, Fighter) and hitter.weapon is not None:
                             hitter.weapon.used()
@@ -639,7 +651,7 @@ class Enemy(Fighter, ABC):
         pass
 
     def update(self):
-        if self.state == EnemyState.APPROACH_PLAYER:
+        if self.state == Enemy.State.APPROACH_PLAYER:
             player = game.player
 
             if player.attack_timer > 0 \
@@ -762,7 +774,7 @@ class Enemy(Fighter, ABC):
             if r < 7:
                 other_enemies_on_same_side_attacking = [enemy for enemy in game.enemies
                                                         if enemy is not self
-                                                        and enemy.state == EnemyState.APPROACH_PLAYER
+                                                        and enemy.state == Enemy.State.APPROACH_PLAYER
                                                         and sign(enemy.vpos.x-player.vpos.x)
                                                         == sign(self.vpos.x-player.vpos.x)]
                 if len(other_enemies_on_same_side_attacking) > 0:
@@ -887,7 +899,7 @@ class EnemyScooterboy(Enemy):
             if player.falling_state == Fighter.FallingState.STANDING \
                     and abs(player.vpos.y - self.vpos.y) < 30 \
                     and abs(self.vpos.x - player.vpos.x) < 60 \
-                    and player.heigh_above_ground < 20:
+                    and player.height_above_ground < 20:
                         player.hit(self, ATTACKS["scooter_hit"])
 
         elif self.just_knocked_off_scooter and self.scooter_sound_channel is not None \
@@ -1327,14 +1339,14 @@ class Game:
                 self.scroll_offset.x += scroll_speed
                 self.boundary.left = self.scroll_offset.x
             else:
-                self.scrolling = Falsee
+                self.scrolling = False
         else:
             begin_scroll_boundary = WIDTH - 300
             if self.player.vpos.x - self.scroll_offset.x > begin_scroll_boundary \
                     and self.scroll_offset.x < self.max_scroll_offset_x:
                         self.scrolling = True
                         if self.stage_index < len(STAGES):
-                            stage = STAGE[self.stage_index]
+                            stage = STAGES[self.stage_index]
                             self.create_stage_objects(stage)
 
         self.score += sum([enemy.score for enemy in self.enemies if enemy.lives <= 0])
