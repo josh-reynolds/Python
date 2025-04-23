@@ -684,7 +684,41 @@ class Enemy(Fighter, ABC):
         pass ###
 
     def make_decision(self):
-        pass ###
+        player = game.player
+
+        if len(game.enemies) == 1:
+            self.state = Enemy.State.APPROACH_PLAYER
+        else:
+            r = randint(0,9)
+            if r < 7:
+                other_enemies_on_same_side_attacking = [enemy for enemy in game.enemies
+                                                        if enemy is not self
+                                                        and enemy.state == EnemyState.APPROACH_PLAYER
+                                                        and sign(enemy.vpos.x-player.vpos.x)
+                                                        == sign(self.vpos.x-player.vpos.x)]
+                if len(other_enemies_on_same_side_attacking) > 0:
+                    self.state = Enemy.State.GO_TO_POS
+                    self.target.x = player.vpos.x - sign(self.vpos.x - player.vpos.x) * 50
+                    self.target.y = player.vpos.y - sign(self.vpos.y - player.vpos.y) * 50
+                    if self.target.y == player.vpos.y:
+                        self.target.y = player.vpos.y + choice((-1,1)) * 50
+                else:
+                    self.state = Enemy.State.APPROACH_PLAYER
+
+            elif r < 9:
+                x_side = sign(self.vpos.x - player.vpos.x)
+                if x_side == 0:
+                    x_side = choice((1,-1))
+                x1 = int(player.vpos.x + (150 * x_side))
+                x2 = int(player.vpos.x + (400 * x_side))
+                x = randint(min(x1,x2), max(x1,x2))
+                y = randint(game.boundary.top, game.boundary.bottom)
+                self.target = Vector2(x,y)
+                self.state = Enemy.State.GO_TO_POS
+
+            else:
+                self.state_timer = randint(50, 100)
+                self.state = Enemy.State.PAUSE
 
 class EnemyVax(Enemy):
     def __init__(self, pos, start_timer=20):
