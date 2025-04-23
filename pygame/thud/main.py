@@ -745,7 +745,20 @@ class EnemyBoss(Enemy):
                          score=75)
 
     def make_decision(self):
-        pass ###
+        if self.weapon is None:
+            available_barrels = [weapon for weapon in game.weapons if isinstance(weapon, Barrel)
+                                 and weapon.can_be_picked_up() and weapon.on_screen()]
+            if len(available_barrels) > 0:
+                for weapon in available_barrels:
+                    other_enemies_same_target = [enemy for enemy in game.enemies
+                                                 if enemy is not self
+                                                 and enemy.target_weapon is weapon]
+                    if len(other_enemies_same_target) == 0:
+                        self.state = Enemy.State.GO_TO_WEAPON
+                        self.target_weapon = weapon
+                        return
+
+        super().make_decision()
 
 class EnemyPortal(Enemy):
     GENERATE_ANIMATION_FRAMES = 6
