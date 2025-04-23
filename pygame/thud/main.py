@@ -719,22 +719,42 @@ class EnemyScooterboy(Enemy):
         self.scooter_sound_channel = None
 
     def spawned(self):
-        pass ###
+        super().spawned()
+        try:
+            self.scooter_sound_channel = pygame.mixer.find_channel()
+            if self.scooter_sound_channel is not None:
+                self.scooter_sound_channel.play(game.get_sound("scooter_slow"), loops=-1, fade_ms=200)
+        except Exception as e:
+            pass
 
     def make_decision(self):
-        pass ###
+        if self.state != Enemy.State.RIDING_SCOOTER:
+            super().make_decision()
 
     def determine_sprite(self):
-        pass ###
+        if self.state == Enemy.State.RIDING_SCOOTER:
+            facing_id = 1 if self.facing_x == 1 else 0
+            frame = 0
+            if self.scooter_speed < self.scooter_target_speed:
+                frame = min(self.frame // 5, 2)
+            return f"{self.sprite}_ride_{facing_id}_{frame}_{self.color_variant}"
+        else:
+            return super().determine_sprite()
 
     def update(self):
         pass ###
 
     def override_walking(self):
-        pass ###
+        return self.state == Enemy.State.RIDING_SCOOTER
 
     def died(self):
-        pass ###
+        super().died()
+
+        if randint(0,19) == 0:
+            game.weapons.append(Chain(self.vpos))
+
+        if self.scooter_sound_channel is not None and self.scooter_sound_channel.get_busy():
+            self.scooter_sound_channel.stop()
 
 class EnemyBoss(Enemy):
     def __init__(self, pos, start_timer=20):
