@@ -677,6 +677,11 @@ class Player(Fighter):
             if (powerup.vpos - self.vpos).length() < 30:
                 powerup.collect(self)
 
+    def draw(self, offset):
+        super().draw(offset)
+        # screen.draw.text(f"{self.vpos}", (0,0))
+        # screen.draw.text(f"{self.vpos}", self.pos)
+
     def determine_attack(self):
         if self.weapon is not None:
             if self.pickup_animation is None and self.controls.button_pressed(0):
@@ -771,6 +776,7 @@ class Enemy(Fighter, ABC):
                     and abs(self.vpos.y - player.vpos.y) < 20 \
                     and abs(self.vpos.x - player.vpos.x) < 200 \
                     and randint(0,500) == 0:
+                        self.log("Back away from attack")
                         self.target.x = self.vpos.x - self.facing_x * 90
                         self.state = Enemy.State.GO_TO_POS
             else:
@@ -792,6 +798,7 @@ class Enemy(Fighter, ABC):
             else:
                 self.target = Vector2(self.target_weapon.vpos)
                 if self.target == self.vpos:
+                    self.log("Pick up weapon")
                     self.pickup_animation = self.target_weapon.name
                     self.frame = 0
                     self.target_weapon.pick_up(Fighter.WEAPON_HOLD_HEIGHT)
@@ -801,7 +808,7 @@ class Enemy(Fighter, ABC):
 
         elif self.state == Enemy.State.PAUSE:
             self.state_timer -= 1
-            if self.state_timer <0:
+            if self.state_timer < 0:
                 self.make_decision()
 
         elif self.state == Enemy.State.KNOCKED_DOWN:
@@ -819,9 +826,16 @@ class Enemy(Fighter, ABC):
                                                  if enemy is not self
                                                  and (enemy.target - self.target).length() < 20]
                     if len(other_enemies_same_target) > 0:
+                        self.log("Same target")
                         self.make_decision()
 
         super().update()
+
+    def draw(self, offset):
+        super().draw(offset)
+
+        if DEBUG_SHOW_TARGET_POS:
+            screen.draw.line(self.vpos - offset, self.target - offset, (255,255,255))
 
     def determine_attack(self):
         px, py = game.player.vpos
@@ -876,11 +890,13 @@ class Enemy(Fighter, ABC):
 
         if self.falling_state == Fighter.FallingState.FALLING:
             self.state = Enemy.State.KNOCKED_DOWN
+            self.log("Knocked down")
 
     def make_decision(self):
         player = game.player
 
         if len(game.enemies) == 1:
+            self.log("Only enemy, go to player")
             self.state = Enemy.State.APPROACH_PLAYER
         else:
             r = randint(0,9)
@@ -891,15 +907,18 @@ class Enemy(Fighter, ABC):
                                                         and sign(enemy.vpos.x-player.vpos.x)
                                                         == sign(self.vpos.x-player.vpos.x)]
                 if len(other_enemies_on_same_side_attacking) > 0:
+                    self.log("Begin flanking (same target)")
                     self.state = Enemy.State.GO_TO_POS
                     self.target.x = player.vpos.x - sign(self.vpos.x - player.vpos.x) * 50
                     self.target.y = player.vpos.y - sign(self.vpos.y - player.vpos.y) * 50
                     if self.target.y == player.vpos.y:
                         self.target.y = player.vpos.y + choice((-1,1)) * 50
                 else:
+                    self.log("Go to player")
                     self.state = Enemy.State.APPROACH_PLAYER
 
             elif r < 9:
+                self.log("Go to distance from player")
                 x_side = sign(self.vpos.x - player.vpos.x)
                 if x_side == 0:
                     x_side = choice((1,-1))
@@ -911,6 +930,7 @@ class Enemy(Fighter, ABC):
                 self.state = Enemy.State.GO_TO_POS
 
             else:
+                self.log("Pause")
                 self.state_timer = randint(50, 100)
                 self.state = Enemy.State.PAUSE
 
