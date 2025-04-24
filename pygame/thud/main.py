@@ -255,9 +255,12 @@ class ScrollHeightActor(Actor):
             self.shadow_actor.pos = (self.vpos.x - offset.x, self.vpos.y - offset.y)
             self.shadow_actor.image = "blank" if self.image == "blank" else self.image + "_shadow"
             self.shadow_actor.draw()
+
         self.pos = (self.vpos.x - offset.x,
                     self.vpos.y - offset.y - self.height_above_ground)
         super().draw()
+        if DEBUG_SHOW_ANCHOR_POINTS:
+            screen.draw.circle(self.pos, 5, (255,255,255))
 
     def on_screen(self):
         return 0 < self.x < WIDTH
@@ -274,6 +277,12 @@ class Fighter(ScrollHeightActor, ABC):
         GETTING_UP = 2
         GRABBED = 3
         THROWN = 4
+
+    def log(self, str):
+        if DEBUG_LOGGING_ENABLED:
+            l = f"{game.timer} {str} {self.vpos}"
+            print(self, l)
+            self.logs.append(l)
 
     def __init__(self, pos, anchor, speed, sprite, health, anim_update_rate=8,
                  stamina=500, half_hit_area=Vector2(25,20), lives=1,
@@ -304,6 +313,7 @@ class Fighter(ScrollHeightActor, ABC):
         self.weapon = None
         self.just_knocked_off_scooter = False
         self.use_die_animation = False
+        self.logs = []
 
     def update(self):
         self.attack_timer -= 1
@@ -338,7 +348,7 @@ class Fighter(ScrollHeightActor, ABC):
                             self.falling_state = Fighter.FallingState.GETTING_UP
                             self.frame = 0
                             self.stamina = self.max_stamina
-                            sel.use_die_animation = False
+                            self.use_die_animation = False
                         else:
                             self.died()
 
@@ -399,6 +409,7 @@ class Fighter(ScrollHeightActor, ABC):
                 if self.pickup_animation is None:
                     attack = self.determine_attack()
                     if attack is not None:
+                        self.log("Attack " + attack.sprite)
                         self.last_attack = attack
                         self.attack_timer = attack.anim_time
                         self.stamina -= attack.stamina_cost
@@ -510,6 +521,19 @@ class Fighter(ScrollHeightActor, ABC):
         self.image = self.determine_sprite()
         super().draw(offset)
 
+        if DEBUG_SHOW_HEALTH_AND_STAMINA:
+            text = f"HP: {self.health}\nSTM: {self.stamina}"
+            screen.draw.text(text, fontsize=24, center=(self.x, self.y - 200), color="#FFFFFF", align="center")
+
+        if DEBUG_SHOW_HIT_AREA_WIDTH:
+            screen.draw.rect(Rect(self.x - self.half_hit_area.x, self.y - self.half_hit_area.y, self.half_hit_area.x * 2, self.half_hit_area.y * 2), (255,255,255))
+
+        if DEBUG_SHOW_LOGS:
+            y = self.y
+            for l in reversed(self.logs):
+                screen.draw.text(l, fontsize=14, center=(self.x, y), color="#FFFFFF", align="center")
+                y += 10
+
     def determine_sprite(self):
         show = True
 
@@ -589,17 +613,19 @@ class Fighter(ScrollHeightActor, ABC):
         self.weapon = None
 
     def grabbed(self):
+        self.log("Grabbed")
         self.falling_state = Fighter.FallingState.GRABBED
         if self.weapon is not None:
             self.drop_weapon()
 
     def thrown(self, dir_x):
+        self.log("Thrown")
         self.falling_state = Fighter.FallingState.THROWN
         self.vel.x = dir_x * PLAYER_THROW_VEL_X
         self.vel.y = PLAYER_THROW_VEL_Y
         self.facing_x = -dir_x
         self.vpos.x += dir_x * 50
-        self.hieght_above_ground = 45
+        self.height_above_ground = 45
 
     def apply_movement_boundaries(self, dx, dy):
         if dx < 0 and self.vpos.x < game.boundary.left:
