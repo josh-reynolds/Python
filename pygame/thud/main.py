@@ -1210,6 +1210,8 @@ class Weapon(ScrollHeightActor):
                 else:
                     self.height_above_ground -= self.vel.y
 
+                assert(self.height_above_ground >= 0)
+
             self.vpos.x += self.vel.x
 
             friction = self.ground_friction if self.height_above_ground == 0 else self.air_friction
@@ -1222,12 +1224,14 @@ class Weapon(ScrollHeightActor):
         return not self.held and self.height_above_ground == 0
 
     def pick_up(self, hold_height):
+        assert(not self.held)
         self.held = True
         self.height_above_ground = hold_height
         self.vel = Vector2(0,0)
         self.image = "blank"
 
     def dropped(self):
+        assert(self.held)
         self.held = False
 
     def used(self):
@@ -1265,7 +1269,7 @@ class Barrel(Weapon):
             self.frame += 1
             self.image = f"barrel_roll_{facing_id}_{(self.frame // 14) % 4}"
 
-    def throw(self, thrower):
+    def throw(self, dir_x, thrower):
         self.dropped()
         self.vel.x = dir_x * BARREL_THROW_VEL_X
         self.vel.y = BARREL_THROW_VEL_Y
@@ -1366,14 +1370,251 @@ class Stage:
 def setup_stages():
     global STAGES
     STAGES = (
-            Stage(max_scroll_x=300, enemies=[EnemyVax(pos=(1000,400))]),
+            # Stage(max_scroll_x=0, enemies=[]),
+
+            # Stage(max_scroll_x=200,
+            #       enemies=[],
+            #       #enemies=[EnemyScooterboy(pos=(200, 400))],
+            #       #enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=60, spawn_interval_change=30)],
+            #       #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
+            #       #enemies=[EnemyVax(pos=(200, 400)),EnemyVax(pos=(100, 300)),EnemyVax(pos=(300, 600)),EnemyVax(pos=(200, 500)),],
+            #       #enemies=[EnemyBoss(pos=(500, 380))],
+            #       weapons=[Barrel((300, 400))]
+            #       ),
+
+            # Stage(max_scroll_x=250,
+            #       #enemies=[EnemyScooterboy(pos=(200, 400))],
+            #       enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=30, start_timer=300)],
+            #       #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
+            #       #enemies=[EnemyBoss(pos=(500, 380))],
+            #       weapons=[Barrel((300, 400))]
+            #       ),
+
+            Stage(max_scroll_x=300,
+                  enemies=[EnemyVax(pos=(1000,400))],
+                  #weapons=[Barrel((300, 400))],
+                  #powerups=[HealthPowerup(pos=(1100, MIN_WALK_Y)), ExtraLifePowerup(pos=(1000, MIN_WALK_Y))]
+                  ),
+
             Stage(max_scroll_x=600,
-                  enemies=[EnemyVax(pos=(1400,400)), EnemyHoodie(pos=(1500,500))],
-                  weapons=[Barrel((1600,400))]),
-            Stage(max_scroll_x=600, enemies=[EnemyScooterboy(pos=(200,400))]),
+                  enemies=[EnemyVax(pos=(1400,400)),
+                           EnemyHoodie(pos=(1500,500))],
+                  weapons=[Barrel((1600, 400))]),
+
+            Stage(max_scroll_x=600,
+                  enemies=[EnemyScooterboy(pos=(200,400))]),
+
             Stage(max_scroll_x=900,
-                  enemies=[EnemyBoss(pos=(1800,400)), EnemyVax(pos=(400,40))]),
-            # more stages on GitHub
+                  enemies=[EnemyBoss(pos=(1800,400)),
+                           EnemyVax(pos=(400,400))]),
+
+            Stage(max_scroll_x=1400,
+                  enemies=[EnemyHoodie(pos=(2100,380)),
+                           EnemyHoodie(pos=(2100,480)),
+                           EnemyHoodie(pos=(800,420))],
+                  powerups=[HealthPowerup(pos=(2300, MIN_WALK_Y))]
+                  ),
+
+            Stage(max_scroll_x=1900,
+                  enemies=[EnemyVax(pos=(2400,380)),
+                           EnemyHoodie(pos=(2500,480)),
+                           EnemyScooterboy(pos=(2800,400))]),
+
+            Stage(max_scroll_x=2500,
+                  enemies=[EnemyScooterboy(pos=(3800,380)),
+                           EnemyScooterboy(pos=(3300,480)),
+                           EnemyScooterboy(pos=(1200,400))]),
+
+            Stage(max_scroll_x=3000,
+                  enemies=[EnemyVax(pos=(4000,380)),
+                           EnemyVax(pos=(3900,480)),
+                           EnemyVax(pos=(4200,460)),
+                           EnemyVax(pos=(4200,450)),
+                           EnemyHoodie(pos=(3900,300)),
+                           EnemyHoodie(pos=(3950,320))]),
+
+            Stage(max_scroll_x=3600,
+                  enemies=[EnemyVax(pos=(4600,380)),
+                           EnemyScooterboy(pos=(1200,350)),
+                           EnemyScooterboy(pos=(1400,350)),
+                           EnemyScooterboy(pos=(1600,350)),
+                           EnemyScooterboy(pos=(1800,350)),
+                           EnemyScooterboy(pos=(2000,350))],
+                  powerups=[HealthPowerup(pos=(5100, MIN_WALK_Y))]
+                  ),
+
+            Stage(max_scroll_x=4600,
+                  enemies=[EnemyHoodie(pos=(4800,380)),
+                           EnemyHoodie(pos=(4800,350)),
+                           EnemyScooterboy(pos=(1200,350)),
+                           EnemyScooterboy(pos=(1400,350)),
+                           EnemyScooterboy(pos=(4800,350)),
+                           EnemyScooterboy(pos=(4800,400)),
+                           EnemyScooterboy(pos=(4900,450))]),
+
+            Stage(max_scroll_x=5500,
+                  enemies=[EnemyBoss(pos=(6500,380)),
+                           EnemyBoss(pos=(6500,360))],
+                  weapons=[Barrel(pos=(6000, 400)),
+                           Barrel(pos=(5900, 370))]),
+
+            Stage(max_scroll_x=6400,
+                  enemies=[EnemyBoss(pos=(7000,380)),
+                           EnemyBoss(pos=(7000,360)),
+                           EnemyBoss(pos=(7000,390))],
+                  weapons=[Barrel(pos=(7000, 380))]),
+
+            Stage(max_scroll_x=6900,
+                  enemies=[EnemyVax(pos=(7500,380)),
+                           EnemyScooterboy(pos=(7500,350)),
+                           EnemyScooterboy(pos=(7500,360))]),
+
+            Stage(max_scroll_x=7550,
+                  enemies=[EnemyHoodie(pos=(8000,380), start_timer=50),
+                           EnemyVax(pos=(8200,340), start_timer=100),
+                           EnemyHoodie(pos=(8200,340), start_timer=150),
+                           EnemyHoodie(pos=(7900,360), start_timer=200),
+                           EnemyHoodie(pos=(8300,390), start_timer=250),
+                           EnemyVax(pos=(8700,400), start_timer=300),
+                           EnemyHoodie(pos=(8800,400), start_timer=400),
+                           EnemyHoodie(pos=(8900,400), start_timer=500),
+                           EnemyVax(pos=(9000,320), start_timer=600),
+                           EnemyVax(pos=(9100,400), start_timer=700),
+                           EnemyHoodie(pos=(9100,450), start_timer=800),
+                           EnemyVax(pos=(9100,420), start_timer=900),
+                           EnemyBoss(pos=(9100,450), start_timer=1000),
+                           ],
+                  powerups=[HealthPowerup(pos=(8000, MIN_WALK_Y)),
+                            ExtraLifePowerup(pos=(8200, MIN_WALK_Y))]
+                  ),
+
+            Stage(max_scroll_x=8400,
+                  enemies=[EnemyPortal(pos=(8900, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=30, max_spawn_interval=250, max_enemies=2),],
+                  # weapons=[Barrel(pos=(9000,380)),
+                  #          Barrel(pos=(8900,360))
+                  ),
+
+            Stage(max_scroll_x=8900,
+                  enemies=[EnemyPortal(pos=(9500, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=50, max_spawn_interval=250, max_enemies=5),
+                           EnemyPortal(pos=(9500, 400), enemies=(EnemyScooterboy,), spawn_interval=160, spawn_interval_change=50, max_spawn_interval=250, max_enemies=5),],
+                  # weapons=[Barrel(pos=(9000,380)),
+                  #          Barrel(pos=(8900,360))
+                  ),
+
+            Stage(max_scroll_x=9600,
+                  enemies=[EnemyPortal(pos=(10000, 420), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=50, max_spawn_interval=250, max_enemies=5),
+                           EnemyScooterboy(pos=(10500,320)),
+                           EnemyScooterboy(pos=(10500,350)),
+                           EnemyScooterboy(pos=(10500,380)),
+                           ],
+                  # weapons=[Barrel(pos=(9000,380)),
+                  #          Barrel(pos=(8900,360))
+                  ),
+
+            Stage(max_scroll_x=10800,
+                  enemies=[EnemyPortal(pos=(11200, 420), enemies=(EnemyHoodie,), spawn_interval=40, spawn_interval_change=10, max_spawn_interval=250, max_enemies=8),
+                           ],
+                  # weapons=[Barrel(pos=(9000,380)),
+                  #          Barrel(pos=(8900,360))
+                  ),
+
+            Stage(max_scroll_x=11400,
+                  enemies=[EnemyPortal(pos=(12100, 340), enemies=(EnemyScooterboy,), spawn_interval=40, spawn_interval_change=20, max_spawn_interval=250, max_enemies=8),
+                           EnemyPortal(pos=(11900, 400), enemies=(EnemyScooterboy,), spawn_interval=50, spawn_interval_change=25, max_spawn_interval=250, max_enemies=8),
+                           ],
+                  weapons=[Barrel(pos=(11800,380))],
+                  powerups=[HealthPowerup(pos=(12000, MIN_WALK_Y)),
+                            HealthPowerup(pos=(12500, MIN_WALK_Y))]
+                  ),
+
+            Stage(max_scroll_x=12600,
+                  enemies=[EnemyPortal(pos=(12900, 340), enemies=(EnemyBoss,), spawn_interval=240, spawn_interval_change=20, max_spawn_interval=300, max_enemies=4),
+                           EnemyHoodie(pos=(13200,320)),
+                           EnemyHoodie(pos=(13200,330)),
+                           EnemyVax(pos=(13400,360)),
+                           ],
+                  ),
+
+            Stage(max_scroll_x=13400,
+                  enemies=[EnemyPortal(pos=(13600, 320), enemies=(EnemyVax,), spawn_interval=230, spawn_interval_change=20, max_spawn_interval=300, max_enemies=10),
+                           EnemyPortal(pos=(13600, 435), enemies=(EnemyHoodie,), spawn_interval=240, spawn_interval_change=20, max_spawn_interval=300, max_enemies=10),
+                           EnemyPortal(pos=(14000, 320), enemies=(EnemyScooterboy,), spawn_interval=250, spawn_interval_change=30, max_spawn_interval=300, max_enemies=10),
+                           EnemyPortal(pos=(14000, 435), enemies=(EnemyBoss,), spawn_interval=260, spawn_interval_change=30, max_spawn_interval=300, max_enemies=10),
+                          ],
+                  ),
+
+            Stage(max_scroll_x=14700,
+                  enemies=[EnemyPortal(pos=(14900, 320), enemies=(EnemyVax,), spawn_interval=220, spawn_interval_change=20, max_spawn_interval=300, max_enemies=8),
+                           EnemyPortal(pos=(14900, 435), enemies=(EnemyHoodie,), spawn_interval=230, spawn_interval_change=20, max_spawn_interval=300, max_enemies=8),
+                           EnemyPortal(pos=(15300, 320), enemies=(EnemyScooterboy,), spawn_interval=240, spawn_interval_change=20, max_spawn_interval=300, max_enemies=8),
+                           EnemyPortal(pos=(15300, 435), enemies=(EnemyBoss,), spawn_interval=250, spawn_interval_change=20, max_spawn_interval=300, max_enemies=8),
+                          ],
+                  powerups=[HealthPowerup(pos=(14650, 350)),]
+                  ),
+
+            Stage(max_scroll_x=15400,
+                  enemies=[EnemyPortal(pos=(15800, 350), enemies=(EnemyVax,EnemyHoodie,EnemyScooterboy), spawn_interval=60, spawn_interval_change=20, max_spawn_interval=300, max_enemies=8),
+                          ],
+                  powerups=[HealthPowerup(pos=(16000, MIN_WALK_Y)),]
+                  ),
+
+            Stage(max_scroll_x=16600,
+                  enemies=[EnemyVax(pos=(17600,300)),
+                           EnemyVax(pos=(17900,320)),
+                           EnemyVax(pos=(17600,340)),
+                           EnemyVax(pos=(17900,360)),
+                           EnemyVax(pos=(17600,380)),
+                           EnemyVax(pos=(17900,400)),
+                           EnemyVax(pos=(17600,420)),
+                          ],
+                  powerups=[HealthPowerup(pos=(17000, MIN_WALK_Y)),],
+                  weapons=[Barrel(pos=(17000,380))],
+                  ),
+
+            Stage(max_scroll_x=17400,
+                  enemies=[EnemyBoss(pos=(17800,MIN_WALK_Y)),
+                           EnemyScooterboy(pos=(18500,380)),
+                           EnemyScooterboy(pos=(18600,380)),
+                           EnemyScooterboy(pos=(18700,380)),
+                           EnemyScooterboy(pos=(18800,380)),
+                           EnemyScooterboy(pos=(19000,380)),
+                          ],
+                  weapons=[Stick(pos=(18000,340))],
+                  ),
+
+            Stage(max_scroll_x=18500,
+                  enemies=[EnemyBoss(pos=(18800, 320)),
+                           EnemyPortal(pos=(18900, 390), enemies=(EnemyVax, EnemyHoodie),
+                                       start_timer=400, spawn_interval=30, spawn_interval_change=5, max_enemies=10),
+                           ],
+             ),
+
+            Stage(max_scroll_x=19300,
+                  enemies=[EnemyScooterboy(pos=(19900, 340))],
+                  weapons=[Barrel(pos=(19400,340))],
+                  powerups=[HealthPowerup(pos=(19600, MIN_WALK_Y)),],
+             ),
+
+            # Final battles
+
+            Stage(max_scroll_x=20500,
+                  enemies=[EnemyHoodie(pos=(20900, 380), start_timer=500),
+                           EnemyBoss(pos=(21500,330)),
+                           EnemyBoss(pos=(21500,350)),
+                           EnemyBoss(pos=(21500,370)),
+                           EnemyBoss(pos=(21500,390)),
+                           EnemyBoss(pos=(18200,320)),
+                           EnemyBoss(pos=(17800,390)),
+                           ],
+                  powerups=[ExtraLifePowerup(pos=(20900, MIN_WALK_Y))]),
+
+            Stage(max_scroll_x=20500,
+                  enemies=[EnemyPortal(pos=(20700, 315), enemies=(EnemyVax,), start_timer=600, spawn_interval=60, spawn_interval_change=5, max_enemies=20),
+                           EnemyPortal(pos=(20700, 440), enemies=(EnemyHoodie,), start_timer=600, spawn_interval=60, spawn_interval_change=10, max_enemies=20),
+                           EnemyPortal(pos=(21100, 315), enemies=(EnemyScooterboy,), start_timer=600, spawn_interval=60, spawn_interval_change=15, max_enemies=20),
+                           EnemyPortal(pos=(21100, 440), enemies=(EnemyBoss,), start_timer=600, spawn_interval=60, spawn_interval_change=20, max_enemies=20),
+                           ]),
+
             )
 
 class Game:
