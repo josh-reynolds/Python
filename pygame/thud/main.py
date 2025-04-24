@@ -1071,6 +1071,7 @@ class EnemyBoss(Enemy):
                                                  if enemy is not self
                                                  and enemy.target_weapon is weapon]
                     if len(other_enemies_same_target) == 0:
+                        self.log("Go to weapon")
                         self.state = Enemy.State.GO_TO_WEAPON
                         self.target_weapon = weapon
                         return
@@ -1149,7 +1150,7 @@ class EnemyPortal(Enemy):
                         self.spawn_timer = 60
                     else:
                         chosen_enemy = choice(self.enemies)
-                        self.spawn_facing = 0 if self.vpos.x < game.player.vpos.x else 1
+                        self.spawn_facing = 0 if self.vpos.x > game.player.vpos.x else 1
                         self.spawning_enemy = chosen_enemy(self.vpos)
                         self.frame = 0
                         game.play_sound("portal_enemy_spawn")
