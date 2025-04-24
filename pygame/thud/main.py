@@ -1,4 +1,6 @@
 import json
+import sys
+import time
 from enum import Enum
 from random import choice, randint
 from abc import ABC, abstractmethod
@@ -7,13 +9,27 @@ from pygame import Rect
 from pygame.math import Vector2
 from engine import *
 
+# version checks not present in book sources
+if sys.version_info < (3,6):
+    print("This game requires at least version 3.6 of Python. Please download"
+          "it from www.python.org")
+    sys.exit()
+
+engine = sys.modules["engine"]
+engine_version = [int(s) if s.isnumeric() else s
+                  for s in engine.__version__.split('.')]
+
+if engine_version < [1,4]:
+    print(f"This game requires at least version 1.4 of the engine. "
+          f"You are using version {engine.__version__}. Please upgrade.")
+    sys.exit()
+
 WIDTH = 800
 HEIGHT = 480
 TITLE = "Thud!"
 
 SPECIAL_FONT_SYMBOLS = {'xb_a' : '%'}
 SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
-
 
 INTRO_ENABLED = True
 HEALTH_STAMINA_BAR_WIDTH = 235
@@ -36,6 +52,32 @@ ENEMY_APPROACH_PLAYER_DISTANCE_BARREL = 180
 ANCHOR_CENTER = ('center', 'center')
 ANCHOR_CENTER_BOTTOM = ('center', 'bottom')
 BACKGROUND_TILE_SPACING = 290
+
+DEBUG_LOGGING_ENABLED = False
+DEBUG_SHOW_SCROLL_POS = False
+DEBUG_SHOW_BOUNDARY = False
+DEBUG_SHOW_ATTACKS = False
+DEBUG_SHOW_TARGET_POS = False
+DEBUG_SHOW_ANCHOR_POINTS = False
+DEBUG_SHOW_HIT_AREA_WIDTH = False
+DEBUG_SHOW_LOGS = False
+DEBUG_SHOW_HEALTH_AND_STAMINA = False
+DEBUG_PROFILING = False
+
+debug_drawcalls = []
+
+class Profiler:
+    def __init__(self, name=""):
+        self.start_time = time.perf_counter()
+        self.name = name
+
+    def get_ms(self):
+        endTime = time.perf_counter()
+        diff = endTime - self.start_time
+        return diff * 1000
+
+    def __str__(self):
+        return f"{self.name}: {self.get_ms()}ms"
 
 BACKGROUND_TILES = ["wall_end1", "wall_fill1", "wall_fill5", "wall_fill2", "alley1", "wall_end6", "wall_fill7",
                     "wall_fill5", "alley2", "wall_end3", "wall_fill3", "wall_fill4", "wall_fill8", "alley5",
@@ -79,19 +121,39 @@ def move_towards(n, target, speed):
     else:
         return n,0
 
-class KeyboardControls:
+class Controls(ABC):
     NUM_BUTTONS = 4
 
     def __init__(self):
-        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
-        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.button_previously_down = [False for i in range(Controls.NUM_BUTTONS)]
+        self.is_button_pressed = [False for i in range(Controls.NUM_BUTTONS)]
 
     def update(self):
-        for button in range(KeyboardControls.NUM_BUTTONS):
+        # Call each frame to update button status
+        for button in range(Controls.NUM_BUTTONS):
             button_down = self.button_down(button)
-            self.is_pressed[button] = button_down and not self.previously_down[button]
-            self.previously_down[button] = button_down
+            self.is_button_pressed[button] = button_down and not self.button_previously_down[button]
+            self.button_previously_down[button] = button_down
 
+    @abstractmethod
+    def get_x(self):
+        # Overridden by subclasses
+        pass
+
+    @abstractmethod
+    def get_y(self):
+        # Overridden by subclasses
+        pass
+
+    @abstractmethod
+    def button_down(self, button):
+        # Overridden by subclasses
+        pass
+
+    def button_pressed(self, button):
+        return self.is_button_pressed[button]
+
+class KeyboardControls(Controls):
     def get_x(self):
         if keyboard.left:
             return -1
@@ -118,8 +180,33 @@ class KeyboardControls:
         elif button == 3:
             return keyboard.a   # flying kick
 
-    def button_pressed(self, button):
-        return self.is_pressed[button]
+class JoystickControls(Controls):
+    def __init__(self, joystick):
+        super().__init__()
+        self.joystick = joystick
+        joystick.init()
+
+    def get_axis(self, axis_num):
+        if self.joystick.get_numhats() > 0 and self.joystick.get_hat(0)[axis_num] != 0:
+            return self.joystick.get_hat(0)[axis_num] * (-1 if axis_num == 1 else 1)
+
+        axis_value = self.joystick.get_axis(axis_num)
+        if abs(axis_value) < 0.6:
+            return 0
+        else:
+            return 1 if axis_value > 0 else -1
+
+    def get_x(self):
+        return self.get_axis(0)
+
+    def get_y(self):
+        return self.get_axis(1)
+
+    def button_down(self, button):
+        if self.joystick.get_numbuttons() <= button:
+            print("Warning: main controller does not have enough buttons!")
+            return False
+        return self.joystick.get_button(button) != 0
 
 class Attack:
     def __init__(self, sprite=None, strength=None, anim_time=None, frame_time=5,
@@ -1042,7 +1129,7 @@ class Scooter(ScrollHeightActor):
 
     def update(self):
         self.frame += 1
-        self.vpos.x += self.vel.x
+        self.vpos.x += self.vel_x
         self.vel_x *= 0.94
         facing_id = 1 if self.facing_x > 0 else 0
         self.image = f"scooterboy_bike_{facing_id}_{min(self.frame//30,2)}_{self.color_variant}"
@@ -1074,7 +1161,7 @@ class Weapon(ScrollHeightActor):
                         self.height_above_ground = 0
                         self.vel.y = 0
                 else:
-                    self.height_above_gorund -= self.vel.y
+                    self.height_above_ground -= self.vel.y
 
             self.vpos.x += self.vel.x
 
