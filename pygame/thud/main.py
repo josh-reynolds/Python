@@ -841,8 +841,8 @@ class Enemy(Fighter, ABC):
         px, py = game.player.vpos
         holding_barrel = isinstance(self.weapon, Barrel)
 
-        if self.state == Enemy.State.APPROACH_PLAYER and game.player.FallingState ==\
-                Fighter.FallingState.STANDING and self.vpos.y == p.y \
+        if self.state == Enemy.State.APPROACH_PLAYER and game.player.falling_state ==\
+                Fighter.FallingState.STANDING and self.vpos.y == py \
                 and (self.approach_player_distance * 0.9 < abs(self.vpos.x - px) 
                      <= self.approach_player_distance * 1.1 or holding_barrel) \
                              and randint(0,19) == 0:

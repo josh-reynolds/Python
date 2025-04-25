@@ -36,7 +36,7 @@ there are still some issues:
         look into that after everything else is done. It does make playtesting
         painfully slow.
 
-[     ] Enemy actors do not attack at all. They move into position and just stand there.
+[FIXED] Enemy actors do not attack at all. They move into position and just stand there.
         Probably a logic error in one of the update/decision methods. The scooter does
         damage the player if it hits, but otherwise nothing.
 
