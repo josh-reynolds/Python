@@ -1855,7 +1855,7 @@ def get_char_image_and_width(char):
         return None, 22
     else:
         if char in SPECIAL_FONT_SYMBOLS_INVERSE:
-            image= getattr(images, SPECIAL_FONT_SYMBOLS_INVERSE[char])
+            image = getattr(images, SPECIAL_FONT_SYMBOLS_INVERSE[char])
         else:
             image = getattr(images, "font0" + str(ord(char)))
         return image, image.get_width()
@@ -1879,6 +1879,21 @@ def draw_text(text, x, y, center=False):
                 screen.blit(image, (x,y))
             x += width
 
+def get_joystick_if_exists():
+    return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
+
+def setup_joystick_controls():
+    global joystick_controls
+    joystick = get_joystick_if_exists()
+    joystick_controls = JoystickControls(joystick) if joystick is not None else None
+
+def update_controls():
+    keyboard_controls.update()
+    if joystick_controls is None:
+        setup_joystick_controls()
+    if joystick_controls is not None:
+        joystick_controls.update()
+
 class State(Enum):
     TITLE = 1
     CONTROLS = 2
@@ -1889,10 +1904,10 @@ def update():
     global state, game, total_frames
 
     total_frames += 1
-    keyboard_controls.update()
+    update_controls()
 
     def button_pressed_controls(button_num):
-        for controls in (keyboard_controls,):
+        for controls in (keyboard_controls, joystick_controls):
             if controls is not None and controls.button_pressed(button_num):
                 return controls
         return None
@@ -1949,6 +1964,7 @@ except Exception as e:
 total_frames = 0
 
 keyboard_controls = KeyboardControls()
+setup_joystick_controls()
 
 state = State.TITLE
 game = None
