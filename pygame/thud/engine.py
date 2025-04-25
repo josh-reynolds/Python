@@ -28,7 +28,7 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.4"
+__version__ = "1.3"
 
 import os
 import sys

@@ -19,8 +19,8 @@ engine = sys.modules["engine"]
 engine_version = [int(s) if s.isnumeric() else s
                   for s in engine.__version__.split('.')]
 
-if engine_version < [1,4]:
-    print(f"This game requires at least version 1.4 of the engine. "
+if engine_version < [1,3]:
+    print(f"This game requires at least version 1.3 of the engine. "
           f"You are using version {engine.__version__}. Please upgrade.")
     sys.exit()
 
