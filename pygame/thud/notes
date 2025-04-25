@@ -30,18 +30,23 @@ Some playtesting, then scrub against GitHub and we're done. Already caught a cou
 Fixed the typo bugs found during playtesting, and was able to finish the game, but
 there are still some issues:
 
-* Performance is very poor, almost slide-show frame rate. Not sure if this is
-  inherent to this game running on pygame, running on Python, running on this
-  laptop. The GitHub sources do add some debugging and profiling bits, so may
-  look into that after everything else is done. It does make playtesting
-  painfully slow.
+[     ] Performance is very poor, almost slide-show frame rate. Not sure if this is
+        inherent to this game running on pygame, running on Python, running on this
+        laptop. The GitHub sources do add some debugging and profiling bits, so may
+        look into that after everything else is done. It does make playtesting
+        painfully slow.
 
-* Enemy actors do not attack at all. They move into position and just stand there.
-  Probably a logic error in one of the update/decision methods. The scooter does
-  damage the player if it hits, but otherwise nothing.
+[     ] Enemy actors do not attack at all. They move into position and just stand there.
+        Probably a logic error in one of the update/decision methods. The scooter does
+        damage the player if it hits, but otherwise nothing.
 
-* Only one stage is present. Not sure if that's by design or whether GitHub has
-  more content. We will see.
+[FIXED] Only one stage is present. Not sure if that's by design or whether GitHub has
+        more content. We will see.
 
-* Music is not playing at all.
+[FIXED] Music is not playing at all.
 
+----
+Finished scrubbing against GitHub - a few issues caught, but mostly it added joystick support
+and debugging code (and more stage definitions).
+
+Playtest and bug fixing now... a couple easy ones listed above are done.

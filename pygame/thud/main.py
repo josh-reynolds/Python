@@ -5,7 +5,7 @@ from enum import Enum
 from random import choice, randint
 from abc import ABC, abstractmethod
 import pygame
-from pygame import Rect
+from pygame import Rect, mixer
 from pygame.math import Vector2
 from engine import *
 
