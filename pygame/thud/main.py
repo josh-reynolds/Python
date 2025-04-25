@@ -1259,7 +1259,7 @@ class Barrel(Weapon):
                 barrel_top_height = barrel_bottom_height + BARREL_HEIGHT
 
                 if fighter is not self.last_thrower \
-                        and fighter.falling_state == Fighter.FallingState.STANDNG \
+                        and fighter.falling_state == Fighter.FallingState.STANDING \
                         and abs(fighter.vpos.y - self.vpos.y) < 30 \
                         and abs(self.vpos.x - fighter.vpos.x) < 30 \
                         and fighter_bottom_height < barrel_top_height:
@@ -1687,6 +1687,9 @@ class Game:
         enemy.spawned()
 
     def update(self):
+        if DEBUG_PROFILING:
+            p = Profiler()
+
         self.timer += 1
 
         if self.text_active:
@@ -1702,6 +1705,9 @@ class Game:
                     self.timer = 0
 
             return
+
+        if DEBUG_SHOW_ATTACKS:
+            debug_drawcalls.clear()
 
         for obj in [self.player] + self.enemies + self.weapons + self.scooters + self.powerups:
             obj.update()
@@ -1733,19 +1739,31 @@ class Game:
         if len(self.enemies) == 0 and self.scroll_offset.x == self.max_scroll_offset_x:
             self.next_stage()
 
+        if DEBUG_PROFILING:
+            print(f"update: {p.get_ms()}")
+
     def draw(self):
         self.draw_background()
 
+        p = Profiler()
         all_objs = [self.player] + self.enemies + self.weapons + self.scooters + self.powerups
         all_objs.sort(key=lambda obj: obj.vpos.y + obj.get_draw_order_offset())
         for obj in all_objs:
             if obj:
                 obj.draw(self.scroll_offset)
+        if DEBUG_PROFILING:
+            print("objs: {0}".format(p.get_ms()))
+
+        p = Profiler()
 
         if self.scroll_offset.x < self.max_scroll_offset_x and (self.timer//30) % 2 == 0:
             screen.blit("arrow", (WIDTH-450,120))
 
         self.draw_ui()
+
+        if DEBUG_PROFILING:
+            print("icons: {0}".format(p.get_ms()))
+            p = Profiler()
 
         if self.text_active or self.timer < 255:
             if self.text_active:
@@ -1758,13 +1776,28 @@ class Game:
         if self.text_active:
             draw_text(self.displayed_text, 50, 50)
 
+        if DEBUG_SHOW_SCROLL_POS:
+            screen.draw.text(f"{self.scroll_offset} {self.max_scroll_offset_x}", (0, 25))
+            screen.draw.text(str(self.boundary.left), (0, 45))
+
+        if DEBUG_SHOW_BOUNDARY:
+            screen.draw.rect(Rect(self.boundary.left - self.scroll_offset.x, self.boundary.top, self.boundary.width, self.boundary.height), (255,255,255))
+
+        for func in debug_drawcalls:
+            func()
+
+        if DEBUG_PROFILING:
+            print("rest: {0}".format(p.get_ms()))
+
     def draw_ui(self):
         full_w = HEALTH_STAMINA_BAR_WIDTH
+        full_h = HEALTH_STAMINA_BAR_HEIGHT
+
         health_w = int((game.player.health / game.player.start_health) * full_w)
-        screen.surface.blit(getattr(images,"health"), (48,11), Rect(0,0,health_w,full_w))
+        screen.surface.blit(getattr(images,"health"), (48,11), Rect(0,0,health_w,full_h))
 
         stam_w = int((game.player.stamina / game.player.max_stamina) * full_w)
-        screen.surface.blit(getattr(images,"stamina"), (517,11), Rect(0,0,stam_w,full_w))
+        screen.surface.blit(getattr(images,"stamina"), (517,11), Rect(0,0,stam_w,full_h))
 
         screen.blit("status", (0,0))
 
@@ -1778,14 +1811,18 @@ class Game:
         draw_text(f"{self.score:04}", WIDTH // 2, 0, True)
 
     def draw_background(self):
+        p = Profiler()
         road1_x = -(self.scroll_offset.x % WIDTH)
         road2_x = road1_x + WIDTH
         screen.blit("road",(road1_x, 0))
         screen.blit("road",(road2_x, 0))
+        if DEBUG_PROFILING:
+            print("road " + str(p.get_ms()))
 
         pos = -self.scroll_offset
         pos.x -= BACKGROUND_TILE_SPACING
 
+        p = Profiler()
         for tile in BACKGROUND_TILES:
             if pos.x + 417 >= 0:
                 screen.blit(tile, pos)
@@ -1794,6 +1831,8 @@ class Game:
                     break
             else:
                 pos.x += BACKGROUND_TILE_SPACING
+        if DEBUG_PROFILING:
+            print("bg " + str(p.get_ms()))
 
     def shutdown(self):
         for enemy in self.enemies:
