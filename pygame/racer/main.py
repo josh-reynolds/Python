@@ -9,6 +9,9 @@ HEIGHT = 400
 TITLE = "Racer"
 
 FIXED_TIMESTEP = 1 ###
+CLIPPING_PLANE = 1 ###
+SPACING = 1 ###
+VIEW_DISTANCE = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -22,8 +25,12 @@ class KeyboardControls:
         pass ###
     def button_pressed(self, a):  ###
         pass ###
+class TrackPiece:
+    def __init__(self): ###
+        self.width = 1 ###
+
 def make_track():
-    pass ###
+    return (TrackPiece(), TrackPiece(), TrackPiece()) ###
 
 class Game:
     def __init__(self, controls=None):
@@ -49,8 +56,72 @@ class Game:
         pass ###
     def update(self, a): ###
         pass ###
+
     def draw(self):
+        if self.bg_offset.y > 0:
+            screen.fill( (0,20,117) )
+        else:
+            screen.fill( (0,77,180) )
+
+        screen.blit(self.background, self.bg_offset)
+        bg_width = self.background.get_width()
+        if self.bg_offset.x > 0:
+            screen.blit(self.background, self.bg_offset - Vector2(bg_width, 0))
+        if self.bg_offset.x + self.background.get_width() < WIDTH:
+            screen.blit(self.background, self.bg_offset + Vector2(bg_width, 0))
+
+        def transform(point_v3, w=None, h=None, clipping_plane=CLIPPING_PLANE):
+            newpoint = point_v3 - self.camera
+            if newpoint.z > clipping_plane:
+                return None if w is None else (None, None, None)
+
+            point_v2 = pygame.math.Vector2((newpoint.x / newpoint.z) + HALF_WIDTH,
+                                           (newpoint.y / newpoint.z) + HALF_HEIGHT)
+
+            if w is None:
+                return point_v2
+            else:
+                return point_v2, w / -newpoint.z, h / -newpoint.z
+
+        offset = Vector3(0,0,0)
+        offset_delta = Vector3(0,0,0)
+
+        prev_track_screen = None
+        prev_stripe_screen = None
+        prev_rumble_left_outer_screen = None
+        prev_rumble_right_outer_screen = None
+
+        draw_list = []
+
+        def add_to_draw_list(drawcall, type="?"):
+            draw_list.append((drawcall, type))
+
+        is_first_track_piece_ahead = True
+
+        result = self.get_first_track_piece_ahead(self.camera.z)
+
+        first_track_piece_idx, current_piece_z = result
+        track_ahead_i = 0
+        current_piece_z += SPACING
+
+        for i in range(first_track_piece_idx, len(self.track)):
+            track_ahead_i += 1
+            if track_ahead_i > VIEW_DISTANCE:
+                break
+
+            track_piece = self.track[i]
+            current_piece_z -= SPACING
+
+            left = Vector3(track_piece.width / 2, 0, current_piece_z)
+            right = Vector3(-track_piece.width / 2, 0, current_piece_z)
+
+
+
+
         pass ###
+
+    def get_first_track_piece_ahead(self, a): ###
+        return (0,0) ###
 
 def update_controls():
     keyboard_controls.update()
@@ -58,6 +129,7 @@ def update_controls():
 class State(Enum):
     TITLE = 1
 
+### REMINDER: still need to implement delta time calculation in the engine
 def update(delta_time):
     global state, game, accumulated_time, demo_reset_timer, demo_start_timer
 
