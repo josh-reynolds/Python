@@ -160,6 +160,44 @@ class Game:
             yellow_line_right_outer_screen = transform(yellow_right_outer)
             yellow_line_right_inner_screen = transform(yellow_right_inner)
 
+            if left_screen is not None and right_screen is not None:
+                if prev_track_screen is not None:
+                    def any_on_screen(points):
+                        on_screen = [point for point in points if point[1] < HEIGHT]
+                        return any(on_screen)
+
+                    def draw_polygon(points, col):
+                        pygame.draw.polygon(screen.surface, col, points, OUTLINE_W)
+
+                    def draw_points(points, col):
+                        if any_on_screen(points):
+                            add_to_draw_list(lambda col=col, points=points: draw_polygon(points, col))
+
+                    if i // 3 % 2 == 0:
+                        points = (stripe_left_screen, stripe_right_screen,
+                                  prev_stripe_screen[1], prev_stripe_screen[0])
+                        draw_points(points, STRIPE_COLOR)
+
+                    if SHOW_YELLOW_LINES:
+                        left_yellow_line_points = (prev_yellow_line_left_outer_screen,
+                                                   yellow_line_left_outer_screen,
+                                                   yellow_line_left_inner_screen,
+                                                   prev_yellow_line_left_inner_screen)
+                        draw_points(left_yellow_line_points, YELLOW_LINE_COL)
+
+                        right_yellow_line_points = (prev_yellow_line_right_outer_screen,
+                                                   yellow_line_right_outer_screen,
+                                                   yellow_line_right_inner_screen,
+                                                   prev_yellow_line_right_inner_screen)
+                        draw_points(right_yellow_line_points, YELLOW_LINE_COL)
+
+                    points = (prev_track_screen[0], left_screen, right_screen, prev_track_screen[1])
+                    draw_points(points, track_piece.col)
+
+
+
+
+
 
 
 
