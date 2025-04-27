@@ -194,6 +194,40 @@ class Game:
                     points = (prev_track_screen[0], left_screen, right_screen, prev_track_screen[1])
                     draw_points(points, track_piece.col)
 
+                    if SHOW_RUMBLE_STRIPS:
+                        rumble_col = RUMBLE_COL_1 if (i // 2) % 2 == 0 else RUMBLE_COL_2
+                        rumble_left_points = (prev_rumble_left_outer_screen,
+                                              prev_track_screen[0],
+                                              left_screen,
+                                              rumble_strip_left_outer_screen)
+                        rumble_right_points = (prev_rumble_right_outer_screen,
+                                              prev_track_screen[1],
+                                              right_screen,
+                                              rumble_strip_right_outer_screen)
+                        draw_points(rumble_left_points, rumble_col)
+                        draw_points(rumble_right_points, rumble_col)
+
+                    if SHOW_TRACKSIDE:
+                        trackside_col = TRACKSIDE_COLOR_1 if (i // 5) % 2 == 0 else TRACKSIDE_COLOR_2
+                        trackside_left_points = (points[2], points[3],
+                                                 (0, points[3].y),
+                                                 (0, points[2].y))
+                        trackside_right_points = (points[0], points[1],
+                                                 (WIDTH - 1, points[1].y),
+                                                 (WIDTH - 1, points[0].y))
+                        draw_points(trackside_left_points, trackside_col)
+                        draw_points(trackside_right_points, trackside_col)
+
+                prev_track_screen = (left_screen, right_screen)
+                prev_stripe_screen = (stripe_left_screen, stripe_right_screen)
+                prev_rumble_left_outer_screen = rumble_strip_left_outer_screen
+                prev_rumble_right_outer_screen = rumble_strip_right_outer_screen
+                prev_yellow_line_left_outer_screen = yellow_line_left_outer_screen
+                prev_yellow_line_left_inner_screen = yellow_line_left_inner_screen
+                prev_yellow_line_right_outer_screen = yellow_line_right_outer_screen
+                prev_yellow_line_right_inner_screen = yellow_line_right_inner_screen
+
+
 
 
 
