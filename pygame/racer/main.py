@@ -1,6 +1,7 @@
 import platform
 from enum import Enum
 import pygame
+from pygame.math import Vector2, Vector3
 from engine import *
 
 WIDTH = 400
@@ -13,20 +14,43 @@ SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
+def draw_text(a, b, c, d): ###
+    pass ###
+
 class KeyboardControls:
     def update(self):
         pass ###
     def button_pressed(self, a):  ###
         pass ###
+def make_track():
+    pass ###
 
 class Game:
+    def __init__(self, controls=None):
+        self.track = make_track()
+        self.player_car = None
+        self.camera_follow_car = None
+        self.setup_cars(controls)
+        self.camera = Vector3(0, 400, 0)
+        self.background = images.background
+        self.bg_offset = Vector2(-self.background.get_width() // 2, 30)
+        self.first_frame = True
+        self.frame_counter = 0
+        self.timer = 0
+        self.race_complete = False
+        self.time_up = False
+        if self.player_car is not None:
+            self.start_timer = 3.999
+            play_music("engines_startline")
+        else:
+            self.start_timer = 0
+
+    def setup_cars(self, a): ###
+        pass ###
     def update(self, a): ###
         pass ###
     def draw(self):
         pass ###
-
-def draw_text(a, b, c, d): ###
-    pass ###
 
 def update_controls():
     keyboard_controls.update()
