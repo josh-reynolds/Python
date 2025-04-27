@@ -9,13 +9,20 @@ HEIGHT = 400
 TITLE = "Racer"
 
 FIXED_TIMESTEP = 1 ###
-CLIPPING_PLANE = 1 ###
+CLIPPING_PLANE = -1 ###
 SPACING = 1 ###
 VIEW_DISTANCE = 1 ###
+HALF_STRIPE_W = 1 ###
+HALF_RUMBLE_STRIP_W = 1 ###
+HALF_YELLOW_LINE_W = 1 ###
+YELLOW_LINE_EDGE_DISTANCE = 1
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
+
+def inverse_lerp(a, b, c): ###
+    return 1 ###
 
 def draw_text(a, b, c, d): ###
     pass ###
@@ -28,6 +35,8 @@ class KeyboardControls:
 class TrackPiece:
     def __init__(self): ###
         self.width = 1 ###
+        self.offset_x = 1 ###
+        self.offset_y = 1 ###
 
 def make_track():
     return (TrackPiece(), TrackPiece(), TrackPiece()) ###
@@ -114,6 +123,42 @@ class Game:
 
             left = Vector3(track_piece.width / 2, 0, current_piece_z)
             right = Vector3(-track_piece.width / 2, 0, current_piece_z)
+
+            if is_first_track_piece_ahead:
+                adjusted_camera_z = self.camera.z - SPACING
+                fraction = inverse_lerp(current_piece_z - SPACING, current_piece_z, adjusted_camera_z)
+                offset_delta = Vector3(fraction * track_piece.offset_x,
+                                       fraction * track_piece.offset_y, 0)
+            else:
+                offset_delta += Vector3(track_piece.offset_x, track_piece.offset_y, 0)
+
+            is_first_track_piece_ahead = False
+
+            offset += offset_delta
+            left += offset
+            right += offset
+
+            left_screen = transform(left)
+            right_screen = transform(right)
+
+            stripe_left = Vector3(HALF_STRIPE_W, 0, current_piece_z) + offset
+            stripe_right = Vector3(-HALF_STRIPE_W, 0, current_piece_z) + offset
+            stripe_left_screen = transform(stripe_left)
+            stripe_right_screen = transform(stripe_right)
+
+            rumble_strip_left_outer = left + Vector3(HALF_RUMBLE_STRIP_W, 0, 0)
+            rumble_strip_right_outer = right - Vector3(HALF_RUMBLE_STRIP_W, 0, 0)
+            rumble_strip_left_outer_screen = transform(rumble_strip_left_outer)
+            rumble_strip_right_outer_screen = transform(rumble_strip_right_outer)
+
+            yellow_left_outer = left - Vector3(YELLOW_LINE_EDGE_DISTANCE, 0, 0)
+            yellow_left_inner = yellow_left_outer - Vector3(HALF_YELLOW_LINE_W, 0, 0)
+            yellow_right_outer = right + Vector3(YELLOW_LINE_EDGE_DISTANCE, 0, 0)
+            yellow_right_inner = yellow_right_outer - Vector3(HALF_YELLOW_LINE_W, 0, 0)
+            yellow_line_left_outer_screen = transform(yellow_left_outer)
+            yellow_line_left_inner_screen = transform(yellow_left_inner)
+            yellow_line_right_outer_screen = transform(yellow_right_outer)
+            yellow_line_right_inner_screen = transform(yellow_right_inner)
 
 
 
