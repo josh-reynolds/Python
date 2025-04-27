@@ -406,6 +406,12 @@ def run():
     #screen.fill(Color("white"))
     #parent.once()
 
+    up = parent.update
+    if up.__code__.co_argcount == 0:
+        update = lambda dt: up()
+    else:
+        update = lambda dt: up(dt)
+
     running = True
     while running:
         pygame.time.Clock().tick(60)
@@ -428,7 +434,8 @@ def run():
                     setattr(keyboard, name, True)
     
         screen.fill(Color("white"))
-        parent.update()
+    #TO_DO: need to calculate delta_time and pass in to update()
+        update(1) ###
         parent.draw()
         pygame.display.update()
     

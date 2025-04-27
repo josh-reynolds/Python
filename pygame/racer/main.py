@@ -18,6 +18,8 @@ class KeyboardControls:
         pass ###
 
 class Game:
+    def update(self, a): ###
+        pass ###
     def draw(self):
         pass ###
 
@@ -29,10 +31,8 @@ def update_controls():
 class State(Enum):
     TITLE = 1
 
-#def update(delta_time):   # not yet supported in the engine
-def update():
+def update(delta_time):
     global state, game, accumulated_time, demo_reset_timer, demo_start_timer
-    delta_time = 0   ###
 
     update_controls()
 
