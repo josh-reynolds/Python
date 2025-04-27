@@ -14,6 +14,8 @@ SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
 class KeyboardControls:
+    def update(self):
+        pass ###
     def button_pressed(self, a):  ###
         pass ###
 
@@ -25,8 +27,9 @@ class Game:
 
 def draw_text(a, b, c, d): ###
     pass ###
+
 def update_controls():
-    pass ###
+    keyboard_controls.update()
 
 class State(Enum):
     TITLE = 1
