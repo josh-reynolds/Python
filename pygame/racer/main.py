@@ -16,6 +16,7 @@ HALF_STRIPE_W = 1 ###
 HALF_RUMBLE_STRIP_W = 1 ###
 HALF_YELLOW_LINE_W = 1 ###
 YELLOW_LINE_EDGE_DISTANCE = 1
+SHOW_SCENERY = True  ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -37,6 +38,8 @@ class TrackPiece:
         self.width = 1 ###
         self.offset_x = 1 ###
         self.offset_y = 1 ###
+        self.scenery = [] ###
+        self.cars = [] ###
 
 def make_track():
     return (TrackPiece(), TrackPiece(), TrackPiece()) ###
@@ -226,6 +229,49 @@ class Game:
                 prev_yellow_line_left_inner_screen = yellow_line_left_inner_screen
                 prev_yellow_line_right_outer_screen = yellow_line_right_outer_screen
                 prev_yellow_line_right_inner_screen = yellow_line_right_inner_screen
+
+            if SHOW_SCENERY:
+                for obj in track_piece.scenery:
+                    if track_ahead_i * SPACING < obj.max_draw_distance:
+                        pos_v3 = Vector3(obj.x, 0, current_piece_z) + offset
+                        if self.camera.z - current_piece_z > obj.min_draw_distance:
+                            billboard = obj.get_image()
+                            w, h = billboard.get_width(), billboard.get_height()
+                            pos, scaled_w, scaled_h = transform(pos_v3, w * obj_scale, h * obj_scale)
+                            if pos is not None and scaled_w < MAX_SCENERY_SCALED_WIDTH:
+                                pos -= Vector2(scaled_w // 2, scaled_h)
+                                try:
+                                    scaled_w, scaled_h = int(scaled_w), int(scaled_h)
+                                    scaled = SCALE_FUNC(billboard, (scaled_w, scaled_h))
+                                    add_to_draw_list(lambda scaled=scaled, pos=pos: screen.blit(scaled, pos))
+                                except pygame.error:
+                                    print(f"SCALE ERROR, w/h: {scaled_w} {scaled_h}")
+
+            cars_to_draw = []
+            for car in track_piece.cars:
+                car_offset = Vector3(offset)
+                if car.pos.z % SPACING != 0:
+                    fraction = inverse_lerp(current_piece_z, current_piece_z - SPACING, car.pos.z)
+                    next_track_piece = self.track[i+1]
+                    car_offset += Vector3(fraction * next_track_piece.offset_x,
+                                          fraction * next_track_piece.offset_y,
+                                          -fraction * SPACING)
+                    car_offset += offset_delta * fraction
+
+                if car is self.camera_follow_car:
+                    car_offset.x = 0
+                    car_offset.y = 0
+
+                pos_v3 = Vector3(car.pos.x, 0, current_piece_z) + car_offset
+                scale = 2
+
+                if isinstance(car, CPUCar):
+                    z_distance = max(1, -(pos_v3.z - self.camera.z))
+                    offset_for_angle = (pos_v3.x - self.camera.x) / z_distance
+                    offset_for_angle += -car.steering * 10
+                    angle_sprite_idx = int(remap_clamp(offset_for_angle, -200, 200, -4, 4))
+
+
 
 
 
