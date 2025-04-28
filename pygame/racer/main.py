@@ -1,3 +1,4 @@
+import math
 import platform
 from enum import Enum
 import pygame
@@ -331,22 +332,14 @@ class Game:
                 if self.player_car.lap == NUM_LAPS and begin_time < self.player_car.lap_time < end_time:
                     y = HEIGHT * 0.4
                     draw_text("FINAL LAP!", WIDTH // 2, y, center=True)
-                
 
-
-
-
-
-
-
-
-
-
-
-        pass ###
-
-    def get_first_track_piece_ahead(self, a): ###
-        return (0,0) ###
+    def get_first_track_piece_ahead(self, z):
+        idx = -int(math.floor(z / SPACING))
+        first_piece_z = -idx * SPACING
+        if idx >= len(self.track):
+            return None,None
+        else:
+            return idx, first_piece_z
 
 def update_controls():
     keyboard_controls.update()
