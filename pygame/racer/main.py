@@ -18,6 +18,7 @@ HALF_RUMBLE_STRIP_W = 1 ###
 HALF_YELLOW_LINE_W = 1 ###
 YELLOW_LINE_EDGE_DISTANCE = 1
 SHOW_SCENERY = True  ###
+CAMERA_FOLLOW_DISTANCE = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -41,6 +42,9 @@ class TrackPiece:
         self.offset_y = 1 ###
         self.scenery = [] ###
         self.cars = [] ###
+class Car:
+    def __init__(self): ###
+        self.pos = Vector3(0,0,0) ###
 
 def make_track():
     return (TrackPiece(), TrackPiece(), TrackPiece()) ###
@@ -66,8 +70,52 @@ class Game:
             self.start_timer = 0
 
     def setup_cars(self, a): ###
+        self.cars = []
+        self.camera_follow_car = Car() ###
         pass ###
-    def update(self, a): ###
+
+    def update(self, delta_time):
+        self.timer += delta_time
+        self.frame_counter += 1
+
+        if self.start_timer > 0:
+            for car in self.cars:
+                car.update_current_track_piece()
+            timer_old = self.start_timer
+            self.start_timer = max(0, self.start_timer - delta_time)
+            if self.start_timer == 0:
+                play_music("ambience")
+                game.play_sound("gobeep")
+            elif int(timer_old) != int(self.start_timer):
+                game.play_sound("startbeep")
+
+        old_camera_z = self.camera.z
+        prev_ahead, _ = self.get_first_track_piece_ahead(old_camera_z)
+
+        if self.start_timer == 0:
+            for car in self.cars:
+                car.update(delta_time)
+
+        if not self.race_complete and self.player_car is not None:
+            if self.player_car.lap_time >= 60 * 4 or keyboard.escape:
+                stop_music()
+                self.time_up = True
+                self.race_complete = True
+
+            elif self.player_car.lap > NUM_LAPS:
+                stop_music()
+                self.race_complete = True
+                self.play_sound("game_complete")
+
+            self.cars.sort(key = lambda car: car.pos.z)
+
+        self.camera.x = self.camera_follow_car.pos.x
+        self.camera.z = self.camera_follow_car.pos.z + CAMERA_FOLLOW_DISTANCE
+
+        new_camera_z = self.camera.z
+        new_ahead, _ = self.get_first_track_piece_ahead(new_camera_z)
+
+
         pass ###
 
     def draw(self):
