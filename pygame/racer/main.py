@@ -271,6 +271,68 @@ class Game:
                     offset_for_angle += -car.steering * 10
                     angle_sprite_idx = int(remap_clamp(offset_for_angle, -200, 200, -4, 4))
 
+                    if car is self.camera_follow_car:
+                        angle_sprite_idx = min(max(angle_sprite_idx, -1), 1)
+
+                    car.update_sprite(angle_sprite_idx, braking=False)
+
+                img = getattr(images, car.image)
+                pos, scaled_w, scaled_h = transform(pos_v3, 
+                                                    img.get_width() * scale,
+                                                    img.get_height() * scale,
+                                                    clipping_plane=CLIPPING_PLANE_CARS)
+
+                if pos is not None and scaled_w < MAX_CAR_SCALED_WIDTH:
+                    pos -= Vector2(scaled_w // 2, scaled_h)
+                    scaled = SCALE_FUNC(img, (int(scaled_w), int(scaled_h)))
+                    cars_to_draw.append({"z": car.pos.z, 
+                                         "drawcall": lambda scaled=scaled, pos=pos: screen.blit(scaled, pos)})
+
+            cars_to_draw.sort(key=lambda entry: entry["z"], reverse=True)
+            for entry in cars_to_draw:
+                add_to_draw_list(entry["drawcall"], "cars")
+
+        for draw_call, type in reversed(draw_list):
+            draw_call()
+
+        if self.player_car is not None:
+            player_pos = self.cars.index(self.player_car) + 1
+            if self.time_up:
+                draw_text("TIME UP!", WIDTH // 2, HEIGHT * 0.4, center=True)
+            elif self.race_complete:
+                fastest_lap_str = format_time(self.player_car.fastest_lap)
+                race_time_str = format_time(self.player_car.race_time)
+                draw_text("RACE COMPLETE!", WIDTH // 2, HEIGHT * 0.15, center=True)
+                draw_text("POSITION", WIDTH // 2, HEIGHT * 0.3, center=True)
+                draw_text(str(player_pos), WIDTH // 2, HEIGHT * 0.42, center=True)
+                draw_text("FASTEST LAP", WIDTH * 0.25, HEIGHT * 0.55, center=True)
+                draw_text(fastest_lap_str, WIDTH * 0.25, HEIGHT * 0.68, center=True)
+                draw_text("RACE TIME", WIDTH * 0.75, HEIGHT * 0.55, center=True)
+                draw_text(race_time_str, WIDTH * 0.75, HEIGHT * 0.68, center=True)
+            else:
+                status_x = (WIDTH/2) - (565/2)
+                speed_str = f"{int(self.player_car.speed):03}"
+                lap_time_str = format_time(self.player_car.lap_time)
+                screen.blit("status", (status_x, 0))
+                draw_text(f"{self.player_car.lap:02}", status_x + 30, 37, font="status1b_")
+                draw_text(f"{player_pos:02}", status_x + 116, 37, font="status1b_")
+                draw_text(speed_str, status_x + 197, 37, font="status1b_")
+                draw_text(lap_time_str, status_x + 299, 37, font="status2_")
+
+                if self.player_car.last_lap_was_fastest and self.player_car.lap_time < 4:
+                    y = HEIGHT * 0.4
+                    draw_text("FASTEST LAP!", WIDTH // 2, y, center=True)
+                    draw_text(format_time(self.player_car.fastest_lap), WIDTH // 2, y + 60, center=True)
+
+                if self.player_car.last_lap_was_fastest:
+                    begin_time, end_time = 4, 8
+                else:
+                    begin_time, end_time = 0, 4
+                if self.player_car.lap == NUM_LAPS and begin_time < self.player_car.lap_time < end_time:
+                    y = HEIGHT * 0.4
+                    draw_text("FINAL LAP!", WIDTH // 2, y, center=True)
+                
+
 
 
 
