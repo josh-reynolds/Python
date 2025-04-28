@@ -115,8 +115,40 @@ class Game:
         new_camera_z = self.camera.z
         new_ahead, _ = self.get_first_track_piece_ahead(new_camera_z)
 
+        dist = old_camera_z - new_camera_z
+        offset_change = Vector2(0,0)
+        if dist > 0 and not self.first_frame and prev_ahad >= 0 and new_ahead >= 0:
+            old_z_next_spacing_boundary = (old_camera_z // SPACING) * SPACING
+            new_z_prev_spacing_boundary = ((new_camera_z // SPACING) * SPACING) + SPACING
+            prev_track = self.track[prev_ahead]
+            new_track = self.track[new_ahead]
+            prev_offset = Vector2(prev_track.offset_x, prev_track.offset_y)
+            if new_ahead > prev_ahead:
+                distance_first = old_camera_z - old_z_next_spacing_boundary
+                distance_last = new_z_prev_spacing_boundary - new_camera_z
+                fraction_first = distance_first / SPACING
+                fraction_last = distance_last / SPACING
+                new_offset = Vector2(new_track.offset_x, new_track.offset_y)
+                offset_change = prev_offset * fraction_first + new_offset * fraction_last
+                if new_ahead - prev_ahead > 1:
+                    for i in range(prev_ahead + 1, new_ahead):
+                        piece = self.track[i]
+                        offset_change += Vector2(piece.offset_x, piece.offset_y)
+            else:
+                fraction = dist / SPACING
+                offset_change = prev_offset * fraction
 
-        pass ###
+            self.bg_offset += offset_change
+
+            while self.bg_offset.x < -self.background.get_width():
+                self.bg_offset.x += self.background.get_width()
+            while self.bg_offset.x > self.background.get_width():
+                self.bg_offset.x -= self.background.get_width()
+
+        if self.player_car is not None:
+            self.player_car.set_offset_x_change(offset_change.x)
+
+        self.first_frame = False
 
     def draw(self):
         if self.bg_offset.y > 0:
