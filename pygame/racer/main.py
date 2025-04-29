@@ -73,7 +73,12 @@ class Car:
         self.track_piece = None
         self.tire_rotation = 0
 
-    def update(self, a): ###
+    def update(self, delta_time):
+        self.pos.z -= self.speed * delta_time
+        self.update_current_track_piece()
+        self.tire_rotation += delta_time * self.speed * 0.75
+
+    def update_current_track_piece(self):
         pass ###
 
 class CPUCar(Car):
@@ -230,7 +235,7 @@ class Game:
 
         dist = old_camera_z - new_camera_z
         offset_change = Vector2(0,0)
-        if dist > 0 and not self.first_frame and prev_ahad >= 0 and new_ahead >= 0:
+        if dist > 0 and not self.first_frame and prev_ahead >= 0 and new_ahead >= 0:
             old_z_next_spacing_boundary = (old_camera_z // SPACING) * SPACING
             new_z_prev_spacing_boundary = ((new_camera_z // SPACING) * SPACING) + SPACING
             prev_track = self.track[prev_ahead]
