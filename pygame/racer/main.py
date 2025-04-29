@@ -19,6 +19,10 @@ HALF_YELLOW_LINE_W = 1 ###
 YELLOW_LINE_EDGE_DISTANCE = 1
 SHOW_SCENERY = True  ###
 CAMERA_FOLLOW_DISTANCE = 1 ###
+NUM_CARS = 2 ###
+GRID_CAR_SPACING = 10 ###
+CPU_CAR_MIN_TARGET_SPEED = 1 ###
+CPU_CAR_MAX_TARGET_SPEED = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -26,7 +30,8 @@ fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
 def inverse_lerp(a, b, c): ###
     return 1 ###
-
+def remap(a, b, c, d, e): ###
+    pass ###
 def draw_text(a, b, c, d): ###
     pass ###
 
@@ -43,8 +48,11 @@ class TrackPiece:
         self.scenery = [] ###
         self.cars = [] ###
 class Car:
-    def __init__(self): ###
+    def __init__(self, a, speed=1, accel=1): ###
         self.pos = Vector3(0,0,0) ###
+class CPUCar(Car):
+    def update(self, a): ###
+        pass ###
 
 def make_track():
     return (TrackPiece(), TrackPiece(), TrackPiece()) ###
@@ -69,10 +77,23 @@ class Game:
         else:
             self.start_timer = 0
 
-    def setup_cars(self, a): ###
+    def setup_cars(self, controls):
         self.cars = []
-        self.camera_follow_car = Car() ###
-        pass ###
+        for i in range(NUM_CARS):
+            z = -3 - i * GRID_CAR_SPACING
+            x = -400 if i % 2 == 0 else 400
+            if i == 0 and controls is not None:
+                self.player_car = PlayerCar(Vector3(x, 0, z), controls)
+                self.cars.append(self.player_car)
+            else:
+                target_speed = remap(i, 0, NUM_CARS - 1, CPU_CAR_MIN_TARGET_SPEED, CPU_CAR_MAX_TARGET_SPEED)
+                accel = remap(i, 0, NUM_CARS - 1, 1.5, 2)
+                self.cars.append(CPUCar(Vector3(x,0,z), speed=target_speed, accel=accel))
+
+        if self.player_car is not None:
+            self.camera_follow_car = self.player_car
+        else:
+            self.camera_follow_car = self.cars[0]
 
     def update(self, delta_time):
         self.timer += delta_time
