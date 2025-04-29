@@ -1,6 +1,7 @@
 import math
 import platform
 from enum import Enum
+from random import choice, uniform
 import pygame
 from pygame.math import Vector2, Vector3
 from engine import *
@@ -29,22 +30,25 @@ SECTION_SHORT = 1 ###
 SECTION_LONG = 1 ###
 SECTION_VERY_SHORT = 1 ###
 BILLBOARD_X = 1 ###
+PLAYER_ACCELERATION_MAX = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
+def remap(a, b, c, d, e): ###
+    return 1 ###
 def inverse_lerp(a, b, c): ###
     return 1 ###
-def remap(a, b, c, d, e): ###
-    pass ###
 def draw_text(a, b, c, d): ###
     pass ###
-
 class KeyboardControls:
     def update(self):
         pass ###
     def button_pressed(self, a):  ###
+        pass ###
+class Billboard:
+    def __init__(self, a, b): ###
         pass ###
 class TrackPiece:
     def __init__(self, scenery=None, offset_x=0, offset_y=0): ###
@@ -58,11 +62,17 @@ class TrackPieceStartLine(TrackPiece): ###
 class Car:
     def __init__(self, a, speed=1, accel=1): ###
         self.pos = Vector3(0,0,0) ###
+
 class CPUCar(Car):
+    def __init__(self, pos, accel, speed):
+        super().__init__(pos, choice(('b','c','d','e')))
+        self.accel = PLAYER_ACCELERATION_MAX * accel
+        self.target_speed = speed
+        self.target_x = pos.x
+        self.steering = 0
+        self.change_speed_timer = uniform(2,4)
+
     def update(self, a): ###
-        pass ###
-class Billboard:
-    def __init__(self, a, b): ###
         pass ###
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
