@@ -23,6 +23,11 @@ NUM_CARS = 2 ###
 GRID_CAR_SPACING = 10 ###
 CPU_CAR_MIN_TARGET_SPEED = 1 ###
 CPU_CAR_MAX_TARGET_SPEED = 1 ###
+NUM_LAPS = 1 ###
+SECTION_MEDIUM = 1 ###
+SECTION_SHORT = 1 ###
+SECTION_LONG = 1 ###
+SECTION_VERY_SHORT = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -41,21 +46,41 @@ class KeyboardControls:
     def button_pressed(self, a):  ###
         pass ###
 class TrackPiece:
-    def __init__(self): ###
+    def __init__(self, scenery=None, offset_x=0, offset_y=0): ###
         self.width = 1 ###
         self.offset_x = 1 ###
         self.offset_y = 1 ###
         self.scenery = [] ###
         self.cars = [] ###
+class TrackPieceStartLine(TrackPiece): ###
+    pass ###
 class Car:
     def __init__(self, a, speed=1, accel=1): ###
         self.pos = Vector3(0,0,0) ###
 class CPUCar(Car):
     def update(self, a): ###
         pass ###
+def generate_scenery(a, images=None, b=0, c=0): ###
+    pass ###
 
 def make_track():
-    return (TrackPiece(), TrackPiece(), TrackPiece()) ###
+    track = []
+    for lap in range(NUM_LAPS + 1):
+        track.extend([TrackPiece(scenery=generate_scenery(i, images.billboard02)) 
+                      for i in range(15)])
+        track.append(TrackPieceStartLine())
+        track.extend([TrackPiece() for i in range(SECTION_MEDIUM)])
+        track.extend([TrackPiece(offset_x=-4, offset_y=0, scenery=generate_scenery(i))
+                      for i in range(SECTION_LONG)])
+        track.extend([TrackPiece(scenery=generate_scenery(i, images.billboard01))
+                      for i in range(SECTION_SHORT)])
+        track.extend([TrackPiece(offset_x=0, offset_y=-1, scenery=generate_scenery(i))
+                      for i in range(SECTION_VERY_SHORT)])
+        track.extend([TrackPiece(offset_x=0, offset_y=-2, scenery=generate_scenery(i))
+                      for i in range(SECTION_VERY_SHORT)])
+        ### more track definition on GitHub
+
+    return track
 
 class Game:
     def __init__(self, controls=None):
