@@ -79,7 +79,14 @@ class Car:
         self.tire_rotation += delta_time * self.speed * 0.75
 
     def update_current_track_piece(self):
-        pass ###
+        current_track_piece = self.track_piece
+        idx = game.get_track_piece_for_z(self.pos.z)
+        if idx is not None:
+            self.track_piece = game.track[idx]
+            if self.track_piece is not current_track_piece:
+                if current_track_piece is not None:
+                    current_track_piece.cars.remove(self)
+                self.track_piece.cars.append(self)
 
 class CPUCar(Car):
     def __init__(self, pos, accel, speed):
@@ -530,6 +537,9 @@ class Game:
                 if self.player_car.lap == NUM_LAPS and begin_time < self.player_car.lap_time < end_time:
                     y = HEIGHT * 0.4
                     draw_text("FINAL LAP!", WIDTH // 2, y, center=True)
+
+    def get_track_piece_for_z(self, z):
+        pass ###
 
     def get_first_track_piece_ahead(self, z):
         idx = -int(math.floor(z / SPACING))
