@@ -28,6 +28,7 @@ SECTION_MEDIUM = 1 ###
 SECTION_SHORT = 1 ###
 SECTION_LONG = 1 ###
 SECTION_VERY_SHORT = 1 ###
+BILLBOARD_X = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -60,8 +61,17 @@ class Car:
 class CPUCar(Car):
     def update(self, a): ###
         pass ###
-def generate_scenery(a, images=None, b=0, c=0): ###
-    pass ###
+class Billboard:
+    def __init__(self, a, b): ###
+        pass ###
+
+def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
+    if track_i % interval == 0:
+        return[Billboard(BILLBOARD_X, image), Billboard(-BILLBOARD_X, image)]
+    elif lamps and track_i % 30 == 0:
+        return[LampLeft(), LampRight()]
+    else:
+        return []
 
 def make_track():
     track = []
