@@ -40,6 +40,8 @@ def remap(a, b, c, d, e): ###
     return 1 ###
 def inverse_lerp(a, b, c): ###
     return 1 ###
+def move_towards(a, b, c): ###
+    return 1 ###
 def draw_text(a, b, c, d): ###
     pass ###
 class KeyboardControls:
@@ -57,11 +59,15 @@ class TrackPiece:
         self.offset_y = 1 ###
         self.scenery = [] ###
         self.cars = [] ###
+        self.cpu_max_target_speed = 1 ###
 class TrackPieceStartLine(TrackPiece): ###
     pass ###
 class Car:
     def __init__(self, a, speed=1, accel=1): ###
         self.pos = Vector3(0,0,0) ###
+        self.speed = 1 ###
+    def update(self, a): ###
+        pass ###
 
 class CPUCar(Car):
     def __init__(self, pos, accel, speed):
@@ -72,8 +78,42 @@ class CPUCar(Car):
         self.steering = 0
         self.change_speed_timer = uniform(2,4)
 
-    def update(self, a): ###
-        pass ###
+    def update(self, delta_time):
+        if game.race_complete:
+            self.target_speed = game.player_car.speed
+
+        self.speed = move_towards(self.speed, self.target_speed, self.accel * delta_time)
+        self.pos.x = move_towards(self.pos.x, self.target_x, 400 * delta_time)
+
+        super().update(delta_time)
+
+        track_piece_idx, _ = game.get_first_track_piece_ahead(self.pos.z)
+        if track_piece_idx is not None:
+            self.steering = game.track[track_piece_idx].offset_x
+
+        self.change_speed_timer -= delta_time
+        if self.change_speed_timer <= 0 and not game.race_complete:
+            self.target_speed += uniform(-4, 6)
+            self.target_speed = min(max(self.target_speed, CPU_CAR_MIN_TARGET_SPEED), CPU_CAR_MAX_TARGET_SPEED)
+
+            if track_piece_idx is not None:
+                target_speed_override = game.track[track_piece_idx].cpu_max_target_speed
+                if target_speed_override is not None and self.target_speed > target_speed_override:
+                    self.target_speed = uniform(target_speed_override-3, target_speed_override)
+
+            def is_target_x_too_close_to_nearby_cars():
+                for car in game.cars:
+                    if car is not self and abs(self.pos.z - car.pos.z) < 20 \
+                            and abs(self.target_x - car.pos.x) < 300:
+                                return True
+                return False
+
+            for attempt in range(0,20):
+                self.target_x = uniform(-1000,1000)
+                if not is_target_x_too_close_to_nearby_cars():
+                    break
+
+            self.change_speed_timer = uniform(2,4)
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
