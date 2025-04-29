@@ -62,10 +62,17 @@ class TrackPiece:
         self.cpu_max_target_speed = 1 ###
 class TrackPieceStartLine(TrackPiece): ###
     pass ###
+
 class Car:
-    def __init__(self, a, speed=1, accel=1): ###
-        self.pos = Vector3(0,0,0) ###
-        self.speed = 1 ###
+    def __init__(self, pos, car_letter):
+        self.pos = pos
+        self.image = f"car_{car_letter}_0_0"
+        self.speed = 0
+        self.grip = 1
+        self.car_letter = car_letter
+        self.track_piece = None
+        self.tire_rotation = 0
+
     def update(self, a): ###
         pass ###
 
