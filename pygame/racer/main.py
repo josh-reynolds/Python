@@ -52,19 +52,23 @@ class KeyboardControls:
         pass ###
     def button_pressed(self, a):  ###
         pass ###
-class Billboard:
+class StartGantry: ###
+    pass ###
+class Billboard: ###
     def __init__(self, a, b): ###
         pass ###
 class TrackPiece:
-    def __init__(self, scenery=None, offset_x=0, offset_y=0): ###
+    def __init__(self, scenery=None, offset_x=0, offset_y=0, col=(0,0,0)): ###
         self.width = 1 ###
         self.offset_x = 1 ###
         self.offset_y = 1 ###
         self.scenery = [] ###
         self.cars = [] ###
         self.cpu_max_target_speed = 1 ###
-class TrackPieceStartLine(TrackPiece): ###
-    pass ###
+
+class TrackPieceStartLine(TrackPiece):
+    def __init__(self):
+        super().__init__(scenery=[StartGantry()], col=(255,255,255))
 
 class Car:
     def __init__(self, pos, car_letter):
