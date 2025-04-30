@@ -32,6 +32,8 @@ SECTION_LONG = 1 ###
 SECTION_VERY_SHORT = 1 ###
 BILLBOARD_X = 1 ###
 PLAYER_ACCELERATION_MAX = 1 ###
+TRACK_COLOR = (0,0,0) ###
+TRACK_W = 1 ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -53,18 +55,23 @@ class KeyboardControls:
     def button_pressed(self, a):  ###
         pass ###
 class StartGantry: ###
-    pass ###
+    def __init__(self): ###
+        self.max_draw_distance = 1 ###
 class Billboard: ###
     def __init__(self, a, b): ###
-        pass ###
+        self.max_draw_distance = 1 ###
+
 class TrackPiece:
-    def __init__(self, scenery=None, offset_x=0, offset_y=0, col=(0,0,0)): ###
-        self.width = 1 ###
-        self.offset_x = 1 ###
-        self.offset_y = 1 ###
-        self.scenery = [] ###
-        self.cars = [] ###
-        self.cpu_max_target_speed = 1 ###
+    def __init__(self, scenery=(), offset_x=0, offset_y=0, 
+                 cpu_max_target_speed=None, col=TRACK_COLOR,
+                 width=TRACK_W):
+        self.scenery = scenery
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        self.cpu_max_target_speed = cpu_max_target_speed
+        self.col = col
+        self.width = width
+        self.cars = []
 
 class TrackPieceStartLine(TrackPiece):
     def __init__(self):
