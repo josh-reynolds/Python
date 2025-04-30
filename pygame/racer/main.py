@@ -54,9 +54,16 @@ class KeyboardControls:
         pass ###
     def button_pressed(self, a):  ###
         pass ###
+
 class Scenery:
-    def __init__(self, a, b, scale, collision_zones, min_draw_distance=1, max_draw_distance=1): ###
-        self.max_draw_distance = 1 ###
+    def __init__(self, x, image, min_draw_distance=0, max_draw_distance=VIEW_DISTANCE // 2,
+                 scale=1, collision_zones=()):
+        self.x = x
+        self.image = image
+        self.min_draw_distance = min_draw_distance
+        self.max_draw_distance = max_draw_distance
+        self.scale = scale
+        self.collision_zones = collision_zones
 
 class StartGantry(Scenery):
     def __init__(self):
