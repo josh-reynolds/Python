@@ -91,6 +91,17 @@ class Car:
                     current_track_piece.cars.remove(self)
                 self.track_piece.cars.append(self)
 
+    def update_sprite(self, angle, braking, boost=False):
+        if self.speed == 0:
+            frame = 0
+        elif braking:
+            frame = 3
+        elif boost:
+            frame = int(self.tire_rotation % 2) + 4
+        else:
+            frame = int(self.tire_rotation % 2) + 1
+        self.image = f"car_{self.car_letter}_{angle}_{frame}"
+
 class CPUCar(Car):
     def __init__(self, pos, accel, speed):
         super().__init__(pos, choice(('b','c','d','e')))
@@ -136,9 +147,6 @@ class CPUCar(Car):
                     break
 
             self.change_speed_timer = uniform(2,4)
-
-    def update_sprite(self, a, braking): ###
-        pass ###
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
