@@ -54,12 +54,18 @@ class KeyboardControls:
         pass ###
     def button_pressed(self, a):  ###
         pass ###
+class Scenery:
+    def __init__(self, a, b, scale, collision_zones): ###
+        self.max_draw_distance = 1 ###
 class StartGantry: ###
     def __init__(self): ###
         self.max_draw_distance = 1 ###
-class Billboard: ###
-    def __init__(self, a, b): ###
-        self.max_draw_distance = 1 ###
+
+class Billboard(Scenery):
+    def __init__(self, x, image):
+        half_width = image.get_width() / 2
+        scale = 2
+        super().__init__(x, image, scale=scale, collision_zones=((-half_width*scale,half_width*scale),))
 
 class TrackPiece:
     def __init__(self, scenery=(), offset_x=0, offset_y=0, 
