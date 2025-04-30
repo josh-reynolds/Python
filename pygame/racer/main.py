@@ -12,6 +12,7 @@ TITLE = "Racer"
 
 FIXED_TIMESTEP = 1 ###
 CLIPPING_PLANE = -1 ###
+CLIPPING_PLANE_CARS = -1 ###
 SPACING = 1 ###
 VIEW_DISTANCE = 1 ###
 HALF_STRIPE_W = 1 ###
@@ -37,6 +38,8 @@ SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
 def remap(a, b, c, d, e): ###
+    return 1 ###
+def remap_clamp(a, b, c, d, e): ###
     return 1 ###
 def inverse_lerp(a, b, c): ###
     return 1 ###
@@ -133,6 +136,9 @@ class CPUCar(Car):
                     break
 
             self.change_speed_timer = uniform(2,4)
+
+    def update_sprite(self, a, braking): ###
+        pass ###
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
@@ -539,7 +545,11 @@ class Game:
                     draw_text("FINAL LAP!", WIDTH // 2, y, center=True)
 
     def get_track_piece_for_z(self, z):
-        pass ###
+        idx = -int(z / SPACING)
+        if idx >= len(self.track):
+            return None
+        else:
+            return idx
 
     def get_first_track_piece_ahead(self, z):
         idx = -int(math.floor(z / SPACING))
