@@ -55,11 +55,13 @@ class KeyboardControls:
     def button_pressed(self, a):  ###
         pass ###
 class Scenery:
-    def __init__(self, a, b, scale, collision_zones): ###
+    def __init__(self, a, b, scale, collision_zones, min_draw_distance=1, max_draw_distance=1): ###
         self.max_draw_distance = 1 ###
-class StartGantry: ###
-    def __init__(self): ###
-        self.max_draw_distance = 1 ###
+
+class StartGantry(Scenery):
+    def __init__(self):
+        super().__init__(0, images.start0, min_draw_distance=1, max_draw_distance=VIEW_DISTANCE,
+                         scale=4, collision_zones=((-3000,-2400),(2400,3000)))
 
 class Billboard(Scenery):
     def __init__(self, x, image):
