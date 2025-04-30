@@ -49,11 +49,28 @@ def move_towards(a, b, c): ###
     return 1 ###
 def draw_text(a, b, c, d): ###
     pass ###
+
 class KeyboardControls:
+    NUM_BUTTONS = 2
+
+    def __init__(self):
+        self.previously_down = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+        self.is_pressed = [False for i in range(KeyboardControls.NUM_BUTTONS)]
+
     def update(self):
-        pass ###
-    def button_pressed(self, a):  ###
-        pass ###
+        for button in range(KeyboardControls.NUM_BUTTONS):
+            button_down = self.button_down(button)
+            self.is_pressed[button] = button_down and not self.previously_down[button]
+            self.previously_down[button] = button_down
+
+    def button_down(self, button):
+        if button == 0:
+            return keyboard.lctrl or keyboard.z
+        elif button == 1:
+            return keyboard.lshift or keyboard.x
+
+    def button_pressed(self, button):
+        return self.is_pressed[button]
 
 class Scenery:
     def __init__(self, x, image, min_draw_distance=0, max_draw_distance=VIEW_DISTANCE // 2,
@@ -173,6 +190,9 @@ class CPUCar(Car):
                     break
 
             self.change_speed_timer = uniform(2,4)
+
+class PlayerCar(Car):
+    pass ###
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
@@ -593,11 +613,16 @@ class Game:
         else:
             return idx, first_piece_z
 
+    def play_sound(self, a): ###
+        pass ###
+
 def update_controls():
     keyboard_controls.update()
 
 class State(Enum):
     TITLE = 1
+    PLAY = 2
+    GAME_OVER = 3
 
 ### REMINDER: still need to implement delta time calculation in the engine
 def update(delta_time):
@@ -658,6 +683,9 @@ def draw():
         logo_img = images.logo
         screen.blit(logo_img, (WIDTH//2 - logo_img.get_width() // 2,
                                HEIGHT//3 - logo_img.get_height() // 2))
+
+def play_music(name):
+    pass ###
 
 keyboard_controls = KeyboardControls()
 state = State.TITLE
