@@ -194,14 +194,46 @@ class CPUCar(Car):
             self.change_speed_timer = uniform(2,4)
 
 class PlayerCar(Car):
-    def __init__(self, a, b): ###
-        super().__init__(Vector3(0,0,0), 'a') ###
-        self.lap_time = 0 ###
-        self.lap = 0 ###
-        self.last_lap_was_fastest = False ###
+    def __init__(self, pos, controls):
+        super().__init__(pos, 'a')
+        self.pos = pos
+        self.controls = controls
+        self.offset_x_change = 0
+        self.resetting = False
+        self.explode_timer = None
+        self.last_checkpoint_idx = None
+        self.lap = 1
+        self.lap_time = 0
+        self.race_time = 0
+        self.fastest_lap = None
+        self.last_lap_was_fastest = False
+        self.braking = False
+
+        try:
+            self.engine_sounds = [getattr(sounds, "engine_short" + str(i))
+                                  for i in range(40)]
+            self.skid_sound = sounds.skid_loop0
+        #except Exception:   ###
+        except Exception as e:
+            self.engine_sounds = []
+            self.skid_sound = None
+            print(e) ###
+
+        self.current_engine_sound = None
+        self.current_engine_sound_idx = -1
+        self.update_engine_sound()
+
+        self.skid_sound_playing = False
+        self.grass_sound_repeat_timer = 0
+        self.on_grass = False
+
+        self.prev_position = NUM_CARS - 1
         
-    def set_offset_x_change(self, a): ###
+    def update_engine_sound(self):
         pass ###
+
+    def set_offset_x_change(self, value):
+        self.offset_x_change = value
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
