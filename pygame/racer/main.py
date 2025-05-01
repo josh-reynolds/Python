@@ -1,7 +1,7 @@
 import math
 import platform
 from enum import Enum
-from random import choice, uniform
+from random import choice, uniform, randint
 import pygame
 from pygame.math import Vector2, Vector3
 from engine import *
@@ -47,7 +47,9 @@ def inverse_lerp(a, b, c): ###
     return 1 ###
 def move_towards(a, b, c): ###
     return 1 ###
-def draw_text(a, b, c, d): ###
+def draw_text(a, b, c, font): ###
+    pass ###
+def format_time(a): ###
     pass ###
 
 class KeyboardControls:
@@ -192,7 +194,14 @@ class CPUCar(Car):
             self.change_speed_timer = uniform(2,4)
 
 class PlayerCar(Car):
-    pass ###
+    def __init__(self, a, b): ###
+        super().__init__(Vector3(0,0,0), 'a') ###
+        self.lap_time = 0 ###
+        self.lap = 0 ###
+        self.last_lap_was_fastest = False ###
+        
+    def set_offset_x_change(self, a): ###
+        pass ###
 
 def generate_scenery(track_i, image=images.billboard00, interval=40, lamps=True):
     if track_i % interval == 0:
@@ -613,8 +622,12 @@ class Game:
         else:
             return idx, first_piece_z
 
-    def play_sound(self, a): ###
-        pass ###
+    def play_sound(self, name, count=1):
+        try:
+            sound = getattr(sounds, name + str(randint(0, count - 1)))
+            sound.play()
+        except Exception as e:
+            print(e)
 
 def update_controls():
     keyboard_controls.update()
@@ -685,7 +698,12 @@ def draw():
                                HEIGHT//3 - logo_img.get_height() // 2))
 
 def play_music(name):
-    pass ###
+    try:
+        music.play(name)
+    except Exception as e: ###
+        print(e) ###
+    #except Exception:
+        #pass
 
 keyboard_controls = KeyboardControls()
 state = State.TITLE
