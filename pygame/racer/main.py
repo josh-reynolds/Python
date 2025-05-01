@@ -230,7 +230,20 @@ class PlayerCar(Car):
         self.prev_position = NUM_CARS - 1
         
     def update_engine_sound(self):
-        pass ###
+        sound_index = min(int(self.speed * 0.6), len(self.engine_sounds) - 1)
+        if sound_index != self.current_engine_sound_idx:
+            self.current_engine_sound_idx = sound_index
+            old_sound = self.current_engine_sound
+            self.current_engine_sound = self.engine_sounds[sound_index]
+            self.current_engine_sound.set_volume(0.3)
+            try:
+                if old_sound is not None:
+                    old_sound.fadeout(150)
+                self.current_engine_sound.play(loops=-1, fade_ms=100)
+            #except: ###
+                #pass ###
+            except Exception as e: ###
+                print(e) ###
 
     def set_offset_x_change(self, value):
         self.offset_x_change = value
