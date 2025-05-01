@@ -34,6 +34,7 @@ BILLBOARD_X = 1 ###
 PLAYER_ACCELERATION_MAX = 1 ###
 TRACK_COLOR = (0,0,0) ###
 TRACK_W = 1 ###
+TEXT_GAP_X = {"font":1, "status1b_":1} ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
 
@@ -47,10 +48,21 @@ def inverse_lerp(a, b, c): ###
     return 1 ###
 def move_towards(a, b, c): ###
     return 1 ###
-def draw_text(a, b, c, font): ###
-    pass ###
 def format_time(a): ###
     pass ###
+def get_char_image_and_width(a,b): ###
+    return (None,1) ###
+def text_width(a,b): ###
+    return 1 ###
+
+def draw_text(text, x, y, center=False, font="font"):
+    if center:
+        x -= text_width(text, font) // 2
+    for char in text:
+        image, width = get_char_image_and_width(char, font)
+        if image is not None:
+            screen.blit(image, (x,y))
+        x += width + TEXT_GAP_X[font]
 
 class KeyboardControls:
     NUM_BUTTONS = 2
@@ -214,7 +226,7 @@ class PlayerCar(Car):
                                   for i in range(40)]
             self.skid_sound = sounds.skid_loop0
         #except Exception:   ###
-        except Exception as e:
+        except Exception as e: ###
             self.engine_sounds = []
             self.skid_sound = None
             print(e) ###
