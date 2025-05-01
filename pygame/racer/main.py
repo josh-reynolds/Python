@@ -34,9 +34,9 @@ BILLBOARD_X = 1 ###
 PLAYER_ACCELERATION_MAX = 1 ###
 TRACK_COLOR = (0,0,0) ###
 TRACK_W = 1 ###
-TEXT_GAP_X = {"font":1, "status1b_":1} ###
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
+SPECIAL_FONT_SYMBOLS_INVERSE = {'%':'xb_a'} ###
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
@@ -50,10 +50,21 @@ def move_towards(a, b, c): ###
     return 1 ###
 def format_time(a): ###
     pass ###
-def get_char_image_and_width(a,b): ###
-    return (None,1) ###
-def text_width(a,b): ###
-    return 1 ###
+
+def get_char_image_and_width(char, font):
+    if char == " ":
+        return None, 30
+    else:
+        if char in SPECIAL_FONT_SYMBOLS_INVERSE:
+            image = getattr(images, SPECIAL_FONT_SYMBOLS_INVERSE[char])
+        else:
+            image = getattr(images, font + "0" + str(ord(char)))
+        return image, image.get_width()
+
+TEXT_GAP_X = {"font":-6, "status1b_":0, "status2_":0}
+
+def text_width(text, font):
+    return sum([get_char_image_and_width(c,font)[1] for c in text]) + TEXT_GAP_X[font] * (len(text)-1)
 
 def draw_text(text, x, y, center=False, font="font"):
     if center:
