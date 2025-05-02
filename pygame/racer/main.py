@@ -10,33 +10,47 @@ WIDTH = 400
 HEIGHT = 400
 TITLE = "Racer"
 
-FIXED_TIMESTEP = 1 ###
-CLIPPING_PLANE = -1 ###
-CLIPPING_PLANE_CARS = -1 ###
-SPACING = 1 ###
-VIEW_DISTANCE = 1 ###
-HALF_STRIPE_W = 1 ###
-HALF_RUMBLE_STRIP_W = 1 ###
-HALF_YELLOW_LINE_W = 1 ###
-YELLOW_LINE_EDGE_DISTANCE = 1
-SHOW_SCENERY = True  ###
-CAMERA_FOLLOW_DISTANCE = 1 ###
-NUM_CARS = 2 ###
-GRID_CAR_SPACING = 10 ###
-CPU_CAR_MIN_TARGET_SPEED = 1 ###
-CPU_CAR_MAX_TARGET_SPEED = 1 ###
-NUM_LAPS = 1 ###
-SECTION_MEDIUM = 1 ###
-SECTION_SHORT = 1 ###
-SECTION_LONG = 1 ###
-SECTION_VERY_SHORT = 1 ###
-BILLBOARD_X = 1 ###
-PLAYER_ACCELERATION_MAX = 1 ###
-TRACK_COLOR = (0,0,0) ###
-TRACK_W = 1 ###
+VIEW_DISTANCE = 200
+SHOW_SCENERY = True
+
+CLIPPING_PLANE = -0.25
+CLIPPING_PLANE_CARS = -0.08
+
+SPACING = 1
+
+TRACK_W = 3000
+HALF_STRIPE_W = 25
+HALF_RUMBLE_STRIP_W = 250
+HALF_YELLOW_LINE_W = 80
+YELLOW_LINE_EDGE_DISTANCE = 150
+
+TRACK_COLOR = (35, 96, 198)
+
+SECTION_VERY_SHORT = 25
+SECTION_SHORT = 50
+SECTION_MEDIUM = 100
+SECTION_LONG = 200
+
+BILLBOARD_X = TRACK_W//2 + 600
+
+PLAYER_ACCELERATION_MAX = 20
+
+CPU_CAR_MIN_TARGET_SPEED = 40
+CPU_CAR_MAX_TARGET_SPEED = 65
+
+NUM_LAPS = 5
+NUM_CARS = 20
+GRID_CAR_SPACING = 0.55
+
+HALF_WIDTH = WIDTH // 2
+HALF_HEIGHT = HEIGHT // 2
+
+CAMERA_FOLLOW_DISTANCE = 2
+
+FIXED_TIMESTEP = 1/60
 
 SPECIAL_FONT_SYMBOLS = {'xb_a':'%'}
-SPECIAL_FONT_SYMBOLS_INVERSE = {'%':'xb_a'} ###
+SPECIAL_FONT_SYMBOLS_INVERSE = dict((v,k) for k,v in SPECIAL_FONT_SYMBOLS.items())
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
@@ -129,6 +143,13 @@ class Billboard(Scenery):
         half_width = image.get_width() / 2
         scale = 2
         super().__init__(x, image, scale=scale, collision_zones=((-half_width*scale,half_width*scale),))
+
+class LampLeft(Scenery):
+    def __init__(self):
+        super().__init__(1,"left_light") ###
+class LampRight(Scenery):
+    def __init__(self):
+        super().__init__(1,"right_light") ###
 
 class TrackPiece:
     def __init__(self, scenery=(), offset_x=0, offset_y=0, 
