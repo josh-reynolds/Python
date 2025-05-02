@@ -40,12 +40,19 @@ SPECIAL_FONT_SYMBOLS_INVERSE = {'%':'xb_a'} ###
 
 fade_to_black_image = pygame.Surface((WIDTH,HEIGHT))
 
-def remap(a, b, c, d, e): ###
-    return 1 ###
-def remap_clamp(a, b, c, d, e): ###
-    return 1 ###
-def inverse_lerp(a, b, c): ###
-    return 1 ###
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min) * (old_val - old_min) / (old_max - old_min) + new_min
+
+def remap_clamp(old_val, old_min, old_max, new_min, new_max):
+    lower_limit = min(new_min, new_max)
+    upper_limit = max(new_min, new_max)
+    return min(upper_limit, max(lower_limit, remap(old_val, old_min, old_max, new_min, new_max)))
+
+def inverse_lerp(a, b, value):
+    if a != b:
+        return min(1, max(0, ((value - a) / (b - a))))
+    else:
+        return 0
 
 def move_towards(n, target, speed):
     if n < target:
