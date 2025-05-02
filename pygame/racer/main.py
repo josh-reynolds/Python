@@ -31,6 +31,7 @@ SECTION_SHORT = 50
 SECTION_MEDIUM = 100
 SECTION_LONG = 200
 
+LAMP_X = TRACK_W//2 + 300
 BILLBOARD_X = TRACK_W//2 + 600
 
 PLAYER_ACCELERATION_MAX = 20
@@ -146,10 +147,11 @@ class Billboard(Scenery):
 
 class LampLeft(Scenery):
     def __init__(self):
-        super().__init__(1,"left_light") ###
+        super().__init__(LAMP_X, images.left_light, scale=2, collision_zones=((350,1200),))
+
 class LampRight(Scenery):
     def __init__(self):
-        super().__init__(1,"right_light") ###
+        super().__init__(-LAMP_X, images.right_light, scale=2, collision_zones=((-1200,-350),))
 
 class TrackPiece:
     def __init__(self, scenery=(), offset_x=0, offset_y=0, 

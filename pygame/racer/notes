@@ -1,0 +1,12 @@
+Fifth and final project from 'Code the Classics Vol. 2' - a Pole Position clone named 'Leading Edge.' Mine will be called
+'Racer.'
+
+First pass through the book is complete, all stubs filled in and mostly sufficient placeholders for the 
+thing to run. This one is the most complex yet. They are drawing the track with "2.5D" graphics rather
+than just placing sprites and background images, so the update and draw code is much longer. Nothing 
+too complex, but lots of code to type out. It also has some physics simulation, and frame rate handling,
+so I will need to add the optional delta time handling to the engine.
+
+Next step is filling in stubs from the book, then passing through one by one. There's a ton of graphics,
+too, and making placeholders is getting tedious, so may drop those in. (I'm also getting exceptions from
+the sound and music code since those files are missing too...)
