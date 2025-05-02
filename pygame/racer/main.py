@@ -10,11 +10,28 @@ WIDTH = 400
 HEIGHT = 400
 TITLE = "Racer"
 
-VIEW_DISTANCE = 200
-SHOW_SCENERY = True
+PERFORMANCE_MODE = False
+
+if not PERFORMANCE_MODE:
+    SHOW_SCENERY = True
+    SHOW_TRACKSIDE = True
+    SHOW_RUMBLE_STRIPS = True
+    SHOW_YELLOW_LINES = True
+    OUTLINE_W = 0
+    VIEW_DISTANCE = 200
+else:
+    SHOW_SCENERY = False
+    SHOW_TRACKSIDE = False
+    SHOW_RUMBLE_STRIPS = False
+    SHOW_YELLOW_LINES = False
+    OUTLINE_W = 1
+    VIEW_DISTANCE = 150
 
 CLIPPING_PLANE = -0.25
 CLIPPING_PLANE_CARS = -0.08
+SCALE_FUNC = pygame.transform.scale
+MAX_SCENERY_SCALED_WIDTH = WIDTH * 2
+MAX_CAR_SCALED_WIDTH = WIDTH * 1
 
 SPACING = 1
 
@@ -25,6 +42,12 @@ HALF_YELLOW_LINE_W = 80
 YELLOW_LINE_EDGE_DISTANCE = 150
 
 TRACK_COLOR = (35, 96, 198)
+STRIPE_COLOR = (70, 192, 198)
+TRACKSIDE_COLOR_1 = (0, 77, 180)
+TRACKSIDE_COLOR_2 = (50, 77, 170)
+YELLOW_LINE_COL = (0, 161, 88)
+RUMBLE_COL_1 = (0, 116, 255)
+RUMBLE_COL_2 = (0, 58, 135)
 
 SECTION_VERY_SHORT = 25
 SECTION_SHORT = 50
@@ -34,7 +57,15 @@ SECTION_LONG = 200
 LAMP_X = TRACK_W//2 + 300
 BILLBOARD_X = TRACK_W//2 + 600
 
+LOSE_GRIP_SPEED = 50
+ZERO_GRIP_SPEED = 100
+
 PLAYER_ACCELERATION_MAX = 20
+PLAYER_ACCELERATION_MIN = 10
+HIGH_ACCEL_THRESHOLD = 30
+
+CORNER_OFFSET_MULTIPLIER = 5.8
+STEERING_STRENGTH = 72
 
 CPU_CAR_MIN_TARGET_SPEED = 40
 CPU_CAR_MAX_TARGET_SPEED = 65
@@ -45,6 +76,8 @@ GRID_CAR_SPACING = 0.55
 
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
+
+SKID_SOUND_START_GRIP = 0.8
 
 CAMERA_FOLLOW_DISTANCE = 2
 
@@ -68,6 +101,9 @@ def inverse_lerp(a, b, value):
         return min(1, max(0, ((value - a) / (b - a))))
     else:
         return 0
+
+def sign(x):
+    pass ###
 
 def move_towards(n, target, speed):
     if n < target:
@@ -115,6 +151,9 @@ class KeyboardControls:
             self.is_pressed[button] = button_down and not self.previously_down[button]
             self.previously_down[button] = button_down
 
+    def get_x(self):
+        pass ###
+
     def button_down(self, button):
         if button == 0:
             return keyboard.lctrl or keyboard.z
@@ -134,10 +173,16 @@ class Scenery:
         self.scale = scale
         self.collision_zones = collision_zones
 
+    def get_image(self):
+        pass ###
+
 class StartGantry(Scenery):
     def __init__(self):
         super().__init__(0, images.start0, min_draw_distance=1, max_draw_distance=VIEW_DISTANCE,
                          scale=4, collision_zones=((-3000,-2400),(2400,3000)))
+
+    def get_image(self):
+        pass ###
 
 class Billboard(Scenery):
     def __init__(self, x, image):
@@ -286,6 +331,11 @@ class PlayerCar(Car):
         self.on_grass = False
 
         self.prev_position = NUM_CARS - 1
+
+    def stop_engne_sound(self):
+        pass ###
+    def update(self, delta_time):
+        pass ###
         
     def update_engine_sound(self):
         sound_index = min(int(self.speed * 0.6), len(self.engine_sounds) - 1)
@@ -302,6 +352,9 @@ class PlayerCar(Car):
                 #pass ###
             except Exception as e: ###
                 print(e) ###
+
+    def get_x_input(self):
+        pass ###
 
     def set_offset_x_change(self, value):
         self.offset_x_change = value
@@ -807,6 +860,16 @@ def play_music(name):
         print(e) ###
     #except Exception:
         #pass
+
+def stop_music():
+    pass ###
+
+try:
+    pygame.mixer.quit()
+    pygame.mixer.init(44100, -16, 2, 1024)
+    play_music("title_theme")
+except Exception:
+    pass
 
 keyboard_controls = KeyboardControls()
 state = State.TITLE
