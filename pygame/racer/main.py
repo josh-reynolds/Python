@@ -48,8 +48,9 @@ def inverse_lerp(a, b, c): ###
     return 1 ###
 def move_towards(a, b, c): ###
     return 1 ###
-def format_time(a): ###
-    pass ###
+
+def format_time(seconds):
+    return f"{int(seconds // 60)}:{seconds % 60:06.3f}"
 
 def get_char_image_and_width(char, font):
     if char == " ":
