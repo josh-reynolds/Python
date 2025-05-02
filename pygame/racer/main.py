@@ -46,8 +46,12 @@ def remap_clamp(a, b, c, d, e): ###
     return 1 ###
 def inverse_lerp(a, b, c): ###
     return 1 ###
-def move_towards(a, b, c): ###
-    return 1 ###
+
+def move_towards(n, target, speed):
+    if n < target:
+        return min(n + speed, target)
+    else:
+        return max(n - speed, target)
 
 def format_time(seconds):
     return f"{int(seconds // 60)}:{seconds % 60:06.3f}"
