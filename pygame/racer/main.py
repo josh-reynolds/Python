@@ -174,7 +174,7 @@ class Scenery:
         self.collision_zones = collision_zones
 
     def get_image(self):
-        pass ###
+        return self.image
 
 class StartGantry(Scenery):
     def __init__(self):
@@ -182,7 +182,13 @@ class StartGantry(Scenery):
                          scale=4, collision_zones=((-3000,-2400),(2400,3000)))
 
     def get_image(self):
-        pass ###
+        if game.start_timer > 0:
+            index = int(remap(game.start_timer, 4, 0, 0, 4))
+        else:
+            index = 4 if int(game.timer * 2) % 2 == 0 else 5
+        image = "start" + str(index)
+        self.image = getattr(images, image)
+        return self.image
 
 class Billboard(Scenery):
     def __init__(self, x, image):
@@ -333,7 +339,14 @@ class PlayerCar(Car):
         self.prev_position = NUM_CARS - 1
 
     def stop_engine_sound(self):
-        pass ###
+        if self.current_engine_sound is not None:
+            try:
+                self.current_engine_sound.stop()
+            #except Exception:   ###
+                #pass ###
+            except Exception as e: ###
+                print(e) ###
+
     def update(self, delta_time):
         pass ###
         
