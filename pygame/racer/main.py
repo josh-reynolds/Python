@@ -507,11 +507,16 @@ class PlayerCar(Car):
                 self.skid_sound_playing = False
                 self.skid_sound.fadeout(250)
 
-
-
-
-
-        pass ###
+        if self.explode_timer is not None:
+            self.image = f"explode{self.explode_timer//2:02}"
+        else:
+            direction = 0
+            if x_move < 0:
+                direction = -1
+            elif x_move > 0:
+                direction = 1
+            boost = accel > 0 and self.speed < HIGH_ACCEL_THRESHOLD and self.speed > 0
+            self.update_sprite(direction, self.braking, boost)
         
     def update_engine_sound(self):
         sound_index = min(int(self.speed * 0.6), len(self.engine_sounds) - 1)
