@@ -6,8 +6,8 @@ import pygame
 from pygame.math import Vector2, Vector3
 from engine import *
 
-WIDTH = 400
-HEIGHT = 400
+WIDTH = 960
+HEIGHT = 540
 TITLE = "Racer"
 
 PERFORMANCE_MODE = False
@@ -356,6 +356,63 @@ class PlayerCar(Car):
                 print(e) ###
 
     def update(self, delta_time):
+        if not game.race_complete:
+            self.lap_time += delta_time
+            self.race_time += delta_time
+
+        self.grass_sound_repeat_timer -= delta_time
+        self.update_engine_sound()
+
+        current_position = game.cars.index(self)
+
+        if current_position != self.prev_position:
+            if abs(self.speed - game.cars[self.prev_position].speed) > 4:
+                game.play_sound("overtake", 6)
+            self.prev_position = current_position
+
+        if self.resetting:
+            if self.explode_timer is not None:
+                self.explode_timer += 1
+                if self.explode_timer > 31:
+                    self.explode_timer = None
+            else:
+                self.pos.x = move_towards(self.pos.x, 0, 2000 + delta_time)
+                self.resetting = self.pos.x != 0
+
+        x_move = accel = 0
+        x_input = self.get_x_input()
+
+        if not self.resetting:
+            self.braking = False
+
+            if not game.race_complete:
+                self.controls.update()
+                if self.controls.button_down(0):
+                    accel = PLAYER_ACCELERATION_MAX if self.speed < HIGH_ACCEL_THRESHOLD \
+                            else PLAYER_ACCELERATION_MIN
+                    self.speed += accel * delta_time
+                elif self.controls.button_down(1):
+                    self.braking = True
+                    self.speed = max(0, self.speed - delta_time * 10)
+
+            drag_factor = 0.9975
+            if self.on_grass:
+                drag_factor -= 0.0025
+
+            self.speed += drag_factor ** (delta_time / (1/60))
+
+            if self.offset_x_change != 0:
+                if self.speed > LOSE_GRIP_SPEED and sign(x_input == -sign(self.offset_x_change)):
+                    self.grip = remap_clamp(self.speed, LOSE_GRIP_SPEED, ZERO_GRIP_SPEED, 1, 0)
+                else:
+                    self.grip = 1
+                if not game.race_complete:
+                    self.pos.x -= self.offset_x_change * CORNER_OFFSET_MULTIPLIER
+            else:
+                self.grip = 1
+
+
+
         pass ###
         
     def update_engine_sound(self):
@@ -689,7 +746,7 @@ class Game:
                         if self.camera.z - current_piece_z > obj.min_draw_distance:
                             billboard = obj.get_image()
                             w, h = billboard.get_width(), billboard.get_height()
-                            pos, scaled_w, scaled_h = transform(pos_v3, w * obj_scale, h * obj_scale)
+                            pos, scaled_w, scaled_h = transform(pos_v3, w * obj.scale, h * obj.scale)
                             if pos is not None and scaled_w < MAX_SCENERY_SCALED_WIDTH:
                                 pos -= Vector2(scaled_w // 2, scaled_h)
                                 try:
