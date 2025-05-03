@@ -10,3 +10,8 @@ so I will need to add the optional delta time handling to the engine.
 Next step is filling in stubs from the book, then passing through one by one. There's a ton of graphics,
 too, and making placeholders is getting tedious, so may drop those in. (I'm also getting exceptions from
 the sound and music code since those files are missing too...)
+
+----
+Book scrub is complete. And I'm adding the resource files now. All that remains is scrubbing against
+GitHub and playtest/debugging. And on the latter, we still need to implement delta time calculation
+in the engine - the dummy value I am using now has the game running extremely fast.
