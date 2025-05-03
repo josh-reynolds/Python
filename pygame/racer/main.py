@@ -103,7 +103,10 @@ def inverse_lerp(a, b, value):
         return 0
 
 def sign(x):
-    pass ###
+    if x == 0:
+        return 0
+    else:
+        return -1 if x < 0 else 1
 
 def move_towards(n, target, speed):
     if n < target:
@@ -152,7 +155,12 @@ class KeyboardControls:
             self.previously_down[button] = button_down
 
     def get_x(self):
-        pass ###
+        if keyboard.left:
+            return -1
+        elif keyboard.right:
+            return 1
+        else:
+            return 0
 
     def button_down(self, button):
         if button == 0:
