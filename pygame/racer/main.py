@@ -332,7 +332,7 @@ class PlayerCar(Car):
 
         self.prev_position = NUM_CARS - 1
 
-    def stop_engne_sound(self):
+    def stop_engine_sound(self):
         pass ###
     def update(self, delta_time):
         pass ###
@@ -354,7 +354,7 @@ class PlayerCar(Car):
                 print(e) ###
 
     def get_x_input(self):
-        pass ###
+        return self.controls.get_x()
 
     def set_offset_x_change(self, value):
         self.offset_x_change = value
@@ -862,7 +862,12 @@ def play_music(name):
         #pass
 
 def stop_music():
-    pass ###
+    try:
+        music.stop()
+    except Exception as e: ###
+        print(e) ###
+    #except Exception:
+        #pass
 
 try:
     pygame.mixer.quit()
