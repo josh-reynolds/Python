@@ -411,6 +411,55 @@ class PlayerCar(Car):
             else:
                 self.grip = 1
 
+            previous_track_piece_idx, _ = game.get_first_track_piece_ahead(self.pos.z)
+
+            if self.speed > 0 and not game.race_complete:
+                x_move = x_input * self.speed * STEERING_STRENGTH * self.grip * delta_time
+                self.pos.x -= x_move
+
+            super().update(delta_time)
+            
+            for car in game.cars:
+                if car is not self:
+                    vec = self.pos - car.pos
+                    COLLIDE_FRONT_DISTANCE_Z = 0.6
+                    COLLIDE_BACK_DISTANCE_Z = 1.2
+                    if abs(vec.x) < 260 and vec.z < COLLIDE_FRONT_DISTANCE_Z \
+                            and vec.z > -COLLIDE_BACK_DISTANCE_Z:
+                                midpoint = (self.pos.z - car.pos.z) / 2 + car.pos.z
+                                if abs(vec.z) < 0.2:
+                                    self.pos.x += sign(vec.x) * 50
+                                    car.pos.x -= sign(vec.x) * 50
+                                elif vec.z > 0:
+                                    self.speed = max(car.speed - 3, 0)
+                                    car.speed = max(car.speed, self.speed + 3)
+                                    car.target_speed = car.speed
+                                    self.pos.z = midpoint + COLLIDE_FRONT_DISTANCE_Z * 0.6
+                                    car.pos.z = midpoint - COLLIDE_FRONT_DISTANCE_Z * 0.6
+                                    game.play_sound("bump", 6)
+                                else:
+                                    self.speed = max(self.speed, car.speed + 3)
+                                    car.speed = max(self.speed - 3, 0)
+                                    self.pos.z = midpoint - COLLIDE_BACK_DISTANCE_Z * 0.6
+                                    car.pos.z = midpoint + COLLIDE_BACK_DISTANCE_Z * 0.6
+                                    game.play_sound("bump_behind")
+
+            track_piece_idx, _ = game.get_first_track_piece_ahead(self.pos.z)
+            if track_piece_idx is not None:
+                track_piece = game.track[track_piece_idx]
+
+                for scenery in track_piece.scenery:
+                    for collision_zone in scenery.collision_zones:
+                        zone_left = scenery.x + collision_zone[0]
+                        zone_right = scenery.x + collision_zone[1]
+                        if zone_left < self.pos.x < zone_right:
+                            self.speed = 0
+                            self.resetting = True
+                            self.explode_timer = 0
+                            game.play_sound("explosion")
+
+
+
 
 
         pass ###
