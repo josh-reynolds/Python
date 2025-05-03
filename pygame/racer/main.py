@@ -458,6 +458,55 @@ class PlayerCar(Car):
                             self.explode_timer = 0
                             game.play_sound("explosion")
 
+                for i in range(previous_track_piece_idx, track_piece_idx+1):
+                    if isinstance(game.track[i], TrackPieceStartLine):
+                        if self.last_checkpoint_idx is not None and self.last_checkpoint_idx != i:
+                            self.lap += 1
+
+                            if self.fastest_lap is None or self.lap_time < self.fastest_lap:
+                                self.fastest_lap = self.lap_time
+                                self.last_lap_was_fastest = True
+                                game.play_sound("fastlap")
+                            else:
+                                self.last_lap_was_fastest = False
+
+                            if self.lap == NUM_LAPS:
+                                game.play_sound("final_lap")
+
+                            self.lap_time = 0
+
+                        self.last_checkpoint_idx = i
+
+                if abs(self.pos.x) + 100 > track_piece.width / 2:
+                    self.on_grass = True
+                    if self.grass_sound_repeat_timer <= 0:
+                        game.play_sound("hit_grass")
+                        self.grass_sound_repeat_timer = 0.15
+
+                    if abs(self.pos.x) > 6000:
+                        self.speed = 0
+                        self.resetting = True
+                else:
+                    self.on_grass = False
+
+        if self.skid_sound is not None:
+            if self.resetting or self.grip > SKID_SOUND_START_GRIP or x_input == 0:
+                volume = 0
+            else:
+                volume = remap_clamp(self.grip, SKID_SOUND_START_GRIP, 0.5, 0, 1)
+                if track_piece_idx is not None:
+                    track_piece = game.track[track_piece_idx]
+                    volume += remap_clamp(abs(track_piece.offset_x), 0, 15, 0, 1)
+
+            if volume > 0:
+                if not self.skid_sound_playing:
+                    self.skid_sound.play(loops=-1, fade_ms=100)
+                    self.skid_sound_playing = True
+                self.skid_sound.set_volume(volume)
+            else:
+                self.skid_sound_playing = False
+                self.skid_sound.fadeout(250)
+
 
 
 
