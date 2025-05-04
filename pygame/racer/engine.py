@@ -435,7 +435,7 @@ def run():
     
         screen.fill(Color("white"))
     #TO_DO: need to calculate delta_time and pass in to update()
-        update(1) ###
+        update(0.05) ###
         parent.draw()
         pygame.display.update()
     
