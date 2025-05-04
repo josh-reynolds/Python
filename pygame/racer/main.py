@@ -1,6 +1,7 @@
 import math
 import platform
 import sys
+import time
 from enum import Enum
 from abc import ABC, abstractmethod
 from random import choice, uniform, randint
@@ -641,17 +642,23 @@ def make_track():
 class Game:
     def __init__(self, controls=None):
         self.track = make_track()
+
         self.player_car = None
         self.camera_follow_car = None
         self.setup_cars(controls)
+
         self.camera = Vector3(0, 400, 0)
+
         self.background = images.background
         self.bg_offset = Vector2(-self.background.get_width() // 2, 30)
+
         self.first_frame = True
+        self.on_screen_debug_strs = []
         self.frame_counter = 0
         self.timer = 0
         self.race_complete = False
         self.time_up = False
+
         if self.player_car is not None:
             self.start_timer = 3.999
             play_music("engines_startline")
@@ -730,14 +737,18 @@ class Game:
                 distance_last = new_z_prev_spacing_boundary - new_camera_z
                 fraction_first = distance_first / SPACING
                 fraction_last = distance_last / SPACING
+                assert(0 <= fraction_first <= 1 and 0 <= fraction_last <= 1)
+
                 new_offset = Vector2(new_track.offset_x, new_track.offset_y)
                 offset_change = prev_offset * fraction_first + new_offset * fraction_last
+
                 if new_ahead - prev_ahead > 1:
                     for i in range(prev_ahead + 1, new_ahead):
                         piece = self.track[i]
                         offset_change += Vector2(piece.offset_x, piece.offset_y)
             else:
                 fraction = dist / SPACING
+                assert(0 <= fraction <= 1)
                 offset_change = prev_offset * fraction
 
             self.bg_offset += offset_change
@@ -750,6 +761,10 @@ class Game:
         if self.player_car is not None:
             self.player_car.set_offset_x_change(offset_change.x)
 
+        if new_ahead < prev_ahead:
+            self.bg_offset.x -= self.track[prev_ahead].offset_x
+            self.bg_offset.y -= self.track[prev_ahead].offset_y
+
         self.first_frame = False
 
     def draw(self):
@@ -758,12 +773,17 @@ class Game:
         else:
             screen.fill( (0,77,180) )
 
+        times = {"scenery_scale":0, "car_scale":0, "prepare_draw_cars":0}
+
+        profile_bg = Profiler()
+        self.on_screen_debug_strs.append(str(self.bg_offset))
         screen.blit(self.background, self.bg_offset)
         bg_width = self.background.get_width()
         if self.bg_offset.x > 0:
             screen.blit(self.background, self.bg_offset - Vector2(bg_width, 0))
-        if self.bg_offset.x + self.background.get_width() < WIDTH:
+        if self.bg_offset.x + bg_width < WIDTH:
             screen.blit(self.background, self.bg_offset + Vector2(bg_width, 0))
+        times["bg"] = profile_bg.get_ms()
 
         def transform(point_v3, w=None, h=None, clipping_plane=CLIPPING_PLANE):
             newpoint = point_v3 - self.camera
@@ -793,9 +813,9 @@ class Game:
 
         is_first_track_piece_ahead = True
 
-        result = self.get_first_track_piece_ahead(self.camera.z)
+        prof_track = Profiler("track")
 
-        first_track_piece_idx, current_piece_z = result
+        first_track_piece_idx, current_piece_z = self.get_first_track_piece_ahead(self.camera.z)
         track_ahead_i = 0
         current_piece_z += SPACING
 
@@ -853,32 +873,38 @@ class Game:
                         return any(on_screen)
 
                     def draw_polygon(points, col):
-                        pygame.draw.polygon(screen.surface, col, points, OUTLINE_W)
+                        if USE_GFXDRAW:
+                            if OUTLINE_W == 0:
+                                pygame.gfxdraw.filled_ploygon(screen.surface, points, col)
+                            else:
+                                pygame.gfxdraw.polygon(screen.surface, points, col)
+                        else:
+                            pygame.draw.polygon(screen.surface, col, points, OUTLINE_W)
 
-                    def draw_points(points, col):
+                    def draw_points(points, col, id_):
                         if any_on_screen(points):
-                            add_to_draw_list(lambda col=col, points=points: draw_polygon(points, col))
+                            add_to_draw_list(lambda col=col, points=points: draw_polygon(points, col), id_)
 
                     if i // 3 % 2 == 0:
                         points = (stripe_left_screen, stripe_right_screen,
                                   prev_stripe_screen[1], prev_stripe_screen[0])
-                        draw_points(points, STRIPE_COLOR)
+                        draw_points(points, STRIPE_COLOR, "stripe")
 
                     if SHOW_YELLOW_LINES:
                         left_yellow_line_points = (prev_yellow_line_left_outer_screen,
                                                    yellow_line_left_outer_screen,
                                                    yellow_line_left_inner_screen,
                                                    prev_yellow_line_left_inner_screen)
-                        draw_points(left_yellow_line_points, YELLOW_LINE_COL)
+                        draw_points(left_yellow_line_points, YELLOW_LINE_COL, "yellow line L")
 
                         right_yellow_line_points = (prev_yellow_line_right_outer_screen,
                                                    yellow_line_right_outer_screen,
                                                    yellow_line_right_inner_screen,
                                                    prev_yellow_line_right_inner_screen)
-                        draw_points(right_yellow_line_points, YELLOW_LINE_COL)
+                        draw_points(right_yellow_line_points, YELLOW_LINE_COL, "yellow line R")
 
                     points = (prev_track_screen[0], left_screen, right_screen, prev_track_screen[1])
-                    draw_points(points, track_piece.col)
+                    draw_points(points, track_piece.col, "track")
 
                     if SHOW_RUMBLE_STRIPS:
                         rumble_col = RUMBLE_COL_1 if (i // 2) % 2 == 0 else RUMBLE_COL_2
@@ -890,8 +916,8 @@ class Game:
                                               prev_track_screen[1],
                                               right_screen,
                                               rumble_strip_right_outer_screen)
-                        draw_points(rumble_left_points, rumble_col)
-                        draw_points(rumble_right_points, rumble_col)
+                        draw_points(rumble_left_points, rumble_col, "rumble L")
+                        draw_points(rumble_right_points, rumble_col, "rumble R")
 
                     if SHOW_TRACKSIDE:
                         trackside_col = TRACKSIDE_COLOR_1 if (i // 5) % 2 == 0 else TRACKSIDE_COLOR_2
@@ -901,8 +927,8 @@ class Game:
                         trackside_right_points = (points[0], points[1],
                                                  (WIDTH - 1, points[1].y),
                                                  (WIDTH - 1, points[0].y))
-                        draw_points(trackside_left_points, trackside_col)
-                        draw_points(trackside_right_points, trackside_col)
+                        draw_points(trackside_left_points, trackside_col, "trackside left")
+                        draw_points(trackside_right_points, trackside_col, "trackside right")
 
                 prev_track_screen = (left_screen, right_screen)
                 prev_stripe_screen = (stripe_left_screen, stripe_right_screen)
@@ -912,6 +938,16 @@ class Game:
                 prev_yellow_line_left_inner_screen = yellow_line_left_inner_screen
                 prev_yellow_line_right_outer_screen = yellow_line_right_outer_screen
                 prev_yellow_line_right_inner_screen = yellow_line_right_inner_screen
+
+                if SHOW_TRACK_PIECE_INDEX or SHOW_TRACK_PIECE_OFFSETS:
+                    items = []
+                    if SHOW_TRACK_PIECE_INDEX:
+                        items.append(str(i))
+                    if SHOW_TRACK_PIECE_OFFSETS:
+                        items.extend([str(track_piece.offset_x), str(track_piece.offset_y)])
+                    text = ",".join(items)
+                    add_to_draw_list(lambda left_screen=left_screen, text=text:
+                                     screen.draw.text(text, (left_screen[0], left_screen[1] - 30)))
 
             if SHOW_SCENERY:
                 for obj in track_piece.scenery:
@@ -924,12 +960,15 @@ class Game:
                             if pos is not None and scaled_w < MAX_SCENERY_SCALED_WIDTH:
                                 pos -= Vector2(scaled_w // 2, scaled_h)
                                 try:
+                                    profile_scale = Profiler()
                                     scaled_w, scaled_h = int(scaled_w), int(scaled_h)
                                     scaled = SCALE_FUNC(billboard, (scaled_w, scaled_h))
-                                    add_to_draw_list(lambda scaled=scaled, pos=pos: screen.blit(scaled, pos))
+                                    add_to_draw_list(lambda scaled=scaled, pos=pos: 
+                                                     screen.blit(scaled, pos), "scenery_draw")
                                 except pygame.error:
                                     print(f"SCALE ERROR, w/h: {scaled_w} {scaled_h}")
 
+            profile_prepare_draw_cars = Profiler()
             cars_to_draw = []
             for car in track_piece.cars:
                 car_offset = Vector3(offset)
@@ -967,39 +1006,59 @@ class Game:
 
                 if pos is not None and scaled_w < MAX_CAR_SCALED_WIDTH:
                     pos -= Vector2(scaled_w // 2, scaled_h)
+                    profile_scale = Profiler()
                     scaled = SCALE_FUNC(img, (int(scaled_w), int(scaled_h)))
+                    times["car_scale"] += profile_scale.get_ms()
                     cars_to_draw.append({"z": car.pos.z, 
                                          "drawcall": lambda scaled=scaled, pos=pos: screen.blit(scaled, pos)})
+
+                    if SHOW_CPU_CAR_SPEEDS and isinstance(car, CPUCar):
+                        output = f"{car.targte_Speed:.0f}"
+                        add_to_draw_list(lambda pos=pos, output=output: draw_text(output, pos.x, pos.y - 40))
+
+            times["prepare_draw_cars"] += profile_prepare_draw_cars.get_ms()
 
             cars_to_draw.sort(key=lambda entry: entry["z"], reverse=True)
             for entry in cars_to_draw:
                 add_to_draw_list(entry["drawcall"], "cars")
 
-        for draw_call, type in reversed(draw_list):
+        for draw_call, type_ in reversed(draw_list):
+            profiler = Profiler()
             draw_call()
+            if type_ not in times:
+                times[type_] = profiler.get_ms()
+            else:
+                times[type_] += profiler.get_ms()
 
         if self.player_car is not None:
             player_pos = self.cars.index(self.player_car) + 1
             if self.time_up:
                 draw_text("TIME UP!", WIDTH // 2, HEIGHT * 0.4, center=True)
             elif self.race_complete:
-                fastest_lap_str = format_time(self.player_car.fastest_lap)
-                race_time_str = format_time(self.player_car.race_time)
                 draw_text("RACE COMPLETE!", WIDTH // 2, HEIGHT * 0.15, center=True)
+
                 draw_text("POSITION", WIDTH // 2, HEIGHT * 0.3, center=True)
                 draw_text(str(player_pos), WIDTH // 2, HEIGHT * 0.42, center=True)
+
                 draw_text("FASTEST LAP", WIDTH * 0.25, HEIGHT * 0.55, center=True)
+                fastest_lap_str = format_time(self.player_car.fastest_lap)
                 draw_text(fastest_lap_str, WIDTH * 0.25, HEIGHT * 0.68, center=True)
+
                 draw_text("RACE TIME", WIDTH * 0.75, HEIGHT * 0.55, center=True)
+                race_time_str = format_time(self.player_car.race_time)
                 draw_text(race_time_str, WIDTH * 0.75, HEIGHT * 0.68, center=True)
             else:
                 status_x = (WIDTH/2) - (565/2)
-                speed_str = f"{int(self.player_car.speed):03}"
-                lap_time_str = format_time(self.player_car.lap_time)
                 screen.blit("status", (status_x, 0))
+
                 draw_text(f"{self.player_car.lap:02}", status_x + 30, 37, font="status1b_")
+
                 draw_text(f"{player_pos:02}", status_x + 116, 37, font="status1b_")
+
+                speed_str = f"{int(self.player_car.speed):03}"
                 draw_text(speed_str, status_x + 197, 37, font="status1b_")
+
+                lap_time_str = format_time(self.player_car.lap_time)
                 draw_text(lap_time_str, status_x + 299, 37, font="status2_")
 
                 if self.player_car.last_lap_was_fastest and self.player_car.lap_time < 4:
@@ -1014,6 +1073,15 @@ class Game:
                 if self.player_car.lap == NUM_LAPS and begin_time < self.player_car.lap_time < end_time:
                     y = HEIGHT * 0.4
                     draw_text("FINAL LAP!", WIDTH // 2, y, center=True)
+
+        if SHOW_DEBUG_TEXT:
+            for i in range(len(self.on_screen_debug_strs)):
+                screen.draw.text(self.on_screen_debug_strs[i], (0, 50 + 1 * 20))
+            self.on_screen_debug_strs.clear()
+
+        if SHOW_PROFILE_TIMINGS:
+            print(prof_track, sum(times.values()))
+            print(self.frame_counter, times)
 
     def get_track_piece_for_z(self, z):
         idx = -int(z / SPACING)
@@ -1037,8 +1105,20 @@ class Game:
         except Exception as e:
             print(e)
 
+def get_joystick_if_exists():
+    return pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None
+
+def setup_joystick_controls():
+    global joystick_controls
+    joystick = get_joystick_if_exists()
+    joystick_controls = JoystickControls(joystick) if joystick is not None else None
+
 def update_controls():
     keyboard_controls.update()
+    if joystick_controls is None:
+        setup_joystick_controls()
+    if joystick_controls is not None:
+        joystick_controls.update()
 
 class State(Enum):
     TITLE = 1
@@ -1129,6 +1209,7 @@ except Exception:
     pass
 
 keyboard_controls = KeyboardControls()
+joystick_controls = None ###
 state = State.TITLE
 game = Game()
 demo_reset_timer, demo_start_timer = 2 * 60, 0
