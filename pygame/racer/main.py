@@ -408,11 +408,9 @@ class PlayerCar(Car):
             self.engine_sounds = [getattr(sounds, "engine_short" + str(i))
                                   for i in range(40)]
             self.skid_sound = sounds.skid_loop0
-        #except Exception:   ###
-        except Exception as e: ###
+        except Exception:
             self.engine_sounds = []
             self.skid_sound = None
-            print(e) ###
 
         self.current_engine_sound = None
         self.current_engine_sound_idx = -1
@@ -428,10 +426,8 @@ class PlayerCar(Car):
         if self.current_engine_sound is not None:
             try:
                 self.current_engine_sound.stop()
-            #except Exception:   ###
-                #pass ###
-            except Exception as e: ###
-                print(e) ###
+            except Exception:
+                pass
 
     def update(self, delta_time):
         if not game.race_complete:
@@ -458,7 +454,6 @@ class PlayerCar(Car):
                 self.resetting = self.pos.x != 0
 
         x_move = accel = 0
-        x_input = self.get_x_input()
 
         if not self.resetting:
             self.braking = False
@@ -477,10 +472,10 @@ class PlayerCar(Car):
             if self.on_grass:
                 drag_factor -= 0.0025
 
-            self.speed += drag_factor ** (delta_time / (1/60))
+            self.speed *= drag_factor ** (delta_time / (1/60))
 
             if self.offset_x_change != 0:
-                if self.speed > LOSE_GRIP_SPEED and sign(x_input == -sign(self.offset_x_change)):
+                if self.speed > LOSE_GRIP_SPEED and sign(self.get_x_input() == -sign(self.offset_x_change)):
                     self.grip = remap_clamp(self.speed, LOSE_GRIP_SPEED, ZERO_GRIP_SPEED, 1, 0)
                 else:
                     self.grip = 1
@@ -492,7 +487,7 @@ class PlayerCar(Car):
             previous_track_piece_idx, _ = game.get_first_track_piece_ahead(self.pos.z)
 
             if self.speed > 0 and not game.race_complete:
-                x_move = x_input * self.speed * STEERING_STRENGTH * self.grip * delta_time
+                x_move = self.get_x_input() * self.speed * STEERING_STRENGTH * self.grip * delta_time
                 self.pos.x -= x_move
 
             super().update(delta_time)
@@ -568,13 +563,13 @@ class PlayerCar(Car):
                     self.on_grass = False
 
         if self.skid_sound is not None:
-            if self.resetting or self.grip > SKID_SOUND_START_GRIP or x_input == 0:
+            if self.resetting or self.grip > SKID_SOUND_START_GRIP or self.get_x_input() == 0:
                 volume = 0
             else:
                 volume = remap_clamp(self.grip, SKID_SOUND_START_GRIP, 0.5, 0, 1)
                 if track_piece_idx is not None:
                     track_piece = game.track[track_piece_idx]
-                    volume += remap_clamp(abs(track_piece.offset_x), 0, 15, 0, 1)
+                    volume *= remap_clamp(abs(track_piece.offset_x), 0, 15, 0, 1)
 
             if volume > 0:
                 if not self.skid_sound_playing:
@@ -607,10 +602,8 @@ class PlayerCar(Car):
                 if old_sound is not None:
                     old_sound.fadeout(150)
                 self.current_engine_sound.play(loops=-1, fade_ms=100)
-            #except: ###
-                #pass ###
-            except Exception as e: ###
-                print(e) ###
+            except:
+                pass
 
     def get_x_input(self):
         return self.controls.get_x()
