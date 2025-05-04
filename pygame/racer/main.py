@@ -1132,7 +1132,7 @@ def update(delta_time):
     update_controls()
 
     def button_pressed_controls(button_num):
-        for controls in (keyboard_controls,):
+        for controls in (keyboard_controls, joystick_controls):
             if controls is not None and controls.button_pressed(button_num):
                 return controls
         return None
@@ -1188,18 +1188,14 @@ def draw():
 def play_music(name):
     try:
         music.play(name)
-    except Exception as e: ###
-        print(e) ###
-    #except Exception:
-        #pass
+    except Exception:
+        pass
 
 def stop_music():
     try:
         music.stop()
-    except Exception as e: ###
-        print(e) ###
-    #except Exception:
-        #pass
+    except Exception:
+        pass
 
 try:
     pygame.mixer.quit()
@@ -1209,7 +1205,7 @@ except Exception:
     pass
 
 keyboard_controls = KeyboardControls()
-joystick_controls = None ###
+setup_joystick_controls()
 state = State.TITLE
 game = Game()
 demo_reset_timer, demo_start_timer = 2 * 60, 0
