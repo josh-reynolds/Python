@@ -625,17 +625,118 @@ def make_track():
     for lap in range(NUM_LAPS + 1):
         track.extend([TrackPiece(scenery=generate_scenery(i, images.billboard02)) 
                       for i in range(15)])
+
         track.append(TrackPieceStartLine())
-        track.extend([TrackPiece() for i in range(SECTION_MEDIUM)])
-        track.extend([TrackPiece(offset_x=-4, offset_y=0, scenery=generate_scenery(i))
-                      for i in range(SECTION_LONG)])
-        track.extend([TrackPiece(scenery=generate_scenery(i, images.billboard01))
+
+        track.extend([TrackPiece() for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-4, offset_y=0, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(scenery=generate_scenery(i,images.billboard01)) 
                       for i in range(SECTION_SHORT)])
-        track.extend([TrackPiece(offset_x=0, offset_y=-1, scenery=generate_scenery(i))
+
+        track.extend([TrackPiece(offset_x=0, offset_y=-1, 
+                                 scenery=generate_scenery(i)) 
                       for i in range(SECTION_VERY_SHORT)])
-        track.extend([TrackPiece(offset_x=0, offset_y=-2, scenery=generate_scenery(i))
+
+        track.extend([TrackPiece(offset_x=0, offset_y=-2, 
+                                 scenery=generate_scenery(i)) 
                       for i in range(SECTION_VERY_SHORT)])
-        ### more track definition on GitHub
+
+        track.extend([TrackPiece(offset_x=-2, offset_y=-1, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_VERY_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-5, offset_y=0, 
+                                 scenery=generate_scenery(i,images.billboard03)) 
+                      for i in range(SECTION_VERY_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-10, offset_y=0, 
+                                 scenery=generate_scenery(i,images.billboard03)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(scenery=generate_scenery(i)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=13, offset_y=1, 
+                                 scenery=generate_scenery(i, images.arrow_left, interval=10)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=0, 
+                                 scenery=generate_scenery(i,images.billboard02)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=2, 
+                                 scenery=generate_scenery(i,images.billboard02)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(offset_x=-3, offset_y=-1, 
+                                 scenery=generate_scenery(i,images.billboard01)) 
+                      for i in range(SECTION_LONG)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=-4, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=2, 
+                                 scenery=generate_scenery(i,images.billboard03)) 
+                      for i in range(SECTION_LONG)])
+
+        for j in range(1,10):
+            track.extend([TrackPiece(offset_x=j, offset_y=j, 
+                                     scenery=generate_scenery(i)) 
+                          for i in range(SECTION_VERY_SHORT)])
+
+        for j in range(1,10):
+            track.extend([TrackPiece(offset_x=0, offset_y=-j, 
+                                     scenery=generate_scenery(i)) 
+                          for i in range(SECTION_VERY_SHORT)])
+
+        track.extend([TrackPiece(cpu_max_target_speed=60, 
+                                 scenery=[]) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(cpu_max_target_speed=58, 
+                                 scenery=generate_scenery(i, images.arrow_right, interval=10, lamps=False)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(cpu_max_target_speed=58, 
+                                 scenery=generate_scenery(i, images.arrow_right, interval=10, lamps=False)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-15, cpu_max_target_speed=55, 
+                                 scenery=generate_scenery(i, images.arrow_right, interval=10, lamps=False)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-13, cpu_max_target_speed=57, 
+                                 scenery=generate_scenery(i, images.arrow_right, interval=10, lamps=False)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-11, offset_y=0, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=-9, offset_y=0, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_SHORT)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=0, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_MEDIUM)])
+
+        track.extend([TrackPiece(offset_y=math.cos(i/20) * 5, 
+                                 scenery=generate_scenery(i)) 
+                      for i in range(SECTION_LONG)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=0.25, 
+                                 scenery=generate_scenery(i,images.billboard03)) 
+                      for i in range(SECTION_LONG)])
+
+        track.extend([TrackPiece(offset_x=0, offset_y=0, 
+                                 scenery=generate_scenery(i,images.billboard03)) 
+                      for i in range(SECTION_SHORT)])
 
     return track
 
