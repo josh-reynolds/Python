@@ -16,7 +16,7 @@ class Walker:
         pygame.gfxdraw.circle(screen.surface, self.x, self.y, 10, (0,0,0))
 
     def step(self):
-        choice = randint(0,4)
+        choice = randint(0,3)
         if choice == 0:
             self.x += 1
         elif choice == 1:
