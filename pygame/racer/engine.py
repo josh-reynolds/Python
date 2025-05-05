@@ -412,9 +412,10 @@ def run():
     else:
         update = lambda dt: up(dt)
 
+    clock = pygame.time.Clock()
     running = True
     while running:
-        pygame.time.Clock().tick(60)
+        clock.tick(60)
         keyboard.reset()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -434,8 +435,7 @@ def run():
                     setattr(keyboard, name, True)
     
         screen.fill(Color("white"))
-    #TO_DO: need to calculate delta_time and pass in to update()
-        update(0.05) ###
+        update(pygame.time.Clock.get_time(clock)/1000)
         parent.draw()
         pygame.display.update()
     

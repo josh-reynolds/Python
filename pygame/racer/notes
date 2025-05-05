@@ -1,5 +1,5 @@
-Fifth and final project from 'Code the Classics Vol. 2' - a Pole Position clone named 'Leading Edge.' Mine will be called
-'Racer.'
+Fifth and final project from 'Code the Classics Vol. 2' - a Pole Position clone named 'Leading Edge.' 
+Mine will be called 'Racer.'
 
 First pass through the book is complete, all stubs filled in and mostly sufficient placeholders for the 
 thing to run. This one is the most complex yet. They are drawing the track with "2.5D" graphics rather
@@ -25,3 +25,8 @@ Some minor playtesting left to do, but it looks good overall. I still need to ta
 time feature in the engine - right now I am passing in a static dummy value that runs the game
 acceptably on this system. The GitHub sources also recommended a YouTube video on the topic that
 I want to check out.
+
+---
+I've added a delta time calculation to the engine - the computed value is very close to the estimated
+static number I was using in playtest (0.05). Game is playable. Ship it.
+

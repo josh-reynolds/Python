@@ -1226,7 +1226,6 @@ class State(Enum):
     PLAY = 2
     GAME_OVER = 3
 
-### REMINDER: still need to implement delta time calculation in the engine
 def update(delta_time):
     global state, game, accumulated_time, demo_reset_timer, demo_start_timer
 
