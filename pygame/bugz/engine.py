@@ -28,7 +28,7 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.3"
+__version__ = "1.4"
 
 import os
 import sys
@@ -406,9 +406,16 @@ def run():
     #screen.fill(Color("white"))
     #parent.once()
 
+    up = parent.update
+    if up.__code__.co_argcount == 0:
+        update = lambda dt: up()
+    else:
+        update = lambda dt: up(dt)
+
+    clock = pygame.time.Clock()
     running = True
     while running:
-        pygame.time.Clock().tick(60)
+        clock.tick(60)
         keyboard.reset()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -428,7 +435,7 @@ def run():
                     setattr(keyboard, name, True)
     
         screen.fill(Color("white"))
-        parent.update()
+        update(pygame.time.Clock.get_time(clock)/1000)
         parent.draw()
         pygame.display.update()
     
