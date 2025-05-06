@@ -2,9 +2,10 @@ from random import randint
 from engine import *
 
 WIDTH = 640
-HEIGHT = 360
+HEIGHT = 240
 TITLE ="The Nature of Code"
 
+# ----------------------------------------------------
 class Walker:
     def __init__(self):
         self.x = WIDTH // 2
@@ -19,14 +20,26 @@ class Walker:
         step_y = randint(0,2) - 1
         self.x += step_x
         self.y += step_y
+# ----------------------------------------------------
 
+# ----------------------------------------------------
 def update():
-    w.step()
+    #w.step()
+
+    idx = randint(0, len(randomCounts)-1)
+    randomCounts[idx] += 1
 
 def draw():
-    w.display()
+    #w.display()
 
-w = Walker()
+    bar_width = WIDTH // len(randomCounts)
+    for i in range(len(randomCounts)):
+        rect = (i * bar_width, HEIGHT - randomCounts[i], bar_width-1, randomCounts[i])
+        screen.draw.rect(rect, (0,255,0), 0)
+
+#w = Walker()
+
+randomCounts = [0 for i in range(20)]
 
 run()
 
