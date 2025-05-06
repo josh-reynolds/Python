@@ -13,7 +13,7 @@ class Walker:
 
     def display(self):
         #pygame.gfxdraw.pixel(screen.surface, self.x, self.y, (0,0,0))
-        pygame.gfxdraw.circle(screen.surface, self.x, self.y, 10, (0,0,0))
+        screen.draw.circle(self.x, self.y, 10, (0,0,0))
 
     def step(self):
         step_x = randint(0,2) - 1

@@ -28,11 +28,12 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.4"
+__version__ = "1.5"
 
 import os
 import sys
 import pygame
+import pygame.gfxdraw
 from pygame.locals import *
 
 DEBUG_ACTOR = False
@@ -310,6 +311,9 @@ class Painter:
 
     def rect(self, rect, color, width=1):
         pygame.draw.rect(self.surface, color, rect, width)
+
+    def circle(self, x, y, radius, color):
+        pygame.gfxdraw.circle(self.surface, x, y, radius, color)
 
 class Music:
     """Music - wraps the Pygame music mixer."""
