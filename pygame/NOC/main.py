@@ -1,4 +1,4 @@
-from random import randint, random
+from random import randint, random, gauss
 from engine import *
 
 WIDTH = 640
@@ -16,19 +16,29 @@ class Walker:
         screen.draw.circle(self.x, self.y, 10, (0,0,0))
 
     def step(self):
+        ### NOC Example 1.1 ----------------
         #step_x = randint(0,2) - 1
         #step_y = randint(0,2) - 1
         #self.x += step_x
         #self.y += step_y
-        r = random()
-        if (r < 0.4):
-            self.x += 1
-        elif (r < 0.6):
-            self.x -= 1
-        elif (r < 0.8):
-            self.y += 1
-        else:
-            self.y -= 1
+
+        ### NOC Example 1.3 ----------------
+        #r = random()
+        #if (r < 0.4):
+            #self.x += 1
+        #elif (r < 0.6):
+            #self.x -= 1
+        #elif (r < 0.8):
+            #self.y += 1
+        #else:
+            #self.y -= 1
+
+        ### NOC Example 1.3 ----------------
+        num = gauss()
+        sd = 60
+        mean = WIDTH // 2
+        self.x = int(sd * num + mean)
+        self.y = HEIGHT // 2
 
 # ----------------------------------------------------
 
@@ -40,6 +50,7 @@ def update():
     randomCounts[idx] += 1
 
 def draw():
+    ### NOC Example 1.2 ----------------
     bar_width = WIDTH // len(randomCounts)
     for i in range(len(randomCounts)):
         rect = (i * bar_width, HEIGHT - randomCounts[i], bar_width-1, randomCounts[i])
