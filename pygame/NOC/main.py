@@ -1,4 +1,3 @@
-import pygame.gfxdraw
 from random import randint
 from engine import *
 
@@ -12,7 +11,7 @@ class Walker:
         self.y = HEIGHT // 2
 
     def display(self):
-        #pygame.gfxdraw.pixel(screen.surface, self.x, self.y, (0,0,0))
+        #screen.draw.pixel(self.x, self.y, (255,0,0))
         screen.draw.circle(self.x, self.y, 10, (0,0,0))
 
     def step(self):
@@ -40,6 +39,3 @@ run()
 # equivalent. If I _do_ add such a thing back to the engine, would need to use some
 # trickery to avoid having to add a dummy setup() to old projects - we want backward
 # compatibility.
-
-# Should also implement Painter methods for pixel and circle so we don't need to 
-# import and use pygame.gfxdraw at this level.

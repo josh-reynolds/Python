@@ -315,6 +315,9 @@ class Painter:
     def circle(self, x, y, radius, color):
         pygame.gfxdraw.circle(self.surface, x, y, radius, color)
 
+    def pixel(self, x, y, color):
+        pygame.gfxdraw.pixel(self.surface, x, y, color)
+
 class Music:
     """Music - wraps the Pygame music mixer."""
     
