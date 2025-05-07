@@ -44,7 +44,8 @@ class Walker:
 
 # ----------------------------------------------------
 def update():
-    w.step()
+    pass
+    #w.step()
 #
     #idx = randint(0, len(randomCounts)-1)
     #randomCounts[idx] += 1
@@ -56,11 +57,29 @@ def draw():
         #rect = (i * bar_width, HEIGHT - randomCounts[i], bar_width-1, randomCounts[i])
         #screen.draw.rect(rect, (0,255,0), 0)
 
-    w.display()
+    #w.display()
 
-w = Walker()
+    for i in range(100):
+        color = (colors[i][0], colors[i][1], colors[i][2]) 
+        screen.draw.circle(dots[i][0], dots[i][1], 10, color)
+
+
+#w = Walker()
 
 #randomCounts = [0 for i in range(20)]
+
+### NOC Exercise 1.4 ----------------
+dots = []
+colors = []
+for i in range(100):
+    x = int(gauss() * 60 + WIDTH // 2)
+    y = int(gauss() * 24 + HEIGHT // 2)
+    dots.append((x,y))
+
+    r = int(gauss() * 24 + 256 // 2)
+    g = int(gauss() * 24 + 256 // 2)
+    b = int(gauss() * 24 + 256 // 2)
+    colors.append((r,g,b))
 
 run()
 
