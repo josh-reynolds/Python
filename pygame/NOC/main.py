@@ -53,7 +53,7 @@ def montecarlo():
     while True:
         r1 = random()
         r2 = random()
-        if r2 < r1:
+        if r2 < (r1 ** 2):
             return r1
 
 # ----------------------------------------------------
