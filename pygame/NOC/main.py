@@ -1,4 +1,4 @@
-from random import randint, random, gauss
+from random import randint, random, gauss, uniform
 from engine import *
 
 WIDTH = 640
@@ -41,10 +41,20 @@ class Walker:
         #self.y = HEIGHT // 2
 
         ### NOC Exercise 1.5 ---------------
-        self.x += int(4 * gauss())
-        self.y += int(4 * gauss())
+        #self.x += int(4 * gauss())
+        #self.y += int(4 * gauss())
+
+        stepsize = 2 * montecarlo()
+        self.x += uniform(-stepsize, stepsize)
+        self.y += uniform(-stepsize, stepsize)
 
 # ----------------------------------------------------
+def montecarlo():
+    while True:
+        r1 = random()
+        r2 = random()
+        if r2 < r1:
+            return r1
 
 # ----------------------------------------------------
 def update():
