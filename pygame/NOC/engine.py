@@ -312,8 +312,8 @@ class Painter:
     def rect(self, rect, color, width=1):
         pygame.draw.rect(self.surface, color, rect, width)
 
-    def circle(self, x, y, radius, color):
-        pygame.gfxdraw.circle(self.surface, x, y, radius, color)
+    def circle(self, x, y, radius, color, width=0):
+        pygame.draw.circle(self.surface, color, (x, y), radius, width)
 
     def pixel(self, x, y, color):
         pygame.gfxdraw.pixel(self.surface, x, y, color)

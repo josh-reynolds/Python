@@ -45,22 +45,22 @@ class Walker:
 # ----------------------------------------------------
 def update():
     w.step()
-
-    idx = randint(0, len(randomCounts)-1)
-    randomCounts[idx] += 1
+#
+    #idx = randint(0, len(randomCounts)-1)
+    #randomCounts[idx] += 1
 
 def draw():
     ### NOC Example 1.2 ----------------
-    bar_width = WIDTH // len(randomCounts)
-    for i in range(len(randomCounts)):
-        rect = (i * bar_width, HEIGHT - randomCounts[i], bar_width-1, randomCounts[i])
-        screen.draw.rect(rect, (0,255,0), 0)
+    #bar_width = WIDTH // len(randomCounts)
+    #for i in range(len(randomCounts)):
+        #rect = (i * bar_width, HEIGHT - randomCounts[i], bar_width-1, randomCounts[i])
+        #screen.draw.rect(rect, (0,255,0), 0)
 
     w.display()
 
 w = Walker()
 
-randomCounts = [0 for i in range(20)]
+#randomCounts = [0 for i in range(20)]
 
 run()
 
