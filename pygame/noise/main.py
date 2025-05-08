@@ -18,6 +18,9 @@ gradients = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
 random_values = [[randint(0,7) for i in range(grid_w)] for i in range(grid_h)]
 cells = [[0 for i in range(grid_w)] for j in range(grid_h)]
 
+min_val = 0
+max_val = 0
+
 def fade(t):
     return t * t * t * (t * (t * 6 - 15) + 10)
 
@@ -57,14 +60,23 @@ for i in range(grid_w):
         pixel_value = v * tmp2 + (1 - v) * tmp1
 
         color_value = int(pixel_value * 255)
-        color_value = min(max(color_value, 0), 255)   # value can be negative, need to clamp
+
+        if color_value < min_val:
+            min_val = color_value
+        if color_value > max_val:
+            max_val = color_value
+
+        color_value = (color_value + 255) // 2
+        color_value = min(max(color_value, 0), 255)
         color = (color_value, color_value, color_value)
         cells[j][i] = color
 
+print(min_val, max_val)
+
 # ---------------------------------------
 #def random_grayscale():
-    #value = randint(0,255)
-    #return (value, value, value)
+   #value = randint(0,255)
+   #return (value, value, value)
 
 #cells = [[random_grayscale() for i in range(grid_w)] for i in range(grid_h)]
 
