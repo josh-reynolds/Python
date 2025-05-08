@@ -1,3 +1,4 @@
+import math
 from random import seed, randint
 from engine import *
 
@@ -11,13 +12,15 @@ grid_w = 100
 grid_h = 100
 cell_w = WIDTH // grid_w
 cell_h = HEIGHT // grid_h
+cells = [[0 for i in range(grid_w)] for j in range(grid_h)]
 
 # ---------------------------------------
-scale = 0.03
-gradients = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
-seed(100)
+scale = 0.09
+seed(100000)
+#gradients = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
+gradients = [(1,1), (math.sqrt(2),0), (1,-1), (0,math.sqrt(2)), 
+             (0,-math.sqrt(2)), (-1,1), (-math.sqrt(2),0), (-1,-1)]
 random_values = [[randint(0,7) for i in range(grid_w)] for i in range(grid_h)]
-cells = [[0 for i in range(grid_w)] for j in range(grid_h)]
 
 min_val = 0
 max_val = 0
@@ -91,6 +94,6 @@ def draw():
             cell_rect = (i * cell_w, j * cell_h, cell_w, cell_h)
 
             screen.draw.rect(cell_rect, cells[j][i], 0)
-            screen.draw.rect(cell_rect, OUTLINE, 1)
+            #screen.draw.rect(cell_rect, OUTLINE, 1)
 
 run()
