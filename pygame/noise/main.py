@@ -1,4 +1,4 @@
-from random import randint
+from random import seed, randint
 from engine import *
 
 WIDTH = 400
@@ -15,6 +15,7 @@ cell_h = HEIGHT // grid_h
 # ---------------------------------------
 scale = 0.03
 gradients = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
+seed(100)
 random_values = [[randint(0,7) for i in range(grid_w)] for i in range(grid_h)]
 cells = [[0 for i in range(grid_w)] for j in range(grid_h)]
 
