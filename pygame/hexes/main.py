@@ -10,6 +10,7 @@ TITLE = "Hexes"
 TWO_PI = math.pi * 2
 HALF_QUARTER = transformations.rotation_z(math.pi / 2)
 SIXTY_DEGREES = transformations.rotation_z(TWO_PI/6)
+VERTEX_SIZE = 5
 points = []
 
 def rotate_around_center(point, angle):
@@ -22,8 +23,7 @@ def update():
 
 def draw():
     for p in points:
-        screen.draw.circle(p.x, p.y, 10, (0,0,0))
-        screen.draw.circle(p.x, p.y, 10, (0,0,0))
+        screen.draw.circle(p.x, p.y, VERTEX_SIZE, (0,0,0))
 
 points.append(tuples.point(WIDTH//2 + 30, HEIGHT//2, 0))
 for i in range(5):
