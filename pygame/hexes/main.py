@@ -1,6 +1,5 @@
 import math
-import tuples
-import transformations
+import pygame
 from engine import *
 
 WIDTH = 400
@@ -8,31 +7,26 @@ HEIGHT = 400
 TITLE = "Hexes"
 
 TWO_PI = math.pi * 2
-HALF_QUARTER = transformations.rotation_z(math.pi / 2)
-SIXTY_DEGREES = transformations.rotation_z(TWO_PI/6)
-VERTEX_SIZE = 5
-points = []
 
-def rotate_around_center(point, angle):
-    p = transformations.translation(-WIDTH//2, -HEIGHT//2, 0) * point
-    p = angle * p
-    return transformations.translation(WIDTH//2, HEIGHT//2 , 0) * p
+def hexagon_points(radius, center_x, center_y):
+    hex_points = []
+    for i in range(6):
+        angle = TWO_PI/6 * (i+1)
+        vX = radius * math.cos(angle) + center_x
+        vY = radius * math.sin(angle) + center_y
+        hex_points.append((vX,vY))
+    return hex_points
 
 def update():
     pass
 
 def draw():
-    for p in points:
-        screen.draw.circle(p.x, p.y, VERTEX_SIZE, (0,0,0))
-
-points.append(tuples.point(WIDTH//2 + 30, HEIGHT//2, 0))
-for i in range(5):
-    points.append(rotate_around_center(points[i], SIXTY_DEGREES))
+    pygame.draw.polygon(screen.surface, (0,0,0), hexagon_points(20, 100, 100), 1)
 
 run()
 
 
-# vertices in a hexagon:
+# vertices in a regular polygon:
 #     for i in sides:
 #         angle = TWO_PI/sides * i
 #         vX = radius * cos(angle)
