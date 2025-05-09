@@ -32,6 +32,7 @@ __version__ = "1.5"
 
 import os
 import sys
+import math
 import pygame
 import pygame.gfxdraw
 from pygame.locals import *
@@ -317,6 +318,21 @@ class Painter:
 
     def pixel(self, x, y, color):
         pygame.gfxdraw.pixel(self.surface, x, y, color)
+
+    # this can be generalized to any regular polygon
+    # also, doubling sides in the range (but not the angle) and 
+    # skipping counts produces a star shape
+    def hex(self, x, y, radius, color, width=1):
+        sides = 6
+        hex_points = []
+        for i in range(sides):
+            angle = math.pi * 2/sides * (i+1)
+            vX = radius * math.cos(angle) + x
+            vY = radius * math.sin(angle) + y
+            hex_points.append((vX,vY))
+
+        pygame.draw.polygon(self.surface, color, hex_points, width)
+
 
 class Music:
     """Music - wraps the Pygame music mixer."""
