@@ -28,11 +28,13 @@ images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
 __all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
-__version__ = "1.4"
+__version__ = "1.5"
 
 import os
 import sys
+import math
 import pygame
+import pygame.gfxdraw
 from pygame.locals import *
 
 DEBUG_ACTOR = False
@@ -310,6 +312,27 @@ class Painter:
 
     def rect(self, rect, color, width=1):
         pygame.draw.rect(self.surface, color, rect, width)
+
+    def circle(self, x, y, radius, color, width=0):
+        pygame.draw.circle(self.surface, color, (x, y), radius, width)
+
+    def pixel(self, x, y, color):
+        pygame.gfxdraw.pixel(self.surface, x, y, color)
+
+    # this can be generalized to any regular polygon
+    # also, doubling sides in the range (but not the angle) and 
+    # skipping counts produces a star shape
+    def hex(self, x, y, radius, color, width=1):
+        sides = 6
+        hex_points = []
+        for i in range(sides):
+            angle = math.pi * 2/sides * (i+1)
+            vX = radius * math.cos(angle) + x
+            vY = radius * math.sin(angle) + y
+            hex_points.append((vX,vY))
+
+        pygame.draw.polygon(self.surface, color, hex_points, width)
+
 
 class Music:
     """Music - wraps the Pygame music mixer."""

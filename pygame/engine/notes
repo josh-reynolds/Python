@@ -104,7 +104,7 @@ v1.4 (released with Racer)
 * [DEFER] only partial positioning implemented for Painter.text()
 * [DEFER] duplication between Images, _load_image(), and Screen
 
-TBD
+v1.5 (under development with NOC and miscellaneous projects)
 ----------------------------------------
 * [     ] no docstrings for class methods
 * [     ] only Actor has debug spew coverage

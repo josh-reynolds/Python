@@ -63,6 +63,7 @@ def update():
     #idx = randint(0, len(randomCounts)-1)
     #randomCounts[idx] += 1
 
+# ----------------------------------------------------
 def draw():
     ### NOC Example 1.2 ----------------
     #bar_width = WIDTH // len(randomCounts)
@@ -105,3 +106,7 @@ run()
 # equivalent. If I _do_ add such a thing back to the engine, would need to use some
 # trickery to avoid having to add a dummy setup() to old projects - we want backward
 # compatibility.
+
+# Latest hurdle: Processing includes a noise() function to generate Perlin noise. I don't
+# have the equivalent in Pygame or stock Python. I _could_ import a module, but I am
+# contemplating rolling my own and sticking into the engine. Researching now.
