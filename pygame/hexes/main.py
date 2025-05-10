@@ -19,23 +19,20 @@ class Hex:
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
         self.hexRadius = hexRadius
+        self.yOffset = math.sqrt((hexRadius * hexRadius) - (hexRadius/2 * hexRadius/2))
+
+        self.startX = hexRadius + left_border
+        self.startY = int(self.yOffset) + top_border
+
         self.left_border = left_border
         self.top_border = top_border
         self.columns = columns
         self.rows = rows
-        self.color = color
-        self.width = width
-        self.yOffset = math.sqrt((hexRadius * hexRadius) - (hexRadius/2 * hexRadius/2))
-        self.startX = hexRadius + left_border
-        self.startY = int(self.yOffset) + top_border
 
         self.hexes = []
         for i in range(columns):
             for j in range(rows):
-                self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), 
-                                      self.hexRadius, 
-                                      self.color, 
-                                      self.width))
+                self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), hexRadius, color, width))
 
     def hex_coordinate_to_screen(self, column, row):
         x = self.startX + column * self.hexRadius * 1.5
