@@ -5,6 +5,7 @@
 /pygame/engine/__pycache__
 /pygame/futbol/__pycache__
 /pygame/hexes/__pycache__
+/pygame/hexes/*.png
 /pygame/huevos/__pycache__
 /pygame/huevos/replays
 /pygame/invader/__pycache__

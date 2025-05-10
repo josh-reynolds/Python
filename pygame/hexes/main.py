@@ -1,10 +1,12 @@
 import math
+import os.path
 import pygame
 from engine import *
 
 WIDTH = 400
 HEIGHT = 400
 TITLE = "Hexes"
+
 
 class Hex:
     def __init__(self, screen_coordinate, radius, color, width):
@@ -52,9 +54,17 @@ def draw():
     #g2.draw()
     #g3.draw()
 
+    try:
+        filename = "./output.png"
+        if not os.path.isfile(filename):
+            pygame.image.save(screen.surface, filename)
+    except Exception as e:
+        print(e)
+
 g1 = Grid(10, 8, 8, 25, 22, (0,0,0))
 g2 = Grid(40, 16, 8, 6, 5, (0,0,255), 2)
 g3 = Grid(50, 16, 12, 5, 4, (255,0,0), 2)
+
 
 run()
 
