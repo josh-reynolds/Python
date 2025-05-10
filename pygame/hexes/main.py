@@ -3,10 +3,9 @@ import os.path
 import pygame
 from engine import *
 
-WIDTH = 400
-HEIGHT = 400
+WIDTH = 425
+HEIGHT = 550
 TITLE = "Hexes"
-
 
 class Hex:
     def __init__(self, screen_coordinate, radius, color, width):
@@ -26,8 +25,8 @@ class Grid:
         self.startX = hexRadius + left_border
         self.startY = int(self.yOffset) + top_border
 
-        self.left_border = left_border
         self.top_border = top_border
+        self.left_border = left_border
         self.columns = columns
         self.rows = rows
 
@@ -53,6 +52,9 @@ def draw():
     g1.draw()
     #g2.draw()
     #g3.draw()
+    #g4.draw()
+    #g5.draw()
+    g6.draw()
 
     try:
         filename = "./output.png"
@@ -61,10 +63,12 @@ def draw():
     except Exception as e:
         print(e)
 
-g1 = Grid(10, 8, 8, 25, 22, (0,0,0))
-g2 = Grid(40, 16, 8, 6, 5, (0,0,255), 2)
-g3 = Grid(50, 16, 12, 5, 4, (255,0,0), 2)
-
+g1 = Grid(10, 4, 8, 27, 31, (0,0,0))
+g2 = Grid(20, 4, 12, 13, 15, (0,0,0), 2)
+g3 = Grid(30, 4, 16, 8, 10, (0,0,0), 2)
+g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)
+g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)
+g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)
 
 run()
 
