@@ -6,33 +6,40 @@ WIDTH = 400
 HEIGHT = 400
 TITLE = "Hexes"
 
-hexRadius = 30
-border = 8
-yOffset = math.sqrt((hexRadius * hexRadius) - (hexRadius/2 * hexRadius/2))
-startX = hexRadius + border
-startY = int(yOffset) + border
+BORDER = 8
 
-def hex_coordinate_to_screen(column, row):
-    #x = startX + (column - 1) * hexRadius * 1.5
-    #columnAdjust = 0 if (column - 1) % 2 == 0 else yOffset
-    #y = startY + (yOffset * (row - 1) * 2) + colunnAdjust
+class Grid:
+    def __init__(self, hexRadius, columns, rows, color):
+        self.hexRadius = hexRadius
+        self.columns = columns
+        self.rows = rows
+        self.color = color
+        self.yOffset = math.sqrt((hexRadius * hexRadius) - (hexRadius/2 * hexRadius/2))
+        self.startX = hexRadius + BORDER
+        self.startY = int(self.yOffset) + BORDER
 
-    x = startX + column * hexRadius * 1.5
-    columnAdjust = 0 if column % 2 == 0 else yOffset
-    y = startY + yOffset * row * 2 + columnAdjust
-    return (x,y)
+        self.hexes = []
+        for i in range(columns):
+            for j in range(rows):
+                self.hexes.append(self.hex_coordinate_to_screen(i,j))
 
-hexes = []
-for i in range(7):
-    for j in range(8):
-        hexes.append(hex_coordinate_to_screen(j,i))
+    def hex_coordinate_to_screen(self, column, row):
+        x = self.startX + column * self.hexRadius * 1.5
+        columnAdjust = 0 if column % 2 == 0 else self.yOffset
+        y = self.startY + self.yOffset * row * 2 + columnAdjust
+        return (x,y)
+
+    def draw(self):
+        for h in self.hexes:
+            screen.draw.hex(h[0], h[1], self.hexRadius, self.color)
 
 def update():
     pass
 
 def draw():
-    for h in hexes:
-        screen.draw.hex(h[0], h[1], hexRadius, (0,0,0))
+    g.draw()
+
+g = Grid(10, 25, 22, (0,0,0))
 
 run()
 
