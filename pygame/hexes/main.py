@@ -6,6 +6,16 @@ WIDTH = 400
 HEIGHT = 400
 TITLE = "Hexes"
 
+class Hex:
+    def __init__(self, screen_coordinate, radius, color, width):
+        self.x, self.y = screen_coordinate
+        self.radius = radius
+        self.color = color
+        self.width = width
+
+    def draw(self):
+        screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
+
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
         self.hexRadius = hexRadius
@@ -22,7 +32,10 @@ class Grid:
         self.hexes = []
         for i in range(columns):
             for j in range(rows):
-                self.hexes.append(self.hex_coordinate_to_screen(i,j))
+                self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), 
+                                      self.hexRadius, 
+                                      self.color, 
+                                      self.width))
 
     def hex_coordinate_to_screen(self, column, row):
         x = self.startX + column * self.hexRadius * 1.5
@@ -32,15 +45,15 @@ class Grid:
 
     def draw(self):
         for h in self.hexes:
-            screen.draw.hex(h[0], h[1], self.hexRadius, self.color, self.width)
+            h.draw()
 
 def update():
     pass
 
 def draw():
     g1.draw()
-    g2.draw()
-    g3.draw()
+    #g2.draw()
+    #g3.draw()
 
 g1 = Grid(10, 8, 8, 25, 22, (0,0,0))
 g2 = Grid(40, 16, 8, 6, 5, (0,0,255), 2)
