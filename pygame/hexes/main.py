@@ -21,10 +21,12 @@ class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
         super().__init__(screen_coordinate, radius, color, width)
         self.scale = scale
+        self.subhexes = [Hex(screen_coordinate, self.radius/scale, color, width)]
 
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
-        screen.draw.hex(self.x, self.y, self.radius/self.scale, self.color)
+        for h in self.subhexes:
+            h.draw()
 
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
