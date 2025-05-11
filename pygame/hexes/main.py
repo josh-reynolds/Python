@@ -92,6 +92,22 @@ class Rosette:
             vY = 2 * self.yOffset * math.sin(angle) + coordinate[1]
             self.hexes.append(Hex((vX,vY), hex_radius, color, width))
 
+        for i in range(6):
+            angle = math.pi * 2/6 * (i+1)
+            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+            vX = 3.5 * self.yOffset * math.cos(angle) + coordinate[0]
+            vY = 3.5 * self.yOffset * math.sin(angle) + coordinate[1]
+            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
+
+        for i in range(6):
+            angle = math.pi * 2/6 * (i+1) + math.pi/6
+            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+            vX = 4 * self.yOffset * math.cos(angle) + coordinate[0]
+            vY = 4 * self.yOffset * math.sin(angle) + coordinate[1]
+            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
+
     def draw(self):
         for h in self.hexes:
             h.draw()
