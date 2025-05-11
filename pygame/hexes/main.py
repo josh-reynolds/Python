@@ -18,9 +18,13 @@ class Hex:
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
 
 class SubdividedHex(Hex):
+    def __init__(self, screen_coordinate, radius, color, width, scale):
+        super().__init__(screen_coordinate, radius, color, width)
+        self.scale = scale
+
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
-        screen.draw.hex(self.x, self.y, self.radius/4, self.color, self.width)
+        screen.draw.hex(self.x, self.y, self.radius/self.scale, self.color)
 
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
@@ -54,8 +58,13 @@ class Grid:
             h.draw()
 
 class SubdividedGrid(Grid):
+    def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1, scale=4):
+        self.scale = scale
+        super().__init__(hexRadius, top_border, left_border, columns, rows, color, width=1)
+
     def add_hex(self, i, j, color, width):
-        self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j), self.hexRadius, color, width))
+        self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j), 
+                                        self.hexRadius, color, width, self.scale))
 
 def update():
     pass
@@ -83,7 +92,7 @@ g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)
 g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)
 g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)
 
-sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2)
+sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2, 3)
 
 run()
 
