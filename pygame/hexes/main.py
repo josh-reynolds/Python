@@ -21,12 +21,17 @@ class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
         super().__init__(screen_coordinate, radius, color, width)
         self.scale = scale
-        self.subhexes = [Hex(screen_coordinate, self.radius/scale, color, width)]
+        self.subhexes = Grid(radius/scale,
+                             self.y - radius - radius/(scale * 2) + 1,
+                             self.x - radius + radius/(scale * 2) + 1,
+                             scale,
+                             scale,
+                             color)
+
 
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
-        for h in self.subhexes:
-            h.draw()
+        self.subhexes.draw()
 
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
@@ -88,13 +93,13 @@ def draw():
         print(e)
 
 g1 = Grid(10, 4, 8, 27, 31, (0,0,0))
-g2 = Grid(20, 4, 12, 13, 15, (0,0,0), 2)
-g3 = Grid(30, 4, 16, 8, 10, (0,0,0), 2)
-g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)
-g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)
-g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)
+g2 = Grid(20, 4, 12, 13, 15, (0,0,0), 2)    # 7 subhexes  (1 + 6)
+g3 = Grid(30, 4, 16, 8, 10, (0,0,0), 2)     # 13 subhexes (1 + 6 + 6)
+g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)      # 19 subhexes (1 + 6 + 6 + 6)
+g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12)
+g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
-sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2, 3)
+sg = SubdividedGrid(40, 12, 8, 1, 1, (0,0,0), 2, 3)
 
 run()
 
