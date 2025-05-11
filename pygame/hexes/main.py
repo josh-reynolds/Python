@@ -78,10 +78,19 @@ class Rosette:
         self.coordinate = coordinate
         self.radius = radius
         self.hex_radius = hex_radius
+        self.yOffset = math.sqrt((hex_radius * hex_radius) - (hex_radius/2 * hex_radius/2))
 
         self.hexes = []
-        for i in range(radius):
-            self.hexes.append(Hex((coordinate[0], coordinate[1]), hex_radius, color, width))
+        #for i in range(radius):
+            #self.hexes.append(Hex((coordinate[0], coordinate[1]), hex_radius, color, width))
+
+        for i in range(6):
+            angle = math.pi * 2/6 * (i+1) + math.pi/6
+            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+            vX = 2 * self.yOffset * math.cos(angle) + coordinate[0]
+            vY = 2 * self.yOffset * math.sin(angle) + coordinate[1]
+            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
 
     def draw(self):
         for h in self.hexes:
