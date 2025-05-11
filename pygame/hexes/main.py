@@ -17,6 +17,11 @@ class Hex:
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
 
+class SubdividedHex(Hex):
+    def draw(self):
+        screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
+        screen.draw.hex(self.x, self.y, self.radius/4, self.color, self.width)
+
 class Grid:
     def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
         self.hexRadius = hexRadius
@@ -33,7 +38,10 @@ class Grid:
         self.hexes = []
         for i in range(columns):
             for j in range(rows):
-                self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), hexRadius, color, width))
+                self.add_hex(i, j, color, width)
+
+    def add_hex(self, i, j, color, width):
+        self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), self.hexRadius, color, width))
 
     def hex_coordinate_to_screen(self, column, row):
         x = self.startX + column * self.hexRadius * 1.5
@@ -45,16 +53,21 @@ class Grid:
         for h in self.hexes:
             h.draw()
 
+class SubdividedGrid(Grid):
+    def add_hex(self, i, j, color, width):
+        self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j), self.hexRadius, color, width))
+
 def update():
     pass
 
 def draw():
-    g1.draw()
+    #g1.draw()
     #g2.draw()
     #g3.draw()
     #g4.draw()
     #g5.draw()
-    g6.draw()
+    #g6.draw()
+    sg.draw()
 
     try:
         filename = "./output.png"
@@ -69,6 +82,8 @@ g3 = Grid(30, 4, 16, 8, 10, (0,0,0), 2)
 g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)
 g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)
 g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)
+
+sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2)
 
 run()
 
