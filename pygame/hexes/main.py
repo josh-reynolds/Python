@@ -34,11 +34,11 @@ class SubdividedHex(Hex):
         self.subhexes.draw()
 
 class Grid:
-    def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1):
-        self.hexRadius = hexRadius
-        self.yOffset = math.sqrt((hexRadius * hexRadius) - (hexRadius/2 * hexRadius/2))
+    def __init__(self, hex_radius, top_border, left_border, columns, rows, color, width=1):
+        self.hex_radius = hex_radius
+        self.yOffset = math.sqrt((hex_radius * hex_radius) - (hex_radius/2 * hex_radius/2))
 
-        self.startX = hexRadius + left_border
+        self.startX = hex_radius + left_border
         self.startY = int(self.yOffset) + top_border
 
         self.top_border = top_border
@@ -52,10 +52,10 @@ class Grid:
                 self.add_hex(i, j, color, width)
 
     def add_hex(self, i, j, color, width):
-        self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), self.hexRadius, color, width))
+        self.hexes.append(Hex(self.hex_coordinate_to_screen(i,j), self.hex_radius, color, width))
 
     def hex_coordinate_to_screen(self, column, row):
-        x = self.startX + column * self.hexRadius * 1.5
+        x = self.startX + column * self.hex_radius * 1.5
         columnAdjust = 0 if column % 2 == 0 else self.yOffset
         y = self.startY + self.yOffset * row * 2 + columnAdjust
         return (x,y)
@@ -65,13 +65,27 @@ class Grid:
             h.draw()
 
 class SubdividedGrid(Grid):
-    def __init__(self, hexRadius, top_border, left_border, columns, rows, color, width=1, scale=4):
+    def __init__(self, hex_radius, top_border, left_border, columns, rows, color, width=1, scale=4):
         self.scale = scale
-        super().__init__(hexRadius, top_border, left_border, columns, rows, color, width=1)
+        super().__init__(hex_radius, top_border, left_border, columns, rows, color, width=1)
 
     def add_hex(self, i, j, color, width):
         self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j), 
-                                        self.hexRadius, color, width, self.scale))
+                                        self.hex_radius, color, width, self.scale))
+
+class Rosette:
+    def __init__(self, coordinate, radius, hex_radius, color, width=1):
+        self.coordinate = coordinate
+        self.radius = radius
+        self.hex_radius = hex_radius
+
+        self.hexes = []
+        for i in range(radius):
+            self.hexes.append(Hex((coordinate[0], coordinate[1]), hex_radius, color, width))
+
+    def draw(self):
+        for h in self.hexes:
+            h.draw()
 
 def update():
     pass
@@ -84,6 +98,7 @@ def draw():
     #g5.draw()
     #g6.draw()
     sg.draw()
+    r.draw()
 
     try:
         filename = "./output.png"
@@ -100,6 +115,8 @@ g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12)
 g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
 sg = SubdividedGrid(40, 12, 8, 1, 1, (0,0,0), 2, 3)
+
+r = Rosette((WIDTH/2, HEIGHT/2), 1, 40, (0,0,0))
 
 run()
 
