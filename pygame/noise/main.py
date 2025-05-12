@@ -2,25 +2,26 @@ import math
 from random import seed, randint
 from engine import *
 
-WIDTH = 400
-HEIGHT = 400
+WIDTH = 800
+HEIGHT = 800
 TITLE = "Perlin Noise"
 
 OUTLINE = (0,0,0)
 
-grid_w = 100
-grid_h = 100
+grid_w = 200
+grid_h = 200
 cell_w = WIDTH // grid_w
 cell_h = HEIGHT // grid_h
 cells = [[0 for i in range(grid_w)] for j in range(grid_h)]
 
 # ---------------------------------------
-scale = 0.11
+repeat = 128
+scale = 0.03
 seed(100000)
 #gradients = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
 gradients = [(1,1), (math.sqrt(2),0), (1,-1), (0,math.sqrt(2)), 
              (0,-math.sqrt(2)), (-1,1), (-math.sqrt(2),0), (-1,-1)]
-random_values = [[randint(0,7) for i in range(grid_w)] for i in range(grid_h)]
+random_values = [[randint(0,7) for i in range(repeat)] for i in range(repeat)]
 
 min_val = 0
 max_val = 0
@@ -29,9 +30,12 @@ def noise(x_in, y_in):
     x = x_in * scale
     y = y_in * scale
 
+    x %= repeat
+    y %= repeat
+
     # grid corners
-    x1, y1 = int(x), int(y)
-    x2, y2 = x1 + 1, y1 + 1
+    x1, y1 = int(x) % repeat, int(y) % repeat
+    x2, y2 = (x1 + 1) % repeat, (y1 + 1) % repeat
 
     # distance vectors
     dA, dB, dC, dD = (x1 - x, y1 - y), \
