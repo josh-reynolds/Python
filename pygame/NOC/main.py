@@ -4,24 +4,32 @@ WIDTH = 640
 HEIGHT = 360
 TITLE ="The Nature of Code"
 
-class Ball:
-    def __init__(self, x, y, xspeed, yspeed):
+class PVector:
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.xspeed = xspeed
-        self.yspeed = yspeed
+
+    def __add__(self, other):
+        return PVector(self.x + other.x, self.y + other.y)
+
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
+
+class Ball:
+    def __init__(self, location, velocity):
+        self.location = location
+        self.velocity = velocity
 
     def update(self):
-        self.x += self.xspeed
-        self.y += self.yspeed
+        self.location += self.velocity
 
-        if ((self.x > WIDTH) or (self.x < 0)):
-            self.xspeed *= -1
-        if ((self.y > HEIGHT) or (self.y < 0)):
-            self.yspeed *= -1
+        if ((self.location.x > WIDTH) or (self.location.x < 0)):
+            self.velocity.x *= -1
+        if ((self.location.y > HEIGHT) or (self.location.y < 0)):
+            self.velocity.y *= -1
 
     def draw(self):
-        screen.draw.circle(self.x, self.y, 10, (255,0,0))
+        screen.draw.circle(self.location.x, self.location.y, 10, (255,0,0))
 
 # ----------------------------------------------------
 def update():
@@ -31,8 +39,9 @@ def update():
 def draw():
     b.draw()
 
-# NOC Example 1.1 (p. 29) ----------------------------
-b = Ball(100,100, 1, 3.3)
+# NOC Example 1.2 (p. 35) ----------------------------
+b = Ball(PVector(100,100), PVector(1, 3.3))
+
 
 run()
 
