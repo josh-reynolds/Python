@@ -21,13 +21,7 @@ class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
         super().__init__(screen_coordinate, radius, color, width)
         self.scale = scale
-        self.subhexes = Grid(radius/scale,
-                             self.y - radius - radius/(scale * 2) + 1,
-                             self.x - radius + radius/(scale * 2) + 1,
-                             scale,
-                             scale,
-                             color)
-
+        self.subhexes = Rosette((self.x, self.y), scale-2, radius/scale, (0,0,0))
 
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
@@ -86,42 +80,46 @@ class Rosette:
         for i in range(radius):
             pass
 
-        for i in range(6):
-            angle = math.pi * 2/6 * (i+1) + math.pi/6
-            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
-            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
-            vX = 2 * self.yOffset * math.cos(angle) + coordinate[0]
-            vY = 2 * self.yOffset * math.sin(angle) + coordinate[1]
-            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
+        if radius > 0:
+            for i in range(6):
+                angle = math.pi * 2/6 * (i+1) + math.pi/6
+                #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+                #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+                vX = 2 * self.yOffset * math.cos(angle) + coordinate[0]
+                vY = 2 * self.yOffset * math.sin(angle) + coordinate[1]
+                self.hexes.append(Hex((vX,vY), hex_radius, color, width))
 
-        for i in range(6):
-            angle = math.pi * 2/6 * (i+1)
-            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
-            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
-            vX = 3.5 * self.yOffset * math.cos(angle) + coordinate[0]
-            vY = 3.5 * self.yOffset * math.sin(angle) + coordinate[1]
-            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
+        if radius > 1:
+            for i in range(6):
+                angle = math.pi * 2/6 * (i+1)
+                #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+                #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+                vX = 3.5 * self.yOffset * math.cos(angle) + coordinate[0]
+                vY = 3.5 * self.yOffset * math.sin(angle) + coordinate[1]
+                self.hexes.append(Hex((vX,vY), hex_radius, color, width))
 
-        for i in range(6):
-            angle = math.pi * 2/6 * (i+1) + math.pi/6
-            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
-            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
-            vX = 4 * self.yOffset * math.cos(angle) + coordinate[0]
-            vY = 4 * self.yOffset * math.sin(angle) + coordinate[1]
-            self.hexes.append(Hex((vX,vY), hex_radius, color, width))
+        if radius > 2:
+            for i in range(6):
+                angle = math.pi * 2/6 * (i+1) + math.pi/6
+                #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+                #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+                vX = 4 * self.yOffset * math.cos(angle) + coordinate[0]
+                vY = 4 * self.yOffset * math.sin(angle) + coordinate[1]
+                self.hexes.append(Hex((vX,vY), hex_radius, color, width))
 
-        for i in range(6):
-            angle1 = math.pi * 2/6 * (i+1) + math.pi/16.5
-            #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
-            #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
-            vX1 = 5.3 * self.yOffset * math.cos(angle1) + coordinate[0]
-            vY1 = 5.3 * self.yOffset * math.sin(angle1) + coordinate[1]
-            self.hexes.append(Hex((vX1,vY1), hex_radius, color, width))
+        if radius > 3:
+            for i in range(6):
+                angle1 = math.pi * 2/6 * (i+1) + math.pi/16.5
+                #vX = 2 * hex_radius * math.cos(angle) + coordinate[0]
+                #vY = 2 * hex_radius * math.sin(angle) + coordinate[1]
+                vX1 = 5.3 * self.yOffset * math.cos(angle1) + coordinate[0]
+                vY1 = 5.3 * self.yOffset * math.sin(angle1) + coordinate[1]
+                self.hexes.append(Hex((vX1,vY1), hex_radius, color, width))
 
-            angle2 = math.pi * 2/6 * (i+1) - math.pi/16.5
-            vX2 = 5.3 * self.yOffset * math.cos(angle2) + coordinate[0]
-            vY2 = 5.3 * self.yOffset * math.sin(angle2) + coordinate[1]
-            self.hexes.append(Hex((vX2,vY2), hex_radius, color, width))
+                angle2 = math.pi * 2/6 * (i+1) - math.pi/16.5
+                vX2 = 5.3 * self.yOffset * math.cos(angle2) + coordinate[0]
+                vY2 = 5.3 * self.yOffset * math.sin(angle2) + coordinate[1]
+                self.hexes.append(Hex((vX2,vY2), hex_radius, color, width))
 
     def draw(self):
         for h in self.hexes:
@@ -138,7 +136,7 @@ def draw():
     #g5.draw()
     #g6.draw()
     sg.draw()
-    r.draw()
+    #r.draw()
 
     try:
         filename = "./output.png"
@@ -154,7 +152,7 @@ g4 = Grid(40, 12, 8, 6, 7, (0,0,0), 2)      # 19 subhexes (1 + 6 + 6 + 6)
 g5 = Grid(50, 12, 12, 5, 5, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12)
 g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
-sg = SubdividedGrid(40, 12, 8, 1, 1, (0,0,0), 2, 3)
+sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2, 4)
 
 r = Rosette((WIDTH/2, HEIGHT/2), 1, 40, (0,0,0))
 
