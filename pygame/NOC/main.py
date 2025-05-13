@@ -34,12 +34,22 @@ class PVector:
         m = self.mag()
         return 0 if m == 0 else self/m
 
+    def limit(self, max_):
+        m = self.mag()
+        if m > max_:
+            self.x, self.y = self.x/m, self.y/m
+            self.x, self.y = self.x * max_, self.y * max_
+
 class Mover:
     def __init__(self):
-        self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
-        self.velocity = PVector(uniform(-2,2), uniform(-2,2))
+        self.location = PVector(WIDTH//2, HEIGHT//2)
+        self.velocity = PVector(0,0)
+        self.acceleration = PVector(-0.001, 0.01)
+        self.top_speed = 10
 
     def update(self):
+        self.velocity += self.acceleration
+        self.velocity.limit(self.top_speed)
         self.location += self.velocity
         self.check_edges()
 
