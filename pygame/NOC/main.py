@@ -29,6 +29,10 @@ class PVector:
     def mag(self):
         return math.sqrt(self.x ** 2 + self.y ** 2)
 
+    def normalize(self):
+        m = self.mag()
+        return 0 if m == 0 else self/m
+
 class Ball:
     def __init__(self, location, velocity):
         self.location = location
@@ -60,7 +64,11 @@ def draw():
     mouse = PVector(x,y)
     center = PVector(WIDTH//2, HEIGHT//2)
     mouse = mouse - center
-    mouse = mouse / 2
+
+    # NOC Example 1.6 (p. 45) ------------------------
+    mouse = mouse.normalize()
+    mouse = mouse * 50
+    #mouse = mouse / 2
     m = mouse.mag()
     mouse = mouse + center
     screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
