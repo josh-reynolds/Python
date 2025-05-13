@@ -1,3 +1,4 @@
+import math
 import pygame
 from engine import *
 
@@ -19,8 +20,14 @@ class PVector:
     def __mul__(self, scalar):
         return PVector(self.x * scalar, self.y * scalar)
 
+    def __truediv__(self, scalar):
+        return PVector(self.x / scalar, self.y / scalar)
+
     def __repr__(self):
         return f"({self.x}, {self.y})"
+
+    def mag(self):
+        return math.sqrt(self.x ** 2 + self.y ** 2)
 
 class Ball:
     def __init__(self, location, velocity):
@@ -53,9 +60,13 @@ def draw():
     mouse = PVector(x,y)
     center = PVector(WIDTH//2, HEIGHT//2)
     mouse = mouse - center
-    mouse = mouse * 0.5
+    mouse = mouse / 2
+    m = mouse.mag()
     mouse = mouse + center
     screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
+
+    # NOC Example 1.5 (p. 43) ------------------------
+    screen.draw.rect((0,0,m,10), (255,0,0), 0)
 
 # NOC Example 1.2 (p. 35) ----------------------------
 b = Ball(PVector(100,100), PVector(1, 3.3))
