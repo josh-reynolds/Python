@@ -1,3 +1,4 @@
+import pygame
 from engine import *
 
 WIDTH = 640
@@ -11,6 +12,12 @@ class PVector:
 
     def __add__(self, other):
         return PVector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return PVector(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, scalar):
+        return PVector(self.x * scalar, self.y * scalar)
 
     def __repr__(self):
         return f"({self.x}, {self.y})"
@@ -33,15 +40,25 @@ class Ball:
 
 # ----------------------------------------------------
 def update():
-    b.update()
+    #b.update()
+    pass
 
 # ----------------------------------------------------
 def draw():
-    b.draw()
+    #b.draw()
+
+    # NOC Example 1.3 (p. 39) ------------------------
+    # NOC Example 1.4 (p. 41) ------------------------
+    x,y = pygame.mouse.get_pos()
+    mouse = PVector(x,y)
+    center = PVector(WIDTH//2, HEIGHT//2)
+    mouse = mouse - center
+    mouse = mouse * 0.5
+    mouse = mouse + center
+    screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
 
 # NOC Example 1.2 (p. 35) ----------------------------
 b = Ball(PVector(100,100), PVector(1, 3.3))
-
 
 run()
 
@@ -67,3 +84,5 @@ run()
 # content of this parent script, need to fiddlw with this to sort it out. But for now,
 # going ahead with class-based solution, which is why Example 1.1 above looks a little
 # different from the book version.
+
+# Another potential addition to the engine: mouse support.
