@@ -1,5 +1,6 @@
 import math
 import pygame
+from random import randint, uniform
 from engine import *
 
 WIDTH = 640
@@ -33,30 +34,41 @@ class PVector:
         m = self.mag()
         return 0 if m == 0 else self/m
 
-class Ball:
-    def __init__(self, location, velocity):
-        self.location = location
-        self.velocity = velocity
+class Mover:
+    def __init__(self):
+        self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
+        self.velocity = PVector(uniform(-2,2), uniform(-2,2))
 
     def update(self):
         self.location += self.velocity
+        self.check_edges()
 
-        if ((self.location.x > WIDTH) or (self.location.x < 0)):
-            self.velocity.x *= -1
-        if ((self.location.y > HEIGHT) or (self.location.y < 0)):
-            self.velocity.y *= -1
+    def check_edges(self):
+        #if ((self.location.x > WIDTH) or (self.location.x < 0)):
+            #self.velocity.x *= -1
+        #if ((self.location.y > HEIGHT) or (self.location.y < 0)):
+            #self.velocity.y *= -1
+
+        if self.location.x > WIDTH:
+            self.location.x = 0
+        elif self.location.x < 0:
+            self.location.x = WIDTH
+
+        if self.location.y > HEIGHT:
+            self.location.y = 0
+        elif self.location.y < 0:
+            self.location.y = HEIGHT
 
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, 10, (255,0,0))
 
 # ----------------------------------------------------
 def update():
-    #b.update()
-    pass
+    b.update()
 
 # ----------------------------------------------------
 def draw():
-    #b.draw()
+    b.draw()
 
     # NOC Example 1.3 (p. 39) ------------------------
     # NOC Example 1.4 (p. 41) ------------------------
@@ -77,7 +89,7 @@ def draw():
     screen.draw.rect((0,0,m,10), (255,0,0), 0)
 
 # NOC Example 1.2 (p. 35) ----------------------------
-b = Ball(PVector(100,100), PVector(1, 3.3))
+b = Mover()
 
 run()
 
