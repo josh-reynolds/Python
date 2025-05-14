@@ -1,6 +1,6 @@
 import math
 import pygame
-from random import randint, uniform, random
+from random import randint, uniform, random, randrange
 from engine import *
 
 WIDTH = 640
@@ -48,7 +48,7 @@ class PVector:
 
 class Mover:
     def __init__(self):
-        self.location = PVector(WIDTH//2, HEIGHT//2)
+        self.location = PVector(randrange(WIDTH), randrange(HEIGHT))
         self.velocity = PVector(0,0)
         self.acceleration = PVector(-0.001, 0.01)
         self.top_speed = 10
@@ -89,31 +89,39 @@ class Mover:
 
 # ----------------------------------------------------
 def update():
-    b.update()
+    #b.update()
+    for m in movers:
+        m.update()
 
 # ----------------------------------------------------
 def draw():
-    b.draw()
+    #b.draw()
 
     # NOC Example 1.3 (p. 39) ------------------------
     # NOC Example 1.4 (p. 41) ------------------------
-    x,y = pygame.mouse.get_pos()
-    mouse = PVector(x,y)
-    center = PVector(WIDTH//2, HEIGHT//2)
-    mouse = PVector.sub(mouse, center)
+    #x,y = pygame.mouse.get_pos()
+    #mouse = PVector(x,y)
+    #center = PVector(WIDTH//2, HEIGHT//2)
+    #mouse = PVector.sub(mouse, center)
 
     # NOC Example 1.6 (p. 45) ------------------------
-    mouse = PVector.normalize(mouse)
-    mouse = PVector.mult(mouse, 50)
-    m = mouse.mag()
-    mouse = PVector.add(mouse, center)
-    screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
+    #mouse = PVector.normalize(mouse)
+    #mouse = PVector.mult(mouse, 50)
+    #m = mouse.mag()
+    #mouse = PVector.add(mouse, center)
+    #screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
 
     # NOC Example 1.5 (p. 43) ------------------------
-    screen.draw.rect((0,0,m,10), (255,0,0), 0)
+    #screen.draw.rect((0,0,m,10), (255,0,0), 0)
+
+    for m in movers:
+        m.draw()
 
 # NOC Example 1.2 (p. 35) ----------------------------
-b = Mover()
+#b = Mover()
+
+# NOC Example 1.11 (p. 59) ---------------------------
+movers = [Mover() for i in range(20)]
 
 run()
 
