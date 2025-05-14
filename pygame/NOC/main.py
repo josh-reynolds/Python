@@ -55,7 +55,13 @@ class Mover:
 
     def update(self):
         # NOC Example 1.9 (p. 53) --------------------------------
-        self.acceleration = PVector.mult(PVector.random2D(), random() * 5)
+        #self.acceleration = PVector.mult(PVector.random2D(), random() * 5)
+
+        # NOC Example 1.10 (p. 58) -------------------------------
+        mouse = PVector(*pygame.mouse.get_pos())
+        direction = PVector.sub(mouse, self.location).normalize()
+        direction = PVector.mult(direction, 0.5)
+        self.acceleration = direction
 
         self.velocity = PVector.add(self.velocity, self.acceleration)
         self.velocity.limit(self.top_speed)
