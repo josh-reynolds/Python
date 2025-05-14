@@ -12,27 +12,11 @@ class PVector:
         self.x = x
         self.y = y
 
-    def __add__(self, other):
-        return PVector(self.x + other.x, self.y + other.y)
-
-    def __sub__(self, other):
-        return PVector(self.x - other.x, self.y - other.y)
-
-    def __mul__(self, scalar):
-        return PVector(self.x * scalar, self.y * scalar)
-
-    def __truediv__(self, scalar):
-        return PVector(self.x / scalar, self.y / scalar)
-
     def __repr__(self):
         return f"({self.x}, {self.y})"
 
     def mag(self):
         return math.sqrt(self.x ** 2 + self.y ** 2)
-
-    def normalize(self):
-        m = self.mag()
-        return 0 if m == 0 else self/m
 
     def limit(self, max_):
         m = self.mag()
@@ -40,9 +24,27 @@ class PVector:
             self.x, self.y = self.x/m, self.y/m
             self.x, self.y = self.x * max_, self.y * max_
 
+    def add(v, u):
+        return PVector(v.x + u.x, v.y + u.y)
+
+    def sub(v, u):
+        return PVector(v.x - u.x, v.y - u.y)
+
+    def mult(v, scalar):
+        return PVector(v.x * scalar, v.y * scalar)
+
+    def div(v, scalar):
+        return PVector(v.x / scalar, v.y / scalar)
+
+    def normalize(v):
+        m = v.mag()
+        if m == 0:
+            return PVector(0,0)
+        else:
+            return PVector.div(v,m)
+
     def random2D():
         return PVector(uniform(-1,1), uniform(-1,1)).normalize()
-
 
 class Mover:
     def __init__(self):
@@ -53,12 +55,11 @@ class Mover:
 
     def update(self):
         # NOC Example 1.9 (p. 53) --------------------------------
-        self.acceleration = PVector.random2D()
-        self.acceleration *= random() * 5
+        self.acceleration = PVector.mult(PVector.random2D(), random() * 5)
 
-        self.velocity += self.acceleration
+        self.velocity = PVector.add(self.velocity, self.acceleration)
         self.velocity.limit(self.top_speed)
-        self.location += self.velocity
+        self.location = PVector.add(self.velocity, self.location)
         self.check_edges()
 
     def check_edges(self):
@@ -93,14 +94,13 @@ def draw():
     x,y = pygame.mouse.get_pos()
     mouse = PVector(x,y)
     center = PVector(WIDTH//2, HEIGHT//2)
-    mouse = mouse - center
+    mouse = PVector.sub(mouse, center)
 
     # NOC Example 1.6 (p. 45) ------------------------
-    mouse = mouse.normalize()
-    mouse = mouse * 50
-    #mouse = mouse / 2
+    mouse = PVector.normalize(mouse)
+    mouse = PVector.mult(mouse, 50)
     m = mouse.mag()
-    mouse = mouse + center
+    mouse = PVector.add(mouse, center)
     screen.draw.line((0,0,0), (center.x, center.y), (mouse.x, mouse.y))
 
     # NOC Example 1.5 (p. 43) ------------------------
