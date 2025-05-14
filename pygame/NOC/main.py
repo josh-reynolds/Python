@@ -1,6 +1,6 @@
 import math
 import pygame
-from random import randint, uniform
+from random import randint, uniform, random
 from engine import *
 
 WIDTH = 640
@@ -40,6 +40,10 @@ class PVector:
             self.x, self.y = self.x/m, self.y/m
             self.x, self.y = self.x * max_, self.y * max_
 
+    def random2D():
+        return PVector(uniform(-1,1), uniform(-1,1)).normalize()
+
+
 class Mover:
     def __init__(self):
         self.location = PVector(WIDTH//2, HEIGHT//2)
@@ -48,6 +52,10 @@ class Mover:
         self.top_speed = 10
 
     def update(self):
+        # NOC Example 1.9 (p. 53) --------------------------------
+        self.acceleration = PVector.random2D()
+        self.acceleration *= random() * 5
+
         self.velocity += self.acceleration
         self.velocity.limit(self.top_speed)
         self.location += self.velocity
