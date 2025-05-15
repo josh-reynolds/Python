@@ -11,7 +11,8 @@ TITLE = "The Nature of Code"
 def update():
     for m in movers:
         m.apply_force(wind)
-        m.apply_force(gravity)
+        g = PVector.mult(gravity, m.mass)
+        m.apply_force(g)
         m.update()
 
 # ----------------------------------------------------
