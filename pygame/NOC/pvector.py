@@ -35,6 +35,9 @@ class PVector:
             self / m
             self * max_
 
+    def copy(self):
+        return PVector(self.x, self.y)
+
     # class methods -------------------------------
     def add(v, u):
         return PVector(v.x + u.x, v.y + u.y)

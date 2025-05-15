@@ -1,5 +1,7 @@
 from engine import *
+from random import uniform
 from mover import Mover
+from pvector import PVector
 
 WIDTH = 640
 HEIGHT = 360
@@ -8,6 +10,8 @@ TITLE = "The Nature of Code"
 # ----------------------------------------------------
 def update():
     for m in movers:
+        m.apply_force(wind)
+        m.apply_force(gravity)
         m.update()
 
 # ----------------------------------------------------
@@ -15,7 +19,9 @@ def draw():
     for m in movers:
         m.draw()
 
-movers = [Mover(WIDTH, HEIGHT) for i in range(20)]
+movers = [Mover(uniform(0.1, 3), 0, 0, WIDTH, HEIGHT) for i in range(100)]
+wind = PVector(0.01, 0)
+gravity = PVector(0, 0.1)
 
 run()
 
