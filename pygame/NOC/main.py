@@ -10,9 +10,19 @@ TITLE = "The Nature of Code"
 # ----------------------------------------------------
 def update():
     for m in movers:
+        c = 0.01
+        normal = 1
+        frictionMag = c * normal
+        friction = m.velocity.copy().normalize()
+        friction * -1
+        friction * frictionMag
+        m.apply_force(friction)
+
         m.apply_force(wind)
+
         g = PVector.mult(gravity, m.mass)
         m.apply_force(g)
+
         m.update()
 
 # ----------------------------------------------------
