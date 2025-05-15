@@ -1,43 +1,9 @@
-import pygame
-from random import randrange
 from engine import *
-from pvector import PVector
+from mover import Mover
 
 WIDTH = 640
 HEIGHT = 360
-TITLE ="The Nature of Code"
-
-class Mover:
-    def __init__(self):
-        self.location = PVector(randrange(WIDTH), randrange(HEIGHT))
-        self.velocity = PVector(0,0)
-        self.acceleration = PVector(0,0)
-        self.top_speed = 10
-
-    def update(self):
-        mouse = PVector(*pygame.mouse.get_pos())
-        direction = PVector.sub(mouse, self.location).normalize()
-        direction * 0.5
-        self.acceleration = direction
-
-        self.velocity + self.acceleration
-        self.velocity.limit(self.top_speed)
-        self.location + self.velocity
-        self.check_edges()
-
-    def check_edges(self):
-        if self.location.x > WIDTH:
-            self.location.x = 0
-        elif self.location.x < 0:
-            self.location.x = WIDTH
-
-        if self.location.y > HEIGHT:
-            self.location.y = 0
-        elif self.location.y < 0:
-            self.location.y = HEIGHT
-
-    def draw(self):
-        screen.draw.circle(self.location.x, self.location.y, 10, (255,0,0))
+TITLE = "The Nature of Code"
 
 # ----------------------------------------------------
 def update():
@@ -49,7 +15,7 @@ def draw():
     for m in movers:
         m.draw()
 
-movers = [Mover() for i in range(20)]
+movers = [Mover(WIDTH, HEIGHT) for i in range(20)]
 
 run()
 
