@@ -7,16 +7,32 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Liquid:
+    def __init__(self, x, y, w, h, c):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.c = c
+        self.rect = (x, y, w, h)
+
+    def draw(self):
+        screen.draw.rect(self.rect, (0,0,200,128), 0)
+        # TO_DO: check alpha value support - isn't working as expected
+
 # ----------------------------------------------------
 def update():
     for m in movers:
         c = 0.01
         normal = 1
-        frictionMag = c * normal
-        friction = m.velocity.copy().normalize()
-        friction * -1
-        friction * frictionMag
+        friction_mag = c * normal
+        friction = m.velocity.mult(-1).normalize().mult(friction_mag)
         m.apply_force(friction)
+
+        c = 0.1
+        speed = m.velocity.mag()
+        drag_magnitude = c * speed * speed
+        drag = m.velocity.mult(-1).normalize().mult(drag_magnitude)
 
         m.apply_force(wind)
 
@@ -27,12 +43,15 @@ def update():
 
 # ----------------------------------------------------
 def draw():
+    l.draw()
     for m in movers:
         m.draw()
+
 
 movers = [Mover(uniform(0.1, 3), 0, 0, WIDTH, HEIGHT) for i in range(100)]
 wind = PVector(0.01, 0)
 gravity = PVector(0, 0.1)
+l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT, 0.1)
 
 run()
 
