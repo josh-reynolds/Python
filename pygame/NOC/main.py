@@ -26,6 +26,17 @@ class Attractor:
         force * strength
         return force
 
+class Repulsor(Attractor):
+    def attract(self, mover):
+        force = PVector.sub(self.location, mover.location)
+        distance = force.mag()
+        distance = max(min(distance, 25), 5)
+        force.normalize()
+        strength = (G * self.mass * mover.mass) / (distance * distance)
+        force * strength
+        force * -0.01
+        return force
+
 # ----------------------------------------------------
 class Liquid:
     def __init__(self, x, y, w, h, c):
@@ -51,15 +62,19 @@ def update():
             if mv is not m:
                 f = mv.attract(m)
                 m.apply_force(f)
+        f = r.attract(m)
+        m.apply_force(f)
         m.update()
 
 # ----------------------------------------------------
 def draw():
     for m in movers:
         m.draw()
+    r.draw()
 
 G = 0.4
 movers = [Mover(uniform(0.1, 2), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
+r = Repulsor(WIDTH//2, HEIGHT//2)
 
 run()
 

@@ -22,18 +22,22 @@ class Mover:
 
     def check_edges(self):
         if self.location.x > self.max_width:
-            self.location.x = self.max_width
-            self.velocity.x *= -1
-        elif self.location.x < 0:
+            #self.location.x = self.max_width
+            #self.velocity.x *= -1
             self.location.x = 0
-            self.velocity.x *= -1
+        elif self.location.x < 0:
+            #self.location.x = 0
+            #self.velocity.x *= -1
+            self.location.x = self.max_width
 
         if self.location.y > self.max_height:
-            self.location.y = self.max_height
-            self.velocity.y *= -1
-        elif self.location.y < 0:
+            #self.location.y = self.max_height
+            #self.velocity.y *= -1
             self.location.y = 0
-            self.velocity.y *= -1
+        elif self.location.y < 0:
+            #self.location.y = 0
+            #self.velocity.y *= -1
+            self.location.y = self.max_height
 
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, self.mass*16, (255,0,0))
