@@ -8,6 +8,25 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Attractor:
+    def __init__(self, x, y):
+        self.location = PVector(x,y)
+        self.mass = 20
+
+    def draw(self):
+        screen.draw.circle(self.location.x, self.location.y, self.mass*2, (0,0,255))
+        screen.draw.circle(self.location.x, self.location.y, self.mass*2, (0,0,0), 1)
+
+    def attract(self, mover):
+        force = PVector.sub(self.location, mover.location)
+        distance = force.mag()
+        distance = max(min(distance, 25), 5)
+        force.normalize()
+        strength = (G * self.mass * mover.mass) / (distance * distance)
+        force * strength
+        return force
+
+# ----------------------------------------------------
 class Liquid:
     def __init__(self, x, y, w, h, c):
         self.x = x
@@ -27,39 +46,35 @@ class Liquid:
 
 # ----------------------------------------------------
 def update():
-    for m in movers:
-        #c = 0.01
-        #normal = 1
-        #friction_mag = c * normal
-        #friction = m.velocity.mult(-1).normalize().mult(friction_mag)
-        #m.apply_force(friction)
+    #for m in movers:
+        #if m.is_inside(l):
+            #m.drag(l)
+#
+        #g = PVector.mult(gravity, m.mass)
+        #m.apply_force(g)
+#
+        #m.update()
+    f = a.attract(m)
+    m.apply_force(f)
 
-        #c = 0.1
-        #speed = m.velocity.mag()
-        #drag_magnitude = c * speed * speed
-        #drag = m.velocity.mult(-1).normalize().mult(drag_magnitude)
-
-        #m.apply_force(wind)
-
-        if m.is_inside(l):
-            m.drag(l)
-
-        g = PVector.mult(gravity, m.mass)
-        m.apply_force(g)
-
-        m.update()
+    m.update()
 
 # ----------------------------------------------------
 def draw():
-    l.draw()
-    for m in movers:
-        m.draw()
+    #l.draw()
+    #for m in movers:
+        #m.draw()
+    m.draw()
+    a.draw()
 
 
-movers = [Mover(uniform(0.1, 3), uniform(0,WIDTH), 0, WIDTH, HEIGHT) for i in range(100)]
-#wind = PVector(0.01, 0)
-gravity = PVector(0, 0.1)
-l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT, 0.1)
+#movers = [Mover(uniform(0.1, 3), uniform(0,WIDTH), 0, WIDTH, HEIGHT) for i in range(100)]
+#gravity = PVector(0, 0.1)
+#l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT, 0.1)
+
+G = 0.4
+m = Mover(2, 0, 0, WIDTH, HEIGHT)
+a = Attractor(WIDTH//2, HEIGHT//2)
 
 run()
 
