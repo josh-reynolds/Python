@@ -46,34 +46,19 @@ class Liquid:
 
 # ----------------------------------------------------
 def update():
-    #for m in movers:
-        #if m.is_inside(l):
-            #m.drag(l)
-#
-        #g = PVector.mult(gravity, m.mass)
-        #m.apply_force(g)
-#
-        #m.update()
-    f = a.attract(m)
-    m.apply_force(f)
-
-    m.update()
+    for m in movers:
+        f = a.attract(m)
+        m.apply_force(f)
+        m.update()
 
 # ----------------------------------------------------
 def draw():
-    #l.draw()
-    #for m in movers:
-        #m.draw()
-    m.draw()
+    for m in movers:
+        m.draw()
     a.draw()
 
-
-#movers = [Mover(uniform(0.1, 3), uniform(0,WIDTH), 0, WIDTH, HEIGHT) for i in range(100)]
-#gravity = PVector(0, 0.1)
-#l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT, 0.1)
-
 G = 0.4
-m = Mover(2, 0, 0, WIDTH, HEIGHT)
+movers = [Mover(uniform(0.1, 3), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
 a = Attractor(WIDTH//2, HEIGHT//2)
 
 run()
