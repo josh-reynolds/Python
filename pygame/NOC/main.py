@@ -1,5 +1,6 @@
 from engine import *
 from random import uniform
+from pygame import Rect
 from mover import Mover
 from pvector import PVector
 
@@ -14,27 +15,34 @@ class Liquid:
         self.w = w
         self.h = h
         self.c = c
-        self.rect = (x, y, w, h)
+        self.rect = Rect(x, y, w, h)
 
     def draw(self):
         screen.draw.rect(self.rect, (0,0,200,128), 0)
         # TO_DO: check alpha value support - isn't working as expected
+        # OK, according to StackOverflow, draw doesn't support alpha
+        # instead we need to draw to a separate surface, and blit that
+        # to the screen - will need to think about how to fold this 
+        # functionality into the engine
 
 # ----------------------------------------------------
 def update():
     for m in movers:
-        c = 0.01
-        normal = 1
-        friction_mag = c * normal
-        friction = m.velocity.mult(-1).normalize().mult(friction_mag)
-        m.apply_force(friction)
+        #c = 0.01
+        #normal = 1
+        #friction_mag = c * normal
+        #friction = m.velocity.mult(-1).normalize().mult(friction_mag)
+        #m.apply_force(friction)
 
-        c = 0.1
-        speed = m.velocity.mag()
-        drag_magnitude = c * speed * speed
-        drag = m.velocity.mult(-1).normalize().mult(drag_magnitude)
+        #c = 0.1
+        #speed = m.velocity.mag()
+        #drag_magnitude = c * speed * speed
+        #drag = m.velocity.mult(-1).normalize().mult(drag_magnitude)
 
-        m.apply_force(wind)
+        #m.apply_force(wind)
+
+        if m.is_inside(l):
+            m.drag(l)
 
         g = PVector.mult(gravity, m.mass)
         m.apply_force(g)
@@ -48,8 +56,8 @@ def draw():
         m.draw()
 
 
-movers = [Mover(uniform(0.1, 3), 0, 0, WIDTH, HEIGHT) for i in range(100)]
-wind = PVector(0.01, 0)
+movers = [Mover(uniform(0.1, 3), uniform(0,WIDTH), 0, WIDTH, HEIGHT) for i in range(100)]
+#wind = PVector(0.01, 0)
 gravity = PVector(0, 0.1)
 l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT, 0.1)
 

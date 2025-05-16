@@ -41,3 +41,14 @@ class Mover:
     def apply_force(self, force):
         f = PVector.div(force, self.mass)
         self.acceleration + f
+
+    def is_inside(self, liquid):
+        return liquid.rect.collidepoint(self.location.x, self.location.y)
+
+    def drag(self, liquid):
+        speed = self.velocity.mag()
+        dragMagnitude = liquid.c * speed * speed
+
+        drag = self.velocity.mult(-1).normalize()
+        drag * dragMagnitude
+        self.apply_force(drag)
