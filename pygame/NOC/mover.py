@@ -11,6 +11,7 @@ class Mover:
         self.velocity = PVector(0,0)
         self.acceleration = PVector(0,0)
         self.top_speed = 10
+        self.G = 0.4
 
     def update(self):
         self.velocity + self.acceleration
@@ -52,3 +53,12 @@ class Mover:
         drag = self.velocity.mult(-1).normalize()
         drag * dragMagnitude
         self.apply_force(drag)
+
+    def attract(self, mover):
+        force = PVector.sub(self.location, mover.location)
+        distance = force.mag()
+        distance = max(min(distance, 25), 5)
+        force.normalize()
+        strength = (self.G * self.mass * mover.mass) / (distance * distance)
+        force * strength
+        return force

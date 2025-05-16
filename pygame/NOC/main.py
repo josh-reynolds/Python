@@ -47,19 +47,19 @@ class Liquid:
 # ----------------------------------------------------
 def update():
     for m in movers:
-        f = a.attract(m)
-        m.apply_force(f)
+        for mv in movers:
+            if mv is not m:
+                f = mv.attract(m)
+                m.apply_force(f)
         m.update()
 
 # ----------------------------------------------------
 def draw():
     for m in movers:
         m.draw()
-    a.draw()
 
 G = 0.4
-movers = [Mover(uniform(0.1, 3), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
-a = Attractor(WIDTH//2, HEIGHT//2)
+movers = [Mover(uniform(0.1, 2), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
 
 run()
 
