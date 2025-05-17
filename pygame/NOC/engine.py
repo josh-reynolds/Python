@@ -310,8 +310,13 @@ class Painter:
     def line(self, color, start, end):
         pygame.draw.line(self.surface, color, start, end)
 
+    # TO_DO: extend this transparency support to other draw methods
     def rect(self, rect, color, width=1):
-        pygame.draw.rect(self.surface, color, rect, width)
+        s = pygame.Surface((rect.width, rect.height))
+        if len(color) == 4:
+            s.set_alpha(color[3])
+        s.fill(color)
+        self.surface.blit(s, (rect.x, rect.y))
 
     def circle(self, x, y, radius, color, width=0):
         pygame.draw.circle(self.surface, color, (x, y), radius, width)

@@ -49,11 +49,6 @@ class Liquid:
 
     def draw(self):
         screen.draw.rect(self.rect, (0,0,200,128), 0)
-        # TO_DO: check alpha value support - isn't working as expected
-        # OK, according to StackOverflow, draw doesn't support alpha
-        # instead we need to draw to a separate surface, and blit that
-        # to the screen - will need to think about how to fold this 
-        # functionality into the engine
 
 # ----------------------------------------------------
 def update():
@@ -71,10 +66,13 @@ def draw():
     for m in movers:
         m.draw()
     r.draw()
+    l.draw()
 
 G = 0.4
 movers = [Mover(uniform(0.1, 2), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
 r = Repulsor(WIDTH//2, HEIGHT//2)
+
+l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT//2, 0.1)
 
 run()
 
