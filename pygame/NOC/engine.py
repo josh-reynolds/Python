@@ -311,13 +311,17 @@ class Painter:
         pygame.draw.line(self.surface, color, start, end)
 
     # TO_DO: extend this transparency support to other draw methods
-    # TO_DO: transparency support breaks outlines, need to add back
+    # TO_DO: transparency/outline fix mutually exclusive, needs adjustment
     def rect(self, rect, color, width=1):
-        s = pygame.Surface((rect.width, rect.height))
         if len(color) == 4:
+            s = pygame.Surface((rect.width, rect.height))
             s.set_alpha(color[3])
-        s.fill(color)
-        self.surface.blit(s, (rect.x, rect.y))
+            #if width == 0:
+            s.fill(color)
+            self.surface.blit(s, (rect.x, rect.y))
+        else:
+            pygame.draw.rect(self.surface, color, rect, width)
+
 
     def circle(self, x, y, radius, color, width=0):
         pygame.draw.circle(self.surface, color, (x, y), radius, width)

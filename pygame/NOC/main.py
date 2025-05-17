@@ -38,8 +38,8 @@ class Block:
         self.color = (0, 200, 0, 128)
 
     def draw(self):
-        screen.draw.rect(self.rect, self.color, 0)
-        #screen.draw.rect(self.rect, (0,0,0), 1)
+        screen.draw.rect(self.rect, self.color, 1)
+        screen.draw.rect(self.rect, (0,0,0), 1)
 
 # ----------------------------------------------------
 def update():
