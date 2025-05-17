@@ -1,41 +1,13 @@
-from engine import *
 from random import uniform
+from engine import *
 from mover import Mover
 from pvector import PVector
 from liquid import Liquid
+from attractor import Attractor, Repulsor
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
-
-class Attractor:
-    def __init__(self, x, y):
-        self.location = PVector(x,y)
-        self.mass = 20
-
-    def draw(self):
-        screen.draw.circle(self.location.x, self.location.y, self.mass*2, (0,0,255))
-        screen.draw.circle(self.location.x, self.location.y, self.mass*2, (0,0,0), 1)
-
-    def attract(self, mover):
-        force = PVector.sub(self.location, mover.location)
-        distance = force.mag()
-        distance = max(min(distance, 25), 5)
-        force.normalize()
-        strength = (G * self.mass * mover.mass) / (distance * distance)
-        force * strength
-        return force
-
-class Repulsor(Attractor):
-    def attract(self, mover):
-        force = PVector.sub(self.location, mover.location)
-        distance = force.mag()
-        distance = max(min(distance, 25), 5)
-        force.normalize()
-        strength = (G * self.mass * mover.mass) / (distance * distance)
-        force * strength
-        force * -0.01
-        return force
 
 # ----------------------------------------------------
 def update():
@@ -55,7 +27,6 @@ def draw():
     r.draw()
     l.draw()
 
-G = 0.4
 movers = [Mover(uniform(0.1, 2), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
 r = Repulsor(WIDTH//2, HEIGHT//2)
 
