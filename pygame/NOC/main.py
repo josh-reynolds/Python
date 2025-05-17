@@ -1,8 +1,8 @@
 from engine import *
 from random import uniform
-from pygame import Rect
 from mover import Mover
 from pvector import PVector
+from liquid import Liquid
 
 WIDTH = 640
 HEIGHT = 360
@@ -36,19 +36,6 @@ class Repulsor(Attractor):
         force * strength
         force * -0.01
         return force
-
-# ----------------------------------------------------
-class Liquid:
-    def __init__(self, x, y, w, h, c):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.c = c
-        self.rect = Rect(x, y, w, h)
-
-    def draw(self):
-        screen.draw.rect(self.rect, (0,0,200,128), 0)
 
 # ----------------------------------------------------
 def update():
