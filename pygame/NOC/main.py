@@ -1,4 +1,5 @@
 from random import uniform
+from pygame import Rect
 from engine import *
 from mover import Mover
 from pvector import PVector
@@ -9,30 +10,58 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+def translate(rect, dx, dy):
+    rect.x += dx
+    rect.y += dy
+
+def rotate(rect, radians):
+    # [0][0] = math.cos(radians)
+    # [0][1] = -math.sin(radians
+    # [1][0] = math.sin(radians)
+    # [1][1] = math.cos(radians)
+
+    # result = (0,0)
+    # r1 = matrix[0]
+    # row1 = (r1[0], r1[1])
+    # result.x = row1.dot(point)
+
+    # r2 = matrix[1]
+    # row2 = (r2[0], r2[1])
+    # result.y = row2.dot(point)
+    pass
+
+class Block:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect = Rect(x, y, 80, 20)
+        self.color = (0, 200, 0, 128)
+
+    def draw(self):
+        screen.draw.rect(self.rect, self.color, 0)
+        #screen.draw.rect(self.rect, (0,0,0), 1)
+
 # ----------------------------------------------------
 def update():
-    for m in movers:
-        for mv in movers:
-            if mv is not m:
-                f = mv.attract(m)
-                m.apply_force(f)
-        f = r.attract(m)
-        m.apply_force(f)
-        m.update()
+    translate(b.rect, 1, 1)
+# ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for m in movers:
-        m.draw()
-    r.draw()
-    l.draw()
+    b.draw()
+# ----------------------------------------------------
 
-movers = [Mover(uniform(0.1, 2), uniform(0, WIDTH), uniform(0, HEIGHT), WIDTH, HEIGHT) for i in range(10)]
-r = Repulsor(WIDTH//2, HEIGHT//2)
+angle = 0.5
+#a_velocity = 0
+#a_acceleration = 0.001
 
-l = Liquid(0, HEIGHT//2, WIDTH, HEIGHT//2, 0.1)
+half_w = WIDTH//2
+half_h = HEIGHT//2
+b = Block(half_w-40, half_h-10)
 
+# ----------------------------------------------------
 run()
+# ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
 # automatically, but the engine does, so we aren't getting trails drawn 

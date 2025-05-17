@@ -311,6 +311,7 @@ class Painter:
         pygame.draw.line(self.surface, color, start, end)
 
     # TO_DO: extend this transparency support to other draw methods
+    # TO_DO: transparency support breaks outlines, need to add back
     def rect(self, rect, color, width=1):
         s = pygame.Surface((rect.width, rect.height))
         if len(color) == 4:
