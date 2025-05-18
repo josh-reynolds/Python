@@ -50,13 +50,15 @@ class Block:
         self.angle = 0
 
     def update(self):
-        self.angle += 0.01
-        print(self.angle)
+        #self.angle += 0.01
+        #print(self.angle)
+        #print(self.rect)
+        pass
 
     def draw(self):
         if self.transform != None:
             pass   ###
-        screen.blit(self.surf, (self.rect.x, self.rect.y))
+        screen.blit(self.surf, (self.x, self.y))
         #screen.draw.rect(self.rect, self.color, 1)
         #screen.draw.rect(self.rect, (0,0,0), 1)
 
@@ -83,6 +85,14 @@ angle = 0.5
 half_w = WIDTH//2
 half_h = HEIGHT//2
 b = Block(half_w-40, half_h-10)
+
+s = Surface((80,20))
+s.fill((255,0,0))
+print(s.get_rect())
+#screen.blit(s, (half_w, half_h))
+s = transform.rotate(s, 30)
+print(s.get_rect())
+screen.blit(s, (half_w, half_h))
 
 # ----------------------------------------------------
 run()
