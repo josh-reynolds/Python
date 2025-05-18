@@ -1,5 +1,6 @@
 from random import uniform
-from pygame import Rect
+import pygame
+from pygame import Rect, Surface, transform
 from engine import *
 from mover import Mover
 from pvector import PVector
@@ -14,7 +15,8 @@ def translate(rect, dx, dy):
     rect.x += dx
     rect.y += dy
 
-def rotate(rect, radians):
+def rotate(surface, degrees):
+    transform.rotate(surface, degrees)
     # [0][0] = math.cos(radians)
     # [0][1] = -math.sin(radians
     # [1][0] = math.sin(radians)
@@ -36,14 +38,37 @@ class Block:
         self.y = y
         self.rect = Rect(x, y, 80, 20)
         self.color = (0, 200, 0, 128)
+        self.transform = None
+
+        self.surf = Surface((self.rect.width, self.rect.height))
+        #if len(self.color) == 4:
+            #self.surf.set_alpha(self.color[3])
+        self.surf.set_alpha(self.color[3])
+        pygame.draw.rect(self.surf, self.color, self.rect, 0)
+        #self.surf.fill(self.color)
+
+        self.angle = 0
+
+    def update(self):
+        self.angle += 0.01
+        print(self.angle)
 
     def draw(self):
-        screen.draw.rect(self.rect, self.color, 1)
-        screen.draw.rect(self.rect, (0,0,0), 1)
+        if self.transform != None:
+            pass   ###
+        screen.blit(self.surf, (self.rect.x, self.rect.y))
+        #screen.draw.rect(self.rect, self.color, 1)
+        #screen.draw.rect(self.rect, (0,0,0), 1)
+
+    def rotate(self):
+        self.surf = transform.rotate(self.surf, self.angle)
+        self.rect = self.surf.get_rect()
 
 # ----------------------------------------------------
 def update():
-    translate(b.rect, 1, 1)
+    #translate(b.rect, 1, 1)
+    b.update()
+    b.rotate()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -86,4 +111,14 @@ run()
 # going ahead with class-based solution, which is why Example 1.1 above looks a little
 # different from the book version.
 
-# Another potential addition to the engine: mouse support.
+# Another potential addition to the engine: mouse support...
+
+# The Processing transform functions are also handy. Don't have a good equivalent in
+# Pygame. Could do something like it by:
+#  1) drawing everything to a separate surface, not directly on the screen
+#  2) applying the current 'screen transform' - defaulting to identity
+#  3) blit the transformed surface to the screen surface
+# translate(), rotate() etc. would modify the screen transform
+# and then we'd want to also support push_matrix() and pop_matrix()
+# fairly big change to the engine, with potential to break backwards compat, so need
+# to approach carefully and test everything thoroughly
