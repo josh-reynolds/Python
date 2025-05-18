@@ -26,7 +26,6 @@ names = {"Human": ["Zali", "Bram", "Clara", "Nattias", "Rina", "Denton", "Mirena
          "Goblin": ["Iggs", "Tark", "Nix", "Lenk", "Roke", "Fitz", "Tila", "Riggs", "Prim", "Zeb",
                     "Finn", "Borg", "Yark", "Deeg", "Nibs", "Brak", "Fink", "Rizzo", "Squib", "Grix"]}
 
-
 def die():
     return randint(1,6)
 
@@ -65,11 +64,10 @@ class Character:
         self.background = choice(backgrounds)
         self.alignment = choice(alignments)
 
-        self.gear = []
-        n = randint(1,4)
-        for i in range(n):
-            self.gear.append(choice(gear))
-        self.gear_slots = (max(10, self.strength))
+        self.melee_attack = self.str_mod
+        self.melee_damage = 0              # STR does not add to damage per RAW
+        self.ranged_attack = self.dex_mod
+        self.ranged_damage = 0             # DEX does not add to damage per RAW
 
         self.talents = ["Beginner's Luck"]
         self.languages = ["Common"]
@@ -81,41 +79,78 @@ class Character:
             self.talents.append("Farsight")
             self.languages.append("Elvish")
             self.languages.append("Sylvan")
+            self.ranged_attack += 1
         elif self.ancestry == "Goblin":
             self.talents.append("Keen Senses")
             self.languages.append("Goblin")
         elif self.ancestry == "Half-orc":
             self.talents.append("Mighty")
             self.languages.append("Orcish")
+            self.melee_attack += 1
+            self.melee_damage += 1
         elif self.ancestry == "Halfling":
             self.talents.append("Stealthy")
         elif self.ancestry == "Human":
             self.talents.append("Ambitious")
             self.languages.append(choice(languages))
 
-        self.name = choice(names[self.ancestry])
+        self.gear = []
+        n = randint(1,4)
+        for i in range(n):
+            self.gear.append(choice(gear))
+        self.gear_slots = (max(10, self.strength))
 
+        self.attacks = []
+        md = f"{fmt(self.melee_damage)}" if self.melee_damage > 0 else ""
+        melee_damage_string = "1d4" + md + " damage"
+        rd = f"{fmt(self.ranged_damage)}" if self.ranged_damage > 0 else ""
+        ranged_damage_string = "1d4" + rd + " damage"
+
+        for item in self.gear:
+            if item == "Dagger":
+                mod = max(self.melee_attack, self.ranged_attack)  # Finesse weapon
+                self.attacks.append(f"Dagger (melee close range) {fmt(mod)} / " 
+                                    + melee_damage_string)
+                self.attacks.append(f"Dagger (thrown near range) {fmt(mod)} / " 
+                                    + ranged_damage_string)
+            elif item == "Shortbow & 5 arrows":
+                self.attacks.append(f"Shortbow (shoot far range) {fmt(self.ranged_attack)} / " 
+                                    + ranged_damage_string)
+            elif item == "Club":
+                self.attacks.append(f"Club (melee close range) {fmt(self.melee_attack)} / " 
+                                    + melee_damage_string)
+
+        self.name = choice(names[self.ancestry])
 
     def __repr__(self):
         dash_len = 76 - len(self.name)
         score = self.str_mod + self.dex_mod + self.con_mod + self.int_mod + self.wis_mod + self.cha_mod
-        return (f"{self.name} {'=' * dash_len}\n" +
-                f"STR: {self.strength} ({fmt(self.str_mod)}) " +
-                f"DEX: {self.dexterity} ({fmt(self.dex_mod)}) " +
-                f"CON: {self.constitution} ({fmt(self.con_mod)}) " +
-                f"INT: {self.intelligence} ({fmt(self.int_mod)}) " +
-                f"WIS: {self.wisdom} ({fmt(self.wis_mod)}) " +
-                f"CHA: {self.charisma} ({fmt(self.cha_mod)})\n" +
-                f"Level 0 {self.alignment} {self.ancestry} {self.background}\n" + 
-                f"{self.hit_points} hp | AC {self.armor_class} | Score: {fmt(score)}\n" +
-                f"Melee attack: {fmt(self.str_mod)} | Ranged attack: {fmt(self.dex_mod)}\n" + 
-                f"Talents: {self.talents}\n" +
-                f"Languages: {self.languages}\n" +
-                f"Gear: {self.gear}\n" +
-                f"Empty gear slots: {self.gear_slots - len(self.gear)}")
+        output = f"{self.name} {'=' * dash_len}\n"
+        output += f"STR: {self.strength} ({fmt(self.str_mod)}) "
+        output += f"DEX: {self.dexterity} ({fmt(self.dex_mod)}) "
+        output += f"CON: {self.constitution} ({fmt(self.con_mod)}) "
+        output += f"INT: {self.intelligence} ({fmt(self.int_mod)}) "
+        output += f"WIS: {self.wisdom} ({fmt(self.wis_mod)}) "
+        output += f"CHA: {self.charisma} ({fmt(self.cha_mod)})\n"
+        output += f"Level 0 {self.alignment} {self.ancestry} {self.background}\n" 
+        output += f"{self.hit_points} hp | AC {self.armor_class} | Score: {fmt(score)}\n"
+        output += f"Melee attack: {fmt(self.melee_attack)} / {fmt(self.melee_damage)} | "
+        output += f"Ranged attack: {fmt(self.ranged_attack)} / {fmt(self.ranged_damage)}\n"
+
+        if len(self.attacks) > 0:
+            for line in self.attacks:
+                output += " - " + line + "\n"
+
+        output += f"Talents: {self.talents}\n"
+        output += f"Languages: {self.languages}\n"
+        output += f"Gear: {self.gear}\n"
+        output += f"Empty gear slots: {self.gear_slots - len(self.gear)}"
+
+        return output
 
 
 chars = [Character() for i in range(4)]
 for c in chars:
     print(c)
+    print("\n")
 
