@@ -69,6 +69,7 @@ class Character:
         n = randint(1,4)
         for i in range(n):
             self.gear.append(choice(gear))
+        self.gear_slots = (max(10, self.strength))
 
         self.talents = ["Beginner's Luck"]
         self.languages = ["Common"]
@@ -94,6 +95,7 @@ class Character:
 
         self.name = choice(names[self.ancestry])
 
+
     def __repr__(self):
         dash_len = 76 - len(self.name)
         score = self.str_mod + self.dex_mod + self.con_mod + self.int_mod + self.wis_mod + self.cha_mod
@@ -106,9 +108,12 @@ class Character:
                 f"CHA: {self.charisma} ({fmt(self.cha_mod)})\n" +
                 f"Level 0 {self.alignment} {self.ancestry} {self.background}\n" + 
                 f"{self.hit_points} hp | AC {self.armor_class} | Score: {fmt(score)}\n" +
+                f"Melee attack: {fmt(self.str_mod)} | Ranged attack: {fmt(self.dex_mod)}\n" + 
                 f"Talents: {self.talents}\n" +
                 f"Languages: {self.languages}\n" +
-                f"Gear: {self.gear}\n")
+                f"Gear: {self.gear}\n" +
+                f"Empty gear slots: {self.gear_slots - len(self.gear)}")
+
 
 chars = [Character() for i in range(4)]
 for c in chars:
