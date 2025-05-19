@@ -42,24 +42,26 @@ class Block:
 
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
         self.surf.fill(self.color)
+        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
+        self.original_surf = self.surf.copy()
 
-        self.angle = 15
+        self.angle = 0
 
     def update(self):
-        #self.angle += 0.01
-        pass
+        self.angle += 0.1
 
     def draw(self):
         screen.blit(self.surf, (self.x, self.y))
+        screen.draw.rect(self.surf.get_rect(), (0,0,0), 1)
 
     def rotate(self):
-        self.surf = transform.rotate(self.surf, self.angle)
+        self.surf = transform.rotate(self.original_surf, self.angle)
         w,h = self.surf.get_size()
         self.rect = Rect(self.x, self.y, w, h)
 
 # ----------------------------------------------------
 def update():
-    #b.rotate()
+    b.rotate()
     b.update()
 # ----------------------------------------------------
 
@@ -75,9 +77,6 @@ angle = 0.5
 half_w = WIDTH//2
 half_h = HEIGHT//2
 b = Block(half_w-40, half_h-10)
-for i in range(5):
-    b.rotate()
-    print(b.x, b.y, b.rect, b.surf.get_rect())
 
 # ----------------------------------------------------
 run()
