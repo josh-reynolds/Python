@@ -1,6 +1,7 @@
 from random import uniform
 import pygame
 from pygame import Rect, Surface, transform
+from pygame.locals import *
 from engine import *
 from mover import Mover
 from pvector import PVector
@@ -37,40 +38,29 @@ class Block:
         self.x = x
         self.y = y
         self.rect = Rect(x, y, 80, 20)
-        self.color = (0, 200, 0, 128)
-        self.transform = None
+        self.color = (0, 200, 0)
 
-        self.surf = Surface((self.rect.width, self.rect.height))
-        #if len(self.color) == 4:
-            #self.surf.set_alpha(self.color[3])
-        self.surf.set_alpha(self.color[3])
-        pygame.draw.rect(self.surf, self.color, self.rect, 0)
-        #self.surf.fill(self.color)
+        self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
+        self.surf.fill(self.color)
 
-        self.angle = 0
+        self.angle = 15
 
     def update(self):
         #self.angle += 0.01
-        #print(self.angle)
-        #print(self.rect)
         pass
 
     def draw(self):
-        if self.transform != None:
-            pass   ###
         screen.blit(self.surf, (self.x, self.y))
-        #screen.draw.rect(self.rect, self.color, 1)
-        #screen.draw.rect(self.rect, (0,0,0), 1)
 
     def rotate(self):
         self.surf = transform.rotate(self.surf, self.angle)
-        self.rect = self.surf.get_rect()
+        w,h = self.surf.get_size()
+        self.rect = Rect(self.x, self.y, w, h)
 
 # ----------------------------------------------------
 def update():
-    #translate(b.rect, 1, 1)
+    #b.rotate()
     b.update()
-    b.rotate()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -85,14 +75,9 @@ angle = 0.5
 half_w = WIDTH//2
 half_h = HEIGHT//2
 b = Block(half_w-40, half_h-10)
-
-s = Surface((80,20))
-s.fill((255,0,0))
-print(s.get_rect())
-#screen.blit(s, (half_w, half_h))
-s = transform.rotate(s, 30)
-print(s.get_rect())
-screen.blit(s, (half_w, half_h))
+for i in range(5):
+    b.rotate()
+    print(b.x, b.y, b.rect, b.surf.get_rect())
 
 # ----------------------------------------------------
 run()
