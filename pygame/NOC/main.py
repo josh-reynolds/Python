@@ -48,35 +48,38 @@ class Block:
         self.angle = 0
 
     def update(self):
-        self.angle += 0.1
+        self.angle += 1
 
     def draw(self):
-        screen.blit(self.surf, (self.x, self.y))
-        screen.draw.rect(self.surf.get_rect(), (0,0,0), 1)
+        screen.blit(self.surf, (self.rect.x, self.rect.y))
+        #screen.draw.rect(self.surf.get_rect(), (0,0,0), 1)
+        screen.draw.circle(self.x, self.y, 5, (255,0,0))
 
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, self.angle)
         w,h = self.surf.get_size()
-        self.rect = Rect(self.x, self.y, w, h)
+        self.rect = Rect(self.x-w/2, self.y-h/2, w, h)
 
 # ----------------------------------------------------
 def update():
-    b.rotate()
-    b.update()
+    for b in blocks:
+        b.rotate()
+        b.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    b.draw()
+    for b in blocks:
+        b.draw()
 # ----------------------------------------------------
 
 angle = 0.5
 #a_velocity = 0
 #a_acceleration = 0.001
 
-half_w = WIDTH//2
-half_h = HEIGHT//2
-b = Block(half_w-40, half_h-10)
+blocks = []
+for i in range(5):
+    blocks.append(Block(uniform(0,WIDTH), uniform(0,HEIGHT)))
 
 # ----------------------------------------------------
 run()
