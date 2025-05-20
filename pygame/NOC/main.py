@@ -1,4 +1,4 @@
-from random import uniform
+from random import uniform, randint
 import pygame
 from pygame import Rect, Surface, transform
 from pygame.locals import *
@@ -34,7 +34,7 @@ def rotate(surface, degrees):
     pass
 
 class Block:
-    def __init__(self, x, y):
+    def __init__(self, x, y, a_vel):
         self.x = x
         self.y = y
         self.rect = Rect(x, y, 80, 20)
@@ -46,9 +46,10 @@ class Block:
         self.original_surf = self.surf.copy()
 
         self.angle = 0
+        self.a_vel = a_vel
 
     def update(self):
-        self.angle += 1
+        self.angle += self.a_vel
 
     def draw(self):
         screen.blit(self.surf, (self.rect.x, self.rect.y))
@@ -79,7 +80,7 @@ angle = 0.5
 
 blocks = []
 for i in range(5):
-    blocks.append(Block(uniform(0,WIDTH), uniform(0,HEIGHT)))
+    blocks.append(Block(uniform(0,WIDTH), uniform(0,HEIGHT), randint(-5,5)))
 
 # ----------------------------------------------------
 run()
