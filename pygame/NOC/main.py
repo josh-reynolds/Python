@@ -49,6 +49,7 @@ class Block:
         self.a_vel = a_vel
 
     def update(self):
+        self.a_vel += a_acceleration
         self.angle += self.a_vel
 
     def draw(self):
@@ -70,7 +71,6 @@ def update():
     for b in blocks:
         b.rotate()
         b.update()
-        b.translate(randint(-1,1), randint(-1,1))
 
 # ----------------------------------------------------
 
@@ -80,13 +80,14 @@ def draw():
         b.draw()
 # ----------------------------------------------------
 
-angle = 0.5
-#a_velocity = 0
-#a_acceleration = 0.001
+angle = 0
+a_velocity = 0
+a_acceleration = 0.001
 
 blocks = []
-for i in range(5):
-    blocks.append(Block(uniform(0,WIDTH), uniform(0,HEIGHT), randint(-5,5)))
+for i in range(1):
+    blocks.append(Block(WIDTH//2, HEIGHT//2, a_velocity))
+
 
 # ----------------------------------------------------
 run()
