@@ -61,11 +61,17 @@ class Block:
         w,h = self.surf.get_size()
         self.rect = Rect(self.x-w/2, self.y-h/2, w, h)
 
+    def translate(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
 # ----------------------------------------------------
 def update():
     for b in blocks:
         b.rotate()
         b.update()
+        b.translate(randint(-1,1), randint(-1,1))
+
 # ----------------------------------------------------
 
 # ----------------------------------------------------
