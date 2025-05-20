@@ -40,9 +40,16 @@ class Block:
         self.rect = Rect(x, y, 80, 20)
         self.color = (0, 200, 0)
 
+        width, height = self.rect.size
+        radius = height//2
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
-        self.surf.fill(self.color)
-        pygame.draw.rect(self.surf, (0,0,0), self.surf.get_rect(), 1)
+
+        pygame.draw.line(self.surf, (0,0,0), (radius,radius), (width-radius,radius), width=2)
+        pygame.draw.circle(self.surf, self.color, (radius, radius), radius)
+        pygame.draw.circle(self.surf, (0,0,0), (radius, radius), radius, width=2)
+        pygame.draw.circle(self.surf, self.color, (width-radius, radius), radius)
+        pygame.draw.circle(self.surf, (0,0,0), (width-radius, radius), radius, width=2)
+
         self.original_surf = self.surf.copy()
 
         self.angle = 0
@@ -54,8 +61,7 @@ class Block:
 
     def draw(self):
         screen.blit(self.surf, (self.rect.x, self.rect.y))
-        #screen.draw.rect(self.surf.get_rect(), (0,0,0), 1)
-        screen.draw.circle(self.x, self.y, 5, (255,0,0))
+        #screen.draw.circle(self.x, self.y, 5, (255,0,0))
 
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, self.angle)
