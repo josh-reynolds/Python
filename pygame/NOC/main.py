@@ -78,22 +78,31 @@ def update():
         b.rotate()
         b.update()
 
+    m.apply_force(gravity)
+    m.apply_force(wind)
+    m.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
     for b in blocks:
         b.draw()
+
+    m.draw()
 # ----------------------------------------------------
 
 angle = 0
 a_velocity = 0
 a_acceleration = 0.001
 
+gravity = PVector(0, 0.1)
+wind = PVector(0.1, 0)
+
 blocks = []
-for i in range(1):
+for i in range(0):
     blocks.append(Block(WIDTH//2, HEIGHT//2, a_velocity))
 
+m = Mover(1, WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 
 # ----------------------------------------------------
 run()

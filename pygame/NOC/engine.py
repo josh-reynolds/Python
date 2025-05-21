@@ -322,7 +322,6 @@ class Painter:
         else:
             pygame.draw.rect(self.surface, color, rect, width)
 
-
     def circle(self, x, y, radius, color, width=0):
         pygame.draw.circle(self.surface, color, (x, y), radius, width)
 
