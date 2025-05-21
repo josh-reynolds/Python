@@ -38,6 +38,9 @@ class PVector:
     def copy(self):
         return PVector(self.x, self.y)
 
+    def heading(self):
+        return math.degrees(math.atan2(self.y, self.x))
+
     # class methods -------------------------------
     def add(v, u):
         return PVector(v.x + u.x, v.y + u.y)

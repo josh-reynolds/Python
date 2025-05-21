@@ -1,4 +1,3 @@
-import math
 import pygame
 from pygame import Rect, Surface, transform
 from pygame.locals import *
@@ -39,7 +38,7 @@ class Mover:
         #self.a_vel += self.a_accel
         #self.a_vel = max(min(self.a_vel, 0.1), -0.1)
         #self.angle += self.a_vel
-        self.angle = math.degrees(math.atan2(self.velocity.y, self.velocity.x)) + 90
+        self.angle = self.velocity.heading() + 90
         self.rotate()
 
         self.check_edges()
