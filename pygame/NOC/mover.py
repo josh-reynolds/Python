@@ -10,13 +10,14 @@ class Mover:
         self.max_height = HEIGHT
         
         self.location = PVector(x, y)
-        self.rect = Rect(x, y, 80, 20)
+        self.rect = Rect(x, y, 20, 80)
         self.color = (0, 200, 0)
 
         width,height = self.rect.size
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
         pygame.draw.rect(self.surf, self.color, (0, 0, width, height), width=0) 
         pygame.draw.rect(self.surf, (0,0,0), (0, 0, width, height), width=1) 
+        pygame.draw.circle(self.surf, (0,0,0), (10,70), 10, 0)
         self.original_surf = self.surf.copy()
 
         self.mass = m
@@ -38,7 +39,7 @@ class Mover:
         #self.a_vel += self.a_accel
         #self.a_vel = max(min(self.a_vel, 0.1), -0.1)
         #self.angle += self.a_vel
-        self.angle = self.velocity.heading() + 90
+        self.angle = self.velocity.heading()
         self.rotate()
 
         self.check_edges()
