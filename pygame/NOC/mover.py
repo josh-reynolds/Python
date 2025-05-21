@@ -31,6 +31,11 @@ class Mover:
         self.a_accel = 0
 
     def update(self):
+        mouse = PVector(*pygame.mouse.get_pos())
+        direction = PVector.sub(mouse, self.location).normalize()
+        direction = PVector.mult(direction, 0.5)
+        self.acceleration = direction
+
         self.velocity + self.acceleration
         self.velocity.limit(self.top_speed)
         self.location + self.velocity

@@ -61,7 +61,6 @@ class Block:
 
     def draw(self):
         screen.blit(self.surf, (self.rect.x, self.rect.y))
-        #screen.draw.circle(self.x, self.y, 5, (255,0,0))
 
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, self.angle)
@@ -74,35 +73,17 @@ class Block:
 
 # ----------------------------------------------------
 def update():
-    for b in blocks:
-        b.rotate()
-        b.update()
-
-    m.apply_force(gravity)
-    m.apply_force(wind)
-    m.update()
+    for m in movers:
+        m.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for b in blocks:
-        b.draw()
-
-    m.draw()
+    for m in movers:
+        m.draw()
 # ----------------------------------------------------
 
-angle = 0
-a_velocity = 0
-a_acceleration = 0.001
-
-gravity = PVector(0, 0.1)
-wind = PVector(0.1, 0)
-
-blocks = []
-for i in range(0):
-    blocks.append(Block(WIDTH//2, HEIGHT//2, a_velocity))
-
-m = Mover(1, WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
+movers = [Mover(1, randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(10)]
 
 # ----------------------------------------------------
 run()
