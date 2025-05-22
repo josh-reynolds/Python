@@ -17,18 +17,23 @@ TITLE = "The Nature of Code"
 
 # ----------------------------------------------------
 def update():
-    for o in orbiters:
-        o.update()
+    global frames
+    frames += 1
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for o in orbiters:
-        o.draw()
+    x = amplitude * math.cos(TWO_PI * frames / period)
+    screen.draw.line((0,0,0), (WIDTH//2,HEIGHT//2), (x + WIDTH//2, HEIGHT//2))
+    screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,255))
+    screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,0), 1)
 # ----------------------------------------------------
 
-orbiters = [Orbiter(randint(0,WIDTH), randint(0,HEIGHT), randint(6,20), randint(6,80), uniform(-0.3,0.3)) 
-            for i in range(20)]
+TWO_PI = math.pi * 2
+period = 120
+amplitude = 100
+frames = 0
+
 
 # ----------------------------------------------------
 run()
@@ -55,7 +60,8 @@ run()
 # works fine. I think this is a referencing problem due to the way the engine finds the
 # content of this parent script, need to fiddlw with this to sort it out. But for now,
 # going ahead with class-based solution, which is why Example 1.1 above looks a little
-# different from the book version.
+# different from the book version. (Update - declaring as global in the function may do
+# the trick...)
 
 # Another potential addition to the engine: mouse support...
 
