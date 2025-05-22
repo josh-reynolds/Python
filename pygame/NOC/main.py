@@ -1,3 +1,4 @@
+import math
 from random import uniform, randint
 import pygame
 from pygame import Rect, Surface, transform
@@ -13,45 +14,26 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-def translate(rect, dx, dy):
-    rect.x += dx
-    rect.y += dy
-
-def rotate(surface, degrees):
-    transform.rotate(surface, degrees)
-    # [0][0] = math.cos(radians)
-    # [0][1] = -math.sin(radians
-    # [1][0] = math.sin(radians)
-    # [1][1] = math.cos(radians)
-
-    # result = (0,0)
-    # r1 = matrix[0]
-    # row1 = (r1[0], r1[1])
-    # result.x = row1.dot(point)
-
-    # r2 = matrix[1]
-    # row2 = (r2[0], r2[1])
-    # result.y = row2.dot(point)
-    pass
-
-
 # ----------------------------------------------------
 def update():
-    for m in movers:
-        m.update()
-    r.update(0.1)
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for m in movers:
-        m.draw()
-    r.draw()
+    global theta
+    x = r * math.cos(theta)
+    y = r * math.sin(theta)
+    screen.draw.circle(WIDTH//2+x, HEIGHT//2+y, 10, (0,255,0), 0)
+    screen.draw.circle(WIDTH//2+x, HEIGHT//2+y, 10, (0,0,0), 1)
+    theta += 0.01
+
+    screen.draw.circle(WIDTH//2, HEIGHT//2, 5, (255,0,0), 0)
+
 # ----------------------------------------------------
 
-movers = [Mover(1, randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(10)]
-
-r = Rotator(WIDTH//2, HEIGHT//2, 0)
+r = 75
+theta = 0
 
 # ----------------------------------------------------
 run()
