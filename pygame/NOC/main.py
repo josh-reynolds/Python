@@ -7,6 +7,7 @@ from mover import Mover
 from pvector import PVector
 from liquid import Liquid
 from attractor import Attractor, Repulsor
+from rotator import Rotator
 
 WIDTH = 640
 HEIGHT = 360
@@ -33,57 +34,24 @@ def rotate(surface, degrees):
     # result.y = row2.dot(point)
     pass
 
-class Block:
-    def __init__(self, x, y, a_vel):
-        self.x = x
-        self.y = y
-        self.rect = Rect(x, y, 80, 20)
-        self.color = (0, 200, 0)
-
-        width, height = self.rect.size
-        radius = height//2
-        self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
-
-        pygame.draw.line(self.surf, (0,0,0), (radius,radius), (width-radius,radius), width=2)
-        pygame.draw.circle(self.surf, self.color, (radius, radius), radius)
-        pygame.draw.circle(self.surf, (0,0,0), (radius, radius), radius, width=2)
-        pygame.draw.circle(self.surf, self.color, (width-radius, radius), radius)
-        pygame.draw.circle(self.surf, (0,0,0), (width-radius, radius), radius, width=2)
-
-        self.original_surf = self.surf.copy()
-
-        self.angle = 0
-        self.a_vel = a_vel
-
-    def update(self):
-        self.a_vel += a_acceleration
-        self.angle += self.a_vel
-
-    def draw(self):
-        screen.blit(self.surf, (self.rect.x, self.rect.y))
-
-    def rotate(self):
-        self.surf = transform.rotate(self.original_surf, self.angle)
-        w,h = self.surf.get_size()
-        self.rect = Rect(self.x-w/2, self.y-h/2, w, h)
-
-    def translate(self, dx, dy):
-        self.x += dx
-        self.y += dy
 
 # ----------------------------------------------------
 def update():
     for m in movers:
         m.update()
+    r.update(0.1)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
     for m in movers:
         m.draw()
+    r.draw()
 # ----------------------------------------------------
 
 movers = [Mover(1, randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(10)]
+
+r = Rotator(WIDTH//2, HEIGHT//2, 0)
 
 # ----------------------------------------------------
 run()
