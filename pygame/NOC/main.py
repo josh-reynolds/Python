@@ -14,26 +14,45 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Orbiter:
+    def __init__(self, x, y, radius, o_radius, o_velocity):
+        self.center_x = x
+        self.center_y = y
+        self.radius = radius
+        self.o_radius = o_radius
+        self.o_velocity = o_velocity
+
+        self.theta = 0
+        self.update()
+
+    def update(self):
+        self.x = self.o_radius * math.cos(self.theta)
+        self.y = self.o_radius * math.sin(self.theta)
+        self.theta += self.o_velocity
+
+    def draw(self):
+        x = self.center_x + self.x
+        y = self.center_y + self.y
+
+        screen.draw.line((0,0,0), (self.center_x, self.center_y), (x,y))
+        screen.draw.circle(x, y, self.radius, (0,255,0), 0)
+        screen.draw.circle(x, y, self.radius, (0,0,0), 1)
+        screen.draw.circle(self.center_x, self.center_y, self.radius//2, (255,0,0), 0)
+
 # ----------------------------------------------------
 def update():
-    pass
+    for o in orbiters:
+        o.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    global theta
-    x = r * math.cos(theta)
-    y = r * math.sin(theta)
-    screen.draw.circle(WIDTH//2+x, HEIGHT//2+y, 10, (0,255,0), 0)
-    screen.draw.circle(WIDTH//2+x, HEIGHT//2+y, 10, (0,0,0), 1)
-    theta += 0.01
-
-    screen.draw.circle(WIDTH//2, HEIGHT//2, 5, (255,0,0), 0)
-
+    for o in orbiters:
+        o.draw()
 # ----------------------------------------------------
 
-r = 75
-theta = 0
+orbiters = [Orbiter(randint(0,WIDTH), randint(0,HEIGHT), randint(6,20), randint(6,80), uniform(-0.3,0.3)) 
+            for i in range(20)]
 
 # ----------------------------------------------------
 run()
