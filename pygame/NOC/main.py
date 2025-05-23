@@ -15,23 +15,36 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Oscillator:
+    def __init__(self):
+        self.angle = PVector(0,0)
+        self.velocity = PVector(uniform(-0.05,0.05), uniform(-0.05,0.05))
+        self.amplitude = PVector(randint(0, WIDTH//2), randint(0, HEIGHT//2))
+
+    def oscillate(self):
+        self.angle + self.velocity
+
+    def draw(self):
+        x = math.sin(self.angle.x) * self.amplitude.x
+        y = math.cos(self.angle.y) * self.amplitude.y
+
+        #screen.draw.line((0,0,0), (WIDTH//2,HEIGHT//2), (x + WIDTH//2, y + HEIGHT//2))
+        screen.draw.circle(x + WIDTH//2, y + HEIGHT//2, 20, (0,0,255))
+        screen.draw.circle(x + WIDTH//2, y +HEIGHT//2, 20, (0,0,0), 1)
+
 # ----------------------------------------------------
 def update():
-    global angle
-    angle += a_velocity
+    for o in oscillators:
+        o.oscillate()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    x = amplitude * math.cos(angle)
-    screen.draw.line((0,0,0), (WIDTH//2,HEIGHT//2), (x + WIDTH//2, HEIGHT//2))
-    screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,255))
-    screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,0), 1)
+    for o in oscillators:
+        o.draw()
 # ----------------------------------------------------
 
-amplitude = 100
-angle = 0
-a_velocity = 0.05
+oscillators = [Oscillator() for i in range(20)]
 
 
 # ----------------------------------------------------
