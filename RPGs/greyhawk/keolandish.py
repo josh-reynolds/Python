@@ -46,5 +46,36 @@ def make_word():
 # This works, but most of the words are unusable junk... needs more filtering...
 
 for i in range(20):
-    print(make_word())
+    print(make_word().capitalize())
+
+print("------------------")
+
+# trying an alternate approach using a Markov chain
+words = ["cryllor", "sheldomar", "niole", "dra", "gradsul", "javan", "hool", "hokar", "jurnre", "gryrax", "ulek", "keo", "tringlee", "kewl", "lortmil", "pomarj", "suss", "oyt", "sterich", "istivin", "davish", "flen", "hochoch", "gorna"]
+
+chain = {}
+for word in words:
+    for i in range(2,len(word)):
+        key = word[i-2] + word[i-1]
+        if key in chain:
+            chain[key].append(word[i])
+        else:
+            chain[key] = [word[i]]
+
+keys = list(chain.keys())
+def markov():
+    start = choice(keys)
+    w = start
+    for i in range(5):
+        k = w[-2] + w[-1]
+        if k in chain:
+            w += choice(chain[k])
+        else:
+            break
+    return w
+
+for i in range(20):
+    print(markov().capitalize())
+
+
 
