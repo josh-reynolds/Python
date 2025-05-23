@@ -1,0 +1,50 @@
+from random import randint, choice
+
+# Non-English place names in Sheldomar Valley ~~~~~~~~~~
+# Cryllor, Sheldomar, Niole Dra, Gradsul, Javan, Hool, Hokar, Jurnre, Gryrax, Ulek, Keo(land),
+# Tringlee, Kewl, Lortmil, Pomarj, Suss, Oyt(wood), Sterich, Istivin, Davish, Flen, Hochoch, Gorna
+
+# Syllable counts ~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2, 3, 2 + 1, 2, 2, 1, 2, 2, 2, 2, (2), 2, 1, 2, 2, 1, (2), 2, 3, 2, 1, 2, 2
+
+# Syllables ~~~~~~~~~~~~~~~~~~
+# cry, llor, shel, do, mar, nio, le, dra, grad, sul, ja, van, hool, ho, kar, jurn, re, gry, rax, u,
+# lek, keo, trin, glee, kewl, lort, mil, pom, arj, suss, oyt, ster, ich, ist, i, vin, dav, ish,
+# flen, hoch, och, gor, na
+
+# Initial Consonants
+# cr, ll, sh, d, m, n, l, dr, gr, s, j, v, h, h, k, j, r, gr, r, _, l, k, tr, gl, k, l, m, p,
+# _, s, _, st, _, _, _, v, d, _, fl, h, _, g, n
+
+# Vowels
+# y, o, e, o, a, io, e, a, a, u, a, a, oo, o, a, u, e, y, a, u, e, eo, i, ee, ew, o, i, o, a, u,
+# oy, e, i, i, i, i, a, i, e, o, o, o, a
+
+# Final Consonants
+# _, r, l, _, r, _, _, _, d, l, _, n, l, _, r, rn, _, _, x, _, k, _, n, _, l, rt, l, m, rj,
+# ss, t, r, ch, st, _, n, v, sh, n, ch, ch, r, _
+
+
+lengths = [2, 3, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 3, 2, 1, 2, 2]
+
+initials = ["cr", "ll", "sh", "d", "m", "n", "l", "dr", "gr", "s", "j", "v", "h", "h", "k", "j", "r", "gr", "r", "_", "l", "k", "tr", "gl", "k", "l", "m", "p", "_", "s", "_", "st", "_", "_", "_", "v", "d", "_", "fl", "h", "_", "g", "n"]
+
+vowels = ["y", "o", "e", "o", "a", "io", "e", "a", "a", "u", "a", "a", "oo", "o", "a", "u", "e", "y", "a", "u", "e", "eo", "i", "ee", "ew", "o", "i", "o", "a", "u", "oy", "e", "i", "i", "i", "i", "a", "i", "e", "o", "o", "o", "a"]
+
+finals = ["_", "r", "l", "_", "r", "_", "_", "_", "d", "l", "_", "n", "l", "_", "r", "rn", "_", "_", "x", "_", "k", "_", "n", "_", "l", "rt", "l", "m", "rj", "ss", "t", "r", "ch", "st", "_", "n", "v", "sh", "n", "ch", "ch", "r", "_"]
+
+
+def make_word():
+    result = ""
+    length = choice(lengths)
+    for i in range(length):
+        result += choice(initials)
+        result += choice(vowels)
+        result += choice(finals)
+    return result.replace("_","")
+
+# This works, but most of the words are unusable junk... needs more filtering...
+
+for i in range(20):
+    print(make_word())
+
