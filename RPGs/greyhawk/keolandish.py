@@ -66,7 +66,7 @@ keys = list(chain.keys())
 def markov():
     start = choice(keys)
     w = start
-    for i in range(5):
+    for i in range(7):
         k = w[-2] + w[-1]
         if k in chain:
             w += choice(chain[k])
@@ -75,7 +75,8 @@ def markov():
     return w
 
 for i in range(20):
-    print(markov().capitalize())
+    w = markov().capitalize()
+    print(w) if w.lower() not in words else print("DUPLICATE")
 
 
 
