@@ -50,8 +50,13 @@ for i in range(20):
 
 print("------------------")
 
-# trying an alternate approach using a Markov chain
-words = ["cryllor", "sheldomar", "niole", "dra", "gradsul", "javan", "hool", "hokar", "jurnre", "gryrax", "ulek", "keo", "tringlee", "kewl", "lortmil", "pomarj", "suss", "oyt", "sterich", "istivin", "davish", "flen", "hochoch", "gorna"]
+# trying an alternate approach using a Markov chain --------------------------
+
+# 'pure' Sheldomar Valley word set
+#words = ["cryllor", "sheldomar", "niole", "dra", "gradsul", "javan", "hool", "hokar", "jurnre", "gryrax", "ulek", "keo", "tringlee", "kewl", "lortmil", "pomarj", "suss", "oyt", "sterich", "istivin", "davish", "flen", "hochoch", "gorna"]
+
+# 'High Gygaxian" word set
+words = ["cryllor", "sheldomar", "niole", "dra", "gradsul", "javan", "hool", "hokar", "jurnre", "gryrax", "ulek", "keo", "tringlee", "kewl", "lortmil", "pomarj", "suss", "oyt", "sterich", "istivin", "davish", "flen", "hochoch", "gorna", "oerik", "oerth", "flanaess", "dramidj", "deklo", "galda", "kara", "ipp", "phost", "usk", "yarpick", "flan", "oeridian", "suel", "baklunish", "suloise", "kendeen", "euroz", "jebli", "celbit", "amedio", "tilvanot", "duxchan", "hepmona", "rhola", "neheli", "aerdi", "nyr", "dyv", "nyrondy", "furyondy", "sunndi", "yar", "telfic", "tenh", "voll", "yatil", "rax", "fruztii", "schnai", "naelax", "onnwal", "iuz", "veluna", "celene", "emridy", "kron", "velverdyva", "hommlet", "zuggtmoy", "almor", "bissel", "dyvers", "ekbir", "chendl", "rauxes", "molag", "cruski", "idee", "dorakaa", "ket", "lopolla", "rel", "mord", "ratik", "asperdi", "lendore", "reltarma", "lo", "nevond", "yecha", "tusmit", "sefmur", "ull", "ulakand", "urnst", "leukish", "radigast", "mitrik", "verbobonc", "elredd", "wegwiur", "zeif", "densac", "gearnat", "grendep", "jeklea", "oljatt", "quag", "relmor", "solnor", "whyestil", "abbor", "alz", "blemu", "tusman", "yecha", "pelisso", "corusk", "clatspur", "sulhaut", "ulsprue", "artonsamay", "att", "blashikmund", "dulsi", "ery", "fals", "flanmi", "fler", "imeda", "neen", "opicm", "ritensa", "selintan", "teesar", "thelly", "trask", "tuflik", "veng", "yol", "zumker", "adri", "celadon", "gamboge", "vesve", "fellreev", "hraak", "nuther", "meno", "rieu", "boccob", "beory", "incabulos", "istus", "kord", "nerull", "pelor", "procan", "rao", "tharizdun", "ulaa", "wee", "jas", "zilchus", "cyndor", "allitur", "atroa", "beltar", "berei", "bleredd", "bralm", "celestian", "delleb", "ehlonna", "fharlanghn", "erythnul", "fortubo", "geshta", "heironeous", "hextor", "joramy", "kurell", "lirr", "llerg", "lydia", "myhriss", "norebo", "obad", "hai", "olidammara", "phaulkon", "pholtus", "phyton", "pyremius", "ralishaz", "raxivort", "sotillion", "syrul", "telchur", "trithereon", "velnius", "wenta", "xan", "yae", "xerbo", "zodal", "rudd", "wastri", "zagyg", "zuoken", "iggwilv", "tsojcanth"]
 
 chain = {}
 for word in words:
@@ -66,7 +71,7 @@ keys = list(chain.keys())
 def markov():
     start = choice(keys)
     w = start
-    for i in range(7):
+    for i in range(randint(2,10)):
         k = w[-2] + w[-1]
         if k in chain:
             w += choice(chain[k])
