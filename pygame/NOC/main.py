@@ -17,22 +17,21 @@ TITLE = "The Nature of Code"
 
 # ----------------------------------------------------
 def update():
-    global frames
-    frames += 1
+    global angle
+    angle += a_velocity
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    x = amplitude * math.cos(TWO_PI * frames / period)
+    x = amplitude * math.cos(angle)
     screen.draw.line((0,0,0), (WIDTH//2,HEIGHT//2), (x + WIDTH//2, HEIGHT//2))
     screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,255))
     screen.draw.circle(x + WIDTH//2, HEIGHT//2, 20, (0,0,0), 1)
 # ----------------------------------------------------
 
-TWO_PI = math.pi * 2
-period = 120
 amplitude = 100
-frames = 0
+angle = 0
+a_velocity = 0.05
 
 
 # ----------------------------------------------------
