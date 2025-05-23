@@ -10,27 +10,11 @@ from liquid import Liquid
 from attractor import Attractor, Repulsor
 from rotator import Rotator
 from orbiter import Orbiter
+from oscillator import Oscillator
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
-
-class Oscillator:
-    def __init__(self):
-        self.angle = PVector(0,0)
-        self.velocity = PVector(uniform(-0.05,0.05), uniform(-0.05,0.05))
-        self.amplitude = PVector(randint(0, WIDTH//2), randint(0, HEIGHT//2))
-
-    def oscillate(self):
-        self.angle + self.velocity
-
-    def draw(self):
-        x = math.sin(self.angle.x) * self.amplitude.x
-        y = math.cos(self.angle.y) * self.amplitude.y
-
-        #screen.draw.line((0,0,0), (WIDTH//2,HEIGHT//2), (x + WIDTH//2, y + HEIGHT//2))
-        screen.draw.circle(x + WIDTH//2, y + HEIGHT//2, 20, (0,0,255))
-        screen.draw.circle(x + WIDTH//2, y +HEIGHT//2, 20, (0,0,0), 1)
 
 # ----------------------------------------------------
 def update():
@@ -44,8 +28,7 @@ def draw():
         o.draw()
 # ----------------------------------------------------
 
-oscillators = [Oscillator() for i in range(20)]
-
+oscillators = [Oscillator(WIDTH, HEIGHT) for i in range(20)]
 
 # ----------------------------------------------------
 run()
