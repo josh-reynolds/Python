@@ -18,17 +18,27 @@ TITLE = "The Nature of Code"
 
 # ----------------------------------------------------
 def update():
-    for o in oscillators:
-        o.oscillate()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for o in oscillators:
-        o.draw()
+    global angle
+    angle = 0
+    for x in range(0,WIDTH,5):
+        y = (math.sin(angle) + 2) * HEIGHT//4
+        screen.draw.circle(x, y, 10, (0,255,0))
+        screen.draw.circle(x, y, 10, (0,0,0), 1)
+        angle += angle_vel
+
+
 # ----------------------------------------------------
 
-oscillators = [Oscillator(WIDTH, HEIGHT) for i in range(20)]
+angle = 0
+angle_vel = 0.1
+amplitude = 100
+
+
 
 # ----------------------------------------------------
 run()
