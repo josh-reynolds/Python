@@ -16,6 +16,22 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Wave:
+    def __init__(self, min_, max_, spacing, velocity):
+        self.min = min_
+        self.max = max_
+        self.spacing = spacing
+        self.velocity = velocity
+        self.angle = 0
+
+    def draw(self):
+        for x in range(self.min, self.max, self.spacing):
+            y = (math.sin(self.angle) + 1) * HEIGHT//2
+            screen.draw.circle(x, y, 10, (0,255,0))
+            screen.draw.circle(x, y, 10, (0,0,0), 1)
+            self.angle += self.velocity
+
+
 # ----------------------------------------------------
 def update():
     pass
@@ -23,22 +39,10 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    global angle
-    #angle = 0
-    for x in range(0,WIDTH,5):
-        y = (math.sin(angle) + 2) * HEIGHT//4
-        screen.draw.circle(x, y, 10, (0,255,0))
-        screen.draw.circle(x, y, 10, (0,0,0), 1)
-        angle += angle_vel
-
-
+    w.draw()
 # ----------------------------------------------------
 
-angle = 0
-angle_vel = 0.1
-amplitude = 100
-
-
+w = Wave(0, WIDTH//2, 5, 0.1)
 
 # ----------------------------------------------------
 run()
