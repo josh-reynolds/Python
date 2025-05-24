@@ -24,7 +24,7 @@ def update():
 # ----------------------------------------------------
 def draw():
     global angle
-    angle = 0
+    #angle = 0
     for x in range(0,WIDTH,5):
         y = (math.sin(angle) + 2) * HEIGHT//4
         screen.draw.circle(x, y, 10, (0,255,0))
