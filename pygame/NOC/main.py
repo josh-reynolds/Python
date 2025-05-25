@@ -19,26 +19,39 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Particle:
+    def __init__(self, x, y):
+        self.location = PVector(x,y)
+        self.acceleration = PVector(0,0.05)
+        self.velocity = PVector(uniform(-1,1), uniform(-2,0))
+        self.lifespan = 255
+
+    def update(self):
+        self.velocity + self.acceleration
+        self.location + self.velocity
+        self.lifespan -= 2
+
+    def draw(self):
+        # TO_DO: add alpha support to Painter.circle()
+        screen.draw.circle(self.location.x, self.location.y, 8, (255,64,64))
+        screen.draw.circle(self.location.x, self.location.y, 8, (0,0,0), 1)
+
+    def is_dead(self):
+        return self.lifespan < 0.0
 
 # ----------------------------------------------------
 def update():
-    bob.apply_force(gravity)
-    bob.apply_force(wind)
-    spring.connect(bob)
-    bob.update()
+    p.update()
+    if p.is_dead():
+        print("Particle dead!")
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    spring.draw_line(bob)
-    spring.draw()
-    bob.draw()
+    p.draw()
 # ----------------------------------------------------
 
-gravity = PVector(0,1)
-wind = PVector(0.1,0)
-bob = Mover(1, WIDTH//2, 30, WIDTH, HEIGHT)
-spring = Spring(WIDTH//2, 10, HEIGHT//2)
+p = Particle(WIDTH//2, 10)
 
 # ----------------------------------------------------
 run()
