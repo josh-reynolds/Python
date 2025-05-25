@@ -31,10 +31,10 @@ class Mover:
         self.a_accel = 0
 
     def update(self):
-        mouse = PVector(*pygame.mouse.get_pos())
-        direction = PVector.sub(mouse, self.location).normalize()
-        direction = PVector.mult(direction, 0.5)
-        self.acceleration = direction
+        #mouse = PVector(*pygame.mouse.get_pos())
+        #direction = PVector.sub(mouse, self.location).normalize()
+        #direction = PVector.mult(direction, 0.5)
+        #self.acceleration = direction
 
         self.velocity + self.acceleration
         self.velocity.limit(self.top_speed)
@@ -70,9 +70,9 @@ class Mover:
             self.location.y = self.max_height
 
     def draw(self):
-        #screen.draw.circle(self.location.x, self.location.y, self.mass*16, (255,0,0))
-        #screen.draw.circle(self.location.x, self.location.y, self.mass*16, (0,0,0), 1)
-        screen.blit(self.surf, (self.rect.x, self.rect.y))
+        screen.draw.circle(self.location.x, self.location.y, self.mass*16, (255,0,0))
+        screen.draw.circle(self.location.x, self.location.y, self.mass*16, (0,0,0), 1)
+        #screen.blit(self.surf, (self.rect.x, self.rect.y))
 
     def apply_force(self, force):
         f = PVector.div(force, self.mass)

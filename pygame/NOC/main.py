@@ -18,18 +18,52 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Bob(Mover):
+    def __init__(self, x, y):
+        super().__init__(1, x, y, WIDTH, HEIGHT)
+
+class Spring:
+    k = 0.1
+
+    def __init__(self, x, y, l):
+        self.anchor = PVector(x,y)
+        self.len = l
+
+    def connect(self, bob):
+        force = PVector.sub(bob.location, self.anchor)
+        d = force.mag()
+        stretch = d - self.len
+
+        force = PVector.normalize(force)
+        force * (-1 * Spring.k * stretch)
+
+        bob.apply_force(force)
+
+    def draw(self):
+        screen.draw.rect((self.anchor.x-5, self.anchor.y-5,10,10), (128,128,128), 0)
+
+    def draw_line(self, bob):
+        screen.draw.line((0,0,0), (bob.location.x, bob.location.y), (self.anchor.x, self.anchor.y))
+
+
 
 # ----------------------------------------------------
 def update():
-    p.update()
+    b.apply_force(gravity)
+    s.connect(b)
+    b.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    p.draw()
+    s.draw_line(b)
+    s.draw()
+    b.draw()
 # ----------------------------------------------------
 
-p = Pendulum(PVector(WIDTH//2,10), 125)
+gravity = PVector(0,1)
+b = Bob(WIDTH//2, 30)
+s = Spring(WIDTH//2, 10, HEIGHT//2)
 
 # ----------------------------------------------------
 run()
