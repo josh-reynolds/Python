@@ -13,53 +13,32 @@ from orbiter import Orbiter
 from oscillator import Oscillator
 from wave import Wave
 from pendulum import Pendulum
+from spring import Spring
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-class Spring:
-    k = 0.1
-
-    def __init__(self, x, y, l):
-        self.anchor = PVector(x,y)
-        self.len = l
-
-    def connect(self, bob):
-        force = PVector.sub(bob.location, self.anchor)
-        d = force.mag()
-        stretch = d - self.len
-
-        force = PVector.normalize(force)
-        force * (-1 * Spring.k * stretch)
-
-        bob.apply_force(force)
-
-    def draw(self):
-        screen.draw.rect((self.anchor.x-5, self.anchor.y-5,10,10), (128,128,128), 0)
-
-    def draw_line(self, bob):
-        screen.draw.line((0,0,0), (bob.location.x, bob.location.y), (self.anchor.x, self.anchor.y))
 
 # ----------------------------------------------------
 def update():
-    b.apply_force(gravity)
-    b.apply_force(wind)
-    s.connect(b)
-    b.update()
+    bob.apply_force(gravity)
+    bob.apply_force(wind)
+    spring.connect(bob)
+    bob.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    s.draw_line(b)
-    s.draw()
-    b.draw()
+    spring.draw_line(bob)
+    spring.draw()
+    bob.draw()
 # ----------------------------------------------------
 
 gravity = PVector(0,1)
 wind = PVector(0.1,0)
-b = Mover(1, WIDTH//2, 30, WIDTH, HEIGHT)
-s = Spring(WIDTH//2, 10, HEIGHT//2)
+bob = Mover(1, WIDTH//2, 30, WIDTH, HEIGHT)
+spring = Spring(WIDTH//2, 10, HEIGHT//2)
 
 # ----------------------------------------------------
 run()
