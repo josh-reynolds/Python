@@ -18,10 +18,6 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-class Bob(Mover):
-    def __init__(self, x, y):
-        super().__init__(1, x, y, WIDTH, HEIGHT)
-
 class Spring:
     k = 0.1
 
@@ -45,11 +41,10 @@ class Spring:
     def draw_line(self, bob):
         screen.draw.line((0,0,0), (bob.location.x, bob.location.y), (self.anchor.x, self.anchor.y))
 
-
-
 # ----------------------------------------------------
 def update():
     b.apply_force(gravity)
+    b.apply_force(wind)
     s.connect(b)
     b.update()
 # ----------------------------------------------------
@@ -62,7 +57,8 @@ def draw():
 # ----------------------------------------------------
 
 gravity = PVector(0,1)
-b = Bob(WIDTH//2, 30)
+wind = PVector(0.1,0)
+b = Mover(1, WIDTH//2, 30, WIDTH, HEIGHT)
 s = Spring(WIDTH//2, 10, HEIGHT//2)
 
 # ----------------------------------------------------
