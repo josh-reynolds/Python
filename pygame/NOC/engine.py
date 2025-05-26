@@ -322,8 +322,15 @@ class Painter:
         else:
             pygame.draw.rect(self.surface, color, rect, width)
 
+    # TO_DO: transparency not quite right here, coming out as a square, neds work
     def circle(self, x, y, radius, color, width=0):
-        pygame.draw.circle(self.surface, color, (x, y), radius, width)
+        if len(color) == 4:
+            s = pygame.Surface((radius, radius))
+            pygame.draw.circle(s, color, (0, 0), radius, width)
+            s.set_alpha(color[3])
+            self.surface.blit(s, (x, y))
+        else:
+            pygame.draw.circle(self.surface, color, (x, y), radius, width)
 
     def pixel(self, x, y, color):
         pygame.gfxdraw.pixel(self.surface, x, y, color)
