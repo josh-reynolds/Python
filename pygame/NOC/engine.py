@@ -392,6 +392,22 @@ class keys:
     pass
 
 
+class Mouse:
+    """Mouse - holds flags indicating mouse button state."""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        for i in dir(self):
+            if not i.startswith('__') and i != 'reset':
+                setattr(self, i, False)
+
+    def __getitem__(self, button):
+        if hasattr(self, button):
+            return getattr(self, button)
+
+
 class Sounds:
     """Sounds - wraps the Pygame audio mixer."""
 
@@ -418,6 +434,9 @@ music = Music()
 
 """keyboard - singleton instance of Keyboard for use by game scripts."""
 keyboard = Keyboard()
+
+"""mouse - singleton instance of Mouse for use by game scripts."""
+mouse = Mouse()
 
 """sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()

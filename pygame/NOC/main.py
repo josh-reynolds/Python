@@ -64,17 +64,22 @@ class Particle:
 
 # ----------------------------------------------------
 def update():
-    ps.random_walk()
-    ps.add_particle()
-    ps.update()
+    if pygame.mouse.get_pressed()[0]:
+        pos = pygame.mouse.get_pos()
+        systems.append(ParticleSystem(pos[0], pos[1]))
+
+    for ps in systems:
+        ps.add_particle()
+        ps.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    ps.draw()
+    for ps in systems:
+        ps.draw()
 # ----------------------------------------------------
 
-ps = ParticleSystem(WIDTH//2, 10)
+systems = []
 
 # ----------------------------------------------------
 run()
