@@ -19,6 +19,24 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class ParticleSystem:
+    def __init__(self, x, y):
+        self.particles = []
+        self.origin = PVector(x,y)
+
+    def add_particle(self):
+        self.particles.append(Particle(self.origin.x, self.origin.y))
+
+    def update(self):
+        for p in self.particles:
+            p.update()
+            if p.is_dead():
+                self.particles.remove(p)
+
+    def draw(self):
+        for p in self.particles:
+            p.draw()
+
 class Particle:
     def __init__(self, x, y):
         self.location = PVector(x,y)
@@ -42,21 +60,16 @@ class Particle:
 
 # ----------------------------------------------------
 def update():
-    particles.append(Particle(WIDTH//2, 10))
-    for p in particles:
-        p.update()
-        if p.is_dead():
-            particles.remove(p)
-    print(len(particles))
+    ps.add_particle()
+    ps.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for p in particles:
-        p.draw()
+    ps.draw()
 # ----------------------------------------------------
 
-particles = []
+ps = ParticleSystem(WIDTH//2, 10)
 
 # ----------------------------------------------------
 run()
