@@ -37,6 +37,10 @@ class ParticleSystem:
         for p in self.particles:
             p.draw()
 
+    def random_walk(self):
+        self.origin.x += (uniform(-5,5))
+        self.origin.y += (uniform(-5,5))
+
 class Particle:
     def __init__(self, x, y):
         self.location = PVector(x,y)
@@ -60,6 +64,7 @@ class Particle:
 
 # ----------------------------------------------------
 def update():
+    ps.random_walk()
     ps.add_particle()
     ps.update()
 # ----------------------------------------------------
