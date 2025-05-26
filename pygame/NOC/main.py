@@ -34,25 +34,29 @@ class Particle:
     def draw(self):
         # TO_DO: add alpha support to Painter.circle()
         if self.lifespan >= 0:
-            screen.draw.circle(self.location.x, self.location.y, 20, (255,64,64,self.lifespan))
-            screen.draw.circle(self.location.x, self.location.y, 20, (0,0,0,self.lifespan), 1)
+            screen.draw.circle(self.location.x, self.location.y, 8, (255,64,64,self.lifespan))
+            screen.draw.circle(self.location.x, self.location.y, 8, (0,0,0,self.lifespan), 1)
 
     def is_dead(self):
         return self.lifespan < 0.0
 
 # ----------------------------------------------------
 def update():
-    p.update()
-    if p.is_dead():
-        print("Particle dead!")
+    particles.append(Particle(WIDTH//2, 10))
+    for p in particles:
+        p.update()
+        if p.is_dead():
+            particles.remove(p)
+    print(len(particles))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    p.draw()
+    for p in particles:
+        p.draw()
 # ----------------------------------------------------
 
-p = Particle(WIDTH//2, 10)
+particles = []
 
 # ----------------------------------------------------
 run()
