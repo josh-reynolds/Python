@@ -23,6 +23,7 @@ class ParticleSystem:
     def __init__(self, x, y):
         self.particles = []
         self.origin = PVector(x,y)
+        self.gravity = PVector(0, 0.1)
 
     def add_particle(self):
         if random() < 0.8: 
@@ -31,6 +32,7 @@ class ParticleSystem:
             self.particles.append(Confetti(self.origin.x, self.origin.y))
 
     def update(self):
+        self.apply_force(self.gravity)
         for p in self.particles:
             p.update()
             if p.is_dead():
@@ -44,16 +46,22 @@ class ParticleSystem:
         self.origin.x += (uniform(-5,5))
         self.origin.y += (uniform(-5,5))
 
+    def apply_force(self, force):
+        for p in self.particles:
+            p.apply_force(force)
+
 class Particle:
     def __init__(self, x, y):
         self.location = PVector(x,y)
-        self.acceleration = PVector(0,0.05)
+        self.acceleration = PVector(0,0)
         self.velocity = PVector(uniform(-1,1), uniform(-2,0))
         self.lifespan = 255
+        self.mass = 1
 
     def update(self):
         self.velocity + self.acceleration
         self.location + self.velocity
+        self.acceleration * 0
         self.lifespan -= 2
 
     def draw(self):
@@ -64,6 +72,11 @@ class Particle:
 
     def is_dead(self):
         return self.lifespan < 0.0
+
+    def apply_force(self, force):
+        f = PVector.div(force, self.mass)
+        self.acceleration + f
+
 
 # book example uses rotation, but my current implementation is a hassle to set up
 # will try a random size and different color instead to distinguish... the example
