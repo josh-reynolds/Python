@@ -14,11 +14,24 @@ from oscillator import Oscillator
 from wave import Wave
 from pendulum import Pendulum
 from spring import Spring
-from particles import ParticleSystem
+from particles import ParticleSystem, Particle
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
+
+class SmokeParticle(Particle):
+    def __init__(self, x, y):
+        self.image = images.texture
+        super().__init__(x,y)
+
+    def draw(self):
+        if self.lifespan >= 0:
+            screen.blit(self.image, (self.location.x, self.location.y))
+
+class Smoke(ParticleSystem):
+    def add_particle(self):
+        self.particles.append(SmokeParticle(self.origin.x, self.origin.y))
 
 # TO_DO: add this to the engine...
 def remap(old_val, old_min, old_max, new_min, new_max):
@@ -28,24 +41,20 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 def update():
     if pygame.mouse.get_pressed()[0]:
         pos = pygame.mouse.get_pos()
-        systems.append(ParticleSystem(pos[0], pos[1]))
+        systems.append(Smoke(pos[0], pos[1]))
 
     for ps in systems:
-        ps.apply_repulsor(r)
         ps.add_particle()
         ps.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    r.draw()
-
     for ps in systems:
         ps.draw()
 # ----------------------------------------------------
 
 systems = []
-r = Repulsor(WIDTH//2, HEIGHT//2)
 
 # ----------------------------------------------------
 run()
