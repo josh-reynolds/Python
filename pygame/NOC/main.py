@@ -50,6 +50,11 @@ class ParticleSystem:
         for p in self.particles:
             p.apply_force(force)
 
+    def apply_repulsor(self, repulsor):
+        for p in self.particles:
+            force = repulsor.attract(p)
+            p.apply_force(force)
+
 class Particle:
     def __init__(self, x, y):
         self.location = PVector(x,y)
@@ -103,17 +108,21 @@ def update():
         systems.append(ParticleSystem(pos[0], pos[1]))
 
     for ps in systems:
+        ps.apply_repulsor(r)
         ps.add_particle()
         ps.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
+    r.draw()
+
     for ps in systems:
         ps.draw()
 # ----------------------------------------------------
 
 systems = []
+r = Repulsor(WIDTH//2, HEIGHT//2)
 
 # ----------------------------------------------------
 run()

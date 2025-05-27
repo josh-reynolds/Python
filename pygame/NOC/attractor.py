@@ -29,5 +29,5 @@ class Repulsor(Attractor):
         force.normalize()
         strength = (G * self.mass * mover.mass) / (distance * distance)
         force * strength
-        force * -0.01
+        force * -0.1
         return force
