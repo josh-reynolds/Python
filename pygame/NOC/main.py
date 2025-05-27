@@ -1,5 +1,5 @@
 import math
-from random import uniform, randint
+from random import uniform, randint, random
 import pygame
 from pygame import Rect, Surface, transform
 from pygame.locals import *
@@ -25,7 +25,10 @@ class ParticleSystem:
         self.origin = PVector(x,y)
 
     def add_particle(self):
-        self.particles.append(Particle(self.origin.x, self.origin.y))
+        if random() < 0.8: 
+            self.particles.append(Particle(self.origin.x, self.origin.y))
+        else:
+            self.particles.append(Confetti(self.origin.x, self.origin.y))
 
     def update(self):
         for p in self.particles:
@@ -61,6 +64,24 @@ class Particle:
 
     def is_dead(self):
         return self.lifespan < 0.0
+
+# book example uses rotation, but my current implementation is a hassle to set up
+# will try a random size and different color instead to distinguish... the example
+# is really about inheritance/polymorphism anyway
+# TO_DO: simplify rotation
+class Confetti(Particle):
+    def __init__(self, x, y):
+        self.size = randint(2,20)
+        super().__init__(x, y)
+
+    def draw(self):
+        if self.lifespan >= 0:
+            screen.draw.circle(self.location.x, self.location.y, self.size, (0,255,0,self.lifespan))
+            screen.draw.circle(self.location.x, self.location.y, self.size, (0,0,0,self.lifespan), 1)
+
+# TO_DO: add this to the engine...
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
 
 # ----------------------------------------------------
 def update():
