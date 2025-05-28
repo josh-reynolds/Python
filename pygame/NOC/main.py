@@ -24,6 +24,7 @@ class SmokeParticle(Particle):
     def __init__(self, x, y):
         self.image = images.texture
         super().__init__(x,y)
+        self.velocity = PVector(uniform(-1.0,1.0)*0.7, random()*0.3-1.0)
 
     def draw(self):
         if self.lifespan >= 0:
@@ -44,11 +45,13 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 
 # ----------------------------------------------------
 def update():
+    pos = pygame.mouse.get_pos()
     if pygame.mouse.get_pressed()[0]:
-        pos = pygame.mouse.get_pos()
         systems.append(Smoke(pos[0], pos[1]))
 
     for ps in systems:
+        dx = remap(pos[0], 0, WIDTH, -0.2, 0.2)
+        ps.apply_force(PVector(dx,0))
         ps.add_particle()
         ps.update()
 # ----------------------------------------------------
