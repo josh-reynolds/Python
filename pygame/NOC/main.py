@@ -27,9 +27,14 @@ class SmokeParticle(Particle):
 
     def draw(self):
         if self.lifespan >= 0:
+            self.image.set_alpha(self.lifespan//2)
             screen.blit(self.image, (self.location.x, self.location.y))
 
 class Smoke(ParticleSystem):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.gravity = PVector(0,-0.01)
+
     def add_particle(self):
         self.particles.append(SmokeParticle(self.origin.x, self.origin.y))
 
