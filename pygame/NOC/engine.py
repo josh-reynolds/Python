@@ -256,7 +256,7 @@ class Screen:
     def fill(self, color):
         self.surface.fill(color)
 
-    def blit(self, image, position):
+    def blit(self, image, position, special_flags=0):
         if isinstance(image, pygame.Surface):
             surf = image
         elif isinstance(image, str):
@@ -264,7 +264,7 @@ class Screen:
                 self.images[image] = _load_image(image)
             surf = self.images[image]
 
-        self.surface.blit(surf, position)
+        self.surface.blit(surf, position, special_flags=special_flags)
 
 
 class Painter:
