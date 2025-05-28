@@ -47,7 +47,17 @@ class Vehicle:
         self.velocity.limit(self.maxspeed)
         self.location + self.velocity
         self.acceleration * 0
-        self.angle = self.velocity.heading() + math.pi/2
+
+        prev_angle = self.angle
+        target_angle = self.velocity.heading()
+        delta = target_angle - prev_angle
+        adjust = 0
+        if delta > 0:
+            adjust = 0.1
+        elif delta < 0:
+            adjust = -0.1
+
+        self.angle = prev_angle + adjust + math.pi/2
         self.rotate()
 
     def draw(self):
