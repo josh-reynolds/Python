@@ -20,6 +20,53 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Vehicle:
+    def __init__(self, x, y):
+        self.location = PVector(x,y)
+        self.rect = Rect(x, y, 20, 80)
+        self.color = (0, 200, 0)
+        
+        width,height = self.rect.size
+        self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
+        pygame.draw.rect(self.surf, self.color, (0, 0, width, height), width=0) 
+        pygame.draw.rect(self.surf, (0,0,0), (0, 0, width, height), width=1) 
+        pygame.draw.circle(self.surf, (0,0,0), (10,70), 10, 0)
+        self.original_surf = self.surf.copy()
+
+        self.velocity = PVector(0,0)
+        self.acceleration = PVector(0,0)
+
+        self.r = 3.0
+        self.maxspeed = 4
+        self.maxforce = 0.1
+
+        self.angle = 0
+
+    def update(self):
+        self.velocity + self.acceleration
+        self.velocity.limit(self.maxspeed)
+        self.location + self.velocity
+        self.acceleration * 0
+        self.angle = self.velocity.heading() + math.pi/2
+        self.rotate()
+
+    def draw(self):
+        screen.blit(self.surf, (self.rect.x, self.rect.y))
+
+    def apply_force(self, force):
+        self.acceleration + force
+
+    def seek(self, target):
+        desired = PVector.sub(target, self.location).normalize()
+        desired * self.maxspeed
+        steer = PVector.sub(desired, self.velocity)
+        steer.limit(self.maxforce)
+        self.apply_force(steer)
+
+    def rotate(self):
+        self.surf = transform.rotate(self.original_surf, self.angle)
+        w,h = self.surf.get_size()
+        self.rect = Rect(self.location.x-w/2, self.location.y-h/2, w, h)
 
 # TO_DO: add this to the engine...
 def remap(old_val, old_min, old_max, new_min, new_max):
@@ -27,25 +74,18 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 
 # ----------------------------------------------------
 def update():
-    pos = pygame.mouse.get_pos()
-    if pygame.mouse.get_pressed()[0]:
-        systems.append(Smoke(pos[0], pos[1]))
-
-    for ps in systems:
-        dx = remap(pos[0], 0, WIDTH, -0.2, 0.2)
-        ps.apply_force(PVector(dx,0))
-        ps.add_particle()
-        ps.update()
+    v.seek(target)
+    v.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    screen.fill((0,0,0))
-    for ps in systems:
-        ps.draw()
+    v.draw()
+    screen.draw.circle(target.x, target.y, 10, (255,0,0))
 # ----------------------------------------------------
 
-systems = []
+v = Vehicle(WIDTH//2, HEIGHT//2)
+target = PVector(100,100)
 
 # ----------------------------------------------------
 run()
@@ -86,3 +126,11 @@ run()
 # and then we'd want to also support push_matrix() and pop_matrix()
 # fairly big change to the engine, with potential to break backwards compat, so need
 # to approach carefully and test everything thoroughly
+
+# Chapter 5 covers physics libraries. Apparently there _is_ a version of Box2D for pygame
+# (pybox2d), and it seems to be available on NixOS according to the search page. But the 
+# available versions are for Python 3.12 and 3.13, while I currently have 3.11. Some
+# fiddling required. The story with toxiclibs is murkier. But a general search for 
+# 'pygame physics libraries' turns up pymunk, so may give that one a go.
+
+# In the meantime, I think I'll skip over Chapter 5 and revisit it later.
