@@ -1,4 +1,5 @@
 from random import uniform, random, randint
+from pygame.locals import *
 from pvector import PVector
 from engine import *
 
@@ -78,3 +79,22 @@ class Confetti(Particle):
         if self.lifespan >= 0:
             screen.draw.circle(self.location.x, self.location.y, self.size, (0,255,0,self.lifespan))
             screen.draw.circle(self.location.x, self.location.y, self.size, (0,0,0,self.lifespan), 1)
+
+class SmokeParticle(Particle):
+    def __init__(self, x, y):
+        self.image = images.texture_2
+        super().__init__(x,y)
+        self.velocity = PVector(uniform(-1.0,1.0)*0.7, random()*0.3-1.0)
+
+    def draw(self):
+        if self.lifespan >= 0:
+            self.image.set_alpha(self.lifespan//2)
+            screen.blit(self.image, (self.location.x, self.location.y), special_flags=BLEND_RGBA_ADD)
+
+class Smoke(ParticleSystem):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.gravity = PVector(0,-0.01)
+
+    def add_particle(self):
+        self.particles.append(SmokeParticle(self.origin.x, self.origin.y))
