@@ -331,14 +331,7 @@ class Painter:
             vY = round(radius * sins[i] + y)
             hex_points.append((vX,vY))
 
-        print(hex_points)
-
         pygame.draw.polygon(self.surface, color, hex_points, width)
-        WIDTH = self.surface.get_width()
-        HEIGHT = self.surface.get_height()
-        for p in hex_points:
-            pygame.draw.line(self.surface, (255,0,0), (0,p[1]), (WIDTH,p[1]))
-            pygame.draw.line(self.surface, (255,0,0), (p[0],0), (p[0],HEIGHT))
 
 
 class Music:
