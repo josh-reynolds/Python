@@ -77,6 +77,30 @@ class Rosette:
         self.hexes = []
         self.hexes.append(Hex((coordinate[0], coordinate[1]), hex_radius, color, width))
 
+        # still seeing artifacts here. we've corrected the underlying hexes, now need
+        # to fix the layout here...
+        # hardcoding and guesstimate values below were never great to begin with
+
+        # 1) adjust for floating point issues here, just as with hex vertices
+        # 2) fold in proper math for layout of hex centers
+
+        # for a flat-topped hex:
+        # hex vertices are 60 degrees apart, starting at 60 degrees
+        # neighboring hex centers are also 60 degrees apart, but starting at 30 degrees
+        # the first ring has 6 hexes, the second 12, the third 18, the fourth 24:
+        #  6 vertex hexes + ((ring # - 1) * 6)
+        #    1 = 6 + 0 * 6 = 6
+        #    2 = 6 + 1 * 6 = 12
+        #    3 = 6 + 2 * 6 = 18
+        #    4 = 6 + 3 * 6 + 24
+        
+        # the angular distance from vertex hex to vertex hex is 60 degrees, so
+        # side hexes just divvy up that separation (add one for fencepost)
+        #   1 = 0 side hexes = 0 separation:              30 | 90
+        #   2 = 1 side hex   = 60 / (1 + 1) = 30 degrees: 30 | 60 | 90
+        #   3 = 2 side hexes = 60 / (2 + 1) = 20 degrees: 30 | 50 | 70 | 90
+        #   4 = 3 side hexes = 60 / (3 + 1) = 15 degrees: 30 | 45 | 60 | 75 | 90
+
         for i in range(radius):
             pass
 
