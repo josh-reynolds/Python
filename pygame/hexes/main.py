@@ -127,8 +127,12 @@ def draw():
     #g4.draw()
     #g5.draw()
     #g6.draw()
-    sg.draw()
+    #sg.draw()
     #r.draw()
+    h.draw()
+    print(points)
+    print(WIDTH//2, HEIGHT//2)
+    print("---")
 
     try:
         filename = "./output.png"
@@ -146,7 +150,26 @@ g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 
 
 sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2, 4)
 
-r = Rosette((WIDTH/2, HEIGHT/2), 1, 40, (0,0,0))
+r = Rosette((WIDTH//2, HEIGHT//2), 2, 40, (0,0,0))
+
+h = Hex((WIDTH//2, HEIGHT//2), 80, (0,0,0), 1)
+
+#vertical = math.floor(80 * math.sin(math.radians(60)))
+vertical = math.floor(80 * 0.86602540378)
+top = HEIGHT//2 + vertical
+middle = HEIGHT//2
+bottom = HEIGHT//2 - vertical
+
+#short_horizontal = math.floor(80 * math.cos(math.radians(60)))
+short_horizontal = 80//2
+short_right = WIDTH//2 + short_horizontal
+center = WIDTH//2
+short_left = WIDTH//2 - short_horizontal
+long_right = WIDTH//2 + 80
+long_left = WIDTH//2 - 80
+
+points = [(short_right, top), (short_left, top), (long_left, middle),
+          (short_left, bottom), (short_right, bottom), (long_right, middle)]
 
 run()
 
