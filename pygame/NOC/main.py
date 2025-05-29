@@ -42,22 +42,34 @@ class Vehicle:
 
         self.angle = 0
 
+        self.target = PVector(0,0)
+
     def update(self):
-        self.velocity + self.acceleration
-        self.velocity.limit(self.maxspeed)
-        self.location + self.velocity
-        self.acceleration * 0
+        #self.velocity + self.acceleration
+        #self.velocity.limit(self.maxspeed)
+        #self.location + self.velocity
+        #self.acceleration * 0
 
-        prev_angle = self.angle
-        target_angle = self.velocity.heading()
-        delta = target_angle - prev_angle
+        prev_angle = self.angle % 360
+        to_target = PVector.sub(self.target, self.location).normalize()
+        screen.draw.line((0,0,0), (self.location.x, self.location.y), (self.target.x, self.target.y))
+
+        pa = math.radians(prev_angle)
+        angle_x = self.location.x + math.cos(pa) * 100
+        angle_y = self.location.y + math.sin(pa) * 100
+        screen.draw.line((255,0,0), (self.location.x, self.location.y), (angle_x, angle_y))
+
+        #target_angle = self.velocity.heading()
+        target_angle = to_target.heading()
+        delta = (target_angle - prev_angle)
         adjust = 0
-        if delta > 0:
-            adjust = 0.1
-        elif delta < 0:
-            adjust = -0.1
+        print(delta)
+        if delta > 5:
+            adjust = 0.5
+        elif delta < -5:
+            adjust = -0.5
 
-        self.angle = prev_angle + adjust + math.pi/2
+        self.angle = prev_angle + adjust #- math.pi/2
         self.rotate()
 
     def draw(self):
@@ -67,6 +79,7 @@ class Vehicle:
         self.acceleration + force
 
     def seek(self, target):
+        self.target = target
         desired = PVector.sub(target, self.location).normalize()
         desired * self.maxspeed
         steer = PVector.sub(desired, self.velocity)
@@ -84,18 +97,18 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 
 # ----------------------------------------------------
 def update():
-    v.seek(target)
+    v.seek(PVector(*pygame.mouse.get_pos()))
     v.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
     v.draw()
-    screen.draw.circle(target.x, target.y, 10, (255,0,0))
+    #screen.draw.circle(target.x, target.y, 10, (255,0,0))
 # ----------------------------------------------------
 
 v = Vehicle(WIDTH//2, HEIGHT//2)
-target = PVector(100,100)
+#target = PVector(100,100)
 
 # ----------------------------------------------------
 run()
