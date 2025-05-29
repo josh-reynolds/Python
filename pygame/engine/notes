@@ -113,6 +113,7 @@ v1.5 (under development with NOC and miscellaneous projects)
 * [     ] blit code duplication between Painter.text() and Screen.blit()
 * [     ] only partial positioning implemented for Painter.text()
 * [     ] duplication between Images, _load_image(), and Screen
+* [     ] artifacting visible in Rosette & SubdividedGrid - needs correction
 
 ----------------------------------------
 # image + anchor -> anchor_value

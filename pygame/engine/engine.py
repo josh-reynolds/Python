@@ -319,16 +319,16 @@ class Painter:
     def pixel(self, x, y, color):
         pygame.gfxdraw.pixel(self.surface, x, y, color)
 
-    # this can be generalized to any regular polygon
-    # also, doubling sides in the range (but not the angle) and 
-    # skipping counts produces a star shape
     def hex(self, x, y, radius, color, width=1):
         sides = 6
+        sins = [0.86602540378, 0.86602540378, 0,
+                -0.86602540378, -0.86602540378, 0]
+        coss = [0.5, -0.5, -1,
+                -0.5, 0.5, 1]
         hex_points = []
         for i in range(sides):
-            angle = math.pi * 2/sides * (i+1)
-            vX = radius * math.cos(angle) + x
-            vY = radius * math.sin(angle) + y
+            vX = round(radius * coss[i] + x)
+            vY = round(radius * sins[i] + y)
             hex_points.append((vX,vY))
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
