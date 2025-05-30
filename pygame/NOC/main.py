@@ -23,14 +23,31 @@ TITLE = "The Nature of Code"
 # The heading code isn't working properly, needs debugging
 # I added some line indicators to see what's going on.
 # Observed bugs:
-#   Drawing orientation doesn't align with heading vector, and is inconsistent
-#   Drawing rotates opposite direction from heading vector
-#   Heading vector properly moves toward target only in lower two quadrants (PI to TWO_PI)
+#   [     ] Drawing orientation doesn't align with heading vector, and is inconsistent
+#   [     ] Drawing rotates opposite direction from heading vector
+#   [FIXED] Heading vector properly moves toward target only in lower two quadrants (PI to TWO_PI)
 #     spins indefinitely conterclockwise in upper two without stopping on target
+#   [     ] Rotation calculation doesn't properly handle crossing 0/360 degree boundary,
+#     will take the long way around
 
 # If we take out the sprite rotation, can see cause of first bug: it is using the 
 # top-left corner of the image rect as axis - need to center this
 # also, current drawing orientation is pointing down - either adapt or fix
+
+# As for the quadrants, the top two return angles of 0 to -180, and the bottom
+# return angles of 0 to 180 - need to adjust or accommodate in order to correct
+
+# So, the heading calculation is just math.atan2(), which:
+#   is oriented vertically (0 degrees is up)
+#   returns positive values for the right-hand quadrants (+x,+y) and (+x,-y)
+#   returns negative values for the left-hand quadrants (-x,+y) and (-x,-y)
+
+# The vehicle angle is counting 0 to 360 degrees clockwise, oriented to the right:
+#   0/360 degrees is (+x,0y)
+#   90 degrees is (0x,-y)
+#   180 degrees is (-x,0y))
+#   270 degrees is (0x,+y)
+# The current motion of the pointer, however, is counter-clockwise (decrementing angle)
 
 class Vehicle:
     def __init__(self, x, y):
@@ -74,16 +91,18 @@ class Vehicle:
 
         #target_angle = self.velocity.heading()
         target_angle = to_target.heading()
+        if target_angle < 0:
+            target_angle += 360
         delta = (target_angle - prev_angle)
         adjust = 0
-        print(delta)
+        print(target_angle, prev_angle, delta)
         if delta > 1:
             adjust = 0.5
         elif delta < -1:
             adjust = -0.5
 
-        self.angle = prev_angle + adjust #- math.pi/2
-        self.rotate()
+        self.angle = prev_angle + adjust #- 90
+        #self.rotate()
 
     def draw(self):
         screen.blit(self.surf, (self.rect.x, self.rect.y))
