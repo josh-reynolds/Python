@@ -20,17 +20,30 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+# The heading code isn't working properly, needs debugging
+# I added some line indicators to see what's going on.
+# Observed bugs:
+#   Drawing orientation doesn't align with heading vector, and is inconsistent
+#   Drawing rotates opposite direction from heading vector
+#   Heading vector properly moves toward target only in lower two quadrants (PI to TWO_PI)
+#     spins indefinitely conterclockwise in upper two without stopping on target
+
+# If we take out the sprite rotation, can see cause of first bug: it is using the 
+# top-left corner of the image rect as axis - need to center this
+# also, current drawing orientation is pointing down - either adapt or fix
+
 class Vehicle:
     def __init__(self, x, y):
         self.location = PVector(x,y)
-        self.rect = Rect(x, y, 20, 80)
+        width = 20
+        height = 80
+        self.rect = Rect(x - width/2, y - height/2, 20, 80)
         self.color = (0, 200, 0)
         
-        width,height = self.rect.size
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
         pygame.draw.rect(self.surf, self.color, (0, 0, width, height), width=0) 
         pygame.draw.rect(self.surf, (0,0,0), (0, 0, width, height), width=1) 
-        pygame.draw.circle(self.surf, (0,0,0), (10,70), 10, 0)
+        pygame.draw.circle(self.surf, (0,0,0), (10,10), 10, 0)
         self.original_surf = self.surf.copy()
 
         self.velocity = PVector(0,0)
@@ -64,9 +77,9 @@ class Vehicle:
         delta = (target_angle - prev_angle)
         adjust = 0
         print(delta)
-        if delta > 5:
+        if delta > 1:
             adjust = 0.5
-        elif delta < -5:
+        elif delta < -1:
             adjust = -0.5
 
         self.angle = prev_angle + adjust #- math.pi/2
