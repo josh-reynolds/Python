@@ -24,7 +24,7 @@ TITLE = "The Nature of Code"
 # I added some line indicators to see what's going on.
 # Observed bugs:
 #   [     ] Drawing orientation doesn't align with heading vector, and is inconsistent
-#   [     ] Drawing rotates opposite direction from heading vector
+#   [FIXED] Drawing rotates opposite direction from heading vector
 #   [FIXED] Heading vector properly moves toward target only in lower two quadrants (PI to TWO_PI)
 #     spins indefinitely conterclockwise in upper two without stopping on target
 #   [FIXED] Rotation calculation doesn't properly handle crossing 0/360 degree boundary,
@@ -115,7 +115,7 @@ class Vehicle:
             adjust = -0.5
 
         self.angle = prev_angle + adjust #- 90
-        #self.rotate()
+        self.rotate()
 
     def draw(self):
         screen.blit(self.surf, (self.rect.x, self.rect.y))
@@ -132,7 +132,7 @@ class Vehicle:
         self.apply_force(steer)
 
     def rotate(self):
-        self.surf = transform.rotate(self.original_surf, self.angle)
+        self.surf = transform.rotate(self.original_surf, -self.angle)
         w,h = self.surf.get_size()
         self.rect = Rect(self.location.x-w/2, self.location.y-h/2, w, h)
 
