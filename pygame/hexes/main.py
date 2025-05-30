@@ -79,7 +79,9 @@ class Rosette:
 
         # still seeing artifacts here. we've corrected the underlying hexes, now need
         # to fix the layout here...
-        # hardcoding and guesstimate values below were never great to begin with
+        # hardcoding and guesstimate values below were never great to begin with,
+        # always hoped to get something formulaic that could drive through the
+        # (currently idle) loop below
 
         # 1) adjust for floating point issues here, just as with hex vertices
         # 2) fold in proper math for layout of hex centers
@@ -92,7 +94,9 @@ class Rosette:
         #    1 = 6 + 0 * 6 = 6
         #    2 = 6 + 1 * 6 = 12
         #    3 = 6 + 2 * 6 = 18
-        #    4 = 6 + 3 * 6 + 24
+        #    4 = 6 + 3 * 6 = 24
+        #    5 = 6 + 4 * 6 = 30
+        #    6 = 6 + 5 * 6 = 36
         
         # the angular distance from vertex hex to vertex hex is 60 degrees, so
         # side hexes just divvy up that separation (add one for fencepost)
@@ -100,38 +104,75 @@ class Rosette:
         #   2 = 1 side hex   = 60 / (1 + 1) = 30 degrees: 30 | 60 | 90
         #   3 = 2 side hexes = 60 / (2 + 1) = 20 degrees: 30 | 50 | 70 | 90
         #   4 = 3 side hexes = 60 / (3 + 1) = 15 degrees: 30 | 45 | 60 | 75 | 90
+        #   5 = 4 side hexes = 60 / (4 + 1) = 12 degrees: 30 | 42 | 54 | 66 | 78 | 90
+        #   6 = 5 side hexes = 60 / (5 + 1) = 10 degrees: 30 | 40 | 50 | 60 | 70 | 80 | 90
+
+        # nice how hexes produce integer values up to this point, but at a ring size of 7
+        # we'll start to see floating point values and all the potential issues there - we
+        # might want to limit rosettes to that max size
+
+        # per the floating point math comments above, it might also be useful to 
+        # keep a couple tables of trig values so we have consistency (and theoretically speed,
+        # though that's not really a concern here)
+
+        # When fixing the hex vertices, I discovered that in Python, math.sin(180) and math.sin(360), 
+        # for instance, are not quite 0 as they should be, and this tiny value was at least one
+        # of the issues contributing to visual artifacts. So same applies here.
+
+        # these tables need to go all the way around to 360...
+        # not sure it's worth the effort, since in testing, Python math.sin()/cos()
+        # give these same values when rounded to 5 decimal places
+        # ...and if I do round(math.sin(math.radians(180)),5) I also get 0, so is that enough?
+        sins = {30:0.5, 40:0.64279, 42:0.66913, 45:0.70711, 
+                50:0.76604, 54:0.80902, 60:0.86603, 66:0.91355, 
+                70:0.93969, 75:0.96593, 78:0.97815,
+                80:0.98481, 90:1.0}
+
+        coss = {30:0.86603, 40:0.76604, 42:0.74314, 45:0.70711, 
+                50:0.64279, 54:0.58779, 60:0.5, 66:0.40674, 
+                70:0.34202, 75:0.25882, 78:0.20791,
+                80:0.17365, 90:0}
 
         for i in range(radius):
+            vertex_hex_count = 1
+            edge_hex_count = i-1
+            ring_hexes = 6 * (vertex_hex_count + edge_hex_count)
+
             pass
 
         if radius > 0:
             for i in range(6):
-                angle = math.pi * 2/6 * (i+1) + math.pi/6
+                # 60 degrees + 30 degrees
+                angle = math.radians(60 * (i+1) + 30)
                 vx = 2 * self.y_offset * math.cos(angle) + coordinate[0]
                 vy = 2 * self.y_offset * math.sin(angle) + coordinate[1]
                 self.hexes.append(Hex((vx,vy), hex_radius, color, width))
 
         if radius > 1:
             for i in range(6):
-                angle = math.pi * 2/6 * (i+1)
+                # 60 degrees
+                angle = math.radians(60 * (i+1))
                 vx = 3.5 * self.y_offset * math.cos(angle) + coordinate[0]
                 vy = 3.5 * self.y_offset * math.sin(angle) + coordinate[1]
                 self.hexes.append(Hex((vx,vy), hex_radius, color, width))
 
         if radius > 2:
             for i in range(6):
-                angle = math.pi * 2/6 * (i+1) + math.pi/6
+                # 60 degrees + 30 degrees
+                angle = math.radians(60 * (i+1) + 30)
                 vx = 4 * self.y_offset * math.cos(angle) + coordinate[0]
                 vy = 4 * self.y_offset * math.sin(angle) + coordinate[1]
                 self.hexes.append(Hex((vx,vy), hex_radius, color, width))
 
         if radius > 3:
             for i in range(6):
+                # 60 degrees + 11 degrees
                 angle1 = math.pi * 2/6 * (i+1) + math.pi/16.5
                 vx1 = 5.3 * self.y_offset * math.cos(angle1) + coordinate[0]
                 vy1 = 5.3 * self.y_offset * math.sin(angle1) + coordinate[1]
                 self.hexes.append(Hex((vx1,vy1), hex_radius, color, width))
 
+                # 60 degrees - 11 degrees
                 angle2 = math.pi * 2/6 * (i+1) - math.pi/16.5
                 vx2 = 5.3 * self.y_offset * math.cos(angle2) + coordinate[0]
                 vy2 = 5.3 * self.y_offset * math.sin(angle2) + coordinate[1]
@@ -145,14 +186,14 @@ def update():
     pass
 
 def draw():
-    g1.draw()
+    #g1.draw()
     #g2.draw()
     #g3.draw()
     #g4.draw()
     #g5.draw()
-    g6.draw()
+    #g6.draw()
     #sg.draw()
-    #r.draw()
+    r.draw()
     #h.draw()
 
     try:
@@ -171,9 +212,16 @@ g6 = Grid(60, 12, 17, 4, 4, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 
 
 sg = SubdividedGrid(40, 12, 8, 6, 7, (0,0,0), 2, 4)
 
-r = Rosette((WIDTH//2, HEIGHT//2), 2, 40, (0,0,0))
+r = Rosette((WIDTH//2, HEIGHT//2), radius=2, hex_radius=40, color=(0,0,0))
 
 h = Hex((WIDTH//2, HEIGHT//2), 80, (0,0,0), 1)
+
+for i in range(7):
+    if i > 0:
+        vertex_hex_count = 1
+        edge_hex_count = i-1
+        ring_hexes = 6 * (vertex_hex_count + edge_hex_count)
+        print(i, vertex_hex_count, edge_hex_count, ring_hexes)
 
 run()
 
