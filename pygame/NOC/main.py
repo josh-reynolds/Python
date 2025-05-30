@@ -27,7 +27,7 @@ TITLE = "The Nature of Code"
 #   [     ] Drawing rotates opposite direction from heading vector
 #   [FIXED] Heading vector properly moves toward target only in lower two quadrants (PI to TWO_PI)
 #     spins indefinitely conterclockwise in upper two without stopping on target
-#   [     ] Rotation calculation doesn't properly handle crossing 0/360 degree boundary,
+#   [FIXED] Rotation calculation doesn't properly handle crossing 0/360 degree boundary,
 #     will take the long way around
 
 # If we take out the sprite rotation, can see cause of first bug: it is using the 
@@ -48,6 +48,13 @@ TITLE = "The Nature of Code"
 #   180 degrees is (-x,0y))
 #   270 degrees is (0x,+y)
 # The current motion of the pointer, however, is counter-clockwise (decrementing angle)
+
+# Fixed the quadrant problem, but that introduced a new issue: the delta always takes
+# the long away around the circle - it can't cross the 0/360 boundary
+
+# Instead of forcing atan values to 0-360 range, perhaps it's better to use the 
+# +/- 180 range, which would indicate direction. Also could shift towards relative
+# rather than absolute angles...
 
 class Vehicle:
     def __init__(self, x, y):
@@ -93,7 +100,13 @@ class Vehicle:
         target_angle = to_target.heading()
         if target_angle < 0:
             target_angle += 360
+
         delta = (target_angle - prev_angle)
+        if delta > 180:
+            delta = -(360 - delta)
+        if delta < -180:
+            delta = 360 + delta
+
         adjust = 0
         print(target_angle, prev_angle, delta)
         if delta > 1:
