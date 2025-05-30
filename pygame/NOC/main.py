@@ -82,10 +82,10 @@ class Vehicle:
         self.target = PVector(0,0)
 
     def update(self):
-        #self.velocity + self.acceleration
-        #self.velocity.limit(self.maxspeed)
-        #self.location + self.velocity
-        #self.acceleration * 0
+        self.velocity + self.acceleration
+        self.velocity.limit(self.maxspeed)
+        self.location + self.velocity
+        self.acceleration * 0
 
         prev_angle = self.angle % 360
         to_target = PVector.sub(self.target, self.location).normalize()
@@ -96,7 +96,6 @@ class Vehicle:
         angle_y = self.location.y + math.sin(pa) * 100
         screen.draw.line((255,0,0), (self.location.x, self.location.y), (angle_x, angle_y))
 
-        #target_angle = self.velocity.heading()
         target_angle = to_target.heading()
         if target_angle < 0:
             target_angle += 360
@@ -109,9 +108,9 @@ class Vehicle:
 
         adjust = 0
         if delta > 1:
-            adjust = 0.5
+            adjust = 3
         elif delta < -1:
-            adjust = -0.5
+            adjust = -3
 
         self.angle = prev_angle + adjust
         self.rotate()
@@ -148,11 +147,9 @@ def update():
 # ----------------------------------------------------
 def draw():
     v.draw()
-    #screen.draw.circle(target.x, target.y, 10, (255,0,0))
 # ----------------------------------------------------
 
 v = Vehicle(WIDTH//2, HEIGHT//2)
-#target = PVector(100,100)
 
 # ----------------------------------------------------
 run()
