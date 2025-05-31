@@ -121,6 +121,22 @@ class Vehicle:
     def apply_force(self, force):
         self.acceleration + force
 
+    def wander(self):
+        projected_distance = 100
+        angle_x = self.location.x + math.cos(math.radians(self.angle)) * projected_distance
+        angle_y = self.location.y + math.sin(math.radians(self.angle)) * projected_distance
+        #screen.draw.circle(angle_x, angle_y, 10, (0,255,0))
+        predicted = PVector(angle_x, angle_y)
+
+        r = 50
+        #screen.draw.circle(angle_x, angle_y, r, (0,0,0), 1)
+        random_angle = uniform(0,360)
+        target_x = angle_x + math.cos(math.radians(random_angle)) * r
+        target_y = angle_y + math.sin(math.radians(random_angle)) * r
+        #screen.draw.circle(target_x, target_y, 5, (0,255,0))
+
+        self.seek(PVector(target_x, target_y))
+
     def seek(self, target):
         self.target = target
         d = PVector.sub(target, self.location)
@@ -144,7 +160,8 @@ class Vehicle:
 
 # ----------------------------------------------------
 def update():
-    v.seek(PVector(*pygame.mouse.get_pos()))
+    #v.seek(PVector(*pygame.mouse.get_pos()))
+    v.wander()
     v.update()
 # ----------------------------------------------------
 
