@@ -123,8 +123,16 @@ class Vehicle:
 
     def seek(self, target):
         self.target = target
-        desired = PVector.sub(target, self.location).normalize()
-        desired * self.maxspeed
+        d = PVector.sub(target, self.location)
+        distance = d.mag()
+        desired = PVector.normalize(d)
+
+        if distance < 100:
+            m = remap(distance, 0, 100, 0, self.maxspeed)
+            desired * m
+        else:
+            desired * self.maxspeed
+
         steer = PVector.sub(desired, self.velocity)
         steer.limit(self.maxforce)
         self.apply_force(steer)
