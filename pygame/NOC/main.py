@@ -134,10 +134,6 @@ class Vehicle:
         w,h = self.surf.get_size()
         self.rect = Rect(self.location.x-w/2, self.location.y-h/2, w, h)
 
-# TO_DO: add this to the engine...
-def remap(old_val, old_min, old_max, new_min, new_max):
-    return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
-
 # ----------------------------------------------------
 def update():
     v.seek(PVector(*pygame.mouse.get_pos()))

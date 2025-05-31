@@ -18,6 +18,7 @@ This module contains the following:
     images - singleton instance of Images for use by game scripts.
 
     run() - entry point containing the core game loop.
+    remap() - utility function; remap a value from one range to another.
 
 Game scripts should generally import the singleton entries, run(), and Actor. The 
 game loop will expect to find update(), draw(), and the constants WIDTH, HEIGHT, and
@@ -498,6 +499,9 @@ def run():
         pygame.display.update()
     
     pygame.quit()
+
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
 
 def _trace_function(frame, event, arg, indent=[0]):
     """Internal function to display function entry/exit while debugging."""
