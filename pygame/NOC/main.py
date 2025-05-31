@@ -135,6 +135,16 @@ class Vehicle:
         target_y = angle_y + math.sin(math.radians(random_angle)) * r
         #screen.draw.circle(target_x, target_y, 5, (0,255,0))
 
+        boundary = 25
+        if target_x > WIDTH - boundary:
+            target_x = WIDTH//2
+        if target_x < boundary:
+            target_x = WIDTH//2
+        if target_y > HEIGHT - boundary:
+            target_y = HEIGHT//2
+        if target_y < boundary:
+            target_y = HEIGHT//2
+
         self.seek(PVector(target_x, target_y))
 
     def seek(self, target):
