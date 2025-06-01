@@ -21,6 +21,61 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Grid:
+    def __init__(self, resolution):
+        self.resolution = resolution
+        self.cols = WIDTH//resolution
+        self.rows = HEIGHT//resolution
+        self.field = [[0 for i in range(self.cols)] for j in range(self.rows)]
+
+    def draw(self, skip):
+        for x in range(self.cols):
+            for y in range(self.rows):
+                self.draw_cell(y, x, skip)
+
+    def draw_cell(self, x, y, skip):
+        top = self.resolution * y
+        left = self.resolution * x
+        width = self.resolution
+        height = self.resolution
+
+        fill = (x + y) % skip
+        screen.draw.rect((top, left, width, height), (255,64,64), fill)
+
+class FlowField:
+    def __init__(self, resolution):
+        self.resolution = resolution
+        self.cols = WIDTH//resolution
+        self.rows = HEIGHT//resolution
+        self.field = [[self.make_vector(i,j) for i in range(self.cols)] for j in range(self.rows)]
+
+    def make_vector(self, col, row):
+        center = (self.resolution * col + self.resolution//2, 
+                  self.resolution * row + self.resolution//2)
+        v = PVector.sub(PVector(WIDTH//2, HEIGHT//2), PVector(*center))
+        return PVector.normalize(v)
+
+    def draw(self):
+        for x in range(self.cols):
+            for y in range(self.rows):
+                self.draw_cell(y,x)
+
+    def draw_cell(self, x, y):
+        top = self.resolution * y
+        left = self.resolution * x
+        width = self.resolution
+        height = self.resolution
+
+        fill = 1
+
+        center = (top + self.resolution//2, left + self.resolution//2)
+        end = (center[0] + self.field[x][y].x * 20, center[1] + self.field[x][y].y * 20)
+
+        screen.draw.rect((top, left, width, height), (255,64,64), fill)
+        screen.draw.circle(center[0], center[1], 3, (0,0,0))
+        screen.draw.line((0,0,0), center, end)
+
+
 # ----------------------------------------------------
 def update():
     global counter
@@ -34,11 +89,18 @@ def update():
 
 # ----------------------------------------------------
 def draw():
+    ff.draw()
+    #g.draw(counter % 22 + 1)
+    #g.draw(20)
     v.draw()
+
 # ----------------------------------------------------
 
 v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 counter = 0
+
+ff = FlowField(40)
+#g = Grid(40)
 
 # ----------------------------------------------------
 run()
