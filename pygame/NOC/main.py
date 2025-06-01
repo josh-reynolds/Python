@@ -75,6 +75,11 @@ class FlowField:
         screen.draw.circle(center[0], center[1], 3, (0,0,0))
         screen.draw.line((0,0,0), center, end)
 
+    def lookup(self, vector):
+        column = max(min(vector.x//self.resolution, self.cols), 0)
+        row = max(min(vector.y//self.resolution, self.rows), 0)
+        return (column, row)
+
 
 # ----------------------------------------------------
 def update():
@@ -84,6 +89,10 @@ def update():
         v.wander()
     v.update()
     counter += 1
+
+    m = PVector(*pygame.mouse.get_pos())
+    print(ff.lookup(m))
+
     
 # ----------------------------------------------------
 
