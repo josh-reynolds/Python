@@ -26,6 +26,13 @@ class PVector:
         self.x /= scalar
         self.y /= scalar
 
+    def dot(self, other):
+        return (self.x * other.x) + (self.y * other.y)
+
+    def angle_between(self, other):
+        dot = self.dot(other)
+        return math.acos(dot / (self.mag() * other.mag()))
+
     def mag(self):
         return math.sqrt(self.x ** 2 + self.y ** 2)
 

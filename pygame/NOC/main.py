@@ -87,7 +87,7 @@ def update():
     #v.seek(PVector(*pygame.mouse.get_pos()))
     if counter % 4 == 0:
         v.wander()
-    v.follow(ff)
+    #v.follow(ff)
     v.update()
     counter += 1
 
