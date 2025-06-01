@@ -78,7 +78,7 @@ class FlowField:
     def lookup(self, vector):
         column = max(min(vector.x//self.resolution, self.cols), 0)
         row = max(min(vector.y//self.resolution, self.rows), 0)
-        return (column, row)
+        return self.field[row][column]
 
 
 # ----------------------------------------------------
@@ -87,13 +87,10 @@ def update():
     #v.seek(PVector(*pygame.mouse.get_pos()))
     if counter % 4 == 0:
         v.wander()
+    v.follow(ff)
     v.update()
     counter += 1
 
-    m = PVector(*pygame.mouse.get_pos())
-    print(ff.lookup(m))
-
-    
 # ----------------------------------------------------
 
 # ----------------------------------------------------

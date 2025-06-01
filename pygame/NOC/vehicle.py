@@ -120,6 +120,14 @@ class Vehicle:
         w,h = self.surf.get_size()
         self.rect = Rect(self.location.x-w/2, self.location.y-h/2, w, h)
 
+    def follow(self, field):
+        int_location = PVector(int(self.location.x), int(self.location.y))
+        desired = field.lookup(int_location)
+        desired * self.maxspeed
+        steer = PVector.sub(desired, self.velocity)
+        steer.limit(self.maxforce)
+        self.apply_force(steer)
+
 # BUG FIX NOTES ~~~~~~~~~~~~~~~~~~
 # The heading code isn't working properly, needs debugging
 # I added some line indicators to see what's going on.
