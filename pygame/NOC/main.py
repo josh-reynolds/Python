@@ -17,50 +17,11 @@ from spring import Spring
 from particles import ParticleSystem, Particle, Smoke
 from vehicle import Vehicle
 from grid import Grid
+from flow_field import FlowField
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
-
-
-class FlowField:
-    def __init__(self, resolution):
-        self.resolution = resolution
-        self.cols = WIDTH//resolution
-        self.rows = HEIGHT//resolution
-        self.field = [[self.make_vector(i,j) for i in range(self.cols)] for j in range(self.rows)]
-
-    def make_vector(self, col, row):
-        center = (self.resolution * col + self.resolution//2, 
-                  self.resolution * row + self.resolution//2)
-        v = PVector.sub(PVector(WIDTH//2, HEIGHT//2), PVector(*center))
-        return PVector.normalize(v)
-
-    def draw(self):
-        for x in range(self.cols):
-            for y in range(self.rows):
-                self.draw_cell(y,x)
-
-    def draw_cell(self, x, y):
-        top = self.resolution * y
-        left = self.resolution * x
-        width = self.resolution
-        height = self.resolution
-
-        fill = 1
-
-        center = (top + self.resolution//2, left + self.resolution//2)
-        end = (center[0] + self.field[x][y].x * 20, center[1] + self.field[x][y].y * 20)
-
-        screen.draw.rect((top, left, width, height), (255,64,64), fill)
-        screen.draw.circle(center[0], center[1], 3, (0,0,0))
-        screen.draw.line((0,0,0), center, end)
-
-    def lookup(self, vector):
-        column = max(min(vector.x//self.resolution, self.cols), 0)
-        row = max(min(vector.y//self.resolution, self.rows), 0)
-        return self.field[row][column]
-
 
 # ----------------------------------------------------
 def update():
@@ -71,49 +32,21 @@ def update():
     #v.follow(ff)
     #v.update()
     #counter += 1
-
-    global mse
-    mse = PVector(*pygame.mouse.get_pos())
+    pass
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    #ff.draw()
-    #g.draw(counter % 22 + 1)
-    g.draw(20)
+    ff.draw()
     #v.draw()
-
-    screen.draw.circle(center.x, center.y, magnitude, (0,0,255), 1)
-
-    screen.draw.line((0,0,0), (center.x, center.y), (v1.x + center.x, v1.y + center.y))
-
-    v2 = PVector.sub(mse, center)
-    v2 = v2.normalize() 
-    v2 * magnitude
-    screen.draw.line((0,0,0), (center.x, center.y), (v2.x + center.x, v2.y + center.y))
-
-    radians = PVector.angle_between(v2, v1)
-    degrees = math.degrees(radians)
-
-    screen.draw.text(f"{degrees:0.2f} degrees", (80,200))
-    screen.draw.text(f"{radians:0.2f} radians", (80,220))
 
 # ----------------------------------------------------
 
 #v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 #counter = 0
 
-#ff = FlowField(40)
-g = Grid(40, WIDTH, HEIGHT)
-
-magnitude = 100
-center = PVector(WIDTH//2,HEIGHT//2)
-
-v1 = PVector(1,0)
-v1 * magnitude
-
-mse = PVector(0,0)
+ff = FlowField(40, WIDTH, HEIGHT)
 
 # ----------------------------------------------------
 run()
