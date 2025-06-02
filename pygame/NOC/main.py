@@ -16,31 +16,12 @@ from pendulum import Pendulum
 from spring import Spring
 from particles import ParticleSystem, Particle, Smoke
 from vehicle import Vehicle
+from grid import Grid
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-class Grid:
-    def __init__(self, resolution):
-        self.resolution = resolution
-        self.cols = WIDTH//resolution
-        self.rows = HEIGHT//resolution
-        self.field = [[0 for i in range(self.cols)] for j in range(self.rows)]
-
-    def draw(self, skip):
-        for x in range(self.cols):
-            for y in range(self.rows):
-                self.draw_cell(y, x, skip)
-
-    def draw_cell(self, x, y, skip):
-        top = self.resolution * y
-        left = self.resolution * x
-        width = self.resolution
-        height = self.resolution
-
-        fill = (x + y) % skip
-        screen.draw.rect((top, left, width, height), (255,64,64), fill)
 
 class FlowField:
     def __init__(self, resolution):
@@ -100,7 +81,7 @@ def update():
 def draw():
     #ff.draw()
     #g.draw(counter % 22 + 1)
-    #g.draw(20)
+    g.draw(20)
     #v.draw()
 
     screen.draw.circle(center.x, center.y, magnitude, (0,0,255), 1)
@@ -124,7 +105,7 @@ def draw():
 #counter = 0
 
 #ff = FlowField(40)
-#g = Grid(40)
+g = Grid(40, WIDTH, HEIGHT)
 
 magnitude = 100
 center = PVector(WIDTH//2,HEIGHT//2)
