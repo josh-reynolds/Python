@@ -83,30 +83,56 @@ class FlowField:
 
 # ----------------------------------------------------
 def update():
-    global counter
+    #global counter
     #v.seek(PVector(*pygame.mouse.get_pos()))
-    if counter % 4 == 0:
-        v.wander()
+    #if counter % 4 == 0:
+        #v.wander()
     #v.follow(ff)
-    v.update()
-    counter += 1
+    #v.update()
+    #counter += 1
+
+    global mse
+    mse = PVector(*pygame.mouse.get_pos())
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    ff.draw()
+    #ff.draw()
     #g.draw(counter % 22 + 1)
     #g.draw(20)
-    v.draw()
+    #v.draw()
+
+    screen.draw.circle(center.x, center.y, magnitude, (0,0,255), 1)
+
+    screen.draw.line((0,0,0), (center.x, center.y), (v1.x + center.x, v1.y + center.y))
+
+    v2 = PVector.sub(mse, center)
+    v2 = v2.normalize() 
+    v2 * magnitude
+    screen.draw.line((0,0,0), (center.x, center.y), (v2.x + center.x, v2.y + center.y))
+
+    radians = PVector.angle_between(v2, v1)
+    degrees = math.degrees(radians)
+
+    screen.draw.text(f"{degrees:0.2f} degrees", (80,200))
+    screen.draw.text(f"{radians:0.2f} radians", (80,220))
 
 # ----------------------------------------------------
 
-v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
-counter = 0
+#v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
+#counter = 0
 
-ff = FlowField(40)
+#ff = FlowField(40)
 #g = Grid(40)
+
+magnitude = 100
+center = PVector(WIDTH//2,HEIGHT//2)
+
+v1 = PVector(1,0)
+v1 * magnitude
+
+mse = PVector(0,0)
 
 # ----------------------------------------------------
 run()
