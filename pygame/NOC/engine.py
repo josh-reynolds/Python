@@ -308,8 +308,8 @@ class Painter:
         # TO_DO: address duplication with Screen.blit()
         self.surface.blit(img, (x,y))
 
-    def line(self, color, start, end):
-        pygame.draw.line(self.surface, color, start, end)
+    def line(self, color, start, end, width=1):
+        pygame.draw.line(self.surface, color, start, end, width)
 
     # TO_DO: extend this transparency support to other draw methods
     # TO_DO: transparency/outline fix mutually exclusive, needs adjustment

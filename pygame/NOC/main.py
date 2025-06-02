@@ -23,6 +23,21 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Path:
+    def __init__(self):
+        self.radius = 20
+        self.start = PVector(0, HEIGHT//3)
+        self.end = PVector(WIDTH, 2 * HEIGHT//3)
+
+    def draw(self):
+        screen.draw.line((128,128,128), 
+                         (self.start.x, self.start.y), 
+                         (self.end.x, self.end.y),
+                         self.radius)
+        screen.draw.line((0,0,0), 
+                         (self.start.x, self.start.y), 
+                         (self.end.x, self.end.y))
+
 # ----------------------------------------------------
 def update():
     #global counter
@@ -38,15 +53,15 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    ff.draw()
     #v.draw()
+    p.draw()
 
 # ----------------------------------------------------
 
 #v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 #counter = 0
 
-ff = FlowField(40, WIDTH, HEIGHT)
+p = Path()
 
 # ----------------------------------------------------
 run()
