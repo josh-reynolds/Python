@@ -128,6 +128,13 @@ class Vehicle:
         steer.limit(self.maxforce)
         self.apply_force(steer)
 
+    def accelerate(self, amount):
+        a = math.radians(self.angle)
+        angle_x = self.location.x - math.cos(a) * amount
+        angle_y = self.location.y - math.sin(a) * amount
+        force = PVector.sub(self.location, PVector(angle_x,angle_y))
+        self.apply_force(force)
+
 # BUG FIX NOTES ~~~~~~~~~~~~~~~~~~
 # The heading code isn't working properly, needs debugging
 # I added some line indicators to see what's going on.

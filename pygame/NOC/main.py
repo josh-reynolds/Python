@@ -40,26 +40,29 @@ class Path:
 
 # ----------------------------------------------------
 def update():
-    #global counter
+    global counter
     #v.seek(PVector(*pygame.mouse.get_pos()))
-    #if counter % 4 == 0:
-        #v.wander()
     #v.follow(ff)
-    #v.update()
-    #counter += 1
+    if counter % 4 == 0:
+        v.target = PVector(*pygame.mouse.get_pos())
+        v.accelerate(100.01)
+
+        #v.wander()
+    v.update()
+    counter += 1
     pass
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    #v.draw()
     p.draw()
+    v.draw()
 
 # ----------------------------------------------------
 
-#v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
-#counter = 0
+v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
+counter = 0
 
 p = Path()
 
