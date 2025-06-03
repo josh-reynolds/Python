@@ -71,3 +71,9 @@ class PVector:
     def random2D():
         return PVector(uniform(-1,1), uniform(-1,1)).normalize()
 
+    def dist(a, b):
+        m = b.x - a.x
+        n = b.y - a.y
+        return math.sqrt(m ** 2 + n ** 2)
+
+

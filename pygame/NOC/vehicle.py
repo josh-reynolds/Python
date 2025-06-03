@@ -148,8 +148,13 @@ class Vehicle:
 
         screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
 
-
-
+        distance = PVector.dist(predict_loc, normal_point)
+        if distance > path.radius:
+            #b = b.normalize()
+            #b * 25
+            #target = PVector.add(normal_point, b)
+            #self.seek(target)
+            self.seek(normal_point)
 
     def accelerate(self, amount):
         a = math.radians(self.angle)
