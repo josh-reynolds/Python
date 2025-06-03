@@ -28,6 +28,10 @@ class Path:
         self.radius = 20
         self.start = PVector(0, HEIGHT//3)
         self.end = PVector(WIDTH, 2 * HEIGHT//3)
+        self.points = []
+
+    def add_point(self, x, y):
+        self.points.append((x,y))
 
     def draw(self):
         screen.draw.line((128,128,128), 
@@ -37,6 +41,11 @@ class Path:
         screen.draw.line((0,0,0), 
                          (self.start.x, self.start.y), 
                          (self.end.x, self.end.y))
+
+        #screen.draw.lines((0,255,0), False, self.points)
+        if len(self.points) > 1:
+            pygame.draw.lines(screen.surface, (128,128,128), False, self.points, self.radius)
+            pygame.draw.lines(screen.surface, (0,0,0), False, self.points)
 
 # ----------------------------------------------------
 def update():
@@ -66,6 +75,9 @@ v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 counter = 0
 
 p = Path()
+p.add_point(100,100)
+p.add_point(200,200)
+p.add_point(300,100)
 
 # ----------------------------------------------------
 run()
