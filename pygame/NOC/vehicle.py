@@ -139,13 +139,15 @@ class Vehicle:
 
         screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
 
+        direction = PVector.sub(path.end, path.start)
+        direction = direction.normalize()
+        direction * 10
+        target = PVector.add(normal_point, direction)
+
         distance = PVector.dist(predict_loc, normal_point)
         if distance > path.radius:
-            #b = b.normalize()
-            #b * 25
-            #target = PVector.add(normal_point, b)
-            #self.seek(target)
-            self.seek(normal_point)
+            #self.seek(target)   # always positive direction, so moves offscreen
+            self.seek(normal_point) # this one will turn back
 
     def get_normal_point(p, a, b):
         ap = PVector.sub(p, a)
