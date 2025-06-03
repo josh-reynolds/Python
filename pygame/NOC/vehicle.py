@@ -135,16 +135,7 @@ class Vehicle:
 
         screen.draw.circle(predict_loc.x, predict_loc.y, 25, (255,0,0))
 
-        a = PVector.sub(predict_loc, path.start)
-        b = PVector.sub(path.end, path.start)
-        #theta = PVector.angle_between(a,b)
-
-        #d = a.mag() * math.cos(theta)
-        b = b.normalize()
-        #b * d
-        b * a.dot(b)
-
-        normal_point = PVector.add(path.start, b)
+        normal_point = Vehicle.get_normal_point(predict_loc, path.start, path.end)
 
         screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
 
@@ -155,6 +146,16 @@ class Vehicle:
             #target = PVector.add(normal_point, b)
             #self.seek(target)
             self.seek(normal_point)
+
+    def get_normal_point(p, a, b):
+        ap = PVector.sub(p, a)
+        ab = PVector.sub(b, a)
+
+        ab = ab.normalize()
+        ab * ap.dot(ab)
+
+        normal_point = PVector.add(a, ab)
+        return normal_point
 
     def accelerate(self, amount):
         a = math.radians(self.angle)
