@@ -45,7 +45,7 @@ def update():
     #v.follow(ff)
     if counter % 4 == 0:
         v.target = PVector(*pygame.mouse.get_pos())
-        v.accelerate(100.01)
+        v.accelerate(1.3)
 
         #v.wander()
     v.update()
@@ -57,6 +57,7 @@ def update():
 # ----------------------------------------------------
 def draw():
     p.draw()
+    v.track(p)
     v.draw()
 
 # ----------------------------------------------------

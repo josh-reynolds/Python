@@ -128,6 +128,29 @@ class Vehicle:
         steer.limit(self.maxforce)
         self.apply_force(steer)
 
+    def track(self, path):
+        predict = self.velocity.normalize()
+        predict * 25
+        predict_loc = PVector.add(self.location, predict)
+
+        screen.draw.circle(predict_loc.x, predict_loc.y, 25, (255,0,0))
+
+        a = PVector.sub(predict_loc, path.start)
+        b = PVector.sub(path.end, path.start)
+        #theta = PVector.angle_between(a,b)
+
+        #d = a.mag() * math.cos(theta)
+        b = b.normalize()
+        #b * d
+        b * a.dot(b)
+
+        normal_point = PVector.add(path.start, b)
+
+        screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
+
+
+
+
     def accelerate(self, amount):
         a = math.radians(self.angle)
         angle_x = self.location.x - math.cos(a) * amount
