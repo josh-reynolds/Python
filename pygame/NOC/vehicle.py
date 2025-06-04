@@ -13,7 +13,7 @@ class Vehicle:
         height = 25
         self.max_width = max_width
         self.max_height = max_height
-        self.rect = Rect(x - width/2, y - height/2, 20, 80)
+        self.rect = Rect(x - width/2, y - height/2, width, height)
         self.color = (0, 200, 0)
         
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)

@@ -38,22 +38,12 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    p.draw()
-    v.track(p)
     v.draw()
 
 # ----------------------------------------------------
 
 v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 counter = 0
-
-p = Path()
-p.add_point(0,HEIGHT//3)
-p.add_point(100,100)
-p.add_point(200,200)
-p.add_point(300,100)
-p.add_point(300,300)
-p.add_point(WIDTH, 2 * HEIGHT//3)
 
 # ----------------------------------------------------
 run()
