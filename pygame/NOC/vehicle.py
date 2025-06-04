@@ -143,8 +143,7 @@ class Vehicle:
 
             np = Vehicle.get_normal_point(predict_loc, a, b)
 
-            # assumes left-to-right, not correct in all cases
-            if (np.x < a.x or np.x > b.x):
+            if (np.x < min(a.x, b.x) or np.x > max(a.x, b.x)):
                 np = b.copy()
 
             d = PVector.dist(predict_loc, np)

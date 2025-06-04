@@ -69,6 +69,7 @@ p.add_point(0,HEIGHT//3)
 p.add_point(100,100)
 p.add_point(200,200)
 p.add_point(300,100)
+p.add_point(300,300)
 p.add_point(WIDTH, 2 * HEIGHT//3)
 
 # ----------------------------------------------------
