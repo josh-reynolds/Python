@@ -129,27 +129,33 @@ class Vehicle:
         self.apply_force(steer)
 
     def track(self, path):
-        start = PVector(*path.points[0])
-        end = PVector(*path.points[-1])
-
         predict = self.velocity.normalize()
         predict * 25
         predict_loc = PVector.add(self.location, predict)
 
         screen.draw.circle(predict_loc.x, predict_loc.y, 25, (255,0,0))
 
-        normal_point = Vehicle.get_normal_point(predict_loc, start, end)
+        record = 1000000
+        normal_point = None
+        for i in range(len(path.points)-1):
+            a = PVector(*path.points[i])
+            b = PVector(*path.points[i+1])
+
+            np = Vehicle.get_normal_point(predict_loc, a, b)
+
+            # assumes left-to-right, not correct in all cases
+            if (np.x < a.x or np.x > b.x):
+                np = b.copy()
+
+            d = PVector.dist(predict_loc, np)
+            if d < record:
+                record = d
+                normal_point = np.copy()
 
         screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
 
-        direction = PVector.sub(end, start)
-        direction = direction.normalize()
-        direction * 10
-        target = PVector.add(normal_point, direction)
-
         distance = PVector.dist(predict_loc, normal_point)
         if distance > path.radius:
-            #self.seek(target)   # always positive direction, so moves offscreen
             self.seek(normal_point) # this one will turn back
 
     def get_normal_point(p, a, b):
