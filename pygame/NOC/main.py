@@ -27,23 +27,28 @@ TITLE = "The Nature of Code"
 # ----------------------------------------------------
 def update():
     global counter
-    if counter % 4 == 0:
-        v.target = PVector(*pygame.mouse.get_pos())
-        v.accelerate(1.3)
 
-    v.update()
+    for v in vehicles:
+        if counter % 4 == 0:
+            v.target = PVector(*pygame.mouse.get_pos())
+            v.accelerate(1.3)
+
+        v.update()
+
     counter += 1
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    v.draw()
+    for v in vehicles:
+        v.draw()
 
 # ----------------------------------------------------
 
-v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
 counter = 0
+
+vehicles = [Vehicle(randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(20)]
 
 # ----------------------------------------------------
 run()
