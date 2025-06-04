@@ -10,16 +10,14 @@ class Vehicle:
     def __init__(self, x, y, max_width, max_height):
         self.location = PVector(x,y)
         width = 20
-        height = 80
+        height = 25
         self.max_width = max_width
         self.max_height = max_height
         self.rect = Rect(x - width/2, y - height/2, 20, 80)
         self.color = (0, 200, 0)
         
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
-        pygame.draw.rect(self.surf, self.color, (0, 0, width, height), width=0) 
-        pygame.draw.rect(self.surf, (0,0,0), (0, 0, width, height), width=1) 
-        pygame.draw.circle(self.surf, (0,0,0), (10,10), 10, 0)
+        pygame.draw.polygon(self.surf, (0,0,0), [(width//2,0), (0,height), (width,height)], 0)
         self.original_surf = self.surf.copy()
 
         self.velocity = PVector(0,0)
