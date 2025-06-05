@@ -55,9 +55,6 @@ def draw():
 
 f = Flock()
 for i in range(100):
-    # book has them all start in the same location, but then the logic
-    # the behaviors cancels out ('if d > 0 ...') - need to shuffle them a bit
-    #f.add_boid(Boid(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT))
     f.add_boid(Boid(WIDTH//2 + randint(-1,1), HEIGHT//2 + randint(-1,1), WIDTH, HEIGHT))
 
 
