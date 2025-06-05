@@ -25,23 +25,41 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Flock:
+    def __init__(self):
+        self.boids = []
+
+    def run(self):
+        for b in self.boids:
+            b.flock(self.boids)
+            b.update()
+
+    def add_boid(self, boid):
+        self.boids.append(boid)
+
+    def draw(self):
+        for b in self.boids:
+            b.draw()
+
 # ----------------------------------------------------
 def update():
-    for b in boids:
-        #b.apply_behaviors(boids)
-        b.flock(boids)
-        b.update()
+    f.run()
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for b in boids:
-        b.draw()
+    f.draw()
 
 # ----------------------------------------------------
 
-boids = [Boid(randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(20)]
+f = Flock()
+for i in range(100):
+    # book has them all start in the same location, but then the logic
+    # the behaviors cancels out ('if d > 0 ...') - need to shuffle them a bit
+    #f.add_boid(Boid(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT))
+    f.add_boid(Boid(WIDTH//2 + randint(-1,1), HEIGHT//2 + randint(-1,1), WIDTH, HEIGHT))
+
 
 # ----------------------------------------------------
 run()

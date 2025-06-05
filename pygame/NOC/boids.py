@@ -242,11 +242,14 @@ class Boid:
         separate = self.separate(others)
         align = self.align(others)
         cohesion = self.cohesion(others)
+        #seek = self.seek(PVector(*pygame.mouse.get_pos()))
 
         separate * 1.5
         align * 1.0
         cohesion * 1.0
+        #seek * 1.5
 
         self.apply_force(separate)
         self.apply_force(align)
         self.apply_force(cohesion)
+        #self.apply_force(seek)
