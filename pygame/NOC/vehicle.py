@@ -39,12 +39,12 @@ class Vehicle:
 
         prev_angle = self.angle % 360
         to_target = PVector.sub(self.target, self.location).normalize()
-        screen.draw.line((0,0,0), (self.location.x, self.location.y), (self.target.x, self.target.y))
+        #screen.draw.line((0,0,0), (self.location.x, self.location.y), (self.target.x, self.target.y))
 
         pa = math.radians(prev_angle)
         angle_x = self.location.x + math.cos(pa) * 100
         angle_y = self.location.y + math.sin(pa) * 100
-        screen.draw.line((255,0,0), (self.location.x, self.location.y), (angle_x, angle_y))
+        #screen.draw.line((255,0,0), (self.location.x, self.location.y), (angle_x, angle_y))
 
         target_angle = to_target.heading()
         if target_angle < 0:
