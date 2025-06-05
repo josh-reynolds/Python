@@ -111,7 +111,7 @@ class Vehicle:
 
         steer = PVector.sub(desired, self.velocity)
         steer.limit(self.max_force)
-        self.apply_force(steer)
+        return steer
 
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, -self.angle - 90)
@@ -191,11 +191,19 @@ class Vehicle:
             total_force.set_mag(self.max_speed)
             steer = PVector.sub(total_force, self.velocity)
             steer.limit(self.max_force)
-            self.apply_force(steer)
+            return steer
+        else:
+            return PVector(0,0)
 
     def apply_behaviors(self, others):
-        self.seek(PVector(*pygame.mouse.get_pos()))
-        self.separate(others)
+        separate = self.separate(others)
+        seek = self.seek(PVector(*pygame.mouse.get_pos()))
+
+        separate * 1.5
+        seek * 0.5
+
+        self.apply_force(separate)
+        self.apply_force(seek)
 
 
 # BUG FIX NOTES ~~~~~~~~~~~~~~~~~~
