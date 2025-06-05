@@ -29,11 +29,12 @@ def update():
     global counter
 
     for v in vehicles:
-        if counter % 4 == 0:
-            v.target = PVector(*pygame.mouse.get_pos())
-            v.accelerate(1.3)
-
-        v.separate(vehicles)
+        #if counter % 4 == 0:
+            #v.target = PVector(*pygame.mouse.get_pos())
+            #v.accelerate(1.3)
+#
+        #v.separate(vehicles)
+        v.apply_behaviors(vehicles)
         v.update()
 
     counter += 1

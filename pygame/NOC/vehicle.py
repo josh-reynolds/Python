@@ -193,6 +193,10 @@ class Vehicle:
             steer.limit(self.max_force)
             self.apply_force(steer)
 
+    def apply_behaviors(self, others):
+        self.seek(PVector(*pygame.mouse.get_pos()))
+        self.separate(others)
+
 
 # BUG FIX NOTES ~~~~~~~~~~~~~~~~~~
 # The heading code isn't working properly, needs debugging
