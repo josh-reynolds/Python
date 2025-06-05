@@ -23,9 +23,9 @@ class Vehicle:
         self.velocity = PVector(0,0)
         self.acceleration = PVector(0,0)
 
-        self.r = 3.0
-        self.maxspeed = 4
-        self.maxforce = 0.1
+        self.r = 10.0
+        self.max_speed = 4
+        self.max_force = 0.1
 
         self.angle = 0
 
@@ -33,7 +33,7 @@ class Vehicle:
 
     def update(self):
         self.velocity + self.acceleration
-        self.velocity.limit(self.maxspeed)
+        self.velocity.limit(self.max_speed)
         self.location + self.velocity
         self.acceleration * 0
 
@@ -104,13 +104,13 @@ class Vehicle:
         desired = PVector.normalize(d)
 
         if distance < 100:
-            m = remap(distance, 0, 100, 0, self.maxspeed)
+            m = remap(distance, 0, 100, 0, self.max_speed)
             desired * m
         else:
-            desired * self.maxspeed
+            desired * self.max_speed
 
         steer = PVector.sub(desired, self.velocity)
-        steer.limit(self.maxforce)
+        steer.limit(self.max_force)
         self.apply_force(steer)
 
     def rotate(self):
@@ -121,9 +121,9 @@ class Vehicle:
     def follow(self, field):
         int_location = PVector(int(self.location.x), int(self.location.y))
         desired = field.lookup(int_location)
-        desired * self.maxspeed
+        desired * self.max_speed
         steer = PVector.sub(desired, self.velocity)
-        steer.limit(self.maxforce)
+        steer.limit(self.max_force)
         self.apply_force(steer)
 
     def track(self, path):
@@ -171,6 +171,28 @@ class Vehicle:
         angle_y = self.location.y - math.sin(a) * amount
         force = PVector.sub(self.location, PVector(angle_x,angle_y))
         self.apply_force(force)
+
+    def separate(self, others):
+        desired_separation = self.r * 2
+        total_force = PVector(0,0)
+        count = 0
+
+        for o in others:
+            d = PVector.dist(self.location, o.location)
+            if d > 0 and d < desired_separation:
+                diff = PVector.sub(self.location, o.location)
+                diff = diff.normalize()
+                diff / d
+                total_force + diff
+                count += 1
+
+        if count > 0:
+            total_force / count
+            total_force.set_mag(self.max_speed)
+            steer = PVector.sub(total_force, self.velocity)
+            steer.limit(self.max_force)
+            self.apply_force(steer)
+
 
 # BUG FIX NOTES ~~~~~~~~~~~~~~~~~~
 # The heading code isn't working properly, needs debugging

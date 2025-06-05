@@ -33,6 +33,7 @@ def update():
             v.target = PVector(*pygame.mouse.get_pos())
             v.accelerate(1.3)
 
+        v.separate(vehicles)
         v.update()
 
     counter += 1

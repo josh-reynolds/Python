@@ -48,6 +48,11 @@ class PVector:
     def heading(self):
         return math.degrees(math.atan2(self.y, self.x))
 
+    def set_mag(self, m):
+        p = self.normalize()
+        p * m
+        self.x, self.y = p.x, p.y
+
     # class methods -------------------------------
     def add(v, u):
         return PVector(v.x + u.x, v.y + u.y)
