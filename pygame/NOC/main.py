@@ -19,6 +19,7 @@ from vehicle import Vehicle
 from grid import Grid
 from flow_field import FlowField
 from path import Path
+from boids import Boid
 
 WIDTH = 640
 HEIGHT = 360
@@ -26,20 +27,20 @@ TITLE = "The Nature of Code"
 
 # ----------------------------------------------------
 def update():
-    for v in vehicles:
-        v.apply_behaviors(vehicles)
-        v.update()
+    for b in boids:
+        b.apply_behaviors(boids)
+        b.update()
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    for v in vehicles:
-        v.draw()
+    for b in boids:
+        b.draw()
 
 # ----------------------------------------------------
 
-vehicles = [Vehicle(randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(20)]
+boids = [Boid(randint(0,WIDTH), randint(0,HEIGHT), WIDTH, HEIGHT) for i in range(20)]
 
 # ----------------------------------------------------
 run()
