@@ -28,7 +28,8 @@ TITLE = "The Nature of Code"
 # ----------------------------------------------------
 def update():
     for b in boids:
-        b.apply_behaviors(boids)
+        #b.apply_behaviors(boids)
+        b.flock(boids)
         b.update()
 
 # ----------------------------------------------------

@@ -190,6 +190,44 @@ class Boid:
         else:
             return PVector(0,0)
 
+    def align(self, others):
+        neighbor_dist = 50
+        total_force = PVector(0,0)
+        count = 0
+
+        for o in others:
+            d = PVector.dist(self.location, o.location)
+            if d > 0 and d < neighbor_dist:
+                total_force + o.velocity
+                count += 1
+
+        if count > 0:
+            total_force / count
+            total_force.set_mag(self.max_speed)
+
+            steer = PVector.sub(total_force, self.velocity)
+            steer.limit(self.max_force)
+            return steer
+        else:
+            return PVector(0,0)
+
+    def cohesion(self, others):
+        neighbor_dist = 50
+        goal = PVector(0,0)
+        count = 0
+
+        for o in others:
+            d = PVector.dist(self.location, o.location)
+            if d > 0 and d < neighbor_dist:
+                goal + o.location
+                count += 1
+
+        if count > 0:
+            goal / count
+            return self.seek(goal)
+        else:
+            return PVector(0,0)
+
     def apply_behaviors(self, others):
         separate = self.separate(others)
         seek = self.seek(PVector(*pygame.mouse.get_pos()))
@@ -199,3 +237,16 @@ class Boid:
 
         self.apply_force(separate)
         self.apply_force(seek)
+
+    def flock(self, others):
+        separate = self.separate(others)
+        align = self.align(others)
+        cohesion = self.cohesion(others)
+
+        separate * 1.5
+        align * 1.0
+        cohesion * 1.0
+
+        self.apply_force(separate)
+        self.apply_force(align)
+        self.apply_force(cohesion)
