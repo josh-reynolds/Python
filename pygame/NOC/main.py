@@ -28,8 +28,10 @@ TITLE = "The Nature of Code"
 
 class CA:
     def __init__(self):
-        self.w = 4
-        self.ruleset = [0,1,0,1,1,0,1,0]
+        self.w = 2
+        #self.ruleset = [0,1,0,1,1,0,1,0]   # Rule 90 - Sierpinski Triangle
+        self.ruleset = [0,1,1,1,1,0,0,0]    # Rule 30 - Class 3 Random
+        #self.ruleset = [0,1,1,1,0,1,1,0]    # Rule 110 - Class 3 Random
         self.reset()
 
     def generate(self):
