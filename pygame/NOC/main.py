@@ -26,7 +26,6 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-
 # ----------------------------------------------------
 def update():
     f.run()
@@ -39,11 +38,7 @@ def draw():
 
 # ----------------------------------------------------
 
-resolution = 20
-grid = [[[] for i in range(WIDTH//resolution)] for i in range(HEIGHT//resolution)]
-f = Flock(grid, WIDTH, HEIGHT, resolution)
-for i in range(100):
-    f.add_boid(Boid(WIDTH//2 + randint(-1,1), HEIGHT//2 + randint(-1,1), WIDTH, HEIGHT))
+f = Flock(WIDTH, HEIGHT, 20, 50)
 
 # ----------------------------------------------------
 run()
