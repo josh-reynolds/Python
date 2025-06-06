@@ -26,21 +26,60 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class CA:
+    def __init__(self):
+        self.w = 4
+        self.ruleset = [0,1,0,1,1,0,1,0]
+        self.reset()
+
+    def generate(self):
+        nextgen = [0 for i in range(len(self.cells))]
+        for i in range(1, len(self.cells)-1):
+            left = self.cells[i-1]
+            me = self.cells[i]
+            right = self.cells[i+1]
+
+            nextgen[i] = self.rules(left, me, right)
+
+        self.cells = nextgen
+        self.generation += 1
+
+    def rules(self, a, b, c):
+        s = "" + str(a) + str(b) + str(c)
+        index = int(s, 2)
+        return self.ruleset[index]
+
+    def reset(self):
+        self.generation =0
+        self.cells = [0 for i in range(WIDTH//self.w)]
+        self.cells[len(self.cells)//2] = 1
+
 # ----------------------------------------------------
 def update():
-    f.run()
+    pass
 
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    f.draw()
+    ca.reset()
+    for i in range(HEIGHT//ca.w):
+        for j in range(len(ca.cells)):
+            if ca.cells[j] == 1:
+                color = (0,0,0)
+            else:
+                color = (255,255,255)
+
+            screen.draw.rect((j*ca.w, i*ca.w, ca.w, ca.w), color, 0)
+        ca.generate()
 
 # ----------------------------------------------------
 
-f = Flock(WIDTH, HEIGHT, 20, 50)
 
 # ----------------------------------------------------
+
+ca = CA()
+
 run()
 # ----------------------------------------------------
 
