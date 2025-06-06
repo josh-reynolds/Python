@@ -17,7 +17,8 @@ class Boid:
         self.color = (0, 200, 0)
         
         self.surf = Surface((self.rect.width, self.rect.height), flags=SRCALPHA)
-        pygame.draw.polygon(self.surf, (0,0,0), [(width//2,0), (0,height), (width,height)], 0)
+        pygame.draw.polygon(self.surf, self.color, [(width//2,0), (0,height), (width,height)], 0)
+        pygame.draw.polygon(self.surf, (0,0,0), [(width//2,0), (0,height), (width,height)], 1)
         self.original_surf = self.surf.copy()
 
         self.velocity = PVector(0,0)
@@ -157,7 +158,7 @@ class Boid:
         cohesion = self.cohesion(others)
         seek = self.seek(PVector(*pygame.mouse.get_pos()))
 
-        separate * 1.5
+        separate * 2.5
         align * 1.0
         cohesion * 1.0
         seek * 1.5

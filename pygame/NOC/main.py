@@ -31,8 +31,24 @@ class Flock:
 
     def run(self):
         for b in self.boids:
-            b.flock(self.boids)
+            prev_column = int(b.location.y) // resolution
+            prev_column = max(0, min(prev_column, HEIGHT//resolution-1))
+            prev_row = int(b.location.x) // resolution
+            prev_row = max(0, min(prev_row, WIDTH//resolution-1))
+            if b not in grid[prev_column][prev_row]:
+                grid[prev_column][prev_row].append(b)
+
+            b.flock(grid[prev_column][prev_row])
             b.update()
+
+            new_column = int(b.location.y) // resolution
+            new_column = max(0, min(new_column, HEIGHT//resolution-1))
+            new_row = int(b.location.x) // resolution
+            new_row = max(0, min(new_row, WIDTH//resolution-1))
+            if new_column != prev_column or new_row != prev_row:
+                if b not in grid[new_column][new_row]:
+                    grid[new_column][new_row].append(b)
+                grid[prev_column][prev_row].remove(b)
 
     def add_boid(self, boid):
         self.boids.append(boid)
@@ -53,10 +69,11 @@ def draw():
 
 # ----------------------------------------------------
 
+resolution = 20
+grid = [[[] for i in range(WIDTH//resolution)] for i in range(HEIGHT//resolution)]
 f = Flock()
 for i in range(100):
     f.add_boid(Boid(WIDTH//2 + randint(-1,1), HEIGHT//2 + randint(-1,1), WIDTH, HEIGHT))
-
 
 # ----------------------------------------------------
 run()
