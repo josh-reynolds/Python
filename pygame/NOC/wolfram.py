@@ -25,7 +25,6 @@ class CA:
                 pygame.draw.rect(self.image, color, (j*self.w, i*self.w, self.w, self.w), 0)
 
     def generate(self):
-        #for i in range(HEIGHT//self.w-1):
         for i in range(len(self.cells)-1):
             nextrow = [0 for i in range(len(self.cells[0]))]
             for j in range(1, len(self.cells[0])-1):

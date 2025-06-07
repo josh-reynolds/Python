@@ -27,18 +27,63 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class Life:
+    def __init__(self):
+        self.w = 4
+        self.columns = WIDTH//self.w
+        self.rows = HEIGHT//self.w
+        
+        self.board = [[randint(0,1) for i in range(self.columns)] for i in range(self.rows)]
+
+    def generate(self):
+        nextgen = [[0 for i in range(self.columns)] for i in range(self.rows)]
+
+        for x in range(1,self.columns-1):
+            for y in range(1,self.rows-1):
+                neighbors = 0
+                for i in range(-1,2):
+                    for j in range(-1,2):
+                        neighbors += self.board[y+i][x+j]
+                neighbors -= self.board[y][x]
+
+                if self.board[y][x] == 1 and neighbors < 2:
+                    nextgen[y][x] = 0
+                elif self.board[y][x] == 1 and neighbors > 3:
+                    nextgen[y][x] = 0
+                elif self.board[y][x] == 0 and neighbors == 3:
+                    nextgen[y][x] = 1
+                else:
+                    nextgen[y][x] = self.board[y][x]
+
+        self.board = nextgen.copy()
+
+    def draw(self):
+        for x in range(self.columns):
+            for y in range(self.rows):
+                if self.board[y][x] == 1:
+                    color = (0,0,0)
+                else:
+                    color = (255,255,255)
+                screen.draw.rect((x*self.w, y*self.w, self.w, self.w), color, 0)
+                screen.draw.rect((x*self.w, y*self.w, self.w, self.w), (200,200,200), 1)
+
 # ----------------------------------------------------
 def update():
-    pass
+    global counter
+    if counter % 5 == 0:
+        l.generate()
+    counter += 1
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    ca.draw()
+    l.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-ca = CA(WIDTH, HEIGHT)
+l = Life()
+counter = 1
+
 run()
 # ----------------------------------------------------
 
