@@ -28,60 +28,58 @@ TITLE = "The Nature of Code"
 
 class CA:
     def __init__(self):
-        self.w = 2
+        self.w = 1
+
         #self.ruleset = [0,1,0,1,1,0,1,0]   # Rule 90 - Sierpinski Triangle
         self.ruleset = [0,1,1,1,1,0,0,0]    # Rule 30 - Class 3 Random
         #self.ruleset = [0,1,1,1,0,1,1,0]    # Rule 110 - Class 3 Random
-        self.reset()
+
+        self.cells = [[0 for i in range(WIDTH//self.w)] for j in range(HEIGHT//self.w)]
+        self.cells[0][len(self.cells[0])//2] = 1
+        self.generate()
+
+        self.image = Surface((WIDTH,HEIGHT))
+        for i in range(HEIGHT//self.w):
+            for j in range(len(self.cells[0])):
+                if self.cells[i][j] == 1:
+                    color = (0,0,0)
+                else:
+                    color = (255,255,255)
+    
+                pygame.draw.rect(self.image, color, (j*self.w, i*self.w, self.w, self.w), 0)
 
     def generate(self):
-        nextgen = [0 for i in range(len(self.cells))]
-        for i in range(1, len(self.cells)-1):
-            left = self.cells[i-1]
-            me = self.cells[i]
-            right = self.cells[i+1]
+        for i in range(HEIGHT//self.w-1):
+            nextrow = [0 for i in range(len(self.cells[0]))]
+            for j in range(1, len(self.cells[0])-1):
+                left = self.cells[i][j-1]
+                me = self.cells[i][j]
+                right = self.cells[i][j+1]
 
-            nextgen[i] = self.rules(left, me, right)
+                nextrow[j] = self.rules(left, me, right)
 
-        self.cells = nextgen
-        self.generation += 1
+            self.cells[i+1] = nextrow
 
     def rules(self, a, b, c):
         s = "" + str(a) + str(b) + str(c)
         index = int(s, 2)
         return self.ruleset[index]
 
-    def reset(self):
-        self.generation =0
-        self.cells = [0 for i in range(WIDTH//self.w)]
-        self.cells[len(self.cells)//2] = 1
+    def draw(self):
+        screen.blit(self.image, (0, 0))
 
 # ----------------------------------------------------
 def update():
     pass
-
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    ca.reset()
-    for i in range(HEIGHT//ca.w):
-        for j in range(len(ca.cells)):
-            if ca.cells[j] == 1:
-                color = (0,0,0)
-            else:
-                color = (255,255,255)
-
-            screen.draw.rect((j*ca.w, i*ca.w, ca.w, ca.w), color, 0)
-        ca.generate()
-
+    ca.draw()
 # ----------------------------------------------------
 
-
 # ----------------------------------------------------
-
 ca = CA()
-
 run()
 # ----------------------------------------------------
 
