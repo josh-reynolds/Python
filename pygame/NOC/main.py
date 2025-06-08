@@ -28,23 +28,23 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+def draw_circle(x, y, radius):
+    screen.draw.circle(x, y, radius, (0,0,0), 1)
+    if radius > 2:
+        radius *= 0.75
+        draw_circle(x, y, radius)
+
 # ----------------------------------------------------
 def update():
-    global counter
-    if counter % 1 == 0:
-        l.generate()
-    counter += 1
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    l.draw()
+    draw_circle(WIDTH//2, HEIGHT//2, 300)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-l = Life(WIDTH, HEIGHT)
-counter = 1
-
 run()
 # ----------------------------------------------------
 
