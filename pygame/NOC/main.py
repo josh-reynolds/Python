@@ -33,6 +33,8 @@ def draw_circle(x, y, radius):
     if radius > 2:
         draw_circle(x + radius/2, y, radius/2)
         draw_circle(x - radius/2, y, radius/2)
+        draw_circle(x, y + radius/2, radius/2)
+        draw_circle(x, y - radius/2, radius/2)
 
 # ----------------------------------------------------
 def update():
