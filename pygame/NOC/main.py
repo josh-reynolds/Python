@@ -36,6 +36,13 @@ def draw_circle(x, y, radius):
         draw_circle(x, y + radius/2, radius/2)
         draw_circle(x, y - radius/2, radius/2)
 
+def cantor(x, y, l):
+    if l >= 1:
+        screen.draw.line((0,0,0), (x,y), (x+l,y))
+        y += 20
+        cantor(x, y, l/3)
+        cantor(x + l * 2/3, y, l/3)
+
 # ----------------------------------------------------
 def update():
     pass
@@ -43,7 +50,8 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    draw_circle(WIDTH//2, HEIGHT//2, 200)
+    #draw_circle(WIDTH//2, HEIGHT//2, 200)
+    cantor(10, 20, WIDTH-20)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
