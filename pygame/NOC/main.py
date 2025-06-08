@@ -31,8 +31,8 @@ TITLE = "The Nature of Code"
 def draw_circle(x, y, radius):
     screen.draw.circle(x, y, radius, (0,0,0), 1)
     if radius > 2:
-        radius *= 0.75
-        draw_circle(x, y, radius)
+        draw_circle(x + radius/2, y, radius/2)
+        draw_circle(x - radius/2, y, radius/2)
 
 # ----------------------------------------------------
 def update():
@@ -41,7 +41,7 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    draw_circle(WIDTH//2, HEIGHT//2, 300)
+    draw_circle(WIDTH//2, HEIGHT//2, 200)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
