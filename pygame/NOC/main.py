@@ -31,12 +31,8 @@ TITLE = "The Nature of Code"
 
 class KochLine:
     def __init__(self, a, b):
-        if a.x <= b.x:
-            self.start = a.copy()
-            self.end = b.copy()
-        else:
-            self.start = b.copy()
-            self.end = a.copy()
+        self.start = a.copy()
+        self.end = b.copy()
 
     def draw(self):
         screen.draw.line((0,0,0), (self.start.x, self.start.y), (self.end.x, self.end.y))
@@ -53,7 +49,10 @@ class KochLine:
         v = PVector.sub(self.end, self.start)
         v / 3
         a = PVector.add(self.start, v)
-        v.rotate(-60)
+        if self.end.x < self.start.x:
+            v.rotate(120)
+        else:
+            v.rotate(-60)
         return PVector.add(a,v)
 
     def koch_d(self):
@@ -115,7 +114,7 @@ lines = []
 start = PVector(0,200)
 end = PVector(WIDTH, 200)
 lines.append(KochLine(start, end))
-for i in range(3):
+for i in range(5):
     generate()
 #t = Test()
 run()
