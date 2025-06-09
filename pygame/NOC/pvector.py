@@ -54,8 +54,17 @@ class PVector:
         self.x, self.y = p.x, p.y
 
     def rotate(self, degrees):
-        r = math.sqrt(self.x ** 2 + self.y * 2)
-        theta = math.degrees(math.atan(self.y/self.x))
+        r = math.sqrt(self.x ** 2 + self.y ** 2)
+        if self.x != 0:
+            theta = math.degrees(math.atan(self.y/self.x))
+        else:
+            if self.y > 0:
+                theta = -90
+            elif self.y < 0:
+                theta = 90
+            else:
+                theta = 0
+
         new_theta = math.radians(theta + degrees)
 
         self.x = r * math.cos(new_theta)

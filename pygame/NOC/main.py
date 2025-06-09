@@ -36,29 +36,24 @@ class KochLine:
 
     def draw(self):
         screen.draw.line((0,0,0), (self.start.x, self.start.y), (self.end.x, self.end.y))
-        #screen.draw.circle(self.koch_a().x, self.koch_a().y, 8, (255,0,0))
-        #screen.draw.circle(self.koch_b().x, self.koch_b().y, 8, (255,0,0))
-        #screen.draw.circle(self.koch_c().x, self.koch_c().y, 8, (255,0,255))
-        #screen.draw.circle(self.koch_d().x, self.koch_d().y, 8, (255,0,0))
-        #screen.draw.circle(self.koch_e().x, self.koch_e().y, 8, (255,0,0))
 
     def koch_a(self):
         return self.start.copy()
 
     def koch_b(self):
-        v = PVector.sub(end, start)
+        v = PVector.sub(self.end, self.start)
         v / 3
         return PVector.add(self.start, v)
 
     def koch_c(self):
-        v = PVector.sub(end, start)
+        v = PVector.sub(self.end, self.start)
         v / 3
         a = PVector.add(self.start, v)
         v.rotate(-60)
         return PVector.add(a,v)
 
     def koch_d(self):
-        v = PVector.sub(end, start)
+        v = PVector.sub(self.end, self.start)
         v * 2
         v / 3
         return PVector.add(self.start, v)
@@ -116,7 +111,8 @@ lines = []
 start = PVector(0,200)
 end = PVector(WIDTH, 200)
 lines.append(KochLine(start, end))
-generate()
+for i in range(5):
+    generate()
 #t = Test()
 run()
 # ----------------------------------------------------
