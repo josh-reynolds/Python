@@ -253,6 +253,8 @@ class Screen:
         self.surface = pygame.display.set_mode((width, height))
         self.images = {}
         self.draw = Painter(self.surface)
+        self.width = width
+        self.height = height
 
     def fill(self, color):
         self.surface.fill(color)
