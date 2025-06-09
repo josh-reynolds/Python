@@ -29,6 +29,75 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class KochLine:
+    def __init__(self, a, b):
+        self.start = a.copy()
+        self.end = b.copy()
+
+    def draw(self):
+        screen.draw.line((0,0,0), (self.start.x, self.start.y), (self.end.x, self.end.y))
+        #screen.draw.circle(self.koch_a().x, self.koch_a().y, 8, (255,0,0))
+        #screen.draw.circle(self.koch_b().x, self.koch_b().y, 8, (255,0,0))
+        #screen.draw.circle(self.koch_c().x, self.koch_c().y, 8, (255,0,255))
+        #screen.draw.circle(self.koch_d().x, self.koch_d().y, 8, (255,0,0))
+        #screen.draw.circle(self.koch_e().x, self.koch_e().y, 8, (255,0,0))
+
+    def koch_a(self):
+        return self.start.copy()
+
+    def koch_b(self):
+        v = PVector.sub(end, start)
+        v / 3
+        return PVector.add(self.start, v)
+
+    def koch_c(self):
+        v = PVector.sub(end, start)
+        v / 3
+        a = PVector.add(self.start, v)
+        v.rotate(-60)
+        return PVector.add(a,v)
+
+    def koch_d(self):
+        v = PVector.sub(end, start)
+        v * 2
+        v / 3
+        return PVector.add(self.start, v)
+
+    def koch_e(self):
+        return self.end.copy()
+
+class Test:
+    def __init__(self):
+        self.points = []
+        start = PVector(100,0)
+        for i in range(0, 280, 10):
+            new_point = start.copy()
+            new_point.rotate(i)
+            self.points.append(new_point)
+
+    def draw(self):
+        for p in self.points:
+            translate = PVector.add(p, PVector(WIDTH//2,HEIGHT//2))
+            screen.draw.circle(translate.x, translate.y, 8, (255,0,0))
+        screen.draw.circle(WIDTH//2, HEIGHT//2, 100, (0,0,0), 1)
+
+def generate():
+    global lines
+    next_lines = []
+
+    for kl in lines:
+        a = kl.koch_a()
+        b = kl.koch_b()
+        c = kl.koch_c()
+        d = kl.koch_d()
+        e = kl.koch_e()
+
+        next_lines.append(KochLine(a,b))
+        next_lines.append(KochLine(b,c))
+        next_lines.append(KochLine(c,d))
+        next_lines.append(KochLine(d,e))
+
+    lines = next_lines.copy()
 
 # ----------------------------------------------------
 def update():
@@ -37,12 +106,18 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    draw_circle(WIDTH//2, HEIGHT//2, 200)
-    cantor(10, 20, WIDTH-20)
-    print(WIDTH, screen.width, HEIGHT, screen.height)
+    for kl in lines:
+        kl.draw()
+    #t.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
+lines = []
+start = PVector(0,200)
+end = PVector(WIDTH, 200)
+lines.append(KochLine(start, end))
+generate()
+#t = Test()
 run()
 # ----------------------------------------------------
 

@@ -53,6 +53,14 @@ class PVector:
         p * m
         self.x, self.y = p.x, p.y
 
+    def rotate(self, degrees):
+        r = math.sqrt(self.x ** 2 + self.y * 2)
+        theta = math.degrees(math.atan(self.y/self.x))
+        new_theta = math.radians(theta + degrees)
+
+        self.x = r * math.cos(new_theta)
+        self.y = r * math.sin(new_theta)
+
     # class methods -------------------------------
     def add(v, u):
         return PVector(v.x + u.x, v.y + u.y)
