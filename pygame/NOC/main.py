@@ -79,23 +79,37 @@ class Test:
             screen.draw.circle(translate.x, translate.y, 8, (255,0,0))
         screen.draw.circle(WIDTH//2, HEIGHT//2, 100, (0,0,0), 1)
 
-def generate():
-    global lines
-    next_lines = []
+class KochCurve:
+    def __init__(self, start, end, depth):
+        self.start = start
+        self.end = end
+        self.depth = depth
 
-    for kl in lines:
-        a = kl.koch_a()
-        b = kl.koch_b()
-        c = kl.koch_c()
-        d = kl.koch_d()
-        e = kl.koch_e()
+        self.lines = []
+        self.lines.append(KochLine(self.start, self.end))
+        for i in range(self.depth):
+            self.generate()
 
-        next_lines.append(KochLine(a,b))
-        next_lines.append(KochLine(b,c))
-        next_lines.append(KochLine(c,d))
-        next_lines.append(KochLine(d,e))
+    def generate(self):
+        next_lines = []
 
-    lines = next_lines.copy()
+        for kl in self.lines:
+            a = kl.koch_a()
+            b = kl.koch_b()
+            c = kl.koch_c()
+            d = kl.koch_d()
+            e = kl.koch_e()
+
+            next_lines.append(KochLine(a,b))
+            next_lines.append(KochLine(b,c))
+            next_lines.append(KochLine(c,d))
+            next_lines.append(KochLine(d,e))
+
+        self.lines = next_lines.copy()
+
+    def draw(self):
+        for kl in self.lines:
+            kl.draw()
 
 # ----------------------------------------------------
 def update():
@@ -104,18 +118,12 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    for kl in lines:
-        kl.draw()
+    kc.draw()
     #t.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-lines = []
-start = PVector(0,200)
-end = PVector(WIDTH, 200)
-lines.append(KochLine(start, end))
-for i in range(5):
-    generate()
+kc = KochCurve(PVector(0,200), PVector(WIDTH, 200), 5)
 #t = Test()
 run()
 # ----------------------------------------------------
