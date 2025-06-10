@@ -30,6 +30,21 @@ WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
+class ScreenMatrix:
+    def __init__(self):
+        self.origin = PVector(0,0)
+
+    # as written this is absolute, but Processing implementation is relative
+    # problem is that we're currently calling this on every pass thorugh draw()
+    def translate(self, target):
+        self.origin = target
+
+    def draw_line(self, color, start, end, width=1):
+        s = PVector(*start)
+        s + self.origin
+        e = PVector(*end)
+        e + self.origin
+        screen.draw.line(color, (s.x, s.y), (e.x, e.y), width)
 
 # ----------------------------------------------------
 def update():
@@ -38,13 +53,15 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    kc.draw()
-    t.draw()
+    sm.translate(PVector(WIDTH//2, HEIGHT))
+    sm.draw_line((0,0,0), (0,0), (0, -100))
+
+    sm.translate(PVector(WIDTH//2, HEIGHT-100))
+    sm.draw_line((0,0,0), (0,0), (50, 0))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-kc = KochCurve(PVector(0,100), PVector(WIDTH, 300), 5)
-t = Test(WIDTH//2, HEIGHT//2)
+sm = ScreenMatrix()
 run()
 # ----------------------------------------------------
 
@@ -104,3 +121,8 @@ run()
 # long-term solution is probably to integrate this deeply into the engine, but that's more
 # work than warranted just yet. But maybe a tiny class that wraps calls to screen.draw could
 # give the desired behavior.
+
+# What if screen retains the matrix settings? So you'd call screen.translate(), screen.rotate(),
+# etc. It would maintain a transform matrix, which may be enough on its own. Translate by itself
+# could be handled just by an 'origin' field, which by default is set to the top-left of the
+# window (0,0).
