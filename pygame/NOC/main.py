@@ -23,46 +23,11 @@ from boids import Boid
 from flock import Flock
 from wolfram import CA
 from life import Life
-from fractals import draw_circle, cantor
+from fractals import draw_circle, cantor, KochCurve
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
-
-class KochLine:
-    def __init__(self, a, b):
-        self.start = a.copy()
-        self.end = b.copy()
-
-    def draw(self):
-        screen.draw.line((0,0,0), (self.start.x, self.start.y), (self.end.x, self.end.y))
-
-    def koch_a(self):
-        return self.start.copy()
-
-    def koch_b(self):
-        v = PVector.sub(self.end, self.start)
-        v / 3
-        return PVector.add(self.start, v)
-
-    def koch_c(self):
-        v = PVector.sub(self.end, self.start)
-        v / 3
-        a = PVector.add(self.start, v)
-        if self.end.x < self.start.x:
-            v.rotate(120)
-        else:
-            v.rotate(-60)
-        return PVector.add(a,v)
-
-    def koch_d(self):
-        v = PVector.sub(self.end, self.start)
-        v * 2
-        v / 3
-        return PVector.add(self.start, v)
-
-    def koch_e(self):
-        return self.end.copy()
 
 class Test:
     def __init__(self):
@@ -78,38 +43,6 @@ class Test:
             translate = PVector.add(p, PVector(WIDTH//2,HEIGHT//2))
             screen.draw.circle(translate.x, translate.y, 8, (255,0,0))
         screen.draw.circle(WIDTH//2, HEIGHT//2, 100, (0,0,0), 1)
-
-class KochCurve:
-    def __init__(self, start, end, depth):
-        self.start = start
-        self.end = end
-        self.depth = depth
-
-        self.lines = []
-        self.lines.append(KochLine(self.start, self.end))
-        for i in range(self.depth):
-            self.generate()
-
-    def generate(self):
-        next_lines = []
-
-        for kl in self.lines:
-            a = kl.koch_a()
-            b = kl.koch_b()
-            c = kl.koch_c()
-            d = kl.koch_d()
-            e = kl.koch_e()
-
-            next_lines.append(KochLine(a,b))
-            next_lines.append(KochLine(b,c))
-            next_lines.append(KochLine(c,d))
-            next_lines.append(KochLine(d,e))
-
-        self.lines = next_lines.copy()
-
-    def draw(self):
-        for kl in self.lines:
-            kl.draw()
 
 # ----------------------------------------------------
 def update():
