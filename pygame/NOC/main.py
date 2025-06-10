@@ -24,25 +24,12 @@ from flock import Flock
 from wolfram import CA
 from life import Life
 from fractals import draw_circle, cantor, KochCurve
+from rotation_test import Test
 
 WIDTH = 640
 HEIGHT = 360
 TITLE = "The Nature of Code"
 
-class Test:
-    def __init__(self):
-        self.points = []
-        start = PVector(100,0)
-        for i in range(350, 400, 10):
-            new_point = start.copy()
-            new_point.rotate(i)
-            self.points.append(new_point)
-
-    def draw(self):
-        for p in self.points:
-            translate = PVector.add(p, PVector(WIDTH//2,HEIGHT//2))
-            screen.draw.circle(translate.x, translate.y, 8, (255,0,0))
-        screen.draw.circle(WIDTH//2, HEIGHT//2, 100, (0,0,0), 1)
 
 # ----------------------------------------------------
 def update():
@@ -52,12 +39,12 @@ def update():
 # ----------------------------------------------------
 def draw():
     kc.draw()
-    #t.draw()
+    t.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-kc = KochCurve(PVector(0,200), PVector(WIDTH, 200), 5)
-#t = Test()
+kc = KochCurve(PVector(0,100), PVector(WIDTH, 300), 5)
+t = Test(WIDTH//2, HEIGHT//2)
 run()
 # ----------------------------------------------------
 
@@ -104,3 +91,16 @@ run()
 # 'pygame physics libraries' turns up pymunk, so may give that one a go.
 
 # In the meantime, I think I'll skip over Chapter 5 and revisit it later.
+
+# Rotation was an issue again in the Fractal chapter (8). I implemented a rotate on my
+# homegrown vector class, and a test class to verify everything is working OK. May still be
+# some weirdness going on as compared to the Processing equivalent. Radians vs. degrees in
+# the various function calls is easy to get crossed up. Behavior in all four quadrants, 
+# rotational direction, and going past 360 degrees are all consderations too. But this is
+# working well enough to get the Koch curve implemented.
+
+# I've been able to survive without push/popmatrix so far, but the next section on Fractal
+# Trees makes heavy use of it. Will need to think about an approach. As noted above, the
+# long-term solution is probably to integrate this deeply into the engine, but that's more
+# work than warranted just yet. But maybe a tiny class that wraps calls to screen.draw could
+# give the desired behavior.
