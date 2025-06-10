@@ -34,10 +34,8 @@ class ScreenMatrix:
     def __init__(self):
         self.origin = PVector(0,0)
 
-    # as written this is absolute, but Processing implementation is relative
-    # problem is that we're currently calling this on every pass thorugh draw()
     def translate(self, target):
-        self.origin = target
+        self.origin + target
 
     def draw_line(self, color, start, end, width=1):
         s = PVector(*start)
@@ -53,16 +51,22 @@ def update():
 
 # ----------------------------------------------------
 def draw():
+    pass
+# ----------------------------------------------------
+
+# ----------------------------------------------------
+def setup():
     sm.translate(PVector(WIDTH//2, HEIGHT))
     sm.draw_line((0,0,0), (0,0), (0, -100))
 
-    sm.translate(PVector(WIDTH//2, HEIGHT-100))
+    sm.translate(PVector(0, -100))
     sm.draw_line((0,0,0), (0,0), (50, 0))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 sm = ScreenMatrix()
-run()
+
+run(draw=False)
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
@@ -126,3 +130,14 @@ run()
 # etc. It would maintain a transform matrix, which may be enough on its own. Translate by itself
 # could be handled just by an 'origin' field, which by default is set to the top-left of the
 # window (0,0).
+
+# Additional hurdle to add into this one: the transform calls should be relative/accumulative,
+# but the current model has us calling repeatedly in draw() - and we need to do that because
+# otherwise the first draw() out of the run() loop will clear the screen. So... I'm adding
+# back the setup() function with a hook in the main loop (I previously called this 'once()'). As
+# noted above, we'll need to do something dynamic to preserve backward compatibility (i.e. don't
+# barf if the main script does not have a setup() function.
+
+# I also needed to suppress the auto-fill behavior in the main loop, via an optional flag to
+# run(). This is a bit klunky right now, needs lots of smoothing before we can bring it back
+# to the main engine project. But this is a good sandbox for figuring it all out.

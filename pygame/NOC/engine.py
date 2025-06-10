@@ -455,7 +455,7 @@ for i in _key_constants:
     setattr(keys, const, const.lower())
     setattr(keyboard, const.lower(), False)
 
-def run():
+def run(draw=True):
     """run() - entry point containing the core game loop."""
 
     #sys.setprofile(_trace_function)
@@ -464,8 +464,9 @@ def run():
     pygame.display.set_caption(parent.TITLE)
     pygame.key.set_repeat(10,10)
 
-    #screen.fill(Color("white"))
-    #parent.once()
+    if not draw:
+        screen.fill(Color("white"))
+        parent.setup()
 
     up = parent.update
     if up.__code__.co_argcount == 0:
@@ -495,9 +496,11 @@ def run():
                 if hasattr(keys, name.upper()):
                     setattr(keyboard, name, True)
     
-        screen.fill(Color("white"))
+        if draw:
+            screen.fill(Color("white"))
         update(pygame.time.Clock.get_time(clock)/1000)
-        parent.draw()
+        if draw:
+            parent.draw()
         pygame.display.update()
     
     pygame.quit()
