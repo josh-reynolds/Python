@@ -77,6 +77,20 @@ def pop_matrix():
 def line(ax, ay, bx, by):
     sm.draw_line((ax, ay), (bx, by))
 
+def branch():
+    line(0, 0, 0, -100)
+    translate(0, -100)
+
+    push_matrix()
+    rotate(math.pi/6)
+    branch()
+    pop_matrix()
+
+    push_matrix()
+    rotate(-math.pi/6)
+    branch()
+    pop_matrix()
+
 # ----------------------------------------------------
 def update():
     pass
@@ -90,16 +104,7 @@ def draw():
 # ----------------------------------------------------
 def setup():
     translate(WIDTH//2, HEIGHT)
-    line(0, 0, 0, -100)
-    translate(0, -100)
-
-    push_matrix()
-    rotate(math.pi/6)
-    line(0, 0, 0, -100)
-    pop_matrix()
-
-    rotate(-math.pi/6)
-    line(0, 0, 0, -100)
+    branch()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
