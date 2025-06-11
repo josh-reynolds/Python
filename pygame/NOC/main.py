@@ -34,7 +34,7 @@ class ScreenMatrix:
     def __init__(self):
         self.origin = PVector(0,0)
         self.color = (0,0,0)
-        self.angle = 0
+        self.angle = math.pi
 
     def translate(self, target):
         self.origin + target
@@ -44,10 +44,15 @@ class ScreenMatrix:
 
     def draw_line(self, start, end, width=1):
         s = PVector(*start)
+        s.rotate(math.degrees(self.angle))
         s + self.origin
+
         e = PVector(*end)
+        e.rotate(math.degrees(self.angle))
         e + self.origin
+
         screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
+        screen.draw.circle(s.x, s.y, 8, (255,0,0))
 
 def translate(x, y):
     sm.translate(PVector(x,y))
@@ -70,16 +75,12 @@ def draw():
 
 # ----------------------------------------------------
 def setup():
-    translate(WIDTH//2, HEIGHT)
+    translate(WIDTH//2, HEIGHT//2)
     line(0, 0, 0, -100)
-
-    print(sm.angle)
 
     translate(0, -100)
     rotate(math.pi/6)
     line(0, 0, 50, 0)
-
-    print(sm.angle)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
