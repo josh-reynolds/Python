@@ -35,12 +35,20 @@ class ScreenMatrix:
         self.origin = PVector(0,0)
         self.color = (0,0,0)
         self.angle = 3 * math.pi
+        self.stack = []
 
     def translate(self, target):
         self.origin + target
 
     def rotate(self, radians):
         self.angle += radians    # consider what happens going past TWO_PI...
+
+    def push_matrix(self):
+        self.stack.append((self.origin, self.angle))
+
+    def pop_matrix(self):
+        if len(self.stack) > 0:
+            self.origin, self.angle = self.stack.pop()
 
     def draw_line(self, start, end, width=1):
         s = PVector(*start)
@@ -60,6 +68,12 @@ def translate(x, y):
 def rotate(radians):
     sm.rotate(radians)
 
+def push_matrix():
+    sm.push_matrix()
+
+def pop_matrix():
+    sm.pop_matrix()
+
 def line(ax, ay, bx, by):
     sm.draw_line((ax, ay), (bx, by))
 
@@ -77,11 +91,15 @@ def draw():
 def setup():
     translate(WIDTH//2, HEIGHT)
     line(0, 0, 0, -100)
-
     translate(0, -100)
+
+    push_matrix()
     rotate(math.pi/6)
     line(0, 0, 0, -100)
+    pop_matrix()
 
+    rotate(-math.pi/6)
+    line(0, 0, 0, -100)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
