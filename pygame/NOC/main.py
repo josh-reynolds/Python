@@ -33,16 +33,23 @@ TITLE = "The Nature of Code"
 class ScreenMatrix:
     def __init__(self):
         self.origin = PVector(0,0)
+        self.color = (0,0,0)
 
     def translate(self, target):
         self.origin + target
 
-    def draw_line(self, color, start, end, width=1):
+    def draw_line(self, start, end, width=1):
         s = PVector(*start)
         s + self.origin
         e = PVector(*end)
         e + self.origin
-        screen.draw.line(color, (s.x, s.y), (e.x, e.y), width)
+        screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
+
+def translate(x, y):
+    sm.translate(PVector(x,y))
+
+def line(ax, ay, bx, by):
+    sm.draw_line((ax, ay), (bx, by))
 
 # ----------------------------------------------------
 def update():
@@ -56,11 +63,11 @@ def draw():
 
 # ----------------------------------------------------
 def setup():
-    sm.translate(PVector(WIDTH//2, HEIGHT))
-    sm.draw_line((0,0,0), (0,0), (0, -100))
+    translate(WIDTH//2, HEIGHT)
+    line(0, 0, 0, -100)
 
-    sm.translate(PVector(0, -100))
-    sm.draw_line((0,0,0), (0,0), (50, 0))
+    translate(0, -100)
+    line(0, 0, 50, 0)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
