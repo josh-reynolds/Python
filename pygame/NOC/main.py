@@ -34,9 +34,13 @@ class ScreenMatrix:
     def __init__(self):
         self.origin = PVector(0,0)
         self.color = (0,0,0)
+        self.angle = 0
 
     def translate(self, target):
         self.origin + target
+
+    def rotate(self, radians):
+        self.angle += radians    # consider what happens going past TWO_PI...
 
     def draw_line(self, start, end, width=1):
         s = PVector(*start)
@@ -47,6 +51,9 @@ class ScreenMatrix:
 
 def translate(x, y):
     sm.translate(PVector(x,y))
+
+def rotate(radians):
+    sm.rotate(radians)
 
 def line(ax, ay, bx, by):
     sm.draw_line((ax, ay), (bx, by))
@@ -66,8 +73,13 @@ def setup():
     translate(WIDTH//2, HEIGHT)
     line(0, 0, 0, -100)
 
+    print(sm.angle)
+
     translate(0, -100)
+    rotate(math.pi/6)
     line(0, 0, 50, 0)
+
+    print(sm.angle)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
