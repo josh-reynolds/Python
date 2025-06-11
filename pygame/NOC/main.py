@@ -37,11 +37,12 @@ class ScreenMatrix:
         self.angle = 3 * math.pi
         self.stack = []
 
+    # BUG: need to apply existing transforms
     def translate(self, target):
         self.origin + target
 
     def rotate(self, radians):
-        self.angle += radians    # consider what happens going past TWO_PI...
+        self.angle += radians
 
     def push_matrix(self):
         self.stack.append((self.origin, self.angle))
@@ -77,19 +78,22 @@ def pop_matrix():
 def line(ax, ay, bx, by):
     sm.draw_line((ax, ay), (bx, by))
 
-def branch():
-    line(0, 0, 0, -100)
-    translate(0, -100)
+def branch(length):
+    line(0, 0, 0, -length)
+    translate(0, -length)
 
-    push_matrix()
-    rotate(math.pi/6)
-    branch()
-    pop_matrix()
+    length *= 0.66
 
-    push_matrix()
-    rotate(-math.pi/6)
-    branch()
-    pop_matrix()
+    if length > 2:
+        push_matrix()
+        rotate(math.pi/6)
+        branch(length)
+        pop_matrix()
+
+        #push_matrix()
+        #rotate(-math.pi/6)
+        #branch(length)
+        #pop_matrix()
 
 # ----------------------------------------------------
 def update():
@@ -104,11 +108,12 @@ def draw():
 # ----------------------------------------------------
 def setup():
     translate(WIDTH//2, HEIGHT)
-    branch()
+    branch(100)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 sm = ScreenMatrix()
+theta = math.pi/6
 
 run(draw=False)
 # ----------------------------------------------------
