@@ -34,15 +34,26 @@ class ScreenMatrix:
     def __init__(self):
         self.origin = PVector(0,0)
         self.color = (0,0,0)
-        self.angle = 3 * math.pi
+        self.angle = 0
         self.stack = []
 
-    # BUG: need to apply existing transforms
+    def __repr__(self):
+        return f"({self.origin.x:0.2f}, {self.origin.y:0.2f}) {self.angle:0.2f} : {self.stack}"
+
     def translate(self, target):
+        print("TRANSLATE --------------------")
+        print(f"original target: ({target.x:0.2f}, {target.y:0.2f})")
+        print(f"current angle: {self.angle:0.5f}")
+        target.rotate(math.degrees(self.angle))
+        print(f"rotated target: ({target.x:0.2f}, {target.y:0.2f})")
         self.origin + target
+        print(f"new origin: ({self.origin.x:0.2f}, {self.origin.y:0.2f})")
 
     def rotate(self, radians):
+        print("ROTATE -----------------------")
+        print(f"target angle: {radians:0.5f}")
         self.angle += radians
+        print(f"new angle: {self.angle:0.5f}")
 
     def push_matrix(self):
         self.stack.append((self.origin, self.angle))
@@ -51,7 +62,8 @@ class ScreenMatrix:
         if len(self.stack) > 0:
             self.origin, self.angle = self.stack.pop()
 
-    def draw_line(self, start, end, width=1):
+    def draw_line(self, start, end, width=2):
+        print("DRAW LINE --------------------")
         s = PVector(*start)
         s.rotate(math.degrees(self.angle))
         s + self.origin
@@ -60,8 +72,10 @@ class ScreenMatrix:
         e.rotate(math.degrees(self.angle))
         e + self.origin
 
+        print(f"drawing between ({s.x:0.2f}, {s.y:0.2f}) and ({e.x:0.2f}, {e.y:0.2f})")
+
         screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
-        screen.draw.circle(s.x, s.y, 8, (255,0,0))
+        screen.draw.circle(s.x, s.y, 3, (255,0,0))
 
 def translate(x, y):
     sm.translate(PVector(x,y))
@@ -107,8 +121,26 @@ def draw():
 
 # ----------------------------------------------------
 def setup():
-    translate(WIDTH//2, HEIGHT)
-    branch(100)
+    screen.draw.line((0,0,255), (0, HEIGHT//2), (WIDTH, HEIGHT//2), 1)
+    screen.draw.line((0,0,255), (WIDTH//2, 0), (WIDTH//2, HEIGHT), 1)
+
+    translate(WIDTH//2, HEIGHT//2)
+    #branch(100)
+
+    line(0, 0, 0, -100)
+    translate(0, -100)
+
+    rotate(math.pi/2)
+    line(0, 0, 0, -100)
+    translate(0, -100)
+
+    rotate(math.pi/2)
+    line(0, 0, 0, -100)
+    translate(0, -100)
+
+    rotate(math.pi/2)
+    line(0, 0, 0, -100)
+    translate(0, -100)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
