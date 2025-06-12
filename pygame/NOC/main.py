@@ -90,41 +90,42 @@ def branch(length):
     length *= 0.66
 
     if length > 2:
-        push_matrix()
-        rotate(theta)
-        branch(length)
-        pop_matrix()
-
-        push_matrix()
-        rotate(-theta)
-        branch(length)
-        pop_matrix()
+        n = randint(1,4)
+        for i in range(n):
+            theta = uniform(-math.pi/2,math.pi/2)
+            push_matrix()
+            rotate(theta)
+            branch(length)
+            pop_matrix()
 
 # ----------------------------------------------------
 def update():
-    global theta
-    mouse_x, _ = pygame.mouse.get_pos()
-    theta = remap(mouse_x, 0, WIDTH, 0, math.pi/2)
-# ----------------------------------------------------
-
-# ----------------------------------------------------
-def draw():
-    translate(WIDTH//2, HEIGHT)
-    branch(60)
-    sm.reset()
-# ----------------------------------------------------
-
-# ----------------------------------------------------
-def setup():
+    #global theta
+    #mouse_x, _ = pygame.mouse.get_pos()
+    #theta = remap(mouse_x, 0, WIDTH, 0, math.pi/2)
     pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-sm = ScreenMatrix()
-theta = math.pi/6
+def draw():
+    #translate(WIDTH//2, HEIGHT)
+    #branch(60)
+    #sm.reset()
+    pass
+# ----------------------------------------------------
 
-#run(draw=False)
-run()
+# ----------------------------------------------------
+def setup():
+    translate(WIDTH//2, HEIGHT)
+    branch(60)
+# ----------------------------------------------------
+
+# ----------------------------------------------------
+sm = ScreenMatrix()
+#theta = math.pi/6
+
+run(draw=False)
+#run()
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
