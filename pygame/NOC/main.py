@@ -26,50 +26,38 @@ from life import Life
 from fractals import draw_circle, cantor, KochCurve
 from rotation_test import Test
 
-WIDTH = 640
-HEIGHT = 360
+WIDTH = 300
+HEIGHT = 200
 TITLE = "The Nature of Code"
 
 class ScreenMatrix:
     def __init__(self):
+        self.reset()
+
+    def __repr__(self):
+        return f"({self.origin.x:0.2f}, {self.origin.y:0.2f}) {self.angle:0.2f} : {self.stack}"
+
+    def reset(self):
         self.origin = PVector(0,0)
         self.color = (0,0,0)
         self.angle = 0
         self.stack = []
 
-    def __repr__(self):
-        return f"({self.origin.x:0.2f}, {self.origin.y:0.2f}) {self.angle:0.2f} : {self.stack}"
-
     def translate(self, target):
-        print("TRANSLATE --------------------")
-        print(f"original target: ({target.x:0.2f}, {target.y:0.2f})")
-        print(f"current angle: {self.angle:0.5f}")
         target.rotate(math.degrees(self.angle))
-        print(f"rotated target: ({target.x:0.2f}, {target.y:0.2f})")
         self.origin + target
-        print(f"new origin: ({self.origin.x:0.2f}, {self.origin.y:0.2f})")
 
     def rotate(self, radians):
-        print("ROTATE -----------------------")
-        print(f"target angle: {radians:0.5f}")
         self.angle += radians
-        print(f"new angle: {self.angle:0.5f}")
 
     def push_matrix(self):
-        print("PUSH MATRIX ------------------")
         self.stack.append((self.origin.copy(), self.angle))
-        print(self.stack)
 
     def pop_matrix(self):
-        print("POP MATRIX -------------------")
-        print(self.stack)
         if len(self.stack) > 0:
             self.origin, self.angle = self.stack.pop()
-            print(f"reset origin: ({self.origin.x:0.2f}, {self.origin.y:0.2f})")
-            print(f"reset angle: {self.angle:0.5f}")
 
-    def draw_line(self, start, end, width=2):
-        print("DRAW LINE --------------------")
+    def draw_line(self, start, end, width=1):
         s = PVector(*start)
         s.rotate(math.degrees(self.angle))
         s + self.origin
@@ -78,10 +66,7 @@ class ScreenMatrix:
         e.rotate(math.degrees(self.angle))
         e + self.origin
 
-        print(f"drawing between ({s.x:0.2f}, {s.y:0.2f}) and ({e.x:0.2f}, {e.y:0.2f})")
-
         screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
-        screen.draw.circle(s.x, s.y, 3, (255,0,0))
 
 def translate(x, y):
     sm.translate(PVector(x,y))
@@ -106,62 +91,40 @@ def branch(length):
 
     if length > 2:
         push_matrix()
-        rotate(math.pi/6)
+        rotate(theta)
         branch(length)
         pop_matrix()
 
-        #push_matrix()
-        #rotate(-math.pi/6)
-        #branch(length)
-        #pop_matrix()
+        push_matrix()
+        rotate(-theta)
+        branch(length)
+        pop_matrix()
 
 # ----------------------------------------------------
 def update():
-    pass
+    global theta
+    mouse_x, _ = pygame.mouse.get_pos()
+    theta = remap(mouse_x, 0, WIDTH, 0, math.pi/2)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    pass
+    translate(WIDTH//2, HEIGHT)
+    branch(60)
+    sm.reset()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def setup():
-    screen.draw.line((0,0,255), (0, HEIGHT//2), (WIDTH, HEIGHT//2), 1)
-    screen.draw.line((0,0,255), (WIDTH//2, 0), (WIDTH//2, HEIGHT), 1)
-
-    translate(WIDTH//2, HEIGHT//2)
-    push_matrix()
-    #branch(100)
-
-    line(0, 0, 0, -100)
-    translate(0, -100)
-    pop_matrix()
-
-    push_matrix()
-    rotate(math.pi/2)
-    line(0, 0, 0, -100)
-    translate(0, -100)
-    pop_matrix()
-
-    push_matrix()
-    rotate(math.pi/2)
-    line(0, 0, 0, -100)
-    translate(0, -100)
-    pop_matrix()
-
-    push_matrix()
-    rotate(math.pi/2)
-    line(0, 0, 0, -100)
-    translate(0, -100)
-    pop_matrix()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 sm = ScreenMatrix()
 theta = math.pi/6
 
-run(draw=False)
+#run(draw=False)
+run()
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
