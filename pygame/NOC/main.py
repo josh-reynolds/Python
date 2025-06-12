@@ -25,63 +25,11 @@ from wolfram import CA
 from life import Life
 from fractals import draw_circle, cantor, KochCurve
 from rotation_test import Test
+from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 
 WIDTH = 300
 HEIGHT = 200
 TITLE = "The Nature of Code"
-
-class ScreenMatrix:
-    def __init__(self):
-        self.reset()
-
-    def __repr__(self):
-        return f"({self.origin.x:0.2f}, {self.origin.y:0.2f}) {self.angle:0.2f} : {self.stack}"
-
-    def reset(self):
-        self.origin = PVector(0,0)
-        self.color = (0,0,0)
-        self.angle = 0
-        self.stack = []
-
-    def translate(self, target):
-        target.rotate(math.degrees(self.angle))
-        self.origin + target
-
-    def rotate(self, radians):
-        self.angle += radians
-
-    def push_matrix(self):
-        self.stack.append((self.origin.copy(), self.angle))
-
-    def pop_matrix(self):
-        if len(self.stack) > 0:
-            self.origin, self.angle = self.stack.pop()
-
-    def draw_line(self, start, end, width=1):
-        s = PVector(*start)
-        s.rotate(math.degrees(self.angle))
-        s + self.origin
-
-        e = PVector(*end)
-        e.rotate(math.degrees(self.angle))
-        e + self.origin
-
-        screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
-
-def translate(x, y):
-    sm.translate(PVector(x,y))
-
-def rotate(radians):
-    sm.rotate(radians)
-
-def push_matrix():
-    sm.push_matrix()
-
-def pop_matrix():
-    sm.pop_matrix()
-
-def line(ax, ay, bx, by):
-    sm.draw_line((ax, ay), (bx, by))
 
 def branch(length):
     line(0, 0, 0, -length)
@@ -100,17 +48,11 @@ def branch(length):
 
 # ----------------------------------------------------
 def update():
-    #global theta
-    #mouse_x, _ = pygame.mouse.get_pos()
-    #theta = remap(mouse_x, 0, WIDTH, 0, math.pi/2)
     pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    #translate(WIDTH//2, HEIGHT)
-    #branch(60)
-    #sm.reset()
     pass
 # ----------------------------------------------------
 
@@ -121,11 +63,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-sm = ScreenMatrix()
-#theta = math.pi/6
-
 run(draw=False)
-#run()
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
