@@ -56,11 +56,17 @@ class ScreenMatrix:
         print(f"new angle: {self.angle:0.5f}")
 
     def push_matrix(self):
-        self.stack.append((self.origin, self.angle))
+        print("PUSH MATRIX ------------------")
+        self.stack.append((self.origin.copy(), self.angle))
+        print(self.stack)
 
     def pop_matrix(self):
+        print("POP MATRIX -------------------")
+        print(self.stack)
         if len(self.stack) > 0:
             self.origin, self.angle = self.stack.pop()
+            print(f"reset origin: ({self.origin.x:0.2f}, {self.origin.y:0.2f})")
+            print(f"reset angle: {self.angle:0.5f}")
 
     def draw_line(self, start, end, width=2):
         print("DRAW LINE --------------------")
@@ -125,22 +131,30 @@ def setup():
     screen.draw.line((0,0,255), (WIDTH//2, 0), (WIDTH//2, HEIGHT), 1)
 
     translate(WIDTH//2, HEIGHT//2)
+    push_matrix()
     #branch(100)
 
     line(0, 0, 0, -100)
     translate(0, -100)
+    pop_matrix()
 
+    push_matrix()
     rotate(math.pi/2)
     line(0, 0, 0, -100)
     translate(0, -100)
+    pop_matrix()
 
+    push_matrix()
     rotate(math.pi/2)
     line(0, 0, 0, -100)
     translate(0, -100)
+    pop_matrix()
 
+    push_matrix()
     rotate(math.pi/2)
     line(0, 0, 0, -100)
     translate(0, -100)
+    pop_matrix()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
