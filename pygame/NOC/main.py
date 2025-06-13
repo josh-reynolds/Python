@@ -33,16 +33,16 @@ TITLE = "The Nature of Code"
 
 def next_generation():
     global current, count
-    next_ = ""
+    next_ = []
 
     for i in range(len(current)):
         c = current[i]
         if c == 'A':
-            next_ += "AB"
+            next_.append("AB")
         elif c == 'B':
-            next_ += "A"
+            next_.append("A")
 
-    current = next_
+    current = ''.join(next_)
     count += 1
     print(f"Generation {count}: {current}")
 
