@@ -104,7 +104,8 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    translate(WIDTH//2, HEIGHT//2)
+    translate(WIDTH//2, HEIGHT)
+    rotate(-math.pi/2)
     turtle.render()
     sm.reset()
 # ----------------------------------------------------
