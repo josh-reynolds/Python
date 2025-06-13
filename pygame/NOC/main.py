@@ -31,9 +31,32 @@ WIDTH = 300
 HEIGHT = 200
 TITLE = "The Nature of Code"
 
+def next_generation():
+    global current, count
+    next_ = ""
+
+    for i in range(len(current)):
+        c = current[i]
+        if c == 'A':
+            next_ += "AB"
+        elif c == 'B':
+            next_ += "A"
+
+    current = next_
+    count += 1
+    print(f"Generation {count}: {current}")
+
 # ----------------------------------------------------
+space_down = False
 def update():
-    pass
+    global space_down
+    space_pressed = False
+    if keyboard.space and not space_down:
+        space_pressed = True
+    space_down = keyboard.space
+    
+    if space_pressed:
+        next_generation()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -43,11 +66,13 @@ def draw():
 
 # ----------------------------------------------------
 def setup():
-    translate(WIDTH//2, HEIGHT)
-    branch(60)
+    print(f"Generation {count}: {current}")
+
 # ----------------------------------------------------
 
 # ----------------------------------------------------
+current = "A"
+count = 0
 run(draw=False)
 # ----------------------------------------------------
 
