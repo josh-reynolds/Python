@@ -23,28 +23,13 @@ from boids import Boid
 from flock import Flock
 from wolfram import CA
 from life import Life
-from fractals import draw_circle, cantor, KochCurve
+from fractals import draw_circle, cantor, KochCurve, branch
 from rotation_test import Test
 from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 
 WIDTH = 300
 HEIGHT = 200
 TITLE = "The Nature of Code"
-
-def branch(length):
-    line(0, 0, 0, -length)
-    translate(0, -length)
-
-    length *= 0.66
-
-    if length > 2:
-        n = randint(1,4)
-        for i in range(n):
-            theta = uniform(-math.pi/2,math.pi/2)
-            push_matrix()
-            rotate(theta)
-            branch(length)
-            pop_matrix()
 
 # ----------------------------------------------------
 def update():

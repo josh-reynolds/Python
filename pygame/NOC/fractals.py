@@ -1,5 +1,8 @@
+import math
+from random import uniform, randint
 from engine import screen
 from pvector import PVector
+from screen_matrix import line, translate, rotate, push_matrix, pop_matrix
 
 def draw_circle(x, y, radius):
     screen.draw.circle(x, y, radius, (0,0,0), 1)
@@ -15,6 +18,21 @@ def cantor(x, y, l):
         y += 20
         cantor(x, y, l/3)
         cantor(x + l * 2/3, y, l/3)
+
+def branch(length):
+    line(0, 0, 0, -length)
+    translate(0, -length)
+
+    length *= 0.66
+
+    if length > 2:
+        n = randint(1,4)
+        for i in range(n):
+            theta = uniform(-math.pi/2,math.pi/2)
+            push_matrix()
+            rotate(theta)
+            branch(length)
+            pop_matrix()
 
 class KochLine:
     def __init__(self, a, b):
