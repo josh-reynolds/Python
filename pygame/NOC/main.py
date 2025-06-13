@@ -67,7 +67,8 @@ class Turtle:
         self.length *= factor
 
     def render(self):
-        pass    ###
+        for i in self.to_do:
+            exec(i)
 
     def set_to_do(self, sentence):
         self.to_do = []
@@ -99,14 +100,11 @@ def update():
         ls.generate()
         turtle.set_to_do(ls.get_sentence())
         turtle.change_len(0.5)
-        print(ls.get_sentence())
-        for i in turtle.to_do:
-            print(i)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    translate(WIDTH//2, HEIGHT)
+    translate(WIDTH//2, HEIGHT//2)
     turtle.render()
     sm.reset()
 # ----------------------------------------------------
