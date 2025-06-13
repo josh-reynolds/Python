@@ -67,8 +67,10 @@ class Turtle:
         self.length *= factor
 
     def render(self):
+        screen.fill(Color("white"))
         for i in self.to_do:
             exec(i)
+        pygame.display.update()
 
     def set_to_do(self, sentence):
         self.to_do = []
@@ -100,14 +102,17 @@ def update():
         ls.generate()
         turtle.set_to_do(ls.get_sentence())
         turtle.change_len(0.5)
+        print(len(turtle.to_do))
+
+        translate(WIDTH//2, HEIGHT)
+        rotate(-math.pi/2)
+        turtle.render()
+        sm.reset()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    translate(WIDTH//2, HEIGHT)
-    rotate(-math.pi/2)
-    turtle.render()
-    sm.reset()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -120,7 +125,7 @@ ruleset = [Rule('F',"FF+[+F-F-F]-[-F+F+F]")]
 ls = LSystem("F", ruleset)
 turtle = Turtle(ls.get_sentence(), WIDTH//4, math.radians(25))
 
-run()
+run(draw=False)
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
