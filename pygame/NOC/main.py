@@ -27,24 +27,64 @@ from fractals import draw_circle, cantor, KochCurve, branch
 from rotation_test import Test
 from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 
-WIDTH = 300
-HEIGHT = 200
+WIDTH = 600
+HEIGHT = 600
 TITLE = "The Nature of Code"
 
-def next_generation():
-    global current, count
-    next_ = []
+class Rule:
+    def __init__(self, p, s):
+        self.predecessor = p
+        self.successor = s
 
-    for i in range(len(current)):
-        c = current[i]
-        if c == 'A':
-            next_.append("AB")
-        elif c == 'B':
-            next_.append("A")
+class LSystem:
+    def __init__(self, axiom, ruleset):
+        self.axiom = axiom
+        self.ruleset = ruleset
 
-    current = ''.join(next_)
-    count += 1
-    print(f"Generation {count}: {current}")
+    def generate(self):
+        next_ = []
+
+        for i in range(len(self.axiom)):
+            c = self.axiom[i]
+            for j in self.ruleset:
+                if c == j.predecessor:
+                    next_.append(j.successor)
+                else:
+                    next_.append(c)
+
+        self.axiom = ''.join(next_)
+
+    def get_sentence(self):
+        return self.axiom
+
+class Turtle:
+    def __init__(self, sentence, length, angle):
+        self.length = length
+        self.angle = angle
+        self.set_to_do(sentence)
+
+    def change_len(self, factor):
+        self.length *= factor
+
+    def render(self):
+        pass    ###
+
+    def set_to_do(self, sentence):
+        self.to_do = []
+        for c in sentence:
+            if c == 'F':
+                self.to_do.append(f"line(0,0,{self.length},0)")
+                self.to_do.append(f"translate({self.length},0)")
+            elif c == 'G':
+                self.to_do.append(f"translate({self.length},0)")
+            elif c == '+':
+                self.to_do.append(f"rotate({self.angle})")
+            elif c == '-':
+                self.to_do.append(f"rotate(-{self.angle})")
+            elif c == '[':
+                self.to_do.append(f"push_matrix()")
+            elif c == ']':
+                self.to_do.append(f"pop_matrix()")
 
 # ----------------------------------------------------
 space_down = False
@@ -54,26 +94,34 @@ def update():
     if keyboard.space and not space_down:
         space_pressed = True
     space_down = keyboard.space
-    
+
     if space_pressed:
-        next_generation()
+        ls.generate()
+        turtle.set_to_do(ls.get_sentence())
+        turtle.change_len(0.5)
+        print(ls.get_sentence())
+        for i in turtle.to_do:
+            print(i)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    pass
+    translate(WIDTH//2, HEIGHT)
+    turtle.render()
+    sm.reset()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def setup():
-    print(f"Generation {count}: {current}")
-
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-current = "A"
-count = 0
-run(draw=False)
+ruleset = [Rule('F',"FF+[+F-F-F]-[-F+F+F]")]
+ls = LSystem("F", ruleset)
+turtle = Turtle(ls.get_sentence(), WIDTH//4, math.radians(25))
+
+run()
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
