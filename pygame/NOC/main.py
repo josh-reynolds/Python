@@ -1,5 +1,5 @@
 import math
-from random import uniform, randint, random
+from random import uniform, randint, random, choice
 import pygame
 from pygame import Rect, Surface, transform
 from pygame.locals import *
@@ -33,6 +33,8 @@ HEIGHT = 600
 TITLE = "The Nature of Code"
 
 class DNA:
+    mutation_rate = 0.01
+
     def __init__(self):
         self.genes = [chr(randint(32,128)) for i in range(18)]
         self.fitness = self.calc_fitness()
@@ -47,6 +49,23 @@ class DNA:
             if self.genes[i] == target[i]:
                 score += 1
         return score/len(target)
+
+    def crossover(self, partner):
+        child = DNA()
+        midpoint = randint(0,len(child.genes))
+        for i in range(len(child.genes)):
+            if i > midpoint:
+                child.genes[i] = self.genes[i]
+            else:
+                child.genes[i] = partner.genes[i]
+        child.fitness = child.calc_fitness()
+        return child
+
+    def mutate(self):
+        for i in range(len(self.genes)):
+            if random() < DNA.mutation_rate:
+                self.genes[i] = chr(randint(32,128))
+        child.fitness = child.calc_fitness()
 
 def random_string():
     length = randint(1,5)
@@ -79,7 +98,6 @@ for i in range(1000):
 
 target = "to be or not to be"
 population = [DNA() for i in range(100)]
-print(population)
 
 mating_pool = []
 for p in population:
@@ -87,8 +105,15 @@ for p in population:
     for i in range(n):
         mating_pool.append(p)
 
-print("----------------")
-print(mating_pool)
+parent_a = choice(mating_pool)
+parent_b = choice(mating_pool)
+
+child = parent_a.crossover(parent_b)
+child.mutate()
+
+print(parent_a)
+print(parent_b)
+print(child)
 
 run()
 # ----------------------------------------------------
