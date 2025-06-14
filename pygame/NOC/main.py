@@ -32,25 +32,17 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "The Nature of Code"
 
+def random_string():
+    length = randint(1,5)
+    chars = []
+    for i in range(length):
+        c = randint(97,122)
+        chars.append(chr(c))
+    return ''.join(chars)
+
 # ----------------------------------------------------
-space_down = False
 def update():
-    global space_down
-    space_pressed = False
-    if keyboard.space and not space_down:
-        space_pressed = True
-    space_down = keyboard.space
-
-    if space_pressed:
-        ls.generate()
-        turtle.set_to_do(ls.get_sentence())
-        turtle.change_len(0.5)
-        print(len(turtle.to_do))
-
-        translate(WIDTH//2, HEIGHT)
-        rotate(-math.pi/2)
-        turtle.render()
-        sm.reset()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -64,11 +56,12 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-ruleset = [Rule('F',"FF+[+F-F-F]-[-F+F+F]")]
-ls = LSystem("F", ruleset)
-turtle = Turtle(ls.get_sentence(), WIDTH//4, math.radians(25))
+for i in range(1000):
+    s = random_string()
+    if s == 'cat':
+        print("GOTCHA!")
 
-run(draw=False)
+run()
 # ----------------------------------------------------
 
 # The primary difference from text: Processing does not redraw the background 
