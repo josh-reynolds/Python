@@ -28,8 +28,8 @@ from rotation_test import Test
 from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 from lsystem import Rule, LSystem, Turtle
 
-WIDTH = 600
-HEIGHT = 600
+WIDTH = 400
+HEIGHT = 100
 TITLE = "The Nature of Code"
 
 class DNA:
@@ -40,6 +40,10 @@ class DNA:
     def __repr__(self):
         genes = ''.join(self.genes)
         return f"{self.fitness:0.2f} {genes}"
+
+    @property
+    def text(self):
+        return ''.join(self.genes)
 
     def calc_fitness(self):
         score = 0
@@ -107,7 +111,8 @@ def update():
 
 # ----------------------------------------------------
 def draw():
-    pass
+    screen.draw.text(f"{generation}", center=(WIDTH//2, 30))
+    screen.draw.text(f"{best.text}", center=(WIDTH//2, 50))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
