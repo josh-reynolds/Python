@@ -33,10 +33,8 @@ HEIGHT = 600
 TITLE = "The Nature of Code"
 
 class DNA:
-    mutation_rate = 0.01
-
     def __init__(self):
-        self.genes = [chr(randint(32,128)) for i in range(18)]
+        self.genes = [chr(randint(32,128)) for i in range(len(target))]
         self.fitness = self.calc_fitness()
 
     def __repr__(self):
@@ -63,9 +61,9 @@ class DNA:
 
     def mutate(self):
         for i in range(len(self.genes)):
-            if random() < DNA.mutation_rate:
+            if random() < mutation_rate:
                 self.genes[i] = chr(randint(32,128))
-        child.fitness = child.calc_fitness()
+        self.fitness = self.calc_fitness()
 
 def random_string():
     length = randint(1,5)
@@ -77,7 +75,28 @@ def random_string():
 
 # ----------------------------------------------------
 def update():
-    pass
+    mating_pool = []
+    for p in population:
+        n = int(p.fitness * 100)
+        for i in range(n):
+            mating_pool.append(p)
+
+    for i in range(len(population)):
+        parent_a = choice(mating_pool)
+        parent_b = choice(mating_pool)
+
+        child = parent_a.crossover(parent_b)
+        child.mutate()
+
+        population[i] = child
+
+    total_fitness = 0
+    for p in population:
+        total_fitness += p.fitness
+        if p.fitness > 0.9:
+            print(p)
+    print(f"{total_fitness/len(population)}")
+
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -96,24 +115,10 @@ for i in range(1000):
     if s == 'cat':
         print("GOTCHA!")
 
+total_population = 150
+mutation_rate = 0.01
 target = "to be or not to be"
-population = [DNA() for i in range(100)]
-
-mating_pool = []
-for p in population:
-    n = int(p.fitness * 100)
-    for i in range(n):
-        mating_pool.append(p)
-
-parent_a = choice(mating_pool)
-parent_b = choice(mating_pool)
-
-child = parent_a.crossover(parent_b)
-child.mutate()
-
-print(parent_a)
-print(parent_b)
-print(child)
+population = [DNA() for i in range(total_population)]
 
 run()
 # ----------------------------------------------------
