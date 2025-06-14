@@ -81,6 +81,15 @@ target = "to be or not to be"
 population = [DNA() for i in range(100)]
 print(population)
 
+mating_pool = []
+for p in population:
+    n = int(p.fitness * 100)
+    for i in range(n):
+        mating_pool.append(p)
+
+print("----------------")
+print(mating_pool)
+
 run()
 # ----------------------------------------------------
 
