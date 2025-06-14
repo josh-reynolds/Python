@@ -32,6 +32,22 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "The Nature of Code"
 
+class DNA:
+    def __init__(self):
+        self.genes = [chr(randint(32,128)) for i in range(18)]
+        self.fitness = self.calc_fitness()
+
+    def __repr__(self):
+        genes = ''.join(self.genes)
+        return f"{self.fitness:0.2f} {genes}"
+
+    def calc_fitness(self):
+        score = 0
+        for i in range(len(self.genes)):
+            if self.genes[i] == target[i]:
+                score += 1
+        return score/len(target)
+
 def random_string():
     length = randint(1,5)
     chars = []
@@ -60,6 +76,10 @@ for i in range(1000):
     s = random_string()
     if s == 'cat':
         print("GOTCHA!")
+
+target = "to be or not to be"
+population = [DNA() for i in range(100)]
+print(population)
 
 run()
 # ----------------------------------------------------
