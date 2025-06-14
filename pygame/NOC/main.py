@@ -75,6 +75,7 @@ def random_string():
 
 # ----------------------------------------------------
 def update():
+    global best, generation
     mating_pool = []
     for p in population:
         n = int(p.fitness * 100)
@@ -91,11 +92,16 @@ def update():
         population[i] = child
 
     total_fitness = 0
+    best_score = 0
     for p in population:
         total_fitness += p.fitness
-        if p.fitness > 0.9:
-            print(p)
-    print(f"{total_fitness/len(population)}")
+        if p.fitness > best_score:
+            best = p
+            best_score = p.fitness
+
+    generation += 1
+
+    print(f"{generation} - {best}")
 
 # ----------------------------------------------------
 
@@ -118,6 +124,8 @@ for i in range(1000):
 total_population = 150
 mutation_rate = 0.01
 target = "to be or not to be"
+best = ""
+generation = 0
 population = [DNA() for i in range(total_population)]
 
 run()
