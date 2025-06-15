@@ -55,8 +55,15 @@ class Population:
                 self.mating_pool.append(p)
 
         if len(self.mating_pool) == 0:
-            self.mating_pool = self.population.copy()
+            self.population.sort(key=lambda r: r.fitness)
+            for i in range(len(self.population)//2):
+                self.mating_pool.append(self.population[i])
             print("zero pool")
+
+        total_fitness = 0
+        for r in self.mating_pool:
+            total_fitness += r.fitness
+        print(f"Average mating pool fitness: {total_fitness/len(self.mating_pool):0.5f}")
 
     def reproduction(self):
         for i in range(len(self.population)):
@@ -95,14 +102,26 @@ class Rocket:
         self.gene_counter = 0
 
         self.mass = 1
+        self.radius = self.mass * 16
         self.location = PVector(WIDTH//2, HEIGHT)
         self.velocity = PVector(0,0)
         self.acceleration = PVector(0,0)
 
         self.stopped = False
+        self.record_distance = 1000
+        self.hit_target = False
+        self.finish_time = 0
 
     def calculate_fitness(self):
-        self.fitness = self.dna.fitness(self.location, self.stopped)
+        #f = lifetime - self.finish_time + 1/self.record_distance
+        d = PVector.dist(self.location, target)
+        f = 1/d * 100
+        #f = f ** 2
+        if self.stopped:
+            f *= 0.1
+        if self.hit_target:
+            f *= 2
+        self.fitness = f
 
     def crossover(self, partner):
         child = Rocket()
@@ -119,6 +138,17 @@ class Rocket:
             self.gene_counter %= lifetime
             self.update()
             self.collision_check()
+            self.check_target()
+
+    def check_target(self):
+        d = PVector.dist(self.location, target)
+        if d < self.record_distance:
+            self.record_distance = d
+
+        if d < self.radius:
+            self.hit_target = True
+        else:
+            self.finish_time += 1
 
     def apply_force(self, f):
         self.acceleration + f
@@ -132,10 +162,11 @@ class Rocket:
         for o in obstacles:
             if o.contains(self.location):
                 self.stopped = True
+                self.finish_time = lifetime
 
     def draw(self):
-        screen.draw.circle(self.location.x, self.location.y, self.mass * 16, (0, 255, 0))
-        screen.draw.circle(self.location.x, self.location.y, self.mass * 16, (0, 0, 0), 1)
+        screen.draw.circle(self.location.x, self.location.y, self.radius, (0, 255, 0))
+        screen.draw.circle(self.location.x, self.location.y, self.radius, (0, 0, 0), 1)
 
 class DNA:
     def __init__(self):
@@ -145,14 +176,6 @@ class DNA:
             vec = PVector.random2D()
             vec * (uniform(0, self.max_force))
             self.genes.append(vec)
-
-    def fitness(self, location, stopped):
-        d = PVector.dist(location, target)
-        #return (1 / d) ** 2
-        f = 1/2
-        if stopped:
-            f *= 0.1
-        return f
 
     def crossover(self, partner):
         child = DNA()
@@ -204,7 +227,7 @@ def setup():
 # ----------------------------------------------------
 lifetime = 500
 life_counter = 0
-population = Population(0.01, 100)
+population = Population(0.01, 50)
 target = PVector(WIDTH//2, HEIGHT//3)
 obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
 generation = 1
