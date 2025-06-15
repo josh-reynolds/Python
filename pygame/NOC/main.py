@@ -72,6 +72,22 @@ class Population:
         for p in self.population:
             p.draw()
 
+class Obstacle:
+    def __init__(self, x, y, w, h):
+        self.location = PVector(x,y)
+        self.width = w
+        self.height = h
+
+    def contains(self, v):
+        if (v.x > self.location.x and v.x < self.location.x + self.width and
+            v.y > self.location.y and v.y < self.location.y + self.height):
+            return True
+        else:
+            return False
+
+    def draw(self):
+        screen.draw.rect((self.location.x, self.location.y, self.width, self.height), (0,0,255), 0)
+
 class Rocket:
     def __init__(self):
         self.dna = DNA()
@@ -83,8 +99,10 @@ class Rocket:
         self.velocity = PVector(0,0)
         self.acceleration = PVector(0,0)
 
+        self.stopped = False
+
     def calculate_fitness(self):
-        self.fitness = self.dna.fitness(self.location)
+        self.fitness = self.dna.fitness(self.location, self.stopped)
 
     def crossover(self, partner):
         child = Rocket()
@@ -95,10 +113,12 @@ class Rocket:
         self.dna.mutate(mutation_rate)
 
     def run(self):
-        self.apply_force(self.dna.genes[self.gene_counter])
-        self.gene_counter += 1
-        self.gene_counter %= lifetime
-        self.update()
+        if not self.stopped:
+            self.apply_force(self.dna.genes[self.gene_counter])
+            self.gene_counter += 1
+            self.gene_counter %= lifetime
+            self.update()
+            self.collision_check()
 
     def apply_force(self, f):
         self.acceleration + f
@@ -107,6 +127,11 @@ class Rocket:
         self.velocity + self.acceleration
         self.location + self.velocity
         self.acceleration * 0
+
+    def collision_check(self):
+        for o in obstacles:
+            if o.contains(self.location):
+                self.stopped = True
 
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, self.mass * 16, (0, 255, 0))
@@ -121,10 +146,13 @@ class DNA:
             vec * (uniform(0, self.max_force))
             self.genes.append(vec)
 
-    def fitness(self, location):
+    def fitness(self, location, stopped):
         d = PVector.dist(location, target)
         #return (1 / d) ** 2
-        return (1 / d)
+        f = 1/2
+        if stopped:
+            f *= 0.1
+        return f
 
     def crossover(self, partner):
         child = DNA()
@@ -161,6 +189,8 @@ def update():
 # ----------------------------------------------------
 def draw():
     population.draw()
+    for o in obstacles:
+        o.draw()
     screen.draw.circle(target.x, target.y, 8, (255, 0, 0))
     screen.draw.text("Generation: " + str(generation), pos=(WIDTH - 140, 20))
     screen.draw.text("Cycle: " + str(life_counter), pos=(WIDTH - 140, 40))
@@ -176,6 +206,7 @@ lifetime = 500
 life_counter = 0
 population = Population(0.01, 100)
 target = PVector(WIDTH//2, HEIGHT//3)
+obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
 generation = 1
 
 run()
