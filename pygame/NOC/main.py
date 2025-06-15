@@ -196,17 +196,19 @@ class DNA:
 
 # ----------------------------------------------------
 def update():
-    global life_counter, generation
+    global life_counter, generation, done
 
-    if life_counter < lifetime:
-        population.live()
-        life_counter += 1
-    else:
-        life_counter = 0
-        population.fitness()
-        population.selection()
-        population.reproduction()
-        generation += 1
+    if not done:
+        if life_counter < lifetime:
+            population.live()
+            life_counter += 1
+        else:
+            life_counter = 0
+            population.fitness()
+            population.selection()
+            population.reproduction()
+            generation += 1
+            done = True
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -231,6 +233,7 @@ population = Population(0.01, 50)
 target = PVector(WIDTH//2, HEIGHT//3)
 obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
 generation = 1
+done = False
 
 run()
 # ----------------------------------------------------
