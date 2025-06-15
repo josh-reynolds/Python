@@ -28,29 +28,103 @@ from rotation_test import Test
 from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 from lsystem import Rule, LSystem, Turtle
 
-WIDTH = 400
-HEIGHT = 100
+WIDTH = 640
+HEIGHT = 480
 TITLE = "The Nature of Code"
+
+class Population:
+    def __init__(self, mutation_rate, size):
+        self.mutation_rate = mutation_rate
+        self.population = [Rocket() for i in range(size)]
+        self.mating_pool = []
+        self.generations = 0
+
+    def live(self):
+        for p in self.population:
+            p.run()
+
+    def fitness(self):
+        for p in self.population:
+            p.calculate_fitness()
+
+    def selection(self):
+        self.mating_pool = []
+        for p in self.population:
+            n = int(p.fitness * 100)
+            for i in range(n):
+                self.mating_pool.append(p)
+
+        if len(self.mating_pool) == 0:
+            self.mating_pool = self.population.copy()
+            print("zero pool")
+
+    def reproduction(self):
+        for i in range(len(self.population)):
+            parent_a = choice(self.mating_pool)
+            parent_b = choice(self.mating_pool)
+
+            child = parent_a.crossover(parent_b)
+            child.mutate(self.mutation_rate)
+
+            self.population[i] = child
+
+    def draw(self):
+        for p in self.population:
+            p.draw()
+
+class Rocket:
+    def __init__(self):
+        self.dna = DNA()
+        self.fitness = 0
+        self.gene_counter = 0
+
+        self.mass = 1
+        self.location = PVector(WIDTH//2, HEIGHT)
+        self.velocity = PVector(0,0)
+        self.acceleration = PVector(0,0)
+
+    def calculate_fitness(self):
+        self.fitness = self.dna.fitness(self.location)
+
+    def crossover(self, partner):
+        child = Rocket()
+        child.dna = self.dna.crossover(partner.dna)
+        return child
+
+    def mutate(self, mutation_rate):
+        self.dna.mutate(mutation_rate)
+
+    def run(self):
+        self.apply_force(self.dna.genes[self.gene_counter])
+        self.gene_counter += 1
+        self.gene_counter %= lifetime
+        self.update()
+
+    def apply_force(self, f):
+        self.acceleration + f
+
+    def update(self):
+        self.velocity + self.acceleration
+        self.location + self.velocity
+        self.acceleration * 0
+
+    def draw(self):
+        screen.draw.circle(self.location.x, self.location.y, self.mass * 16, (0, 255, 0))
+        screen.draw.circle(self.location.x, self.location.y, self.mass * 16, (0, 0, 0), 1)
 
 class DNA:
     def __init__(self):
-        self.genes = [chr(randint(32,128)) for i in range(len(target))]
-        self.fitness = self.calc_fitness()
+        self.max_force = 0.1
+        self.genes = []
+        for i in range(lifetime):
+            vec = PVector.random2D()
+            vec * (uniform(0, self.max_force))
+            self.genes.append(vec)
 
-    def __repr__(self):
-        genes = ''.join(self.genes)
-        return f"{self.fitness:0.2f} {genes}"
-
-    @property
-    def text(self):
-        return ''.join(self.genes)
-
-    def calc_fitness(self):
-        score = 0
-        for i in range(len(self.genes)):
-            if self.genes[i] == target[i]:
-                score += 1
-        return score/len(target)
+    def fitness(self, location):
+        d = PVector.dist(location, target)
+        #return (1 / d) ** 2
+        return (1 / d)
 
     def crossover(self, partner):
         child = DNA()
@@ -60,66 +134,36 @@ class DNA:
                 child.genes[i] = self.genes[i]
             else:
                 child.genes[i] = partner.genes[i]
-        child.fitness = child.calc_fitness()
         return child
 
-    def mutate(self):
+    def mutate(self, mutation_rate):
         for i in range(len(self.genes)):
             if random() < mutation_rate:
-                self.genes[i] = chr(randint(32,128))
-        self.fitness = self.calc_fitness()
-
-def random_string():
-    length = randint(1,5)
-    chars = []
-    for i in range(length):
-        c = randint(97,122)
-        chars.append(chr(c))
-    return ''.join(chars)
+                vec = PVector.random2D()
+                vec * (uniform(0, self.max_force))
+                self.genes[i] = vec
 
 # ----------------------------------------------------
 def update():
-    global best, generation, counter, done
-    if not done:
-        if counter % 5 == 0:
-            mating_pool = []
-            for p in population:
-                n = int(p.fitness * 100)
-                for i in range(n):
-                    mating_pool.append(p)
+    global life_counter, generation
 
-            for i in range(len(population)):
-                parent_a = choice(mating_pool)
-                parent_b = choice(mating_pool)
-
-                child = parent_a.crossover(parent_b)
-                child.mutate()
-
-                population[i] = child
-
-            total_fitness = 0
-            best_score = 0
-            for p in population:
-                total_fitness += p.fitness
-                if p.fitness > best_score:
-                    best = p
-                    best_score = p.fitness
-
-            if best_score == 1.0:
-                done = True
-
-            generation += 1
-
-            print(f"{generation} - {best}")
-
-    counter += 1
-
+    if life_counter < lifetime:
+        population.live()
+        life_counter += 1
+    else:
+        life_counter = 0
+        population.fitness()
+        population.selection()
+        population.reproduction()
+        generation += 1
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    screen.draw.text(f"{generation}", center=(WIDTH//2, 30))
-    screen.draw.text(f"{best.text}", center=(WIDTH//2, 50))
+    population.draw()
+    screen.draw.circle(target.x, target.y, 8, (255, 0, 0))
+    screen.draw.text("Generation: " + str(generation), pos=(WIDTH - 140, 20))
+    screen.draw.text("Cycle: " + str(life_counter), pos=(WIDTH - 140, 40))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -128,21 +172,11 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-for i in range(1000):
-    s = random_string()
-    if s == 'cat':
-        print("GOTCHA!")
-
-total_population = 1000
-mutation_rate = 0.01
-#target = "to be or not to be"
-target = "For whom the bell tolls"
-best = ""
-generation = 0
-done = False
-population = [DNA() for i in range(total_population)]
-
-counter = 0
+lifetime = 500
+life_counter = 0
+population = Population(0.01, 100)
+target = PVector(WIDTH//2, HEIGHT//3)
+generation = 1
 
 run()
 # ----------------------------------------------------
