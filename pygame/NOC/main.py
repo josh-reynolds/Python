@@ -79,34 +79,38 @@ def random_string():
 
 # ----------------------------------------------------
 def update():
-    global best, generation, counter
-    if counter % 5 == 0:
-        mating_pool = []
-        for p in population:
-            n = int(p.fitness * 100)
-            for i in range(n):
-                mating_pool.append(p)
+    global best, generation, counter, done
+    if not done:
+        if counter % 5 == 0:
+            mating_pool = []
+            for p in population:
+                n = int(p.fitness * 100)
+                for i in range(n):
+                    mating_pool.append(p)
 
-        for i in range(len(population)):
-            parent_a = choice(mating_pool)
-            parent_b = choice(mating_pool)
+            for i in range(len(population)):
+                parent_a = choice(mating_pool)
+                parent_b = choice(mating_pool)
 
-            child = parent_a.crossover(parent_b)
-            child.mutate()
+                child = parent_a.crossover(parent_b)
+                child.mutate()
 
-            population[i] = child
+                population[i] = child
 
-        total_fitness = 0
-        best_score = 0
-        for p in population:
-            total_fitness += p.fitness
-            if p.fitness > best_score:
-                best = p
-                best_score = p.fitness
+            total_fitness = 0
+            best_score = 0
+            for p in population:
+                total_fitness += p.fitness
+                if p.fitness > best_score:
+                    best = p
+                    best_score = p.fitness
 
-        generation += 1
+            if best_score == 1.0:
+                done = True
 
-        print(f"{generation} - {best}")
+            generation += 1
+
+            print(f"{generation} - {best}")
 
     counter += 1
 
@@ -129,12 +133,13 @@ for i in range(1000):
     if s == 'cat':
         print("GOTCHA!")
 
-total_population = 150
+total_population = 1000
 mutation_rate = 0.01
 #target = "to be or not to be"
 target = "For whom the bell tolls"
 best = ""
 generation = 0
+done = False
 population = [DNA() for i in range(total_population)]
 
 counter = 0
