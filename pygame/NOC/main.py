@@ -117,16 +117,26 @@ class Rocket:
     def calculate_fitness(self):
         #f = lifetime - self.finish_time + 1/self.record_distance
         d = PVector.dist(self.location, target)
-        f = 1/d * 100
+        #f = 1/d * 100
+        #f = 1/self.record_distance * 100 + lifetime - self.finish_time
+        f = 1/d * 1000 + lifetime - self.finish_time
         #f = f ** 2
         if self.stopped:
-            f *= 0.1
+            f *= 0.01
         if self.hit_target:
             f *= 2
+        if not self.is_onscreen():
+            f *= 0.5
         self.line_of_sight()
         if self.intersection is not None:
             f *= 0.1
         self.fitness = f
+
+    def is_onscreen(self):
+        return (self.location.x > 0 and
+                self.location.x < WIDTH and
+                self.location.y > 0 and
+                self.location.y < HEIGHT)
 
     def line_of_sight(self):
         # handle obstacle as a line segment
@@ -268,7 +278,7 @@ def setup():
 # ----------------------------------------------------
 lifetime = 500
 life_counter = 0
-population = Population(0.01, 100)
+population = Population(0.01, 200)
 target = PVector(WIDTH//2, HEIGHT//3)
 obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
 generation = 1
