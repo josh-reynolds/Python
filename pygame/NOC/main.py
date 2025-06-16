@@ -123,8 +123,10 @@ class Rocket:
             f *= 0.1
         if self.hit_target:
             f *= 2
-        self.fitness = f
         self.line_of_sight()
+        if self.intersection is not None:
+            f *= 0.1
+        self.fitness = f
 
     def line_of_sight(self):
         # handle obstacle as a line segment
@@ -195,11 +197,11 @@ class Rocket:
                 self.finish_time = lifetime
 
     def draw(self):
-        screen.draw.line((0,0,0), (self.location.x, self.location.y), (target.x, target.y))
+        #screen.draw.line((0,0,0), (self.location.x, self.location.y), (target.x, target.y))
         color = (0,255,0)
-        if self.intersection is not None:
-            screen.draw.circle(self.intersection[0], self.intersection[1], self.radius//4, (255, 0, 255))
-            color = (255,100,100)
+        #if self.intersection is not None:
+            #screen.draw.circle(self.intersection[0], self.intersection[1], self.radius//4, (255, 0, 255))
+            #color = (255,100,100)
         screen.draw.circle(self.location.x, self.location.y, self.radius, color)
         screen.draw.circle(self.location.x, self.location.y, self.radius, (0, 0, 0), 1)
 
@@ -237,9 +239,9 @@ def update():
         if life_counter < lifetime:
             population.live()
             life_counter += 1
-        elif life_counter == lifetime:
-            done = True
-            population.fitness()
+        #elif life_counter == lifetime:
+            #done = True
+            #population.fitness()
         else:
             life_counter = 0
             population.fitness()
@@ -250,9 +252,9 @@ def update():
 
 # ----------------------------------------------------
 def draw():
+    population.draw()
     for o in obstacles:
         o.draw()
-    population.draw()
     screen.draw.circle(target.x, target.y, 8, (255, 0, 0))
     screen.draw.text("Generation: " + str(generation), pos=(WIDTH - 140, 20))
     screen.draw.text("Cycle: " + str(life_counter), pos=(WIDTH - 140, 40))
@@ -266,7 +268,7 @@ def setup():
 # ----------------------------------------------------
 lifetime = 500
 life_counter = 0
-population = Population(0.01, 50)
+population = Population(0.01, 100)
 target = PVector(WIDTH//2, HEIGHT//3)
 obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
 generation = 1
