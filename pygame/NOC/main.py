@@ -112,6 +112,8 @@ class Rocket:
         self.hit_target = False
         self.finish_time = 0
 
+        self.intersection = None
+
     def calculate_fitness(self):
         #f = lifetime - self.finish_time + 1/self.record_distance
         d = PVector.dist(self.location, target)
@@ -122,6 +124,34 @@ class Rocket:
         if self.hit_target:
             f *= 2
         self.fitness = f
+        self.line_of_sight()
+
+    def line_of_sight(self):
+        # handle obstacle as a line segment
+        # find intersection point
+        # if point between ends of obstacle segment, return point
+        # else no intersection
+
+        # Line AB
+        A = (self.location.x, self.location.y)
+        B = (target.x, target.y)
+        m1 = (B[1] - A[1])/(B[0] - A[0])   # handle division by zero...
+        b1 = A[1] - m1 * A[0]
+
+        # Line CD
+        # will generalize to loop over obstacles, but just hard-code first one for now
+        C = (obstacles[0].location.x, obstacles[0].location.y + obstacles[0].height/2)
+        D = (obstacles[0].location.x + obstacles[0].width, obstacles[0].location.y + obstacles[0].height/2)
+        m2 = (D[1] - C[1])/(D[0] - C[0])   # handle division by zero...
+        b2 = C[1] - m2 * C[0]
+
+        # Intersection
+        x = (b2 - b1) / (m1 - m2)   # handle division by zero...
+        y = m1 * x + b1
+
+        # limited, does not handle all cases
+        if C[0] < x < D[0]:
+            self.intersection = (x,y)
 
     def crossover(self, partner):
         child = Rocket()
@@ -165,7 +195,12 @@ class Rocket:
                 self.finish_time = lifetime
 
     def draw(self):
-        screen.draw.circle(self.location.x, self.location.y, self.radius, (0, 255, 0))
+        screen.draw.line((0,0,0), (self.location.x, self.location.y), (target.x, target.y))
+        color = (0,255,0)
+        if self.intersection is not None:
+            screen.draw.circle(self.intersection[0], self.intersection[1], self.radius//4, (255, 0, 255))
+            color = (255,100,100)
+        screen.draw.circle(self.location.x, self.location.y, self.radius, color)
         screen.draw.circle(self.location.x, self.location.y, self.radius, (0, 0, 0), 1)
 
 class DNA:
@@ -202,20 +237,22 @@ def update():
         if life_counter < lifetime:
             population.live()
             life_counter += 1
+        elif life_counter == lifetime:
+            done = True
+            population.fitness()
         else:
             life_counter = 0
             population.fitness()
             population.selection()
             population.reproduction()
             generation += 1
-            done = True
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    population.draw()
     for o in obstacles:
         o.draw()
+    population.draw()
     screen.draw.circle(target.x, target.y, 8, (255, 0, 0))
     screen.draw.text("Generation: " + str(generation), pos=(WIDTH - 140, 20))
     screen.draw.text("Cycle: " + str(life_counter), pos=(WIDTH - 140, 40))
