@@ -27,47 +27,11 @@ from fractals import draw_circle, cantor, KochCurve, branch
 from rotation_test import Test
 from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 from lsystem import Rule, LSystem, Turtle
-from rocket import Population, Obstacle
+from rocket import SmartRockets
 
 WIDTH = 640
 HEIGHT = 480
 TITLE = "The Nature of Code"
-
-class SmartRockets:
-    def __init__(self):
-        self.lifetime = 500
-        self.life_counter = 0
-        self.generation = 1
-        self.done = False
-        self.target = PVector(WIDTH//2, HEIGHT//3)
-        self.obstacles = [Obstacle(WIDTH//4, HEIGHT//2, WIDTH//2, 20)]
-        self.population = Population(0.01, 200, self.lifetime, WIDTH, HEIGHT, self.obstacles, self.target)
-
-    def update(self):
-        if not self.done:
-            if self.life_counter < self.lifetime:
-                self.live()
-                self.life_counter += 1
-            else:
-                self.breed()
-                self.life_counter = 0
-                self.generation += 1
-
-    def live(self):
-        self.population.live()
-
-    def breed(self):
-        self.population.fitness()
-        self.population.selection()
-        self.population.reproduction()
-
-    def draw(self):
-        self.population.draw()
-        for o in self.obstacles:
-            o.draw()
-        screen.draw.circle(self.target.x, self.target.y, 8, (255, 0, 0))
-        screen.draw.text("Generation: " + str(self.generation), pos=(WIDTH - 140, 20))
-        screen.draw.text("Cycle: " + str(self.life_counter), pos=(WIDTH - 140, 40))
 
 # ----------------------------------------------------
 def update():
@@ -85,7 +49,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-sr = SmartRockets()
+sr = SmartRockets(WIDTH, HEIGHT)
 run()
 # ----------------------------------------------------
 
