@@ -69,7 +69,6 @@ class Face:
         mouthh = remap(self.dna.genes[5], 0, 1, 0, 10)
         screen.draw.rect((self.x + mouth_x, self.y + mouth_y, mouthw, mouthh), mouth_color, 0)
 
-
 class Population:
     def __init__(self, mutation_rate, size):
         self.mutation_rate = mutation_rate
@@ -96,7 +95,8 @@ class Button:
         pass
 
     def draw(self):
-        pass
+        screen.draw.rect((self.x, self.y, self.w, self.h), (0,0,0))
+        screen.draw.text(self.text, pos=(self.x + 2, self.y))
 
 # ----------------------------------------------------
 def update():
@@ -122,7 +122,7 @@ def setup():
 # ----------------------------------------------------
 mutation_rate = 0.05
 population = Population(mutation_rate, 10)
-button = Button(15,150,160,20, "evolve new generation")
+button = Button(15,175,180,20, "evolve new generation")
 
 f = Face()
 
