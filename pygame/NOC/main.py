@@ -29,18 +29,76 @@ from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 from lsystem import Rule, LSystem, Turtle
 from rocket import SmartRockets
 
-WIDTH = 640
-HEIGHT = 480
+WIDTH = 780
+HEIGHT = 200
 TITLE = "The Nature of Code"
+
+class DNA:
+    def __init__(self):
+        self.genes = [random() for i in range(20)]
+
+class Face:
+    def __init__(self):
+        self.dna = DNA()
+        self.fitness = 0
+
+    def draw(self):
+        radius = remap(self.dna.genes[0], 0, 1, 0, 70)
+        color = Color(int(self.dna.genes[1] * 255), 
+                      int(self.dna.genes[2] * 255), 
+                      int(self.dna.genes[3] * 255))
+        eye_y = remap(self.dna.genes[4], 0, 1, 0, 5)
+        eye_x = remap(self.dna.genes[5], 0, 1, 0, 10)
+        eye_size = remap(self.dna.genes[5], 0, 1, 0, 10)
+        eye_color = Color(int(self.dna.genes[4] * 255), 
+                          int(self.dna.genes[5] * 255), 
+                          int(self.dna.genes[6] * 255))
+        mouth_color = Color(int(self.dna.genes[7] * 255), 
+                            int(self.dna.genes[8] * 255), 
+                            int(self.dna.genes[9] * 255))
+        mouth_x = remap(self.dna.genes[5], 0, 1, -25, 25)
+        mouth_y = remap(self.dna.genes[5], 0, 1, 0, 25)
+        mouthw = remap(self.dna.genes[5], 0, 1, 0, 50)
+        mouthh = remap(self.dna.genes[5], 0, 1, 0, 10)
+
+class Population:
+    def __init__(self, mutation_rate, size):
+        self.mutation_rate = mutation_rate
+        self.size = size
+
+    def rollover(self, mouseX, mouseY):
+        pass
+
+    def draw(self):
+        pass
+
+class Button:
+    def __init__(self, x, y, w, h, text):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.text = text
+
+    def clicked(self, mouseX, mouseY):
+        pass
+
+    def draw(self):
+        pass
 
 # ----------------------------------------------------
 def update():
-    sr.update()
+    mouseX, mouseY = pygame.mouse.get_pos()
+    population.rollover(mouseX, mouseY)
+    if button.clicked(mouseX, mouseY):
+        population.selection()
+        population.reproduction()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    sr.draw()
+    population.draw()
+    button.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -49,7 +107,9 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-sr = SmartRockets(WIDTH, HEIGHT)
+mutation_rate = 0.05
+population = Population(mutation_rate, 10)
+button = Button(15,150,160,20, "evolve new generation")
 run()
 # ----------------------------------------------------
 
