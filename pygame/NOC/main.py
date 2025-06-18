@@ -110,13 +110,17 @@ class Button:
         self.h = h
         self.text = text
         self.rect = Rect(x, y, w, h)
+        self.active = False
 
     def clicked(self, mouseX, mouseY):
         if ((pygame.mouse.get_pressed()[0] or pygame.mouse.get_pressed()[1]) and
-            self.rect.collidepoint((mouseX, mouseY))):
+            self.rect.collidepoint((mouseX, mouseY)) and not self.active):
             self.color = (255,128,128)
+            self.active = True
             return True
         else:
+            if (not pygame.mouse.get_pressed()[0] and not pygame.mouse.get_pressed()[1]):
+                self.active = False
             self.color = (255,255,255)
             return False
 
