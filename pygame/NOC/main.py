@@ -82,6 +82,18 @@ class Face:
         else:
             self.border_color = (0,0,0)
 
+    def crossover(self, partner):
+        return self.copy()
+        pass
+
+    def mutate(self, mutation_rate):
+        pass
+
+    def copy(self):
+        new = Face(self.rect.left, self.rect.top)
+        new.dna = self.dna
+        return new
+
 class Population:
     def __init__(self, mutation_rate, size):
         self.mutation_rate = mutation_rate
@@ -117,6 +129,15 @@ class Population:
 
     def reproduction(self):
         print("Population.reproduction()")
+        for i in range(len(self.faces)):
+            parent_a = choice(self.mating_pool)
+            parent_b = choice(self.mating_pool)
+
+            child = parent_a.crossover(parent_b)
+            child.rect.left = (10 * i + 10) + 160 * i
+            child.mutate(self.mutation_rate)
+
+            self.faces[i] = child
 
 class Button:
     def __init__(self, x, y, w, h, text):
