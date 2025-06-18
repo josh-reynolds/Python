@@ -44,6 +44,7 @@ class Face:
         self.rect = Rect(left, top, 160, 160)
         self.x = self.rect.center[0]
         self.y = self.rect.center[1]
+        self.border_color = (0,0,0)
 
     def draw(self):
         radius = remap(self.dna.genes[0], 0, 1, 20, 70)
@@ -70,7 +71,16 @@ class Face:
         mouthh = remap(self.dna.genes[5], 0, 1, 0, 10)
         screen.draw.rect((self.x + mouth_x, self.y + mouth_y, mouthw, mouthh), mouth_color, 0)
 
-        screen.draw.rect(self.rect, (0,0,0), 1)
+        screen.draw.rect(self.rect, self.border_color, 1)
+
+        screen.draw.text(str(self.fitness), (self.rect.left + 10, self.rect.top + 10))  
+
+    def rollover(self, mouseX, mouseY):
+        if self.rect.collidepoint((mouseX, mouseY)):
+            self.border_color = (255,0,0)
+            self.fitness += 1
+        else:
+            self.border_color = (0,0,0)
 
 class Population:
     def __init__(self, mutation_rate, size):
@@ -79,7 +89,8 @@ class Population:
         self.faces = [Face((10 * i + 10) + 160 * i, 10) for i in range(self.size)]
 
     def rollover(self, mouseX, mouseY):
-        pass
+        for f in self.faces:
+            f.rollover(mouseX, mouseY)
 
     def draw(self):
         for f in self.faces:
