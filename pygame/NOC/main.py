@@ -29,7 +29,7 @@ from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
 from lsystem import Rule, LSystem, Turtle
 from rocket import SmartRockets
 
-WIDTH = 780
+WIDTH = 860
 HEIGHT = 200
 TITLE = "The Nature of Code"
 
@@ -38,11 +38,12 @@ class DNA:
         self.genes = [random() for i in range(20)]
 
 class Face:
-    def __init__(self):
+    def __init__(self, left, top):
         self.dna = DNA()
         self.fitness = 0
-        self.x = 100
-        self.y = 100
+        self.rect = Rect(left, top, 160, 160)
+        self.x = self.rect.center[0]
+        self.y = self.rect.center[1]
 
     def draw(self):
         radius = remap(self.dna.genes[0], 0, 1, 20, 70)
@@ -69,19 +70,20 @@ class Face:
         mouthh = remap(self.dna.genes[5], 0, 1, 0, 10)
         screen.draw.rect((self.x + mouth_x, self.y + mouth_y, mouthw, mouthh), mouth_color, 0)
 
+        screen.draw.rect(self.rect, (0,0,0), 1)
+
 class Population:
     def __init__(self, mutation_rate, size):
         self.mutation_rate = mutation_rate
         self.size = size
-        self.faces = [Face() for i in range(self.size)]
+        self.faces = [Face((10 * i + 10) + 160 * i, 10) for i in range(self.size)]
 
     def rollover(self, mouseX, mouseY):
         pass
 
     def draw(self):
-        pass
-        #for f in self.faces:
-            #f.draw()
+        for f in self.faces:
+            f.draw()
 
 class Button:
     def __init__(self, x, y, w, h, text):
@@ -111,7 +113,7 @@ def update():
 def draw():
     population.draw()
     button.draw()
-    f.draw()
+    #f.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -121,10 +123,10 @@ def setup():
 
 # ----------------------------------------------------
 mutation_rate = 0.05
-population = Population(mutation_rate, 10)
-button = Button(15,175,180,20, "evolve new generation")
+population = Population(mutation_rate, 5)
+button = Button(15, 175, 180, 20, "evolve new generation")
 
-f = Face()
+f = Face(10, 10)
 
 run()
 # ----------------------------------------------------
