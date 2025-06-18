@@ -51,6 +51,11 @@ class DNA:
                 child.genes[i] = partner.genes[i]
         return child
 
+    def mutate(self, mutation_rate):
+        for i in range(len(self.genes)):
+            if random() < mutation_rate:
+                self.genes[i] = random()
+
 class Face:
     def __init__(self, left, top):
         self.dna = DNA()
@@ -96,7 +101,6 @@ class Face:
         if self.rect.collidepoint((mouseX, mouseY)):
             self.border_color = (255,0,0)
             self.fitness += 1
-            print(self.dna)
         else:
             self.border_color = (0,0,0)
 
@@ -106,7 +110,7 @@ class Face:
         return child
 
     def mutate(self, mutation_rate):
-        pass
+        self.dna.mutate(mutation_rate)
 
 class Population:
     def __init__(self, mutation_rate, size):
@@ -192,7 +196,6 @@ def update():
 def draw():
     population.draw()
     button.draw()
-    #f.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -204,8 +207,6 @@ def setup():
 mutation_rate = 0.05
 population = Population(mutation_rate, 5)
 button = Button(15, 175, 180, 20, "evolve new generation")
-
-f = Face(10, 10)
 
 run()
 # ----------------------------------------------------
