@@ -55,10 +55,13 @@ class Face:
     def __init__(self, left, top):
         self.dna = DNA()
         self.fitness = 0
+        self.border_color = (0,0,0)
+        self.reset_location(left, top)
+
+    def reset_location(self, left, top):
         self.rect = Rect(left, top, 160, 160)
         self.x = self.rect.center[0]
         self.y = self.rect.center[1]
-        self.border_color = (0,0,0)
 
     def draw(self):
         radius = remap(self.dna.genes[0], 0, 1, 20, 70)
@@ -144,7 +147,7 @@ class Population:
             parent_b = choice(self.mating_pool)
 
             child = parent_a.crossover(parent_b)
-            child.rect.left = (10 * i + 10) + 160 * i
+            child.reset_location((10 * i + 10) + 160 * i, 10)
             child.mutate(self.mutation_rate)
 
             self.faces[i] = child
