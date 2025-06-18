@@ -96,6 +96,12 @@ class Population:
         for f in self.faces:
             f.draw()
 
+    def selection(self):
+        print("Population.selection()")
+
+    def reproduction(self):
+        print("Population.reproduction()")
+
 class Button:
     def __init__(self, x, y, w, h, text):
         self.x = x
@@ -103,12 +109,20 @@ class Button:
         self.w = w
         self.h = h
         self.text = text
+        self.rect = Rect(x, y, w, h)
 
     def clicked(self, mouseX, mouseY):
-        pass
+        if ((pygame.mouse.get_pressed()[0] or pygame.mouse.get_pressed()[1]) and
+            self.rect.collidepoint((mouseX, mouseY))):
+            self.color = (255,128,128)
+            return True
+        else:
+            self.color = (255,255,255)
+            return False
 
     def draw(self):
-        screen.draw.rect((self.x, self.y, self.w, self.h), (0,0,0))
+        screen.draw.rect(self.rect, self.color, 0)
+        screen.draw.rect(self.rect, (0,0,0))
         screen.draw.text(self.text, pos=(self.x + 2, self.y))
 
 # ----------------------------------------------------
