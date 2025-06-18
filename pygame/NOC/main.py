@@ -98,6 +98,22 @@ class Population:
 
     def selection(self):
         print("Population.selection()")
+        self.mating_pool = []
+        for p in self.faces:
+            n = int(p.fitness)
+            for i in range(n):
+                self.mating_pool.append(p)
+
+        if len(self.mating_pool) == 0:
+            self.faces.sort(key=lambda r: r.fitness)
+            for i in range(len(self.faces)//2):
+                self.mating_pool.append(self.faces[i])
+            print("zero pool")
+
+        total_fitness = 0
+        for r in self.mating_pool:
+            total_fitness += r.fitness
+        print(f"Average mating pool fitness: {total_fitness/len(self.mating_pool):0.5f}")
 
     def reproduction(self):
         print("Population.reproduction()")
