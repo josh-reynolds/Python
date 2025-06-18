@@ -35,7 +35,21 @@ TITLE = "The Nature of Code"
 
 class DNA:
     def __init__(self):
-        self.genes = [random() for i in range(20)]
+        self.genes = [random() for i in range(10)]
+
+    def __repr__(self):
+        result = [f"{self.genes[i]:0.2f}" for i in range(len(self.genes))]
+        return str(result)
+
+    def crossover(self, partner):
+        child = DNA()
+        midpoint = randint(0,len(child.genes))
+        for i in range(len(child.genes)):
+            if i > midpoint:
+                child.genes[i] = self.genes[i]
+            else:
+                child.genes[i] = partner.genes[i]
+        return child
 
 class Face:
     def __init__(self, left, top):
@@ -79,20 +93,17 @@ class Face:
         if self.rect.collidepoint((mouseX, mouseY)):
             self.border_color = (255,0,0)
             self.fitness += 1
+            print(self.dna)
         else:
             self.border_color = (0,0,0)
 
     def crossover(self, partner):
-        return self.copy()
-        pass
+        child = Face(self.rect.left, self.rect.top)
+        child.dna = self.dna.crossover(partner.dna)
+        return child
 
     def mutate(self, mutation_rate):
         pass
-
-    def copy(self):
-        new = Face(self.rect.left, self.rect.top)
-        new.dna = self.dna
-        return new
 
 class Population:
     def __init__(self, mutation_rate, size):
@@ -117,8 +128,7 @@ class Population:
                 self.mating_pool.append(p)
 
         if len(self.mating_pool) == 0:
-            self.faces.sort(key=lambda r: r.fitness)
-            for i in range(len(self.faces)//2):
+            for i in range(len(self.faces)):
                 self.mating_pool.append(self.faces[i])
             print("zero pool")
 
