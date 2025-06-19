@@ -1,5 +1,5 @@
 import math
-from random import uniform, randint, random, choice
+from random import uniform, randint, random, choice, seed
 import pygame
 from pygame import Rect, Surface, transform
 from pygame.locals import *
@@ -38,13 +38,14 @@ class Bloop:
     def __init__(self):
         self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
         self.r = 10
-        self.max_speed = 10
+        self.max_speed = 1
         self.xoff = 100.1
         self.yoff = 10.1
 
     def update(self):
-        vx = remap(noise(self.xoff),0,1,-self.max_speed,self.max_speed)
-        vy = remap(noise(self.yoff),0,1,-self.max_speed,self.max_speed)
+        vx = remap(noise(self.xoff),-1,1,-self.max_speed,self.max_speed)
+        vy = remap(noise(self.yoff),-1,1,-self.max_speed,self.max_speed)
+        print(vx, vy)
         velocity = PVector(vx,vy)
         self.xoff += 0.01
         self.yoff += 0.01
@@ -53,8 +54,53 @@ class Bloop:
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
 
+repeat = 128
+scale = 0.1
+#seed(100000)
+gradients = [(1,1), (math.sqrt(2),0), (1,-1), (0,math.sqrt(2)),
+             (0,-math.sqrt(2)), (-1,1), (-math.sqrt(2),0), (-1,1)]
+random_values = [[randint(0,7) for i in range(repeat)] for i in range(repeat)]
+
 def noise(offset):
-    return 0.25    ###
+    x = offset * scale
+    y = 50.1 * scale
+
+    x %= repeat
+    y %= repeat
+
+    # grid corners
+    x1, y1 = int(x) % repeat, int(y) % repeat
+    x2, y2 = (x1 + 1) % repeat, (y1 + 1) % repeat
+
+    # distance vectors
+    dA, dB, dC, dD = (x1 - x, y1 - y), \
+                     (x1 - x, y2 - y), \
+                     (x2 - x, y1 - y), \
+                     (x2 - x, y2 - y)
+
+    # gradient vectors
+    gA, gB, gC, gD = gradients[random_values[x1][y1]], \
+                     gradients[random_values[x1][y2]], \
+                     gradients[random_values[x2][y1]], \
+                     gradients[random_values[x2][y2]]
+
+    # dot products
+    dotA, dotB, dotC, dotD = (dA[0] * gA[0] + dA[1] * gA[1]), \
+                             (dB[0] * gB[0] + dB[1] * gB[1]), \
+                             (dC[0] * gC[0] + dC[1] * gC[1]), \
+                             (dD[0] * gD[0] + dD[1] * gD[1])
+
+    def fade(t):
+        return t * t * t * (t * (t * 6 - 15) + 10)
+
+    # fade values
+    u, v = fade(x - x1), fade(y - y1)
+
+    #interpolation
+    tmp1 = u * dotC + (1 - u) * dotA  # top edge
+    tmp2 = u * dotD + (1 - u) * dotB  # bottom edge
+    return v * tmp2 + (1 - v) * tmp1  # vertical
+
 
 # ----------------------------------------------------
 def update():
