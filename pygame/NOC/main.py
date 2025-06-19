@@ -34,25 +34,41 @@ WIDTH = 640
 HEIGHT = 480
 TITLE = "The Nature of Code"
 
+class World:
+    def __init__(self, size):
+        self.bloops = [Bloop() for i in range(size)]
+
+    def update(self):
+        for b in self.bloops:
+            b.update()
+
+    def draw(self):
+        for b in self.bloops:
+            b.draw()
+
 class Bloop:
     def __init__(self):
         self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
         self.r = 10
         self.max_speed = 1
-        self.xoff = 100.1
-        self.yoff = 10.1
+        self.xoff = uniform(80.1,120.1)
+        self.yoff = uniform(8.1,10.1)
+        self.health = 100
 
     def update(self):
         vx = remap(noise(self.xoff),-1,1,-self.max_speed,self.max_speed)
         vy = remap(noise(self.yoff),-1,1,-self.max_speed,self.max_speed)
-        print(vx, vy)
         velocity = PVector(vx,vy)
         self.xoff += 0.01
         self.yoff += 0.01
         self.location + velocity
+        self.health -= 1
 
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
+
+    def is_dead(self):
+        return health < 0.0
 
 repeat = 128
 scale = 0.1
@@ -104,12 +120,12 @@ def noise(offset):
 
 # ----------------------------------------------------
 def update():
-    b.update()
+    w.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    b.draw()
+    w.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -118,7 +134,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-b = Bloop()
+w = World(10)
 run()
 # ----------------------------------------------------
 
