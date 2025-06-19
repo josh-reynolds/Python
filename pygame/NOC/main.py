@@ -48,7 +48,10 @@ class World:
                 self.bloops.append(child)
         for i in range(len(self.bloops)-1,-1,-1):
             if self.bloops[i].is_dead():
-                self.bloops.remove(self.bloops[i])
+                b = self.bloops[i]
+                self.foods.append(PVector(b.location.x, b.location.y))
+                self.bloops.remove(b)
+
 
     def draw(self):
         for b in self.bloops:
@@ -185,7 +188,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-w = World(10)
+w = World(20)
 run()
 # ----------------------------------------------------
 
