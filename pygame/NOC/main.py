@@ -33,6 +33,23 @@ WIDTH = 860
 HEIGHT = 200
 TITLE = "The Nature of Code"
 
+class Faces:
+    def __init__(self):
+        mutation_rate = 0.05
+        self.population = Population(mutation_rate, 5)
+        self.button = Button(15, 175, 180, 20, "evolve new generation")
+
+    def update(self):
+        mouseX, mouseY = pygame.mouse.get_pos()
+        self.population.rollover(mouseX, mouseY)
+        if self.button.clicked(mouseX, mouseY):
+            self.population.selection()
+            self.population.reproduction()
+
+    def draw(self):
+        self.population.draw()
+        self.button.draw()
+
 class DNA:
     def __init__(self):
         self.genes = [random() for i in range(10)]
@@ -185,17 +202,12 @@ class Button:
 
 # ----------------------------------------------------
 def update():
-    mouseX, mouseY = pygame.mouse.get_pos()
-    population.rollover(mouseX, mouseY)
-    if button.clicked(mouseX, mouseY):
-        population.selection()
-        population.reproduction()
+    f.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    population.draw()
-    button.draw()
+    f.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -204,9 +216,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-mutation_rate = 0.05
-population = Population(mutation_rate, 5)
-button = Button(15, 175, 180, 20, "evolve new generation")
+f = Faces()
 
 run()
 # ----------------------------------------------------
