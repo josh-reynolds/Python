@@ -30,18 +30,40 @@ from lsystem import Rule, LSystem, Turtle
 from rocket import SmartRockets
 from face import Faces
 
-WIDTH = 860
-HEIGHT = 200
+WIDTH = 640
+HEIGHT = 480
 TITLE = "The Nature of Code"
+
+class Bloop:
+    def __init__(self):
+        self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
+        self.r = 10
+        self.max_speed = 10
+        self.xoff = 100.1
+        self.yoff = 10.1
+
+    def update(self):
+        vx = remap(noise(self.xoff),0,1,-self.max_speed,self.max_speed)
+        vy = remap(noise(self.yoff),0,1,-self.max_speed,self.max_speed)
+        velocity = PVector(vx,vy)
+        self.xoff += 0.01
+        self.yoff += 0.01
+        self.location + velocity
+
+    def draw(self):
+        screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
+
+def noise(offset):
+    return 0.25    ###
 
 # ----------------------------------------------------
 def update():
-    f.update()
+    b.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    f.draw()
+    b.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -50,8 +72,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-f = Faces()
-
+b = Bloop()
 run()
 # ----------------------------------------------------
 
