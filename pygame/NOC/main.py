@@ -36,13 +36,16 @@ TITLE = "The Nature of Code"
 
 class World:
     def __init__(self, size):
-        self.bloops = [Bloop() for i in range(size)]
+        self.bloops = [Bloop(PVector(randint(0,WIDTH), randint(0,HEIGHT)), DNA()) for i in range(size)]
         self.foods = [PVector(uniform(0,WIDTH), uniform(0,HEIGHT)) for i in range(size*50)]
 
     def update(self):
         for b in self.bloops:
             b.update()
             b.eat(self.foods)
+            child = b.reproduce()
+            if child is not None:
+                self.bloops.append(child)
         for i in range(len(self.bloops)-1,-1,-1):
             if self.bloops[i].is_dead():
                 self.bloops.remove(self.bloops[i])
@@ -57,14 +60,24 @@ class DNA:
     def __init__(self):
         self.genes = [random()]
 
+    def copy(self):
+        d = DNA()
+        d.genes = self.genes.copy()
+        return d
+
+    def mutate(self, mutation_rate):
+        if random() < mutation_rate:
+            self.genes = [random()]
+
 class Bloop:
-    def __init__(self):
-        self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
+    def __init__(self, location, dna):
+        self.location = location
         self.xoff = uniform(80.1,120.1)
         self.yoff = uniform(8.1,10.1)
         self.health = 100
+        self.color = (randint(0,255), randint(0,255), randint(0,255))
 
-        self.dna = DNA()
+        self.dna = dna
         self.r = remap(self.dna.genes[0], 0, 1, 0, 50)
         self.max_speed = remap(self.dna.genes[0], 0, 1, 15, 0)
 
@@ -74,11 +87,21 @@ class Bloop:
         velocity = PVector(vx,vy)
         self.xoff += 0.01
         self.yoff += 0.01
+
         self.location + velocity
+        if self.location.x < 0:
+            self.location.x = 0
+        if self.location.x > WIDTH:
+            self.location.x = WIDTH
+        if self.location.y < 0:
+            self.location.y = 0
+        if self.location.y > HEIGHT:
+            self.location.y = HEIGHT
+
         self.health -= 1
 
     def draw(self):
-        screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
+        screen.draw.circle(self.location.x, self.location.y, self.r, self.color)
         screen.draw.circle(self.location.x, self.location.y, self.r, (0,0,0), 1)
 
     def is_dead(self):
@@ -87,10 +110,17 @@ class Bloop:
     def eat(self, foods):
         for f in foods:
             d = PVector.dist(self.location, f)
-            if d < self.r/2:
+            if d < self.r:
                 self.health += 100
                 foods.remove(f)
-                print("ATE FOOD!")
+
+    def reproduce(self):
+        if random() < 0.01:
+            dna = self.dna.copy()
+            dna.mutate(0.01)
+            return Bloop(self.location, dna)
+        else:
+            return None
 
 repeat = 128
 scale = 0.1
