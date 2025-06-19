@@ -77,26 +77,25 @@ class Bloop:
         self.health = 100
         self.color = (randint(0,255), randint(0,255), randint(0,255))
 
+        self.dirx = 1
+        self.diry = 1
+
         self.dna = dna
         self.r = remap(self.dna.genes[0], 0, 1, 0, 50)
         self.max_speed = remap(self.dna.genes[0], 0, 1, 15, 0)
 
     def update(self):
-        vx = remap(noise(self.xoff),-1,1,-self.max_speed,self.max_speed)
-        vy = remap(noise(self.yoff),-1,1,-self.max_speed,self.max_speed)
+        vx = remap(noise(self.xoff),-1,1,-self.max_speed,self.max_speed) * self.dirx
+        vy = remap(noise(self.yoff),-1,1,-self.max_speed,self.max_speed) * self.diry
         velocity = PVector(vx,vy)
         self.xoff += 0.01
         self.yoff += 0.01
 
         self.location + velocity
-        if self.location.x < 0:
-            self.location.x = 0
-        if self.location.x > WIDTH:
-            self.location.x = WIDTH
-        if self.location.y < 0:
-            self.location.y = 0
-        if self.location.y > HEIGHT:
-            self.location.y = HEIGHT
+        if self.location.x <= 0 or self.location.x >= WIDTH:
+            self.dirx *= -1
+        if self.location.y <= 0 or self.location.y >= HEIGHT:
+            self.diry *= -1
 
         self.health -= 1
 
