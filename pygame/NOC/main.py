@@ -53,14 +53,20 @@ class World:
         for f in self.foods:
             screen.draw.rect((f.x - 3, f.y - 3, 6, 6), (255,0,0), 0)
 
+class DNA:
+    def __init__(self):
+        self.genes = [random()]
+
 class Bloop:
     def __init__(self):
         self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
-        self.r = 10
-        self.max_speed = 3
         self.xoff = uniform(80.1,120.1)
         self.yoff = uniform(8.1,10.1)
         self.health = 100
+
+        self.dna = DNA()
+        self.r = remap(self.dna.genes[0], 0, 1, 0, 50)
+        self.max_speed = remap(self.dna.genes[0], 0, 1, 15, 0)
 
     def update(self):
         vx = remap(noise(self.xoff),-1,1,-self.max_speed,self.max_speed)
@@ -73,6 +79,7 @@ class Bloop:
 
     def draw(self):
         screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
+        screen.draw.circle(self.location.x, self.location.y, self.r, (0,0,0), 1)
 
     def is_dead(self):
         return self.health < 0.0
