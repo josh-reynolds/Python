@@ -37,20 +37,27 @@ TITLE = "The Nature of Code"
 class World:
     def __init__(self, size):
         self.bloops = [Bloop() for i in range(size)]
+        self.foods = [PVector(uniform(0,WIDTH), uniform(0,HEIGHT)) for i in range(size*50)]
 
     def update(self):
         for b in self.bloops:
             b.update()
+            b.eat(self.foods)
+        for i in range(len(self.bloops)-1,-1,-1):
+            if self.bloops[i].is_dead():
+                self.bloops.remove(self.bloops[i])
 
     def draw(self):
         for b in self.bloops:
             b.draw()
+        for f in self.foods:
+            screen.draw.rect((f.x - 3, f.y - 3, 6, 6), (255,0,0), 0)
 
 class Bloop:
     def __init__(self):
         self.location = PVector(randint(0,WIDTH), randint(0,HEIGHT))
         self.r = 10
-        self.max_speed = 1
+        self.max_speed = 3
         self.xoff = uniform(80.1,120.1)
         self.yoff = uniform(8.1,10.1)
         self.health = 100
@@ -68,7 +75,15 @@ class Bloop:
         screen.draw.circle(self.location.x, self.location.y, self.r, (0,255,0))
 
     def is_dead(self):
-        return health < 0.0
+        return self.health < 0.0
+
+    def eat(self, foods):
+        for f in foods:
+            d = PVector.dist(self.location, f)
+            if d < self.r/2:
+                self.health += 100
+                foods.remove(f)
+                print("ATE FOOD!")
 
 repeat = 128
 scale = 0.1
