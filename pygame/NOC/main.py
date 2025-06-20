@@ -35,14 +35,59 @@ WIDTH = 640
 HEIGHT = 480
 TITLE = "The Nature of Code"
 
+class Perceptron:
+    c = 0.01
+
+    def __init__(self, n):
+        self.weights = [uniform(-1,1) for i in range(n)]
+
+    def feedforward(self, inputs):
+        sum_ = 0
+        for i in range(len(self.weights)):
+            sum_ += inputs[i] * self.weights[i]
+        return self.activate(sum_)
+
+    def activate(self, n):
+        return 1 if n > 0 else -1
+
+    def train(self, inputs, desired):
+        guess = self.feedforward(inputs)
+        error = desired - guess
+        for i in range(len(self.weights)):
+            self.weights[i] += Perceptron.c * error * inputs[i]
+
+class Trainer:
+    def __init__(self, x, y, a):
+        self.inputs = [x, y, 1]
+        self.answer = a
+
+def f(x):
+    return x / 2 + 100
+
 # ----------------------------------------------------
 def update():
-    w.update()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    w.draw()
+    global count
+
+    p1 = (0, f(0))
+    p2 = (WIDTH, f(WIDTH))
+    screen.draw.line((0,0,0), p1, p2)
+
+    p.train(training[count].inputs, training[count].answer)
+    count = (count + 1) % len(training)
+
+    for i in range(count):
+        guess = p.feedforward(training[i].inputs)
+        if guess > 0:
+            color = (0,0,255)
+        else:
+            color = (255,0,0)
+
+        screen.draw.circle(training[i].inputs[0], training[i].inputs[1], 4, color, 0)
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -51,7 +96,20 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-w = World(20, WIDTH, HEIGHT)
+
+p = Perceptron(3)
+training = []
+count = 0
+
+for i in range(2000):
+    x = randint(0, WIDTH)
+    y = randint(0, HEIGHT)
+    if y < f(x):
+        a = -1
+    else:
+        a = 1
+    training.append(Trainer(x,y,a))
+
 run()
 # ----------------------------------------------------
 
