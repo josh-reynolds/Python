@@ -145,12 +145,12 @@ class Vehicle:
         return steer
 
     def seek_targets(self, targets):
-        for t in targets:
-            force = self.seek(t)
-            d = PVector.dist(t, self.location)
-            weight = remap(d, 0, WIDTH, 0, 5)
-            force * weight
-            self.apply_force(force)
+        forces = []
+        for i in range(len(targets)):
+            forces.append(self.seek(targets[i]))
+
+        output = self.brain.process(forces)
+        self.apply_force(output)
 
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, -self.angle - 90)
@@ -264,6 +264,9 @@ class Perceptron:
         error = desired - guess
         for i in range(len(self.weights)):
             self.weights[i] += Perceptron.c * error * inputs[i]
+
+    def process(self, forces):
+        return PVector(0,0)    ###
 
 class Trainer:
     def __init__(self, x, y, a):
