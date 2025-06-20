@@ -64,30 +64,47 @@ class Trainer:
 def f(x):
     return x / 2 + 100
 
+class Simulation:
+    def __init__(self):
+        self.p = Perceptron(3)
+        self.training = []
+        self.count = 0
+
+        for i in range(2000):
+            x = randint(0, WIDTH)
+            y = randint(0, HEIGHT)
+            if y < f(x):
+                a = -1
+            else:
+                a = 1
+            self.training.append(Trainer(x,y,a))
+
+    def update(self):
+        self.p.train(self.training[self.count].inputs, self.training[self.count].answer)
+        self.count = (self.count + 1) % len(self.training)
+
+    def draw(self):
+        p1 = (0, f(0))
+        p2 = (WIDTH, f(WIDTH))
+        screen.draw.line((0,0,0), p1, p2)
+
+        for i in range(self.count):
+            guess = self.p.feedforward(self.training[i].inputs)
+            if guess > 0:
+                color = (0,0,255)
+            else:
+                color = (255,0,0)
+
+            screen.draw.circle(self.training[i].inputs[0], self.training[i].inputs[1], 4, color, 0)
+
 # ----------------------------------------------------
 def update():
-    pass
+    s.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    global count
-
-    p1 = (0, f(0))
-    p2 = (WIDTH, f(WIDTH))
-    screen.draw.line((0,0,0), p1, p2)
-
-    p.train(training[count].inputs, training[count].answer)
-    count = (count + 1) % len(training)
-
-    for i in range(count):
-        guess = p.feedforward(training[i].inputs)
-        if guess > 0:
-            color = (0,0,255)
-        else:
-            color = (255,0,0)
-
-        screen.draw.circle(training[i].inputs[0], training[i].inputs[1], 4, color, 0)
+    s.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -96,19 +113,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-
-p = Perceptron(3)
-training = []
-count = 0
-
-for i in range(2000):
-    x = randint(0, WIDTH)
-    y = randint(0, HEIGHT)
-    if y < f(x):
-        a = -1
-    else:
-        a = 1
-    training.append(Trainer(x,y,a))
+s = Simulation()
 
 run()
 # ----------------------------------------------------
