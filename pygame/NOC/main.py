@@ -70,12 +70,10 @@ class Vehicle:
 
         prev_angle = self.angle % 360
         to_target = PVector.sub(self.target, self.location).normalize()
-        #screen.draw.line((0,0,0), (self.location.x, self.location.y), (self.target.x, self.target.y))
 
         pa = math.radians(prev_angle)
         angle_x = self.location.x + math.cos(pa) * 100
         angle_y = self.location.y + math.sin(pa) * 100
-        #screen.draw.line((255,0,0), (self.location.x, self.location.y), (angle_x, angle_y))
 
         target_angle = to_target.heading()
         if target_angle < 0:
@@ -101,32 +99,6 @@ class Vehicle:
 
     def apply_force(self, force):
         self.acceleration + force
-
-    def wander(self):
-        projected_distance = 100
-        angle_x = self.location.x + math.cos(math.radians(self.angle)) * projected_distance
-        angle_y = self.location.y + math.sin(math.radians(self.angle)) * projected_distance
-        #screen.draw.circle(angle_x, angle_y, 10, (0,255,0))
-        predicted = PVector(angle_x, angle_y)
-
-        r = 50
-        #screen.draw.circle(angle_x, angle_y, r, (0,0,0), 1)
-        random_angle = uniform(0,360)
-        target_x = angle_x + math.cos(math.radians(random_angle)) * r
-        target_y = angle_y + math.sin(math.radians(random_angle)) * r
-        #screen.draw.circle(target_x, target_y, 5, (0,255,0))
-
-        boundary = 25
-        if target_x > self.max_width - boundary:
-            target_x = self.max_width//2
-        if target_x < boundary:
-            target_x = self.max_width//2
-        if target_y > self.max_height - boundary:
-            target_y = self.max_height//2
-        if target_y < boundary:
-            target_y = self.max_height//2
-
-        self.seek(PVector(target_x, target_y))
 
     def seek(self, target):
         self.target = target
@@ -160,93 +132,6 @@ class Vehicle:
         self.surf = transform.rotate(self.original_surf, -self.angle - 90)
         w,h = self.surf.get_size()
         self.rect = Rect(self.location.x-w/2, self.location.y-h/2, w, h)
-
-    def follow(self, field):
-        int_location = PVector(int(self.location.x), int(self.location.y))
-        desired = field.lookup(int_location)
-        desired * self.max_speed
-        steer = PVector.sub(desired, self.velocity)
-        steer.limit(self.max_force)
-        self.apply_force(steer)
-
-    def track(self, path):
-        predict = self.velocity.normalize()
-        predict * 25
-        predict_loc = PVector.add(self.location, predict)
-
-        screen.draw.circle(predict_loc.x, predict_loc.y, 25, (255,0,0))
-
-        record = 1000000
-        normal_point = None
-        for i in range(len(path.points)-1):
-            a = PVector(*path.points[i])
-            b = PVector(*path.points[i+1])
-
-            np = Vehicle.get_normal_point(predict_loc, a, b)
-
-            if (np.x < min(a.x, b.x) or np.x > max(a.x, b.x)):
-                np = b.copy()
-
-            d = PVector.dist(predict_loc, np)
-            if d < record:
-                record = d
-                normal_point = np.copy()
-
-        screen.draw.circle(normal_point.x, normal_point.y, 15, (0,0,255))
-
-        distance = PVector.dist(predict_loc, normal_point)
-        if distance > path.radius:
-            self.seek(normal_point) # this one will turn back
-
-    def get_normal_point(p, a, b):
-        ap = PVector.sub(p, a)
-        ab = PVector.sub(b, a)
-
-        ab = ab.normalize()
-        ab * ap.dot(ab)
-
-        normal_point = PVector.add(a, ab)
-        return normal_point
-
-    def accelerate(self, amount):
-        a = math.radians(self.angle)
-        angle_x = self.location.x - math.cos(a) * amount
-        angle_y = self.location.y - math.sin(a) * amount
-        force = PVector.sub(self.location, PVector(angle_x,angle_y))
-        self.apply_force(force)
-
-    def separate(self, others):
-        desired_separation = self.r * 2
-        total_force = PVector(0,0)
-        count = 0
-
-        for o in others:
-            d = PVector.dist(self.location, o.location)
-            if d > 0 and d < desired_separation:
-                diff = PVector.sub(self.location, o.location)
-                diff = diff.normalize()
-                diff / d
-                total_force + diff
-                count += 1
-
-        if count > 0:
-            total_force / count
-            total_force.set_mag(self.max_speed)
-            steer = PVector.sub(total_force, self.velocity)
-            steer.limit(self.max_force)
-            return steer
-        else:
-            return PVector(0,0)
-
-    def apply_behaviors(self, others):
-        separate = self.separate(others)
-        seek = self.seek(PVector(*pygame.mouse.get_pos()))
-
-        separate * 1.5
-        seek * 0.5
-
-        self.apply_force(separate)
-        self.apply_force(seek)
 
 class Perceptron:
     c = 0.01
@@ -322,21 +207,31 @@ class Simulation:
 
             screen.draw.circle(self.training[i].inputs[0], self.training[i].inputs[1], 4, color, 0)
 
+class VehicleSimulation:
+    def __init__(self):
+        self.v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
+        self.targets = [PVector(randint(0,WIDTH), randint(0,HEIGHT)) for i in range(5)]
+
+    def update(self):
+        self.v.seek_targets(self.targets)
+        self.v.update()
+
+    def draw(self):
+        self.v.draw()
+
+        for i,t in enumerate(self.targets):
+            screen.draw.circle(t.x, t.y, 8, (0,255,0), 0)
+            screen.draw.circle(t.x, t.y, 8, (0,0,0), 1)
+            screen.draw.text(str(i), pos=(t.x+8, t.y+8))
+
 # ----------------------------------------------------
 def update():
-    v.seek_targets(targets)
-    v.update()
+    vs.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    v.draw()
-
-    for i,t in enumerate(targets):
-        screen.draw.circle(t.x, t.y, 8, (0,255,0), 0)
-        screen.draw.circle(t.x, t.y, 8, (0,0,0), 1)
-        screen.draw.text(str(i), pos=(t.x+8, t.y+8))
-
+    vs.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -345,10 +240,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-v = Vehicle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT)
-
-targets = [PVector(randint(0,WIDTH), randint(0,HEIGHT)) for i in range(5)]
-
+vs = VehicleSimulation()
 run()
 # ----------------------------------------------------
 
@@ -424,3 +316,20 @@ run()
 # I also needed to suppress the auto-fill behavior in the main loop, via an optional flag to
 # run(). This is a bit klunky right now, needs lots of smoothing before we can bring it back
 # to the main engine project. But this is a good sandbox for figuring it all out.
+
+# Nearly done with the text - and I notice I've evolved a workflow of sorts for tackling these
+# little projects. For the first many, I would just create the classes and get the thing running
+# through code in update()/draw(). Then to preserve the work (and keep this file manageable), I'd
+# shunt the classes off to a separate module, import, adjust till it works, then move on. Problem
+# is, I was abandoning the code in update()/draw() every time. None of it was super-complicated - 
+# the classes do all the heavy lifting - but I'd need to reconstruct in order to run that same
+# project again, probably by referring to GitHub history.
+
+# But for the last few, I've also added a 'World' or 'Simulation' class. It has a simple interface:
+# ctor, update() and draw(). And for the most part, all of the setup code can drop right in, and
+# then the main script becomes very simple. At some point, it might be good to circle back and 
+# clean up every project to this standard. (Though I _also_ have acquired quite a backlog of 
+# polish and integration work on the engine...)
+
+# Another TO_DO: I hate the syntax I created for PVector math operators. The imperative mutator
+# feels wrong every time I write it. Rework so I can replace with a civilized += notation instead.
