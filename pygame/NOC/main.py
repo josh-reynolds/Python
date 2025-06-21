@@ -152,6 +152,10 @@ class Vehicle:
         output = self.brain.process(forces)
         self.apply_force(output)
 
+        desired = PVector(WIDTH//2, HEIGHT//2)
+        error = PVector.sub(desired, self.location)
+        self.brain.train_vehicle(forces, error)
+
     def rotate(self):
         self.surf = transform.rotate(self.original_surf, -self.angle - 90)
         w,h = self.surf.get_size()
@@ -266,7 +270,16 @@ class Perceptron:
             self.weights[i] += Perceptron.c * error * inputs[i]
 
     def process(self, forces):
-        return PVector(0,0)    ###
+        sum_ = PVector(0,0)
+        for i in range(len(self.weights)):
+            forces[i] * self.weights[i]
+            sum_ + forces[i]
+        return sum_
+
+    def train_vehicle(self, forces, error):
+        for i in range(len(self.weights)):
+            self.weights[i] + Perceptron.c * error.x * forces[i].x
+            self.weights[i] + Perceptron.c * error.y * forces[i].y
 
 class Trainer:
     def __init__(self, x, y, a):
