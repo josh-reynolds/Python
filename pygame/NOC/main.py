@@ -25,7 +25,7 @@ from wolfram import CA
 from life import Life
 from fractals import draw_circle, cantor, KochCurve, branch
 from rotation_test import Test
-from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix
+from screen_matrix import sm, line, translate, rotate, push_matrix, pop_matrix, circle
 from lsystem import Rule, LSystem, Turtle
 from rocket import SmartRockets
 from face import Faces
@@ -36,15 +36,37 @@ WIDTH = 640
 HEIGHT = 480
 TITLE = "The Nature of Code"
 
+class Neuron:
+    def __init__(self, x, y):
+        self.location = PVector(x,y)
+
+    def draw(self):
+        circle(self.location.x, self.location.y, 16, (0,255,0), 0)
+        circle(self.location.x, self.location.y, 16, (0,0,0), 1)
+
+class Network:
+    def __init__(self, x, y):
+        self.location = PVector(x,y)
+        self.neurons = []
+
+    def add_neuron(self, neuron):
+        self.neurons.append(neuron)
+
+    def draw(self):
+        push_matrix()
+        translate(self.location.x, self.location.y)
+        for n in self.neurons:
+            n.draw()
+        pop_matrix()
 
 # ----------------------------------------------------
 def update():
-    vs.update()
+    pass
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    vs.draw()
+    n.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -53,7 +75,9 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-vs = VehicleSimulation(WIDTH, HEIGHT)
+n = Network(WIDTH//2, HEIGHT//2)
+n.add_neuron(Neuron(0,0))
+
 run()
 # ----------------------------------------------------
 
