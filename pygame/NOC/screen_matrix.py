@@ -62,8 +62,8 @@ def push_matrix():
 def pop_matrix():
     sm.pop_matrix()
 
-def line(ax, ay, bx, by):
-    sm.draw_line((ax, ay), (bx, by))
+def line(ax, ay, bx, by, line_weight):
+    sm.draw_line((ax, ay), (bx, by), line_weight)
 
 def circle(x, y, r, color, width=0):
     sm.draw_circle(x, y, r, color, width)

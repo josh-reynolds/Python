@@ -33,7 +33,7 @@ from ecosystem import World
 from perceptron import Simulation, VehicleSimulation
 
 WIDTH = 640
-HEIGHT = 480
+HEIGHT = 360
 TITLE = "The Nature of Code"
 
 class Neuron:
@@ -48,16 +48,35 @@ class Network:
     def __init__(self, x, y):
         self.location = PVector(x,y)
         self.neurons = []
+        self.connections = []
 
     def add_neuron(self, neuron):
         self.neurons.append(neuron)
 
+    def add_connection(self, connection):
+        self.connections.append(connection)
+
+    def connect(self, a, b):
+        self.add_connection(Connection(a, b, random()))
+
     def draw(self):
         push_matrix()
         translate(self.location.x, self.location.y)
+        for c in self.connections:
+            c.draw()
         for n in self.neurons:
             n.draw()
         pop_matrix()
+
+class Connection:
+    def __init__(self, from_, to_, weight):
+        self.weight = weight
+        self.a = from_
+        self.b = to_
+
+    def draw(self):
+        line_weight = math.floor(remap(self.weight, 0, 1, 1, 6))
+        line(self.a.location.x, self.a.location.y, self.b.location.x, self.b.location.y, line_weight)
 
 # ----------------------------------------------------
 def update():
@@ -76,7 +95,21 @@ def setup():
 
 # ----------------------------------------------------
 n = Network(WIDTH//2, HEIGHT//2)
-n.add_neuron(Neuron(0,0))
+
+a = Neuron(-230,0)
+b = Neuron(0,100)
+c = Neuron(0,-100)
+d = Neuron(200,0)
+
+n.add_neuron(a)
+n.add_neuron(b)
+n.add_neuron(c)
+n.add_neuron(d)
+
+n.connect(a,b)
+n.connect(a,c)
+n.connect(b,d)
+n.connect(c,d)
 
 run()
 # ----------------------------------------------------
