@@ -332,9 +332,10 @@ def update():
 def draw():
     v.draw()
 
-    for t in targets:
+    for i,t in enumerate(targets):
         screen.draw.circle(t.x, t.y, 8, (0,255,0), 0)
         screen.draw.circle(t.x, t.y, 8, (0,0,0), 1)
+        screen.draw.text(str(i), pos=(t.x+8, t.y+8))
 
 # ----------------------------------------------------
 
