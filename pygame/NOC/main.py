@@ -127,6 +127,41 @@ class Connection:
         self.sender = self.a.location.copy()
         self.sending = True
 
+class NeuralNetwork:
+    def __init__(self):
+        self.count = 0
+
+        self.n = Network(WIDTH//2, HEIGHT//2)
+
+        self.a = Neuron(-230,0, 'a')
+        self.b = Neuron(0,100, 'b')
+        self.c = Neuron(0,-100, 'c')
+        self.d = Neuron(0,0, 'd')
+        self.e = Neuron(200,0, 'e')
+
+        self.n.add_neuron(self.a)
+        self.n.add_neuron(self.b)
+        self.n.add_neuron(self.c)
+        self.n.add_neuron(self.d)
+        self.n.add_neuron(self.e)
+
+        self.n.connect(self.a,self.b)
+        self.n.connect(self.a,self.c)
+        self.n.connect(self.a,self.d)
+        self.n.connect(self.b,self.e)
+        self.n.connect(self.c,self.e)
+        self.n.connect(self.d,self.e)
+
+    def update(self):
+        self.n.update()
+        self.count += 1
+        if self.count % 30 == 0:
+            self.n.feed_forward(random())
+
+    def draw(self):
+        self.n.draw()
+        screen.draw.text(str(self.count), pos=(WIDTH-50,20))
+
 def lerp(a, b, scale):
     if scale <= 0:
         return a
@@ -137,17 +172,12 @@ def lerp(a, b, scale):
 
 # ----------------------------------------------------
 def update():
-    global count
-    n.update()
-    count += 1
-    if count % 30 == 0:
-        n.feed_forward(random())
+    nn.update()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
-    n.draw()
-    screen.draw.text(str(count), pos=(WIDTH-50,20))
+    nn.draw()
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -156,28 +186,7 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
-count = 0
-n = Network(WIDTH//2, HEIGHT//2)
-
-a = Neuron(-230,0, 'a')
-b = Neuron(0,100, 'b')
-c = Neuron(0,-100, 'c')
-d = Neuron(0,0, 'd')
-e = Neuron(200,0, 'e')
-
-n.add_neuron(a)
-n.add_neuron(b)
-n.add_neuron(c)
-n.add_neuron(d)
-n.add_neuron(e)
-
-n.connect(a,b)
-n.connect(a,c)
-n.connect(a,d)
-n.connect(b,e)
-n.connect(c,e)
-n.connect(d,e)
-
+nn = NeuralNetwork()
 run()
 # ----------------------------------------------------
 
