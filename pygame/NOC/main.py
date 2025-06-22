@@ -42,11 +42,12 @@ class Neuron:
         self.connections = []
         self.sum = 0
         self.id = id_
+        self.color = (0,255,0)
 
     def draw(self):
         for c in self.connections:
             c.draw()
-        circle(self.location.x, self.location.y, 16, (0,255,0), 0)
+        circle(self.location.x, self.location.y, 16, self.color, 0)
         circle(self.location.x, self.location.y, 16, (0,0,0), 1)
 
     def update(self):
@@ -60,6 +61,9 @@ class Neuron:
         self.sum += value
         if self.sum > 1:
             self.fire()
+            self.color = (255,0,0)
+        else:
+            self.color = (0,255,0)
 
     def fire(self):
         for c in self.connections:
@@ -158,17 +162,21 @@ n = Network(WIDTH//2, HEIGHT//2)
 a = Neuron(-230,0, 'a')
 b = Neuron(0,100, 'b')
 c = Neuron(0,-100, 'c')
-d = Neuron(200,0, 'd')
+d = Neuron(0,0, 'd')
+e = Neuron(200,0, 'e')
 
 n.add_neuron(a)
 n.add_neuron(b)
 n.add_neuron(c)
 n.add_neuron(d)
+n.add_neuron(e)
 
 n.connect(a,b)
 n.connect(a,c)
-n.connect(b,d)
-n.connect(c,d)
+n.connect(a,d)
+n.connect(b,e)
+n.connect(c,e)
+n.connect(d,e)
 
 run()
 # ----------------------------------------------------
