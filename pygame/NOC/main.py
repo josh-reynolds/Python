@@ -37,9 +37,11 @@ HEIGHT = 360
 TITLE = "The Nature of Code"
 
 class Neuron:
-    def __init__(self, x, y):
+    def __init__(self, x, y, id_):
         self.location = PVector(x,y)
         self.connections = []
+        self.sum = 0
+        self.id = id_
 
     def draw(self):
         for c in self.connections:
@@ -47,8 +49,22 @@ class Neuron:
         circle(self.location.x, self.location.y, 16, (0,255,0), 0)
         circle(self.location.x, self.location.y, 16, (0,0,0), 1)
 
+    def update(self):
+        for c in self.connections:
+            c.update()
+
     def add_connection(self, connection):
         self.connections.append(connection)
+
+    def feed_forward(self, value):
+        self.sum += value
+        if self.sum > 1:
+            self.fire()
+
+    def fire(self):
+        for c in self.connections:
+            c.feed_forward(self.sum)
+        self.sum = 0
 
 class Network:
     def __init__(self, x, y):
@@ -68,24 +84,66 @@ class Network:
             n.draw()
         pop_matrix()
 
+    def feed_forward(self, value):
+        start = self.neurons[0]
+        start.feed_forward(value)
+
+    def update(self):
+        for n in self.neurons:
+            n.update()
+
 class Connection:
     def __init__(self, from_, to_, weight):
         self.weight = weight
         self.a = from_
         self.b = to_
+        self.sending = False
+        self.sender = from_.location.copy()
+        self.output = 0
 
     def draw(self):
         line_weight = math.floor(remap(self.weight, 0, 1, 1, 6))
         line(self.a.location.x, self.a.location.y, self.b.location.x, self.b.location.y, line_weight)
+        if self.sending:
+            circle(self.sender.x, self.sender.y, 8, (0,0,0), 0)
+
+    def update(self):
+        if self.sending:
+            self.sender.x = lerp(self.sender.x, self.b.location.x, 0.1)
+            self.sender.y = lerp(self.sender.y, self.b.location.y, 0.1)
+
+            d = PVector.dist(self.sender, self.b.location)
+
+            if d < 1:
+                self.b.feed_forward(self.output)
+                self.sending = False
+
+    def feed_forward(self, value):
+        self.output = value * self.weight
+        self.sender = self.a.location.copy()
+        self.sending = True
+
+def lerp(a, b, scale):
+    if scale <= 0:
+        return a
+    elif scale >= 1:
+        return b
+    else:
+        return ((b - a) * scale) + a
 
 # ----------------------------------------------------
 def update():
-    pass
+    global count
+    n.update()
+    count += 1
+    if count % 30 == 0:
+        n.feed_forward(random())
 # ----------------------------------------------------
 
 # ----------------------------------------------------
 def draw():
     n.draw()
+    screen.draw.text(str(count), pos=(WIDTH-50,20))
 # ----------------------------------------------------
 
 # ----------------------------------------------------
@@ -94,12 +152,13 @@ def setup():
 # ----------------------------------------------------
 
 # ----------------------------------------------------
+count = 0
 n = Network(WIDTH//2, HEIGHT//2)
 
-a = Neuron(-230,0)
-b = Neuron(0,100)
-c = Neuron(0,-100)
-d = Neuron(200,0)
+a = Neuron(-230,0, 'a')
+b = Neuron(0,100, 'b')
+c = Neuron(0,-100, 'c')
+d = Neuron(200,0, 'd')
 
 n.add_neuron(a)
 n.add_neuron(b)
