@@ -28,7 +28,7 @@ flagging keyboard events in the keyboard object as they occur. The engine will l
 images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
-__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run', 'remap']
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run', 'remap', 'lerp']
 __version__ = "1.5"
 
 import os
@@ -507,6 +507,14 @@ def run(draw=True):
 
 def remap(old_val, old_min, old_max, new_min, new_max):
     return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
+
+def lerp(a, b, scale):
+    if scale <= 0:
+        return a
+    elif scale >= 1:
+        return b
+    else:
+        return ((b - a) * scale) + a
 
 def _trace_function(frame, event, arg, indent=[0]):
     """Internal function to display function entry/exit while debugging."""
