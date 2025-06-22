@@ -39,31 +39,31 @@ TITLE = "The Nature of Code"
 class Neuron:
     def __init__(self, x, y):
         self.location = PVector(x,y)
+        self.connections = []
 
     def draw(self):
+        for c in self.connections:
+            c.draw()
         circle(self.location.x, self.location.y, 16, (0,255,0), 0)
         circle(self.location.x, self.location.y, 16, (0,0,0), 1)
+
+    def add_connection(self, connection):
+        self.connections.append(connection)
 
 class Network:
     def __init__(self, x, y):
         self.location = PVector(x,y)
         self.neurons = []
-        self.connections = []
 
     def add_neuron(self, neuron):
         self.neurons.append(neuron)
 
-    def add_connection(self, connection):
-        self.connections.append(connection)
-
     def connect(self, a, b):
-        self.add_connection(Connection(a, b, random()))
+        a.add_connection(Connection(a, b, random()))
 
     def draw(self):
         push_matrix()
         translate(self.location.x, self.location.y)
-        for c in self.connections:
-            c.draw()
         for n in self.neurons:
             n.draw()
         pop_matrix()
