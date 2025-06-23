@@ -281,7 +281,7 @@ class Painter:
         self.surface = surface
         self.fontname = None
         self.fontsize = 24
-        self.fontcolor = Color('black')
+        self.fontcolor = Color('black')    # deprecate
         self.set_font()
 
     def set_font(self):
@@ -289,7 +289,7 @@ class Painter:
 
     #TO_DO: only partial positioning implemented thus far, and a bit creaky
     # this is 'borrowed' from ptext, which is what Pygame Zero uses internally
-    def text(self, text, pos=None, center=None):
+    def text(self, text, pos=None, center=None, color=Color('black')):
         if center and not pos:
             x, y = center
             hanchor, vanchor = 0.5, 0.5
@@ -299,7 +299,7 @@ class Painter:
         else:
             raise Exception("Must specify either pos or center location")
 
-        img = self.font.render(text, True, self.fontcolor)
+        img = self.font.render(text, True, color)
 
         x -= hanchor * img.get_width()
         y -= vanchor * img.get_height()

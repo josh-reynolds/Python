@@ -130,4 +130,4 @@ class NeuralNetwork:
 
     def draw(self):
         self.n.draw()
-        screen.draw.text(str(self.count), pos=(self.max_width-50,20))
+        screen.draw.text(str(self.count), pos=(self.max_width-50,20), color=(255,0,0))
