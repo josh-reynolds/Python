@@ -1,16 +1,14 @@
-'''The first project from Impractical Python Projects, by Lee Vaughan'''
+"""The first project from Impractical Python Projects, by Lee Vaughan."""
 
 from random import choice
 
 # function not present in the book project - see note below
 def pr_red(string):
-    '''Print string to console, colored red.'''
-
+    """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
 def main():
-    '''Main program loop.'''
-
+    """Run the main program loop."""
     print("Welcome to the Psych 'Sidekick Name Picker.'\n")
     print("A name just like Sean would pick for Gus:\n\n")
 
