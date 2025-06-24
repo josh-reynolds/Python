@@ -1,3 +1,3 @@
 import cProfile
-import palingrams
-cProfile.run('palingrams.find_palingrams()')
+import palingrams_optimized
+cProfile.run('palingrams_optimized.find_palingrams()')
