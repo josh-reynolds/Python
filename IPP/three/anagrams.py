@@ -10,7 +10,7 @@ dict_file = sorted(dict_file)
 
 ini_name = input("Enter a name: ")
 
-def find_angrams(name, word_list):
+def find_anagrams(name, word_list):
     """Read name & dictionary file and display all anagrams IN name."""
     name_letter_map = Counter(name)
     anagrams = []
@@ -45,33 +45,38 @@ def process_choice(name):
         if len(name) - len(left_over_list) == len(candidate):
             break
         else:
-            print("Won't work! Make another choice!")  ### print red
+            print("Won't work! Make another choice!")  ### TO_DO: print red
     name = ''.join(left_over_list)
     return choice, name
 
+def main():
+    """Help user build anagram phrase from their name."""
+    name = ''.join(ini_name.lower().split())
+    name = name.replace('-','')
+    limit = len(name)
+    phrase = ''
+    running = True
 
-anagram_list = []
+    while running:
+        temp_phrase = phrase.replace(' ', '')
+        if len(temp_phrase) < limit:
+            print(f"Length of anagram phrase = {len(temp_phrase)}")
 
-while True:
-    print(f"Input name = {ini_name}")
-    name = ini_name.lower()
-    print(f"Using name = {name}")
+            find_anagrams(name, dict_file)
+            print("Current anagram phrase =", end=" ")
+            print(phrase)  ### TO_DO: print red
 
-    name_count = Counter(name)
-    for word in dict_file:
-        word_count = Counter(word.lower())
-        if word != name:
-            if word_count == name_count:
-                anagram_list.append(word)
+        elif len(temp_phrase) == limit:
+            print("\n*****FINISHED!!!*****\n")
+            print("Anagram of name =", end=" ")
+            print(phrase)  ### TO_DO: print red
+            print()
+            try_again = input('\n\nTry again? (Press Enter else "n" to quit)\n')
+            if try_again.lower() == "n":
+                running = False
+                sys.exit()
+            else:
+                main()
 
-    print()
-    if len(anagram_list) == 0:
-        print("You need a larger dictionary or a new name!")
-    else:
-        print("Anagrams =", *anagram_list, sep='\n')
-
-    try_again = input("\n\nTry again? (Press Enter or 'n' to quit)\n")
-    if try_again.lower() == 'n':
-        break
-
-    anagram_list = []
+if __name__ == '__main__':
+    main()
