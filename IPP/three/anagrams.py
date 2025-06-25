@@ -1,4 +1,5 @@
 """Find all anagrams in a dictionary file for a given word."""
+from collections import Counter
 import load_dictionary
 
 word_list = load_dictionary.load("words.txt")
@@ -10,11 +11,11 @@ while True:
     name = name.lower()
     print(f"Using name = {name}")
 
-    name_sorted = sorted(name)
+    name_count = Counter(name)
     for word in word_list:
-        word = word.lower()
+        word_count = Counter(word.lower())
         if word != name:
-            if sorted(word) == name_sorted:
+            if word_count == name_count:
                 anagram_list.append(word)
 
     print()
