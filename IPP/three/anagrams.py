@@ -28,6 +28,27 @@ def find_angrams(name, word_list):
     print(f"Number of remaining letters = {len(name)}")
     print(f"Number of remaining (real word) anagrams = {len(anagrams)}")
 
+def process_choice(name):
+    """Check user choice for validity, return choice and leftover letters."""
+    while True:
+        choice = input('\nMake a choice else Enter to start over or # to end: ')
+        if choice == '':
+            main()
+        elif chioce == '#':
+            sys.exit()
+        else:
+            candidate = ''.join(choice.lower().split())
+        left_over_list = list(name)
+        for letter in candidate:
+            if letter in left_over_list:
+                left_over_list.remove(letter)
+        if len(name) - len(left_over_list) == len(candidate):
+            break
+        else:
+            print("Won't work! Make another choice!")  ### print red
+    name = ''.join(left_over_list)
+    return choice, name
+
 
 anagram_list = []
 
