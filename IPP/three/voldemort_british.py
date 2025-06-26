@@ -27,8 +27,28 @@ def prep_words(name, word_list_ini):
     print(f"length of new word_list = {len(word_list)}")
     return word_list
 
-def cv_map_words(list_):
-    pass
+def cv_map_words(word_list):
+    """Map letters in words to consonants & vowels"""
+    vowels = 'aeiouy'
+    cv_mapped_words = []
+    for word in word_list:
+        temp = ''
+        for letter in word:
+            if letter in vowels:
+                temp += 'v'
+            else:
+                temp += 'c'
+        cv_mapped_words.append(temp)
+
+    total = len(set(cv_mapped_words))
+    target = 0.05
+    n = int(total * target)
+    count_pruned = Counter(cv_mapped_words).most_common(total - n)
+    filtered_cv_map = set()
+    for pattern, count in count_pruned:
+        filtered_cv_map.add(pattern)
+    print(f"length filtered_cv_map = {len(filtered_cv_map)}")
+    return filtered_cv_map
 
 def cv_map_filter(word, map_):
     pass
