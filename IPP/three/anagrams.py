@@ -10,6 +10,10 @@ dict_file = sorted(dict_file)
 
 ini_name = input("Enter a name: ")
 
+def pr_red(string):
+    """Print string to console, colored red."""
+    print(f"\033[91m {string}\033[00m")
+
 def find_anagrams(name, word_list):
     """Read name & dictionary file and display all anagrams IN name."""
     name_letter_map = Counter(name)
@@ -34,7 +38,7 @@ def process_choice(name):
         choice = input('\nMake a choice else Enter to start over or # to end: ')
         if choice == '':
             main()
-        elif chioce == '#':
+        elif choice == '#':
             sys.exit()
         else:
             candidate = ''.join(choice.lower().split())
@@ -45,7 +49,7 @@ def process_choice(name):
         if len(name) - len(left_over_list) == len(candidate):
             break
         else:
-            print("Won't work! Make another choice!")  ### TO_DO: print red
+            pr_red("Won't work! Make another choice!")
     name = ''.join(left_over_list)
     return choice, name
 
@@ -64,12 +68,15 @@ def main():
 
             find_anagrams(name, dict_file)
             print("Current anagram phrase =", end=" ")
-            print(phrase)  ### TO_DO: print red
+            pr_red(phrase)
 
+            choice, name = process_choice(name)
+            phrase += choice + ' '
+            
         elif len(temp_phrase) == limit:
             print("\n*****FINISHED!!!*****\n")
             print("Anagram of name =", end=" ")
-            print(phrase)  ### TO_DO: print red
+            pr_red(phrase)
             print()
             try_again = input('\n\nTry again? (Press Enter else "n" to quit)\n')
             if try_again.lower() == "n":
