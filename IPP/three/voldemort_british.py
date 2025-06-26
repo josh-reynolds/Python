@@ -18,8 +18,14 @@ def main():
     filter_3 = letter_pair_filter(filter_2)
     view_by_letter(name, filter_3)
 
-def prep_words(word, list_):
-    pass
+def prep_words(name, word_list_ini):
+    """Prep word list for finding anagrams."""
+    print(f"length initial word_list = {len(word_list_ini)}")
+    len_name = len(name)
+    word_list = [word.lower() for word in word_list_ini 
+                 if len(word) == len_name]
+    print(f"length of new word_list = {len(word_list)}")
+    return word_list
 
 def cv_map_words(list_):
     pass
