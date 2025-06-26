@@ -35,7 +35,8 @@ def find_anagrams(name, word_list):
 def process_choice(name):
     """Check user choice for validity, return choice and leftover letters."""
     while True:
-        choice = input('\nMake a choice else Enter to start over or # to end: ')
+        choice = input('\nMake a choice else Enter to '
+                       'start over or # to end: ')
         if choice == '':
             main()
         elif choice == '#':
@@ -48,8 +49,7 @@ def process_choice(name):
                 left_over_list.remove(letter)
         if len(name) - len(left_over_list) == len(candidate):
             break
-        else:
-            pr_red("Won't work! Make another choice!")
+        pr_red("Won't work! Make another choice!")
     name = ''.join(left_over_list)
     return choice, name
 
@@ -72,13 +72,14 @@ def main():
 
             choice, name = process_choice(name)
             phrase += choice + ' '
-            
+
         elif len(temp_phrase) == limit:
             print("\n*****FINISHED!!!*****\n")
             print("Anagram of name =", end=" ")
             pr_red(phrase)
             print()
-            try_again = input('\n\nTry again? (Press Enter else "n" to quit)\n')
+            try_again = input('\n\nTry again? (Press Enter '
+                              'else "n" to quit)\n')
             if try_again.lower() == "n":
                 running = False
                 sys.exit()
