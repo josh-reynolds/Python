@@ -50,8 +50,23 @@ def cv_map_words(word_list):
     print(f"length filtered_cv_map = {len(filtered_cv_map)}")
     return filtered_cv_map
 
-def cv_map_filter(word, map_):
-    pass
+def cv_map_filter(name, filtered_cv_map):
+    """Remove permutations of words based on unlikely cons-vowel combos."""
+    perms = {''.join(i) for i in permutations(name)}
+    print(f"length of initial permutations set = {len(perms)}")
+    vowels = 'aeiouy'
+    filter_1 = set()
+    for candidate in perms:
+        temp = ''
+        for letter in candidate:
+            if letter in vowels:
+                temp += 'v'
+            else:
+                temp += 'c'
+        if temp in filtered_cv_map:
+            filter_1.add(candidate)
+    print(f"# choices after filter_1 = {len(filter_1)}")
+    return filter_1
 
 def trigram_filter(word, list_):
     pass
