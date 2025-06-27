@@ -1,3 +1,4 @@
+"""Filter letter permutations to find anagrams of 'Voldemort'."""
 import sys
 from itertools import permutations
 from collections import Counter
@@ -26,13 +27,13 @@ def prep_words(name, word_list_ini):
     """Prep word list for finding anagrams."""
     print(f"length initial word_list = {len(word_list_ini)}")
     len_name = len(name)
-    word_list = [word.lower() for word in word_list_ini 
+    word_list = [word.lower() for word in word_list_ini
                  if len(word) == len_name]
     print(f"length of new word_list = {len(word_list)}")
     return word_list
 
 def cv_map_words(word_list):
-    """Map letters in words to consonants & vowels"""
+    """Map letters in words to consonants & vowels."""
     vowels = 'aeiouy'
     cv_mapped_words = []
     for word in word_list:
@@ -46,10 +47,11 @@ def cv_map_words(word_list):
 
     total = len(set(cv_mapped_words))
     target = 0.05
-    n = int(total * target)
-    count_pruned = Counter(cv_mapped_words).most_common(total - n)
+    rejected_fraction = int(total * target)
+    count_pruned = Counter(cv_mapped_words).most_common(total -
+                                                        rejected_fraction)
     filtered_cv_map = set()
-    for pattern, count in count_pruned:
+    for pattern, _ in count_pruned:
         filtered_cv_map.add(pattern)
     print(f"length filtered_cv_map = {len(filtered_cv_map)}")
     return filtered_cv_map
@@ -92,11 +94,11 @@ def letter_pair_filter(filter_2):
     first_pair_rejects = ['ld', 'lm', 'lt', 'lv', 'rd',
                           'rl', 'rm', 'rt', 'rv', 'tl', 'tm']
     for candidate in filter_2:
-        for r in rejects:
-            if r in candidate:
+        for reject in rejects:
+            if reject in candidate:
                 filtered.add(candidate)
-        for fp in first_pair_rejects:
-            if candidate.startswith(fp):
+        for firstpair in first_pair_rejects:
+            if candidate.startswith(firstpair):
                 filtered.add(candidate)
     filter_3 = filter_2 - filtered
     print(f"# choices after filter_3 = {len(filter_3)}")
@@ -119,8 +121,6 @@ def view_by_letter(name, filter_3):
         view_by_letter(name, filter_3)
     else:
         sys.exit()
-
-    pass
 
 if __name__ == '__main__':
     main()
