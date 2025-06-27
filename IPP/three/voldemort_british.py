@@ -104,7 +104,22 @@ def letter_pair_filter(filter_2):
         pr_red("Voldemort found!")
     return filter_3
 
-def view_by_letter(word, list_):
+def view_by_letter(name, filter_3):
+    """Filter to aagrams starting with input letter."""
+    print(f"Remaining letters = {name}")
+    first = input("select a starting letter or press Enter to see all: ")
+    subset = []
+    for candidate in filter_3:
+        if candidate.startswith(first):
+            subset.append(candidate)
+    print(*sorted(subset), sep='\n')
+    print(f"Number of choices starting with {first} = {len(subset)}")
+    try_again = input("Try again? (Press Enter else any other key to exit):")
+    if try_again.lower() == '':
+        view_by_letter(name, filter_3)
+    else:
+        sys.exit()
+
     pass
 
 if __name__ == '__main__':
