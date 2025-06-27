@@ -3,6 +3,10 @@ from itertools import permutations
 from collections import Counter
 import load_dictionary
 
+def pr_red(string):
+    """Print string to console, colored red."""
+    print(f"\033[91m{string}\033[00m")
+
 def main():
     """Load files, run filters, allow user to view anagrams by first letter."""
     name = 'tmvoordle'
@@ -80,8 +84,25 @@ def trigram_filter(filter_1, trigrams_filtered):
     print(f"# choices after filter_2 = {len(filter_2)}")
     return filter_2
 
-def letter_pair_filter(list_):
-    pass
+def letter_pair_filter(filter_2):
+    """Remove unlikely letter-pairs from permutations."""
+    filtered = set()
+    rejects = ['dt', 'lr', 'md', 'ml', 'mr', 'mt', 'mv',
+               'td', 'tv', 'vd', 'vl', 'vm', 'vr', 'vt']
+    first_pair_rejects = ['ld', 'lm', 'lt', 'lv', 'rd',
+                          'rl', 'rm', 'rt', 'rv', 'tl', 'tm']
+    for candidate in filter_2:
+        for r in rejects:
+            if r in candidate:
+                filtered.add(candidate)
+        for fp in first_pair_rejects:
+            if candidate.startswith(fp):
+                filtered.add(candidate)
+    filter_3 = filter_2 - filtered
+    print(f"# choices after filter_3 = {len(filter_3)}")
+    if 'voldemort' in filter_3:
+        pr_red("Voldemort found!")
+    return filter_3
 
 def view_by_letter(word, list_):
     pass
