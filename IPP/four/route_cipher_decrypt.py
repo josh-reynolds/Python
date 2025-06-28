@@ -107,7 +107,13 @@ def build_matrix(key_int, cipherlist):
     return translation_matrix
 
 def decrypt(translation_matrix):
-    pass
+    """Loop through nested lists popping off last item to a string."""
+    plaintext = ''
+    for i in range(ROWS):
+        for matrix_col in translation_matrix:
+            word = str(matrix_col.pop())
+            plaintext += word + ' '
+    return plaintext
 
 def pr_red(string):
     """Print string to console, colored red."""
