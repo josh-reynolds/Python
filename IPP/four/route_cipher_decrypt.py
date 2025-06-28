@@ -65,7 +65,19 @@ def main():
     print(f"Plaintext = {plaintext}")
 
 def validate_col_row(cipherlist):
-    pass
+    """Check that input columns and rows are valid vs. message length"""
+    factors = []
+    len_cipher = len(cipherlist)
+    for i in range(2, len_cipher):   # range excludes 1-column ciphers
+        if len_cipher % i == 0:
+            factors.append(i)
+    print(f"\nLength of cipher = {len_cipher}")
+    print(f"Acceptable column/row values include: {factors}")
+    print()
+    if ROWS * COLS != len_cipher:
+        pr_red("\nError - Input columns & rows not factors of length "
+               "of cipher. Terminating program.")
+        sys.exit(1)
 
 def key_to_int(key):
     pass
@@ -75,6 +87,10 @@ def build_matrix(key_int, cipherlist):
 
 def decrypt(translation_matrix):
     pass
+
+def pr_red(string):
+    """Print string to console, colored red."""
+    print(f"\033[91m{string}\033[00m")
 
 if __name__ == '__main__':
     main()
