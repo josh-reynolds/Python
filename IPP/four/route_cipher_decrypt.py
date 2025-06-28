@@ -80,7 +80,16 @@ def validate_col_row(cipherlist):
         sys.exit(1)
 
 def key_to_int(key):
-    pass
+    """Turn key into list of integers & check validity."""
+    key_int = [int(i) for i in key.split()]
+    key_int_lo = min(key_int)
+    key_int_hi = max(key_int)
+    if len(key_int) != COLS or key_int_lo < -COLS or key_int_hi > COLS \
+            or 0 in key_int:
+                pr_red("\nError - Problem with key. Terminating program.")
+                sys.exit(1)
+    else:
+        return key_int
 
 def build_matrix(key_int, cipherlist):
     pass
