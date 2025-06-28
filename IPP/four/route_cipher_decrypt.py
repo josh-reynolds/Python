@@ -92,7 +92,19 @@ def key_to_int(key):
         return key_int
 
 def build_matrix(key_int, cipherlist):
-    pass
+    """Turn every n items in a list into a new item in a list of lists."""
+    translation_matrix = [None] * COLS
+    start = 0
+    stop = ROWS
+    for k in key_int:
+        if k < 0:    # read bottom-to-top of column
+            col_items = cipherlist[start:stop]
+        elif k > 0:
+            col_items = list(reversed(cipherlist[start:stop]))
+        translation_matrix[abs(k) - 1] = col_items
+        start += ROWS
+        stop += ROWS
+    return translation_matrix
 
 def decrypt(translation_matrix):
     pass
