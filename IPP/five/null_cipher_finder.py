@@ -1,10 +1,11 @@
+"""Solve a null cipher based on number of letters after punctuation mark."""
 import sys
 import string
 
 def load_text(file):
     """Load a text file as a string."""
-    with open(file) as f:
-        return f.read().strip()
+    with open(file, 'r', encoding='utf-8') as text:
+        return text.read().strip()
 
 def solve_null_cipher(message, lookahead):
     """Solve a null cipher based on number of letters after punctuation mark.
@@ -32,32 +33,30 @@ def main():
     filename = input("\nEnter full filename fo message to translate: ")
     try:
         loaded_message = load_text(filename)
-    except IOError as e:
-        pr_red(f"{e}. Terminating program.")
+    except IOError as error:
+        pr_red(f"{error}. Terminating program.")
         sys.exit(1)
     print("\nORIGINAL MESSAGE =")
     print(f"{loaded_message}", "\n")
-    print(f"\nList of punctuation marks to check = {string.punctuation}", 
+    print(f"\nList of punctuation marks to check = {string.punctuation}",
           "\n")
 
     message = ''.join(loaded_message.split())
 
     while True:
-        lookahead = input("\nNumber of letters to check after punctuation mark: ")
+        lookahead = input("\nNumber of letters to check after "
+                          "punctuation mark: ")
         if lookahead.isdigit():
             lookahead = int(lookahead)
             break
-        else:
-            pr_red("Please input a number.")
+        pr_red("Please input a number.")
     print()
 
     solve_null_cipher(message, lookahead)
 
-
-
-def pr_red(string):
+def pr_red(output):
     """Print string to console, colored red."""
-    print(f"\033[91m{string}\033[00m")
+    print(f"\033[91m{output}\033[00m")
 
 if __name__ == '__main__':
     main()
