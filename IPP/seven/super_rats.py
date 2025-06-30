@@ -1,4 +1,5 @@
-import time
+"""Breed population of giant rats using genetic algorithm."""
+#import time
 import random
 import statistics
 
@@ -60,7 +61,7 @@ def mutate(children, mutate_odds, mutate_min, mutate_max):
 def main():
     """Initialize population, select, breed, and mutate, display results."""
     generations = 0
-    parents = populate(NUM_RATS, INITIAL_MIN_WT, INITIAL_MAX_WT, 
+    parents = populate(NUM_RATS, INITIAL_MIN_WT, INITIAL_MAX_WT,
                        INITIAL_MODE_WT)
     print(f"initial population weights = {parents}")
     popl_fitness = fitness(parents, GOAL)
@@ -85,5 +86,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
