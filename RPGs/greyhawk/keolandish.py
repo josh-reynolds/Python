@@ -1,4 +1,5 @@
 from random import randint, choice
+from collections import Counter
 
 # Non-English place names in Sheldomar Valley ~~~~~~~~~~
 # Cryllor, Sheldomar, Niole Dra, Gradsul, Javan, Hool, Hokar, Jurnre, Gryrax, Ulek, Keo(land),
@@ -95,6 +96,20 @@ for i in range(20):
     w = markov(k, c).capitalize()
     print(w) if w.lower() not in words else print("DUPLICATE")
 print("------------------")
+
+vowels = 'aeiouy'
+patterns = []
+for word in words:
+    pattern = ''
+    for letter in word:
+        if letter in vowels:
+            pattern += 'V'
+        else:
+            pattern += 'C'
+    patterns.append(pattern)
+
+print(Counter(patterns))
+
 
 # breaking out vowel groupings ~~~~~~~~~
 # [a] alz
