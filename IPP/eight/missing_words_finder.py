@@ -18,8 +18,11 @@ def main():
         missing_words_dict = make_exceptions_dict(exceptions)
         save_exceptions(missing_words_dict)
 
-def load_haiku(file):
+def load_haiku(filename):
     """Open and return training corpus of haiku as a set."""
+    with open(filename) as in_file:
+        haiku = set(in_file.read().replace('-', ' ').split())
+        return haiku
 
 def cmudict_missing(words):
     """Find and return words in word set missing from cmudict."""
