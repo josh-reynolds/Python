@@ -24,8 +24,23 @@ def load_haiku(filename):
         haiku = set(in_file.read().replace('-', ' ').split())
         return haiku
 
-def cmudict_missing(words):
+def cmudict_missing(word_set):
     """Find and return words in word set missing from cmudict."""
+    exceptions = set()
+    for word in word_set:
+        word = word.lower().strip(punctuation)
+        curly = chr(8217)   # curly quote not available on my keyboard
+        if word.endswith("'s") or word.endswith(curly + "s"):
+            word = word[:-2]
+        if word not in cmudict:
+            exceptions.add(word)
+    print("\nexceptions:")
+    print(*exceptions, sep='\n')
+    print(f"Number of unique words in haiku corpus = {len(word_set)}")
+    print(f"Number of words in corpus not in cmudict = {len(exceptions)}")
+    membership = (1 - (len(exceptions) / len(word_set))) * 100
+    print(f"cmudict membership = {membership:0.1f}{'%'}")
+    return exceptions
 
 def make_exceptions_dict(words):
     """Return dictionary of words and syllable counts from a set of words."""
