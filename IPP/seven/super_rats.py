@@ -1,5 +1,5 @@
 """Breed population of giant rats using genetic algorithm."""
-#import time
+import time
 import random
 import statistics
 
@@ -85,4 +85,8 @@ def main():
     print(f"number of years = {int(generations / LITTERS_PER_YEAR)}")
 
 if __name__ == '__main__':
+    start_time = time.time()
     main()
+    end_time = time.time()
+    duration = end_time - start_time
+    print(f"\nRuntime for this program was {duration:0.03f} seconds.")
