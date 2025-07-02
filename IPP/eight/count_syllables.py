@@ -1,10 +1,11 @@
+"""Use dictionaries to look up number of syllables in a given word/phrase."""
 import sys
 from string import punctuation
 import json
 from nltk.corpus import cmudict
 
-with open('missing_words.json') as f:
-    missing_words = json.load(f)
+with open('missing_words.json', 'r', encoding='utf-8') as file:
+    missing_words = json.load(file)
 
 cmudict = cmudict.dict()
 
@@ -27,3 +28,23 @@ def count_syllables(words):
                         num_sylls += 1
     return num_sylls
 
+def main():
+    """Take user input and print number of syllables in it."""
+    while True:
+        print("Syllable Counter")
+        word = input("Enter word or phrase; else press Enter to Exit: ")
+        if word == '':
+            sys.exit()
+        try:
+            num_syllables = count_syllables(word)
+            print(f"number of syllables in {word} is: {num_syllables}")
+            print()
+        except KeyError:
+            pr_red("Word not found. Try again\n")
+
+def pr_red(output):
+    """Print string to console, colored red."""
+    print(f"\033[91m{output}\033[00m")
+
+if __name__ == '__main__':
+    main()
