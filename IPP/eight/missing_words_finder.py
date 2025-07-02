@@ -81,10 +81,13 @@ def make_exceptions_dict(exceptions_set):
 
     return missing_words
 
-
-
-def save_exceptions(dictionary):
+def save_exceptions(missing_words):
     """Save exceptions dictionary as a json file."""
+    json_string = json.dumps(missing_words)
+    f = open('missing_words.json', 'w')
+    f.write(json_string)
+    f.close()
+    print("\nFile saved as missing_words.json")
 
 def pr_red(output):
     """Print string to console, colored red."""
