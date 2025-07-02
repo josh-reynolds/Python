@@ -20,7 +20,7 @@ def main():
 
 def load_haiku(filename):
     """Open and return training corpus of haiku as a set."""
-    with open(filename) as in_file:
+    with open(filename, 'r', encoding='utf-8') as in_file:
         haiku = set(in_file.read().replace('-', ' ').split())
         return haiku
 
@@ -51,8 +51,7 @@ def make_exceptions_dict(exceptions_set):
             num_sylls = input(f"Enter number syllables in {word}: ")
             if num_sylls.isdigit():
                 break
-            else:
-                pr_red("            Not a valid answer!")
+            pr_red("            Not a valid answer!")
         missing_words[word] = int(num_sylls)
     print()
     pprint.pprint(missing_words, width=1)
@@ -68,7 +67,7 @@ def make_exceptions_dict(exceptions_set):
         choice = input("\nEnter choice: ")
         if choice == '0':
             break
-        elif choice == '1':
+        if choice == '1':
             word = input("\nWord to add or change: ")
             missing_words[word] = int(input(f"Enter number "
                                             f"syllables in {word}:"))
@@ -84,9 +83,8 @@ def make_exceptions_dict(exceptions_set):
 def save_exceptions(missing_words):
     """Save exceptions dictionary as a json file."""
     json_string = json.dumps(missing_words)
-    f = open('missing_words.json', 'w')
-    f.write(json_string)
-    f.close()
+    with open('missing_words.json', 'w', encoding='utf-8') as file:
+        file.write(json_string)
     print("\nFile saved as missing_words.json")
 
 def pr_red(output):
