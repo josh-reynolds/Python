@@ -31,9 +31,24 @@ def map_word_to_word(corpus):
                   dict1_to_1['sake'])
     return dict1_to_1
 
+def map_2_words_to_word(corpus):
+    """Load list and use dictionary to map word-pair to trailing word."""
+    limit = len(corpus) - 2
+    dict2_to_1 = defaultdict(list)
+    for index, word in enumerate(corpus):
+        if index < limit:
+            key = word + ' ' + corpus[index + 1]
+            suffix = corpus[index + 2]
+            dict2_to_1[key].append(suffix)
+    logging.debug('map_2_words_to_word results for \"sake jug\" = %s\n',
+                  dict2_to_1['sake jug'])
+    return dict2_to_1
+
 def main():
     """Generate haiku using a Markov chain."""
-    map_word_to_word(prep_training(load_training_file('train.txt')))
+    corpus = prep_training(load_training_file('train.txt'))
+    map_word_to_word(corpus)
+    map_2_words_to_word(corpus)
 
 if __name__ == '__main__':
     main()
