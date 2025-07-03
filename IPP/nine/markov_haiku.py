@@ -1,9 +1,9 @@
 """Create haiku by applying a Markov chain to a corpus of haikus."""
 #import sys
 import logging
-#import random
+import random
 from collections import defaultdict
-#from count_syllables import count_syllables
+from count_syllables import count_syllables
 
 #logging.disable(logging.CRITICAL)
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -44,11 +44,21 @@ def map_2_words_to_word(corpus):
                   dict2_to_1['sake jug'])
     return dict2_to_1
 
+def random_word(corpus):
+    """Return random word and syllable count from training corpus."""
+    word = random.choice(corpus)
+    num_syls = count_syllables(word)
+    if num_syls > 4:
+        word, num_syls = random_word(corpus)
+    logging.debug('random word & syllables = %s %s\n', word, num_syls)
+    return (word, num_syls)
+
 def main():
     """Generate haiku using a Markov chain."""
     corpus = prep_training(load_training_file('train.txt'))
     map_word_to_word(corpus)
     map_2_words_to_word(corpus)
+    random_word(corpus)
 
 if __name__ == '__main__':
     main()
