@@ -9,6 +9,8 @@
 /pygame/futbol/__pycache__
 /pygame/hexes/__pycache__
 /pygame/hexes/*.png
+/pygame/isometric/__pycache__
+/pygame/isometric/*.png
 /pygame/huevos/__pycache__
 /pygame/huevos/replays
 /pygame/invader/__pycache__
