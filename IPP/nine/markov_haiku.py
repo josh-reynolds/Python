@@ -66,13 +66,31 @@ def word_after_single(prefix, suffix_map_1, current_syls, target_syls):
                   prefix, set(accepted_words))
     return accepted_words
 
+def word_after_double(prefix, suffix_map_2, current_syls, target_syls):
+    """Return all acceptable words in a corpus that follow a word pair."""
+    accepted_words = []
+    suffixes = suffix_map_2.get(prefix)
+    if suffixes is not None:
+        for candidate in suffixes:
+            num_syls = count_syllables(candidate)
+            if current_syls + num_syls <= target_syls:
+                accepted_words.append(candidate)
+    logging.debug('accepted words after \"%s\" = %s\n',
+                  prefix, set(accepted_words))
+    return accepted_words
+
+
 def main():
     """Generate haiku using a Markov chain."""
     corpus = prep_training(load_training_file('train.txt'))
     single = map_word_to_word(corpus)
-    map_2_words_to_word(corpus)
+    double = map_2_words_to_word(corpus)
     rand = random_word(corpus)
-    word_after_single(rand[0], single, rand[1], 5)
+    nxt_choice = word_after_single(rand[0], single, rand[1], 5)
+    nxt = random.choice(nxt_choice)
+    pair = f"{rand[0]} {nxt}"
+    sylls = rand[1] + count_syllables(nxt)
+    word_after_double(pair, double, sylls, 5)
 
 if __name__ == '__main__':
     main()
