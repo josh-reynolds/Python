@@ -1,9 +1,9 @@
 """Create haiku by applying a Markov chain to a corpus of haikus."""
-#import sys
+import sys
 import logging
 import random
 from collections import defaultdict
-from count_syllables import count_syllables
+from count_syllables import count_syllables, pr_red
 
 #logging.disable(logging.CRITICAL)
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -145,18 +145,62 @@ def haiku_line(suffix_map_1, suffix_map_2, corpus, end_prev_line, target_syls):
     return final_line, end_prev_line
 
 def main():
-    """Generate haiku using a Markov chain."""
-    corpus = prep_training(load_training_file('train.txt'))
-    single = map_word_to_word(corpus)
-    double = map_2_words_to_word(corpus)
-    rand = random_word(corpus)
-    nxt_choice = word_after_single(rand[0], single, rand[1], 5)
-    nxt = random.choice(nxt_choice)
-    pair = f"{rand[0]} {nxt}"
-    sylls = rand[1] + count_syllables(nxt)
-    word_after_double(pair, double, sylls, 5)
-    line = haiku_line(single, double, corpus, "", 5)
-    print(line)
+    """Give user choice of building a haiku or modifying an existing haiku."""
+    intro = """\n
+    A thousand monkeys at a thousand typewriters...
+    or one computer... can sometimes produce a haiku.\n """
+    print(f"{intro}")
+
+    raw_haiku = load_training_file('train.txt')
+    corpus = prep_training(raw_haiku)
+    suffix_map_1 = map_word_to_word(corpus)
+    suffix_map_2 = map_2_words_to_word(corpus)
+    final = []
+
+    choice = None
+    while choice != "0":
+        print(
+                """
+                Japanese Haiku Generator
+
+                0 - Quit
+                1 - Generate a Haiku
+                2 - Regenerate Line 2
+                3 - Regenerate Line 3
+                """
+                )
+        choice = input("Choice: ")
+        print()
+
+        if choice == "0":
+            print("Sayonara.")
+            sys.exit()
+
+        elif choice == "1":
+            pass      ###
+
+        elif choice == "2":
+            pass      ###
+
+        elif choice == "3":
+            pass      ###
+
+        else:
+            pr_red("\nSorry, but that isn't a valid choice.")
+            continue
+
+        final = [["0"],["0"],["0"]]   ###
+
+        print()
+        print("First line = ", end="")
+        pr_red(' '.join(final[0]))
+        print("Second line = ", end="")
+        pr_red(' '.join(final[1]))
+        print("Third line = ", end="")
+        pr_red(' '.join(final[2]))
+        print()
+
+    input("\n\nPress the Enter key to exit.")
 
 if __name__ == '__main__':
     main()
