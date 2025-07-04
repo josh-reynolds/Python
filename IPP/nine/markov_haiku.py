@@ -53,12 +53,26 @@ def random_word(corpus):
     logging.debug('random word & syllables = %s %s\n', word, num_syls)
     return (word, num_syls)
 
+def word_after_single(prefix, suffix_map_1, current_syls, target_syls):
+    """Return all acceptable words in a corpus that follow a single word."""
+    accepted_words = []
+    suffixes = suffix_map_1.get(prefix)
+    if suffixes is not None:
+        for candidate in suffixes:
+            num_syls = count_syllables(candidate)
+            if current_syls + num_syls <= target_syls:
+                accepted_words.append(candidate)
+    logging.debug('accepted words after \"%s\" = %s\n',
+                  prefix, set(accepted_words))
+    return accepted_words
+
 def main():
     """Generate haiku using a Markov chain."""
     corpus = prep_training(load_training_file('train.txt'))
-    map_word_to_word(corpus)
+    single = map_word_to_word(corpus)
     map_2_words_to_word(corpus)
-    random_word(corpus)
+    rand = random_word(corpus)
+    word_after_single(rand[0], single, rand[1], 5)
 
 if __name__ == '__main__':
     main()
