@@ -79,6 +79,68 @@ def word_after_double(prefix, suffix_map_2, current_syls, target_syls):
                   prefix, set(accepted_words))
     return accepted_words
 
+def haiku_line(suffix_map_1, suffix_map_2, corpus, end_prev_line, target_syls):
+    """Build a haiku line from a training corpus and return it."""
+    line = '2/3'
+    line_syls = 0
+    current_line = []
+    if len(end_prev_line) == 0:
+        line = '1'
+        word, num_syls = random_word(corpus)
+        current_line.append(word)
+        line_syls += num_syls
+        word_choices = word_after_single(word, suffix_map_1,
+                                         line_syls, target_syls)
+        while len(word_choices) == 0:
+            prefix = random.choice(corpus)
+            logging.debug("new random prefix = %s", prefix)
+            word_choices = word_after_single(prefix, suffix_map_1,
+                                             line_syls, target_syls)
+        word = random.choice(word_choices)
+        num_syls = count_syllables(word)
+        logging.debug("word & syllables = %s %s", word, num_syls)
+        line_syls += num_syls
+        current_line.append(word)
+
+        if line_syls == target_syls:
+            end_prev_line.extend(current_line[-2:])
+            return current_line, end_prev_line
+
+        current_line.extend(end_prev_line)
+
+        while True:
+            logging.debug("line = %s\n", line)
+            prefix = current_line[-2] + ' ' + current_line[-1]
+            word_choices = word_after_double(prefix, suffix_map_2,
+                                             line_syls, target_syls)
+            while len(word_choices) == 0:
+                index = random.randint(0, len(corpus) - 2)
+                prefix = corpus[index] + ' ' + corpus[index + 1]
+                logging.debug("new random prefix = %s", prefix)
+                word_choices = word_after_double(prefix, suffix_map_2,
+                                                 line_syls, target_syls)
+            word = random.choice(word_choices)
+            num_syls = count_syllables(word)
+            logging.debug("word & syllables = %s %s", word, num_syls)
+
+            if line_syls + num_syls > target_syls:
+                continue
+            if line_syls + num_syls < target_syls:
+                current_line.append(word)
+                line_syls += num_syls
+            elif line_syls + num_syls == target_syls:
+                current_line.append(word)
+                break
+
+    end_prev_line = []
+    end_prev_line.extend(current_line[-2:])
+
+    if line == '1':
+        final_line = current_line[:]
+    else:
+        final_line = current_line[2:]
+
+    return final_line, end_prev_line
 
 def main():
     """Generate haiku using a Markov chain."""
@@ -91,6 +153,8 @@ def main():
     pair = f"{rand[0]} {nxt}"
     sylls = rand[1] + count_syllables(nxt)
     word_after_double(pair, double, sylls, 5)
+    line = haiku_line(single, double, corpus, "", 5)
+    print(line)
 
 if __name__ == '__main__':
     main()
