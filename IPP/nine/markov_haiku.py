@@ -177,19 +177,49 @@ def main():
             sys.exit()
 
         elif choice == "1":
-            pass      ###
+            final = []
+            end_prev_line = []
+            first_line, end_prev_line1 = haiku_line(suffix_map_1,
+                                                    suffix_map_2,
+                                                    corpus,
+                                                    end_prev_line, 5)
+            final.append(first_line)
+            line, end_prev_line2 = haiku_line(suffix_map_1,
+                                              suffix_map_2,
+                                              corpus,
+                                              end_prev_line1, 7)
+            final.append(line)
+            line, end_prev_line3 = haiku_line(suffix_map_1,
+                                              suffix_map_2,
+                                              corpus,
+                                              end_prev_line2, 5)
+            final.append(line)
 
         elif choice == "2":
-            pass      ###
+            if not final:
+                print("Please generate a full haiku first (Option 1)")
+                continue
+            else:
+                line, end_prev_line2 = haiku_line(suffix_map_1,
+                                                  suffix_map_2,
+                                                  corpus,
+                                                  end_prev_line1, 7)
+                final[1] = line
 
         elif choice == "3":
-            pass      ###
+            if not final:
+                print("Please generate a full haiku first (Option 1)")
+                continue
+            else:
+                line, end_prev_line3 = haiku_line(suffix_map_1,
+                                                  suffix_map_2,
+                                                  corpus,
+                                                  end_prev_line2, 5)
+                final[2] = line
 
         else:
             pr_red("\nSorry, but that isn't a valid choice.")
             continue
-
-        final = [["0"],["0"],["0"]]   ###
 
         print()
         print("First line = ", end="")
