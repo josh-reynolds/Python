@@ -77,5 +77,16 @@ def spirals(b, r, rot_fac, fuz_fac, arm):
         elif arm == 1:
             c.create_oval(x, y, x, y, fill='white', outline='')
 
+def star_haze(disc_radius_scaled, density):
+    """Randomly distibute faint tkinter stars in galactic disc.
+
+    disc_radius_scaled = galactic disc radius scaled to radio bubble diameter
+    density = multiplier to vary number of stars posted
+    """
+    for i in range(0, disc_radius_scaled * density):
+        x,y = random_polar_coordinates(disc_radius_scaled)
+        c.create_text(x, y, fill='white', font=('Helvetica', '7'), text='.')
+
+
 
 
