@@ -1,6 +1,9 @@
+"""Calculate detection probability and display on galaxy simulation image."""
 import tkinter as tk
 from random import randint, uniform, random
 import math
+# many math-style single letter variables here, pylint doesn't like them...
+# pylint: disable=C0103
 
 # ============================================================================
 # MAIN INPUT
@@ -83,13 +86,15 @@ def star_haze(disc_radius_scaled, density):
     disc_radius_scaled = galactic disc radius scaled to radio bubble diameter
     density = multiplier to vary number of stars posted
     """
-    for i in range(0, disc_radius_scaled * density):
+    for _ in range(0, disc_radius_scaled * density):
         x,y = random_polar_coordinates(disc_radius_scaled)
         c.create_text(x, y, fill='white', font=('Helvetica', '7'), text='.')
 
 def main():
     """Calculate detection probability & post galaxy display & statistics."""
     disc_radius_scaled, disc_vol_scaled = scale_galaxy()
+    # pylint apparently can't see this variable in the f-string below
+    # pylint: disable=W0612
     detection_prob = detect_prob(disc_vol_scaled)
 
     # build 4 main spiral arms and 4 trailing arms
@@ -109,7 +114,8 @@ def main():
     c.create_text(-455, -330, fill='white', anchor='w',
                   text=f"Radio Bubble Diameter = {SCALE} LY")
     c.create_text(-455, -300, fill='white', anchor='w',
-                  text=f"Probability of detection for {NUM_CIVS:,} civilizations = {detection_prob}")
+                  text=f"Probability of detection for {NUM_CIVS:,} "
+                  "civilizations = {detection_prob}")
 
     # post Earth's 225 LY diameter bubble and annotate
     if SCALE == 225:
@@ -122,7 +128,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
