@@ -41,3 +41,11 @@ def detect_prob(disc_vol_scaled):
         detection_prob = (-0.004757 * ratio**4 + 0.06681 * ratio**3 -
                           0.3605 * ratio**2 + 0.9215 * ratio + 0.00826)
     return round(detection_prob, 3)
+
+def random_polar_coordinates(disc_radius_scaled):
+    """Generate uniform (x,y) point within a disc for 2D display."""
+    r = random()
+    theta = uniform(0, 2 * math.pi)
+    x = round(math.sqrt(r) * math.cos(theta) * disc_radius_scaled)
+    y = round(math.sqrt(r) * math.sin(theta) * disc_radius_scaled)
+    return x, y
