@@ -49,3 +49,33 @@ def random_polar_coordinates(disc_radius_scaled):
     x = round(math.sqrt(r) * math.cos(theta) * disc_radius_scaled)
     y = round(math.sqrt(r) * math.sin(theta) * disc_radius_scaled)
     return x, y
+
+def spirals(b, r, rot_fac, fuz_fac, arm):
+    """Build spiral arms for tkinter display using logarithmic spiral formula.
+
+    b = arbitrary constant in logarithmic spiral equation
+    r = scaled galactic disc radius
+    rot_fac = rotation factor
+    fuz_fac = random shift in star position in arm, applied to 'fuzz' variable
+    arm = spiral arm (0 = main arm, 1 = trailing stars)
+    """
+    spiral_stars = []
+    fuzz = int(0.030 * abs(r))    # randomly shift star locations
+    theta_max_degrees = 520
+    for i in range(theta_max_degrees): # range(0,600,2) for no black hole
+        theta = math.radians(i)
+        x = (r * math.exp(b * theta) * math.cos(theta + math.pi * rot_fac) +
+             randint(-fuzz,fuzz) * fuz_fac)
+        l = (r * math.exp(b * theta) * math.sin(theta + math.pi * rot_fac) +
+             randint(-fuzz,fuzz) * fuz_fac)
+        spiral_Stars.append((x,y))
+    for x,y in spiral_stars:
+        if arm == 0 and int(x % 2) == 0:
+            c.create_oval(x-2, y-2, x+2, y+2, fill='white', outline='')
+        elif arm == 0 and int(x % 2) != 0:
+            c.create_oval(x-1, y-1, x+1, y+1, fill='white', outline='')
+        elif arm == 1:
+            c.create_oval(x, y, x, y, fill='white', outline='')
+
+
+
