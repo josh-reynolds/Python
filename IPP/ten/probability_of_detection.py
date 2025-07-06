@@ -1,7 +1,9 @@
+"""Calculate detection probability of galactic civs & display graph."""
 from random import randint
 from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
+# pylint: disable=C0103
 
 NUM_EQUIV_VOLUMES = 1000
 MAX_CIVS = 5000
@@ -36,4 +38,3 @@ xp = np.linspace(0, 5)
 _ = plt.plot(x, y, '.', xp, p(xp), '-')
 plt.ylim(-0.5, 1.5)
 plt.show()
-
