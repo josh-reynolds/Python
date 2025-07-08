@@ -83,6 +83,31 @@ class Game(tk.Frame):
         self.photo_lbl.configure(image=img)
         self.photo_lbl.image = img
 
+    def win_reveal(self):
+        """Randomly pick winner and reveal unchosen door with goat."""
+        door_list = list(self.doors)
+        self.choice = self.door_choice.get()
+        self.winner = random.choice(door_list)
+
+        door_list.remove(self.winner)
+
+        if self.choice in door_list:
+            door_list.remove(self.choice)
+            self.reveal = door_list[0]
+        else:
+            self.reveal = random.choice(door_list)
+
+        self.img_file = (f"reveal_{self.reveal}.png")
+        self.update_image()
+
+        self.yes.config(state='normal')
+        self.no.config(state='normal')
+        self.change_door.set(None)
+
+        self.img_file = 'all_closed.png'
+        self.parent.after(2000, self.update_image)
+
+
 
 
 
