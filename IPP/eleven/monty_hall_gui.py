@@ -107,6 +107,36 @@ class Game(tk.Frame):
         self.img_file = 'all_closed.png'
         self.parent.after(2000, self.update_image)
 
+    def show_final(self):
+        """Reveal image behind user's final door choice & count wins."""
+        door_list = list(self.doors)
+
+        switch_doors = self.change_door.get()
+
+        if switch_doors == 'y':
+            door_list.remove(self.choice)
+            door_list.remove(self.reveal)
+            new_pick = door_list[0]
+            if new_pick == self.winner:
+                self.img_file = f"money_{new_pick}.png"
+                self.pick_change_wins += 1
+            else:
+                self.img_file = f"goat_{new_pick}.png"
+                self.first_choice_wins += 1
+        elif switch_doors == 'n':
+            if self.choice == self.winner:
+                self.img_file = f"money_{new_pick}.png"
+                self.first_choice_wins += 1
+            else:
+                self.img_file = f"goat_{new_pick}.png"
+                self.pick_change_wins += 1
+
+        self.update_image()
+
+
+
+
+
 
 
 
