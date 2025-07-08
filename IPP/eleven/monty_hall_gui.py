@@ -69,5 +69,13 @@ class Game(tk.Frame):
                                         bg=defaultbg, fg='black',
                                         borderwidth=0)
 
+        a.grid(row=1, column=4, sticky='W', padx=20)
+        b.grid(row=1, column=4, sticky='N', padx=20)
+        c.grid(row=1, column=4, sticky='E', padx=20)
+        self.yes.grid(row=2, column=4, sticky='W', padx=20)
+        self.no.grid(row=2, column=4, sticky='N', padx=20)
+        self.unchanged_wins_txt.grid(row=1, column=5, columnspan=5)
+        self.changed_wins_txt.grid(row=2, column=5, columnspan=5)
+
 
 
