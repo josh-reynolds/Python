@@ -1,5 +1,7 @@
+"""Run Monty Hall simulation via a GUI interface and display stats."""
 import random
 import tkinter as tk
+# pylint: disable=C0103, R0902, R1725
 
 class Game(tk.Frame):
     """GUI application for Monty Hall Problem game."""
@@ -47,7 +49,7 @@ class Game(tk.Frame):
                            value='c', command=self.win_reveal)
 
         self.change_door = tk.StringVar()
-        self.change_dor.set(None)
+        self.change_door.set(None)
 
         instr_lbl = tk.Label(self.parent, text='Change doors?')
         instr_lbl.grid(row=2, column=3, columnspan=1, sticky='E')
@@ -97,7 +99,7 @@ class Game(tk.Frame):
         else:
             self.reveal = random.choice(door_list)
 
-        self.img_file = (f"reveal_{self.reveal}.png")
+        self.img_file = f"reveal_{self.reveal}.png"
         self.update_image()
 
         self.yes.config(state='normal')
@@ -132,12 +134,3 @@ class Game(tk.Frame):
                 self.pick_change_wins += 1
 
         self.update_image()
-
-
-
-
-
-
-
-
-
