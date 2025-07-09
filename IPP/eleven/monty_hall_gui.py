@@ -134,3 +134,17 @@ class Game(tk.Frame):
                 self.pick_change_wins += 1
 
         self.update_image()
+
+        self.unchanged_wins_txt.delete(1.0, 'end')
+        self.unchanged_wins_txt.insert(1.0, f"Unchanged wins = "
+                                       f"{self.first_choice_wins:d}")
+        self.changed_wins_txt.delete(1.0, 'end')
+        self.changed_wins_txt.insert(1.0, f"Changed wins = "
+                                       f"{self.pick_change_wins:d}")
+
+        self.yes.config(state='disabled')
+        self.no.config(state='disabled')
+        self.door_choice.set(None)
+
+        self.img_file = 'all_closed.pn'
+        self.parent.after(2000, self.update_image)
