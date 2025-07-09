@@ -148,3 +148,9 @@ class Game(tk.Frame):
 
         self.img_file = 'all_closed.pn'
         self.parent.after(2000, self.update_image)
+
+root = tk.Tk()
+root.title('Monty Hall Problem')
+root.geometry('1280x820')
+game = Game(root)
+root.mainloop()
