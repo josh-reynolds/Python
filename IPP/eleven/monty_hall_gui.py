@@ -81,6 +81,8 @@ class Game(tk.Frame):
         self.unchanged_wins_txt.grid(row=1, column=5, columnspan=5)
         self.changed_wins_txt.grid(row=2, column=5, columnspan=5)
 
+        print("Finished creating widgets")
+
     def update_image(self):
         """Update current doors image."""
         print("Updating doors image")
