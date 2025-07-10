@@ -11,7 +11,6 @@ class Game(tk.Frame):
     def __init__(self, parent):
         """Initialize the frame."""
         super(Game, self).__init__(parent)
-        print("Creating Game")
         self.parent = parent
         self.img_file = 'all_closed.png'
         self.choice = ''
@@ -23,7 +22,6 @@ class Game(tk.Frame):
 
     def create_widgets(self):
         """Create label, button, and text widgets for game."""
-        print("Creating widgets")
         img = tk.PhotoImage(file='all_closed.png')
         self.photo_lbl = tk.Label(self.parent, image=img,
                                   text='', borderwidth=0)
@@ -81,18 +79,14 @@ class Game(tk.Frame):
         self.unchanged_wins_txt.grid(row=1, column=5, columnspan=5)
         self.changed_wins_txt.grid(row=2, column=5, columnspan=5)
 
-        print("Finished creating widgets")
-
     def update_image(self):
         """Update current doors image."""
-        print("Updating doors image")
         img = tk.PhotoImage(file=self.img_file)
         self.photo_lbl.configure(image=img)
         self.photo_lbl.image = img
 
     def win_reveal(self):
         """Randomly pick winner and reveal unchosen door with goat."""
-        print("Revealing winner")
         door_list = list(self.doors)
         self.choice = self.door_choice.get()
         self.winner = random.choice(door_list)
@@ -117,7 +111,6 @@ class Game(tk.Frame):
 
     def show_final(self):
         """Reveal image behind user's final door choice & count wins."""
-        print("Showing final choice")
         door_list = list(self.doors)
 
         switch_doors = self.change_door.get()
