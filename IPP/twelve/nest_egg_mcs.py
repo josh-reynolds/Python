@@ -30,10 +30,21 @@ except IOError as exception:
     sys.exit(1)
 
 investment_type_args = {'bonds': bonds, 'stocks': stocks,
-                        'sp_blend': blend_50_50, 'sbc_blend': blend_40_50_10}
+                        'sb_blend': blend_50_50, 'sbc_blend': blend_40_50_10}
 
 print("   stocks = SP500")
 print("    bonds = 10-yr Treasury Bond")
 print(" sb_blend = 50% SP500 / 50% TBond")
 print("sbc_blend = 40% SP500 / 50% TBond / 10% Cash")
 print("Press ENTER to take default value shown in [brackets].\n")
+
+invest_type = default_input("Enter investmet type: (stocks, bonds, sb_blend,"\
+                            " sbc_blend): \n", 'bonds').lower()
+while invest_type not in investment_type_args:
+    invest_type = input("Invalid investment. Enter investment type "\
+                        "as listed in prompt: ")
+
+start_value = default_input("Input starting value of investments: \n", \
+                            '2000000')
+while not start_value.isdigit():
+    start_value = input("Invalid input! Input integer only: ")
