@@ -29,3 +29,11 @@ except IOError as exception:
     print(f"{exception}. \nTerminating program.")
     sys.exit(1)
 
+investment_type_args = {'bonds': bonds, 'stocks': stocks,
+                        'sp_blend': blend_50_50, 'sbc_blend': blend_40_50_10}
+
+print("   stocks = SP500")
+print("    bonds = 10-yr Treasury Bond")
+print(" sb_blend = 50% SP500 / 50% TBond")
+print("sbc_blend = 40% SP500 / 50% TBond / 10% Cash")
+print("Press ENTER to take default value shown in [brackets].\n")
