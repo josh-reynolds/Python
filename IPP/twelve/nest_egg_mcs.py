@@ -1,5 +1,5 @@
 """Model retirement income using Monte Carlo simulation."""
-#import sys
+import sys
 #import random
 #import matplotlib.pyplot as plt
 
@@ -17,3 +17,15 @@ def default_input(prompt, default=None):
     if not response and default:
         return default
     return response
+
+print("\nNote: Input data should be in percent, not decimal!\n")
+try:
+    bonds = read_to_list('10-yr_TBond_returns_1926-2013_pct.txt')
+    stocks = read_to_list('SP500_returns_1926-2013_pct.txt')
+    blend_40_50_10 = read_to_list('S-B-C_blend_1926-2013_pct.txt')
+    blend_50_50 = read_to_list('S-B_blend_1926-2013_pct.txt')
+    infl_rate = read_to_list('annual_infl_rate_1926-2013_pct.txt')
+except IOError as exception:
+    print(f"{exception}. \nTerminating program.")
+    sys.exit(1)
+
