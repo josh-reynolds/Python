@@ -82,4 +82,51 @@ if (not int(min_years) < int(most_likely_years) < int(max_years)
     pr_red("Requires Min < ML < Max with Max <= 99")
     sys.exit(1)
 
+def montecarlo(returns):
+    """Run MCS and return investment value at end-of-plan and bankrupt count."""
+    case_count = 0
+    bankrupt_count = 0
+    outcome = []
+
+    while case_count < int(num_cases):
+        investments = int(start_value)
+        start_year = random.randrange(0, len(returns))
+        duration = int(random.triangular(int(min_years), int(max_years),
+                                         int(most_likely_years)))
+        end_year = start_year + duration
+        lifespan = [i for i in range(start_year, end_year)]
+        bankrupt = 'no'
+
+        lifespan_returns = []
+        lifespan_infl = []
+        for i in lifespan:
+            lifespan_returns.append(returns[i % len(returns)])
+            lifespan_infl.append(infl_rate[i % len(returns)])
+
+        for index, i in enumerate(lifespan_returns):
+            infl = lifespan_infl[index]
+
+            if index == 0:
+                withdraw_infl_adj = int(withdrawal)
+            else:
+                widthdraw_infl_adj = int(withdraw_infl_adj * (1 + infl))
+
+            investments -= withdraw_infl_adj
+            investments = int(investments * (1 + i))
+
+            if investments <= 0:
+                bankrupt = 'yes'
+                break
+
+        if bnakrupt == 'yes':
+            outcome.append(0)
+            bankrupt_count += 1
+        else:
+            outcome.append(investments)
+        
+        case_count += 1
+
+    return outcome, bankrupt_count
+
+
 
