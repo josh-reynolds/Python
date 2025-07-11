@@ -1,7 +1,7 @@
 """Model retirement income using Monte Carlo simulation."""
 import sys
-#import random
-#import matplotlib.pyplot as plt
+import random
+import matplotlib.pyplot as plt
 
 def pr_red(output):
     """Print string to console, colored red."""
@@ -118,7 +118,7 @@ def montecarlo(returns):
                 bankrupt = 'yes'
                 break
 
-        if bnakrupt == 'yes':
+        if bankrupt == 'yes':
             outcome.append(0)
             bankrupt_count += 1
         else:
@@ -134,8 +134,8 @@ def bankrupt_prob(outcome, bankrupt_count):
     odds = round(100 * bankrupt_count / total, 1)
     
     print(f"\nInvestment type: {invest_type}")
-    print(f"Starting value: ${start_value:,}")
-    print(f"Annual withdrawal: ${withdrawal:,}")
+    print(f"Starting value: ${int(start_value):,}")
+    print(f"Annual withdrawal: ${int(withdrawal):,}")
     print(f"Years in retirement (min-ml-max): "
           f"{min_years}-{most_likely_years}-{max_years}")
     print(f"Number of runs: {len(outcome):,}")
@@ -146,4 +146,26 @@ def bankrupt_prob(outcome, bankrupt_count):
 
     return odds
 
+def main():
+    """Call MCS & bankrupt functions and draw bar chart of results."""
+    outcome, bankrupt_count = montecarlo(investment_type_args[invest_type])
+    odds = bankrupt_prob(outcome, bankrupt_count)
 
+    plotdata = outcome[:3000]
+
+    plt.figure(f"Outcome by Case (showing first {len(plotdata)} runs)",
+               figsize=(16,5))
+    index = [i + 1 for i in range(len(plotdata))]
+    plt.bar(index, plotdata, color='black')
+    plt.xlabel('Simulated Lives', fontsize=18)
+    plt.ylabel('$ Remaining', fontsize=18)
+    plt.ticklabel_format(style='plain', axis='y')
+    ax = plt.gca()
+    ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x,
+                                                         loc: f"{int(x):,}"))
+    plt.title(f"Probability of running out of money = {odds}%",
+              fontsize=20, color='red')
+    plt.show()
+
+if __name__ == '__main__':
+    main()
