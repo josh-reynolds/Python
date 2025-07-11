@@ -2,6 +2,7 @@
 import sys
 import random
 import matplotlib.pyplot as plt
+# pylint: disable=R0914, C0103
 
 def pr_red(output):
     """Print string to console, colored red."""
@@ -83,7 +84,7 @@ if (not int(min_years) < int(most_likely_years) < int(max_years)
     sys.exit(1)
 
 def montecarlo(returns):
-    """Run MCS and return investment value at end-of-plan and bankrupt count."""
+    """Run MCS & return investment value at end-of-plan & bankrupt count."""
     case_count = 0
     bankrupt_count = 0
     outcome = []
@@ -94,7 +95,7 @@ def montecarlo(returns):
         duration = int(random.triangular(int(min_years), int(max_years),
                                          int(most_likely_years)))
         end_year = start_year + duration
-        lifespan = [i for i in range(start_year, end_year)]
+        lifespan = list(range(start_year, end_year))
         bankrupt = 'no'
 
         lifespan_returns = []
@@ -109,7 +110,7 @@ def montecarlo(returns):
             if index == 0:
                 withdraw_infl_adj = int(withdrawal)
             else:
-                widthdraw_infl_adj = int(withdraw_infl_adj * (1 + infl))
+                withdraw_infl_adj = int(withdraw_infl_adj * (1 + infl))
 
             investments -= withdraw_infl_adj
             investments = int(investments * (1 + i))
@@ -123,7 +124,7 @@ def montecarlo(returns):
             bankrupt_count += 1
         else:
             outcome.append(investments)
-        
+
         case_count += 1
 
     return outcome, bankrupt_count
@@ -132,7 +133,7 @@ def bankrupt_prob(outcome, bankrupt_count):
     """Calculate and return chance of running out of money & other stats."""
     total = len(outcome)
     odds = round(100 * bankrupt_count / total, 1)
-    
+
     print(f"\nInvestment type: {invest_type}")
     print(f"Starting value: ${int(start_value):,}")
     print(f"Annual withdrawal: ${int(withdrawal):,}")
