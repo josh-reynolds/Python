@@ -1,6 +1,6 @@
 """Simulate Tvashtar eruption on Io."""
 #import sys
-#import math
+import math
 import random
 import pygame as pg
 
@@ -36,6 +36,13 @@ class Particle(pg.sprite.Sprite):
         self.vel = Particle.VELOCITY_SO2 * Particle.vel_scalar[self.gas]
         self.x, self.y = Particle.VENT_LOCATION_XY
         self.vector()
+
+    def vector(self):
+        """Calculate particle vector at launch."""
+        orient = random.uniform(60,120)
+        radians = math.radians(orient)
+        self.dx = self.vel * math.cos(radians)
+        self.dy = -self.vel * math.sin(radians)
 
 def main():
     """Run the simulation."""
