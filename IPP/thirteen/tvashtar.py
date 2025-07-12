@@ -1,9 +1,9 @@
 """Simulate Tvashtar eruption on Io."""
-#import sys
+import sys
 import math
 import random
 import pygame as pg
-# pylint: disable=C0103, R0902
+# pylint: disable=C0103, R0902, E1101
 
 pg.init()
 
@@ -59,7 +59,40 @@ class Particle(pg.sprite.Sprite):
             self.kill()
 
 def main():
-    """Run the simulation."""
+    """Set up and run game screen and loop."""
+    screen = pg.display.set_mode((639,360))
+    pg.display.set_caption('Io Volcano Simulator')
+    background = pg.image.load('tvashtar_plume.gif')
+
+    legend_font = pg.font.SysFont('None', 24)
+    water_label = legend_font.render('--- H20', True, WHITE, BLACK)
+    h2s_label = legend_font.render('--- H2S', True, DK_GRAY, BLACK)
+    co2_label = legend_font.render('--- CO2', True, GRAY, BLACK)
+    so2_label = legend_font.render('--- SO2/S2', True, LT_GRAY, BLACK)
+
+    particles = pg.sprite.Group()
+
+    clock = pg.time.Clock()
+
+    while True:
+        clock.tick(25)
+        particles.add(Particle(screen, background))
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+
+        screen.blit(background, (0,0))
+        screen.blit(water_label, (40, 20))
+        screen.blit(h2s_label, (40, 40))
+        screen.blit(co2_label, (40, 60))
+        screen.blit(so2_label, (40, 80))
+
+        particles.update()
+        particles.draw(screen)
+
+        pg.display.flip()
+
 
 if __name__ == '__main__':
     main()
