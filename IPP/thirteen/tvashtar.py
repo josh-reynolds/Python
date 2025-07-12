@@ -3,6 +3,7 @@
 import math
 import random
 import pygame as pg
+# pylint: disable=C0103, R0902
 
 pg.init()
 
@@ -43,6 +44,19 @@ class Particle(pg.sprite.Sprite):
         radians = math.radians(orient)
         self.dx = self.vel * math.cos(radians)
         self.dy = -self.vel * math.sin(radians)
+
+    def update(self):
+        """Apply gravity, draw path, and handle boundary conditions."""
+        self.dy += Particle.GRAVITY
+        pg.draw.line(self.background, self.color, (self.x, self.y),
+                     (self.x + self.dx, self.y + self.dy))
+        self.x += self.dx
+        self.y += self.dy
+
+        if self.x < 0 or self.x > self.screen.get_width():
+            self.kill()
+        if self.y < 0 or self.y > Particle.IO_SURFACE_Y:
+            self.kill()
 
 def main():
     """Run the simulation."""
