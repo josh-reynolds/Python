@@ -1,6 +1,6 @@
 """Game simulating satellite orbiting Mars."""
 #import os
-#import math
+import math
 import random
 import pygame as pg
 # pylint: disable=C0103, R0902
@@ -53,3 +53,13 @@ class Satellite(pg.sprite.Sprite):
             self.thruster(dx=0, dy=-0.05)
         elif keys[pg.K_DOWN]:
             self.thruster(dx=0, dy=0.05)
+
+    def locate(self, planet):
+        """Calculate distance & heading to planet."""
+        px, py = planet.x, planet.y
+        dist_x = self.x - px
+        dist_y = self.y - py
+        planet_dir_radians = math.atan2(dist_x, dist_y)
+        self.heading = planet_dir_radians * 180 / math.pi
+        self.heading -= 90
+        self.distance = math.hypot(dist_x, dist_y)
