@@ -41,3 +41,15 @@ class Satellite(pg.sprite.Sprite):
         self.dy += dy
         self.fuel -= 2
         self.thrust.play()
+
+    def check_keys(self):
+        """Check if user presses arrow keys & call thruster() method."""
+        keys = pg.key.get_pressed()
+        if keys[pg.K_RIGHT]:
+            self.thruster(dx=0.05, dy=0)
+        elif keys[pg.K_LEFT]:
+            self.thruster(dx=-0.05, dy=0)
+        elif keys[pg.K_UP]:
+            self.thruster(dx=0, dy=-0.05)
+        elif keys[pg.K_DOWN]:
+            self.thruster(dx=0, dy=0.05)
