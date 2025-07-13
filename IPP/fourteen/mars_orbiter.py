@@ -34,3 +34,10 @@ class Satellite(pg.sprite.Sprite):
         self.distance = 0
         self.thrust = pg.mixer.Sound('trust_audio.ogg')
         self.thrust.set_volume(0.07)
+
+    def thruster(self, dx, dy):
+        """Execute actions assocated with firing thrusters."""
+        self.dx += dx
+        self.dy += dy
+        self.fuel -= 2
+        self.thrust.play()
