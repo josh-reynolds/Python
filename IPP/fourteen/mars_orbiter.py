@@ -128,3 +128,10 @@ class Planet(pg.sprite.Sprite):
     def update(self):
         """Call the rotate method."""
         self.rotate()
+
+def calc_eccentricity(dist_list):
+    """Calculate & return eccentricity from list of radii."""
+    apoapsis = max(dist_list)
+    periapsis = min(dist_list)
+    eccentricity = (apoapsis - periapsis) / (apoapsis + periapsis)
+    return eccentricity
