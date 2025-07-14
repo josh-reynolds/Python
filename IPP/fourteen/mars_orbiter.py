@@ -104,3 +104,11 @@ class Planet(pg.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.angle = math.degrees(0)
         self.rotate_by = math.degrees(0.01)
+
+    def rotate(self):
+        """Rotate the planet image with each game loop."""
+        last_center = self.rect.center
+        self.image = pg.transform.rotate(self.image_copy, self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = last_center
+        self.angle += self.rotate_by
