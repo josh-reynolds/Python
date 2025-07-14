@@ -75,3 +75,13 @@ class Satellite(pg.sprite.Sprite):
         self.x += self.dx
         self.y += self.dy
         pg.draw.line(self.background, WHITE, last_center, (self.x, self.y))
+
+    def update(self):
+        """Update satellite object dring game."""
+        self.check_keys()
+        self.rotate()
+        self.path()
+        self.rect.center = (self.x, self.y)
+        if self.dx == 0 and self.dy == 0:
+            self.image = self.image_crash
+            self.image.set_colorkey(BLACK)
