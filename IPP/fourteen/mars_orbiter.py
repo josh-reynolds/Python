@@ -63,3 +63,15 @@ class Satellite(pg.sprite.Sprite):
         self.heading = planet_dir_radians * 180 / math.pi
         self.heading -= 90
         self.distance = math.hypot(dist_x, dist_y)
+
+    def rotate(self):
+        """Rotate satellite using degrees so dish faces planet."""
+        self.image = pg.transform.rotate(self.image_sat, self.heading)
+        self.rect = self.image.get_rect()
+
+    def path(self):
+        """Update satellite's position & draw line to trace orbital path."""
+        last_center = (self.x, self.y)
+        self.x += self.dx
+        self.y += self.dy
+        pg.draw.line(self.background, WHITE, last_center, (self.x, self.y))
