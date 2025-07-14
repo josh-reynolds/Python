@@ -85,3 +85,22 @@ class Satellite(pg.sprite.Sprite):
         if self.dx == 0 and self.dy == 0:
             self.image = self.image_crash
             self.image.set_colorkey(BLACK)
+
+class Planet(pg.sprite.Sprite):
+    """Planet object that rotates & projects gravity field."""
+
+    def __init__(self):
+        """Create a Planet."""
+        super().__init__()
+        self.image_mars = pg.image.load("mars.png").convert()
+        self.image_water = pg.image.load("mars_water.png").convert()
+        self.image_copy = pg.transform.scale(self.image_mars, (100,100))
+        self.image_copy.set_colorkey(BLACK)
+        self.rect = self.image_copy.get_rect()
+        self.image = self.image_copy
+        self.mass = 2000
+        self.x = 400
+        self.y = 320
+        self.rect.center = (self.x, self.y)
+        self.angle = math.degrees(0)
+        self.rotate_by = math.degrees(0.01)
