@@ -112,3 +112,19 @@ class Planet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = last_center
         self.angle += self.rotate_by
+
+    def gravity(self, satellite):
+        """Calculate impact of gravity on satellite."""
+        G = 1.0
+        dist_x = self.x - satellite.x
+        dist_y = self.y - satellite.y
+        distance = math.hypot(dist_x, dist_y)
+        dist_x /= distance
+        dist_y /= distance
+        force = G * (satellite.mass * self.mass) / (math.pow(distance, 2))
+        satellite.dx += (dist_x * force)
+        satellite.dy += (dist_y * force)
+
+    def update(self):
+        """Call the rotate method."""
+        self.rotate()
