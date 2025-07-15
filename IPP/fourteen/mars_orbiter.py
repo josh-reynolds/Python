@@ -3,7 +3,7 @@ import os
 import math
 import random
 import pygame as pg
-# pylint: disable=C0103, R0902
+# pylint: disable=C0103, R0902, R0914, R0912, R0915
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -259,7 +259,7 @@ def main():
 
         if eccentricity < 0.05 and sat.distance >= 69 and sat.distance <= 120:
             map_instruct = ['Press and hold M to map soil moisture']
-            instruct_lable(screen, map_instruct, LT_BLUE, 250, 175)
+            instruct_label(screen, map_instruct, LT_BLUE, 250, 175)
             mapping_enabled = True
         else:
             mapping_enabled = False
@@ -268,3 +268,29 @@ def main():
         planet_sprite.draw(screen)
         sat_sprite.update()
         sat_sprite.draw(screen)
+
+        if pg.time.get_ticks() <= 15000:
+            instruct_label(screen, intro_text, GREEN, 145, 100)
+
+        box_label(screen, 'Dx', (70, 20, 75, 20))
+        box_label(screen, 'Dy', (150, 20, 80, 20))
+        box_label(screen, 'Altitude', (240, 20, 160, 20))
+        box_label(screen, 'Fuel', (410, 20, 160, 20))
+        box_label(screen, 'Eccentricity', (580, 20, 150, 20))
+
+        box_label(screen, f'{sat.dx:.1f}', (70, 50, 75, 20))
+        box_label(screen, f'{sat.dy:.1f}', (150, 50, 80, 20))
+        box_label(screen, f'{sat.distance:.1f}', (240, 50, 160, 20))
+        box_label(screen, f'{sat.fuel}', (410, 50, 160, 20))
+        box_label(screen, f'{eccentricity}', (580, 50, 150, 20))
+
+        instruct_label(screen, instruct_text1, WHITE, 10, 575)
+        instruct_label(screen, instruct_text2, WHITE, 570, 510)
+
+        cast_shadow(screen)
+        pg.draw.rect(screen, WHITE, (1, 1, 798, 643), 1)
+
+        pg.display.flip()
+
+if __name__ == '__main__':
+    main()
