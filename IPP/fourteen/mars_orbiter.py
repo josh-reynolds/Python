@@ -165,3 +165,9 @@ def mapping_off(planet):
     """Restore normal planet image."""
     planet.image_copy = pg.transform.scale(planet.image_mars, (100,100))
     planet.image_copy.set_colorkey(BLACK)
+
+def cast_shadow(screen):
+    """Add optional terminator & shadow behind planet to screen."""
+    shadow = pg.Surface((400,100), flags=pg.SRCALPHA)
+    shadow.fill((0,0,0,210))
+    screen.blit(shadow, (0,270))
