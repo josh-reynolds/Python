@@ -135,3 +135,20 @@ def calc_eccentricity(dist_list):
     periapsis = min(dist_list)
     eccentricity = (apoapsis - periapsis) / (apoapsis + periapsis)
     return eccentricity
+
+def instruct_label(screen, text, color, x, y):
+    """Take screen, list of strings, color & origin & render text to screen."""
+    instruct_font = pg.font.SysFont(None, 25)
+    line_spacing = 22
+    for index, line in enumerate(text):
+        label = instruct_font.render(line, True, color, BLACK)
+        screen.blit(label, (x, y + index * line_spacing))
+
+def box_label(screen, text, dimensions):
+    """Make fixed-size label from screen, text & dimensions."""
+    readout_font = pg.font.SysFont(None, 27)
+    base = pg.Rect(dimensions)
+    pg.draw.rect(screen, WHITE, base, 0)
+    label = readout_font.render(text, True, BLACK)
+    label_rect = label.get_rect(center=base.center)
+    screen.blit(label, label_rect)
