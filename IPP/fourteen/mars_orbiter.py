@@ -1,5 +1,5 @@
 """Game simulating satellite orbiting Mars."""
-#import os
+import os
 import math
 import random
 import pygame as pg
@@ -171,3 +171,35 @@ def cast_shadow(screen):
     shadow = pg.Surface((400,100), flags=pg.SRCALPHA)
     shadow.fill((0,0,0,210))
     screen.blit(shadow, (0,270))
+
+def main():
+    """Set up labels & instructions, create objects & run game loop."""
+    pg.init()
+
+    os.environ['SDL_VIDEO_WINDOW_POS'] = '700, 100'
+    screen = pg.display.set_mode((800,645), pg.FULLSCREEN)
+    pg.display.set_caption("Mars Orbiter")
+    background = pg.Surface(screen.get_size())
+
+    pg.mixer.init()
+
+    intro_text = [
+            ' The Mars Orbiter experienced an error during Orbit insertion.',
+            ' Use thrusters to correct to a circular mapping orbit without',
+            ' running out of propellant or burning up in the atmosphere.'
+            ]
+
+    instruct_text1 = [
+            'Orbital altitude must be within 69-120 miles',
+            'Orbital Eccentricity must be < 0.05',
+            'Avoid top of atmosphere at 68 miles'
+            ]
+
+    instruct_text2 = [
+            'Left Arrow = Decrease Dx',
+            'Right Arrow = Increase Dx',
+            'Up Arrow = Decrease Dy',
+            'Down Arrow = Increase Dy',
+            'Space Bar = Clear Path',
+            'Escape = Exit Full Screen'
+            ]
