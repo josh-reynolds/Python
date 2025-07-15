@@ -203,3 +203,68 @@ def main():
             'Space Bar = Clear Path',
             'Escape = Exit Full Screen'
             ]
+
+    planet = Planet()
+    planet_sprite = pg.sprite.Group(planet)
+    sat = Satellite(background)
+    sat_sprite = pg.sprite.Group(sat)
+
+    dist_list = []
+    eccentricity = 1
+    eccentricity_calc_interval = 5
+
+    clock = pg.time.Clock()
+    fps = 30
+    tick_count = 0
+
+    mapping_enabled = False
+
+    running = True
+    while running:
+        clock.tick(fps)
+        tick_count += 1
+        dist_list.append(sat.distance)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+            elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                screen = pg.display.set_mode((800,645))
+            elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                background.fill(BLACK)
+            elif event.type == pg.KEYUP:
+                sat.thrust.stop()
+                mapping_off(planet)
+            elif mapping_enabled:
+                if event.type == pg.KEYDOWN and event.key == pg.K_m:
+                    mapping_on(planet)
+
+        sat.locate(planet)
+        planet.gravity(sat)
+
+        if tick_count % (eccentricity_calc_interval * fps) == 0:
+            eccentricity = calc_eccentricity(dist_list)
+            dist_list = []
+
+        screen.blit(background, (0,0))
+
+        if sat.fuel <= 0:
+            instruct_label(screen, ['Fuel Depleted'], RED, 340, 195)
+            sat.fuel = 0
+            sat.dx = 2
+        elif sat.distance <= 68:
+            instruct_label(screen, ['Atmospheric Entry!'], RED, 320, 195)
+            sat.dx = 0
+            sat.dy = 0
+
+        if eccentricity < 0.05 and sat.distance >= 69 and sat.distance <= 120:
+            map_instruct = ['Press and hold M to map soil moisture']
+            instruct_lable(screen, map_instruct, LT_BLUE, 250, 175)
+            mapping_enabled = True
+        else:
+            mapping_enabled = False
+
+        planet_sprite.update()
+        planet_sprite.draw(screen)
+        sat_sprite.update()
+        sat_sprite.draw(screen)
