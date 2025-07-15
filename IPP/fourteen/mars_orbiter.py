@@ -152,3 +152,16 @@ def box_label(screen, text, dimensions):
     label = readout_font.render(text, True, BLACK)
     label_rect = label.get_rect(center=base.center)
     screen.blit(label, label_rect)
+
+def mapping_on(planet):
+    """Show soil moisture image of planet."""
+    last_center = planet.rect.center
+    planet.image_copy = pg.transform.scale(planet.image_water, (100,100))
+    planet.image_copy.set_colorkey(BLACK)
+    planet.rect = planet.image_copy.get_rect()
+    planet.rect.center = last_center
+
+def mapping_off(planet):
+    """Restore normal planet image."""
+    planet.image_copy = pg.transform.scale(planet.image_mars, (100,100))
+    planet.image_copy.set_colorkey(BLACK)
