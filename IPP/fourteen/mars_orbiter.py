@@ -32,7 +32,7 @@ class Satellite(pg.sprite.Sprite):
         self.fuel = 100
         self.mass = 1
         self.distance = 0
-        self.thrust = pg.mixer.Sound('trust_audio.ogg')
+        self.thrust = pg.mixer.Sound('thrust_audio.ogg')
         self.thrust.set_volume(0.07)
 
     def thruster(self, dx, dy):
@@ -282,7 +282,7 @@ def main():
         box_label(screen, f'{sat.dy:.1f}', (150, 50, 80, 20))
         box_label(screen, f'{sat.distance:.1f}', (240, 50, 160, 20))
         box_label(screen, f'{sat.fuel}', (410, 50, 160, 20))
-        box_label(screen, f'{eccentricity}', (580, 50, 150, 20))
+        box_label(screen, f'{eccentricity:.8f}', (580, 50, 150, 20))
 
         instruct_label(screen, instruct_text1, WHITE, 10, 575)
         instruct_label(screen, instruct_text2, WHITE, 570, 510)
