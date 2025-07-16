@@ -19,10 +19,18 @@ def main():
     print("Done! \n")
 
 def del_folders(name):
-    pass
+    """If a folder with a named prefix exists in directory, delete it."""
+    contents = os.listdir()
+    for item in contents:
+        if os.path.isdir(item) and item.startswith(name):
+            shutil.rmtree(item)
 
 def clean_folder(prefix_to_save):
-    pass
+    """Delete all files in folder except those with a named prefix."""
+    files = os.listdir()
+    for file in files:
+        if not file.startswith(prefix_to_save):
+            os.remove(file)
 
 def crop_images():
     pass
