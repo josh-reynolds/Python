@@ -2,7 +2,7 @@
 import sys
 import math
 from collections import defaultdict
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 BENFORD = [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]
 
@@ -48,3 +48,15 @@ def chi_square_test(data_count, expected_counts):
     print("Critical value at a P-value o 0.05 is 15.51.")
 
     return chi_square_stat < 15.51
+
+def bar_chart(data_pct):
+    """Make bar chart of observed vs expected 1st-digit frequency (%)."""
+    fig, axes = plt.subplots()
+
+    index = [i + 1 for i in range(len(data_pct))]
+
+    fig.canvas.set_window_title('Percentage First Digits')
+    axes.set_title('Data vs. Benford Values', fontsize=15)
+    axes.set_ylabel('Frequency (%)', fontsize=16)
+    axes.set_ticks(index)
+    axes.set_xticklabels(index, fontsize=14)
