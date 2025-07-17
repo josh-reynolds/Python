@@ -33,8 +33,9 @@ def count_first_digits(data_list):
     data_pct = [(i / total_count) * 100 for i in data_count]
     return data_count, data_pct, total_count
 
-def get_expected_counts():
-    """pass."""
+def get_expected_counts(total_count):
+    """Return expected Benford's law counts for a total sample count."""
+    return [round(p * total_count/100) for p in BENFORD]
 
 def chi_square_test():
     """pass."""
