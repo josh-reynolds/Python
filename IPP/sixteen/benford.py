@@ -1,6 +1,6 @@
 """Assess a set of data for potential fraud using Benford's Law."""
 import sys
-#import math
+import math
 from collections import defaultdict
 #import matplotlib.pyplot as plt
 
@@ -37,5 +37,14 @@ def get_expected_counts(total_count):
     """Return expected Benford's law counts for a total sample count."""
     return [round(p * total_count/100) for p in BENFORD]
 
-def chi_square_test():
-    """pass."""
+def chi_square_test(data_count, expected_counts):
+    """Return boolean on chi-square test (8 deg. freedom & P-val 0.05)."""
+    chi_square_stat = 0
+    for data, expected in zip(data_count, expected_counts):
+        chi_square = math.pow(data - expected, 2)
+        chi_square_stat += chi_square / expected
+
+    print(f"\nChi Squared Test Statistic = {chi_square_stat:.3f}")
+    print("Critical value at a P-value o 0.05 is 15.51.")
+
+    return chi_square_stat < 15.51
