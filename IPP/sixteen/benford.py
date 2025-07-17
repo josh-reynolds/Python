@@ -60,3 +60,19 @@ def bar_chart(data_pct):
     axes.set_ylabel('Frequency (%)', fontsize=16)
     axes.set_ticks(index)
     axes.set_xticklabels(index, fontsize=14)
+
+    rects = axes.bar(index, data_pct, width=0.95, color='black', label='Data')
+
+    for rect in rects:
+        height = rect.get_height()
+        axes.text(rect.get_x() + rect.get_width()/2, height,
+                  f'{height:0.1f}', ha='center', va='bottom',
+                  fontsize=13)
+
+    axes.scatter(index, BENFORD, s=150, c='red', zorder=2, label='Benford')
+
+    axes.spines['right'].set_visible(False)
+    axes.spines['top'].set_visible(False)
+    axes.legend(prop={'size':15}, frameon=False)
+
+    plt.show()
