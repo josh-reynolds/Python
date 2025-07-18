@@ -4,10 +4,16 @@ import turtle as t
 # throws errors for missing members in the turtle module - disabling
 # pylint: disable=E1101
 
-t.forward(100)
+def square():
+    for i in range(4):
+        t.forward(100)
+        t.right(90)
+
 t.shape('turtle')
-t.right(45)
-t.forward(150)
+t.speed(0)
+for i in range(60):
+    square()
+    t.right(5)
 
 t.mainloop()  # required for running in a script, otherwise the window
               # closes immediately - book omits this detail
