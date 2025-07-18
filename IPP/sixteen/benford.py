@@ -51,14 +51,16 @@ def chi_square_test(data_count, expected_counts):
 
 def bar_chart(data_pct):
     """Make bar chart of observed vs expected 1st-digit frequency (%)."""
-    fig, axes = plt.subplots()
+    _, axes = plt.subplots()
 
     index = [i + 1 for i in range(len(data_pct))]
 
-    fig.canvas.set_window_title('Percentage First Digits')
+    # following usage from the text has since been deprecated - use next line
+    #fig.canvas.set_window_title('Percentage First Digits')
+    plt.get_current_fig_manager().set_window_title('Percentage First Digits')
     axes.set_title('Data vs. Benford Values', fontsize=15)
     axes.set_ylabel('Frequency (%)', fontsize=16)
-    axes.set_ticks(index)
+    axes.set_xticks(index)
     axes.set_xticklabels(index, fontsize=14)
 
     rects = axes.bar(index, data_pct, width=0.95, color='black', label='Data')
@@ -76,3 +78,34 @@ def bar_chart(data_pct):
     axes.legend(prop={'size':15}, frameon=False)
 
     plt.show()
+
+def main():
+    """Call functions and print stats."""
+    while True:
+        filename = input("\nName of file with COUNT data: ")
+        try:
+            data_list = load_data(filename)
+        except IOError as err:
+            pr_red(f"{err}. Try again.")
+        else:
+            break
+
+    data_count, data_pct, total_count = count_first_digits(data_list)
+    expected_counts = get_expected_counts(total_count)
+    print(f"\nobserved counts = {data_count}")
+    print(f"expected counts = {expected_counts}\n")
+
+    print("First Digit Probabilities:")
+    for i in range(1,10):
+        print(f"{i}: observed: {data_pct[i-1]/100:.3f} "
+              f"expected: {BENFORD[i-1]/100:.3f}")
+
+    if chi_square_test(data_count, expected_counts):
+        print("Observed distribution matches expected distribution.")
+    else:
+        pr_red("Observed distribution does not match expected distribution.")
+
+    bar_chart(data_pct)
+
+if __name__ == '__main__':
+    main()
