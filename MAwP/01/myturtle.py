@@ -22,16 +22,19 @@ def polygon(sidelength=100, sides=4):
         t.forward(sidelength)
         t.right(360/sides)
 
+def star(sidelength=100):
+    """Draw a five-pointed star."""
+    for _ in range(5):
+        t.forward(sidelength)
+        t.right(145)
+
 t.shape('turtle')
 
 size = 5
-for _ in range(60):
-    square(size)
+for _ in range(30):
+    star(size)
     t.right(5)
     size += 5
-
-
-
 
 # --------------------------------------------------------------------
 t.mainloop()  # required for running in a script, otherwise the window
