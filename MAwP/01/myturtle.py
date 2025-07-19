@@ -16,8 +16,14 @@ def triangle(sidelength=100):
         t.forward(sidelength)
         t.right(120)
 
+def polygon(sidelength=100, sides=4):
+    """Draw a regular polygon of specified size."""
+    for _ in range(sides):
+        t.forward(sidelength)
+        t.right(360/sides)
+
 t.shape('turtle')
-triangle()
+polygon(100,7)
 
 
 # --------------------------------------------------------------------
