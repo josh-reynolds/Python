@@ -23,7 +23,14 @@ def polygon(sidelength=100, sides=4):
         t.right(360/sides)
 
 t.shape('turtle')
-polygon(100,7)
+
+size = 5
+for _ in range(60):
+    square(size)
+    t.right(5)
+    size += 5
+
+
 
 
 # --------------------------------------------------------------------
