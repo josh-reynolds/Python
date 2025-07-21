@@ -1,6 +1,6 @@
 """Display equations on a graph."""
 from engine import run, screen
-from screen_matrix import push_matrix, translate, sm, line, pop_matrix
+from screen_matrix import push_matrix, translate, sm, line, circle, pop_matrix
 
 WIDTH = 600
 HEIGHT = 600
@@ -16,7 +16,7 @@ RANGEX = XMAX - XMIN
 RANGEY = YMAX - YMIN
 
 XSCL = WIDTH / RANGEX
-YSCL = HEIGHT / RANGEY
+YSCL = -HEIGHT / RANGEY
 
 
 def update():
@@ -28,10 +28,18 @@ def draw():
 
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
+
     sm.color = (0,255,255)
     for i in range(XMIN, XMAX + 1):
         line(i * XSCL, YMIN * YSCL, i * XSCL, YMAX * YSCL)
         line(XMIN * XSCL, i * YSCL, XMAX * XSCL, i * YSCL)
+
+    sm.color = (0,0,0)
+    line(0, YMIN * YSCL, 0, YMAX * YSCL)
+    line(XMIN * XSCL, 0, XMAX * XSCL, 0)
+
+    circle(3 * XSCL, 6 * YSCL, 10, (255,0,0))
+
     pop_matrix()
 
 run()
