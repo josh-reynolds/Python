@@ -18,14 +18,8 @@ RANGEY = YMAX - YMIN
 XSCL = WIDTH / RANGEX
 YSCL = -HEIGHT / RANGEY
 
-
-def update():
-    """Update state once per frame."""
-
-def draw():
-    """Draw on window once per frame."""
-    screen.fill((255,255,255))
-
+def grid():
+    """Draw a grid on the window surface."""
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
 
@@ -41,5 +35,13 @@ def draw():
     circle(3 * XSCL, 6 * YSCL, 10, (255,0,0))
 
     pop_matrix()
+
+def update():
+    """Update state once per frame."""
+
+def draw():
+    """Draw on window once per frame."""
+    screen.fill((255,255,255))
+    grid()
 
 run()
