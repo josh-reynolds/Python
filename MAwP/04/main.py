@@ -1,6 +1,6 @@
 """Display equations on a graph."""
 from engine import run, screen
-from screen_matrix import push_matrix, translate, sm, line, pop_matrix
+from screen_matrix import push_matrix, translate, sm, line, circle, pop_matrix
 
 WIDTH = 600
 HEIGHT = 600
@@ -26,14 +26,21 @@ def cubic(_input):
     """Cubic function."""
     return 6*_input**3 + 31*_input**2 + 3*_input - 10
 
+def quadratic(_input):
+    """Quadratic function."""
+    return 2*x**2 + 7*x - 15
+
 def graph(function):
     """Draw function curve on the window surface."""
     sm.color = (255,0,0)
     x_val = XMIN
     while x_val <= XMAX:
-        line(x_val * XSCL, function(x_val) * YSCL,
-             (x_val + 0.1) * XSCL, function(x_val + 0.1) * YSCL)
-        x_val += 0.1
+        value = function(x_val)
+        line(x_val * XSCL, value * YSCL,
+             (x_val + 0.001) * XSCL, function(x_val + 0.001) * YSCL)
+        if value < 0.001 and value > -0.001:
+            circle(x_val * XSCL, value * YSCL, 8, (255,0,0))
+        x_val += 0.001
 
 def grid():
     """Draw a grid on the window surface."""
