@@ -18,17 +18,17 @@ RANGEY = YMAX - YMIN
 XSCL = WIDTH / RANGEX
 YSCL = -HEIGHT / RANGEY
 
-def parabola(_input):
+def parabola(input_):
     """Parabola formula."""
-    return _input**2
+    return input_**2
 
-def cubic(_input):
+def cubic(input_):
     """Cubic function."""
-    return 6*_input**3 + 31*_input**2 + 3*_input - 10
+    return 6*input_**3 + 31*input_**2 + 3*input_ - 10
 
-def quadratic(_input):
+def quadratic(input_):
     """Quadratic function."""
-    return 2*x**2 + 7*x - 15
+    return 2*input_**2 + 7*input_ - 15
 
 def graph(function):
     """Draw function curve on the window surface."""
@@ -64,7 +64,8 @@ def draw():
     translate(WIDTH/2, HEIGHT/2)
     grid()
     #graph(parabola)
-    graph(cubic)
+    #graph(cubic)
+    graph(quadratic)
     pop_matrix()
 
 run()
