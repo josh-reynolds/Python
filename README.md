@@ -11,5 +11,6 @@ Miscellaneous projects and experiments in Python
   * pygame/nulltima - a rudimentary Ultima III clone
   * pygame/noise - a simple Perlin noise implementation
   * pygame/bresenham.py - working out Bresenham's line drawing algorithm
-  * pygame/engine - a homegrown replacement for Pygame Zero, used in all the Code the Classics projects
+  * pygame/engine - a homegrown replacement for Pygame Zero, used in all the Code the Classics projects. Also
+                    duplicates some features of Processing, and is used accordingly in NOC, above.
   
