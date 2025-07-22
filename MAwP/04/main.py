@@ -22,11 +22,15 @@ def parabola(_input):
     """Parabola formula."""
     return _input**2
 
+def cubic(_input):
+    """Cubic function."""
+    return 6*_input**3 + 31*_input**2 + 3*_input - 10
+
 def graph(function):
     """Draw function curve on the window surface."""
+    sm.color = (255,0,0)
     x_val = XMIN
     while x_val <= XMAX:
-        sm.color = (0,0,0)
         line(x_val * XSCL, function(x_val) * YSCL,
              (x_val + 0.1) * XSCL, function(x_val + 0.1) * YSCL)
         x_val += 0.1
@@ -52,7 +56,8 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     grid()
-    graph(parabola)
+    #graph(parabola)
+    graph(cubic)
     pop_matrix()
 
 run()
