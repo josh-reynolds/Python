@@ -34,11 +34,11 @@ def guess():
     """Find solution using binary search guesses."""
     lower = -1
     upper = 0
-    for i in range(20):
+    for _ in range(20):
         midpt = average(lower, upper)
         if g(midpt) == 0:
             return midpt
-        elif g(midpt) < 0:
+        if g(midpt) < 0:
             upper = midpt
         else:
             lower = midpt
