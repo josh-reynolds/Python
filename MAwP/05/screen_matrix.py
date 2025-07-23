@@ -49,10 +49,25 @@ class ScreenMatrix:
 
     def draw_rect(self, x, y, w, h, color, width=0):
         # not supporting rotation yet, just translation
+        # might be simplest to handle this as a polygon and
+        # rotate all four points...
         top_left = PVector(x,y)
         top_left + self.origin
+        tl = (top_left.x, top_left.y)
 
-        screen.draw.rect(top_left.x, top_left.y, w, h, color, width)
+        top_right = PVector(x+w,y)
+        top_right + self.origin
+        tr = (top_right.x, top_right.y)
+
+        bottom_left = PVector(x,y+h)
+        bottom_left + self.origin
+        bl = (bottom_left.x, bottom_left.y)
+
+        bottom_right = PVector(x+w,y+h)
+        bottom_right + self.origin
+        br = (bottom_right.x, bottom_right.y)
+        
+        screen.draw.polygon((tl, tr, br, bl), color, width)
 
 
 def translate(x, y):

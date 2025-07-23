@@ -355,6 +355,9 @@ class Painter:
     def rect(self, x, y, w, h, color, width=0):
         pygame.draw.rect(self.surface, color, (x, y, w, h), width)
 
+    def polygon(self, points, color, width=0):
+        pygame.draw.polygon(self.surface, color, points, width)
+
 
 class Music:
     """Music - wraps the Pygame music mixer."""
