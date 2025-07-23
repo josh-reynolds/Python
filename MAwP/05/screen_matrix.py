@@ -52,18 +52,22 @@ class ScreenMatrix:
         # might be simplest to handle this as a polygon and
         # rotate all four points...
         top_left = PVector(x,y)
+        top_left.rotate(math.degrees(self.angle))
         top_left + self.origin
         tl = (top_left.x, top_left.y)
 
         top_right = PVector(x+w,y)
+        top_right.rotate(math.degrees(self.angle))
         top_right + self.origin
         tr = (top_right.x, top_right.y)
 
         bottom_left = PVector(x,y+h)
+        bottom_left.rotate(math.degrees(self.angle))
         bottom_left + self.origin
         bl = (bottom_left.x, bottom_left.y)
 
         bottom_right = PVector(x+w,y+h)
+        bottom_right.rotate(math.degrees(self.angle))
         bottom_right + self.origin
         br = (bottom_right.x, bottom_right.y)
         

@@ -1,7 +1,7 @@
 """Chapter 5 - Transforming Shapes with Geometry."""
 from math import radians
 from engine import run
-from screen_matrix import circle, rect, translate, rotate, push_matrix, pop_matrix
+from screen_matrix import push_matrix, translate, rotate, rect, pop_matrix
 
 WIDTH = 600
 HEIGHT = 600
@@ -13,7 +13,8 @@ def update():
 def draw():
     """Draw to window once per frame."""
     push_matrix()
-    translate(WIDTH/2, HEIGHT/2)
+    translate(200,200)
+    rotate(radians(20))
     rect(20,20,60,100)
     pop_matrix()
 
