@@ -47,7 +47,12 @@ class ScreenMatrix:
 
         screen.draw.circle(o.x, o.y, radius, color, width)
 
+    def draw_rect(self, x, y, w, h, color, width=0):
+        # not supporting rotation yet, just translation
+        top_left = PVector(x,y)
+        top_left + self.origin
 
+        screen.draw.rect(top_left.x, top_left.y, w, h, color, width)
 
 
 def translate(x, y):
@@ -65,7 +70,10 @@ def pop_matrix():
 def line(ax, ay, bx, by, line_weight=1):
     sm.draw_line((ax, ay), (bx, by), line_weight)
 
-def circle(x, y, r, color, width=0):
+def circle(x, y, r, color=(0,0,0), width=1):
     sm.draw_circle(x, y, r, color, width)
+
+def rect(x, y, w, h, color=(0,0,0), width=1):
+    sm.draw_rect(x, y, w, h, color, width)
 
 sm = ScreenMatrix()
