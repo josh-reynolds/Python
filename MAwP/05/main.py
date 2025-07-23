@@ -13,9 +13,10 @@ def update():
 def draw():
     """Draw to window once per frame."""
     push_matrix()
-    translate(200,200)
-    rotate(radians(20))
-    rect(20,20,60,100)
+    translate(WIDTH/2, HEIGHT/2)
+    for i in range(12):
+        rect(200,0,50,50)
+        rotate(radians(360/12))
     pop_matrix()
 
 run()
