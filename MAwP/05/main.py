@@ -2,6 +2,7 @@
 from math import radians
 from engine import run
 from screen_matrix import push_matrix, translate, rotate, rect, pop_matrix
+# pylint: disable=C0103, W0603
 
 WIDTH = 600
 HEIGHT = 600
@@ -18,8 +19,12 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     rotate(radians(time))
-    for i in range(12):
-        rect(200,0,50,50)
+    for _ in range(12):
+        push_matrix()
+        translate(200,0)
+        rotate(radians(time))
+        rect(0,0,50,50)
+        pop_matrix()
         rotate(radians(360/12))
     pop_matrix()
     time += 1

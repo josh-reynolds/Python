@@ -48,9 +48,6 @@ class ScreenMatrix:
         screen.draw.circle(o.x, o.y, radius, color, width)
 
     def draw_rect(self, x, y, w, h, color, width=0):
-        # not supporting rotation yet, just translation
-        # might be simplest to handle this as a polygon and
-        # rotate all four points...
         top_left = PVector(x,y)
         top_left.rotate(math.degrees(self.angle))
         top_left + self.origin
@@ -92,6 +89,8 @@ def line(ax, ay, bx, by, line_weight=1):
 def circle(x, y, r, color=(0,0,0), width=1):
     sm.draw_circle(x, y, r, color, width)
 
+# TO_DO: need to implement rect mode, current implementation
+#        is equivalent to CORNERS
 def rect(x, y, w, h, color=(0,0,0), width=1):
     sm.draw_rect(x, y, w, h, color, width)
 
