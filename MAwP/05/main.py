@@ -50,7 +50,7 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     rotate(radians(time))
-    triangle(0, 0, 100, 100, 200, -200)
+    triangle(0, 0, 100, 100, -100, 100)
     pop_matrix()
     time += 0.5
 
