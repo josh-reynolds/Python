@@ -70,6 +70,24 @@ class ScreenMatrix:
         
         screen.draw.polygon((tl, tr, br, bl), color, width)
 
+    def draw_triangle(self, x1, y1, x2, y2, x3, y3, color, width=0):
+        first = PVector(x1, y1)
+        first.rotate(math.degrees(self.angle))
+        first + self.origin
+        f = (first.x, first.y)
+
+        second = PVector(x2, y2)
+        second.rotate(math.degrees(self.angle))
+        second + self.origin
+        s = (second.x, second.y)
+
+        third = PVector(x3, y3)
+        third.rotate(math.degrees(self.angle))
+        third + self.origin
+        t = (third.x, third.y)
+
+        screen.draw.polygon((f, s, t), color, width)
+
 
 def translate(x, y):
     sm.translate(PVector(x,y))
@@ -93,5 +111,8 @@ def circle(x, y, r, color=(0,0,0), width=1):
 #        is equivalent to CORNERS
 def rect(x, y, w, h, color=(0,0,0), width=1):
     sm.draw_rect(x, y, w, h, color, width)
+
+def triangle(x1, y1, x2, y2, x3, y3, color=(0,0,0), width=1):
+    sm.draw_triangle(x1, y1, x2, y2, x3, y3, color, width)
 
 sm = ScreenMatrix()
