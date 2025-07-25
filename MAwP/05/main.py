@@ -65,15 +65,14 @@ def draw():
     global time
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
-    rotate(radians(time))
-    for _ in range(12):
+    for i in range(90):
+        rotate(radians(360/90))
         push_matrix()
         translate(200,0)
-        rotate(radians(time))
-        tri(50)
+        rotate(radians(time + i*360/90))
+        tri(100)
         pop_matrix()
-        rotate(radians(360/12))
     pop_matrix()
-    time += 1
+    time += 0.5
 
 run()
