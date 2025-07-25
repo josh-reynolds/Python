@@ -1,9 +1,10 @@
 """Chapter 5 - Transforming Shapes with Geometry."""
-from math import radians, dist
-import pygame
+from math import radians, sqrt
+#from math import dist
+#import pygame
 from engine import run
-from screen_matrix import push_matrix, translate, rotate, rect, pop_matrix
-from screen_matrix import triangle
+from screen_matrix import push_matrix, translate, rotate, triangle, pop_matrix
+#from screen_matrix import rect
 # pylint: disable=C0103, W0603
 
 WIDTH = 600
@@ -11,6 +12,12 @@ HEIGHT = 600
 TITLE = "Geometry"
 
 time = 0
+
+def tri(length):
+    """Draw an equilateral triangle."""
+    triangle(0, -length,
+             -length*sqrt(3)/2, length/2,
+             length*sqrt(3)/2, length/2)
 
 def update():
     """Update app state once per frame."""
@@ -50,7 +57,8 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     rotate(radians(time))
-    triangle(0, 0, 100, 100, -100, 100)
+    #triangle(0, 0, 100, 100, -100, 100)
+    tri(200)
     pop_matrix()
     time += 0.5
 
