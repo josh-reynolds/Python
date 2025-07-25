@@ -1,7 +1,7 @@
 """Chapter 5 - Transforming Shapes with Geometry."""
 from math import radians, sqrt
 #from math import dist
-#import pygame
+from pygame import Color
 from engine import run
 from screen_matrix import push_matrix, translate, rotate, triangle, pop_matrix
 #from screen_matrix import rect
@@ -12,6 +12,7 @@ HEIGHT = 600
 TITLE = "Geometry"
 
 time = 0
+color = Color(0,0,0)
 
 def tri(length, color=(0,0,0), width=1):
     """Draw an equilateral triangle."""
@@ -64,6 +65,7 @@ def draw():
 
     # ----------------------------------------
     global time
+    screen.fill((0,0,0))
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     for i in range(90):
@@ -71,7 +73,8 @@ def draw():
         push_matrix()
         translate(200,0)
         rotate(radians(time + 2*i*360/90))
-        tri(100, (255,0,0), 1)
+        color.hsva = (i*4, 100, 100)
+        tri(100, color, 1)
         pop_matrix()
     pop_matrix()
     time += 1
