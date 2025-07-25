@@ -69,10 +69,10 @@ def draw():
         rotate(radians(360/90))
         push_matrix()
         translate(200,0)
-        rotate(radians(time + i*360/90))
+        rotate(radians(time + 2*i*360/90))
         tri(100)
         pop_matrix()
     pop_matrix()
-    time += 0.5
+    time += 1
 
 run()
