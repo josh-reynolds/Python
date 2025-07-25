@@ -49,17 +49,31 @@ def draw():
             #value = int(0.5*d % 255)
             ## TO_DO: book implementation uses HSV, I just have RGB here...
             #color = (value, value//2, value)
-#
+
             #rect(30*x, 30*y, 25, 25, color)
+
+    # ----------------------------------------
+    #global time
+    #push_matrix()
+    #translate(WIDTH/2, HEIGHT/2)
+    #rotate(radians(time))
+    #tri(200)
+    #pop_matrix()
+    #time += 0.5
 
     # ----------------------------------------
     global time
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     rotate(radians(time))
-    #triangle(0, 0, 100, 100, -100, 100)
-    tri(200)
+    for _ in range(12):
+        push_matrix()
+        translate(200,0)
+        rotate(radians(time))
+        tri(50)
+        pop_matrix()
+        rotate(radians(360/12))
     pop_matrix()
-    time += 0.5
+    time += 1
 
 run()
