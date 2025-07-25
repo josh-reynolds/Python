@@ -13,11 +13,12 @@ TITLE = "Geometry"
 
 time = 0
 
-def tri(length):
+def tri(length, color=(0,0,0), width=1):
     """Draw an equilateral triangle."""
     triangle(0, -length,
              -length*sqrt(3)/2, length/2,
-             length*sqrt(3)/2, length/2)
+             length*sqrt(3)/2, length/2,
+             color, width)
 
 def update():
     """Update app state once per frame."""
@@ -70,7 +71,7 @@ def draw():
         push_matrix()
         translate(200,0)
         rotate(radians(time + 2*i*360/90))
-        tri(100)
+        tri(100, (255,0,0), 1)
         pop_matrix()
     pop_matrix()
     time += 1
