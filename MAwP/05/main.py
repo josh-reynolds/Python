@@ -2,10 +2,10 @@
 from math import radians, sqrt
 #from math import dist
 from pygame import Color
-from engine import run
+from engine import run, screen
 from screen_matrix import push_matrix, translate, rotate, triangle, pop_matrix
 #from screen_matrix import rect
-# pylint: disable=C0103, W0603
+# pylint: disable=C0103, W0603, W0621
 
 WIDTH = 600
 HEIGHT = 600
