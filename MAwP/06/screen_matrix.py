@@ -88,6 +88,16 @@ class ScreenMatrix:
 
         screen.draw.polygon((f, s, t), color, width)
 
+    def draw_polygon(self, points, color, width=0):
+        vertices = []
+        for p in points:
+            pt = PVector(p[0], p[1])
+            pt.rotate(math.degrees(self.angle))
+            pt + self.origin
+            vertices.append((pt.x, pt.y))
+
+        screen.draw.polygon(vertices, color, width)
+
 
 def translate(x, y):
     sm.translate(PVector(x,y))
@@ -114,5 +124,8 @@ def rect(x, y, w, h, color=(0,0,0), width=1):
 
 def triangle(x1, y1, x2, y2, x3, y3, color=(0,0,0), width=1):
     sm.draw_triangle(x1, y1, x2, y2, x3, y3, color, width)
+
+def polygon(points, color=(0,0,0), width=1):
+    sm.draw_polygon(points, color, width)
 
 sm = ScreenMatrix()
