@@ -19,6 +19,7 @@ class Demo(App):
         Text('Main screen', pos=(20,60))
 
         App.scene = App.scenes[0]
+        App.scene.enter()
 
 if __name__ == '__main__':
     Demo().run()

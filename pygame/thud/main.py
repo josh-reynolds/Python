@@ -1901,6 +1901,7 @@ class State(Enum):
     GAME_OVER = 4
 
 def update():
+    p = Profiler("update()")
     global state, game, total_frames
 
     total_frames += 1
@@ -1932,8 +1933,10 @@ def update():
         if button_pressed_controls(0) is not None:
             state = State.TITLE
             game = None
+    print(p)
 
 def draw():
+    p = Profiler("draw()")
     if state == State.TITLE:
         logo_img = images.title0 if total_frames // 20 % 2 == 0 else images.title1
         screen.blit(logo_img, (WIDTH//2 - logo_img.get_width() // 2,
@@ -1952,6 +1955,7 @@ def draw():
         img = images.status_win if game.check_won() else images.status_lose
         screen.blit(img, (WIDTH//2 - img.get_width() // 2,
                           HEIGHT//2 - img.get_height() // 2))
+    print(p)
 
 try:
     mixer.quit()

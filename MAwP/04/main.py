@@ -1,4 +1,5 @@
 """Display equations on a graph."""
+from math import sin
 from engine import run, screen
 from screen_matrix import push_matrix, translate, sm, line, circle, pop_matrix
 
@@ -29,6 +30,10 @@ def cubic(input_):
 def quadratic(input_):
     """Quadratic function."""
     return 2*input_**2 + 7*input_ - 15
+
+def sine(input_):
+    """Sine function."""
+    return sin(input_)
 
 def graph(function):
     """Draw function curve on the window surface."""
@@ -65,7 +70,8 @@ def draw():
     grid()
     #graph(parabola)
     #graph(cubic)
-    graph(quadratic)
+    #graph(quadratic)
+    graph(sine)
     pop_matrix()
 
 run()

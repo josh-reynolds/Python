@@ -1,7 +1,8 @@
+"""Draw a grid of hexagons at various scales."""
 import math
 import os.path
 import pygame
-from engine import *
+from engine import screen, run
 
 WIDTH = 425
 HEIGHT = 550
@@ -64,7 +65,7 @@ class SubdividedGrid(Grid):
         super().__init__(hex_radius, top_border, left_border, columns, rows, color, width=1)
 
     def add_hex(self, i, j, color, width):
-        self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j), 
+        self.hexes.append(SubdividedHex(self.hex_coordinate_to_screen(i,j),
                                         self.hex_radius, color, width, self.scale))
 
 class Rosette:
@@ -193,8 +194,12 @@ def draw():
     #g5.draw()
     #g6.draw()
     #sg.draw()
-    r.draw()
+    #r.draw()
     #h.draw()
+    #g11.draw()
+    g41.draw()
+    #g51.draw()
+    g61.draw()
 
     try:
         filename = "./output.png"
@@ -222,6 +227,12 @@ for i in range(7):
         edge_hex_count = i-1
         ring_hexes = 6 * (vertex_hex_count + edge_hex_count)
         print(i, vertex_hex_count, edge_hex_count, ring_hexes)
+
+# aligning first hex center with screen origin, and filling entire page
+g11 = Grid(10, -10, -10, 33, 33, (0,0,0))
+g41 = Grid(40, -37, -40, 8, 9, (0,0,0), 2)     # 19 subhexes (1 + 6 + 6 + 6)
+g51 = Grid(50, -46, -50, 7, 8, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12)
+g61 = Grid(60, -54, -60, 5, 6, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
 run()
 
