@@ -7,6 +7,16 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Trigonometry"
 
+def poly(sides, sz):
+    """Draw a polygon of arbitrary size and number of sides."""
+    # TO_DO: Maybe. Depends if we want to closely emulate Processing.
+    #        The model there is to use beginShape, vertex and endShape.
+    vertices = []
+    step = radians(360/sides)
+    for i in range(sides):
+        vertices.append((sz * cos(step * i),
+                         sz * sin(step * i)))
+    polygon(vertices)
 
 def update():
     """Update app state once per frame."""
@@ -15,13 +25,7 @@ def draw():
     """Draw to window once per frame."""
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
-    # TO_DO: Maybe. Depends if we want to closely emulate Processing.
-    #        The model there is to use beginShape, vertex and endShape.
-    vertices = []
-    for i in range(6):
-        vertices.append((100 * cos(radians(60 * i)),
-                         100 * sin(radians(60 * i))))
-    polygon(vertices)
+    poly(3,100)
     pop_matrix()
 
 
