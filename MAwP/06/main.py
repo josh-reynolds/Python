@@ -1,7 +1,9 @@
 """Chapter 6 - Creating Oscillations with Trigonometry."""
 from math import radians, cos, sin
 from engine import run
-from screen_matrix import push_matrix, translate, pop_matrix, polygon, circle, line
+from screen_matrix import push_matrix, translate, pop_matrix
+from screen_matrix import polygon, circle, line
+# pylint: disable=C0103, W0603
 
 WIDTH = 600
 HEIGHT = 600
@@ -49,8 +51,8 @@ def draw():
     circle(200, y, R2, (0,255,0), 0)
     circle(x, y, R2, (255,0,0), 0)
 
-    for i in range(len(circle_list)):
-        circle(200+i, circle_list[i], 3, (0,255,0), 0)
+    for i,c in enumerate(circle_list):
+        circle(200+i, c, 4, (0,255,0), 0)
 
     pop_matrix()
 
