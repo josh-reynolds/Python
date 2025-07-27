@@ -1,5 +1,5 @@
 """Chapter 6 - Creating Oscillations with Trigonometry."""
-from math import radians, cos, sin
+from math import radians, cos, sin, pi, e
 from engine import run
 from screen_matrix import push_matrix, translate, pop_matrix
 from screen_matrix import polygon, circle, line
@@ -61,27 +61,50 @@ def draw():
     #pop_matrix()
 #
 
+    #push_matrix()
+    #translate(WIDTH/2, HEIGHT/2)
+    #circle(x1, y1, R1)
+#
+    #x2 = (R1 - R2) * cos(t)
+    #y2 = (R1 - R2) * sin(t)
+    #circle(x2, y2, R2)
+#
+    #x3 = x2 + PROP * (R2 - R3) * cos(-((R1-R2)/R2)*t)
+    #y3 = y2 + PROP * (R2 - R3) * sin(-((R1-R2)/R2)*t)
+#
+    #points = [[x3,y3]] + points[:2000]
+    #for i,p in enumerate(points):
+        #if i < len(points)-1:
+            #line(p[0], p[1], points[i+1][0], points[i+1][1])
+#
+    #circle(x3, y3, R3, (255,0,0), 0)
+#
+    #pop_matrix()
+
     push_matrix()
+
+    a1,a2 = 100,200    # amplitude
+    f1,f2 = 1,2        # frequency
+    p1,p2 = 0,pi/2     # phase shift
+    d1,d2 = 0.02,0.02  # decay
+
     translate(WIDTH/2, HEIGHT/2)
-    circle(x1, y1, R1)
 
-    x2 = (R1 - R2) * cos(t)
-    y2 = (R1 - R2) * sin(t)
-    circle(x2, y2, R2)
+    x = a1 * cos(f1 * t + p1) * e**(-d1 * t)
+    y = a2 * cos(f2 * t + p2) * e**(-d2 * t)
+    points.append([x,y])
 
-    x3 = x2 + PROP * (R2 - R3) * cos(-((R1-R2)/R2)*t)
-    y3 = y2 + PROP * (R2 - R3) * sin(-((R1-R2)/R2)*t)
-
-    points = [[x3,y3]] + points[:2000]
     for i,p in enumerate(points):
         if i < len(points)-1:
             line(p[0], p[1], points[i+1][0], points[i+1][1])
 
-    circle(x3, y3, R3, (255,0,0), 0)
+    circle(x, y, 5)
 
     pop_matrix()
 
     t += 0.05
+
+
 
 
 run()
