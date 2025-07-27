@@ -8,8 +8,10 @@ HEIGHT = 600
 TITLE = "Trigonometry"
 
 R1 = 100 # radius of big circle
-R2 = 10  # radius of small circle
+R2 = 10  # radius of small circles
+
 t = 0
+circle_list = []
 
 def poly(sides, sz):
     """Draw a polygon of arbitrary size and number of sides."""
@@ -27,7 +29,7 @@ def update():
 
 def draw():
     """Draw to window once per frame."""
-    global t
+    global t, circle_list
 
     #push_matrix()
     #translate(WIDTH/2, HEIGHT/2)
@@ -41,10 +43,14 @@ def draw():
 
     x = R1 * cos(t)
     y = R1 * sin(t)
+    circle_list = [y] + circle_list[:249]
 
-    line(x,y,200,y)
-    circle(200,y,R2,(0,255,0),0)
-    circle(x,y,R2,(255,0,0),0)
+    line(x, y, 200, y)
+    circle(200, y, R2, (0,255,0), 0)
+    circle(x, y, R2, (255,0,0), 0)
+
+    for i in range(len(circle_list)):
+        circle(200+i, circle_list[i], 3, (0,255,0), 0)
 
     pop_matrix()
 
