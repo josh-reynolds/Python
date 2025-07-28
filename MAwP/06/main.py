@@ -16,8 +16,6 @@ PROP = 0.8
 
 x1, y1 = 0, 0
 
-t = 0
-points = []
 
 def poly(sides, sz):
     """Draw a polygon of arbitrary size and number of sides."""
@@ -30,13 +28,21 @@ def poly(sides, sz):
                          sz * sin(step * i)))
     polygon(vertices)
 
+def harmonograph(t):
+    """Return a point on a harmonograph given a time value."""
+    a1,a2 = 100,200    # amplitude
+    f1,f2 = 1,2        # frequency
+    p1,p2 = pi/6,pi/2  # phase shift
+    d1,d2 = 0.02,0.02  # decay
+    x = a1 * cos(f1 * t + p1) * e**(-d1 * t)
+    y = a2 * cos(f2 * t + p2) * e**(-d2 * t)
+    return [x,y]
+
 def update():
     """Update app state once per frame."""
 
 def draw():
     """Draw to window once per frame."""
-    global t, points
-
     #push_matrix()
     #translate(WIDTH/2, HEIGHT/2)
     #poly(3,100)
@@ -82,29 +88,18 @@ def draw():
     #pop_matrix()
 
     push_matrix()
-
-    a1,a2 = 100,200    # amplitude
-    f1,f2 = 1,2        # frequency
-    p1,p2 = 0,pi/2     # phase shift
-    d1,d2 = 0.02,0.02  # decay
-
     translate(WIDTH/2, HEIGHT/2)
-
-    x = a1 * cos(f1 * t + p1) * e**(-d1 * t)
-    y = a2 * cos(f2 * t + p2) * e**(-d2 * t)
-    points.append([x,y])
 
     for i,p in enumerate(points):
         if i < len(points)-1:
             line(p[0], p[1], points[i+1][0], points[i+1][1])
 
-    circle(x, y, 5)
-
     pop_matrix()
 
-    t += 0.05
-
-
-
+points = []
+t = 0
+while t < 1000:
+    points.append(harmonograph(t))
+    t += 0.01
 
 run()
