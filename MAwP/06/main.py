@@ -2,7 +2,7 @@
 from math import radians, cos, sin, pi, e
 from engine import run
 from screen_matrix import push_matrix, translate, pop_matrix
-from screen_matrix import polygon, circle, line
+from screen_matrix import polygon, circle, line, sm
 # pylint: disable=C0103, W0603
 
 WIDTH = 600
@@ -15,7 +15,6 @@ R3 = 5   # radius of drawing dot
 PROP = 0.8
 
 x1, y1 = 0, 0
-
 
 def poly(sides, sz):
     """Draw a polygon of arbitrary size and number of sides."""
@@ -30,12 +29,14 @@ def poly(sides, sz):
 
 def harmonograph(t):
     """Return a point on a harmonograph given a time value."""
-    a1,a2 = 100,200    # amplitude
-    f1,f2 = 1,2        # frequency
-    p1,p2 = pi/6,pi/2  # phase shift
-    d1,d2 = 0.02,0.02  # decay
-    x = a1 * cos(f1 * t + p1) * e**(-d1 * t)
-    y = a2 * cos(f2 * t + p2) * e**(-d2 * t)
+    a1=a2=a3=a4 = 100                 # amplitude
+    f1,f2,f3,f4 = 2.01,3,3,2          # frequency
+    p1,p2,p3,p4 = -pi/2,0,-pi/16,0    # phase shift
+    d1,d2,d3,d4 = 0.00085,0.0065,0,0  # decay
+    x = (a1 * cos(f1 * t + p1) * e**(-d1 * t) + 
+         a3 * cos(f3 * t + p3) * e**(-d3 * t))
+    y = (a2 * sin(f2 * t + p2) * e**(-d2 * t) +
+         a4 * sin(f4 * t + p4) * e**(-d4 * t))
     return [x,y]
 
 def update():
@@ -92,6 +93,7 @@ def draw():
 
     for i,p in enumerate(points):
         if i < len(points)-1:
+            sm.color = (255,0,0)
             line(p[0], p[1], points[i+1][0], points[i+1][1])
 
     pop_matrix()
