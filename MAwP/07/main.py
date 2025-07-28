@@ -1,6 +1,7 @@
 """Chapter 7 - Complex Numbers."""
 from math import sqrt
 from engine import run
+# pylint: disable=C0103
 
 WIDTH = 600
 HEIGHT = 600
@@ -10,6 +11,7 @@ class ComplexNumber:
     """Representation and operations on a complex number."""
 
     def __init__(self, real, imaginary):
+        """Create a complex number with real and imaginary parts."""
         self.r = real
         self.i = imaginary
 
@@ -25,13 +27,15 @@ class ComplexNumber:
         """Return magnitude of a complex number."""
         return sqrt(self.r**2 + self.i**2)
 
-    def mult(left, right):
+    @classmethod
+    def mult(cls, left, right):
         """Multiplies two complex numbers."""
         return ComplexNumber(left.r * right.r - left.i * right.i,
                              left.i * right.r + left.r * right.i)
 
-    def add(left,right):
-        """Adds two complex numbers."""
+    @classmethod
+    def add(cls, left,right):
+        """Add two complex numbers."""
         return ComplexNumber(left.r + right.r,
                              left.i + right.i)
 
@@ -50,6 +54,7 @@ print(a)
 print(b)
 print(c)
 print(d)
+print('--------')
 print(ComplexNumber.add(a,b))
 print(ComplexNumber.mult(a,b))
 print(ComplexNumber.mult(b,c))
