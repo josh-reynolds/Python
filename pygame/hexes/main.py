@@ -18,6 +18,19 @@ class Hex:
     def draw(self):
         screen.draw.hex(self.x, self.y, self.radius, self.color, self.width)
 
+class NumberedHex(Hex):
+    def __init__(self, screen_coordinate, radius, color, width, text):
+        super().__init__(screen_coordinate, radius, color, width)
+        self.text = text
+
+    def draw(self):
+        super().draw()
+        screen.draw.fontsize = 24    # TO_DO: awkward API, fix this!
+        screen.draw.fontcolor = (128,128,128)
+        screen.draw.set_font()
+        screen.draw.text(self.text, center=(self.x, self.y+self.radius-18))
+        # hard-coded positioning values, should fix this too
+
 class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
         super().__init__(screen_coordinate, radius, color, width)
@@ -197,9 +210,10 @@ def draw():
     #r.draw()
     #h.draw()
     #g11.draw()
-    g41.draw()
+    #g41.draw()
     #g51.draw()
-    g61.draw()
+    #g61.draw()
+    num_hex.draw()
 
     try:
         filename = "./output.png"
@@ -226,13 +240,15 @@ for i in range(7):
         vertex_hex_count = 1
         edge_hex_count = i-1
         ring_hexes = 6 * (vertex_hex_count + edge_hex_count)
-        print(i, vertex_hex_count, edge_hex_count, ring_hexes)
+        #print(i, vertex_hex_count, edge_hex_count, ring_hexes)
 
 # aligning first hex center with screen origin, and filling entire page
 g11 = Grid(10, -10, -10, 33, 33, (0,0,0))
 g41 = Grid(40, -37, -40, 8, 9, (0,0,0), 2)     # 19 subhexes (1 + 6 + 6 + 6)
 g51 = Grid(50, -46, -50, 7, 8, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12)
 g61 = Grid(60, -54, -60, 5, 6, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
+
+num_hex = NumberedHex((WIDTH/2, HEIGHT/2), 60, (0,0,0), 1, "0101")
 
 run()
 
