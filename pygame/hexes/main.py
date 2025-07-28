@@ -30,6 +30,7 @@ class NumberedHex(Hex):
         screen.draw.set_font()
         screen.draw.text(self.text, center=(self.x, self.y+self.radius-18))
         # hard-coded positioning values, should fix this too
+        # (same applies to font size - should scale w/ radius)
 
 class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
@@ -71,6 +72,12 @@ class Grid:
     def draw(self):
         for h in self.hexes:
             h.draw()
+
+class NumberedGrid(Grid):
+    def add_hex(self, i, j, color, width):
+        text = f"{i:02d}{j:02d}"
+        self.hexes.append(NumberedHex(self.hex_coordinate_to_screen(i,j), 
+                                      self.hex_radius, color, width, text))
 
 class SubdividedGrid(Grid):
     def __init__(self, hex_radius, top_border, left_border, columns, rows, color, width=1, scale=4):
@@ -213,7 +220,8 @@ def draw():
     #g41.draw()
     #g51.draw()
     #g61.draw()
-    num_hex.draw()
+    #num_hex.draw()
+    ng1.draw()
 
     try:
         filename = "./output.png"
@@ -249,6 +257,7 @@ g51 = Grid(50, -46, -50, 7, 8, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12
 g61 = Grid(60, -54, -60, 5, 6, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
 num_hex = NumberedHex((WIDTH/2, HEIGHT/2), 60, (0,0,0), 1, "0101")
+ng1 = NumberedGrid(50, -46, -50, 7, 8, (0,0,0), 2)
 
 run()
 
