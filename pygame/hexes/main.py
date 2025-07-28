@@ -25,12 +25,12 @@ class NumberedHex(Hex):
 
     def draw(self):
         super().draw()
-        screen.draw.fontsize = 24    # TO_DO: awkward API, fix this!
+        # TO_DO: awkward API to adjust font, fix this!
+        screen.draw.fontsize = self.radius//2
         screen.draw.fontcolor = (128,128,128)
         screen.draw.set_font()
-        screen.draw.text(self.text, center=(self.x, self.y+self.radius-18))
-        # hard-coded positioning values, should fix this too
-        # (same applies to font size - should scale w/ radius)
+        screen.draw.text(self.text, center=(self.x, 
+                                            self.y+self.radius//2+self.radius//6))
 
 class SubdividedHex(Hex):
     def __init__(self, screen_coordinate, radius, color, width, scale):
@@ -75,7 +75,7 @@ class Grid:
 
 class NumberedGrid(Grid):
     def add_hex(self, i, j, color, width):
-        text = f"{i:02d}{j:02d}"
+        text = f"{i+1:02d}{j+1:02d}"
         self.hexes.append(NumberedHex(self.hex_coordinate_to_screen(i,j), 
                                       self.hex_radius, color, width, text))
 
@@ -221,7 +221,10 @@ def draw():
     #g51.draw()
     #g61.draw()
     #num_hex.draw()
-    ng1.draw()
+    ng3.draw()
+    #ng4.draw()
+    #ng5.draw()
+    #ng6.draw()
 
     try:
         filename = "./output.png"
@@ -257,7 +260,10 @@ g51 = Grid(50, -46, -50, 7, 8, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12
 g61 = Grid(60, -54, -60, 5, 6, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
 num_hex = NumberedHex((WIDTH/2, HEIGHT/2), 60, (0,0,0), 1, "0101")
-ng1 = NumberedGrid(50, -46, -50, 7, 8, (0,0,0), 2)
+ng3 = NumberedGrid(30, -28, -30, 10, 11, (0,0,0), 2)
+ng4 = NumberedGrid(40, -37, -40, 8, 9, (0,0,0), 2)
+ng5 = NumberedGrid(50, -46, -50, 7, 8, (0,0,0), 2)
+ng6 = NumberedGrid(60, -54, -60, 5, 6, (0,0,0), 2)
 
 run()
 
