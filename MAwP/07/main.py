@@ -1,11 +1,24 @@
 """Chapter 7 - Complex Numbers."""
 from math import sqrt
 from engine import run
+from screen_matrix import push_matrix, pop_matrix, translate, rect
 # pylint: disable=C0103
 
 WIDTH = 600
 HEIGHT = 600
 TITLE = "Complex Numbers"
+
+xmin = -2
+xmax = 2
+
+ymin = -2
+ymax = 2
+
+rangex = xmax - xmin
+rangey = ymax - ymin
+
+xscl = float(rangex)/WIDTH
+yscl = float(rangey)/HEIGHT
 
 class ComplexNumber:
     """Representation and operations on a complex number."""
@@ -47,7 +60,6 @@ def mandelbrot(z, num):
         if z1.magnitude() > 2.0:
             return count
         z1 = ComplexNumber.add(ComplexNumber.mult(z1, z1), z)
-        print(z1.magnitude())
         count += 1
     return num
 
@@ -56,24 +68,18 @@ def update():
 
 def draw():
     """Draw to window once per frame."""
+    push_matrix()
+    #translate(WIDTH/2, HEIGHT/2)
+    for x in range(WIDTH):
+        for y in range(HEIGHT):
+            z = ComplexNumber((xmin + x * xscl),
+                              (ymin + y * yscl))
+            col = mandelbrot(z,100)
+            color = (255,255,255)
+            if col == 100:
+                color = (0,0,0)
+            rect(x, y, 1, 1, color)
 
-a = ComplexNumber(1,2)
-b = ComplexNumber(3,4)
-c = ComplexNumber(0,1)
-d = ComplexNumber(2,1)
-print(a)
-print(b)
-print(c)
-print(d)
-print('--------')
-print(ComplexNumber.add(a,b))
-print(ComplexNumber.mult(a,b))
-print(ComplexNumber.mult(b,c))
-print(d.magnitude())
-
-
-z = ComplexNumber(0.25, 0.75)
-print(z.magnitude())
-print(mandelbrot(z, 1))
+    pop_matrix()
 
 run()
