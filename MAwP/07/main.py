@@ -39,6 +39,17 @@ class ComplexNumber:
         return ComplexNumber(left.r + right.r,
                              left.i + right.i)
 
+def mandelbrot(z, num):
+    """Run the process num times and return the diverge count."""
+    count = 0
+    z1 = z
+    while count <= num:
+        if z1.magnitude() > 2.0:
+            return count
+        z1 = ComplexNumber.add(ComplexNumber.mult(z1, z1), z)
+        print(z1.magnitude())
+        count += 1
+    return num
 
 def update():
     """Update app state once per frame."""
@@ -61,5 +72,8 @@ print(ComplexNumber.mult(b,c))
 print(d.magnitude())
 
 
+z = ComplexNumber(0.25, 0.75)
+print(z.magnitude())
+print(mandelbrot(z, 1))
 
 run()
