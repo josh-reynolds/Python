@@ -8,11 +8,11 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Complex Numbers"
 
-xmin = -2
-xmax = 2
+xmin = -0.25
+xmax = 0.25
 
-ymin = -2
-ymax = 2
+ymin = -1
+ymax = -0.5
 
 rangex = xmax - xmin
 rangey = ymax - ymin
