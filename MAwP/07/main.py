@@ -20,6 +20,8 @@ rangey = ymax - ymin
 xscl = float(rangex)/WIDTH
 yscl = float(rangey)/HEIGHT
 
+raster = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
+
 class ComplexNumber:
     """Representation and operations on a complex number."""
 
@@ -72,14 +74,19 @@ def draw():
     #translate(WIDTH/2, HEIGHT/2)
     for x in range(WIDTH):
         for y in range(HEIGHT):
-            z = ComplexNumber((xmin + x * xscl),
-                              (ymin + y * yscl))
-            col = mandelbrot(z,100)
             color = (255,255,255)
-            if col == 100:
+            if raster[x][y] == 100:
                 color = (0,0,0)
             rect(x, y, 1, 1, color)
 
     pop_matrix()
+
+for x in range(WIDTH):
+    for y in range(HEIGHT):
+        z = ComplexNumber((xmin + x * xscl),
+                          (ymin + y * yscl))
+        col = mandelbrot(z,100)
+        raster[x][y] = col
+
 
 run()
