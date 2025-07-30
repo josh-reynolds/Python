@@ -77,7 +77,7 @@ ymin = -1.5
 ymax = 1.5
 # ---------------------------------------------
 # Julia Set constant
-constant = ComplexNumber(-0.8, 0.156)
+constant = ComplexNumber(0.285, 0.01)
 # ---------------------------------------------
 
 rangex = xmax - xmin
