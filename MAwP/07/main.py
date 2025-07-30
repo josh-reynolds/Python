@@ -1,7 +1,7 @@
 """Chapter 7 - Complex Numbers."""
 from math import sqrt
 from engine import run
-from screen_matrix import push_matrix, pop_matrix, translate, rect
+from screen_matrix import push_matrix, pop_matrix, rect
 # pylint: disable=C0103
 
 WIDTH = 600
@@ -54,14 +54,14 @@ class ComplexNumber:
         return ComplexNumber(left.r + right.r,
                              left.i + right.i)
 
-def mandelbrot(z, num):
+def mandelbrot(value, num):
     """Run the process num times and return the diverge count."""
     count = 0
-    z1 = z
+    z1 = value
     while count <= num:
         if z1.magnitude() > 2.0:
             return count
-        z1 = ComplexNumber.add(ComplexNumber.mult(z1, z1), z)
+        z1 = ComplexNumber.add(ComplexNumber.mult(z1, z1), value)
         count += 1
     return num
 
@@ -72,12 +72,12 @@ def draw():
     """Draw to window once per frame."""
     push_matrix()
     #translate(WIDTH/2, HEIGHT/2)
-    for x in range(WIDTH):
-        for y in range(HEIGHT):
+    for i in range(WIDTH):
+        for j in range(HEIGHT):
             color = (255,255,255)
-            if raster[x][y] == 100:
+            if raster[i][j] == 100:
                 color = (0,0,0)
-            rect(x, y, 1, 1, color)
+            rect(i, j, 1, 1, color)
 
     pop_matrix()
 
@@ -87,6 +87,5 @@ for x in range(WIDTH):
                           (ymin + y * yscl))
         col = mandelbrot(z,100)
         raster[x][y] = col
-
 
 run()
