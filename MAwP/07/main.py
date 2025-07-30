@@ -1,26 +1,12 @@
 """Chapter 7 - Complex Numbers."""
 from math import sqrt
-from engine import run
-from screen_matrix import push_matrix, pop_matrix, rect
+import pygame
+from engine import run, screen
 # pylint: disable=C0103
 
 WIDTH = 600
 HEIGHT = 600
 TITLE = "Complex Numbers"
-
-xmin = -0.25
-xmax = 0.25
-
-ymin = -1
-ymax = -0.5
-
-rangex = xmax - xmin
-rangey = ymax - ymin
-
-xscl = float(rangex)/WIDTH
-yscl = float(rangey)/HEIGHT
-
-raster = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
 
 class ComplexNumber:
     """Representation and operations on a complex number."""
@@ -70,22 +56,39 @@ def update():
 
 def draw():
     """Draw to window once per frame."""
-    push_matrix()
-    #translate(WIDTH/2, HEIGHT/2)
-    for i in range(WIDTH):
-        for j in range(HEIGHT):
-            color = (255,255,255)
-            if raster[i][j] == 100:
-                color = (0,0,0)
-            rect(i, j, 1, 1, color)
+    screen.blit(image, (0,0))
 
-    pop_matrix()
+# ADJUST THESE VALUES TO ZOOM ------------------
+xmin = -2
+xmax = 2
 
+ymin = -2
+ymax = 2
+# ---------------------------------------------
+
+rangex = xmax - xmin
+rangey = ymax - ymin
+
+xscl = float(rangex)/WIDTH
+yscl = float(rangey)/HEIGHT
+
+raster = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
+
+print("Calculating mandelbrot data")
 for x in range(WIDTH):
     for y in range(HEIGHT):
         z = ComplexNumber((xmin + x * xscl),
                           (ymin + y * yscl))
         col = mandelbrot(z,100)
         raster[x][y] = col
+
+print("Rendering to image")
+image = pygame.Surface((WIDTH,HEIGHT))
+for i in range(WIDTH):
+    for j in range(HEIGHT):
+        color = (255,255,255)
+        if raster[i][j] == 100:
+            color = (0,0,0)
+        pygame.draw.rect(image,color, (i, j, 1, 1))
 
 run()
