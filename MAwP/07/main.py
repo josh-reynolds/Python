@@ -51,6 +51,17 @@ def mandelbrot(value, num):
         count += 1
     return num
 
+def julia(value, c,num):
+    """Run the process num times and return the diverge count."""
+    count = 0
+    z1 = value
+    while count <= num:
+        if z1.magnitude() > 2.0:
+            return count
+        z1 = ComplexNumber.add(ComplexNumber.mult(z1, z1), c)
+        count += 1
+    return num
+
 def update():
     """Update app state once per frame."""
 
@@ -59,11 +70,14 @@ def draw():
     screen.blit(image, (0,0))
 
 # ADJUST THESE VALUES TO ZOOM ------------------
-xmin = -0.25
-xmax = 0.25
+xmin = -1.5
+xmax = 1.5
 
-ymin = -1
-ymax = -0.5
+ymin = -1.5
+ymax = 1.5
+# ---------------------------------------------
+# Julia Set constant
+constant = ComplexNumber(-0.8, 0.156)
 # ---------------------------------------------
 
 rangex = xmax - xmin
@@ -75,12 +89,14 @@ yscl = float(rangey)/HEIGHT
 raster = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
 color = pygame.Color(0,0,0)
 
-print("Calculating mandelbrot data")
+#print("Calculating mandelbrot data")
+print("Calculating julia data")
 for x in range(WIDTH):
     for y in range(HEIGHT):
         z = ComplexNumber((xmin + x * xscl),
                           (ymin + y * yscl))
-        col = mandelbrot(z,100)
+        #col = mandelbrot(z,100)
+        col = julia(z,constant,100)
         raster[x][y] = col
 
 print("Rendering to image")
