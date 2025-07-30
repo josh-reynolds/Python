@@ -59,11 +59,11 @@ def draw():
     screen.blit(image, (0,0))
 
 # ADJUST THESE VALUES TO ZOOM ------------------
-xmin = -2
-xmax = 2
+xmin = -0.25
+xmax = 0.25
 
-ymin = -2
-ymax = 2
+ymin = -1
+ymax = -0.5
 # ---------------------------------------------
 
 rangex = xmax - xmin
@@ -73,6 +73,7 @@ xscl = float(rangex)/WIDTH
 yscl = float(rangey)/HEIGHT
 
 raster = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
+color = pygame.Color(0,0,0)
 
 print("Calculating mandelbrot data")
 for x in range(WIDTH):
@@ -86,9 +87,10 @@ print("Rendering to image")
 image = pygame.Surface((WIDTH,HEIGHT))
 for i in range(WIDTH):
     for j in range(HEIGHT):
-        color = (255,255,255)
         if raster[i][j] == 100:
-            color = (0,0,0)
+            color = pygame.Color(0,0,0)
+        else:
+            color.hsva = (3*raster[i][j],100,100)
         pygame.draw.rect(image,color, (i, j, 1, 1))
 
 run()
