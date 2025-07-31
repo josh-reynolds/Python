@@ -68,6 +68,9 @@ def draw():
     grid()
     graph_points(fmatrix, (0,0,255), 2)
     graph_points(rotated_matrix, (255,0,0), 2)
+    graph_points(f_a, (0,255,0), 2)
+    graph_points(f_b, (0,255,255), 2)
+    graph_points(f_c, (255,0,255), 2)
     pop_matrix()
 
 xmin = -10
@@ -86,6 +89,14 @@ fmatrix = [[0,0],[1,0],[1,2],[2,2],[2,3],[1,3],[1,4],[3,4],[3,5],[0,5]]
 transformation_matrix = [[0,-1],[1,0]]
 rotated_matrix = transpose(mult_matrices(transformation_matrix,
                                          transpose(fmatrix)))
+
+transform_a = [[1,0],[0,-1]]
+transform_b = [[0,-1],[-1,0]]
+transform_c = [[-1,1],[1,1]]
+
+f_a = transpose(mult_matrices(transform_a, transpose(fmatrix)))
+f_b = transpose(mult_matrices(transform_b, transpose(fmatrix)))
+f_c = transpose(mult_matrices(transform_c, transpose(fmatrix)))
 
 print(fmatrix)
 print(transpose(fmatrix))
