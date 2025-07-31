@@ -55,7 +55,8 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     grid()
-    graph_points(fmatrix, (255,0,0), 2)
+    graph_points(fmatrix, (0,0,255), 2)
+    graph_points(rotated_matrix, (255,0,0), 2)
     pop_matrix()
 
 xmin = -10
@@ -71,5 +72,7 @@ xscl = WIDTH/rangex
 yscl = -HEIGHT/rangey
 
 fmatrix = [[0,0],[1,0],[1,2],[2,2],[2,3],[1,3],[1,4],[3,4],[3,5],[0,5]]
+transformation_matrix = [[0,-1],[1,0]]
+rotated_matrix = mult_matrices(fmatrix, transformation_matrix)
 
 run()
