@@ -47,6 +47,17 @@ def graph_points(matrix, color, width):
         points.append((pt[0]*xscl,pt[1]*yscl))
     polygon(points, color, width)
 
+def transpose(a):
+    """Transpose matrix a."""
+    output = []
+    m = len(a)
+    n = len(a[0])
+    for i in range(n):
+        output.append([])
+        for j in range(m):
+            output[i].append(a[j][i])
+    return output
+
 def update():
     """Update the app state once per frame."""
 
@@ -73,6 +84,10 @@ yscl = -HEIGHT/rangey
 
 fmatrix = [[0,0],[1,0],[1,2],[2,2],[2,3],[1,3],[1,4],[3,4],[3,5],[0,5]]
 transformation_matrix = [[0,-1],[1,0]]
-rotated_matrix = mult_matrices(fmatrix, transformation_matrix)
+rotated_matrix = transpose(mult_matrices(transformation_matrix,
+                                         transpose(fmatrix)))
+
+print(fmatrix)
+print(transpose(fmatrix))
 
 run()
