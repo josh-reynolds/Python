@@ -1,6 +1,6 @@
 """Chapter 8 - Using Matrices for Computer Graphics."""
 from engine import run
-from screen_matrix import line, push_matrix, pop_matrix, translate, sm
+from screen_matrix import line, push_matrix, pop_matrix, translate, sm, polygon
 # pylint: disable=C0103, C0200
 
 WIDTH = 600
@@ -40,6 +40,12 @@ def grid():
     line(0, ymin*yscl, 0, ymax*yscl)
     line(xmin*xscl, 0, xmax*xscl, 0)
 
+def graph_points(matrix, color, width):
+    """Draw line segments between consecutive points."""
+    points = []
+    for pt in matrix:
+        points.append((pt[0]*xscl,pt[1]*yscl))
+    polygon(points, color, width)
 
 def update():
     """Update the app state once per frame."""
@@ -49,6 +55,7 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     grid()
+    graph_points(fmatrix, (255,0,0), 2)
     pop_matrix()
 
 xmin = -10
@@ -61,6 +68,8 @@ rangex = xmax - xmin
 rangey = ymax - ymin
 
 xscl = WIDTH/rangex
-yscl = HEIGHT/rangey
+yscl = -HEIGHT/rangey
+
+fmatrix = [[0,0],[1,0],[1,2],[2,2],[2,3],[1,3],[1,4],[3,4],[3,5],[0,5]]
 
 run()
