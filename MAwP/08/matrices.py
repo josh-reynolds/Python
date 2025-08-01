@@ -26,7 +26,7 @@ def gauss(A):
     """Perform Gaussian elimination on a matrix."""
     m = len(A)
     n = len(A[0])
-    for j,row in enumerate(G):
+    for j,row in enumerate(A):
         if row[j] != 0:
             divisor = row[j]
             for i, term in enumerate(row):
@@ -58,6 +58,12 @@ G = [[2,1,-1,8],
      [-3,-1,2,-1],
      [-2,1,2,-3]]
 print(gauss(G))
+
+H = [[2,-1,5,1,-3],
+     [3,2,2,-6,-32],
+     [1,3,3,-1,-47],
+     [5,-2,-3,3,49]]
+print(gauss(H))
 
 
 
