@@ -22,6 +22,21 @@ def mult_matrices(a,b):
         new_matrix.append(row)
     return new_matrix
 
+def gauss(A):
+    """Perform Gaussian elimination on a matrix."""
+    m = len(A)
+    n = len(A[0])
+    for j,row in enumerate(G):
+        if row[j] != 0:
+            divisor = row[j]
+            for i, term in enumerate(row):
+                row[i] = term/divisor
+        for i in range(m):
+            if i != j:
+                addinv = -1 * A[i][j]
+                for ind in range(n):
+                    A[i][ind] += addinv * A[j][ind]
+    return A
 
 A = [[2,3],[5,-8]]
 B = [[1,-4],[8,-6]]
@@ -32,3 +47,17 @@ D = [[1,-2],[2,1]]
 E = [[3,-4],[5,6]]
 F = mult_matrices(E,D)
 print(F)
+
+divisor = 2
+row = [1,2,3,4,5]
+for i, term in enumerate(row):
+    row[i] = term/divisor
+print(row)
+
+G = [[2,1,-1,8],
+     [-3,-1,2,-1],
+     [-2,1,2,-3]]
+print(gauss(G))
+
+
+
