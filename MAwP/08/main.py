@@ -1,5 +1,7 @@
 """Chapter 8 - Using Matrices for Computer Graphics."""
-from engine import run
+from math import sin, cos, pi
+import pygame
+from engine import run, remap
 from screen_matrix import line, push_matrix, pop_matrix, translate, sm, polygon
 # pylint: disable=C0103, C0200
 
@@ -66,12 +68,22 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     grid()
+    
+    mouse_x, _ = pygame.mouse.get_pos()
+    theta = remap(mouse_x, 0, WIDTH, 0, pi*2)
+    rot_matrix = [[cos(theta), -sin(theta)],
+                  [sin(theta), cos(theta)]]
+    new_matrix = transpose(mult_matrices(rot_matrix,
+                                         transpose(fmatrix)))
+    graph_points(new_matrix, (0,0,0), 4)
+    
     graph_points(fmatrix, (0,0,255), 2)
     graph_points(rotated_matrix, (255,0,0), 2)
     graph_points(f_a, (0,255,0), 2)
     graph_points(f_b, (0,255,255), 2)
     graph_points(f_c, (255,0,255), 2)
     pop_matrix()
+
 
 xmin = -10
 xmax = 10
