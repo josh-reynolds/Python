@@ -42,12 +42,13 @@ def grid():
     line(0, ymin*yscl, 0, ymax*yscl)
     line(xmin*xscl, 0, xmax*xscl, 0)
 
-def graph_points(matrix, color, width):
-    """Draw line segments between consecutive points."""
-    points = []
-    for pt in matrix:
-        points.append((pt[0]*xscl,pt[1]*yscl))
-    polygon(points, color, width)
+def graph_points(point_list, edges, color=(0,0,0), width=1):
+    """Graphs the points in a list using edges."""
+    sm.color = color
+    for e in edges:
+        line(point_list[e[0]][0] * xscl, point_list[e[0]][1] * yscl,
+             point_list[e[1]][0] * xscl, point_list[e[1]][1] * yscl,
+             line_weight=width)
 
 def transpose(a):
     """Transpose matrix a."""
@@ -60,6 +61,16 @@ def transpose(a):
             output[i].append(a[j][i])
     return output
 
+def rottilt(rot,tilt):
+    """Return the matrices for rotating & tilting a number of degrees."""
+    rotmatrix_Y = [[cos(rot), 0.0, sin(rot)],
+                   [0.0, 1.0, 0.0],
+                   [-sin(rot), 0.0, cos(rot)]]
+    rotmatrix_X = [[1.0, 0.0, 0.0],
+                   [0.0, cos(tilt), sin(tilt)],
+                   [0.0, -sin(tilt), cos(tilt)]]
+    return mult_matrices(rotmatrix_Y, rotmatrix_X)
+
 def update():
     """Update the app state once per frame."""
 
@@ -68,20 +79,12 @@ def draw():
     push_matrix()
     translate(WIDTH/2, HEIGHT/2)
     grid()
-    
-    mouse_x, _ = pygame.mouse.get_pos()
-    theta = remap(mouse_x, 0, WIDTH, 0, pi*2)
-    rot_matrix = [[cos(theta), -sin(theta)],
-                  [sin(theta), cos(theta)]]
-    new_matrix = transpose(mult_matrices(rot_matrix,
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    rot = remap(mouse_x, 0, WIDTH, 0, pi*2)
+    tilt = remap(mouse_y, 0, HEIGHT, 0, pi*2)
+    new_matrix = transpose(mult_matrices(rottilt(rot,tilt),
                                          transpose(fmatrix)))
-    graph_points(new_matrix, (0,0,0), 4)
-    
-    graph_points(fmatrix, (0,0,255), 2)
-    graph_points(rotated_matrix, (255,0,0), 2)
-    graph_points(f_a, (0,255,0), 2)
-    graph_points(f_b, (0,255,255), 2)
-    graph_points(f_c, (255,0,255), 2)
+    graph_points(new_matrix, edges, color=(255,0,0), width=3)
     pop_matrix()
 
 
@@ -97,20 +100,13 @@ rangey = ymax - ymin
 xscl = WIDTH/rangex
 yscl = -HEIGHT/rangey
 
-fmatrix = [[0,0],[1,0],[1,2],[2,2],[2,3],[1,3],[1,4],[3,4],[3,5],[0,5]]
-transformation_matrix = [[0,-1],[1,0]]
-rotated_matrix = transpose(mult_matrices(transformation_matrix,
-                                         transpose(fmatrix)))
-
-transform_a = [[1,0],[0,-1]]
-transform_b = [[0,-1],[-1,0]]
-transform_c = [[-1,1],[1,1]]
-
-f_a = transpose(mult_matrices(transform_a, transpose(fmatrix)))
-f_b = transpose(mult_matrices(transform_b, transpose(fmatrix)))
-f_c = transpose(mult_matrices(transform_c, transpose(fmatrix)))
-
-print(fmatrix)
-print(transpose(fmatrix))
+fmatrix = [[0,0,0],[1,0,0],[1,2,0],[2,2,0],[2,3,0],[1,3,0],[1,4,0],[3,4,0],[3,5,0],[0,5,0],
+           [0,0,1],[1,0,1],[1,2,1],[2,2,1],[2,3,1],[1,3,1],[1,4,1],[3,4,1],[3,5,1],[0,5,1]]
+edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],
+         [7,8],[8,9],[9,0],
+         [10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],
+         [17,18],[18,19],[19,10],
+         [0,10],[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],
+         [7,17],[8,18],[9,19]]
 
 run()
