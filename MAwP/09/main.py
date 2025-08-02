@@ -18,6 +18,7 @@ class Ball:
         self.color = (randint(0,255),
                       randint(0,255),
                       randint(0,255))
+        self.radius = randint(3,25)
 
     def update(self):
         """Update Ball state."""
@@ -30,7 +31,7 @@ class Ball:
 
     def draw(self):
         "Draw a Ball at its position."""
-        circle(self.xcor, self.ycor, 10, self.color, 0)
+        circle(self.xcor, self.ycor, self.radius, self.color, 0)
 
 def update():
     """Update the app state once per frame."""
