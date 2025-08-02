@@ -1,4 +1,5 @@
 """Chapter 9 - Building Objects with Classes."""
+from random import randrange, randint
 from engine import run, screen
 from screen_matrix import circle
 # pylint: disable=C0103, W0603
@@ -7,27 +8,43 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Objects"
 
-xcor = 300
-ycor = 300
-xvel = 1
-yvel = 2
+class Ball:
+    def __init__(self, x, y):
+        """Create a Ball object."""
+        self.xcor = x
+        self.ycor = y
+        self.xvel = randrange(-2,2)
+        self.yvel = randrange(-2,2)
+        self.color = (randint(0,255),
+                      randint(0,255),
+                      randint(0,255))
+
+    def update(self):
+        """Update Ball state."""
+        self.xcor += self.xvel
+        self.ycor += self.yvel
+        if self.xcor > WIDTH or self.xcor < 0:
+            self.xvel = -self.xvel
+        if self.ycor > WIDTH or self.ycor < 0:
+            self.yvel = -self.yvel
+
+    def draw(self):
+        "Draw a Ball at its position."""
+        circle(self.xcor, self.ycor, 10, self.color, 0)
 
 def update():
     """Update the app state once per frame."""
+    for b in balls:
+        b.update()
 
 def draw():
     """Draw to the window once per frame."""
-    global xcor, ycor, xvel, yvel
     screen.fill((0,0,0))
-    xcor += xvel
-    ycor += yvel
+    for b in balls:
+        b.draw()
 
-    if xcor > WIDTH or xcor < 0:
-        xvel = -xvel
-    if ycor > HEIGHT or ycor < 0:
-        yvel = -yvel
-
-    circle(xcor, ycor, 10, (255,255,255), 0)
-
+balls = []
+for _ in range(10):
+    balls.append(Ball(randint(0,WIDTH), randint(0,HEIGHT)))
 
 run()
