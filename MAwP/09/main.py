@@ -1,10 +1,16 @@
 """Chapter 9 - Building Objects with Classes."""
-from engine import run
+from engine import run, screen
 from screen_matrix import circle
+# pylint: disable=C0103, W0603
 
 WIDTH = 600
 HEIGHT = 600
 TITLE = "Objects"
+
+xcor = 300
+ycor = 300
+xvel = 1
+yvel = 2
 
 def update():
     """Update the app state once per frame."""
@@ -23,9 +29,5 @@ def draw():
 
     circle(xcor, ycor, 10, (255,255,255), 0)
 
-xcor = 300
-ycor = 300
-xvel = 1
-yvel = 2
 
 run()
