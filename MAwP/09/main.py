@@ -1,7 +1,7 @@
 """Chapter 9 - Building Objects with Classes."""
 from random import randrange, randint
 from engine import run
-from screen_matrix import circle
+from screen_matrix import circle, rect
 # pylint: disable=C0103, W0603
 
 WIDTH = 600
@@ -66,18 +66,46 @@ class Sheep:
         """Draw a Sheep at its position."""
         circle(self.x, self.y, self.sz, BLACK, 0)
 
+class Grass:
+    """Grass object."""
+
+    def __init__(self, x, y, sz):
+        """Create a Grass object."""
+        self.x = x
+        self.y = y
+        self.energy = 5
+        self.eaten = False
+        self.sz = sz
+
+    def update(self):
+        """Update Grass state."""
+
+    def draw(self):
+        """Draw a Grass at its position."""
+        rect(self.x, self.y, self.sz, self.sz, color=GREEN, width=0)
+
 def update():
     """Update the app state once per frame."""
+    for g in grass:
+        g.update()
     for s in sheep:
         s.update()
 
 def draw():
     """Draw to the window once per frame."""
+    for g in grass:
+        g.draw()
     for s in sheep:
         s.draw()
 
 sheep = []
 for _ in range(3):
     sheep.append(Sheep(randint(0,WIDTH), randint(0,HEIGHT)))
+
+grass = []
+patch_size = 10
+for x in range(0, WIDTH, patch_size):
+    for y in range(0, HEIGHT, patch_size):
+        grass.append(Grass(x, y, patch_size))
 
 run()
