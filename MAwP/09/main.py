@@ -111,12 +111,15 @@ class Grass:
         """Create a Grass object."""
         self.x = x
         self.y = y
-        self.energy = 5
+        self.energy = 2
         self.eaten = False
         self.sz = sz
 
     def update(self):
         """Update Grass state."""
+        if self.eaten:
+            if randint(0,100) < 5:
+                self.eaten = False
 
     def draw(self):
         """Draw a Grass at its position."""
