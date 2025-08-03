@@ -1,6 +1,6 @@
 """Chapter 9 - Building Objects with Classes."""
 import sys
-from random import randrange, randint
+from random import randrange, randint, choice
 from engine import run
 from screen_matrix import circle, rect
 # pylint: disable=C0103, W0603
@@ -16,6 +16,7 @@ RED = (255,0,0)
 GREEN = (0,102,0)
 YELLOW = (255,255,0)
 PURPLE = (102,0,204)
+COLOR_LIST = [WHITE, RED, YELLOW, PURPLE]
 
 class Ball:
     """Bouncing Ball object."""
@@ -47,12 +48,13 @@ class Ball:
 class Sheep:
     """Sheep object."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, col):
         """Create a Sheep object."""
         self.x = x
         self.y = y
         self.sz = 5
         self.energy = 20
+        self.col = col
 
     def update(self):
         """Update Sheep state."""
@@ -96,7 +98,7 @@ class Sheep:
 
     def draw(self):
         """Draw a Sheep at its position."""
-        circle(self.x, self.y, self.sz, WHITE, 0)
+        circle(self.x, self.y, self.sz, self.col, 0)
 
 class Grass:
     """Grass object."""
@@ -135,7 +137,9 @@ def draw():
 
 sheep = []
 for _ in range(20):
-    sheep.append(Sheep(randint(0,WIDTH), randint(0,HEIGHT)))
+    sheep.append(Sheep(randint(0,WIDTH), 
+                       randint(0,HEIGHT),
+                       choice(COLOR_LIST)))
 
 grass = []
 PATCH_SIZE = 5
