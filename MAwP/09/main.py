@@ -65,7 +65,7 @@ class Sheep:
             self.energy -= 30
             sheep.append(Sheep(self.x, self.y, self.col))
 
-        move = 5
+        move = 7 if self.col == PURPLE else 5
         self.x += randint(-move,move)
         self.y += randint(-move,move)
 
