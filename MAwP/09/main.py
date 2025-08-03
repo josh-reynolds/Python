@@ -1,4 +1,5 @@
 """Chapter 9 - Building Objects with Classes."""
+import sys
 from random import randrange, randint
 from engine import run
 from screen_matrix import circle, rect
@@ -50,38 +51,52 @@ class Sheep:
         """Create a Sheep object."""
         self.x = x
         self.y = y
-        self.sz = 10
+        self.sz = 5
         self.energy = 20
 
     def update(self):
         """Update Sheep state."""
-        move = 1
+        move = 5
         self.energy -= 1
         if self.energy <= 0:
             sheep.remove(self)
         self.x += randint(-move,move)
         self.y += randint(-move,move)
 
-        if self.x > WIDTH:
-            self.x = 0
-        if self.y > HEIGHT:
-            self.y = 0
+        # text just has these as > tests,
+        # which causes an index error when the value
+        # exactly equals WIDTH
+        if self.x >= WIDTH:
+            self.x %= WIDTH
+        if self.y >= HEIGHT:
+            self.y %= HEIGHT
         if self.x < 0:
-            self.x = WIDTH
+            self.x += WIDTH
         if self.y < 0:
-            self.y = HEIGHT
+            self.y += HEIGHT
 
-        xscl = self.x // PATCH_SIZE
-        yscl = self.y // PATCH_SIZE
-        g = grass[xscl * ROWS_OF_GRASS + yscl]
+        xscl = int(self.x / PATCH_SIZE)
+        yscl = int(self.y / PATCH_SIZE)
+        # text has a couple bugs that were causing index errors
+        # here - added this try/catch to pin it down...
+        try:
+            g = grass[xscl * ROWS_OF_GRASS + yscl]
+        except IndexError as e:
+            print(e)
+            print(f"xscl = {xscl}")
+            print(f"sheep.x = {self.x}")
+            print(f"yscl = {yscl}")
+            print(f"sheep.y = {self.y}")
+            print(f"ROWS_OF_GRASS = {ROWS_OF_GRASS}")
+            print(f"product = {xscl * ROWS_OF_GRASS + yscl}")
+            sys.exit()
         if not g.eaten:
             self.energy += g.energy
             g.eaten = True
 
-
     def draw(self):
         """Draw a Sheep at its position."""
-        circle(self.x, self.y, self.sz, BLACK, 0)
+        circle(self.x, self.y, self.sz, WHITE, 0)
 
 class Grass:
     """Grass object."""
@@ -119,11 +134,13 @@ def draw():
         s.draw()
 
 sheep = []
-for _ in range(3):
+for _ in range(20):
     sheep.append(Sheep(randint(0,WIDTH), randint(0,HEIGHT)))
 
 grass = []
-PATCH_SIZE = 10
+PATCH_SIZE = 5
+# text has this as floating point division, which causes an error
+# when calclating an index above - needs to be integer division
 ROWS_OF_GRASS = HEIGHT//PATCH_SIZE
 for x in range(0, WIDTH, PATCH_SIZE):
     for y in range(0, HEIGHT, PATCH_SIZE):
