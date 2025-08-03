@@ -8,6 +8,14 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Objects"
 
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+BROWN = (102,51,0)
+RED = (255,0,0)
+GREEN = (0,102,0)
+YELLOW = (255,255,0)
+PURPLE = (102,0,204)
+
 class Ball:
     """Bouncing Ball object."""
 
@@ -43,16 +51,20 @@ class Sheep:
         self.x = x
         self.y = y
         self.sz = 10
+        self.energy = 20
 
     def update(self):
         """Update Sheep state."""
-        move = 10
+        move = 1
+        self.energy -= 1
+        if self.energy <= 0:
+            sheep.remove(self)
         self.x += randint(-move,move)
         self.y += randint(-move,move)
 
     def draw(self):
         """Draw a Sheep at its position."""
-        circle(self.x, self.y, self.sz, (0,0,0), 1)
+        circle(self.x, self.y, self.sz, BLACK, 0)
 
 def update():
     """Update the app state once per frame."""
