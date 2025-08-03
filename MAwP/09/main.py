@@ -62,6 +62,23 @@ class Sheep:
         self.x += randint(-move,move)
         self.y += randint(-move,move)
 
+        if self.x > WIDTH:
+            self.x = 0
+        if self.y > HEIGHT:
+            self.y = 0
+        if self.x < 0:
+            self.x = WIDTH
+        if self.y < 0:
+            self.y = HEIGHT
+
+        xscl = self.x // PATCH_SIZE
+        yscl = self.y // PATCH_SIZE
+        g = grass[xscl * ROWS_OF_GRASS + yscl]
+        if not g.eaten:
+            self.energy += g.energy
+            g.eaten = True
+
+
     def draw(self):
         """Draw a Sheep at its position."""
         circle(self.x, self.y, self.sz, BLACK, 0)
@@ -82,7 +99,10 @@ class Grass:
 
     def draw(self):
         """Draw a Grass at its position."""
-        rect(self.x, self.y, self.sz, self.sz, color=GREEN, width=0)
+        col = GREEN
+        if self.eaten:
+            col = BROWN
+        rect(self.x, self.y, self.sz, self.sz, col, width=0)
 
 def update():
     """Update the app state once per frame."""
@@ -103,9 +123,10 @@ for _ in range(3):
     sheep.append(Sheep(randint(0,WIDTH), randint(0,HEIGHT)))
 
 grass = []
-patch_size = 10
-for x in range(0, WIDTH, patch_size):
-    for y in range(0, HEIGHT, patch_size):
-        grass.append(Grass(x, y, patch_size))
+PATCH_SIZE = 10
+ROWS_OF_GRASS = HEIGHT//PATCH_SIZE
+for x in range(0, WIDTH, PATCH_SIZE):
+    for y in range(0, HEIGHT, PATCH_SIZE):
+        grass.append(Grass(x, y, PATCH_SIZE))
 
 run()
