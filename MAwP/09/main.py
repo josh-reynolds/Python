@@ -46,18 +46,26 @@ class Sheep:
 
     def update(self):
         """Update Sheep state."""
+        move = 10
+        self.x += randint(-move,move)
+        self.y += randint(-move,move)
 
     def draw(self):
         """Draw a Sheep at its position."""
-        circle(self.x, self.y, self.sz, (0,0,0), 0)
+        circle(self.x, self.y, self.sz, (0,0,0), 1)
 
 def update():
     """Update the app state once per frame."""
+    for s in sheep:
+        s.update()
 
 def draw():
     """Draw to the window once per frame."""
-    shawn.draw()
+    for s in sheep:
+        s.draw()
 
-shawn = Sheep(300,200)
+sheep = []
+for _ in range(3):
+    sheep.append(Sheep(randint(0,WIDTH), randint(0,HEIGHT)))
 
 run()
