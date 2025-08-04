@@ -52,10 +52,10 @@ class Sheep:
         """Create a Sheep object."""
         self.x = x
         self.y = y
-        self.sz = 5
         self.energy = 20
         self.col = col
         self.age = 200
+        self.sz = self.energy//4
 
     def update(self):
         """Update Sheep state."""
@@ -65,6 +65,8 @@ class Sheep:
         if self.energy >= 50:
             self.energy -= 30
             sheep.append(Sheep(self.x, self.y, self.col))
+
+        self.sz = self.energy//4
 
         self.age -= 1
         if self.age <= 0:
