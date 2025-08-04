@@ -55,6 +55,7 @@ class Sheep:
         self.sz = 5
         self.energy = 20
         self.col = col
+        self.age = 200
 
     def update(self):
         """Update Sheep state."""
@@ -64,6 +65,10 @@ class Sheep:
         if self.energy >= 50:
             self.energy -= 30
             sheep.append(Sheep(self.x, self.y, self.col))
+
+        self.age -= 1
+        if self.age <= 0:
+            sheep.remove(self)
 
         move = 7 if self.col == PURPLE else 5
         self.x += randint(-move,move)
