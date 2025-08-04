@@ -1,6 +1,7 @@
 """Chapter 10 - Creating Fractals Using Recursion."""
 from math import radians
-from engine import run
+import pygame
+from engine import run, remap
 from screen_matrix import push_matrix, pop_matrix, line, translate, rotate
 
 WIDTH = 600
@@ -27,9 +28,11 @@ def update():
 
 def draw():
     """Draw to the window once per frame."""
+    mouse_x, _ = pygame.mouse.get_pos()
+    level = int(remap(mouse_x, 0, WIDTH, 0, 10))
     push_matrix()
     translate(300,500)
-    tree_fork(100,5)
+    tree_fork(100,level)
     pop_matrix()
 
 run()
