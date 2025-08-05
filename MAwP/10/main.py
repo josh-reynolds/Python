@@ -55,6 +55,11 @@ def sierpinski(size, level):
     if level == 0:
         triangle(0, 0, size, 0, size/2.0, -size*sqrt(3)/2.0,
                  color=(0,0,0), width=0)
+    else:
+        for _ in range(3):
+            sierpinski(size/2.0, level-1)
+            translate(size/2.0, -size*sqrt(3)/2.0)
+            rotate(radians(120))
 
 def update():
     """Update the app state once per frame."""
@@ -80,7 +85,7 @@ def draw():
     ## Sierpinski Triangle =============
     push_matrix()
     translate(50, 450)
-    sierpinski(400, 0)
+    sierpinski(400, 8)
     pop_matrix()
 
 
