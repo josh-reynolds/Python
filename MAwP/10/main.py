@@ -17,7 +17,7 @@ def tree_fork(size, level):
         line(0,0,0,-size)
         translate(0, -size)
         rotate(radians(angle))
-        
+
         tree_fork(0.8*size, level-1)
         rotate(radians(-2*angle))
 
@@ -26,16 +26,29 @@ def tree_fork(size, level):
 
         translate(0, size)
 
+def snowflake(size, level):
+    """Draw a Koch snowflake."""
+    for _ in range(3):
+        line(0,0,size,0)
+        translate(size,0)
+        rotate(radians(120))
+
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
-    mouse_x, _ = pygame.mouse.get_pos()
-    level = int(remap(mouse_x, 0, WIDTH, 0, 15))
+    #mouse_x, _ = pygame.mouse.get_pos()
+    #level = int(remap(mouse_x, 0, WIDTH, 0, 15))
+    #push_matrix()
+    #translate(300,500)
+    #tree_fork(100,level)
+    #pop_matrix()
+    #----------------------
     push_matrix()
-    translate(300,500)
-    tree_fork(100,level)
+    translate(100,100)
+    snowflake(400,1)
     pop_matrix()
+
 
 run()
