@@ -1,8 +1,9 @@
 """Chapter 10 - Creating Fractals Using Recursion."""
-from math import radians
+from math import radians, sqrt
 import pygame
 from engine import run, remap
-from screen_matrix import push_matrix, pop_matrix, line, translate, rotate
+from screen_matrix import push_matrix, pop_matrix, line
+from screen_matrix import translate, rotate, triangle
 
 WIDTH = 600
 HEIGHT = 600
@@ -49,23 +50,37 @@ def segment(size, level):
 
         segment(size/3.0, level-1)
 
+def sierpinski(size, level):
+    """Draw a Sierpinski triangle."""
+    if level == 0:
+        triangle(0, 0, size, 0, size/2.0, -size*sqrt(3)/2.0,
+                 color=(0,0,0), width=0)
+
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
+    ## Fractal Tree ====================
     #mouse_x, _ = pygame.mouse.get_pos()
     #level = int(remap(mouse_x, 0, WIDTH, 0, 15))
     #push_matrix()
     #translate(300,500)
     #tree_fork(100,level)
     #pop_matrix()
-    #----------------------
-    mouse_x, _ = pygame.mouse.get_pos()
-    level = int(remap(mouse_x, 0, WIDTH, 0, 7))
+
+    ## Koch Snowflake ==================
+    #mouse_x, _ = pygame.mouse.get_pos()
+    #level = int(remap(mouse_x, 0, WIDTH, 0, 7))
+    #push_matrix()
+    #translate(100, 200)
+    #snowflake(400, level)
+    #pop_matrix()
+
+    ## Sierpinski Triangle =============
     push_matrix()
-    translate(100, 200)
-    snowflake(400, level)
+    translate(50, 450)
+    sierpinski(400, 0)
     pop_matrix()
 
 
