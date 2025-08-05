@@ -61,9 +61,11 @@ def draw():
     #tree_fork(100,level)
     #pop_matrix()
     #----------------------
+    mouse_x, _ = pygame.mouse.get_pos()
+    level = int(remap(mouse_x, 0, WIDTH, 0, 7))
     push_matrix()
     translate(100, 200)
-    snowflake(400,3)
+    snowflake(400, level)
     pop_matrix()
 
 
