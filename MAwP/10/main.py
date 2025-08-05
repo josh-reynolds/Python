@@ -29,9 +29,25 @@ def tree_fork(size, level):
 def snowflake(size, level):
     """Draw a Koch snowflake."""
     for _ in range(3):
-        line(0,0,size,0)
-        translate(size,0)
+        segment(size, level)
         rotate(radians(120))
+
+def segment(size, level):
+    """Draw one segment of the side of a Koch snowflake."""
+    if level == 0:
+        line(0,0,size,0)
+        translate(size, 0)
+    else:
+        segment(size/3.0, level-1)
+        rotate(radians(-60))
+
+        segment(size/3.0, level-1)
+        rotate(radians(120))
+
+        segment(size/3.0, level-1)
+        rotate(radians(-60))
+
+        segment(size/3.0, level-1)
 
 def update():
     """Update the app state once per frame."""
@@ -46,8 +62,8 @@ def draw():
     #pop_matrix()
     #----------------------
     push_matrix()
-    translate(100,100)
-    snowflake(400,1)
+    translate(100, 200)
+    snowflake(400,3)
     pop_matrix()
 
 
