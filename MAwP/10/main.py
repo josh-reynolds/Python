@@ -75,6 +75,26 @@ def square_fractal(size, level):
         square_fractal(size/2.0, level-1)
         pop_matrix()
 
+def left_dragon(size, level):
+    """Draw the left half of a dragon curve fractal."""
+    if level == 0:
+        line(0,0,size,0)
+        translate(size,0)
+    else:
+        left_dragon(size, level-1)
+        rotate(radians(-90))
+        right_dragon(size, level-1)
+
+def right_dragon(size, level):
+    """Draw the right half of a dragon curve fractal."""
+    if level == 0:
+        line(0,0,size,0)
+        translate(size,0)
+    else:
+        left_dragon(size, level-1)
+        rotate(radians(90))
+        right_dragon(size, level-1)
+
 def update():
     """Update the app state once per frame."""
 
@@ -103,9 +123,15 @@ def draw():
     #pop_matrix()
 
     ## Square Fractal ==================
+    #push_matrix()
+    #translate(50, 50)
+    #square_fractal(500, 8)
+    #pop_matrix()
+
+    ## Dragon Curve ===================
     push_matrix()
-    translate(50, 50)
-    square_fractal(500, 8)
+    translate(WIDTH/2, HEIGHT/2)
+    left_dragon(5, 11)
     pop_matrix()
 
 run()
