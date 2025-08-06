@@ -66,6 +66,14 @@ def square_fractal(size, level):
     if level == 0:
         rect(0, 0, size, size,
              color=(150,0,150), width=0)
+    else:
+        push_matrix()
+        square_fractal(size/2.0, level-1)
+        translate(size/2.0, 0)
+        square_fractal(size/2.0, level-1)
+        translate(-size/2.0, size/2.0)
+        square_fractal(size/2.0, level-1)
+        pop_matrix()
 
 def update():
     """Update the app state once per frame."""
@@ -97,7 +105,7 @@ def draw():
     ## Square Fractal ==================
     push_matrix()
     translate(50, 50)
-    square_fractal(500, 0)
+    square_fractal(500, 8)
     pop_matrix()
 
 run()
