@@ -1,13 +1,18 @@
 """Chapter 10 - Creating Fractals Using Recursion."""
 from math import radians, sqrt
 import pygame
-from engine import run, remap
+from engine import run, remap, keyboard
 from screen_matrix import push_matrix, pop_matrix, line, rect
 from screen_matrix import translate, rotate, triangle
+# pylint: disable=W0603,E1101,C0103,E0601
 
 WIDTH = 600
 HEIGHT = 600
 TITLE = "Fractals & Recursion"
+
+RED = (255,0,0)
+BLACK = (0,0,0)
+PURPLE = (150,0,150)
 
 def tree_fork(size, level):
     """Draw a fork consisting of a trunk and two branches."""
@@ -54,7 +59,7 @@ def sierpinski(size, level):
     """Draw a Sierpinski triangle."""
     if level == 0:
         triangle(0, 0, size, 0, size/2.0, -size*sqrt(3)/2.0,
-                 color=(0,0,0), width=0)
+                 color=BLACK, width=0)
     else:
         for _ in range(3):
             sierpinski(size/2.0, level-1)
@@ -65,7 +70,7 @@ def square_fractal(size, level):
     """Draw a square fractal."""
     if level == 0:
         rect(0, 0, size, size,
-             color=(150,0,150), width=0)
+             color=PURPLE, width=0)
     else:
         push_matrix()
         square_fractal(size/2.0, level-1)
@@ -97,6 +102,17 @@ def right_dragon(size, level):
 
 def update():
     """Update the app state once per frame."""
+    global key_down
+    if keyboard.left and not key_down:
+        print("left arrow")
+    elif keyboard.right and not key_down:
+        print("right arrow")
+    elif keyboard.up and not key_down:
+        print("up arrow")
+    elif keyboard.down and not key_down:
+        print("down arrow")
+    key_down = (keyboard.left or keyboard.right or
+                keyboard.up or keyboard.down)
 
 def draw():
     """Draw to the window once per frame."""
@@ -133,5 +149,9 @@ def draw():
     translate(WIDTH/2, HEIGHT/2)
     left_dragon(5, 11)
     pop_matrix()
+
+dragon_level = 1
+dragon_size = 40
+key_down = False
 
 run()
