@@ -2,7 +2,7 @@
 from math import radians, sqrt
 import pygame
 from engine import run, remap
-from screen_matrix import push_matrix, pop_matrix, line
+from screen_matrix import push_matrix, pop_matrix, line, rect
 from screen_matrix import translate, rotate, triangle
 
 WIDTH = 600
@@ -61,6 +61,12 @@ def sierpinski(size, level):
             translate(size/2.0, -size*sqrt(3)/2.0)
             rotate(radians(120))
 
+def square_fractal(size, level):
+    """Draw a square fractal."""
+    if level == 0:
+        rect(0, 0, size, size,
+             color=(150,0,150), width=0)
+
 def update():
     """Update the app state once per frame."""
 
@@ -83,10 +89,15 @@ def draw():
     #pop_matrix()
 
     ## Sierpinski Triangle =============
-    push_matrix()
-    translate(50, 450)
-    sierpinski(400, 8)
-    pop_matrix()
+    #push_matrix()
+    #translate(50, 450)
+    #sierpinski(400, 8)
+    #pop_matrix()
 
+    ## Square Fractal ==================
+    push_matrix()
+    translate(50, 50)
+    square_fractal(500, 0)
+    pop_matrix()
 
 run()
