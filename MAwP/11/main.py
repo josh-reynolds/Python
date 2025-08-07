@@ -9,15 +9,49 @@ GRID_W = 15
 GRID_H = 15
 CELL_SIZE = 18
 
+class Cell:
+    """Cell class for Cellular Automata."""
+
+    def __init__(self, column, row, state=0):
+        """Create a Cell object."""
+        self.column = column
+        self.row = row
+        self.state = state
+
+    def display(self):
+        """Draw Cell on screen."""
+        if self.state == 1:
+            color = (0,0,0)
+        else:
+            color = (255,255,255)
+
+        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column, 
+                         CELL_SIZE, CELL_SIZE, 
+                         color=color, width=0)
+        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column, 
+                         CELL_SIZE, CELL_SIZE, 
+                         color=(128,128,128), width=1)
+
+def create_cell_list():
+    """Create a list of Cells with one on Cell in the center."""
+    new_list = []
+    for j in range(GRID_H):
+        new_list.append([])
+        for i in range(GRID_W):
+            new_list[j].append(Cell(i,j,0))
+
+    new_list[GRID_H//2][GRID_W//2].state = 1
+    return new_list
+
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
-    for x in range(GRID_W):
-        for y in range(GRID_H):
-            screen.draw.rect(CELL_SIZE*x, CELL_SIZE* y, 
-                             CELL_SIZE, CELL_SIZE, 
-                             color=(0,0,0), width=1)
+    for row in cell_list:
+        for cell in row:
+            cell.display()
+
+cell_list = create_cell_list()
 
 run()
