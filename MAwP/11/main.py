@@ -9,6 +9,8 @@ GRID_W = 50
 GRID_H = 50
 CELL_SIZE = WIDTH // GRID_W
 
+generation = 0
+
 class Cell:
     """Cell class for Cellular Automata."""
 
@@ -59,15 +61,29 @@ def create_cell_list():
     new_list[GRID_H//2][GRID_W//2].state = 1
     return new_list
 
+def update_cell_list(cell_list):
+    """Create next generation of a CA using a double-buffer."""
+    new_list = []
+    for r,row in enumerate(cell_list):
+        new_list.append([])
+        for c,cell in enumerate(row):
+            new_list[r].append(Cell(c,r,cell.check_neighbors()))
+    return new_list[::]
+
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
+    global cell_list, generation
+    cell_list = update_cell_list(cell_list)
     for row in cell_list:
         for cell in row:
-            cell.state = cell.check_neighbors()
             cell.display()
+    generation += 1
+    #if generation == 3:
+        #no_loop()       # TO_DO: don't have this functionality yet
+                         #        in the engine
 
 cell_list = create_cell_list()
 
