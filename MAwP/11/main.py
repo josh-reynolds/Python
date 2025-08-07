@@ -32,6 +32,22 @@ class Cell:
                          CELL_SIZE, CELL_SIZE, 
                          color=(220,220,220), width=1)
 
+    def check_neighbors(self):
+        """Examine states of neighbor cells."""
+        if self.state == 1:
+            return 1
+        neighbors = 0
+        for dr,dc in [[-1,0],[1,0],[0,-1],[0,1]]:
+            try:
+                if cell_list[self.row + dr][self.column + dc].state == 1:
+                    neighbors += 1
+            except IndexError:
+                continue
+        if neighbors in [1,4]:
+            return 1
+        else:
+            return 0
+
 def create_cell_list():
     """Create a list of Cells with one on Cell in the center."""
     new_list = []
@@ -50,6 +66,7 @@ def draw():
     """Draw to the window once per frame."""
     for row in cell_list:
         for cell in row:
+            cell.state = cell.check_neighbors()
             cell.display()
 
 cell_list = create_cell_list()
