@@ -5,9 +5,9 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Cellular Automata"
 
-GRID_W = 15
-GRID_H = 15
-CELL_SIZE = 18
+GRID_W = 50
+GRID_H = 50
+CELL_SIZE = WIDTH // GRID_W
 
 class Cell:
     """Cell class for Cellular Automata."""
@@ -30,7 +30,7 @@ class Cell:
                          color=color, width=0)
         screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column, 
                          CELL_SIZE, CELL_SIZE, 
-                         color=(128,128,128), width=1)
+                         color=(220,220,220), width=1)
 
 def create_cell_list():
     """Create a list of Cells with one on Cell in the center."""
