@@ -1,5 +1,6 @@
 """Chapter 11 - Cellular Automata."""
 from engine import run, screen
+# pylint: disable=C0103, E1121, W0603
 
 WIDTH = 600
 HEIGHT = 600
@@ -27,12 +28,12 @@ class Cell:
         else:
             color = (255,255,255)
 
-        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column, 
-                         CELL_SIZE, CELL_SIZE, 
-                         color=color, width=0)
-        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column, 
-                         CELL_SIZE, CELL_SIZE, 
-                         color=(220,220,220), width=1)
+        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column,
+                         CELL_SIZE, CELL_SIZE,
+                         color, 0)
+        screen.draw.rect(CELL_SIZE*self.row, CELL_SIZE* self.column,
+                         CELL_SIZE, CELL_SIZE,
+                         (220,220,220), 1)
 
     def check_neighbors(self):
         """Examine states of neighbor cells."""
@@ -47,8 +48,7 @@ class Cell:
                 continue
         if neighbors in [1,4]:
             return 1
-        else:
-            return 0
+        return 0
 
 def create_cell_list():
     """Create a list of Cells with one on Cell in the center."""
@@ -61,10 +61,10 @@ def create_cell_list():
     new_list[GRID_H//2][GRID_W//2].state = 1
     return new_list
 
-def update_cell_list(cell_list):
+def update_cell_list(c_list):
     """Create next generation of a CA using a double-buffer."""
     new_list = []
-    for r,row in enumerate(cell_list):
+    for r,row in enumerate(c_list):
         new_list.append([])
         for c,cell in enumerate(row):
             new_list[r].append(Cell(c,r,cell.check_neighbors()))
