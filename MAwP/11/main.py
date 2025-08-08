@@ -1,5 +1,5 @@
 """Chapter 11 - Cellular Automata."""
-from engine import run, screen, keyboard
+from engine import run, screen
 # pylint: disable=C0103, E1121, W0603, E1101
 
 WIDTH = 600
@@ -10,8 +10,9 @@ GRID_W = 50
 GRID_H = 50
 CELL_SIZE = WIDTH // GRID_W
 
-generation = 0
+generation = 1
 key_down = False
+frame_counter = 0
 
 class Cell:
     """Cell class for Cellular Automata."""
@@ -73,24 +74,26 @@ def update_cell_list(c_list):
 
 def update():
     """Update the app state once per frame."""
-    global key_down, cell_list, generation
-    if keyboard.up and not key_down:
-        cell_list = update_cell_list(cell_list)
-        generation += 1
-    key_down = keyboard.up
 
 def draw():
     """Draw to the window once per frame."""
+    global generation, cell_list, frame_counter
+    if frame_counter % 30 == 0:
+        cell_list = update_cell_list(cell_list)
+        generation += 1
+
+        if generation == 30:
+            generation = 1
+            cell_list = create_cell_list()
+
+    frame_counter += 1
+
     for row in cell_list:
         for cell in row:
             cell.display()
-    screen.draw.text("Press up-arrow to increase generation.", pos=(20,20),
-                     color=(0,0,255))
+
     screen.draw.text(f"Generation: {generation}", pos=(460,20),
                      color=(255,0,0))
-    #if generation == 3:
-        #no_loop()       # TO_DO: don't have this functionality yet
-                         #        in the engine
 
 cell_list = create_cell_list()
 
