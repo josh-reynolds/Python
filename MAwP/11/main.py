@@ -1,4 +1,5 @@
 """Chapter 11 - Cellular Automata."""
+from random import choice
 from engine import run, screen
 # pylint: disable=C0103, E1121, W0603, E1101
 
@@ -39,17 +40,23 @@ class Cell:
 
     def check_neighbors(self):
         """Examine states of neighbor cells."""
-        if self.state == 1:
-            return 1
         neighbors = 0
-        for dr,dc in [[-1,0],[1,0],[0,-1],[0,1]]:
+
+        for dr,dc in [[-1,-1],[-1,0],[-1,1],
+                      [0,-1],[0,1],
+                      [1,-1],[1,0],[1,1]]:
             try:
                 if cell_list[self.row + dr][self.column + dc].state == 1:
                     neighbors += 1
             except IndexError:
                 continue
-        if neighbors in [1,4]:
-            return 1
+
+        if self.state == 1:
+            if neighbors in [2,3]:
+                return 1
+            return 0
+        if neighbors == 3:
+              return 1
         return 0
 
 def create_cell_list():
@@ -58,7 +65,7 @@ def create_cell_list():
     for j in range(GRID_H):
         new_list.append([])
         for i in range(GRID_W):
-            new_list[j].append(Cell(i,j,0))
+            new_list[j].append(Cell(i,j,choice([0,1])))
 
     new_list[GRID_H//2][GRID_W//2].state = 1
     return new_list
@@ -78,13 +85,9 @@ def update():
 def draw():
     """Draw to the window once per frame."""
     global generation, cell_list, frame_counter
-    if frame_counter % 30 == 0:
+    if frame_counter % 20 == 0:
         cell_list = update_cell_list(cell_list)
         generation += 1
-
-        if generation == 30:
-            generation = 1
-            cell_list = create_cell_list()
 
     frame_counter += 1
 
