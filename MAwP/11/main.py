@@ -84,6 +84,10 @@ def draw():
     for row in cell_list:
         for cell in row:
             cell.display()
+    screen.draw.text("Press up-arrow to increase generation.", pos=(20,20),
+                     color=(0,0,255))
+    screen.draw.text(f"Generation: {generation}", pos=(460,20),
+                     color=(255,0,0))
     #if generation == 3:
         #no_loop()       # TO_DO: don't have this functionality yet
                          #        in the engine
