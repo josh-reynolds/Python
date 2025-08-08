@@ -1,5 +1,5 @@
 """Chapter 11 - Cellular Automata."""
-from engine import run
+from engine import run, keyboard, screen
 from screen_matrix import rect
 # pylint: disable=C0103
 
@@ -8,8 +8,9 @@ HEIGHT = 600
 TITLE = "Cellular Automata"
 
 w = 3
-rows = 500
-cols = 500
+rows = 100
+cols = 200
+key_down = False
 
 def rules(a,b,c):
     """Evaluate CA ruleset."""
@@ -28,6 +29,16 @@ def generate():
 
 def update():
     """Update the app state once per frame."""
+    global key_down, w
+    if keyboard.up and not key_down:
+        w += 1
+    elif keyboard.down and not key_down:
+        w -= 1
+    if w < 1:
+        w = 1
+    if w > 20:
+        w = 20
+    key_down = (keyboard.down or keyboard.up)
 
 def draw():
     """Draw to the window once per frame."""
@@ -36,7 +47,11 @@ def draw():
             color = (0,0,0) if v == 1 else (255,255,255)
             rect(j*w-(cols*w-WIDTH)/2, w*i, w, w, color, 0)
 
-ruleset = [0,1,0,1,1,0,1,0]
+    screen.draw.text("Up-arrow to zoom in, down-arrow to zoom out.",
+                     pos=(20,20), color=(255,0,0))
+
+#ruleset = [0,0,0,1,1,1,1,0]   # Rule 30
+ruleset = [0,1,0,1,1,0,1,0]   # Rule 90
 cells = []
 for r in range(rows):
     cells.append([])
