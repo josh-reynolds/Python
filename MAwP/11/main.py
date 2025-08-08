@@ -8,8 +8,8 @@ HEIGHT = 600
 TITLE = "Cellular Automata"
 
 w = 3
-rows = 1000
-cols = 1000
+rows = 500
+cols = 500
 
 def rules(a,b,c):
     """Evaluate CA ruleset."""
@@ -36,7 +36,7 @@ def draw():
             color = (0,0,0) if v == 1 else (255,255,255)
             rect(j*w-(cols*w-WIDTH)/2, w*i, w, w, color, 0)
 
-ruleset = [0,0,0,1,1,1,1,0]
+ruleset = [0,1,0,1,1,0,1,0]
 cells = []
 for r in range(rows):
     cells.append([])
