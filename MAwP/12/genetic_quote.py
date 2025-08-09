@@ -2,7 +2,7 @@
 import random
 
 target = "I never go back on my word, because that is my Ninja way."
-characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.',?!"
+characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.',?!"
 
 def make_list():
     """Returns a list of characters the same length as the target."""
@@ -30,3 +30,22 @@ def mutate(a_list):
     index = random.randint(0, len(target)-1)
     new_list[index] = new_letter
     return new_list
+
+random.seed()
+best_list = make_list()
+best_score = score(best_list)
+guesses = 0
+
+while True:
+    guess = mutate(best_list)
+    guess_score = score(guess)
+    guesses += 1
+    if guess_score <= best_score:
+        continue
+    else:
+        print(to_string(guess), guess_score, guesses)
+        if guess_score == len(target):
+            break
+        else:
+            best_list = list(guess)
+            best_score = guess_score
