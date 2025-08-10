@@ -1,4 +1,5 @@
 """Chapter 12 - Genetic Algorithms."""
+from math import dist 
 from random import randint, sample
 from engine import run, screen
 from screen_matrix import circle, polygon
@@ -46,6 +47,14 @@ class Route:
         for j in self.city_nums:
             cities[j].display()
 
+    def calc_length(self):
+        self.distance = 0
+        for i, num in enumerate(self.city_nums):
+            self.distance += dist((cities[num].x, cities[num].y),
+                                  (cities[self.city_nums[i-1]].x,
+                                   cities[self.city_nums[i-1]].y))
+        return self.distance
+
 def update():
     """Update the app state once per frame."""
 
@@ -61,5 +70,6 @@ for i in range(CITY_COUNT):
                        i))
 
 r = Route()
+print(r.calc_length())
 
 run()
