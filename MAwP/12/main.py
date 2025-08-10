@@ -1,6 +1,6 @@
 """Chapter 12 - Genetic Algorithms."""
 from math import dist
-from random import randint, sample
+from random import randint, sample, choice, random
 from engine import run, screen
 from screen_matrix import circle, polygon
 # pylint: disable=C0103, R0903, W0603
@@ -9,10 +9,7 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Genetic Algorithms"
 
-CITY_COUNT = 10
-
-random_improvements = 0
-mutated_improvements = 0
+CITY_COUNT = 50
 
 class City:
     """An object representing a city location."""
@@ -71,44 +68,63 @@ class Route:
                     child.city_nums[indices[j]]
         return child
 
+    def crossover(self, partner):
+        """Splice together genes with partner's genes."""
+        child = Route()
+        index = randint(1, CITY_COUNT-2)
+        child.city_nums = self.city_nums[:index]
+        if random() < 0.5:
+            child.city_nums = child.city_nums[::-1]
+        not_slice = [x for x in partner.city_nums if x not in child.city_nums]
+        child.city_nums += not_slice
+        return child
+
 cities = []
+population = []
+POP_N = 5000
 for i in range(CITY_COUNT):
     cities.append(City(randint(50, WIDTH-50),
                        randint(50, HEIGHT-50),
                        i))
-best = Route()
+for i in range(POP_N):
+    population.append(Route())
+best = choice(population)
 record_distance = best.calc_length()
+first = record_distance
 
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
-    global best, record_distance, random_improvements
-    global mutated_improvements
+    global best, record_distance, population
     screen.fill((0,0,0))
 
     best.display()
     print(record_distance)
-    print(f"random: {random_improvements}")
-    print(f"mutated: {mutated_improvements}")
+    #print(best.city_nums)
 
-    r = Route()
-    l1 = r.calc_length()
-    if l1 < record_distance:
-        record_distance = l1
-        best = r
-        random_improvements += 1
+    population.sort(key=Route.calc_length)
+    population = population[:POP_N]
+    length1 = population[0].calc_length()
+    if length1 < record_distance:
+        record_distance = length1
+        best = population[0]
 
-    for i in range(2,6):
-        mutated = Route()
-        mutated.city_nums = best.city_nums
-        mutated = mutated.mutate_n(i)
-        l2 = mutated.calc_length()
-        if l2 < record_distance:
-            record_distance = l2
-            best = mutated
-            mutated_improvements += 1
+    for j in range(POP_N):
+        parent_a, parent_b = sample(population,2)
+        child = parent_a.crossover(parent_b)
+        population.append(child)
 
+    for j in range(3,25):
+        if j < CITY_COUNT:
+            new = best.mutate_n(j)
+            population.append(new)
+
+    for j in range(3,25):
+        if j < CITY_COUNT:
+            new = choice(population)
+            new = new.mutate_n(j)
+            population.append(new)
 
 run()
