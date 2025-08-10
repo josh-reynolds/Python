@@ -1,15 +1,18 @@
 """Chapter 12 - Genetic Algorithms."""
-from math import dist 
+from math import dist
 from random import randint, sample
 from engine import run, screen
 from screen_matrix import circle, polygon
-# pylint: disable=C0103, R0903
+# pylint: disable=C0103, R0903, W0603
 
 WIDTH = 600
 HEIGHT = 600
 TITLE = "Genetic Algorithms"
 
-CITY_COUNT = 4
+CITY_COUNT = 10
+
+random_improvements = 0
+mutated_improvements = 0
 
 class City:
     """An object representing a city location."""
@@ -48,31 +51,39 @@ class Route:
             cities[j].display()
 
     def calc_length(self):
+        """Calculate the length of the Route."""
         self.distance = 0
-        for i, num in enumerate(self.city_nums):
+        for j, num in enumerate(self.city_nums):
             self.distance += dist((cities[num].x, cities[num].y),
-                                  (cities[self.city_nums[i-1]].x,
-                                   cities[self.city_nums[i-1]].y))
+                                  (cities[self.city_nums[j-1]].x,
+                                   cities[self.city_nums[j-1]].y))
         return self.distance
+
+cities = []
+for i in range(CITY_COUNT):
+    cities.append(City(randint(50, WIDTH-50),
+                       randint(50, HEIGHT-50),
+                       i))
+best = Route()
+record_distance = best.calc_length()
 
 def update():
     """Update the app state once per frame."""
 
 def draw():
     """Draw to the window once per frame."""
+    global best, record_distance, random_improvements
     screen.fill((0,0,0))
-    r.display()
 
-cities = []
-#for i in range(CITY_COUNT):
-    #cities.append(City(randint(50, WIDTH-50),
-                       #randint(50, HEIGHT-50),
-                       #i))
-cities = [City(100,100,0), City(300,100,1),
-          City(300,300,2), City(100,300,3)]
+    best.display()
+    print(record_distance)
+    print(f"random: {random_improvements}")
 
-r = Route()
-r.city_nums = [0,1,2,3]
-print(r.calc_length())
+    r = Route()
+    l = r.calc_length()
+    if l < record_distance:
+        record_distance = l
+        best = r
+        random_improvements += 1
 
 run()
