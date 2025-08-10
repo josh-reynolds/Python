@@ -59,6 +59,18 @@ class Route:
                                    cities[self.city_nums[j-1]].y))
         return self.distance
 
+    def mutate_n(self, num):
+        """Mutate a Route by swapping num cities."""
+        indices = sample(list(range(CITY_COUNT)), num)
+        child = Route()
+        child.city_nums = self.city_nums[::]
+        for j in range(num-1):
+            child.city_nums[indices[j]],\
+                    child.city_nums[indices[(j+1)%num]] = \
+                    child.city_nums[indices[(j+1)%num]],\
+                    child.city_nums[indices[j]]
+        return child
+
 cities = []
 for i in range(CITY_COUNT):
     cities.append(City(randint(50, WIDTH-50),
@@ -73,17 +85,30 @@ def update():
 def draw():
     """Draw to the window once per frame."""
     global best, record_distance, random_improvements
+    global mutated_improvements
     screen.fill((0,0,0))
 
     best.display()
     print(record_distance)
     print(f"random: {random_improvements}")
+    print(f"mutated: {mutated_improvements}")
 
     r = Route()
-    l = r.calc_length()
-    if l < record_distance:
-        record_distance = l
+    l1 = r.calc_length()
+    if l1 < record_distance:
+        record_distance = l1
         best = r
         random_improvements += 1
+
+    for i in range(2,6):
+        mutated = Route()
+        mutated.city_nums = best.city_nums
+        mutated = mutated.mutate_n(i)
+        l2 = mutated.calc_length()
+        if l2 < record_distance:
+            record_distance = l2
+            best = mutated
+            mutated_improvements += 1
+
 
 run()
