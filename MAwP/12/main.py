@@ -9,7 +9,7 @@ WIDTH = 600
 HEIGHT = 600
 TITLE = "Genetic Algorithms"
 
-CITY_COUNT = 10
+CITY_COUNT = 4
 
 class City:
     """An object representing a city location."""
@@ -64,12 +64,15 @@ def draw():
     r.display()
 
 cities = []
-for i in range(CITY_COUNT):
-    cities.append(City(randint(50, WIDTH-50),
-                       randint(50, HEIGHT-50),
-                       i))
+#for i in range(CITY_COUNT):
+    #cities.append(City(randint(50, WIDTH-50),
+                       #randint(50, HEIGHT-50),
+                       #i))
+cities = [City(100,100,0), City(300,100,1),
+          City(300,300,2), City(100,300,3)]
 
 r = Route()
+r.city_nums = [0,1,2,3]
 print(r.calc_length())
 
 run()
