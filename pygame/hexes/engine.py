@@ -18,6 +18,7 @@ This module contains the following:
     images - singleton instance of Images for use by game scripts.
 
     run() - entry point containing the core game loop.
+    remap() - utility function; remap a value from one range to another.
 
 Game scripts should generally import the singleton entries, run(), and Actor. The 
 game loop will expect to find update(), draw(), and the constants WIDTH, HEIGHT, and
@@ -27,7 +28,7 @@ flagging keyboard events in the keyboard object as they occur. The engine will l
 images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
-__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run']
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run', 'remap', 'lerp']
 __version__ = "1.5"
 
 import os
@@ -252,11 +253,13 @@ class Screen:
         self.surface = pygame.display.set_mode((width, height))
         self.images = {}
         self.draw = Painter(self.surface)
+        self.width = width
+        self.height = height
 
     def fill(self, color):
         self.surface.fill(color)
 
-    def blit(self, image, position):
+    def blit(self, image, position, special_flags=0):
         if isinstance(image, pygame.Surface):
             surf = image
         elif isinstance(image, str):
@@ -264,7 +267,7 @@ class Screen:
                 self.images[image] = _load_image(image)
             surf = self.images[image]
 
-        self.surface.blit(surf, position)
+        self.surface.blit(surf, position, special_flags=special_flags)
 
 
 class Painter:
@@ -278,7 +281,7 @@ class Painter:
         self.surface = surface
         self.fontname = None
         self.fontsize = 24
-        self.fontcolor = Color('black')
+        self.fontcolor = Color('black')    # deprecate
         self.set_font()
 
     def set_font(self):
@@ -286,7 +289,7 @@ class Painter:
 
     #TO_DO: only partial positioning implemented thus far, and a bit creaky
     # this is 'borrowed' from ptext, which is what Pygame Zero uses internally
-    def text(self, text, pos=None, center=None):
+    def text(self, text, pos=None, center=None, color=Color('black')):
         if center and not pos:
             x, y = center
             hanchor, vanchor = 0.5, 0.5
@@ -296,7 +299,7 @@ class Painter:
         else:
             raise Exception("Must specify either pos or center location")
 
-        img = self.font.render(text, True, self.fontcolor)
+        img = self.font.render(text, True, color)
 
         x -= hanchor * img.get_width()
         y -= vanchor * img.get_height()
@@ -307,31 +310,53 @@ class Painter:
         # TO_DO: address duplication with Screen.blit()
         self.surface.blit(img, (x,y))
 
-    def line(self, color, start, end):
-        pygame.draw.line(self.surface, color, start, end)
+    def line(self, color, start, end, width=1):
+        pygame.draw.line(self.surface, color, start, end, width)
 
+    # TO_DO: extend this transparency support to other draw methods
+    # TO_DO: transparency/outline fix mutually exclusive, needs adjustment
     def rect(self, rect, color, width=1):
-        pygame.draw.rect(self.surface, color, rect, width)
+        if len(color) == 4:
+            s = pygame.Surface((rect.width, rect.height))
+            s.set_alpha(color[3])
+            #if width == 0:
+            s.fill(color)
+            self.surface.blit(s, (rect.x, rect.y))
+        else:
+            pygame.draw.rect(self.surface, color, rect, width)
 
+    # TO_DO: transparency not quite right here, coming out as a square, neds work
     def circle(self, x, y, radius, color, width=0):
-        pygame.draw.circle(self.surface, color, (x, y), radius, width)
+        if len(color) == 4:
+            s = pygame.Surface((radius, radius))
+            pygame.draw.circle(s, color, (0, 0), radius, width)
+            s.set_alpha(color[3])
+            self.surface.blit(s, (x, y))
+        else:
+            pygame.draw.circle(self.surface, color, (x, y), radius, width)
 
     def pixel(self, x, y, color):
         pygame.gfxdraw.pixel(self.surface, x, y, color)
 
+    # this can be generalized to any regular polygon
+    # also, doubling sides in the range (but not the angle) and 
+    # skipping counts produces a star shape
     def hex(self, x, y, radius, color, width=1):
         sides = 6
-        sins = [0.86602540378, 0.86602540378, 0,
-                -0.86602540378, -0.86602540378, 0]
-        coss = [0.5, -0.5, -1,
-                -0.5, 0.5, 1]
         hex_points = []
         for i in range(sides):
-            vX = round(radius * coss[i] + x)
-            vY = round(radius * sins[i] + y)
+            angle = math.pi * 2/sides * (i+1)
+            vX = radius * math.cos(angle) + x
+            vY = radius * math.sin(angle) + y
             hex_points.append((vX,vY))
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
+
+    def rect(self, x, y, w, h, color, width=0):
+        pygame.draw.rect(self.surface, color, (x, y, w, h), width)
+
+    def polygon(self, points, color, width=0):
+        pygame.draw.polygon(self.surface, color, points, width)
 
 
 class Music:
@@ -376,6 +401,22 @@ class keys:
     pass
 
 
+class Mouse:
+    """Mouse - holds flags indicating mouse button state."""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        for i in dir(self):
+            if not i.startswith('__') and i != 'reset':
+                setattr(self, i, False)
+
+    def __getitem__(self, button):
+        if hasattr(self, button):
+            return getattr(self, button)
+
+
 class Sounds:
     """Sounds - wraps the Pygame audio mixer."""
 
@@ -403,6 +444,9 @@ music = Music()
 """keyboard - singleton instance of Keyboard for use by game scripts."""
 keyboard = Keyboard()
 
+"""mouse - singleton instance of Mouse for use by game scripts."""
+mouse = Mouse()
+
 """sounds - singleton instance of Sounds for use by game scripts."""
 sounds = Sounds()
 
@@ -417,7 +461,7 @@ for i in _key_constants:
     setattr(keys, const, const.lower())
     setattr(keyboard, const.lower(), False)
 
-def run():
+def run(draw=True):
     """run() - entry point containing the core game loop."""
 
     #sys.setprofile(_trace_function)
@@ -426,8 +470,9 @@ def run():
     pygame.display.set_caption(parent.TITLE)
     pygame.key.set_repeat(10,10)
 
-    #screen.fill(Color("white"))
-    #parent.once()
+    if not draw:
+        screen.fill(Color("white"))
+        parent.setup()
 
     up = parent.update
     if up.__code__.co_argcount == 0:
@@ -457,12 +502,25 @@ def run():
                 if hasattr(keys, name.upper()):
                     setattr(keyboard, name, True)
     
-        screen.fill(Color("white"))
+        if draw:
+            screen.fill(Color("white"))
         update(pygame.time.Clock.get_time(clock)/1000)
-        parent.draw()
+        if draw:
+            parent.draw()
         pygame.display.update()
     
     pygame.quit()
+
+def remap(old_val, old_min, old_max, new_min, new_max):
+    return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
+
+def lerp(a, b, scale):
+    if scale <= 0:
+        return a
+    elif scale >= 1:
+        return b
+    else:
+        return ((b - a) * scale) + a
 
 def _trace_function(frame, event, arg, indent=[0]):
     """Internal function to display function entry/exit while debugging."""
@@ -475,3 +533,5 @@ def _trace_function(frame, event, arg, indent=[0]):
         indent[0] -= 2
     return _trace_function
 
+#no_loop()       # TO_DO: don't have this functionality yet
+                 #        in the engine
