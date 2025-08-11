@@ -114,11 +114,13 @@ v1.5 (under development with NOC and miscellaneous projects)
 * [     ] only partial positioning implemented for Painter.text()
 * [     ] duplication between Images, _load_image(), and Screen
 * [     ] artifacting visible in Rosette & SubdividedGrid - needs correction
-
-----------------------------------------
-# image + anchor -> anchor_value
-# topleft + anchor_value -> position
-
-# change image, need to recalculate anchor_value and position
-# change anchor, need to recalculat anchor_value and position
-# change position, need to recalculate topleft
+* [     ] handle loading image files with same name but different extensions
+* [     ] expose customization options for Painter (Processing style?)
+* [     ] extend transparency support to all Painter draw methods
+* [     ] transparency/outline mutually exclusive in Painter
+* [     ] transparency displaying as a square in Painter.circle()
+* [     ] add no_loop() functionality a la Processing
+* [     ] Painter.rect() was redefined while working on the Processing-style API
+* [     ] merge screen_matrix & pvector into engine
+* [     ] implement rect mode, current is equivalent to CORNERS
+* [     ] enforce arg consistency across Processing API functions

@@ -325,6 +325,12 @@ class Painter:
         else:
             pygame.draw.rect(self.surface, color, rect, width)
 
+    # BUG: I redifined rect while working on the Processing-style API,
+    #      and this breaks the noise project. Need to reconcile.
+    def rect(self, x, y, w, h, color, width=0):
+        pygame.draw.rect(self.surface, color, (x, y, w, h), width)
+
+
     # TO_DO: transparency not quite right here, coming out as a square, neds work
     def circle(self, x, y, radius, color, width=0):
         if len(color) == 4:
@@ -351,9 +357,6 @@ class Painter:
             hex_points.append((vX,vY))
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
-
-    def rect(self, x, y, w, h, color, width=0):
-        pygame.draw.rect(self.surface, color, (x, y, w, h), width)
 
     def polygon(self, points, color, width=0):
         pygame.draw.polygon(self.surface, color, points, width)
