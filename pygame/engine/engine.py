@@ -28,7 +28,8 @@ flagging keyboard events in the keyboard object as they occur. The engine will l
 images and sound files in the subdirectories ./images, ./sounds and ./music.
 """
 
-__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', 'run', 'remap', 'lerp']
+__all__ = ['Actor', 'screen', 'music', 'keyboard', 'keys', 'sounds', 'images', \
+        'run', 'remap', 'lerp']
 __version__ = "1.5"
 
 import os
@@ -47,10 +48,7 @@ def _load_image(image_name):
     img = None
     for entry in os.listdir('./images/'):
         name,extension = entry.split('.')
-        if name == image_name and (extension == 'png' or
-                                   extension == 'jpg' or
-                                   extension == 'gif'):
-
+        if name == image_name and extension in ('png', 'jpg', 'gif'):
             try:
                 img = pygame.image.load('./images/' + image_name + '.' + extension)
             except FileNotFoundError:
@@ -67,35 +65,40 @@ class Actor:
     """Actor - class to handle moving graphical objects."""
 
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
-        if DEBUG_ACTOR: print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
-        
+        if DEBUG_ACTOR:
+            print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
+
         self._anchor = ("left", "top")
         self._anchor_value = (0,0)
         self.rect = Rect((0,0), (0,0))
 
-        if anchor == None:
+        if anchor is None:
             anchor = ("center","center")
 
         self.image = image
         self.initialize_position(pos, anchor)
 
     def draw(self):
-        if DEBUG_ACTOR: print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+        if DEBUG_ACTOR:
+            print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
 
         screen.blit(self._image, self.rect.topleft)
 
     def collidepoint(self, point):
-        if DEBUG_ACTOR: print(f"collidepoint({point})")
+        if DEBUG_ACTOR:
+            print(f"collidepoint({point})")
 
         return self.rect.collidepoint(point)
 
     def colliderect(self, rect):
-        if DEBUG_ACTOR: print(f"colliderect({rect})")
+        if DEBUG_ACTOR:
+            print(f"colliderect({rect})")
 
         return self.rect.colliderect(rect)
 
     def distance_to(self, other):
-        if DEBUG_ACTOR: print(f"colliderect({rect})")
+        if DEBUG_ACTOR:
+            print(f"colliderect({rect})")
 
         pos = pygame.Vector2(self.pos)
         target = pygame.Vector2(other.pos)
@@ -128,21 +131,24 @@ class Actor:
 
     @image.setter
     def image(self, image_name):
-        if DEBUG_ACTOR: print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
-        
+        if DEBUG_ACTOR:
+            print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
+
         self.image_name = image_name
         self._image = _load_image(image_name)
         self.update_position()
 
     def initialize_position(self, pos, anchor):
-        if DEBUG_ACTOR: print(f"initialize_position({pos}, {anchor})")
+        if DEBUG_ACTOR:
+            print(f"initialize_position({pos}, {anchor})")
 
         self._anchor = anchor
         self.calculate_anchor()
         self.pos = pos
-    
+
     def update_position(self):
-        if DEBUG_ACTOR: print("update_position()")
+        if DEBUG_ACTOR:
+            print("update_position()")
 
         current_position = self.pos
         self.rect.width, self.rect.height = self._image.get_size()
@@ -155,7 +161,8 @@ class Actor:
 
     @x.setter
     def x(self, new_x):
-        if DEBUG_ACTOR: print(f"set_x({new_x})")
+        if DEBUG_ACTOR:
+            print(f"set_x({new_x})")
 
         self.rect.left = new_x - self._anchor_value[0]
 
@@ -165,7 +172,8 @@ class Actor:
 
     @y.setter
     def y(self, new_y):
-        if DEBUG_ACTOR: print(f"set_y({new_y})")
+        if DEBUG_ACTOR:
+            print(f"set_y({new_y})")
 
         self.rect.top = new_y - self._anchor_value[1]
 
@@ -173,12 +181,13 @@ class Actor:
     def pos(self):
         anchor_x, anchor_y = self._anchor_value
 
-        return (self.rect.topleft[0] + anchor_x, 
+        return (self.rect.topleft[0] + anchor_x,
                 self.rect.topleft[1] + anchor_y)
 
     @pos.setter
     def pos(self, new_pos):
-        if DEBUG_ACTOR: print(f"set_pos({new_pos})")
+        if DEBUG_ACTOR:
+            print(f"set_pos({new_pos})")
 
         anchor_x, anchor_y = self._anchor_value
 
@@ -191,13 +200,15 @@ class Actor:
 
     @anchor.setter
     def anchor(self, new_anchor):
-        if DEBUG_ACTOR: print(f"set_anchor({new_anchor})")
+        if DEBUG_ACTOR:
+            print(f"set_anchor({new_anchor})")
 
         self._anchor = new_anchor
         self.update_position()
 
     def calculate_anchor(self):
-        if DEBUG_ACTOR: print("calculate_anchor()")
+        if DEBUG_ACTOR:
+            print("calculate_anchor()")
 
         iw = self._image.get_width()
         xs = {"left":0, "center":iw//2, "right":iw}
@@ -237,7 +248,7 @@ class Images:
         for entry in os.listdir('./images/'):
             if os.path.isfile('./images/' + entry):
                 name, extension = entry.split('.')
-                if extension == 'png' or extension == 'gif' or extension == 'jpg':
+                if extension in ('png', 'gif', 'jpg'):
                     files.append((name,extension))
 
         for file in files:
@@ -277,7 +288,7 @@ class Painter:
     """
 
     def __init__(self, surface):
-        # TO_DO: make this customizeable 
+        # TO_DO: make this customizeable
         self.surface = surface
         self.fontname = None
         self.fontsize = 24
@@ -345,7 +356,7 @@ class Painter:
         pygame.gfxdraw.pixel(self.surface, x, y, color)
 
     # this can be generalized to any regular polygon
-    # also, doubling sides in the range (but not the angle) and 
+    # also, doubling sides in the range (but not the angle) and
     # skipping counts produces a star shape
     def hex(self, x, y, radius, color, width=1):
         sides = 6
@@ -364,7 +375,7 @@ class Painter:
 
 class Music:
     """Music - wraps the Pygame music mixer."""
-    
+
     def __init__(self):
         pass
 
@@ -401,7 +412,6 @@ class Keyboard:
 
 class keys:
     """keys - contains all keyboard key name constants."""
-    pass
 
 
 class Mouse:
@@ -428,7 +438,7 @@ class Sounds:
         for entry in os.listdir('./sounds/'):
             if os.path.isfile('./sounds/' + entry):
                 name, extension = entry.split('.')
-                if extension == 'ogg' or extension == 'wav':
+                if extension in ('ogg','wav'):
                     files.append((name,extension))
 
         for file in files:
@@ -438,22 +448,22 @@ class Sounds:
 
 pygame.init()
 
-"""screen - singleton instance of Screen for use by game scripts."""
+# screen - singleton instance of Screen for use by game scripts.
 screen = Screen(1,1)
 
-"""music - singleton instance of Music for use by game scripts."""
+# music - singleton instance of Music for use by game scripts.
 music = Music()
 
-"""keyboard - singleton instance of Keyboard for use by game scripts."""
+# keyboard - singleton instance of Keyboard for use by game scripts.
 keyboard = Keyboard()
 
-"""mouse - singleton instance of Mouse for use by game scripts."""
+# mouse - singleton instance of Mouse for use by game scripts.
 mouse = Mouse()
 
-"""sounds - singleton instance of Sounds for use by game scripts."""
+# sounds - singleton instance of Sounds for use by game scripts.
 sounds = Sounds()
 
-"""images - singleton instance of Images for use by game scripts."""
+# images - singleton instance of Images for use by game scripts.
 images = Images()
 
 # extract all key name constants imported from pygame.locals
@@ -504,14 +514,14 @@ def run(draw=True):
 
                 if hasattr(keys, name.upper()):
                     setattr(keyboard, name, True)
-    
+
         if draw:
             screen.fill(Color("white"))
         update(pygame.time.Clock.get_time(clock)/1000)
         if draw:
             parent.draw()
         pygame.display.update()
-    
+
     pygame.quit()
 
 def remap(old_val, old_min, old_max, new_min, new_max):
@@ -520,10 +530,9 @@ def remap(old_val, old_min, old_max, new_min, new_max):
 def lerp(a, b, scale):
     if scale <= 0:
         return a
-    elif scale >= 1:
+    if scale >= 1:
         return b
-    else:
-        return ((b - a) * scale) + a
+    return ((b - a) * scale) + a
 
 def _trace_function(frame, event, arg, indent=[0]):
     """Internal function to display function entry/exit while debugging."""
