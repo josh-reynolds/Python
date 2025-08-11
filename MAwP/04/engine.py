@@ -352,6 +352,12 @@ class Painter:
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
 
+    def rect(self, x, y, w, h, color, width=0):
+        pygame.draw.rect(self.surface, color, (x, y, w, h), width)
+
+    def polygon(self, points, color, width=0):
+        pygame.draw.polygon(self.surface, color, points, width)
+
 
 class Music:
     """Music - wraps the Pygame music mixer."""
@@ -527,3 +533,5 @@ def _trace_function(frame, event, arg, indent=[0]):
         indent[0] -= 2
     return _trace_function
 
+#no_loop()       # TO_DO: don't have this functionality yet
+                 #        in the engine
