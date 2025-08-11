@@ -4,8 +4,8 @@ import os.path
 import pygame
 from engine import screen, run
 
-WIDTH = 425
-HEIGHT = 550
+WIDTH = 600
+HEIGHT = 690
 TITLE = "Hexes"
 
 class Hex:
@@ -27,7 +27,7 @@ class NumberedHex(Hex):
         super().draw()
         # TO_DO: awkward API to adjust font, fix this!
         screen.draw.fontsize = self.radius//2
-        screen.draw.fontcolor = (128,128,128)
+        #screen.draw.fontcolor = (128,128,128)
         screen.draw.set_font()
         screen.draw.text(self.text, center=(self.x, 
                                             self.y+self.radius//2+self.radius//6))
@@ -207,6 +207,7 @@ def update():
     pass
 
 def draw():
+    screen.fill((255,0,229))
     #g1.draw()
     #g2.draw()
     #g3.draw()
@@ -260,7 +261,8 @@ g51 = Grid(50, -46, -50, 7, 8, (0,0,0), 2)     # 31 subhexes (1 + 6 + 6 + 6 + 12
 g61 = Grid(60, -54, -60, 5, 6, (0,0,0), 2)     # 43 subhexes (1 + 6 + 6 + 6 + 12 + 12)
 
 num_hex = NumberedHex((WIDTH/2, HEIGHT/2), 60, (0,0,0), 1, "0101")
-ng3 = NumberedGrid(30, -28, -30, 10, 11, (0,0,0), 2)
+ng3 = NumberedGrid(30, 20, 20, 12, 12, (0,0,0), 2)
+#ng3 = NumberedGrid(30, -28, -30, 12, 12, (0,0,0), 2)
 ng4 = NumberedGrid(40, -37, -40, 8, 9, (0,0,0), 2)
 ng5 = NumberedGrid(50, -46, -50, 7, 8, (0,0,0), 2)
 ng6 = NumberedGrid(60, -54, -60, 5, 6, (0,0,0), 2)
