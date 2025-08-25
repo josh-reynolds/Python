@@ -2,15 +2,33 @@ def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
-class Location:
+# probably will have a graph of Locations
+# connections are world - orbit - jump point - other system jump point
+# what if we collapse?
+# instead of location, we have 'system'
+# with a flag to indicate surface/orbit/jump
+class System:
     def __init__(self, name):
         self.name = name
+        self.detail = "surface"
 
-world = Location("Yorbund")
+    def description(self):
+        if self.detail == "surface":
+            return f"on {self.name}"
+        elif self.detail == "orbit":
+            return f"in orbit around {self.name}"
+        elif self.detail == "jump":
+            return f"at the {self.name} jump point"
+
+    def liftoff(self):
+        if self.detail == "surface":
+            self.detail = "orbit"
+
+location = System("Yorbund")
 hold = []
 
 while True:
-    pr_red(f"\nYou are on {world.name}.")
+    pr_red(f"\nYou are {location.description()}.")
     command = input("Enter a command (? to list).  ")
     if command.lower() == 'q':
         break
@@ -26,6 +44,9 @@ while True:
         print("Contents of cargo hold:")
         for item in hold:
             print(item)
+    if command.lower() == 'l':
+        print("Lifting off to orbit.")
+        location.liftoff()
 
 print("Goodbye.")
 
