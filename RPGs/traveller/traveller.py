@@ -2,11 +2,15 @@ def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
-world = "Yorbund"
+class Location:
+    def __init__(self, name):
+        self.name = name
+
+world = Location("Yorbund")
 hold = []
 
 while True:
-    pr_red(f"\nYou are on {world}.")
+    pr_red(f"\nYou are on {world.name}.")
     command = input("Enter a command (? to list).  ")
     if command.lower() == 'q':
         break
