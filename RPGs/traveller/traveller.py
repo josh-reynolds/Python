@@ -29,43 +29,44 @@ class System:
             self.detail = "jump"
 
 class Command:
-    def __init__(self, key, description, action):
+    def __init__(self, key, description, action, message):
         self.key = key
         self.description = description
         self.action = action
+        self.message = message
 
 location = System("Yorbund")
 hold = []
 commands = [Command('l', 'Lift off to orbit', 
-                    location.liftoff)]
+                    location.liftoff,
+                    "Lifting off to orbit."),
+            Command('g', 'Go to jump point',
+                    location.to_jump_point,
+                    "Travelling to jump point.")]
 
-while True:
+running = True
+while running:
     pr_red(f"\nYou are {location.description()}.")
     command = input("Enter a command (? to list).  ")
     for c in commands:
         if command.lower() == c.key:
+            print(c.message)
             c.action()
     if command.lower() == 'q':
-        break
+        running = False
     if command.lower() == '?':
         # TO_DO: commands should be location-dependent
+        for c in commands:
+            print(f"{c.key} - {c.description}")
         print("? - List commands")
         print("c - Cargo hold contents")
-        print("g - Go to jump point")
         print("j - Jump to new system")
-        print("l - Lift off to orbit")
         print("q - Quit")
         print("t - Trade")
     if command.lower() == 'c':
         print("Contents of cargo hold:")
         for item in hold:
             print(item)
-    #if command.lower() == 'l':
-        #print("Lifting off to orbit.")
-        #location.liftoff()
-    if command.lower() == 'g':
-        print("Travelling to jump point.")
-        location.to_jump_point()
 
 print("Goodbye.")
 
