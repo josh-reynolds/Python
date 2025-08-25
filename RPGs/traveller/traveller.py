@@ -28,12 +28,23 @@ class System:
         if self.detail == "orbit":
             self.detail = "jump"
 
+class Command:
+    def __init__(self, key, description, action):
+        self.key = key
+        self.description = description
+        self.action = action
+
 location = System("Yorbund")
 hold = []
+commands = [Command('l', 'Lift off to orbit', 
+                    location.liftoff)]
 
 while True:
     pr_red(f"\nYou are {location.description()}.")
     command = input("Enter a command (? to list).  ")
+    for c in commands:
+        if command.lower() == c.key:
+            c.action()
     if command.lower() == 'q':
         break
     if command.lower() == '?':
@@ -49,9 +60,9 @@ while True:
         print("Contents of cargo hold:")
         for item in hold:
             print(item)
-    if command.lower() == 'l':
-        print("Lifting off to orbit.")
-        location.liftoff()
+    #if command.lower() == 'l':
+        #print("Lifting off to orbit.")
+        #location.liftoff()
     if command.lower() == 'g':
         print("Travelling to jump point.")
         location.to_jump_point()
