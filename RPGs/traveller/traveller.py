@@ -24,6 +24,10 @@ class System:
         if self.detail == "surface":
             self.detail = "orbit"
 
+    def to_jump_point(self):
+        if self.detail == "orbit":
+            self.detail = "jump"
+
 location = System("Yorbund")
 hold = []
 
@@ -36,6 +40,7 @@ while True:
         # TO_DO: commands should be location-dependent
         print("? - List commands")
         print("c - Cargo hold contents")
+        print("g - Go to jump point")
         print("j - Jump to new system")
         print("l - Lift off to orbit")
         print("q - Quit")
@@ -47,6 +52,9 @@ while True:
     if command.lower() == 'l':
         print("Lifting off to orbit.")
         location.liftoff()
+    if command.lower() == 'g':
+        print("Travelling to jump point.")
+        location.to_jump_point()
 
 print("Goodbye.")
 
