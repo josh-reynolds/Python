@@ -37,13 +37,14 @@ class Command:
 
 location = System("Yorbund")
 hold = []
-commands = [Command('l', 'Lift off to orbit', 
+commands = []
+grounded = [Command('l', 'Lift off to orbit', 
                     location.liftoff,
-                    "Lifting off to orbit."),
-            Command('g', 'Go to jump point',
-                    location.to_jump_point,
-                    "Travelling to jump point.")]
-
+                    "Lifting off to orbit.")]
+orbit = [Command('g', 'Go to jump point',
+                 location.to_jump_point,
+                 "Travelling to jump point.")]
+commands = grounded
 running = True
 while running:
     pr_red(f"\nYou are {location.description()}.")
