@@ -38,20 +38,29 @@ class Command:
 def quit_game():
     global running
     running = False
+
+def list_commands():
+    global commands
+    for c in commands:
+        print(f"{c.key} - {c.description}")
         
 location = System("Yorbund")
 hold = []
 
-always = [Command('q', "Quit",
+always = [Command('q', 'Quit',
                   quit_game,
-                  "Goodbye.")]
+                  'Goodbye.'),
+          Command('?', 'List commands',
+                  list_commands,
+                  '')]
 grounded = always + [Command('l', 'Lift off to orbit', 
                      location.liftoff,
-                     "Lifting off to orbit.")]
+                     'Lifting off to orbit.')]
 orbit = always + [Command('g', 'Go to jump point',
                   location.to_jump_point,
-                  "Travelling to jump point.")]
+                  'Travelling to jump point.')]
 jump = always + []
+# TO_DO: should sort commands on key
 
 commands = grounded
 running = True
@@ -64,12 +73,8 @@ while running:
             c.action()
     if command.lower() == '?':
         # TO_DO: commands should be location-dependent
-        for c in commands:
-            print(f"{c.key} - {c.description}")
-        print("? - List commands")
         print("c - Cargo hold contents")
         print("j - Jump to new system")
-        print("q - Quit")
         print("t - Trade")
     if command.lower() == 'c':
         print("Contents of cargo hold:")
