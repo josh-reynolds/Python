@@ -35,15 +35,24 @@ class Command:
         self.action = action
         self.message = message
 
+def quit_game():
+    global running
+    running = False
+        
 location = System("Yorbund")
 hold = []
-commands = []
-grounded = [Command('l', 'Lift off to orbit', 
-                    location.liftoff,
-                    "Lifting off to orbit.")]
-orbit = [Command('g', 'Go to jump point',
-                 location.to_jump_point,
-                 "Travelling to jump point.")]
+
+always = [Command('q', "Quit",
+                  quit_game,
+                  "Goodbye.")]
+grounded = always + [Command('l', 'Lift off to orbit', 
+                     location.liftoff,
+                     "Lifting off to orbit.")]
+orbit = always + [Command('g', 'Go to jump point',
+                  location.to_jump_point,
+                  "Travelling to jump point.")]
+jump = always + []
+
 commands = grounded
 running = True
 while running:
@@ -53,8 +62,6 @@ while running:
         if command.lower() == c.key:
             print(c.message)
             c.action()
-    if command.lower() == 'q':
-        running = False
     if command.lower() == '?':
         # TO_DO: commands should be location-dependent
         for c in commands:
@@ -68,6 +75,3 @@ while running:
         print("Contents of cargo hold:")
         for item in hold:
             print(item)
-
-print("Goodbye.")
-
