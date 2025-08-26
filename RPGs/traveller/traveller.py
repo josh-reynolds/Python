@@ -20,6 +20,10 @@ class System:
         elif self.detail == "jump":
             return f"at the {self.name} jump point"
 
+    def land(self):
+        if self.detail == "orbit":
+            self.detail = "surface"
+
     def liftoff(self):
         if self.detail == "surface":
             self.detail = "orbit"
@@ -27,6 +31,10 @@ class System:
     def to_jump_point(self):
         if self.detail == "orbit":
             self.detail = "jump"
+
+    def from_jump_point(self):
+        if self.detail == "jump":
+            self.detail = "orbit"
 
 class Command:
     def __init__(self, key, description, action, message):
@@ -54,6 +62,27 @@ def trade():
 
 def jump():
     pass
+
+def liftoff():
+    global location, commands, orbit
+    location.liftoff()
+    commands = orbit
+
+def land():
+    global location, commands, grounded
+    location.land()
+    commands = grounded
+
+def outbound_to_jump():
+    global location, commands, jump
+    location.to_jump_point()
+    commands = jump
+
+def inbound_from_jump():
+    global location, commands, orbit
+    location.from_jump_point()
+    commands = orbit
+
         
 location = System("Yorbund")
 hold = []
@@ -68,17 +97,23 @@ always = [Command('q', 'Quit',
                   cargo_hold,
                   'Contents of cargo hold:')]
 grounded = always + [Command('l', 'Lift off to orbit', 
-                     location.liftoff,
-                     'Lifting off to orbit.'),
+                             liftoff,
+                             'Lifting off to orbit.'),
                      Command('t', 'Trade',
                              trade,
                              'Trading goods.')]
 orbit = always + [Command('g', 'Go to jump point',
-                  location.to_jump_point,
-                  'Travelling to jump point.')]
+                          outbound_to_jump,
+                          'Travelling to jump point.'),
+                  Command('l', 'Land on surface',
+                          land,
+                          f"Landing on {location.name}")]
 jump = always + [Command('j', 'Jump to new system',
                          jump,
-                         'Executing jump sequence!')]
+                         'Executing jump sequence!'),
+                 Command('i', 'Inbound to orbit',
+                         inbound_from_jump,
+                         f"Travel in to orbit {location.name}")]
 # TO_DO: should sort commands on key
 
 commands = grounded
