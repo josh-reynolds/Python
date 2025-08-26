@@ -43,6 +43,11 @@ def list_commands():
     global commands
     for c in commands:
         print(f"{c.key} - {c.description}")
+
+def cargo_hold():
+    global hold
+    for item in hold:
+        print(item)
         
 location = System("Yorbund")
 hold = []
@@ -52,7 +57,10 @@ always = [Command('q', 'Quit',
                   'Goodbye.'),
           Command('?', 'List commands',
                   list_commands,
-                  '')]
+                  'Available commands:'),
+          Command('c', 'Cargo hold contents',
+                  cargo_hold,
+                  'Contents of cargo hold:')]
 grounded = always + [Command('l', 'Lift off to orbit', 
                      location.liftoff,
                      'Lifting off to orbit.')]
@@ -73,10 +81,5 @@ while running:
             c.action()
     if command.lower() == '?':
         # TO_DO: commands should be location-dependent
-        print("c - Cargo hold contents")
         print("j - Jump to new system")
         print("t - Trade")
-    if command.lower() == 'c':
-        print("Contents of cargo hold:")
-        for item in hold:
-            print(item)
