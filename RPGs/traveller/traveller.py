@@ -48,6 +48,12 @@ def cargo_hold():
     global hold
     for item in hold:
         print(item)
+
+def trade():
+    pass
+
+def jump():
+    pass
         
 location = System("Yorbund")
 hold = []
@@ -63,11 +69,16 @@ always = [Command('q', 'Quit',
                   'Contents of cargo hold:')]
 grounded = always + [Command('l', 'Lift off to orbit', 
                      location.liftoff,
-                     'Lifting off to orbit.')]
+                     'Lifting off to orbit.'),
+                     Command('t', 'Trade',
+                             trade,
+                             'Trading goods.')]
 orbit = always + [Command('g', 'Go to jump point',
                   location.to_jump_point,
                   'Travelling to jump point.')]
-jump = always + []
+jump = always + [Command('j', 'Jump to new system',
+                         jump,
+                         'Executing jump sequence!')]
 # TO_DO: should sort commands on key
 
 commands = grounded
@@ -79,7 +90,3 @@ while running:
         if command.lower() == c.key:
             print(c.message)
             c.action()
-    if command.lower() == '?':
-        # TO_DO: commands should be location-dependent
-        print("j - Jump to new system")
-        print("t - Trade")
