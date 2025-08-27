@@ -113,6 +113,14 @@ def buy_cargo():
     #  add purchased item to hold
     #  deduct cost from credit balance
 
+def sell_cargo():
+    global cargo
+    item_number = input('Enter cargo number to sell ')
+    # TO_DO:
+    #  remove purchased item from hold
+    #  no need to add purchased item to cargo
+    #  add price to credit balance
+    
 # TO_DO: will need a goods class, with name, volume, price
         
 location = System("Yorbund")
@@ -160,7 +168,10 @@ trade = always + [Command('l', 'Leave trade interaction',
                           'Available cargo loads:'),
                   Command('b', 'Buy cargo',
                           buy_cargo,
-                          'Purchasing cargo')]
+                          'Purchasing cargo'),
+                  Command('s', 'Sell cargo',
+                          sell_cargo,
+                          'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
 commands = grounded
