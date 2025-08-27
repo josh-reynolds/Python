@@ -39,12 +39,12 @@ class System:
             self.detail = "orbit"
 
     def join_trade(self):
-        if self.detail == "grounded":
+        if self.detail == "surface":
             self.detail = "trade"
 
     def leave_trade(self):
         if self.detail == "trade":
-            self.detail = "grounded"
+            self.detail = "surface"
 
 class Command:
     def __init__(self, key, description, action, message):
@@ -99,9 +99,15 @@ def to_trade():
     global location, commands, trade
     location.join_trade()
     commands = trade
+
+def goods():
+    global cargo
+    for i,item in enumerate(cargo):
+        print(f"{i} - {item}")
         
 location = System("Yorbund")
-hold = []
+hold = ["Grain - 20 tons"]
+cargo = ["Steel - 50 tons"]
 
 always = [Command('q', 'Quit',
                   quit_game,
@@ -138,7 +144,10 @@ jump = sorted(jump, key=lambda command: command.key)
 
 trade = always + [Command('l', 'Leave trade interaction',
                           leave,
-                          'Leaving trader depot.')]
+                          'Leaving trader depot.'),
+                  Command('g', 'Show goods for sale',
+                          goods,
+                          'Available cargo loads:')]
 trade = sorted(trade, key=lambda command: command.key)
 
 commands = grounded
