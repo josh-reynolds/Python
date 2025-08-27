@@ -19,6 +19,8 @@ class System:
             return f"in orbit around {self.name}"
         elif self.detail == "jump":
             return f"at the {self.name} jump point"
+        elif self.detail == "trade":
+            return f"at the {self.name} trade depot"
 
     def land(self):
         if self.detail == "orbit":
@@ -35,6 +37,14 @@ class System:
     def from_jump_point(self):
         if self.detail == "jump":
             self.detail = "orbit"
+
+    def join_trade(self):
+        if self.detail == "grounded":
+            self.detail = "trade"
+
+    def leave_trade(self):
+        if self.detail == "trade":
+            self.detail = "grounded"
 
 class Command:
     def __init__(self, key, description, action, message):
@@ -56,9 +66,6 @@ def cargo_hold():
     global hold
     for item in hold:
         print(item)
-
-def trade():
-    pass
 
 def jump():
     pass
@@ -83,6 +90,15 @@ def inbound_from_jump():
     location.from_jump_point()
     commands = orbit
 
+def leave():
+    global location, commands, grounded
+    location.leave_trade()
+    commands = grounded
+
+def to_trade():
+    global location, commands, trade
+    location.join_trade()
+    commands = trade
         
 location = System("Yorbund")
 hold = []
@@ -100,7 +116,7 @@ grounded = always + [Command('l', 'Lift off to orbit',
                              liftoff,
                              'Lifting off to orbit.'),
                      Command('t', 'Trade',
-                             trade,
+                             to_trade,
                              'Trading goods.')]
 grounded = sorted(grounded, key=lambda command: command.key)
 
@@ -119,6 +135,11 @@ jump = always + [Command('j', 'Jump to new system',
                          inbound_from_jump,
                          f"Travel in to orbit {location.name}")]
 jump = sorted(jump, key=lambda command: command.key)
+
+trade = always + [Command('l', 'Leave trade interaction',
+                          leave,
+                          'Leaving trader depot.')]
+trade = sorted(trade, key=lambda command: command.key)
 
 commands = grounded
 running = True
