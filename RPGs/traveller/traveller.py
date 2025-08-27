@@ -102,19 +102,23 @@ grounded = always + [Command('l', 'Lift off to orbit',
                      Command('t', 'Trade',
                              trade,
                              'Trading goods.')]
+grounded = sorted(grounded, key=lambda command: command.key)
+
 orbit = always + [Command('g', 'Go to jump point',
                           outbound_to_jump,
                           'Travelling to jump point.'),
                   Command('l', 'Land on surface',
                           land,
                           f"Landing on {location.name}")]
+orbit = sorted(orbit, key=lambda command: command.key)
+
 jump = always + [Command('j', 'Jump to new system',
                          jump,
                          'Executing jump sequence!'),
                  Command('i', 'Inbound to orbit',
                          inbound_from_jump,
                          f"Travel in to orbit {location.name}")]
-# TO_DO: should sort commands on key
+jump = sorted(jump, key=lambda command: command.key)
 
 commands = grounded
 running = True
