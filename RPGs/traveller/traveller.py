@@ -104,6 +104,16 @@ def goods():
     global cargo
     for i,item in enumerate(cargo):
         print(f"{i} - {item}")
+
+def buy_cargo():
+    global cargo
+    item_number = input('Enter cargo number to buy ')
+    # TO_DO:
+    #  remove purchased item from cargo
+    #  add purchased item to hold
+    #  deduct cost from credit balance
+
+# TO_DO: will need a goods class, with name, volume, price
         
 location = System("Yorbund")
 hold = ["Grain - 20 tons"]
@@ -147,7 +157,10 @@ trade = always + [Command('l', 'Leave trade interaction',
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
                           goods,
-                          'Available cargo loads:')]
+                          'Available cargo loads:'),
+                  Command('b', 'Buy cargo',
+                          buy_cargo,
+                          'Purchasing cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
 commands = grounded
