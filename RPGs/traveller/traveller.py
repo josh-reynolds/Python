@@ -2,11 +2,6 @@ def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
-# probably will have a graph of Locations
-# connections are world - orbit - jump point - other system jump point
-# what if we collapse?
-# instead of location, we have 'system'
-# with a flag to indicate surface/orbit/jump
 class System:
     def __init__(self, name):
         self.name = name
@@ -100,27 +95,6 @@ def to_trade():
     location.join_trade()
     commands = trade
 
-def goods():
-    global cargo
-    for i,item in enumerate(cargo):
-        print(f"{i} - {item}")
-
-def buy_cargo():
-    global cargo
-    item_number = input('Enter cargo number to buy ')
-    # TO_DO:
-    #  remove purchased item from cargo
-    #  add purchased item to hold
-    #  deduct cost from credit balance
-
-def sell_cargo():
-    global cargo
-    item_number = input('Enter cargo number to sell ')
-    # TO_DO:
-    #  remove purchased item from hold
-    #  no need to add purchased item to cargo
-    #  add price to credit balance
-    
 class Cargo:
     def __init__(self, name, tonnage, price):
         self.name = name
@@ -129,10 +103,32 @@ class Cargo:
 
     def __repr__(self):
         return f"{self.name} - {self.tonnage} tons - {self.price} Cr"
+
+class CargoDepot:
+    def __init__(self):
+        self.cargo = [Cargo("Steel", 50, 500)]
+
+    def goods(self):
+        for i,item in enumerate(self.cargo):
+            print(f"{i} - {item}")
+
+    def buy_cargo(self):
+        item_number = input('Enter cargo number to buy ')
+        # TO_DO:
+        #  remove purchased item from cargo
+        #  add purchased item to hold
+        #  deduct cost from credit balance
+
+    def sell_cargo(self):
+        item_number = input('Enter cargo number to sell ')
+        # TO_DO:
+        #  remove purchased item from hold
+        #  no need to add purchased item to cargo
+        #  add price to credit balance
         
 location = System("Yorbund")
 hold = [Cargo("Grain", 20, 100)]
-cargo = [Cargo("Steel", 50, 500)]
+depot = CargoDepot()
 
 always = [Command('q', 'Quit',
                   quit_game,
@@ -171,13 +167,13 @@ trade = always + [Command('l', 'Leave trade interaction',
                           leave,
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
-                          goods,
+                          depot.goods,
                           'Available cargo loads:'),
                   Command('b', 'Buy cargo',
-                          buy_cargo,
+                          depot.buy_cargo,
                           'Purchasing cargo'),
                   Command('s', 'Sell cargo',
-                          sell_cargo,
+                          depot.sell_cargo,
                           'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
