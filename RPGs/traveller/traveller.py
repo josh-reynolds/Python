@@ -48,43 +48,38 @@ class Command:
         self.action = action
         self.message = message
 
-def list_commands():
-    global commands
-    for c in commands:
-        print(f"{c.key} - {c.description}")
-
 def jump():
     pass
 
 def liftoff():
-    global commands, orbit
+    global orbit
     game.location.liftoff()
-    commands = orbit
+    game.commands = orbit
 
 def land():
-    global commands, grounded
+    global grounded
     game.location.land()
-    commands = grounded
+    game.commands = grounded
 
 def outbound_to_jump():
-    global commands, jump
+    global jump
     game.location.to_jump_point()
-    commands = jump
+    game.commands = jump
 
 def inbound_from_jump():
-    global commands, orbit
+    global orbit
     game.location.from_jump_point()
-    commands = orbit
+    game.commands = orbit
 
 def leave():
-    global commands, grounded
+    global grounded
     game.location.leave_trade()
-    commands = grounded
+    game.commands = grounded
 
 def to_trade():
-    global commands, trade
+    global trade
     game.location.join_trade()
-    commands = trade
+    game.commands = trade
 
 class Cargo:
     def __init__(self, name, tonnage, price):
@@ -131,17 +126,22 @@ class Game:
         self.location = System("Yorbund")
 
     def run(self):
+        self.commands = grounded
         self.running = True
         while self.running:
             pr_red(f"\nYou are {self.location.description()}.")
             command = input("Enter a command (? to list).  ")
-            for c in commands:
+            for c in self.commands:
                 if command.lower() == c.key:
                     print(c.message)
                     c.action()
 
     def quit(self):
         self.running = False
+
+    def list_commands(self):
+        for c in self.commands:
+            print(f"{c.key} - {c.description}")
 
 depot = CargoDepot()
 ship = Ship()
@@ -151,7 +151,7 @@ always = [Command('q', 'Quit',
                   game.quit,
                   'Goodbye.'),
           Command('?', 'List commands',
-                  list_commands,
+                  game.list_commands,
                   'Available commands:'),
           Command('c', 'Cargo hold contents',
                   ship.cargo_hold,
@@ -193,8 +193,6 @@ trade = always + [Command('l', 'Leave trade interaction',
                           depot.sell_cargo,
                           'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
-
-commands = grounded
 
 if __name__ == '__main__':
     game.run()
