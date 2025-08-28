@@ -48,10 +48,6 @@ class Command:
         self.action = action
         self.message = message
 
-def quit_game():
-    global running
-    running = False
-
 def list_commands():
     global commands
     for c in commands:
@@ -129,13 +125,31 @@ class Ship:
         for item in self.hold:
             print(item)
         
+
+class Game:
+    def __init__(self):
+        self.running = False
+
+    def run(self):
+        self.running = True
+        while self.running:
+            pr_red(f"\nYou are {location.description()}.")
+            command = input("Enter a command (? to list).  ")
+            for c in commands:
+                if command.lower() == c.key:
+                    print(c.message)
+                    c.action()
+
+    def quit(self):
+        self.running = False
+
 location = System("Yorbund")
-hold = [Cargo("Grain", 20, 100)]
 depot = CargoDepot()
 ship = Ship()
+game = Game()
 
 always = [Command('q', 'Quit',
-                  quit_game,
+                  game.quit,
                   'Goodbye.'),
           Command('?', 'List commands',
                   list_commands,
@@ -182,11 +196,6 @@ trade = always + [Command('l', 'Leave trade interaction',
 trade = sorted(trade, key=lambda command: command.key)
 
 commands = grounded
-running = True
-while running:
-    pr_red(f"\nYou are {location.description()}.")
-    command = input("Enter a command (? to list).  ")
-    for c in commands:
-        if command.lower() == c.key:
-            print(c.message)
-            c.action()
+
+if __name__ == '__main__':
+    game.run()
