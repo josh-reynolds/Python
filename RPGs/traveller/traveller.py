@@ -57,33 +57,33 @@ def jump():
     pass
 
 def liftoff():
-    global location, commands, orbit
-    location.liftoff()
+    global commands, orbit
+    game.location.liftoff()
     commands = orbit
 
 def land():
-    global location, commands, grounded
-    location.land()
+    global commands, grounded
+    game.location.land()
     commands = grounded
 
 def outbound_to_jump():
-    global location, commands, jump
-    location.to_jump_point()
+    global commands, jump
+    game.location.to_jump_point()
     commands = jump
 
 def inbound_from_jump():
-    global location, commands, orbit
-    location.from_jump_point()
+    global commands, orbit
+    game.location.from_jump_point()
     commands = orbit
 
 def leave():
-    global location, commands, grounded
-    location.leave_trade()
+    global commands, grounded
+    game.location.leave_trade()
     commands = grounded
 
 def to_trade():
-    global location, commands, trade
-    location.join_trade()
+    global commands, trade
+    game.location.join_trade()
     commands = trade
 
 class Cargo:
@@ -124,16 +124,16 @@ class Ship:
     def cargo_hold(self):
         for item in self.hold:
             print(item)
-        
 
 class Game:
     def __init__(self):
         self.running = False
+        self.location = System("Yorbund")
 
     def run(self):
         self.running = True
         while self.running:
-            pr_red(f"\nYou are {location.description()}.")
+            pr_red(f"\nYou are {self.location.description()}.")
             command = input("Enter a command (? to list).  ")
             for c in commands:
                 if command.lower() == c.key:
@@ -143,7 +143,6 @@ class Game:
     def quit(self):
         self.running = False
 
-location = System("Yorbund")
 depot = CargoDepot()
 ship = Ship()
 game = Game()
@@ -170,7 +169,7 @@ orbit = always + [Command('g', 'Go to jump point',
                           'Travelling to jump point.'),
                   Command('l', 'Land on surface',
                           land,
-                          f"Landing on {location.name}")]
+                          f"Landing on {game.location.name}")]
 orbit = sorted(orbit, key=lambda command: command.key)
 
 jump = always + [Command('j', 'Jump to new system',
@@ -178,7 +177,7 @@ jump = always + [Command('j', 'Jump to new system',
                          'Executing jump sequence!'),
                  Command('i', 'Inbound to orbit',
                          inbound_from_jump,
-                         f"Travel in to orbit {location.name}")]
+                         f"Travel in to orbit {game.location.name}")]
 jump = sorted(jump, key=lambda command: command.key)
 
 trade = always + [Command('l', 'Leave trade interaction',
