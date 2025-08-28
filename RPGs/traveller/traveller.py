@@ -121,11 +121,18 @@ def sell_cargo():
     #  no need to add purchased item to cargo
     #  add price to credit balance
     
-# TO_DO: will need a goods class, with name, volume, price
+class Cargo:
+    def __init__(self, name, tonnage, price):
+        self.name = name
+        self.tonnage = tonnage
+        self.price = price
+
+    def __repr__(self):
+        return f"{self.name} - {self.tonnage} tons - {self.price} Cr"
         
 location = System("Yorbund")
-hold = ["Grain - 20 tons"]
-cargo = ["Steel - 50 tons"]
+hold = [Cargo("Grain", 20, 100)]
+cargo = [Cargo("Steel", 50, 500)]
 
 always = [Command('q', 'Quit',
                   quit_game,
