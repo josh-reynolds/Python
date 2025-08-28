@@ -57,11 +57,6 @@ def list_commands():
     for c in commands:
         print(f"{c.key} - {c.description}")
 
-def cargo_hold():
-    global hold
-    for item in hold:
-        print(item)
-
 def jump():
     pass
 
@@ -125,10 +120,19 @@ class CargoDepot:
         #  remove purchased item from hold
         #  no need to add purchased item to cargo
         #  add price to credit balance
+
+class Ship:
+    def __init__(self):
+        self.hold = [Cargo("Grain", 20, 100)]
+
+    def cargo_hold(self):
+        for item in self.hold:
+            print(item)
         
 location = System("Yorbund")
 hold = [Cargo("Grain", 20, 100)]
 depot = CargoDepot()
+ship = Ship()
 
 always = [Command('q', 'Quit',
                   quit_game,
@@ -137,7 +141,7 @@ always = [Command('q', 'Quit',
                   list_commands,
                   'Available commands:'),
           Command('c', 'Cargo hold contents',
-                  cargo_hold,
+                  ship.cargo_hold,
                   'Contents of cargo hold:')]
 grounded = always + [Command('l', 'Lift off to orbit', 
                              liftoff,
