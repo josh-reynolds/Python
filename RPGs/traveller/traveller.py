@@ -1,10 +1,24 @@
+from random import randint
+
 def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
+def die_roll():
+    return randint(1,6)
+
+def constrain(value, min_val, max_val):
+    if value <= min_val:
+        return min_val
+    elif value >= max_val:
+        return max_val
+    else:
+        return value
+
 class System:
-    def __init__(self, name):
+    def __init__(self, name, population):
         self.name = name
+        self.population = population
         self.detail = "surface"
 
     def description(self):
@@ -58,8 +72,14 @@ class Cargo:
         return f"{self.name} - {self.tonnage} tons - {self.price} Cr"
 
 class CargoDepot:
-    def __init__(self):
-        self.cargo = [Cargo("Steel", 50, 500)]
+    def __init__(self, system):
+        self.system = system
+        self.cargo = self.determine_cargo()
+        # TO_DO:
+        #  randomly determine available cargo
+        #    DMs per world characteristics
+        #  regenerate weekly
+        #  randomly determine quantity
 
     def goods(self):
         for i,item in enumerate(self.cargo):
@@ -69,6 +89,12 @@ class CargoDepot:
         self.goods()
         item_number = input('Enter cargo number to buy ')
         # TO_DO:
+        #  ask what quantity to buy
+        #  calculate price
+        #     DMs per world characteristics, skills, brokers
+        #     fee for partial purchase
+        #  verify quantity fits in cargo hold
+        #  confirm purchase
         #  remove purchased item from cargo
         #  add purchased item to hold
         #  deduct cost from credit balance
@@ -82,6 +108,23 @@ class CargoDepot:
         #  no need to add purchased item to cargo
         #  add price to credit balance
 
+    def determine_cargo(self):
+        cargo = []
+
+        first = die_roll()
+        if (self.system.population <= 5):
+            first -= 1
+        if (self.system.population >= 9):
+            first += 1
+        first = constrain(first, 1, 6)
+        first *= 10
+
+        second = die_roll()
+        roll = first + second
+        print(roll)
+
+        return [Cargo("Steel", 50, 500)]
+
 class Ship:
     def __init__(self):
         self.hold = [Cargo("Grain", 20, 100)]
@@ -93,7 +136,7 @@ class Ship:
 class Game:
     def __init__(self):
         self.running = False
-        self.location = System("Yorbund")
+        self.location = System("Yorbund", 5) 
 
     def run(self):
         self.commands = grounded
@@ -146,9 +189,9 @@ class Game:
     def jump(self):
         pass
 
-depot = CargoDepot()
 ship = Ship()
 game = Game()
+depot = CargoDepot(game.location)
 
 always = [Command('q', 'Quit',
                   game.quit,
