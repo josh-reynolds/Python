@@ -51,35 +51,6 @@ class Command:
 def jump():
     pass
 
-def liftoff():
-    global orbit
-    game.location.liftoff()
-    game.commands = orbit
-
-def land():
-    global grounded
-    game.location.land()
-    game.commands = grounded
-
-def outbound_to_jump():
-    global jump
-    game.location.to_jump_point()
-    game.commands = jump
-
-def inbound_from_jump():
-    global orbit
-    game.location.from_jump_point()
-    game.commands = orbit
-
-def leave():
-    global grounded
-    game.location.leave_trade()
-    game.commands = grounded
-
-def to_trade():
-    global trade
-    game.location.join_trade()
-    game.commands = trade
 
 class Cargo:
     def __init__(self, name, tonnage, price):
@@ -143,6 +114,36 @@ class Game:
         for c in self.commands:
             print(f"{c.key} - {c.description}")
 
+    def liftoff(self):
+        global orbit
+        game.location.liftoff()
+        game.commands = orbit
+
+    def land(self):
+        global grounded
+        game.location.land()
+        game.commands = grounded
+
+    def outbound_to_jump(self):
+        global jump
+        game.location.to_jump_point()
+        game.commands = jump
+
+    def inbound_from_jump(self):
+        global orbit
+        game.location.from_jump_point()
+        game.commands = orbit
+
+    def leave(self):
+        global grounded
+        game.location.leave_trade()
+        game.commands = grounded
+
+    def to_trade(self):
+        global trade
+        game.location.join_trade()
+        game.commands = trade
+
 depot = CargoDepot()
 ship = Ship()
 game = Game()
@@ -156,19 +157,20 @@ always = [Command('q', 'Quit',
           Command('c', 'Cargo hold contents',
                   ship.cargo_hold,
                   'Contents of cargo hold:')]
+
 grounded = always + [Command('l', 'Lift off to orbit', 
-                             liftoff,
+                             game.liftoff,
                              'Lifting off to orbit.'),
                      Command('t', 'Trade',
-                             to_trade,
+                             game.to_trade,
                              'Trading goods.')]
 grounded = sorted(grounded, key=lambda command: command.key)
 
 orbit = always + [Command('g', 'Go to jump point',
-                          outbound_to_jump,
+                          game.outbound_to_jump,
                           'Travelling to jump point.'),
                   Command('l', 'Land on surface',
-                          land,
+                          game.land,
                           f"Landing on {game.location.name}")]
 orbit = sorted(orbit, key=lambda command: command.key)
 
@@ -176,12 +178,12 @@ jump = always + [Command('j', 'Jump to new system',
                          jump,
                          'Executing jump sequence!'),
                  Command('i', 'Inbound to orbit',
-                         inbound_from_jump,
+                         game.inbound_from_jump,
                          f"Travel in to orbit {game.location.name}")]
 jump = sorted(jump, key=lambda command: command.key)
 
 trade = always + [Command('l', 'Leave trade interaction',
-                          leave,
+                          game.leave,
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
                           depot.goods,
@@ -196,3 +198,49 @@ trade = sorted(trade, key=lambda command: command.key)
 
 if __name__ == '__main__':
     game.run()
+
+# Trading procedure (Traveller 77 Book 2 pp. 42-4
+#
+# Once per week, throw d66 to determine best cargo
+#   DMs per world population
+# Determine quantity
+# Purchase if desired, up to limits of quantity
+#   and available cargo space
+# Partial purchases incur 1% fee
+# Determine price of goods by 2d6 roll on table
+#   DMs per skills, brokers, world characteristics
+#
+# Can sell cargo on a (different?) world
+# Sale price by 2d6 roll on table
+#   DMs per skills, brokers, world characteristics
+
+# So overall sequence would be:
+# Enter trade depot and see available goods
+# Choice: wait a week, purchase some or all, jump to new system
+# (And at any point can sell cargo in the hold)
+
+# Other elements we will need:
+#   time/calendar (so we will want to display current time...)
+#   world characteristics
+#   cargo tables
+#   bank account (also need to display/query this...)
+#   brokers for hire
+#   character skills
+#
+# Not covered in this section, but eventually will want
+# starship economics (Book 2 pp. 5-8)
+# Operating expenses:
+#   fuel
+#   life support
+#   routine maintenance
+#   crew salaries
+#   berthing costs
+#   bank payment
+#
+# The starship economics section also covers freight
+# shipping (flat rate - above is speculation) - add
+# this option eventually. Also passengers.
+
+# Ship design and customization is another potential
+# area to explore. We'll assume a simple standard design
+# (like the Free Trader) to start with.
