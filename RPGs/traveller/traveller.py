@@ -65,15 +65,36 @@ class Command:
 class Cargo:
     def __init__(self, name, quantity, price, individual):
         self.name = name
-        self.quantity = quantity
+        self.quantity = Cargo.determine_quantity(quantity)
         self.price = price
         self.individual = individual
+
+        # quantity convention:
+        #   if 'quantity' parameter string contains "Dx" then 
+        #     the value needs to be randomly generated
+        #     otherwise it is an exact amount
+        #   'individual' parameter flag indicates the quantity
+        #     value is either tonnage or separate items
 
     def __repr__(self):
         quantity_string = f"{self.quantity}"
         if self.individual == 0:
             quantity_string += " tons"
         return f"{self.name} - {quantity_string} - {self.price} Cr"
+
+    def determine_quantity(quantity):
+        q = str(quantity)
+        if "Dx" in q:
+            die_count, multiplier = q.split("Dx")
+            die_count = int(die_count)
+            multiplier = int(multiplier)
+            value = 0
+            for _ in range(0, die_count):
+                value += die_roll()
+            value *= multiplier
+            return value
+        else:
+            return int(quantity)
 
 class CargoDepot:
     def __init__(self, system):
@@ -82,7 +103,7 @@ class CargoDepot:
         # TO_DO:
         #  [DONE] randomly determine available cargo
         #    [DONE] DMs per world characteristics
-        #  randomly determine quantity
+        #  [DONE] randomly determine quantity
         #  regenerate weekly
 
     def goods(self):
@@ -128,7 +149,7 @@ class CargoDepot:
         roll = first + second
 
         # TO_DO: 
-        #   need to convert quantity values to tonnage - in Cargo ctor?
+        #   [DONE] need to convert quantity values to tonnage - in Cargo ctor?
         #   [DONE] also need to handle individual items (51-56)
         #   might consider moving this data to a separate file
         table = {
@@ -136,32 +157,32 @@ class CargoDepot:
                 12 : Cargo("Polymers", "4Dx5", 7000, 0),
                 13 : Cargo("Liquor", "1Dx5", 10000, 0),
                 14 : Cargo("Wood", "2Dx10", 1000, 0),
-                15 : Cargo("Crystals", "1D", 20000, 0),
-                16 : Cargo("Radioactives", "1D", 1000000, 0),
+                15 : Cargo("Crystals", "1Dx1", 20000, 0),
+                16 : Cargo("Radioactives", "1Dx1", 1000000, 0),
                 21 : Cargo("Steel", "4Dx10", 500, 0),
                 22 : Cargo("Copper", "2Dx10", 2000, 0),
                 23 : Cargo("Aluminum", "5Dx10", 1000, 0),
                 24 : Cargo("Tin", "3Dx10", 9000, 0),
                 25 : Cargo("Silver", "1Dx5", 70000, 0),
-                26 : Cargo("Special Alloys", "1D", 200000, 0),
+                26 : Cargo("Special Alloys", "1Dx1", 200000, 0),
                 31 : Cargo("Petrochemicals", "6Dx5", 10000, 0),
                 32 : Cargo("Grain", "8Dx5", 300, 0),
                 33 : Cargo("Meat", "4Dx5", 1500, 0),
                 34 : Cargo("Spices", "1Dx5", 6000, 0),
                 35 : Cargo("Fruit", "2Dx5", 1000, 0),
-                36 : Cargo("Pharmaceuticals", "1D", 100000, 0),
-                41 : Cargo("Gems", "1D", 1000000, 0),
-                42 : Cargo("Firearms", "2D", 30000, 0),
-                43 : Cargo("Ammunition", "2D", 30000, 0),
-                44 : Cargo("Blades", "2D", 10000, 0),
-                45 : Cargo("Tools", "2D", 10000, 0),
-                46 : Cargo("Body Armor", "2D", 50000, 0),
-                51 : Cargo("Aircraft", "1D", 1000000, 1),
-                52 : Cargo("Air/Raft", "1D", 6000000, 1),
-                53 : Cargo("Computers", "1D", 10000000, 1),
-                54 : Cargo("ATV", "1D", 3000000, 1),
-                55 : Cargo("AFV", "1D", 7000000, 1),
-                56 : Cargo("Farm Machinery", "1D", 150000, 1),
+                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0),
+                41 : Cargo("Gems", "1Dx1", 1000000, 0),
+                42 : Cargo("Firearms", "2Dx1", 30000, 0),
+                43 : Cargo("Ammunition", "2Dx1", 30000, 0),
+                44 : Cargo("Blades", "2Dx1", 10000, 0),
+                45 : Cargo("Tools", "2Dx1", 10000, 0),
+                46 : Cargo("Body Armor", "2Dx1", 50000, 0),
+                51 : Cargo("Aircraft", "1Dx1", 1000000, 1),
+                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1),
+                53 : Cargo("Computers", "1Dx1", 10000000, 1),
+                54 : Cargo("ATV", "1Dx1", 3000000, 1),
+                55 : Cargo("AFV", "1Dx1", 7000000, 1),
+                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1),
                 61 : Cargo("Electronics Parts", "1Dx5", 100000, 0),
                 62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0),
                 63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0),
