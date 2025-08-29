@@ -63,13 +63,17 @@ class Command:
         self.message = message
 
 class Cargo:
-    def __init__(self, name, tonnage, price):
+    def __init__(self, name, quantity, price, individual):
         self.name = name
-        self.tonnage = tonnage
+        self.quantity = quantity
         self.price = price
+        self.individual = individual
 
     def __repr__(self):
-        return f"{self.name} - {self.tonnage} tons - {self.price} Cr"
+        quantity_string = f"{self.quantity}"
+        if self.individual == 0:
+            quantity_string += " tons"
+        return f"{self.name} - {quantity_string} - {self.price} Cr"
 
 class CargoDepot:
     def __init__(self, system):
@@ -97,6 +101,7 @@ class CargoDepot:
         #  confirm purchase
         #  remove purchased item from cargo
         #  add purchased item to hold
+        #     need to convert individual items to tonnage
         #  deduct cost from credit balance
 
     def sell_cargo(self):
@@ -122,47 +127,47 @@ class CargoDepot:
         second = die_roll()
         roll = first + second
 
-        # TO_DO: need to convert quantity values to 
-        #   tonnage - in Cargo ctor?
-        # also need to handle individual items (51-56)
-        # might consider moving this data to a separate file
+        # TO_DO: 
+        #   need to convert quantity values to tonnage - in Cargo ctor?
+        #   [DONE] also need to handle individual items (51-56)
+        #   might consider moving this data to a separate file
         table = {
-                11 : Cargo("Textiles", "3Dx5", 3000),
-                12 : Cargo("Polymers", "4Dx5", 7000),
-                13 : Cargo("Liquor", "1Dx5", 10000),
-                14 : Cargo("Wood", "2Dx10", 1000),
-                15 : Cargo("Crystals", "1D", 20000),
-                16 : Cargo("Radioactives", "1D", 1000000),
-                21 : Cargo("Steel", "4Dx10", 500),
-                22 : Cargo("Copper", "2Dx10", 2000),
-                23 : Cargo("Aluminum", "5Dx10", 1000),
-                24 : Cargo("Tin", "3Dx10", 9000),
-                25 : Cargo("Silver", "1Dx5", 70000),
-                26 : Cargo("Special Alloys", "1D", 200000),
-                31 : Cargo("Petrochemicals", "6Dx5", 10000),
-                32 : Cargo("Grain", "8Dx5", 300),
-                33 : Cargo("Meat", "4Dx5", 1500),
-                34 : Cargo("Spices", "1Dx5", 6000),
-                35 : Cargo("Fruit", "2Dx5", 1000),
-                36 : Cargo("Pharmaceuticals", "1D", 100000),
-                41 : Cargo("Gems", "1D", 1000000),
-                42 : Cargo("Firearms", "2D", 30000),
-                43 : Cargo("Ammunition", "2D", 30000),
-                44 : Cargo("Blades", "2D", 10000),
-                45 : Cargo("Tools", "2D", 10000),
-                46 : Cargo("Body Armor", "2D", 50000),
-                51 : Cargo("Aircraft", "1D", 1000000),
-                52 : Cargo("Air/Raft", "1D", 6000000),
-                53 : Cargo("Computers", "1D", 10000000),
-                54 : Cargo("ATV", "1D", 3000000),
-                55 : Cargo("AFV", "1D", 7000000),
-                56 : Cargo("Farm Machinery", "1D", 150000),
-                61 : Cargo("Electronics Parts", "1Dx5", 100000),
-                62 : Cargo("Mechanical Parts", "1Dx5", 75000),
-                63 : Cargo("Cybernetic Parts", "1Dx5", 250000),
-                64 : Cargo("Computer Parts", "1Dx5", 150000),
-                65 : Cargo("Machine Tools", "1Dx5", 750000),
-                66 : Cargo("Vacc Suits", "1Dx5", 400000)
+                11 : Cargo("Textiles", "3Dx5", 3000, 0),
+                12 : Cargo("Polymers", "4Dx5", 7000, 0),
+                13 : Cargo("Liquor", "1Dx5", 10000, 0),
+                14 : Cargo("Wood", "2Dx10", 1000, 0),
+                15 : Cargo("Crystals", "1D", 20000, 0),
+                16 : Cargo("Radioactives", "1D", 1000000, 0),
+                21 : Cargo("Steel", "4Dx10", 500, 0),
+                22 : Cargo("Copper", "2Dx10", 2000, 0),
+                23 : Cargo("Aluminum", "5Dx10", 1000, 0),
+                24 : Cargo("Tin", "3Dx10", 9000, 0),
+                25 : Cargo("Silver", "1Dx5", 70000, 0),
+                26 : Cargo("Special Alloys", "1D", 200000, 0),
+                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0),
+                32 : Cargo("Grain", "8Dx5", 300, 0),
+                33 : Cargo("Meat", "4Dx5", 1500, 0),
+                34 : Cargo("Spices", "1Dx5", 6000, 0),
+                35 : Cargo("Fruit", "2Dx5", 1000, 0),
+                36 : Cargo("Pharmaceuticals", "1D", 100000, 0),
+                41 : Cargo("Gems", "1D", 1000000, 0),
+                42 : Cargo("Firearms", "2D", 30000, 0),
+                43 : Cargo("Ammunition", "2D", 30000, 0),
+                44 : Cargo("Blades", "2D", 10000, 0),
+                45 : Cargo("Tools", "2D", 10000, 0),
+                46 : Cargo("Body Armor", "2D", 50000, 0),
+                51 : Cargo("Aircraft", "1D", 1000000, 1),
+                52 : Cargo("Air/Raft", "1D", 6000000, 1),
+                53 : Cargo("Computers", "1D", 10000000, 1),
+                54 : Cargo("ATV", "1D", 3000000, 1),
+                55 : Cargo("AFV", "1D", 7000000, 1),
+                56 : Cargo("Farm Machinery", "1D", 150000, 1),
+                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0),
+                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0),
+                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0),
+                64 : Cargo("Computer Parts", "1Dx5", 150000, 0),
+                65 : Cargo("Machine Tools", "1Dx5", 750000, 0),
+                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0)
                 }
 
         cargo.append(table[roll])
@@ -170,7 +175,7 @@ class CargoDepot:
 
 class Ship:
     def __init__(self):
-        self.hold = [Cargo("Grain", 20, 100)]
+        self.hold = [Cargo("Grain", 20, 300, 0)]
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
