@@ -48,10 +48,6 @@ class Command:
         self.action = action
         self.message = message
 
-def jump():
-    pass
-
-
 class Cargo:
     def __init__(self, name, tonnage, price):
         self.name = name
@@ -144,6 +140,9 @@ class Game:
         game.location.join_trade()
         game.commands = trade
 
+    def jump(self):
+        pass
+
 depot = CargoDepot()
 ship = Ship()
 game = Game()
@@ -175,7 +174,7 @@ orbit = always + [Command('g', 'Go to jump point',
 orbit = sorted(orbit, key=lambda command: command.key)
 
 jump = always + [Command('j', 'Jump to new system',
-                         jump,
+                         game.jump,
                          'Executing jump sequence!'),
                  Command('i', 'Inbound to orbit',
                          game.inbound_from_jump,
@@ -244,3 +243,10 @@ if __name__ == '__main__':
 # Ship design and customization is another potential
 # area to explore. We'll assume a simple standard design
 # (like the Free Trader) to start with.
+
+# The star map will be a whole 'nother thing. A couple
+# potential approaches:
+#   Traveller subsector maps, whether generated or
+#     loaded from a file
+#   On-demand world generation - of course will need
+#     to persist these systems as they are created
