@@ -66,6 +66,7 @@ class CargoDepot:
             print(f"{i} - {item}")
 
     def buy_cargo(self):
+        self.goods()
         item_number = input('Enter cargo number to buy ')
         # TO_DO:
         #  remove purchased item from cargo
@@ -73,6 +74,8 @@ class CargoDepot:
         #  deduct cost from credit balance
 
     def sell_cargo(self):
+        global ship
+        ship.cargo_hold()
         item_number = input('Enter cargo number to sell ')
         # TO_DO:
         #  remove purchased item from hold
@@ -84,8 +87,8 @@ class Ship:
         self.hold = [Cargo("Grain", 20, 100)]
 
     def cargo_hold(self):
-        for item in self.hold:
-            print(item)
+        for i,item in enumerate(self.hold):
+            print(f"{i} - {item}")
 
 class Game:
     def __init__(self):
