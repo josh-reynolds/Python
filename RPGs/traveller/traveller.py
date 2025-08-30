@@ -106,6 +106,9 @@ class Cargo:
         self.quantity = Cargo.determine_quantity(quantity)
         self.price = price
         self.individual = individual
+
+        # DMs are in order: agricultural, non-agricultural, industrial,
+        #                   non-industrial, rich, poor
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
 
@@ -157,23 +160,27 @@ class CargoDepot:
             print("That is not a valid cargo ID.")
             return
 
+        cargo = self.cargo[item_number]
         quantity = int(input('How many would you like to purchase? '))
-        if (quantity > self.cargo[item_number].quantity):
+        if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
             return
 
+        modifier = 0
         if self.system.agricultural:
-            pass
+            modifier += cargo.purchase_dms[0]
         if self.system.nonagricultural:
-            pass
+            modifier += cargo.purchase_dms[1]
         if self.system.industrial:
-            pass
+            modifier += cargo.purchase_dms[2]
         if self.system.nonindustrial:
-            pass
+            modifier += cargo.purchase_dms[3]
         if self.system.rich:
-            pass
+            modifier += cargo.purchase_dms[4]
         if self.system.poor:
-            pass
+            modifier += cargo.purchase_dms[5]
+
+        print(modifier)
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
@@ -221,42 +228,42 @@ class CargoDepot:
         #   [DONE] also need to handle individual items (51-56)
         #   might consider moving this data to a separate file
         table = {
-                11 : Cargo("Textiles", "3Dx5", 3000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                12 : Cargo("Polymers", "4Dx5", 7000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                13 : Cargo("Liquor", "1Dx5", 10000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                14 : Cargo("Wood", "2Dx10", 1000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                15 : Cargo("Crystals", "1Dx1", 20000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                16 : Cargo("Radioactives", "1Dx1", 1000000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                21 : Cargo("Steel", "4Dx10", 500, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                22 : Cargo("Copper", "2Dx10", 2000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                23 : Cargo("Aluminum", "5Dx10", 1000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                24 : Cargo("Tin", "3Dx10", 9000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                25 : Cargo("Silver", "1Dx5", 70000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                26 : Cargo("Special Alloys", "1Dx1", 200000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                32 : Cargo("Grain", "8Dx5", 300, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                33 : Cargo("Meat", "4Dx5", 1500, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                34 : Cargo("Spices", "1Dx5", 6000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                35 : Cargo("Fruit", "2Dx5", 1000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                41 : Cargo("Gems", "1Dx1", 1000000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                42 : Cargo("Firearms", "2Dx1", 30000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                43 : Cargo("Ammunition", "2Dx1", 30000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                44 : Cargo("Blades", "2Dx1", 10000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                45 : Cargo("Tools", "2Dx1", 10000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                46 : Cargo("Body Armor", "2Dx1", 50000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                51 : Cargo("Aircraft", "1Dx1", 1000000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                53 : Cargo("Computers", "1Dx1", 10000000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                54 : Cargo("ATV", "1Dx1", 3000000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                55 : Cargo("AFV", "1Dx1", 7000000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                64 : Cargo("Computer Parts", "1Dx5", 150000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                65 : Cargo("Machine Tools", "1Dx5", 750000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0]),
-                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0, [0,0,0,0,0,0], [0,0,0,0,0,0])
+                11 : Cargo("Textiles", "3Dx5", 3000, 0, [-7,-5,0,-3,0,0], [0,0,0,0,0,0]),
+                12 : Cargo("Polymers", "4Dx5", 7000, 0, [0,0,-2,0,-3,2], [0,0,0,0,0,0]),
+                13 : Cargo("Liquor", "1Dx5", 10000, 0, [-4,0,0,0,0,0], [0,0,0,0,0,0]),
+                14 : Cargo("Wood", "2Dx10", 1000, 0, [-6,0,0,0,0,0], [0,0,0,0,0,0]),
+                15 : Cargo("Crystals", "1Dx1", 20000, 0, [0,-3,4,0,0,0], [0,0,0,0,0,0]),
+                16 : Cargo("Radioactives", "1Dx1", 1000000, 0, [0,0,7,-3,5,0], [0,0,0,0,0,0]),
+                21 : Cargo("Steel", "4Dx10", 500, 0, [0,0,-2,0,-1,1], [0,0,0,0,0,0]),
+                22 : Cargo("Copper", "2Dx10", 2000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
+                23 : Cargo("Aluminum", "5Dx10", 1000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
+                24 : Cargo("Tin", "3Dx10", 9000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
+                25 : Cargo("Silver", "1Dx5", 70000, 0, [0,0,5,0,-1,2], [0,0,0,0,0,0]),
+                26 : Cargo("Special Alloys", "1Dx1", 200000, 0, [0,0,-3,5,-2,0], [0,0,0,0,0,0]),
+                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0, [0,-4,1,-5,0,0], [0,0,0,0,0,0]),
+                32 : Cargo("Grain", "8Dx5", 300, 0, [-2,1,2,0,0,0], [0,0,0,0,0,0]),
+                33 : Cargo("Meat", "4Dx5", 1500, 0, [-2,2,3,0,0,0], [0,0,0,0,0,0]),
+                34 : Cargo("Spices", "1Dx5", 6000, 0, [-2,3,2,0,0,0], [0,0,0,0,0,0]),
+                35 : Cargo("Fruit", "2Dx5", 1000, 0, [-3,1,2,0,0,0], [0,0,0,0,0,0]),
+                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0, [0,-3,4,0,0,3], [0,0,0,0,0,0]),
+                41 : Cargo("Gems", "1Dx1", 1000000, 0, [0,0,4,-8,0,-3], [0,0,0,0,0,0]),
+                42 : Cargo("Firearms", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
+                43 : Cargo("Ammunition", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
+                44 : Cargo("Blades", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
+                45 : Cargo("Tools", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
+                46 : Cargo("Body Armor", "2Dx1", 50000, 0, [0,0,-1,0,-3,3], [0,0,0,0,0,0]),
+                51 : Cargo("Aircraft", "1Dx1", 1000000, 1, [0,0,-4,0,-3,0], [0,0,0,0,0,0]),
+                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1, [0,0,-3,0,-2,0], [0,0,0,0,0,0]),
+                53 : Cargo("Computers", "1Dx1", 10000000, 1, [0,0,-2,0,-2,0], [0,0,0,0,0,0]),
+                54 : Cargo("ATV", "1Dx1", 3000000, 1, [0,0,-2,0,-2,0], [0,0,0,0,0,0]),
+                55 : Cargo("AFV", "1Dx1", 7000000, 1, [0,0,-5,0,-2,4], [0,0,0,0,0,0]),
+                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1, [0,0,-5,0,-2,0], [0,0,0,0,0,0]),
+                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0, [0,0,-4,0,-3,0], [0,0,0,0,0,0]),
+                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0, [0,0,-5,0,-3,0], [0,0,0,0,0,0]),
+                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0, [0,0,-4,0,-1,0], [0,0,0,0,0,0]),
+                64 : Cargo("Computer Parts", "1Dx5", 150000, 0, [0,0,-5,0,-3,0], [0,0,0,0,0,0]),
+                65 : Cargo("Machine Tools", "1Dx5", 750000, 0, [0,0,-5,0,-4,0], [0,0,0,0,0,0]),
+                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0, [0,-5,-3,0,-3,0], [0,0,0,0,0,0])
                 }
 
         cargo.append(table[roll])
