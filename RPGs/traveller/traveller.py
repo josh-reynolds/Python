@@ -80,14 +80,12 @@ class Cargo:
         quantity_string = f"{self.quantity}"
         if self.individual == 0:
             quantity_string += " tons"
-        return f"{self.name} - {quantity_string} - {self.price} Cr"
+        return f"{self.name} - {quantity_string} - {self.price} Cr/unit"
 
     def determine_quantity(quantity):
         q = str(quantity)
         if "Dx" in q:
-            die_count, multiplier = q.split("Dx")
-            die_count = int(die_count)
-            multiplier = int(multiplier)
+            die_count, multiplier = [int(n) for n in q.split("Dx")]
             value = 0
             for _ in range(0, die_count):
                 value += die_roll()
