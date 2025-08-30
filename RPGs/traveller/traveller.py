@@ -107,6 +107,10 @@ class Cargo:
         self.price = price
         self.individual = individual
 
+        # TO_DO: calculate a tonnage value: equal to quantity for bulk goods,
+        #        but needs conversion for individual items
+        self.tonnage = self.quantity
+
         # DMs are in order: agricultural, non-agricultural, industrial,
         #                   non-industrial, rich, poor
         self.purchase_dms = purchase_dms
@@ -152,6 +156,7 @@ class CargoDepot:
             print(f"{i} - {item}")
 
     def buy_cargo(self):
+        global game
         self.goods()
         # In Traveller '77, there is only one available cargo
         # per week. Retain this for future versions, though.
@@ -164,6 +169,12 @@ class CargoDepot:
         quantity = int(input('How many would you like to purchase? '))
         if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
+            return
+
+        free_space = game.ship.free_space()
+        if (quantity > free_space):
+            print("That amount will not fit in your hold.")
+            print(f"You only have {free_space} tons free.")
             return
 
         modifier = 0
@@ -191,11 +202,14 @@ class CargoDepot:
         cost = cargo.price * price_adjustment * quantity
 
         # TO_DO: should have a formatting function to print credit values
+        # TO_DO: should show whether the price is a good deal or not, 
+        #        compared to base
 
         print(cost)
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
+        #  [DONE] verify quantity is available
         #  [DONE] calculate price
         #     [DONE] DMs per world characteristics
         #     DMs per skills, brokers
@@ -207,6 +221,11 @@ class CargoDepot:
         #  add purchased item to hold
         #     need to convert individual items to tonnage
         #  deduct cost from credit balance
+
+        # if the player does not purchase all of a given cargo,
+        # the calculated price values should be retained, until
+        # the cargo list is refreshed (after a week or upon 
+        # returning to the world)
 
     def sell_cargo(self):
         global game
@@ -283,12 +302,18 @@ class CargoDepot:
         return cargo
 
 class Ship:
+    # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
-        self.hold = [Cargo("Grain", 20, 300, 0, [0,0,0,0,0,0], [0,0,0,0,0,0])]
+        self.hold = [Cargo("Grain", 20, 300, 0, [-2,1,2,0,0,0], [0,0,0,0,0,0])]
+        self.hold_size = 82
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
             print(f"{i} - {item}")
+
+    def free_space(self):
+        taken = sum([cargo.tonnage for cargo in self.hold])
+        return self.hold_size - taken
 
 class Game:
     def __init__(self):
