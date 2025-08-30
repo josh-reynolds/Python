@@ -180,13 +180,26 @@ class CargoDepot:
         if self.system.poor:
             modifier += cargo.purchase_dms[5]
 
-        print(modifier)
+        actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
+                        9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
+        roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+        price_adjustment = actual_value[roll]
+
+        if quantity < cargo.quantity:
+            price_adjustment += .01
+
+        cost = cargo.price * price_adjustment * quantity
+
+        # TO_DO: should have a formatting function to print credit values
+
+        print(cost)
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
-        #  calculate price
-        #     DMs per world characteristics, skills, brokers
-        #     fee for partial purchase
+        #  [DONE] calculate price
+        #     [DONE] DMs per world characteristics
+        #     DMs per skills, brokers
+        #     [DONE] fee for partial purchase
         #  [DONE] verify quantity fits in cargo hold
         #  verify player has enough funds
         #  confirm purchase
