@@ -15,12 +15,49 @@ def constrain(value, min_val, max_val):
     else:
         return value
 
+# TO_DO: eventually will probably want a proper UWP class and
+#        generator in the ctor accordingly
 class System:
-    def __init__(self, name, population):
+    def __init__(self, name, atmosphere, hydrographics, population, government):
         self.name = name
+        self.atmosphere = atmosphere
+        self.hydrographics = hydrographics
         self.population = population
+        self.government = government
         self.detail = "surface"
         self.depot = CargoDepot(self)
+
+        self.agricultural = False
+        if (atmosphere >= 4 and atmosphere <= 9 and 
+            hydrographics >= 4 and hydrographics <= 8 and
+            population >= 5 and population <= 7):
+            self.agricultural = True
+
+        self.nonagricultural = False
+        if (atmosphere <= 3 and 
+            hydrographics <= 3 and
+            population >= 6):
+            self.nonagricultural = True
+
+        self.industrial = False
+        if ((atmosphere <= 2 or atmosphere == 4 or atmosphere == 7 or atmosphere == 9) and
+            population >= 9):
+            self.industrial = True
+
+        self.nonindustrial = False
+        if population <= 6:
+            self.nonindustrial = True
+
+        self.rich = False
+        if (government >= 4 and government <= 9 and
+            (atmosphere == 6 or atmosphere == 8) and
+            population >= 6 and population <= 8):
+            self.rich = True
+
+        self.poor = False
+        if (atmosphere >= 2 and atmosphere <= 5 and
+            hydrographics <= 3):
+            self.poor = True
 
     def description(self):
         if self.detail == "surface":
@@ -123,6 +160,19 @@ class CargoDepot:
             print("There is not enough available. Specify a lower quantity.")
             return
 
+        if self.system.agricultural:
+            pass
+        if self.system.nonagricultural:
+            pass
+        if self.system.industrial:
+            pass
+        if self.system.nonindustrial:
+            pass
+        if self.system.rich:
+            pass
+        if self.system.poor:
+            pass
+
         # TO_DO:
         #  [DONE] ask what quantity to buy
         #  calculate price
@@ -221,7 +271,7 @@ class Ship:
 class Game:
     def __init__(self):
         self.running = False
-        self.location = System("Yorbund", 5) 
+        self.location = System("Yorbund", 5, 5, 5, 5) 
         self.ship = Ship()
 
     def run(self):
