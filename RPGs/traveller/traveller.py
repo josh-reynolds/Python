@@ -111,13 +111,25 @@ class CargoDepot:
 
     def buy_cargo(self):
         self.goods()
-        item_number = input('Enter cargo number to buy ')
+        # In Traveller '77, there is only one available cargo
+        # per week. Retain this for future versions, though.
+        item_number = int(input('Enter cargo number to buy '))
+        if item_number >= len(self.cargo):
+            print("That is not a valid cargo ID.")
+            return
+
+        quantity = int(input('How many would you like to purchase? '))
+        if (quantity > self.cargo[item_number].quantity):
+            print("There is not enough available. Specify a lower quantity.")
+            return
+
         # TO_DO:
-        #  ask what quantity to buy
+        #  [DONE] ask what quantity to buy
         #  calculate price
         #     DMs per world characteristics, skills, brokers
         #     fee for partial purchase
-        #  verify quantity fits in cargo hold
+        #  [DONE] verify quantity fits in cargo hold
+        #  verify player has enough funds
         #  confirm purchase
         #  remove purchased item from cargo
         #  add purchased item to hold
@@ -127,8 +139,13 @@ class CargoDepot:
     def sell_cargo(self):
         global game
         game.ship.cargo_hold()
-        item_number = input('Enter cargo number to sell ')
+        item_number = int(input('Enter cargo number to sell '))
+        if item_number >= len(game.ship.hold):
+            print("That is not a valid cargo ID.")
+            return
         # TO_DO:
+        #  [DONE] verify item_number is valid
+        #  ask what quantity to sell
         #  remove purchased item from hold
         #  no need to add purchased item to cargo
         #  add price to credit balance
