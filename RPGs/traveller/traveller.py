@@ -20,6 +20,7 @@ class System:
         self.name = name
         self.population = population
         self.detail = "surface"
+        self.depot = CargoDepot(self)
 
     def description(self):
         if self.detail == "surface":
@@ -258,7 +259,6 @@ class Game:
 
 ship = Ship()
 game = Game()
-depot = CargoDepot(game.location)
 
 always = [Command('q', 'Quit',
                   game.quit,
@@ -298,13 +298,13 @@ trade = always + [Command('l', 'Leave trade interaction',
                           game.leave,
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
-                          depot.goods,
+                          game.location.depot.goods,
                           'Available cargo loads:'),
                   Command('b', 'Buy cargo',
-                          depot.buy_cargo,
+                          game.location.depot.buy_cargo,
                           'Purchasing cargo'),
                   Command('s', 'Sell cargo',
-                          depot.sell_cargo,
+                          game.location.depot.sell_cargo,
                           'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
