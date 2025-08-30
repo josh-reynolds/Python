@@ -125,8 +125,8 @@ class CargoDepot:
         #  deduct cost from credit balance
 
     def sell_cargo(self):
-        global ship
-        ship.cargo_hold()
+        global game
+        game.ship.cargo_hold()
         item_number = input('Enter cargo number to sell ')
         # TO_DO:
         #  remove purchased item from hold
@@ -205,6 +205,7 @@ class Game:
     def __init__(self):
         self.running = False
         self.location = System("Yorbund", 5) 
+        self.ship = Ship()
 
     def run(self):
         self.commands = grounded
@@ -257,7 +258,6 @@ class Game:
     def jump(self):
         pass
 
-ship = Ship()
 game = Game()
 
 always = [Command('q', 'Quit',
@@ -267,7 +267,7 @@ always = [Command('q', 'Quit',
                   game.list_commands,
                   'Available commands:'),
           Command('c', 'Cargo hold contents',
-                  ship.cargo_hold,
+                  game.ship.cargo_hold,
                   'Contents of cargo hold:')]
 
 grounded = always + [Command('l', 'Lift off to orbit', 
