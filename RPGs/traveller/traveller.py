@@ -199,13 +199,19 @@ class CargoDepot:
         if quantity < cargo.quantity:
             price_adjustment += .01
 
-        cost = cargo.price * price_adjustment * quantity
-
         # TO_DO: should have a formatting function to print credit values
+        cost = cargo.price * price_adjustment * quantity
+        print(f"That quantity will cost {cost}")
+
+        funds = game.financials.balance
+        if cost > funds:
+            print("You do not have sufficient funds.")
+            print(f"Your available balance is {funds}.")
+            return
+
         # TO_DO: should show whether the price is a good deal or not, 
         #        compared to base
 
-        print(cost)
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
@@ -215,7 +221,7 @@ class CargoDepot:
         #     DMs per skills, brokers
         #     [DONE] fee for partial purchase
         #  [DONE] verify quantity fits in cargo hold
-        #  verify player has enough funds
+        #  [DONE] verify player has enough funds
         #  confirm purchase
         #  remove purchased item from cargo
         #  add purchased item to hold
@@ -315,11 +321,16 @@ class Ship:
         taken = sum([cargo.tonnage for cargo in self.hold])
         return self.hold_size - taken
 
+class Financials:
+    def __init__(self, balance):
+        self.balance = balance
+
 class Game:
     def __init__(self):
         self.running = False
         self.location = System("Yorbund", 5, 5, 5, 5) 
         self.ship = Ship()
+        self.financials = Financials(4000)
 
     def run(self):
         self.commands = grounded
