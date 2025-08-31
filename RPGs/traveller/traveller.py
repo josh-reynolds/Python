@@ -4,6 +4,10 @@ def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
 
+def pr_green(string):
+    """Print string to console, colored green."""
+    print(f"\033[92m {string}\033[00m")
+
 def die_roll():
     return randint(1,6)
 
@@ -14,6 +18,17 @@ def constrain(value, min_val, max_val):
         return max_val
     else:
         return value
+
+#  I suppose we could have a currency
+#  class so that the value vs. display
+#  doesn't get confused, maybe later
+def credit_string(value):
+    val = round(value)
+    suffix = "Cr"
+    if val >= 1000000:
+        suffix = "MCr"
+        val = val/1000000
+    return f"{val:,} {suffix}"
 
 # TO_DO: eventually will probably want a proper UWP class and
 #        generator in the ctor accordingly
@@ -127,7 +142,7 @@ class Cargo:
         quantity_string = f"{self.quantity}"
         if self.individual == 0:
             quantity_string += " tons"
-        return f"{self.name} - {quantity_string} - {self.price} Cr/unit"
+        return f"{self.name} - {quantity_string} - {credit_string(self.price)}/unit"
 
     def determine_quantity(quantity):
         q = str(quantity)
@@ -160,7 +175,7 @@ class CargoDepot:
         self.goods()
         # In Traveller '77, there is only one available cargo
         # per week. Retain this for future versions, though.
-        item_number = int(input('Enter cargo number to buy '))
+        item_number = int(input('Enter cargo number to buy: '))
         if item_number >= len(self.cargo):
             print("That is not a valid cargo ID.")
             return
@@ -199,19 +214,17 @@ class CargoDepot:
         if quantity < cargo.quantity:
             price_adjustment += .01
 
-        # TO_DO: should have a formatting function to print credit values
         cost = cargo.price * price_adjustment * quantity
-        print(f"That quantity will cost {cost}")
+        print(f"That quantity will cost {credit_string(cost)}.")
 
         funds = game.financials.balance
         if cost > funds:
             print("You do not have sufficient funds.")
-            print(f"Your available balance is {funds}.")
+            print(f"Your available balance is {credit_string(funds)}.")
             return
 
         # TO_DO: should show whether the price is a good deal or not, 
         #        compared to base
-
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
@@ -321,6 +334,7 @@ class Ship:
         taken = sum([cargo.tonnage for cargo in self.hold])
         return self.hold_size - taken
 
+# would probably want to have a ledger tracking all transactions...
 class Financials:
     def __init__(self, balance):
         self.balance = balance
@@ -330,7 +344,7 @@ class Game:
         self.running = False
         self.location = System("Yorbund", 5, 5, 5, 5) 
         self.ship = Ship()
-        self.financials = Financials(4000)
+        self.financials = Financials(400000)
 
     def run(self):
         self.commands = grounded
@@ -436,7 +450,7 @@ trade = sorted(trade, key=lambda command: command.key)
 if __name__ == '__main__':
     game.run()
 
-# Trading procedure (Traveller 77 Book 2 pp. 42-4
+# Trading procedure (Traveller 77 Book 2 pp. 42-4)
 #
 # Once per week, throw d66 to determine best cargo
 #   DMs per world population
@@ -488,3 +502,4 @@ if __name__ == '__main__':
 #     loaded from a file
 #   On-demand world generation - of course will need
 #     to persist these systems as they are created
+
