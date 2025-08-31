@@ -185,6 +185,8 @@ class CargoDepot:
             return
 
         cargo = self.cargo[item_number]
+        # BUG: non-numeric input causes a crash
+        # BUG: can purchase 0 items (how about negative?)
         quantity = int(input('How many would you like to purchase? '))
         if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
@@ -243,6 +245,13 @@ class CargoDepot:
             print("Cancelling purchase.")
             return
 
+        # proceed with the transaction
+        if quantity == cargo.quantity:
+            self.cargo.remove(cargo)
+        else:
+            cargo.quantity -= quantity
+
+
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
@@ -254,7 +263,7 @@ class CargoDepot:
         #  [DONE] verify quantity fits in cargo hold
         #  [DONE] verify player has enough funds
         #  [DONE] confirm purchase
-        #  remove purchased item from cargo
+        #  [DONE] remove purchased item from cargo
         #  add purchased item to hold
         #     need to convert individual items to tonnage
         #  deduct cost from credit balance
@@ -362,7 +371,7 @@ class Game:
         self.running = False
         self.location = System("Yorbund", 5, 5, 5, 5) 
         self.ship = Ship()
-        self.financials = Financials(400000)
+        self.financials = Financials(10000000)
 
     def run(self):
         self.commands = grounded
@@ -529,3 +538,6 @@ if __name__ == '__main__':
 #
 #  also think about persistent display sections, rather than
 #  always having to query data points
+#
+#  will need to make all the input much more robust - it needs
+#  to handle bogus input appropriately
