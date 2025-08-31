@@ -251,6 +251,11 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
+        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.individual,
+                          cargo.purchase_dms, cargo.sale_dms)
+        game.ship.load_cargo(purchased)
+
+
 
 
         # TO_DO:
@@ -264,8 +269,9 @@ class CargoDepot:
         #  [DONE] verify player has enough funds
         #  [DONE] confirm purchase
         #  [DONE] remove purchased item from cargo
-        #  add purchased item to hold
+        #  [DONE] add purchased item to hold
         #     need to convert individual items to tonnage
+        #     will handle this in Cargo ctor
         #  deduct cost from credit balance
 
         # if the player does not purchase all of a given cargo,
@@ -360,6 +366,13 @@ class Ship:
     def free_space(self):
         taken = sum([cargo.tonnage for cargo in self.hold])
         return self.hold_size - taken
+
+    # for now keep all cargo lots separate, since the may have had different
+    # purchase prices, plus it is simpler
+    # if this turns out not to matter, or we can handle via a transaction log
+    # instead, then we could merge identical cargo types together
+    def load_cargo(self, cargo):
+        self.hold.append(cargo)
 
 # would probably want to have a ledger tracking all transactions...
 class Financials:
