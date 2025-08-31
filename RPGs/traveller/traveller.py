@@ -215,16 +215,19 @@ class CargoDepot:
             price_adjustment += .01
 
         cost = cargo.price * price_adjustment * quantity
-        print(f"That quantity will cost {credit_string(cost)}.")
+        if price_adjustment < 1:
+            pr_function = pr_green
+        elif price_adjustment > 1:
+            pr_function = pr_red
+        else:
+            pr_function = print
+        pr_function(f"That quantity will cost {credit_string(cost)}.")
 
         funds = game.financials.balance
         if cost > funds:
             print("You do not have sufficient funds.")
             print(f"Your available balance is {credit_string(funds)}.")
             return
-
-        # TO_DO: should show whether the price is a good deal or not, 
-        #        compared to base
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
