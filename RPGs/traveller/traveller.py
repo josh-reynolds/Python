@@ -354,7 +354,9 @@ class Game:
         self.running = True
         while self.running:
             pr_red(f"\nYou are {self.location.description()}.")
-            command = input("Enter a command (? to list).  ")
+            print(f"Credits: {credit_string(self.financials.balance)}"
+                  f"\tFree hold space: {self.ship.free_space()} tons")
+            command = input("Enter a command (? to list):  ")
             for c in self.commands:
                 if command.lower() == c.key:
                     print(c.message)
@@ -506,3 +508,9 @@ if __name__ == '__main__':
 #   On-demand world generation - of course will need
 #     to persist these systems as they are created
 
+# UI thoughts:
+#  as long as we're text-based, might want to play with
+#  more ANSI code formatting to distinguish various things
+#
+#  also think about persistent display sections, rather than
+#  always having to query data points
