@@ -121,13 +121,16 @@ class Cargo:
         self.quantity = Cargo.determine_quantity(quantity)
         self.price = price
         self.individual = individual
-
-        # TO_DO: calculate a tonnage value: equal to quantity for bulk goods,
-        #        but needs conversion for individual items
-        self.tonnage = self.quantity
+        self.tonnage = self.determine_tonnage()
 
         # DMs are in order: agricultural, non-agricultural, industrial,
         #                   non-industrial, rich, poor
+        #
+        # could make this more intuitive and simplify data
+        # entry by using hashes instead of lists
+        # if we scale this out to later Traveller editions (where there are
+        # many more trade classifications to worry about) that might
+        # be necessary
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
 
@@ -158,6 +161,72 @@ class Cargo:
             return value
         else:
             return int(quantity)
+
+    # This data might belong in the cargo tables rather than here
+    # also, the RAW is very handwavy about tonnage for individual items,
+    # basically says "figure it out" - only some of these items
+    # are in the equipment list, so I'll fill in something plausible
+    # as best I can
+    # 
+    # Equipment list comparisons drawn from Book 3 (pp.16-7)
+    #
+    # Also need to consider that tonnage should be _displacement tons_
+    # not mass, so fiddle with the numbers supplied as necessary
+    # and there's packing material to consider too, as they call out in
+    # the example on Book 2 p. 43
+    #
+    # Per Traders & Gunboats p. 5, a 1.5m deck plan square, floor to
+    # ceiling, is half a displacement ton - so a 100-ton ship has
+    # 200 grid squares in theory. Yes, cargo hold ceilings might be
+    # higher than 3m, but this is a good enough basis for converting
+    # length/width into displacement numbers.
+    #
+    # Of course if we're dipping into sources later than the original
+    # three LBB, then we should be able to look all this up directly.
+    #
+    # Another observation - Traveller 77 trading setup does not consider
+    # Tech Level at all. Some of the items below might not be 
+    # producible on a given (low-tech) world. Can hand-wave by 
+    # assuming they are off-world products being warehoused here...
+    # 
+    # We'll assume the aircraft are less dense than the ground vehicles
+    # and fiddle with mass to volume ratios accordingly
+    def determine_tonnage(self):
+        if not self.individual:
+            return self.quantity
+        match self.name:
+            # assume TL5 Fixed Wing Aircraft based on price
+            # weight 5 tons, cargo 5 tons, length 15m, wingspan 15m
+            case "Aircraft":
+                return 10 * self.quantity
+
+            # assume TL8 Air/Raft based on price
+            # weight 4 tons, cargo 4 tons
+            # the Scout/Courier deck plans in Traderes & Gunboats
+            # allocates 12 grid squares to its Air/Raft, so 6 d-tons
+            case "Air/Raft":
+                return 6 * self.quantity
+
+            # not listed - base this on ship's computers
+            # closest fit is the Model/2bis, which costs a bit more
+            # (12MCr vs 10), and displaces 2 tons
+            case "Computers":
+                return 2 * self.quantity
+
+            # assume TL6 All Terrain Vehicle based on price
+            # weight 10 tons
+            case "ATV":
+                return 4 * self.quantity
+
+            # assume TL6 Armored Fighting Vehicle based on price
+            # weight 10 tons
+            case "AFV":
+                return 4 * self.quantity
+
+            # not listed, will need to guesstimate
+            # let's just assign it the same stats as ATV/AFV
+            case "Farm Machinery":
+                return 4 * self.quantity
 
 class CargoDepot:
     def __init__(self, system):
@@ -269,8 +338,8 @@ class CargoDepot:
         #  [DONE] confirm purchase
         #  [DONE] remove purchased item from cargo
         #  [DONE] add purchased item to hold
-        #     need to convert individual items to tonnage
-        #     will handle this in Cargo ctor
+        #     [DONE] need to convert individual items to tonnage
+        #           (will handle this in Cargo ctor)
         #  [DONE] deduct cost from credit balance
 
         # if the player does not purchase all of a given cargo,
