@@ -255,8 +255,7 @@ class CargoDepot:
                           cargo.purchase_dms, cargo.sale_dms)
         game.ship.load_cargo(purchased)
 
-
-
+        game.financials.debit(cost)
 
         # TO_DO:
         #  [DONE] ask what quantity to buy
@@ -272,7 +271,7 @@ class CargoDepot:
         #  [DONE] add purchased item to hold
         #     need to convert individual items to tonnage
         #     will handle this in Cargo ctor
-        #  deduct cost from credit balance
+        #  [DONE] deduct cost from credit balance
 
         # if the player does not purchase all of a given cargo,
         # the calculated price values should be retained, until
@@ -378,6 +377,9 @@ class Ship:
 class Financials:
     def __init__(self, balance):
         self.balance = balance
+
+    def debit(self, amount):
+        self.balance -= amount
 
 class Game:
     def __init__(self):
