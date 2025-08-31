@@ -139,10 +139,13 @@ class Cargo:
         #     value is either tonnage or separate items
 
     def __repr__(self):
-        quantity_string = f"{self.quantity}"
-        if self.individual == 0:
-            quantity_string += " tons"
-        return f"{self.name} - {quantity_string} - {credit_string(self.price)}/unit"
+        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
+
+    def quantity_string(cargo, quantity):
+        string = f"{quantity}"
+        if cargo.individual == 0:
+            string += " tons"
+        return string
 
     def determine_quantity(quantity):
         q = str(quantity)
@@ -175,6 +178,7 @@ class CargoDepot:
         self.goods()
         # In Traveller '77, there is only one available cargo
         # per week. Retain this for future versions, though.
+        # BUG: non-numeric input causes a crash
         item_number = int(input('Enter cargo number to buy: '))
         if item_number >= len(self.cargo):
             print("That is not a valid cargo ID.")
@@ -229,6 +233,17 @@ class CargoDepot:
             print(f"Your available balance is {credit_string(funds)}.")
             return
 
+        confirmation = ""
+        while confirmation != 'y' and confirmation != 'n':
+            confirmation = input(f"Would you like to purchase " 
+                                 f"{Cargo.quantity_string(cargo, quantity)} of "
+                                 f"{cargo.name} for {credit_string(cost)} (y/n)? ")
+
+        if confirmation == 'n':
+            print("Cancelling purchase.")
+            return
+
+
         # TO_DO:
         #  [DONE] ask what quantity to buy
         #  [DONE] verify quantity is available
@@ -238,7 +253,7 @@ class CargoDepot:
         #     [DONE] fee for partial purchase
         #  [DONE] verify quantity fits in cargo hold
         #  [DONE] verify player has enough funds
-        #  confirm purchase
+        #  [DONE] confirm purchase
         #  remove purchased item from cargo
         #  add purchased item to hold
         #     need to convert individual items to tonnage
