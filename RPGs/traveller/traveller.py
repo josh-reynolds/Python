@@ -150,6 +150,16 @@ class Cargo:
         #   then tonnage is a simple multiplication that applies to
         #   every cargo uniformly
 
+        # there's another gotcha to worry about with the current scheme:
+        # when part of a cargo is sold, we will reduce the quantity
+        # but because tonnage is calculated in the ctor just once, that
+        # value will be inaccurate. We either need to:
+        #   - create a new Cargo when changing quantities, making the 
+        #     Cargo data type immutable essentially
+        #   - make tonnage a dynamic property, calculated on demand
+        #   - shift to simpler scheme above (though would still want to
+        #     combine with a tonnage property)
+
     def __repr__(self):
         return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
 
@@ -382,16 +392,57 @@ class CargoDepot:
             print("There is not enough available. Specify a lower quantity.")
             return
 
+        modifier = 0
+        if self.system.agricultural:
+            modifier += cargo.sale_dms[0]
+        if self.system.nonagricultural:
+            modifier += cargo.sale_dms[1]
+        if self.system.industrial:
+            modifier += cargo.sale_dms[2]
+        if self.system.nonindustrial:
+            modifier += cargo.sale_dms[3]
+        if self.system.rich:
+            modifier += cargo.sale_dms[4]
+        if self.system.poor:
+            modifier += cargo.sale_dms[5]
+
+        actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
+                        9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
+
+        # TO_DO: need to save sale dms as well as purchase dms
+        print(modifier)
+        price_adjustment = 1
+        #if self.prices[item_number] > 0:
+            #price_adjustment = self.prices[item_number]
+        #else:
+            #roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+            #price_adjustment = actual_value[roll]
+
+            #if quantity < cargo.quantity:
+                #price_adjustment += .01
+
+            #self.prices[item_number] = price_adjustment
+
+        sale_price = cargo.price * price_adjustment * quantity
+        if price_adjustment > 1:
+            pr_function = pr_green
+        elif price_adjustment < 1:
+            pr_function = pr_red
+        else:
+            pr_function = print
+        pr_function(f"That quantity will sell for {credit_string(sale_price)}.")
+
         # TO_DO:
         #  [DONE] verify item_number is valid
         #  [DONE] ask what quantity to sell
         #  [DONE] verify quantity is available
         #  calculate price
-        #     DMs per world characteristics
+        #     [DONE] DMs per world characteristics
         #     DMs per skills, brokers
-        #     per p. 43, these only apply to sale, not purchase
-        #     review against later rules, this could just be imprecise
-        #     wording or I am interpreting too strictly
+        #     per p. 43, these two only apply to sale, not purchase
+        #       review against later rules, this could just be imprecise
+        #       wording or I am interpreting too strictly
+        #  save price adjustment for future transactions
         #  no need to verify space or funds
         #  confirm sale
         #  remove purchased item from hold
@@ -417,42 +468,42 @@ class CargoDepot:
         #   [DONE] also need to handle individual items (51-56)
         #   might consider moving this data to a separate file
         table = {
-                11 : Cargo("Textiles", "3Dx5", 3000, 0, [-7,-5,0,-3,0,0], [0,0,0,0,0,0]),
-                12 : Cargo("Polymers", "4Dx5", 7000, 0, [0,0,-2,0,-3,2], [0,0,0,0,0,0]),
-                13 : Cargo("Liquor", "1Dx5", 10000, 0, [-4,0,0,0,0,0], [0,0,0,0,0,0]),
-                14 : Cargo("Wood", "2Dx10", 1000, 0, [-6,0,0,0,0,0], [0,0,0,0,0,0]),
-                15 : Cargo("Crystals", "1Dx1", 20000, 0, [0,-3,4,0,0,0], [0,0,0,0,0,0]),
-                16 : Cargo("Radioactives", "1Dx1", 1000000, 0, [0,0,7,-3,5,0], [0,0,0,0,0,0]),
-                21 : Cargo("Steel", "4Dx10", 500, 0, [0,0,-2,0,-1,1], [0,0,0,0,0,0]),
-                22 : Cargo("Copper", "2Dx10", 2000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
-                23 : Cargo("Aluminum", "5Dx10", 1000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
-                24 : Cargo("Tin", "3Dx10", 9000, 0, [0,0,-3,0,-2,1], [0,0,0,0,0,0]),
-                25 : Cargo("Silver", "1Dx5", 70000, 0, [0,0,5,0,-1,2], [0,0,0,0,0,0]),
-                26 : Cargo("Special Alloys", "1Dx1", 200000, 0, [0,0,-3,5,-2,0], [0,0,0,0,0,0]),
-                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0, [0,-4,1,-5,0,0], [0,0,0,0,0,0]),
-                32 : Cargo("Grain", "8Dx5", 300, 0, [-2,1,2,0,0,0], [0,0,0,0,0,0]),
-                33 : Cargo("Meat", "4Dx5", 1500, 0, [-2,2,3,0,0,0], [0,0,0,0,0,0]),
-                34 : Cargo("Spices", "1Dx5", 6000, 0, [-2,3,2,0,0,0], [0,0,0,0,0,0]),
-                35 : Cargo("Fruit", "2Dx5", 1000, 0, [-3,1,2,0,0,0], [0,0,0,0,0,0]),
-                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0, [0,-3,4,0,0,3], [0,0,0,0,0,0]),
-                41 : Cargo("Gems", "1Dx1", 1000000, 0, [0,0,4,-8,0,-3], [0,0,0,0,0,0]),
-                42 : Cargo("Firearms", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
-                43 : Cargo("Ammunition", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
-                44 : Cargo("Blades", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
-                45 : Cargo("Tools", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,0,0,0,0]),
-                46 : Cargo("Body Armor", "2Dx1", 50000, 0, [0,0,-1,0,-3,3], [0,0,0,0,0,0]),
-                51 : Cargo("Aircraft", "1Dx1", 1000000, 1, [0,0,-4,0,-3,0], [0,0,0,0,0,0]),
-                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1, [0,0,-3,0,-2,0], [0,0,0,0,0,0]),
-                53 : Cargo("Computers", "1Dx1", 10000000, 1, [0,0,-2,0,-2,0], [0,0,0,0,0,0]),
-                54 : Cargo("ATV", "1Dx1", 3000000, 1, [0,0,-2,0,-2,0], [0,0,0,0,0,0]),
-                55 : Cargo("AFV", "1Dx1", 7000000, 1, [0,0,-5,0,-2,4], [0,0,0,0,0,0]),
-                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1, [0,0,-5,0,-2,0], [0,0,0,0,0,0]),
-                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0, [0,0,-4,0,-3,0], [0,0,0,0,0,0]),
-                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0, [0,0,-5,0,-3,0], [0,0,0,0,0,0]),
-                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0, [0,0,-4,0,-1,0], [0,0,0,0,0,0]),
-                64 : Cargo("Computer Parts", "1Dx5", 150000, 0, [0,0,-5,0,-3,0], [0,0,0,0,0,0]),
-                65 : Cargo("Machine Tools", "1Dx5", 750000, 0, [0,0,-5,0,-4,0], [0,0,0,0,0,0]),
-                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0, [0,-5,-3,0,-3,0], [0,0,0,0,0,0])
+                11 : Cargo("Textiles", "3Dx5", 3000, 0, [-7,-5,0,-3,0,0], [-6,1,0,0,3,0]),
+                12 : Cargo("Polymers", "4Dx5", 7000, 0, [0,0,-2,0,-3,2], [0,0,-2,0,3,0]),
+                13 : Cargo("Liquor", "1Dx5", 10000, 0, [-4,0,0,0,0,0], [-3,0,1,0,2,0]),
+                14 : Cargo("Wood", "2Dx10", 1000, 0, [-6,0,0,0,0,0], [-6,0,1,0,2,0]),
+                15 : Cargo("Crystals", "1Dx1", 20000, 0, [0,-3,4,0,0,0], [0,-3,3,0,3,0]),
+                16 : Cargo("Radioactives", "1Dx1", 1000000, 0, [0,0,7,-3,5,0], [0,0,6,-3,-4,0]),
+                21 : Cargo("Steel", "4Dx10", 500, 0, [0,0,-2,0,-1,1], [0,0,-2,0,-1,3]),
+                22 : Cargo("Copper", "2Dx10", 2000, 0, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
+                23 : Cargo("Aluminum", "5Dx10", 1000, 0, [0,0,-3,0,-2,1], [0,0,-3,4,-1,0]),
+                24 : Cargo("Tin", "3Dx10", 9000, 0, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
+                25 : Cargo("Silver", "1Dx5", 70000, 0, [0,0,5,0,-1,2], [0,0,5,0,-1,0]),
+                26 : Cargo("Special Alloys", "1Dx1", 200000, 0, [0,0,-3,5,-2,0], [0,0,-3,4,-1,0]),
+                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0, [0,-4,1,-5,0,0], [0,-4,3,-5,0,0]),
+                32 : Cargo("Grain", "8Dx5", 300, 0, [-2,1,2,0,0,0], [-2,0,0,0,0,0]),
+                33 : Cargo("Meat", "4Dx5", 1500, 0, [-2,2,3,0,0,0], [-2,0,2,0,0,1]),
+                34 : Cargo("Spices", "1Dx5", 6000, 0, [-2,3,2,0,0,0], [-2,0,0,0,2,3]),
+                35 : Cargo("Fruit", "2Dx5", 1000, 0, [-3,1,2,0,0,0], [-2,0,3,0,0,2]),
+                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0, [0,-3,4,0,0,3], [0,-3,5,0,4,0]),
+                41 : Cargo("Gems", "1Dx1", 1000000, 0, [0,0,4,-8,0,-3], [0,0,4,-2,8,0]),
+                42 : Cargo("Firearms", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                43 : Cargo("Ammunition", "2Dx1", 30000, 0, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                44 : Cargo("Blades", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                45 : Cargo("Tools", "2Dx1", 10000, 0, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                46 : Cargo("Body Armor", "2Dx1", 50000, 0, [0,0,-1,0,-3,3], [0,0,-2,0,1,4]),
+                51 : Cargo("Aircraft", "1Dx1", 1000000, 1, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
+                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1, [0,0,-3,0,-2,0], [0,0,0,2,0,1]),
+                53 : Cargo("Computers", "1Dx1", 10000000, 1, [0,0,-2,0,-2,0], [-3,0,0,2,0,1]),
+                54 : Cargo("ATV", "1Dx1", 3000000, 1, [0,0,-2,0,-2,0], [1,0,0,2,0,1]),
+                55 : Cargo("AFV", "1Dx1", 7000000, 1, [0,0,-5,0,-2,4], [2,-2,0,0,1,0]),
+                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1, [0,0,-5,0,-2,0], [5,-8,0,0,0,1]),
+                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
+                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0, [0,0,-5,0,-3,0], [2,0,0,3,0,0]),
+                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0, [0,0,-4,0,-1,0], [1,2,0,4,0,0]),
+                64 : Cargo("Computer Parts", "1Dx5", 150000, 0, [0,0,-5,0,-3,0], [1,2,0,3,0,0]),
+                65 : Cargo("Machine Tools", "1Dx5", 750000, 0, [0,0,-5,0,-4,0], [1,2,0,3,0,0]),
+                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0, [0,-5,-3,0,-3,0], [0,-1,0,2,0,0])
                 }
 
         cargo.append(table[roll])
