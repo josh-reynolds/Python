@@ -421,6 +421,16 @@ class CargoDepot:
             pr_function = print
         pr_function(f"That quantity will sell for {credit_string(sale_price)}.")
 
+        confirmation = ""
+        while confirmation != 'y' and confirmation != 'n':
+            confirmation = input(f"Would you like to sell " 
+                                 f"{Cargo.quantity_string(cargo, quantity)} of "
+                                 f"{cargo.name} for {credit_string(sale_price)} (y/n)? ")
+
+        if confirmation == 'n':
+            print("Cancelling sale.")
+            return
+
         # TO_DO:
         #  [DONE] verify item_number is valid
         #  [DONE] ask what quantity to sell
@@ -434,7 +444,7 @@ class CargoDepot:
         #  don't save price adjustment for future transactions, assume
         #      each sale is independent
         #  no need to verify space or funds
-        #  confirm sale
+        #  [DONE] confirm sale
         #  remove purchased item from hold
         #  no need to add purchased item to cargo
         #  add price to credit balance
