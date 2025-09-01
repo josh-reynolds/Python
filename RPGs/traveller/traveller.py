@@ -141,6 +141,15 @@ class Cargo:
         #   'individual' parameter flag indicates the quantity
         #     value is either tonnage or separate items
 
+        # alternate scheme to handle tonnage & bulk cargo:
+        #   instead of an indvidual flag and a calculate tonnage,
+        #   have a 'unit size' field
+        #   for bulk cargo, this is set to 1
+        #   for individual items, it is some higher number corresponding
+        #      to tons per item
+        #   then tonnage is a simple multiplication that applies to
+        #   every cargo uniformly
+
     def __repr__(self):
         return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
 
@@ -191,6 +200,8 @@ class Cargo:
     # 
     # We'll assume the aircraft are less dense than the ground vehicles
     # and fiddle with mass to volume ratios accordingly
+    #
+    # see note above in ctor - might want to rework this scheme
     def determine_tonnage(self):
         if not self.individual:
             return self.quantity
@@ -263,6 +274,9 @@ class CargoDepot:
             return
 
         free_space = game.ship.free_space()
+        # BUG: we need tonnage here, not quantity - and it needs to be the 
+        #      tonnage of the purchase amount, not necessarily the full
+        #      cargo allotment
         if (quantity > free_space):
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
@@ -347,10 +361,10 @@ class CargoDepot:
         #           (will handle this in Cargo ctor)
         #  [DONE] deduct cost from credit balance
 
-        # if the player does not purchase all of a given cargo,
-        # the calculated price values should be retained, until
-        # the cargo list is refreshed (after a week or upon 
-        # returning to the world)
+        # [DONE] if the player does not purchase all of a given cargo,
+        #        the calculated price values should be retained, 
+        # [    ] until the cargo list is refreshed (after a week or upon 
+        #        returning to the world)
 
     def sell_cargo(self):
         global game
@@ -359,10 +373,19 @@ class CargoDepot:
         if item_number >= len(game.ship.hold):
             print("That is not a valid cargo ID.")
             return
+
+        cargo = game.ship.hold[item_number]
+        # BUG: non-numeric input causes a crash
+        # BUG: can purchase 0 items (how about negative?)
+        quantity = int(input('How many would you like to sell? '))
+        if (quantity > cargo.quantity):
+            print("There is not enough available. Specify a lower quantity.")
+            return
+
         # TO_DO:
         #  [DONE] verify item_number is valid
-        #  ask what quantity to sell
-        #  verify quantity is available
+        #  [DONE] ask what quantity to sell
+        #  [DONE] verify quantity is available
         #  calculate price
         #     DMs per world characteristics
         #     DMs per skills, brokers
