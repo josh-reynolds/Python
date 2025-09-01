@@ -232,11 +232,12 @@ class CargoDepot:
     def __init__(self, system):
         self.system = system
         self.cargo = self.determine_cargo()
+        self.prices = [0]  # '0' indicates price modifier has not been determined yet
         # TO_DO:
         #  [DONE] randomly determine available cargo
         #    [DONE] DMs per world characteristics
         #  [DONE] randomly determine quantity
-        #  regenerate weekly
+        #  regenerate weekly (and also reset prices)
 
     def goods(self):
         for i,item in enumerate(self.cargo):
@@ -283,11 +284,16 @@ class CargoDepot:
 
         actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
                         9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
-        roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
-        price_adjustment = actual_value[roll]
+        if self.prices[item_number] > 0:
+            price_adjustment = self.prices[item_number]
+        else:
+            roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+            price_adjustment = actual_value[roll]
 
-        if quantity < cargo.quantity:
-            price_adjustment += .01
+            if quantity < cargo.quantity:
+                price_adjustment += .01
+
+            self.prices[item_number] = price_adjustment
 
         cost = cargo.price * price_adjustment * quantity
         if price_adjustment < 1:
@@ -331,7 +337,6 @@ class CargoDepot:
         #  [DONE] verify quantity is available
         #  [DONE] calculate price
         #     [DONE] DMs per world characteristics
-        #     DMs per skills, brokers
         #     [DONE] fee for partial purchase
         #  [DONE] verify quantity fits in cargo hold
         #  [DONE] verify player has enough funds
@@ -357,6 +362,15 @@ class CargoDepot:
         # TO_DO:
         #  [DONE] verify item_number is valid
         #  ask what quantity to sell
+        #  verify quantity is available
+        #  calculate price
+        #     DMs per world characteristics
+        #     DMs per skills, brokers
+        #     per p. 43, these only apply to sale, not purchase
+        #     review against later rules, this could just be imprecise
+        #     wording or I am interpreting too strictly
+        #  no need to verify space or funds
+        #  confirm sale
         #  remove purchased item from hold
         #  no need to add purchased item to cargo
         #  add price to credit balance
