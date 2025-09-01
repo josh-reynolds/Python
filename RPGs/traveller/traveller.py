@@ -431,23 +431,33 @@ class CargoDepot:
             print("Cancelling sale.")
             return
 
+        # proceed with the transaction
+        # TO_DO: have an 'unload_cargo' method that handles all this...
+        # BUG: free hold space not updating because cargo tonnage is not recalculated
+        if quantity == cargo.quantity:
+            game.ship.hold.remove(cargo)
+        else:
+            cargo.quantity -= quantity
+
+        game.financials.credit(sale_price)
+
         # TO_DO:
         #  [DONE] verify item_number is valid
         #  [DONE] ask what quantity to sell
         #  [DONE] verify quantity is available
         #  [DONE] calculate price
         #     [DONE] DMs per world characteristics
-        #     DMs per skills, brokers
-        #     per p. 43, these two only apply to sale, not purchase
-        #       review against later rules, this could just be imprecise
-        #       wording or I am interpreting too strictly
-        #  don't save price adjustment for future transactions, assume
-        #      each sale is independent
-        #  no need to verify space or funds
+        #     [    ] DMs per skills, brokers
+        #            per p. 43, these two only apply to sale, not purchase
+        #              review against later rules, this could just be imprecise
+        #              wording or I am interpreting too strictly
+        #            don't save price adjustment for future transactions, assume
+        #                each sale is independent
+        #            no need to verify space or funds
         #  [DONE] confirm sale
-        #  remove purchased item from hold
-        #  no need to add purchased item to cargo
-        #  add price to credit balance
+        #  [DONE] remove purchased item from hold
+        #         no need to add purchased item to cargo
+        #  [DONE] add price to credit balance
 
     def determine_cargo(self):
         cargo = []
@@ -537,6 +547,9 @@ class Financials:
 
     def debit(self, amount):
         self.balance -= amount
+
+    def credit(self, amount):
+        self.balance += amount
 
 class Game:
     def __init__(self):
