@@ -121,7 +121,6 @@ class Cargo:
         self.quantity = Cargo.determine_quantity(quantity)
         self.price = price
         self.individual = individual
-        self.tonnage = self.determine_tonnage()
 
         # DMs are in order: agricultural, non-agricultural, industrial,
         #                   non-industrial, rich, poor
@@ -156,12 +155,16 @@ class Cargo:
         # value will be inaccurate. We either need to:
         #   - create a new Cargo when changing quantities, making the 
         #     Cargo data type immutable essentially
-        #   - make tonnage a dynamic property, calculated on demand
+        #   - [DONE] make tonnage a dynamic property, calculated on demand
         #   - shift to simpler scheme above (though would still want to
         #     combine with a tonnage property)
 
     def __repr__(self):
         return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
+
+    @property
+    def tonnage(self):
+        return self.determine_tonnage()
 
     def quantity_string(cargo, quantity):
         string = f"{quantity}"
@@ -433,7 +436,6 @@ class CargoDepot:
 
         # proceed with the transaction
         # TO_DO: have an 'unload_cargo' method that handles all this...
-        # BUG: free hold space not updating because cargo tonnage is not recalculated
         if quantity == cargo.quantity:
             game.ship.hold.remove(cargo)
         else:
@@ -458,6 +460,11 @@ class CargoDepot:
         #  [DONE] remove purchased item from hold
         #         no need to add purchased item to cargo
         #  [DONE] add price to credit balance
+
+        # should we prevent the player from selling cargo back immediately?
+        # should they have to wait a week, or on return to the planet?
+        # how would we track - flag cargo with a point of origin and/or
+        # purchase date?
 
     def determine_cargo(self):
         cargo = []
