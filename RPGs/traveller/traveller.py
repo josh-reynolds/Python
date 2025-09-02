@@ -416,12 +416,13 @@ class Financials:
 # seven day weeks and four week months are used to refer to
 # lengths of time, but rarely to establish dates
 # (of course fun math, 7 * 4 * 12 = 336, so we are missing
-# 29 days)
+# 29 days - but since week/month are really just durations
+# it shouldn't matter)
 #
 # operations we'll need:
 #   [DONE] proper display formatting, including leading zeroes
-#   [....] increment/decrement day/week/month/year
-#   [....] roll over year as appropriate
+#   [DONE] increment day/week/month/year (no need to decrement)
+#   [DONE] roll over year as appropriate
 #   [    ] possibly trigger other events, like re-rolling cargo
 #            that may end up a separate 'timer' responsibility, we'll see
 class Calendar:
@@ -436,11 +437,8 @@ class Calendar:
     @day.setter
     def day(self, value):
         self.day_value = value
-
-    def day_plus(self):
-        self.day += 1
-        if self.day == 366:
-            self.day = 1
+        if self.day >= 366:
+            self.day = self.day - 365
             self.year += 1
 
     @property
@@ -451,7 +449,16 @@ class Calendar:
     def year(self, value):
         self.year_value = value
 
-    def year_plus(self):
+    def plus_day(self):
+        self.day += 1
+
+    def plus_week(self):
+        self.day += 7
+
+    def plus_month(self):
+        self.day += 28
+
+    def plus_year(self):
         self.year += 1
 
     def __repr__(self):
@@ -528,7 +535,10 @@ always = [Command('q', 'Quit',
                   'Available commands:'),
           Command('c', 'Cargo hold contents',
                   game.ship.cargo_hold,
-                  'Contents of cargo hold:')]
+                  'Contents of cargo hold:'),
+          Command('w', 'Wait a week',
+                  game.date.plus_week,
+                  'Waiting')]
 
 grounded = always + [Command('l', 'Lift off to orbit', 
                              game.liftoff,
@@ -696,7 +706,7 @@ if __name__ == '__main__':
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [    ] Regenerate cargo for sale weekly (and reset price adjustment)
-#  * [    ] Add 'wait a week' command
+#  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
