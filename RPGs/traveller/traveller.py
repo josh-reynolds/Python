@@ -140,25 +140,6 @@ class Cargo:
         #   'individual' parameter flag indicates the quantity
         #     value is either tonnage or separate items
 
-        # alternate scheme to handle tonnage & bulk cargo:
-        #   instead of an indvidual flag and a calculate tonnage,
-        #   have a 'unit size' field
-        #   for bulk cargo, this is set to 1
-        #   for individual items, it is some higher number corresponding
-        #      to tons per item
-        #   then tonnage is a simple multiplication that applies to
-        #   every cargo uniformly
-
-        # there's another gotcha to worry about with the current scheme:
-        # when part of a cargo is sold, we will reduce the quantity
-        # but because tonnage is calculated in the ctor just once, that
-        # value will be inaccurate. We either need to:
-        #   - create a new Cargo when changing quantities, making the 
-        #     Cargo data type immutable essentially
-        #   - [DONE] make tonnage a dynamic property, calculated on demand
-        #   - shift to simpler scheme above (though would still want to
-        #     combine with a tonnage property)
-
     def __repr__(self):
         return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
 
@@ -184,63 +165,14 @@ class Cargo:
         else:
             return int(quantity)
 
-    # This data might belong in the cargo tables rather than here
-    # also, the RAW is very handwavy about tonnage for individual items,
-    # basically says "figure it out" - only some of these items
-    # are in the equipment list, so I'll fill in something plausible
-    # as best I can
-    # 
-    # Equipment list comparisons drawn from Book 3 (pp.16-7)
-    #
-    # Also need to consider that tonnage should be _displacement tons_
-    # not mass, so fiddle with the numbers supplied as necessary
-    # and there's packing material to consider too, as they call out in
-    # the example on Book 2 p. 43
-    #
-    # Per Traders & Gunboats p. 5, a 1.5m deck plan square, floor to
-    # ceiling, is half a displacement ton - so a 100-ton ship has
-    # 200 grid squares in theory. Yes, cargo hold ceilings might be
-    # higher than 3m, but this is a good enough basis for converting
-    # length/width into displacement numbers.
-    #
-    # Of course if we're dipping into sources later than the original
-    # three LBB, then we should be able to look all this up directly.
-    #
-    # Another observation - Traveller 77 trading setup does not consider
-    # Tech Level at all. Some of the items below might not be 
-    # producible on a given (low-tech) world. Can hand-wave by 
-    # assuming they are off-world products being warehoused here...
-    # 
-    # We'll assume the aircraft are less dense than the ground vehicles
-    # and fiddle with mass to volume ratios accordingly
-    #
-    # see note above in ctor - might want to rework this scheme
-            # assume TL5 Fixed Wing Aircraft based on price
-            # weight 5 tons, cargo 5 tons, length 15m, wingspan 15m
-
-            # assume TL8 Air/Raft based on price
-            # weight 4 tons, cargo 4 tons
-            # the Scout/Courier deck plans in Traderes & Gunboats
-            # allocates 12 grid squares to its Air/Raft, so 6 d-tons
-
-            # not listed - base this on ship's computers
-            # closest fit is the Model/2bis, which costs a bit more
-            # (12MCr vs 10), and displaces 2 tons
-
-            # assume TL6 All Terrain Vehicle based on price
-            # weight 10 tons
-
-            # assume TL6 Armored Fighting Vehicle based on price
-            # weight 10 tons
-
-            # not listed, will need to guesstimate
-            # let's just assign it the same stats as ATV/AFV
-
 class CargoDepot:
     def __init__(self, system):
         self.system = system
         self.cargo = self.determine_cargo()
         self.prices = [0]  # '0' indicates price modifier has not been determined yet
+        # we are only retaining price modifiers for purchases,
+        # not for sales
+
         # TO_DO:
         #  [DONE] randomly determine available cargo
         #    [DONE] DMs per world characteristics
@@ -271,10 +203,7 @@ class CargoDepot:
             return
 
         free_space = game.ship.free_space()
-        # BUG: we need tonnage here, not quantity - and it needs to be the 
-        #      tonnage of the purchase amount, not necessarily the full
-        #      cargo allotment
-        if (quantity > free_space):
+        if (quantity * cargo.unit_size > free_space):
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
             return
@@ -717,3 +646,57 @@ if __name__ == '__main__':
 #
 #  will need to make all the input much more robust - it needs
 #  to handle bogus input appropriately
+
+    # Comments about individual cargo unit_size assessment, prune
+    # through this and retain if any is useful...
+    # ---------------------------------------------------
+    # This data might belong in the cargo tables rather than here
+    # also, the RAW is very handwavy about tonnage for individual items,
+    # basically says "figure it out" - only some of these items
+    # are in the equipment list, so I'll fill in something plausible
+    # as best I can
+    # 
+    # Equipment list comparisons drawn from Book 3 (pp.16-7)
+    #
+    # Also need to consider that tonnage should be _displacement tons_
+    # not mass, so fiddle with the numbers supplied as necessary
+    # and there's packing material to consider too, as they call out in
+    # the example on Book 2 p. 43
+    #
+    # Per Traders & Gunboats p. 5, a 1.5m deck plan square, floor to
+    # ceiling, is half a displacement ton - so a 100-ton ship has
+    # 200 grid squares in theory. Yes, cargo hold ceilings might be
+    # higher than 3m, but this is a good enough basis for converting
+    # length/width into displacement numbers.
+    #
+    # Of course if we're dipping into sources later than the original
+    # three LBB, then we should be able to look all this up directly.
+    #
+    # Another observation - Traveller 77 trading setup does not consider
+    # Tech Level at all. Some of the items below might not be 
+    # producible on a given (low-tech) world. Can hand-wave by 
+    # assuming they are off-world products being warehoused here...
+    # 
+    # We'll assume the aircraft are less dense than the ground vehicles
+    # and fiddle with mass to volume ratios accordingly
+    #
+    # assume TL5 Fixed Wing Aircraft based on price
+    # weight 5 tons, cargo 5 tons, length 15m, wingspan 15m
+
+    # assume TL8 Air/Raft based on price
+    # weight 4 tons, cargo 4 tons
+    # the Scout/Courier deck plans in Traderes & Gunboats
+    # allocates 12 grid squares to its Air/Raft, so 6 d-tons
+
+    # not listed - base this on ship's computers
+    # closest fit is the Model/2bis, which costs a bit more
+    # (12MCr vs 10), and displaces 2 tons
+
+    # assume TL6 All Terrain Vehicle based on price
+    # weight 10 tons
+
+    # assume TL6 Armored Fighting Vehicle based on price
+    # weight 10 tons
+
+    # not listed, will need to guesstimate
+    # let's just assign it the same stats as ATV/AFV
