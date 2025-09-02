@@ -19,9 +19,6 @@ def constrain(value, min_val, max_val):
     else:
         return value
 
-#  I suppose we could have a currency
-#  class so that the value vs. display
-#  doesn't get confused, maybe later
 def credit_string(value):
     val = round(value)
     suffix = "Cr"
@@ -30,8 +27,6 @@ def credit_string(value):
         val = val/1000000
     return f"{val:,} {suffix}"
 
-# TO_DO: eventually will probably want a proper UWP class and
-#        generator in the ctor accordingly
 class System:
     def __init__(self, name, atmosphere, hydrographics, population, government):
         self.name = name
@@ -124,21 +119,8 @@ class Cargo:
 
         # DMs are in order: agricultural, non-agricultural, industrial,
         #                   non-industrial, rich, poor
-        #
-        # could make this more intuitive and simplify data
-        # entry by using hashes instead of lists
-        # if we scale this out to later Traveller editions (where there are
-        # many more trade classifications to worry about) that might
-        # be necessary
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
-
-        # quantity convention:
-        #   if 'quantity' parameter string contains "Dx" then 
-        #     the value needs to be randomly generated
-        #     otherwise it is an exact amount
-        #   'individual' parameter flag indicates the quantity
-        #     value is either tonnage or separate items
 
     def __repr__(self):
         return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
@@ -153,6 +135,12 @@ class Cargo:
             string += " tons"
         return string
 
+    # quantity convention:
+    #   if 'quantity' parameter string contains "Dx" then 
+    #     the value needs to be randomly generated
+    #     otherwise it is an exact amount
+    #   value is either tonnage or separate items
+    #     as indicated by the unit_size field
     def determine_quantity(quantity):
         q = str(quantity)
         if "Dx" in q:
@@ -169,15 +157,10 @@ class CargoDepot:
     def __init__(self, system):
         self.system = system
         self.cargo = self.determine_cargo()
-        self.prices = [0]  # '0' indicates price modifier has not been determined yet
-        # we are only retaining price modifiers for purchases,
-        # not for sales
-
-        # TO_DO:
-        #  [DONE] randomly determine available cargo
-        #    [DONE] DMs per world characteristics
-        #  [DONE] randomly determine quantity
-        #  regenerate weekly (and also reset prices)
+        self.prices = [0]  
+        # '0' indicates price modifier has not been determined yet
+        # we are only retaining price modifiers for
+        # purchases, not for sales
 
     def goods(self):
         for i,item in enumerate(self.cargo):
@@ -272,26 +255,6 @@ class CargoDepot:
 
         game.financials.debit(cost)
 
-        # TO_DO:
-        #  [DONE] ask what quantity to buy
-        #  [DONE] verify quantity is available
-        #  [DONE] calculate price
-        #     [DONE] DMs per world characteristics
-        #     [DONE] fee for partial purchase
-        #  [DONE] verify quantity fits in cargo hold
-        #  [DONE] verify player has enough funds
-        #  [DONE] confirm purchase
-        #  [DONE] remove purchased item from cargo
-        #  [DONE] add purchased item to hold
-        #     [DONE] need to convert individual items to tonnage
-        #           (will handle this in Cargo ctor)
-        #  [DONE] deduct cost from credit balance
-
-        # [DONE] if the player does not purchase all of a given cargo,
-        #        the calculated price values should be retained, 
-        # [    ] until the cargo list is refreshed (after a week or upon 
-        #        returning to the world)
-
     def sell_cargo(self):
         global game
         game.ship.cargo_hold()
@@ -348,36 +311,12 @@ class CargoDepot:
             return
 
         # proceed with the transaction
-        # TO_DO: have an 'unload_cargo' method that handles all this...
         if quantity == cargo.quantity:
             game.ship.hold.remove(cargo)
         else:
             cargo.quantity -= quantity
 
         game.financials.credit(sale_price)
-
-        # TO_DO:
-        #  [DONE] verify item_number is valid
-        #  [DONE] ask what quantity to sell
-        #  [DONE] verify quantity is available
-        #  [DONE] calculate price
-        #     [DONE] DMs per world characteristics
-        #     [    ] DMs per skills, brokers
-        #            per p. 43, these two only apply to sale, not purchase
-        #              review against later rules, this could just be imprecise
-        #              wording or I am interpreting too strictly
-        #            don't save price adjustment for future transactions, assume
-        #                each sale is independent
-        #            no need to verify space or funds
-        #  [DONE] confirm sale
-        #  [DONE] remove purchased item from hold
-        #         no need to add purchased item to cargo
-        #  [DONE] add price to credit balance
-
-        # should we prevent the player from selling cargo back immediately?
-        # should they have to wait a week, or on return to the planet?
-        # how would we track - flag cargo with a point of origin and/or
-        # purchase date?
 
     def determine_cargo(self):
         cargo = []
@@ -393,10 +332,6 @@ class CargoDepot:
         second = die_roll()
         roll = first + second
 
-        # TO_DO: 
-        #   [DONE] need to convert quantity values to tonnage - in Cargo ctor?
-        #   [DONE] also need to handle individual items (51-56)
-        #   might consider moving this data to a separate file
         table = {
                 11 : Cargo("Textiles", "3Dx5", 3000, 1, [-7,-5,0,-3,0,0], [-6,1,0,0,3,0]),
                 12 : Cargo("Polymers", "4Dx5", 7000, 1, [0,0,-2,0,-3,2], [0,0,-2,0,3,0]),
@@ -460,7 +395,6 @@ class Ship:
     def load_cargo(self, cargo):
         self.hold.append(cargo)
 
-# would probably want to have a ledger tracking all transactions...
 class Financials:
     def __init__(self, balance):
         self.balance = balance
@@ -471,18 +405,67 @@ class Financials:
     def credit(self, amount):
         self.balance += amount
 
+# We'll use the standard Imperial calendar, though that didn't
+# yet exist in Traveller '77
+# year is 365 consecutively numbered days
+# date displayed as DDD-YYYY
+# seven day weeks and four week months are used to refer to
+# lengths of time, but rarely to establish dates
+# (of course fun math, 7 * 4 * 12 = 336, so we are missing
+# 29 days)
+#
+# operations we'll need:
+#   [DONE] proper display formatting, including leading zeroes
+#   [....] increment/decrement day/week/month/year
+#   [....] roll over year as appropriate
+#   [    ] possibly trigger other events, like re-rolling cargo
+#            that may end up a separate 'timer' responsibility, we'll see
+class Calendar:
+    def __init__(self):
+        self.year_value = 1105
+        self.day_value = 1
+
+    @property
+    def day(self):
+        return self.day_value
+
+    @day.setter
+    def day(self, value):
+        self.day_value = value
+
+    def day_plus(self):
+        self.day += 1
+        if self.day == 366:
+            self.day = 1
+            self.year += 1
+
+    @property
+    def year(self):
+        return self.year_value
+
+    @year.setter
+    def year(self, value):
+        self.year_value = value
+
+    def year_plus(self):
+        self.year += 1
+
+    def __repr__(self):
+        return f"{self.day:03.0f}-{self.year}"
+
 class Game:
     def __init__(self):
         self.running = False
         self.location = System("Yorbund", 5, 5, 5, 5) 
         self.ship = Ship()
         self.financials = Financials(10000000)
+        self.date = Calendar()
 
     def run(self):
         self.commands = grounded
         self.running = True
         while self.running:
-            pr_red(f"\nYou are {self.location.description()}.")
+            pr_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {credit_string(self.financials.balance)}"
                   f"\tFree hold space: {self.ship.free_space()} tons")
             command = input("Enter a command (? to list):  ")
@@ -700,3 +683,34 @@ if __name__ == '__main__':
 
     # not listed, will need to guesstimate
     # let's just assign it the same stats as ATV/AFV
+
+# --------------------------------------------------------------
+# Consolidating TO_DO list:
+
+#  * Create a currency class to keep value vs. display straight
+#  * Create a proper UWP class and generator in the System ctor
+#  * Change purchase/sale DMs from lists to hashes to improve data
+#      entry and validation
+#  * Renerate cargo for sale weekly (and reset price adjustment)
+#  * Add 'wait a week' command
+#  * Display current date
+#  * Protect input from bad data - one example, non-numeric
+#      values cause crashes
+#  * Create an unload_cargo method to consolidate proper handling
+#  * Add crew skills and their influence on sale prices
+#  * Add brokers and their influence on sale prices
+#  * Review interpretation that skills/brokers only apply to sales
+#  * Prevent immediate resale of bought cargo (wait a week? leave and
+#      return? Not sure how to properly flag cargo lot yet...)
+#  * Move cargo data to separate data file
+#  * Add different ship types and ship design
+#  * Replace dummy/test data with 'real' values
+#  * Add a transaction ledger to Financial class
+#  * Add starship operating expenses
+#  * Add freight shipping
+#  * Add passengers
+#  * Add multiple star systems and map (whether loaded or generated
+#      and whether in advance or on the fly)
+#  * Adjust UI elements, play with more ANSI codes
+#  * If we want to expand beyond just the trade model, add 
+#      ship encounters (Book 2 p. 36)
