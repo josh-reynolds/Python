@@ -1,5 +1,9 @@
 from random import randint
 
+def pr_yellow_on_red(string):
+    """Print string to console, yellow text on red background."""
+    print(f"\033[1;33;41m {string}\033[00m")
+
 def pr_red(string):
     """Print string to console, colored red."""
     print(f"\033[91m {string}\033[00m")
@@ -465,7 +469,7 @@ class Game:
         self.commands = grounded
         self.running = True
         while self.running:
-            pr_red(f"\n{self.date} : You are {self.location.description()}.")
+            pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {credit_string(self.financials.balance)}"
                   f"\tFree hold space: {self.ship.free_space()} tons")
             command = input("Enter a command (? to list):  ")
@@ -687,30 +691,32 @@ if __name__ == '__main__':
 # --------------------------------------------------------------
 # Consolidating TO_DO list:
 
-#  * Create a currency class to keep value vs. display straight
-#  * Create a proper UWP class and generator in the System ctor
-#  * Change purchase/sale DMs from lists to hashes to improve data
-#      entry and validation
-#  * Renerate cargo for sale weekly (and reset price adjustment)
-#  * Add 'wait a week' command
-#  * Display current date
-#  * Protect input from bad data - one example, non-numeric
-#      values cause crashes
-#  * Create an unload_cargo method to consolidate proper handling
-#  * Add crew skills and their influence on sale prices
-#  * Add brokers and their influence on sale prices
-#  * Review interpretation that skills/brokers only apply to sales
-#  * Prevent immediate resale of bought cargo (wait a week? leave and
-#      return? Not sure how to properly flag cargo lot yet...)
-#  * Move cargo data to separate data file
-#  * Add different ship types and ship design
-#  * Replace dummy/test data with 'real' values
-#  * Add a transaction ledger to Financial class
-#  * Add starship operating expenses
-#  * Add freight shipping
-#  * Add passengers
-#  * Add multiple star systems and map (whether loaded or generated
-#      and whether in advance or on the fly)
-#  * Adjust UI elements, play with more ANSI codes
-#  * If we want to expand beyond just the trade model, add 
-#      ship encounters (Book 2 p. 36)
+#  * [    ] Create a currency class to keep value vs. display straight
+#  * [    ] Create a proper UWP class and generator in the System ctor
+#  * [    ] Change purchase/sale DMs from lists to hashes to improve data
+#            entry and validation
+#  * [    ] Regenerate cargo for sale weekly (and reset price adjustment)
+#  * [    ] Add 'wait a week' command
+#  * [DONE] Display current date
+#  * [    ] Protect input from bad data - one example, non-numeric
+#            values cause crashes
+#  * [    ] Create an unload_cargo method to consolidate proper handling
+#  * [    ] Add crew skills and their influence on sale prices
+#  * [    ] Add brokers and their influence on sale prices
+#  * [    ] Review interpretation that skills/brokers only apply to sales
+#  * [    ] Prevent immediate resale of bought cargo (wait a week? leave and
+#            return? Not sure how to properly flag cargo lot yet...)
+#  * [    ] Move cargo data to separate data file
+#  * [    ] Add different ship types and ship design
+#  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Add a transaction ledger to Financial class
+#  * [    ] Add starship operating expenses
+#  * [    ] Add freight shipping
+#  * [    ] Add passengers
+#  * [    ] Add multiple star systems and map (whether loaded or generated
+#            and whether in advance or on the fly)
+#  * [....] Adjust UI elements, play with more ANSI codes
+#  * [    ] If we want to expand beyond just the trade model, add 
+#            ship encounters (Book 2 p. 36)
+#  * [    ] Distinguish between highport and downport
+#  * [    ] Refactoring and tests!!!
