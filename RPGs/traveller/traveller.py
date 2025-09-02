@@ -116,11 +116,10 @@ class Command:
         self.message = message
 
 class Cargo:
-    def __init__(self, name, quantity, price, individual, unit_size, purchase_dms, sale_dms):
+    def __init__(self, name, quantity, price, unit_size, purchase_dms, sale_dms):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
         self.price = price
-        self.individual = individual
         self.unit_size = unit_size
 
         # DMs are in order: agricultural, non-agricultural, industrial,
@@ -169,7 +168,7 @@ class Cargo:
 
     def quantity_string(cargo, quantity):
         string = f"{quantity}"
-        if cargo.individual == 0:
+        if cargo.unit_size == 1:
             string += " tons"
         return string
 
@@ -216,42 +215,26 @@ class Cargo:
     # and fiddle with mass to volume ratios accordingly
     #
     # see note above in ctor - might want to rework this scheme
-    def determine_tonnage(self):
-        if not self.individual:
-            return self.quantity
-        match self.name:
             # assume TL5 Fixed Wing Aircraft based on price
             # weight 5 tons, cargo 5 tons, length 15m, wingspan 15m
-            case "Aircraft":
-                return 10 * self.quantity
 
             # assume TL8 Air/Raft based on price
             # weight 4 tons, cargo 4 tons
             # the Scout/Courier deck plans in Traderes & Gunboats
             # allocates 12 grid squares to its Air/Raft, so 6 d-tons
-            case "Air/Raft":
-                return 6 * self.quantity
 
             # not listed - base this on ship's computers
             # closest fit is the Model/2bis, which costs a bit more
             # (12MCr vs 10), and displaces 2 tons
-            case "Computers":
-                return 2 * self.quantity
 
             # assume TL6 All Terrain Vehicle based on price
             # weight 10 tons
-            case "ATV":
-                return 4 * self.quantity
 
             # assume TL6 Armored Fighting Vehicle based on price
             # weight 10 tons
-            case "AFV":
-                return 4 * self.quantity
 
             # not listed, will need to guesstimate
             # let's just assign it the same stats as ATV/AFV
-            case "Farm Machinery":
-                return 4 * self.quantity
 
 class CargoDepot:
     def __init__(self, system):
@@ -354,8 +337,8 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.individual,
-                          cargo.unit_size, cargo.purchase_dms, cargo.sale_dms)
+        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
+                          cargo.purchase_dms, cargo.sale_dms)
         game.ship.load_cargo(purchased)
 
         game.financials.debit(cost)
@@ -486,42 +469,42 @@ class CargoDepot:
         #   [DONE] also need to handle individual items (51-56)
         #   might consider moving this data to a separate file
         table = {
-                11 : Cargo("Textiles", "3Dx5", 3000, 0, 1, [-7,-5,0,-3,0,0], [-6,1,0,0,3,0]),
-                12 : Cargo("Polymers", "4Dx5", 7000, 0, 1, [0,0,-2,0,-3,2], [0,0,-2,0,3,0]),
-                13 : Cargo("Liquor", "1Dx5", 10000, 0, 1, [-4,0,0,0,0,0], [-3,0,1,0,2,0]),
-                14 : Cargo("Wood", "2Dx10", 1000, 0, 1, [-6,0,0,0,0,0], [-6,0,1,0,2,0]),
-                15 : Cargo("Crystals", "1Dx1", 20000, 0, 1, [0,-3,4,0,0,0], [0,-3,3,0,3,0]),
-                16 : Cargo("Radioactives", "1Dx1", 1000000, 0, 1, [0,0,7,-3,5,0], [0,0,6,-3,-4,0]),
-                21 : Cargo("Steel", "4Dx10", 500, 0, 1, [0,0,-2,0,-1,1], [0,0,-2,0,-1,3]),
-                22 : Cargo("Copper", "2Dx10", 2000, 0, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
-                23 : Cargo("Aluminum", "5Dx10", 1000, 0, 1, [0,0,-3,0,-2,1], [0,0,-3,4,-1,0]),
-                24 : Cargo("Tin", "3Dx10", 9000, 0, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
-                25 : Cargo("Silver", "1Dx5", 70000, 0, 1, [0,0,5,0,-1,2], [0,0,5,0,-1,0]),
-                26 : Cargo("Special Alloys", "1Dx1", 200000, 0, 1, [0,0,-3,5,-2,0], [0,0,-3,4,-1,0]),
-                31 : Cargo("Petrochemicals", "6Dx5", 10000, 0, 1, [0,-4,1,-5,0,0], [0,-4,3,-5,0,0]),
-                32 : Cargo("Grain", "8Dx5", 300, 0, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]),
-                33 : Cargo("Meat", "4Dx5", 1500, 0, 1, [-2,2,3,0,0,0], [-2,0,2,0,0,1]),
-                34 : Cargo("Spices", "1Dx5", 6000, 0, 1, [-2,3,2,0,0,0], [-2,0,0,0,2,3]),
-                35 : Cargo("Fruit", "2Dx5", 1000, 0, 1, [-3,1,2,0,0,0], [-2,0,3,0,0,2]),
-                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 0, 1, [0,-3,4,0,0,3], [0,-3,5,0,4,0]),
-                41 : Cargo("Gems", "1Dx1", 1000000, 0, 1, [0,0,4,-8,0,-3], [0,0,4,-2,8,0]),
-                42 : Cargo("Firearms", "2Dx1", 30000, 0, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                43 : Cargo("Ammunition", "2Dx1", 30000, 0, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                44 : Cargo("Blades", "2Dx1", 10000, 0, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                45 : Cargo("Tools", "2Dx1", 10000, 0, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                46 : Cargo("Body Armor", "2Dx1", 50000, 0, 1, [0,0,-1,0,-3,3], [0,0,-2,0,1,4]),
-                51 : Cargo("Aircraft", "1Dx1", 1000000, 1, 10, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
-                52 : Cargo("Air/Raft", "1Dx1", 6000000, 1, 6, [0,0,-3,0,-2,0], [0,0,0,2,0,1]),
-                53 : Cargo("Computers", "1Dx1", 10000000, 1, 2, [0,0,-2,0,-2,0], [-3,0,0,2,0,1]),
-                54 : Cargo("ATV", "1Dx1", 3000000, 1, 4, [0,0,-2,0,-2,0], [1,0,0,2,0,1]),
-                55 : Cargo("AFV", "1Dx1", 7000000, 1, 4, [0,0,-5,0,-2,4], [2,-2,0,0,1,0]),
-                56 : Cargo("Farm Machinery", "1Dx1", 150000, 1, 4, [0,0,-5,0,-2,0], [5,-8,0,0,0,1]),
-                61 : Cargo("Electronics Parts", "1Dx5", 100000, 0, 1, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
-                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 0, 1, [0,0,-5,0,-3,0], [2,0,0,3,0,0]),
-                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 0, 1, [0,0,-4,0,-1,0], [1,2,0,4,0,0]),
-                64 : Cargo("Computer Parts", "1Dx5", 150000, 0, 1, [0,0,-5,0,-3,0], [1,2,0,3,0,0]),
-                65 : Cargo("Machine Tools", "1Dx5", 750000, 0, 1, [0,0,-5,0,-4,0], [1,2,0,3,0,0]),
-                66 : Cargo("Vacc Suits", "1Dx5", 400000, 0, 1, [0,-5,-3,0,-3,0], [0,-1,0,2,0,0])
+                11 : Cargo("Textiles", "3Dx5", 3000, 1, [-7,-5,0,-3,0,0], [-6,1,0,0,3,0]),
+                12 : Cargo("Polymers", "4Dx5", 7000, 1, [0,0,-2,0,-3,2], [0,0,-2,0,3,0]),
+                13 : Cargo("Liquor", "1Dx5", 10000, 1, [-4,0,0,0,0,0], [-3,0,1,0,2,0]),
+                14 : Cargo("Wood", "2Dx10", 1000, 1, [-6,0,0,0,0,0], [-6,0,1,0,2,0]),
+                15 : Cargo("Crystals", "1Dx1", 20000, 1, [0,-3,4,0,0,0], [0,-3,3,0,3,0]),
+                16 : Cargo("Radioactives", "1Dx1", 1000000, 1, [0,0,7,-3,5,0], [0,0,6,-3,-4,0]),
+                21 : Cargo("Steel", "4Dx10", 500, 1, [0,0,-2,0,-1,1], [0,0,-2,0,-1,3]),
+                22 : Cargo("Copper", "2Dx10", 2000, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
+                23 : Cargo("Aluminum", "5Dx10", 1000, 1, [0,0,-3,0,-2,1], [0,0,-3,4,-1,0]),
+                24 : Cargo("Tin", "3Dx10", 9000, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
+                25 : Cargo("Silver", "1Dx5", 70000, 1, [0,0,5,0,-1,2], [0,0,5,0,-1,0]),
+                26 : Cargo("Special Alloys", "1Dx1", 200000, 1, [0,0,-3,5,-2,0], [0,0,-3,4,-1,0]),
+                31 : Cargo("Petrochemicals", "6Dx5", 10000, 1, [0,-4,1,-5,0,0], [0,-4,3,-5,0,0]),
+                32 : Cargo("Grain", "8Dx5", 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]),
+                33 : Cargo("Meat", "4Dx5", 1500, 1, [-2,2,3,0,0,0], [-2,0,2,0,0,1]),
+                34 : Cargo("Spices", "1Dx5", 6000, 1, [-2,3,2,0,0,0], [-2,0,0,0,2,3]),
+                35 : Cargo("Fruit", "2Dx5", 1000, 1, [-3,1,2,0,0,0], [-2,0,3,0,0,2]),
+                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 1, [0,-3,4,0,0,3], [0,-3,5,0,4,0]),
+                41 : Cargo("Gems", "1Dx1", 1000000, 1, [0,0,4,-8,0,-3], [0,0,4,-2,8,0]),
+                42 : Cargo("Firearms", "2Dx1", 30000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                43 : Cargo("Ammunition", "2Dx1", 30000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                44 : Cargo("Blades", "2Dx1", 10000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                45 : Cargo("Tools", "2Dx1", 10000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
+                46 : Cargo("Body Armor", "2Dx1", 50000, 1, [0,0,-1,0,-3,3], [0,0,-2,0,1,4]),
+                51 : Cargo("Aircraft", "1Dx1", 1000000, 10, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
+                52 : Cargo("Air/Raft", "1Dx1", 6000000, 6, [0,0,-3,0,-2,0], [0,0,0,2,0,1]),
+                53 : Cargo("Computers", "1Dx1", 10000000, 2, [0,0,-2,0,-2,0], [-3,0,0,2,0,1]),
+                54 : Cargo("ATV", "1Dx1", 3000000, 4, [0,0,-2,0,-2,0], [1,0,0,2,0,1]),
+                55 : Cargo("AFV", "1Dx1", 7000000, 4, [0,0,-5,0,-2,4], [2,-2,0,0,1,0]),
+                56 : Cargo("Farm Machinery", "1Dx1", 150000, 4, [0,0,-5,0,-2,0], [5,-8,0,0,0,1]),
+                61 : Cargo("Electronics Parts", "1Dx5", 100000, 1, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
+                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 1, [0,0,-5,0,-3,0], [2,0,0,3,0,0]),
+                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 1, [0,0,-4,0,-1,0], [1,2,0,4,0,0]),
+                64 : Cargo("Computer Parts", "1Dx5", 150000, 1, [0,0,-5,0,-3,0], [1,2,0,3,0,0]),
+                65 : Cargo("Machine Tools", "1Dx5", 750000, 1, [0,0,-5,0,-4,0], [1,2,0,3,0,0]),
+                66 : Cargo("Vacc Suits", "1Dx5", 400000, 1, [0,-5,-3,0,-3,0], [0,-1,0,2,0,0])
                 }
 
         cargo.append(table[roll])
@@ -530,7 +513,7 @@ class CargoDepot:
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
-        self.hold = [Cargo("Grain", 20, 300, 0, 1, [-2,1,2,0,0,0], [0,0,0,0,0,0])]
+        self.hold = [Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [0,0,0,0,0,0])]
         self.hold_size = 82
 
     def cargo_hold(self):
