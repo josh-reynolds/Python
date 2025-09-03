@@ -308,20 +308,20 @@ class CargoDepot:
         roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
         price_adjustment = actual_value[roll]
 
-        sale_price = cargo.price.amount * price_adjustment * quantity
+        sale_price = Credits(cargo.price.amount * price_adjustment * quantity)
         if price_adjustment > 1:
             pr_function = pr_green
         elif price_adjustment < 1:
             pr_function = pr_red
         else:
             pr_function = print
-        pr_function(f"That quantity will sell for {credit_string(sale_price)}.")
+        pr_function(f"That quantity will sell for {sale_price}.")
 
         confirmation = ""
         while confirmation != 'y' and confirmation != 'n':
             confirmation = input(f"Would you like to sell " 
                                  f"{Cargo.quantity_string(cargo, quantity)} of "
-                                 f"{cargo.name} for {credit_string(sale_price)} (y/n)? ")
+                                 f"{cargo.name} for {sale_price} (y/n)? ")
 
         if confirmation == 'n':
             print("Cancelling sale.")
@@ -333,7 +333,7 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
-        game.financials.credit(sale_price)
+        game.financials.credit(sale_price.amount)
 
     def determine_cargo(self):
         cargo = []
