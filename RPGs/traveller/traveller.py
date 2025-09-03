@@ -235,17 +235,17 @@ class CargoDepot:
             self.prices[item_number] = price_adjustment
             game.date.set_timer(7)
 
-        cost = cargo.price.amount * price_adjustment * quantity
+        cost = Credits(cargo.price.amount * price_adjustment * quantity)
         if price_adjustment < 1:
             pr_function = pr_green
         elif price_adjustment > 1:
             pr_function = pr_red
         else:
             pr_function = print
-        pr_function(f"That quantity will cost {credit_string(cost)}.")
+        pr_function(f"That quantity will cost {cost}.")
 
         funds = game.financials.balance
-        if cost > funds:
+        if cost.amount > funds:
             print("You do not have sufficient funds.")
             print(f"Your available balance is {credit_string(funds)}.")
             return
@@ -254,7 +254,7 @@ class CargoDepot:
         while confirmation != 'y' and confirmation != 'n':
             confirmation = input(f"Would you like to purchase " 
                                  f"{Cargo.quantity_string(cargo, quantity)} of "
-                                 f"{cargo.name} for {credit_string(cost)} (y/n)? ")
+                                 f"{cargo.name} for {cost} (y/n)? ")
 
         if confirmation == 'n':
             print("Cancelling purchase.")
@@ -266,11 +266,11 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
+        purchased = Cargo(cargo.name, quantity, cargo.price.amount, cargo.unit_size, 
                           cargo.purchase_dms, cargo.sale_dms)
         game.ship.load_cargo(purchased)
 
-        game.financials.debit(cost)
+        game.financials.debit(cost.amount)
 
     def sell_cargo(self):
         global game
@@ -774,7 +774,7 @@ if __name__ == '__main__':
 # --------------------------------------------------------------
 # Consolidating TO_DO list:
 
-#  * [    ] Create a currency class to keep value vs. display straight
+#  * [....] Create a currency class to keep value vs. display straight
 #  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
