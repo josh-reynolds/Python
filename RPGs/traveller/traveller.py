@@ -23,6 +23,18 @@ def constrain(value, min_val, max_val):
     else:
         return value
 
+class Credits:
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __repr__(self):
+        val = round(value)
+        suffix = "Cr"
+        if val >= 1000000:
+            suffix = "MCr"
+            val = val/1000000
+        return f"{val:,} {suffix}"
+
 def credit_string(value):
     val = round(value)
     suffix = "Cr"
@@ -452,6 +464,17 @@ class Financials:
 
 # the second (timer) model seems more robust, and in line with how
 # some computer GUI toolkits handle events, so I'll give that a try
+
+# open question where the timer should live - we want them to be cleaned
+# up when the entity that cares goes out of scope (as when jumping to a
+# new world). I think the timer should live in the entity, and the 
+# list in the Calendar class is a callback reference. We'll want to make
+# sure lifespan and object cleanup is happening correctly - otherwise 
+# we could accumulate a large list of timers firing against worlds other
+# than the current. May be able to deal with that by using Game.location
+# (which should always point to the current system) to point to the 
+# right entity (though even then, we wouldn't want more than on timer
+# to fire against that target).
 class Calendar:
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
@@ -494,9 +517,16 @@ class Calendar:
     def set_timer(self, interval):
         self.timers.append(Timer(self.current_date.day, interval))
 
+# basic algorithm:
+#  * when the date changes, timer.run() is called
+#  * run() subtracts self.created_day from date.current_day
+#  * then difference modulus self.interval
+#  * it invokes its callback that many times
+#  * then move created day up to the final interval point
+# (will want to tweak some of these names)
 class Timer:
-    def __init__(self, created_day, interval):
-        self.created_day = created_day
+    def __init__(self, base_date, interval):
+        self.base_date = base_date
         self.interval = interval
 
 class ImperialDate:
