@@ -308,7 +308,7 @@ class CargoDepot:
         roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
         price_adjustment = actual_value[roll]
 
-        sale_price = cargo.price * price_adjustment * quantity
+        sale_price = cargo.price.amount * price_adjustment * quantity
         if price_adjustment > 1:
             pr_function = pr_green
         elif price_adjustment < 1:
