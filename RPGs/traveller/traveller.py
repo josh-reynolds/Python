@@ -28,7 +28,7 @@ class Credits:
         self.amount = amount
 
     def __repr__(self):
-        val = round(value)
+        val = round(self.amount)
         suffix = "Cr"
         if val >= 1000000:
             suffix = "MCr"
@@ -130,7 +130,7 @@ class Cargo:
     def __init__(self, name, quantity, price, unit_size, purchase_dms, sale_dms):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
-        self.price = price
+        self.price = Credits(price)
         self.unit_size = unit_size
 
         # DMs are in order: agricultural, non-agricultural, industrial,
@@ -139,7 +139,7 @@ class Cargo:
         self.sale_dms = sale_dms
 
     def __repr__(self):
-        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {credit_string(self.price)}/unit"
+        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/unit"
 
     @property
     def tonnage(self):
@@ -235,7 +235,7 @@ class CargoDepot:
             self.prices[item_number] = price_adjustment
             game.date.set_timer(7)
 
-        cost = cargo.price * price_adjustment * quantity
+        cost = cargo.price.amount * price_adjustment * quantity
         if price_adjustment < 1:
             pr_function = pr_green
         elif price_adjustment > 1:
