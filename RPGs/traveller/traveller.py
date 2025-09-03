@@ -454,51 +454,58 @@ class Financials:
 # some computer GUI toolkits handle events, so I'll give that a try
 class Calendar:
     def __init__(self):
-        self.year_value = 1105
-        self.day_value = 1
+        self.current_date = ImperialDate(1,1105)
         self.timers = []
 
     @property
     def day(self):
-        return self.day_value
+        return self.current_date.day
 
     @day.setter
     def day(self, value):
-        self.day_value = value
-        if self.day >= 366:
-            self.day = self.day - 365
-            self.year += 1
+        self.current_date.day = value
+        if self.current_date.day >= 366:
+            self.current_date.day = self.day - 365
+            self.current_date.year += 1
 
     @property
     def year(self):
-        return self.year_value
+        return self.current_date.year
 
     @year.setter
     def year(self, value):
-        self.year_value = value
+        self.current_date.year = value
 
     def plus_day(self):
-        self.day += 1
+        self.current_date.day += 1
 
     def plus_week(self):
-        self.day += 7
+        self.current_date.day += 7
 
     def plus_month(self):
-        self.day += 28
+        self.current_date.day += 28
 
     def plus_year(self):
-        self.year += 1
+        self.current_date.year += 1
 
     def __repr__(self):
-        return f"{self.day:03.0f}-{self.year}"
+        return f"{self.current_date}"
 
     def set_timer(self, interval):
-        self.timers.append(Timer(self.day_value, interval))
+        self.timers.append(Timer(self.current_date.day, interval))
 
 class Timer:
     def __init__(self, created_day, interval):
         self.created_day = created_day
         self.interval = interval
+
+class ImperialDate:
+    def __init__(self, day, year):
+        self.day = day
+        self.year = year
+
+    def __repr__(self):
+        return f"{self.day:03.0f}-{self.year}"
 
 class Game:
     def __init__(self):
