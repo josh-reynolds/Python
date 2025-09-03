@@ -221,6 +221,7 @@ class CargoDepot:
                 price_adjustment += .01
 
             self.prices[item_number] = price_adjustment
+            game.date.set_timer(7)
 
         cost = cargo.price * price_adjustment * quantity
         if price_adjustment < 1:
@@ -425,10 +426,37 @@ class Financials:
 #   [DONE] roll over year as appropriate
 #   [    ] possibly trigger other events, like re-rolling cargo
 #            that may end up a separate 'timer' responsibility, we'll see
+
+# probably a lot of ways to do this... here's a couple ideas:
+#    * the 'wait a week' action does at least two things:
+#        advance the date
+#        trigger any weekly events
+#        tricky bit: monthly events, how do they know?
+#    * have timers that can be created with specific intervals
+#        when the date advances, they check to see if the new
+#        date is higher than their target, then take action if so
+#        and then create a new timer at the next interval
+#        timers would be Observers of the Calendar
+#        tricky bit: if multiple intervals are jumped past, need
+#        to check the new timer until all are in the clear
+
+# right now we only have refreshing the cargo depot weekly as an
+# event, but there will be more:
+#    * monthly loan payment
+#    * annual maintenance
+#    * monthly crew salaries
+#    * daily berthing fees for extended stays
+# other operational costs might better be handled as resource modeling:
+#    * fuel
+#    * life support
+
+# the second (timer) model seems more robust, and in line with how
+# some computer GUI toolkits handle events, so I'll give that a try
 class Calendar:
     def __init__(self):
         self.year_value = 1105
         self.day_value = 1
+        self.timers = []
 
     @property
     def day(self):
@@ -463,6 +491,14 @@ class Calendar:
 
     def __repr__(self):
         return f"{self.day:03.0f}-{self.year}"
+
+    def set_timer(self, interval):
+        self.timers.append(Timer(self.day_value, interval))
+
+class Timer:
+    def __init__(self, created_day, interval):
+        self.created_day = created_day
+        self.interval = interval
 
 class Game:
     def __init__(self):
@@ -705,9 +741,13 @@ if __name__ == '__main__':
 #  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
-#  * [    ] Regenerate cargo for sale weekly (and reset price adjustment)
+#  * [....] Regenerate cargo for sale weekly (and reset price adjustment)
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
+#  * [    ] Add fuel system to Ship, and corresponding mechanics like
+#            refuelling costs, skimming, check fuel before jump, etc.
+#  * [    ] Add life support system to Ship and corresponding mechanics like
+#            recharging costs, check level before jump, etc.
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Create an unload_cargo method to consolidate proper handling
@@ -720,13 +760,13 @@ if __name__ == '__main__':
 #  * [    ] Add different ship types and ship design
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
-#  * [    ] Add starship operating expenses
+#  * [....] Add starship operating expenses
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
 #  * [....] Adjust UI elements, play with more ANSI codes
 #  * [    ] If we want to expand beyond just the trade model, add 
-#            ship encounters (Book 2 p. 36)
+#            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  * [    ] Distinguish between highport and downport
 #  * [    ] Refactoring and tests!!!
