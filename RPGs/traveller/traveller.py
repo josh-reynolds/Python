@@ -180,10 +180,10 @@ class CargoDepot:
         # purchases, not for sales
 
     def notify(self, date):
-        print(f"CargoDepot current date = {self.current_date}")
-        print(f"CargoDepot notified with {date}.")
         if date >= ImperialDate(self.current_date.day + 7, self.current_date.year):
-            print("Need to regenerate cargo list")
+            self.current_date = date.copy()
+            self.cargo = self.determine_cargo()
+            self.prices = [0]
 
     def goods(self):
         for i,item in enumerate(self.cargo):
@@ -802,7 +802,7 @@ if __name__ == '__main__':
 #  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
-#  * [....] Regenerate cargo for sale weekly (and reset price adjustment)
+#  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
 #  * [    ] Review Calendar increment scenarios, remove speculative options
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
