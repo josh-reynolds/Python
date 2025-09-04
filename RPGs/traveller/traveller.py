@@ -182,6 +182,8 @@ class CargoDepot:
     def notify(self, date):
         print(f"CargoDepot current date = {self.current_date}")
         print(f"CargoDepot notified with {date}.")
+        if date >= ImperialDate(self.current_date.day + 7, self.current_date.year):
+            print("Need to regenerate cargo list")
 
     def goods(self):
         for i,item in enumerate(self.cargo):
@@ -541,6 +543,16 @@ class ImperialDate:
 
     def __repr__(self):
         return f"{self.day:03.0f}-{self.year}"
+
+    def __eq__(self, other):
+        return self.day == other.day and self.year == other.year
+
+    def __gt__(self, other):
+        return self.year > other.year or (self.day > other.day and
+                                          self.year == other.year)
+
+    def __ge__(self, other):
+        return self == other or self > other
 
     def copy(self):
         return ImperialDate(self.day, self.year)
