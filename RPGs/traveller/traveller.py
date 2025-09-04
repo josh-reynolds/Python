@@ -44,14 +44,14 @@ def credit_string(value):
     return f"{val:,} {suffix}"
 
 class System:
-    def __init__(self, name, atmosphere, hydrographics, population, government):
+    def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
         self.name = name
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
         self.government = government
         self.detail = "surface"
-        self.depot = CargoDepot(self)
+        self.depot = CargoDepot(self, current_date)
 
         self.agricultural = False
         if (atmosphere >= 4 and atmosphere <= 9 and 
@@ -170,8 +170,9 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system):
+    def __init__(self, system, current_date):
         self.system = system
+        self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
         self.prices = [0]  
         # '0' indicates price modifier has not been determined yet
@@ -179,6 +180,7 @@ class CargoDepot:
         # purchases, not for sales
 
     def notify(self, date):
+        print(f"CargoDepot current date = {self.current_date}")
         print(f"CargoDepot notified with {date}.")
 
     def goods(self):
@@ -540,14 +542,18 @@ class ImperialDate:
     def __repr__(self):
         return f"{self.day:03.0f}-{self.year}"
 
+    def copy(self):
+        return ImperialDate(self.day, self.year)
+
 class Game:
     def __init__(self):
         self.running = False
-        self.location = System("Yorbund", 5, 5, 5, 5) 
+        self.date = Calendar()
+        self.location = System("Yorbund", 5, 5, 5, 5, self.date.current_date) 
         self.ship = Ship()
         self.financials = Financials(10000000)
-        self.date = Calendar()
 
+        # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
 
     def run(self):
