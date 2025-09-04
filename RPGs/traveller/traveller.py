@@ -493,7 +493,8 @@ class Calendar:
         self.current_date.day = value
         if self.current_date.day >= 366:
             self.current_date.day = self.day - 365
-            self.current_date.year += 1
+            self.year += 1
+        print("Day changed")
 
     @property
     def year(self):
@@ -502,18 +503,19 @@ class Calendar:
     @year.setter
     def year(self, value):
         self.current_date.year = value
+        print("Year changed")
 
     def plus_day(self):
-        self.current_date.day += 1
+        self.day += 1
 
     def plus_week(self):
-        self.current_date.day += 7
+        self.day += 7
 
     def plus_month(self):
-        self.current_date.day += 28
+        self.day += 28
 
     def plus_year(self):
-        self.current_date.year += 1
+        self.year += 1
 
     def __repr__(self):
         return f"{self.current_date}"
