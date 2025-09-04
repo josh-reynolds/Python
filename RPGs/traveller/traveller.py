@@ -178,6 +178,9 @@ class CargoDepot:
         # we are only retaining price modifiers for
         # purchases, not for sales
 
+    def notify(self, date):
+        print(f"CargoDepot notified with {date}.")
+
     def goods(self):
         for i,item in enumerate(self.cargo):
             print(f"{i} - {item}")
@@ -494,7 +497,8 @@ class Calendar:
         if self.current_date.day >= 366:
             self.current_date.day = self.day - 365
             self.year += 1
-        print("Day changed")
+        for observer in self.observers:
+            observer.notify(self.current_date)
 
     @property
     def year(self):
@@ -503,11 +507,16 @@ class Calendar:
     @year.setter
     def year(self, value):
         self.current_date.year = value
-        print("Year changed")
+        # TO_DO: Redundant, but probably harmless. Think through the scenario.
+        # Will we ever need this if day.setter has it covered?
+        for observer in self.observers:
+            observer.notify(self.current_date)
 
     def plus_day(self):
         self.day += 1
 
+    # TO_DO: Are we ever going to need any increments other
+    # than +1 week? Should remove others if not. Review.
     def plus_week(self):
         self.day += 7
 
@@ -538,6 +547,8 @@ class Game:
         self.ship = Ship()
         self.financials = Financials(10000000)
         self.date = Calendar()
+
+        self.date.add_observer(self.location.depot)
 
     def run(self):
         self.commands = grounded
@@ -774,6 +785,7 @@ if __name__ == '__main__':
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [....] Regenerate cargo for sale weekly (and reset price adjustment)
+#  * [    ] Review Calendar increment scenarios, remove speculative options
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
 #  * [    ] Add fuel system to Ship, and corresponding mechanics like
