@@ -233,7 +233,6 @@ class CargoDepot:
                 price_adjustment += .01
 
             self.prices[item_number] = price_adjustment
-            game.date.set_timer(7)
 
         cost = Credits(cargo.price.amount * price_adjustment * quantity)
         if price_adjustment < 1:
@@ -475,10 +474,15 @@ class Financials:
 # (which should always point to the current system) to point to the 
 # right entity (though even then, we wouldn't want more than on timer
 # to fire against that target).
+
+# OK, mulling this over - it's overly complex. This should be doable
+# with a simple Observer, no need for an intermediary object. The 
+# CargoDepot registers with the Calendar, and is notified when it
+# changes. Then it can decide what to do.
 class Calendar:
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
-        self.timers = []
+        self.observers = []
 
     @property
     def day(self):
@@ -514,20 +518,8 @@ class Calendar:
     def __repr__(self):
         return f"{self.current_date}"
 
-    def set_timer(self, interval):
-        self.timers.append(Timer(self.current_date.day, interval))
-
-# basic algorithm:
-#  * when the date changes, timer.run() is called
-#  * run() subtracts self.created_day from date.current_day
-#  * then difference modulus self.interval
-#  * it invokes its callback that many times
-#  * then move created day up to the final interval point
-# (will want to tweak some of these names)
-class Timer:
-    def __init__(self, base_date, interval):
-        self.base_date = base_date
-        self.interval = interval
+    def add_observer(self, observer):
+        self.observers.append(observer)
 
 class ImperialDate:
     def __init__(self, day, year):
@@ -774,7 +766,8 @@ if __name__ == '__main__':
 # --------------------------------------------------------------
 # Consolidating TO_DO list:
 
-#  * [....] Create a currency class to keep value vs. display straight
+#  * [DONE] Create a currency class to keep value vs. display straight
+#  * [....] Deprecate and remove credit_string() function
 #  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
