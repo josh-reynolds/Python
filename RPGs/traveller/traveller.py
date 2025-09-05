@@ -131,6 +131,9 @@ class Cargo:
     def __init__(self, name, quantity, price, unit_size, purchase_dms, sale_dms):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
+
+        # would prefer to pass this in as Credits already, but we are taking
+        # input from the cargo table which just has integers
         self.price = Credits(price)
         self.unit_size = unit_size
 
@@ -140,7 +143,11 @@ class Cargo:
         self.sale_dms = sale_dms
 
     def __repr__(self):
-        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/unit"
+        if self.unit_size == 1:
+            unit = "ton"
+        else:
+            unit = "item"
+        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/{unit}"
 
     @property
     def tonnage(self):
@@ -149,7 +156,12 @@ class Cargo:
     def quantity_string(cargo, quantity):
         string = f"{quantity}"
         if cargo.unit_size == 1:
-            string += " tons"
+            if quantity == 1:
+                string += " ton"
+            else:
+                string += " tons"
+        else:
+            string += f" ({cargo.unit_size} tons/item)"
         return string
 
     # quantity convention:
