@@ -86,8 +86,7 @@ class StarSystem:
             hydrographics <= 3):
             self.poor = True
 
-    # TO_DO: need to make this more robust and type safe
-    #   also, making a big assumption that worlds cannot share the
+    #   making a big assumption that worlds cannot share the
     #   same name - good enough for now
     def __eq__(self, other):
         return self.name == other.name
@@ -462,6 +461,16 @@ class Financials:
     def credit(self, amount):
         self.balance += amount
 
+    # Book 2 p. 7:
+    # Average cost is CR 100 to land and remain for up to six days;
+    # thereafter, a CR 100 per day fee is imposed for each
+    # additional day spent in port. In some locations this fee will
+    # be higher, while at others local government subsidies will 
+    # lower or eliminate it.
+    def berthing_fee(self):
+        print("Charging 100 Cr berthing fee.")
+        self.debit(Credits(100))
+
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
 # year is 365 consecutively numbered days
@@ -533,16 +542,12 @@ class Calendar:
     @year.setter
     def year(self, value):
         self.current_date.year = value
-        # TO_DO: Redundant, but probably harmless. Think through the scenario.
-        # Will we ever need this if day.setter has it covered?
         for observer in self.observers:
             observer.notify(self.current_date)
 
     def plus_day(self):
         self.day += 1
 
-    # TO_DO: Are we ever going to need any increments other
-    # than +1 week? Should remove others if not. Review.
     def plus_week(self):
         self.day += 7
 
@@ -616,6 +621,7 @@ class Game:
 
     def land(self):
         self.location.land()
+        self.financials.berthing_fee()
         self.commands = grounded
 
     def outbound_to_jump(self):
@@ -821,6 +827,7 @@ if __name__ == '__main__':
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
 #  * [    ] Review Calendar increment scenarios, remove speculative options
+#  * [    ] Review Calendar.plus_year() for whether it should notify observers
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
 #  * [    ] Advance calendar for in-system activities
@@ -833,6 +840,7 @@ if __name__ == '__main__':
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
+#  * [    ] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [    ] Add crew skills and their influence on sale prices
 #  * [    ] Add brokers and their influence on sale prices
