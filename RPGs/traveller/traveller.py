@@ -339,6 +339,8 @@ class CargoDepot:
         if self.system.poor:
             modifier += cargo.sale_dms[5]
 
+        modifier + game.ship.trade_skill()
+
         actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
                         9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
 
@@ -450,6 +452,13 @@ class Ship:
             self.hold.remove(cargo)
         else:
             cargo.quantity -= quantity
+
+    # Book 2 p. 43
+    # If characters are skilled in bribery or admin, they may apply these
+    # as DMs for the sale of goods. In any given transaction, such DMs may
+    # be used by only one person.
+    def trade_skill(self):
+        return 1
 
 class Financials:
     def __init__(self, balance):
@@ -842,7 +851,8 @@ if __name__ == '__main__':
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
 #  * [    ] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
-#  * [    ] Add crew skills and their influence on sale prices
+#  * [DONE] Add crew skills and their influence on sale prices
+#  * [    ] Add crew members with skills
 #  * [    ] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
 #  * [DONE] Prevent immediate resale of bought cargo
@@ -854,6 +864,7 @@ if __name__ == '__main__':
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
 #  * [....] Add starship operating expenses
+#  * [    ] Add extended berthing fee mechanism
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add multiple star systems and map (whether loaded or generated
