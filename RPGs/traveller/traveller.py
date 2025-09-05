@@ -314,9 +314,10 @@ class CargoDepot:
 
         cargo = game.ship.hold[item_number]
 
-        if cargo.source_world == game.location:
-            print("You cannot resell cargo on the world where it was purchased.")
-            return
+        if cargo.source_world:
+            if cargo.source_world == game.location:
+                print("You cannot resell cargo on the world where it was purchased.")
+                return
 
         # BUG: non-numeric input causes a crash
         # BUG: can purchase 0 items (how about negative?)
@@ -365,11 +366,7 @@ class CargoDepot:
             return
 
         # proceed with the transaction
-        if quantity == cargo.quantity:
-            game.ship.hold.remove(cargo)
-        else:
-            cargo.quantity -= quantity
-
+        game.ship.unload_cargo(cargo, quantity)
         game.financials.credit(sale_price)
 
     def determine_cargo(self):
@@ -448,6 +445,12 @@ class Ship:
     # instead, then we could merge identical cargo types together
     def load_cargo(self, cargo):
         self.hold.append(cargo)
+
+    def unload_cargo(self, cargo, quantity):
+        if quantity == cargo.quantity:
+            self.hold.remove(cargo)
+        else:
+            cargo.quantity -= quantity
 
 class Financials:
     def __init__(self, balance):
@@ -836,7 +839,7 @@ if __name__ == '__main__':
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
-#  * [    ] Create an unload_cargo method to consolidate proper handling
+#  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [    ] Add crew skills and their influence on sale prices
 #  * [    ] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
