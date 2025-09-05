@@ -35,6 +35,15 @@ class Credits:
             val = val/1000000
         return f"{val:,} {suffix}"
 
+    def __gt__(self, other):
+        return self.amount > other.amount
+
+    def __add__(self, other):
+        return Credits(self.amount + other.amount)
+
+    def __sub__(self, other):
+        return Credits(self.amount - other.amount)
+
 class StarSystem:
     def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
         self.name = name
@@ -242,8 +251,7 @@ class CargoDepot:
             pr_function = print
         pr_function(f"That quantity will cost {cost}.")
 
-        # TO_DO: add comparison operators to Credits class
-        if cost.amount > game.financials.balance.amount:
+        if cost > game.financials.balance:
             print("You do not have sufficient funds.")
             print(f"Your available balance is {game.financials.balance}.")
             return
@@ -268,7 +276,7 @@ class CargoDepot:
                           cargo.purchase_dms, cargo.sale_dms)
         game.ship.load_cargo(purchased)
 
-        game.financials.debit(cost.amount)
+        game.financials.debit(cost)
 
     def sell_cargo(self):
         global game
@@ -331,7 +339,7 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
-        game.financials.credit(sale_price.amount)
+        game.financials.credit(sale_price)
 
     def determine_cargo(self):
         cargo = []
@@ -414,12 +422,11 @@ class Financials:
     def __init__(self, balance):
         self.balance = Credits(balance)
 
-    # TO_DO: add +/- to Credits class
     def debit(self, amount):
-        self.balance.amount -= amount
+        self.balance -= amount
 
     def credit(self, amount):
-        self.balance.amount += amount
+        self.balance += amount
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
@@ -760,7 +767,8 @@ if __name__ == '__main__':
 
 #  * [DONE] Create a currency class to keep value vs. display straight
 #  * [DONE] Deprecate and remove credit_string() function
-#  * [    ] Add math/comparison operators to currency class
+#  * [DONE] Add (basic) math/comparison operators to currency class
+#            (add more operators as needed)
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
@@ -773,6 +781,7 @@ if __name__ == '__main__':
 #            recharging costs, check level before jump, etc.
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
+#  * [    ] Make type dunder methods more robust with NotImpemented etc.
 #  * [    ] Create an unload_cargo method to consolidate proper handling
 #  * [    ] Add crew skills and their influence on sale prices
 #  * [    ] Add brokers and their influence on sale prices
