@@ -611,34 +611,28 @@ class Game:
             print(f"{c.key} - {c.description}")
 
     def liftoff(self):
-        global orbit
-        game.location.liftoff()
-        game.commands = orbit
+        self.location.liftoff()
+        self.commands = orbit
 
     def land(self):
-        global grounded
-        game.location.land()
-        game.commands = grounded
+        self.location.land()
+        self.commands = grounded
 
     def outbound_to_jump(self):
-        global jump
-        game.location.to_jump_point()
-        game.commands = jump
+        self.location.to_jump_point()
+        self.commands = jump
 
     def inbound_from_jump(self):
-        global orbit
-        game.location.from_jump_point()
-        game.commands = orbit
+        self.location.from_jump_point()
+        self.commands = orbit
 
     def leave(self):
-        global grounded
-        game.location.leave_trade()
-        game.commands = grounded
+        self.location.leave_trade()
+        self.commands = grounded
 
     def to_trade(self):
-        global trade
-        game.location.join_trade()
-        game.commands = trade
+        self.location.join_trade()
+        self.commands = trade
 
     def jump(self):
         pass
@@ -862,3 +856,4 @@ if __name__ == '__main__':
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  * [    ] Distinguish between highport and downport
 #  * [    ] Refactoring and tests!!!
+#  * [    ] pylint/pydocstyle scrub
