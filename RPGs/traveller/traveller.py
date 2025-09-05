@@ -35,7 +35,7 @@ class Credits:
             val = val/1000000
         return f"{val:,} {suffix}"
 
-class System:
+class StarSystem:
     def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
         self.name = name
         self.atmosphere = atmosphere
@@ -522,7 +522,7 @@ class Game:
     def __init__(self):
         self.running = False
         self.date = Calendar()
-        self.location = System("Yorbund", 5, 5, 5, 5, self.date.current_date) 
+        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date) 
         self.ship = Ship()
         self.financials = Financials(10000000)
 
@@ -761,7 +761,6 @@ if __name__ == '__main__':
 #  * [DONE] Create a currency class to keep value vs. display straight
 #  * [DONE] Deprecate and remove credit_string() function
 #  * [    ] Add math/comparison operators to currency class
-#  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
@@ -789,6 +788,7 @@ if __name__ == '__main__':
 #  * [    ] Add passengers
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
+#  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [....] Adjust UI elements, play with more ANSI codes
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
