@@ -86,6 +86,12 @@ class StarSystem:
             hydrographics <= 3):
             self.poor = True
 
+    # TO_DO: need to make this more robust and type safe
+    #   also, making a big assumption that worlds cannot share the
+    #   same name - good enough for now
+    def __eq__(self, other):
+        return self.name == other.name
+
     def description(self):
         if self.detail == "surface":
             return f"on {self.name}"
@@ -307,6 +313,11 @@ class CargoDepot:
             return
 
         cargo = game.ship.hold[item_number]
+
+        if cargo.source_world == game.location:
+            print("You cannot resell cargo on the world where it was purchased.")
+            return
+
         # BUG: non-numeric input causes a crash
         # BUG: can purchase 0 items (how about negative?)
         quantity = int(input('How many would you like to sell? '))
@@ -829,8 +840,10 @@ if __name__ == '__main__':
 #  * [    ] Add crew skills and their influence on sale prices
 #  * [    ] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
-#  * [....] Prevent immediate resale of bought cargo (wait a week? leave and
-#            return? Not sure how to properly flag cargo lot yet...)
+#  * [DONE] Prevent immediate resale of bought cargo
+#            (current solution just prevents sale to source world, may want
+#             to add a time element - simplest would be to reset the source_world
+#             field to None, but later for Merchant Prince we may want to retain it)
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Add different ship types and ship design
 #  * [    ] Replace dummy/test data with 'real' values
