@@ -128,7 +128,8 @@ class Command:
         self.message = message
 
 class Cargo:
-    def __init__(self, name, quantity, price, unit_size, purchase_dms, sale_dms):
+    def __init__(self, name, quantity, price, unit_size, 
+                 purchase_dms, sale_dms, source_world=None):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
 
@@ -142,12 +143,19 @@ class Cargo:
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
 
+        self.source_world = source_world
+
     def __repr__(self):
         if self.unit_size == 1:
             unit = "ton"
         else:
             unit = "item"
-        return f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/{unit}"
+
+        result = f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/{unit}"
+        if self.source_world:
+            result += f" ({self.source_world.name})"
+
+        return result
 
     @property
     def tonnage(self):
@@ -285,7 +293,7 @@ class CargoDepot:
             cargo.quantity -= quantity
 
         purchased = Cargo(cargo.name, quantity, cargo.price.amount, cargo.unit_size, 
-                          cargo.purchase_dms, cargo.sale_dms)
+                          cargo.purchase_dms, cargo.sale_dms, game.location)
         game.ship.load_cargo(purchased)
 
         game.financials.debit(cost)
@@ -449,13 +457,6 @@ class Financials:
 # (of course fun math, 7 * 4 * 12 = 336, so we are missing
 # 29 days - but since week/month are really just durations
 # it shouldn't matter)
-#
-# operations we'll need:
-#   [DONE] proper display formatting, including leading zeroes
-#   [DONE] increment day/week/month/year (no need to decrement)
-#   [DONE] roll over year as appropriate
-#   [    ] possibly trigger other events, like re-rolling cargo
-#            that may end up a separate 'timer' responsibility, we'll see
 
 # right now we only have refreshing the cargo depot weekly as an
 # event, but there will be more:
@@ -466,6 +467,33 @@ class Financials:
 # other operational costs might better be handled as resource modeling:
 #    * fuel
 #    * life support
+
+# also need to advance the calendar while in-system
+# RAW says that ships typically take two trips per month:
+# each jump is one week, and they spend a week buying & selling
+# cargo, finding passengers, and on shore leave
+
+# two approaches:
+#    * give each action a cost in days
+#    * advance the calendar only on jump and liftoff (the latter
+#        perhaps with a message like 'you spent a week on Yorbund')
+
+# for the former, does it add up to about a week? and do we want the
+# player to be fiddling with time as well as money and space?
+#    * to/from jump point - 1 day each
+#    * to/from orbit - no time, don't want to privilege highport
+#    * buy cargo (and load into ship) - 1 day
+#    * sell cargo (and load into ship) - 1 day
+#    * find passengers (and embark) - 1 day
+#    * find freight (and load into ship) - 1 day
+#    * listing hold/depot contents - no time
+#    * refuelling - 1 day? (more for skimming? done in parallel with
+#        other actions?)
+#    * recharging life support?
+#    * financial transactions - no time
+#
+# easily 6-7 days if the player does all activities
+
 class Calendar:
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
@@ -787,8 +815,11 @@ if __name__ == '__main__':
 #  * [    ] Review Calendar increment scenarios, remove speculative options
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
+#  * [    ] Advance calendar for in-system activities
 #  * [    ] Add fuel system to Ship, and corresponding mechanics like
 #            refuelling costs, skimming, check fuel before jump, etc.
+#  * [    ] Skimming as jump point action, assuming gas giants present in 
+#            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
 #  * [    ] Protect input from bad data - one example, non-numeric
@@ -798,7 +829,7 @@ if __name__ == '__main__':
 #  * [    ] Add crew skills and their influence on sale prices
 #  * [    ] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
-#  * [    ] Prevent immediate resale of bought cargo (wait a week? leave and
+#  * [....] Prevent immediate resale of bought cargo (wait a week? leave and
 #            return? Not sure how to properly flag cargo lot yet...)
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Add different ship types and ship design
