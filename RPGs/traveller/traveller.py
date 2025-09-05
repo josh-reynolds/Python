@@ -23,6 +23,12 @@ def constrain(value, min_val, max_val):
     else:
         return value
 
+# table from Book 2 p. 42
+def actual_value(roll):
+    actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
+                    9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
+    return actual_value[roll]
+
 class Credits:
     def __init__(self, amount):
         self.amount = amount
@@ -254,13 +260,11 @@ class CargoDepot:
         if self.system.poor:
             modifier += cargo.purchase_dms[5]
 
-        actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
-                        9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
         if self.prices[item_number] > 0:
             price_adjustment = self.prices[item_number]
         else:
             roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
-            price_adjustment = actual_value[roll]
+            price_adjustment = actual_value(roll)
 
             if quantity < cargo.quantity:
                 price_adjustment += .01
@@ -341,11 +345,8 @@ class CargoDepot:
 
         modifier + game.ship.trade_skill()
 
-        actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
-                        9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
-
         roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
-        price_adjustment = actual_value[roll]
+        price_adjustment = actual_value(roll)
 
         sale_price = Credits(cargo.price.amount * price_adjustment * quantity)
         if price_adjustment > 1:
@@ -479,6 +480,13 @@ class Financials:
     def berthing_fee(self):
         print("Charging 100 Cr berthing fee.")
         self.debit(Credits(100))
+        # how to implement variable fee?
+        #   charge base fee on landing
+        #   track time berth was issued (or expiration date)
+        #   observe calendar
+        #   on expiry, charge new fee (and set new expiration)
+        #   repeat until liftoff
+        #   berth privilege reset on liftoff
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
@@ -519,12 +527,13 @@ class Financials:
 #    * find passengers (and embark) - 1 day
 #    * find freight (and load into ship) - 1 day
 #    * listing hold/depot contents - no time
-#    * refuelling - 1 day? (more for skimming? done in parallel with
-#        other actions?)
+#    * refuelling - no time at port, 1 day to skim 
 #    * recharging life support?
 #    * financial transactions - no time
 #
 # easily 6-7 days if the player does all activities
+# but if they want to go fast, jump in, skim fuel, jump out - just
+# one day? or even no delay if they have reserve fuel.
 
 class Calendar:
     def __init__(self):
