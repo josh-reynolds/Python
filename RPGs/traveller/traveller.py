@@ -35,14 +35,6 @@ class Credits:
             val = val/1000000
         return f"{val:,} {suffix}"
 
-def credit_string(value):
-    val = round(value)
-    suffix = "Cr"
-    if val >= 1000000:
-        suffix = "MCr"
-        val = val/1000000
-    return f"{val:,} {suffix}"
-
 class System:
     def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
         self.name = name
@@ -250,10 +242,10 @@ class CargoDepot:
             pr_function = print
         pr_function(f"That quantity will cost {cost}.")
 
-        funds = game.financials.balance
-        if cost.amount > funds:
+        # TO_DO: add comparison operators to Credits class
+        if cost.amount > game.financials.balance.amount:
             print("You do not have sufficient funds.")
-            print(f"Your available balance is {credit_string(funds)}.")
+            print(f"Your available balance is {game.financials.balance}.")
             return
 
         confirmation = ""
@@ -420,13 +412,14 @@ class Ship:
 
 class Financials:
     def __init__(self, balance):
-        self.balance = balance
+        self.balance = Credits(balance)
 
+    # TO_DO: add +/- to Credits class
     def debit(self, amount):
-        self.balance -= amount
+        self.balance.amount -= amount
 
     def credit(self, amount):
-        self.balance += amount
+        self.balance.amount += amount
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
@@ -445,19 +438,6 @@ class Financials:
 #   [    ] possibly trigger other events, like re-rolling cargo
 #            that may end up a separate 'timer' responsibility, we'll see
 
-# probably a lot of ways to do this... here's a couple ideas:
-#    * the 'wait a week' action does at least two things:
-#        advance the date
-#        trigger any weekly events
-#        tricky bit: monthly events, how do they know?
-#    * have timers that can be created with specific intervals
-#        when the date advances, they check to see if the new
-#        date is higher than their target, then take action if so
-#        and then create a new timer at the next interval
-#        timers would be Observers of the Calendar
-#        tricky bit: if multiple intervals are jumped past, need
-#        to check the new timer until all are in the clear
-
 # right now we only have refreshing the cargo depot weekly as an
 # event, but there will be more:
 #    * monthly loan payment
@@ -467,25 +447,6 @@ class Financials:
 # other operational costs might better be handled as resource modeling:
 #    * fuel
 #    * life support
-
-# the second (timer) model seems more robust, and in line with how
-# some computer GUI toolkits handle events, so I'll give that a try
-
-# open question where the timer should live - we want them to be cleaned
-# up when the entity that cares goes out of scope (as when jumping to a
-# new world). I think the timer should live in the entity, and the 
-# list in the Calendar class is a callback reference. We'll want to make
-# sure lifespan and object cleanup is happening correctly - otherwise 
-# we could accumulate a large list of timers firing against worlds other
-# than the current. May be able to deal with that by using Game.location
-# (which should always point to the current system) to point to the 
-# right entity (though even then, we wouldn't want more than on timer
-# to fire against that target).
-
-# OK, mulling this over - it's overly complex. This should be doable
-# with a simple Observer, no need for an intermediary object. The 
-# CargoDepot registers with the Calendar, and is notified when it
-# changes. Then it can decide what to do.
 class Calendar:
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
@@ -573,7 +534,7 @@ class Game:
         self.running = True
         while self.running:
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
-            print(f"Credits: {credit_string(self.financials.balance)}"
+            print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons")
             command = input("Enter a command (? to list):  ")
             for c in self.commands:
@@ -798,7 +759,8 @@ if __name__ == '__main__':
 # Consolidating TO_DO list:
 
 #  * [DONE] Create a currency class to keep value vs. display straight
-#  * [....] Deprecate and remove credit_string() function
+#  * [DONE] Deprecate and remove credit_string() function
+#  * [    ] Add math/comparison operators to currency class
 #  * [    ] Create a proper UWP class and generator in the System ctor
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
