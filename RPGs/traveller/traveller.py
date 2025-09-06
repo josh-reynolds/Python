@@ -486,7 +486,6 @@ class Financials:
             unit = "days"
         print(f"Renewing berth on {date} for {days_extra} {unit}.")
         self.debit(Credits(days_extra * 100))
-        # BUG: if we roll past EOY, the date will be invalid - deal with this
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
 
     # Book 2 p. 7:
@@ -605,6 +604,9 @@ class ImperialDate:
     def __init__(self, day, year):
         self.day = day
         self.year = year
+        if self.day > 365:
+            self.day -= 365
+            self.year += 1
 
     def __repr__(self):
         return f"{self.day:03.0f}-{self.year}"
