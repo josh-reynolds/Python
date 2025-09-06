@@ -471,6 +471,9 @@ class Financials:
     def credit(self, amount):
         self.balance += amount
 
+    def notify(self, date):
+        print(f"Financials notified with {date}.")
+
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
     # thereafter, a CR 100 per day fee is imposed for each
@@ -612,6 +615,7 @@ class Game:
 
         # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
+        self.date.add_observer(self.financials)
 
     def run(self):
         self.commands = grounded
