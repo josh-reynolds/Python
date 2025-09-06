@@ -456,6 +456,7 @@ class Ship:
     def __init__(self):
         self.hold = [Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0])]
         self.hold_size = 82
+        self.fuel = 30
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
@@ -688,7 +689,8 @@ class Game:
         while self.running:
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {self.financials.balance}"
-                  f"\tFree hold space: {self.ship.free_space()} tons")
+                  f"\tFree hold space: {self.ship.free_space()} tons"
+                  f"\tFuel: {self.ship.fuel} tons")
             command = input("Enter a command (? to list):  ")
             for c in self.commands:
                 if command.lower() == c.key:
@@ -918,8 +920,10 @@ if __name__ == '__main__':
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
 #  * [    ] Advance calendar for in-system activities
-#  * [    ] Add fuel system to Ship, and corresponding mechanics like
-#            refuelling costs, skimming, check fuel before jump, etc.
+#  * [DONE] Add fuel system to Ship
+#  * [    ] Add fuel expenditure
+#  * [    ] Add refuelling costs at starport
+#  * [    ] Add fuel level check before executing jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add life support system to Ship and corresponding mechanics like
