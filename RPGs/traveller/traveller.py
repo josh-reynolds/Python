@@ -2,15 +2,15 @@ from random import randint
 
 def pr_yellow_on_red(string):
     """Print string to console, yellow text on red background."""
-    print(f"\033[1;33;41m {string}\033[00m")
+    print(f"\033[1;33;41m{string}\033[00m")
 
 def pr_red(string):
     """Print string to console, colored red."""
-    print(f"\033[91m {string}\033[00m")
+    print(f"\033[91m{string}\033[00m")
 
 def pr_green(string):
     """Print string to console, colored green."""
-    print(f"\033[92m {string}\033[00m")
+    print(f"\033[92m{string}\033[00m")
 
 def die_roll():
     return randint(1,6)
@@ -324,6 +324,22 @@ class CargoDepot:
                 print("You cannot resell cargo on the world where it was purchased.")
                 return
 
+        broker = ""
+        while broker != 'y' and broker != 'n':
+            broker = input(f"Would you like to hire a broker (y/n)? ")
+
+        broker_skill = 0
+        if broker == 'y':
+            while broker_skill < 1 or broker_skill > 4:
+                broker_skill = int(input("What level of broker (1-4)? "))
+
+            broker_confirm = ""
+            while broker_confirm != 'y' and broker_confirm != 'n':
+                broker_confirm = input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
+
+            if broker_confirm == 'n':
+                broker_skill = 0
+
         # BUG: non-numeric input causes a crash
         # BUG: can purchase 0 items (how about negative?)
         quantity = int(input('How many would you like to sell? '))
@@ -345,7 +361,8 @@ class CargoDepot:
         if self.system.poor:
             modifier += cargo.sale_dms[5]
 
-        modifier + game.ship.trade_skill()
+        modifier += game.ship.trade_skill()
+        modifier += broker_skill
 
         roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
         price_adjustment = actual_value(roll)
@@ -358,6 +375,11 @@ class CargoDepot:
         else:
             pr_function = print
         pr_function(f"That quantity will sell for {sale_price}.")
+
+        if broker_skill > 0:
+            broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
+            print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
+            game.financials.debit(broker_fee)
 
         confirmation = ""
         while confirmation != 'y' and confirmation != 'n':
@@ -432,7 +454,7 @@ class CargoDepot:
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
-        self.hold = [Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [0,0,0,0,0,0])]
+        self.hold = [Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0])]
         self.hold_size = 82
 
     def cargo_hold(self):
@@ -882,12 +904,13 @@ if __name__ == '__main__':
 #  * [    ] Add monthly crew salaries
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
+#  * [    ] Extract confirmation input loop to a reusble function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
-#  * [    ] Make StarSystem.__eq__ more robust
+#  * [....] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [DONE] Add crew skills and their influence on sale prices
 #  * [    ] Add crew members with skills
-#  * [    ] Add brokers and their influence on sale prices
+#  * [DONE] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
 #  * [DONE] Prevent immediate resale of bought cargo
 #            (current solution just prevents sale to source world, may want
