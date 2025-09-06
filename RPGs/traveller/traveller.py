@@ -475,8 +475,20 @@ class Financials:
 
     def notify(self, date):
         self.current_date = date.copy()
-        if date > self.berth_expiry:
+        if date > self.berth_expiry and game.location.detail == "surface":
             self.renew_berth(date)
+
+    # Book 2 p. 7:
+    # Average cost is CR 100 to land and remain for up to six days;
+    # thereafter, a CR 100 per day fee is imposed for each
+    # additional day spent in port. In some locations this fee will
+    # be higher, while at others local government subsidies will 
+    # lower or eliminate it.
+    def berthing_fee(self):
+        if game.location.detail == "surface":
+            print("Charging 100 Cr berthing fee.")
+            self.debit(Credits(100))
+            self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
 
     def renew_berth(self, date):
         days_extra = date - self.berth_expiry
@@ -487,25 +499,6 @@ class Financials:
         print(f"Renewing berth on {date} for {days_extra} {unit}.")
         self.debit(Credits(days_extra * 100))
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
-
-    # Book 2 p. 7:
-    # Average cost is CR 100 to land and remain for up to six days;
-    # thereafter, a CR 100 per day fee is imposed for each
-    # additional day spent in port. In some locations this fee will
-    # be higher, while at others local government subsidies will 
-    # lower or eliminate it.
-    def berthing_fee(self):
-        print("Charging 100 Cr berthing fee.")
-        self.debit(Credits(100))
-        self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
-        # how to implement variable fee?
-        #   [DONE] charge base fee on landing
-        #   [DONE] track time berth was issued (or expiration date)
-        #   [DONE] observe calendar
-        #   [DONE] on expiry, charge new fee (and set new expiration)
-        #   [DONE] repeat until liftoff
-        #   berth privilege reset on liftoff
-        #   ...and only charge fee if grounded
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
