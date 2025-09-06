@@ -501,6 +501,7 @@ class Financials:
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
         self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
+        self.salary_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
 
     def debit(self, amount):
         self.balance -= amount
@@ -510,8 +511,13 @@ class Financials:
 
     def notify(self, date):
         self.current_date = date.copy()
-        if date > self.berth_expiry and game.location.detail == "surface":
+        if (date > self.berth_expiry and 
+            (game.location.detail == "surface" or
+             game.location.detail == "trade")):
             self.renew_berth(date)
+
+        if date > self.salary_due:
+            self.pay_salaries(date)
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -534,6 +540,12 @@ class Financials:
         print(f"Renewing berth on {date} for {days_extra} {unit}.")
         self.debit(Credits(days_extra * 100))
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
+
+    def pay_salaries(self, date):
+        amount = Credits(game.ship.crew_salary())
+        print(f"Paying crew salaries on {self.salary_due} for {amount}.")
+        self.debit(amount)
+        self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
@@ -610,17 +622,20 @@ class Calendar:
         for observer in self.observers:
             observer.notify(self.current_date)
 
-    def plus_day(self):
-        self.day += 1
+    #def plus_day(self):
+        #self.day += 1
 
     def plus_week(self):
         self.day += 7
 
-    def plus_month(self):
-        self.day += 28
+    # For longer intervals, we will need to make sure
+    # repeating events execute multiple times to catch up
 
-    def plus_year(self):
-        self.year += 1
+    #def plus_month(self):
+        #self.day += 28
+
+    #def plus_year(self):
+        #self.year += 1
 
     def __repr__(self):
         return f"{self.current_date}"
@@ -898,8 +913,8 @@ if __name__ == '__main__':
 #  * [    ] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
-#  * [    ] Review Calendar increment scenarios, remove speculative options
-#  * [    ] Review Calendar.plus_year() for whether it should notify observers
+#  * [....] Review Calendar increment scenarios, remove speculative options
+#  * [    ] Review Calendar.year() setter for whether it should notify observers
 #  * [DONE] Add 'wait a week' command
 #  * [DONE] Display current date
 #  * [    ] Advance calendar for in-system activities
@@ -912,13 +927,14 @@ if __name__ == '__main__':
 #  * [DONE] Add extended berthing fee mechanism
 #  * [    ] Add annual maintenance
 #  * [    ] Add monthly loan payment
-#  * [....] Add monthly crew salaries
+#  * [DONE] Add monthly crew salaries
 #  * [    ] Add crew members with skills
 #  * [    ] Add proper salary calculation per crew member
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Extract confirmation input loop to a reusble function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
+#  * [    ] Add 'plus days' method to ImperialDate
 #  * [....] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [DONE] Add crew skills and their influence on sale prices
