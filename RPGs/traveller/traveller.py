@@ -95,7 +95,9 @@ class StarSystem:
     #   making a big assumption that worlds cannot share the
     #   same name - good enough for now
     def __eq__(self, other):
-        return self.name == other.name
+        if isinstance(other, StarSystem):
+            return self.name == other.name
+        return False
 
     def description(self):
         if self.detail == "surface":
@@ -874,6 +876,10 @@ if __name__ == '__main__':
 #            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
+#  * [DONE] Add extended berthing fee mechanism
+#  * [    ] Add annual maintenance
+#  * [    ] Add monthly loan payment
+#  * [    ] Add monthly crew salaries
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
@@ -891,8 +897,6 @@ if __name__ == '__main__':
 #  * [    ] Add different ship types and ship design
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
-#  * [....] Add starship operating expenses
-#  * [    ] Add extended berthing fee mechanism
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add multiple star systems and map (whether loaded or generated
