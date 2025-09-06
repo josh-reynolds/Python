@@ -462,8 +462,10 @@ class Ship:
         return 1
 
 class Financials:
-    def __init__(self, balance):
+    def __init__(self, balance, current_date):
         self.balance = Credits(balance)
+        self.current_date = current_date.copy()
+        self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
 
     def debit(self, amount):
         self.balance -= amount
@@ -472,7 +474,20 @@ class Financials:
         self.balance += amount
 
     def notify(self, date):
-        print(f"Financials notified with {date}.")
+        self.current_date = date.copy()
+        if date > self.berth_expiry:
+            self.renew_berth(date)
+
+    def renew_berth(self, date):
+        days_extra = date - self.berth_expiry
+        if days_extra == 1:
+            unit = "day"
+        else:
+            unit = "days"
+        print(f"Renewing berth on {date} for {days_extra} {unit}.")
+        self.debit(Credits(days_extra * 100))
+        # BUG: if we roll past EOY, the date will be invalid - deal with this
+        self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -483,13 +498,15 @@ class Financials:
     def berthing_fee(self):
         print("Charging 100 Cr berthing fee.")
         self.debit(Credits(100))
+        self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
         # how to implement variable fee?
-        #   charge base fee on landing
-        #   track time berth was issued (or expiration date)
-        #   observe calendar
-        #   on expiry, charge new fee (and set new expiration)
-        #   repeat until liftoff
+        #   [DONE] charge base fee on landing
+        #   [DONE] track time berth was issued (or expiration date)
+        #   [DONE] observe calendar
+        #   [DONE] on expiry, charge new fee (and set new expiration)
+        #   [DONE] repeat until liftoff
         #   berth privilege reset on liftoff
+        #   ...and only charge fee if grounded
 
 # We'll use the standard Imperial calendar, though that didn't
 # yet exist in Traveller '77
@@ -602,6 +619,9 @@ class ImperialDate:
     def __ge__(self, other):
         return self == other or self > other
 
+    def __sub__(self, other):
+        return self.day - other.day
+
     def copy(self):
         return ImperialDate(self.day, self.year)
 
@@ -611,7 +631,7 @@ class Game:
         self.date = Calendar()
         self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date) 
         self.ship = Ship()
-        self.financials = Financials(10000000)
+        self.financials = Financials(10000000, self.date.current_date)
 
         # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
