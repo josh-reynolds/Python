@@ -485,6 +485,17 @@ class Ship:
     def trade_skill(self):
         return 1
 
+    # Book 2 p. 19
+    # ...four for the crew: pilot, engineer, medic and steward...
+    # Book 2 p. 6
+    # Crew members must be paid monthly:
+    # Pilot     6000 Cr
+    # Engineer  4000 Cr
+    # Medic     2000 Cr
+    # Steward   3000 Cr
+    def crew_salary(self):
+        return 15000
+
 class Financials:
     def __init__(self, balance, current_date):
         self.balance = Credits(balance)
@@ -901,7 +912,9 @@ if __name__ == '__main__':
 #  * [DONE] Add extended berthing fee mechanism
 #  * [    ] Add annual maintenance
 #  * [    ] Add monthly loan payment
-#  * [    ] Add monthly crew salaries
+#  * [....] Add monthly crew salaries
+#  * [    ] Add crew members with skills
+#  * [    ] Add proper salary calculation per crew member
 #  * [    ] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Extract confirmation input loop to a reusble function
@@ -909,7 +922,6 @@ if __name__ == '__main__':
 #  * [....] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [DONE] Add crew skills and their influence on sale prices
-#  * [    ] Add crew members with skills
 #  * [DONE] Add brokers and their influence on sale prices
 #  * [    ] Review interpretation that skills/brokers only apply to sales
 #  * [DONE] Prevent immediate resale of bought cargo
@@ -928,6 +940,7 @@ if __name__ == '__main__':
 #  * [....] Adjust UI elements, play with more ANSI codes
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
+#  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Distinguish between highport and downport
 #  * [    ] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
