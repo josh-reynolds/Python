@@ -1,35 +1,6 @@
-from random import randint
 from credits import Credits
-
-def pr_yellow_on_red(string):
-    """Print string to console, yellow text on red background."""
-    print(f"\033[1;33;41m {string}\033[00m")
-
-def pr_red(string):
-    """Print string to console, colored red."""
-    print(f"\033[91m{string}\033[00m")
-
-def pr_green(string):
-    """Print string to console, colored green."""
-    print(f"\033[92m{string}\033[00m")
-
-def die_roll():
-    return randint(1,6)
-
-def constrain(value, min_val, max_val):
-    if value <= min_val:
-        return min_val
-    elif value >= max_val:
-        return max_val
-    else:
-        return value
-
-# table from Book 2 p. 42
-def actual_value(roll):
-    actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
-                    9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
-    return actual_value[roll]
-
+from utilities import die_roll, constrain, actual_value
+from utilities import pr_yellow_on_red, pr_red, pr_green
 
 class StarSystem:
     def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
@@ -947,5 +918,6 @@ if __name__ == '__main__':
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Distinguish between highport and downport
+#  * [....] Separate code out into modules
 #  * [    ] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
