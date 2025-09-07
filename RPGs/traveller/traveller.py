@@ -1,4 +1,5 @@
 from random import randint
+from credits import Credits
 
 def pr_yellow_on_red(string):
     """Print string to console, yellow text on red background."""
@@ -29,26 +30,6 @@ def actual_value(roll):
                     9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
     return actual_value[roll]
 
-class Credits:
-    def __init__(self, amount):
-        self.amount = amount
-
-    def __repr__(self):
-        val = round(self.amount)
-        suffix = "Cr"
-        if val >= 1000000:
-            suffix = "MCr"
-            val = val/1000000
-        return f"{val:,} {suffix}"
-
-    def __gt__(self, other):
-        return self.amount > other.amount
-
-    def __add__(self, other):
-        return Credits(self.amount + other.amount)
-
-    def __sub__(self, other):
-        return Credits(self.amount - other.amount)
 
 class StarSystem:
     def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
