@@ -180,6 +180,26 @@ class CargoDepot:
         for i,item in enumerate(self.cargo):
             print(f"{i} - {item}")
 
+    def get_price_modifiers(self, cargo, transaction_type):
+        if transaction_type == "purchase":
+            table = cargo.purchase_dms
+        elif transaction_type == "sale":
+            table = cargo.sale_dms
+        modifier = 0
+        if self.system.agricultural:
+            modifier += table[0]
+        if self.system.nonagricultural:
+            modifier += table[1]
+        if self.system.industrial:
+            modifier += table[2]
+        if self.system.nonindustrial:
+            modifier += table[3]
+        if self.system.rich:
+            modifier += table[4]
+        if self.system.poor:
+            modifier += table[5]
+        return modifier
+
     def buy_cargo(self):
         global game
         self.goods()
@@ -206,19 +226,7 @@ class CargoDepot:
             print(f"You only have {free_space} tons free.")
             return
 
-        modifier = 0
-        if self.system.agricultural:
-            modifier += cargo.purchase_dms[0]
-        if self.system.nonagricultural:
-            modifier += cargo.purchase_dms[1]
-        if self.system.industrial:
-            modifier += cargo.purchase_dms[2]
-        if self.system.nonindustrial:
-            modifier += cargo.purchase_dms[3]
-        if self.system.rich:
-            modifier += cargo.purchase_dms[4]
-        if self.system.poor:
-            modifier += cargo.purchase_dms[5]
+        modifier = self.get_price_modifiers(cargo, "purchase")
 
         if self.prices[item_number] > 0:
             price_adjustment = self.prices[item_number]
@@ -286,7 +294,7 @@ class CargoDepot:
             while broker_skill < 1 or broker_skill > 4:
                 broker_skill = int_input("What level of broker (1-4)? ")
 
-            broker_confirm = confirm_input("This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
+            broker_confirm = confirm_input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
             if broker_confirm == 'n':
                 broker_skill = 0
 
@@ -298,20 +306,7 @@ class CargoDepot:
             print("Quantity needs to be a positive number.")
             return
 
-        modifier = 0
-        if self.system.agricultural:
-            modifier += cargo.sale_dms[0]
-        if self.system.nonagricultural:
-            modifier += cargo.sale_dms[1]
-        if self.system.industrial:
-            modifier += cargo.sale_dms[2]
-        if self.system.nonindustrial:
-            modifier += cargo.sale_dms[3]
-        if self.system.rich:
-            modifier += cargo.sale_dms[4]
-        if self.system.poor:
-            modifier += cargo.sale_dms[5]
-
+        modifier = self.get_price_modifiers(cargo, "sale")
         modifier += game.ship.trade_skill()
         modifier += broker_skill
 
@@ -713,9 +708,9 @@ if __name__ == '__main__':
 #  * [DONE] Add monthly crew salaries
 #  * [    ] Add crew members with skills
 #  * [    ] Add proper salary calculation per crew member
-#  * [....] Protect input from bad data - one example, non-numeric
+#  * [DONE] Protect input from bad data - one example, non-numeric
 #            values cause crashes
-#  * [    ] Extract confirmation input loop to a reusable function
+#  * [DONE] Extract confirmation input loop to a reusable function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
 #  * [    ] Add 'plus days' method to ImperialDate
 #  * [....] Make StarSystem.__eq__ more robust
