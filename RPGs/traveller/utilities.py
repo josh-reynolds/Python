@@ -29,3 +29,11 @@ def pr_green(string):
     """Print string to console, colored green."""
     print(f"\033[92m{string}\033[00m")
 
+def int_input(prompt):
+    while True:
+        try:
+            result = int(input(prompt))
+            break
+        except ValueError:
+            print("Please input a number.")
+    return result

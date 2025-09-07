@@ -1,6 +1,6 @@
 from credits import Credits
 from utilities import die_roll, constrain, actual_value
-from utilities import pr_yellow_on_red, pr_red, pr_green
+from utilities import pr_yellow_on_red, pr_red, pr_green, int_input
 from calendar import Calendar, ImperialDate
 from ship import Ship
 
@@ -185,16 +185,14 @@ class CargoDepot:
         self.goods()
         # In Traveller '77, there is only one available cargo
         # per week. Retain this for future versions, though.
-        # BUG: non-numeric input causes a crash
-        item_number = int(input('Enter cargo number to buy: '))
+        item_number = int_input('Enter cargo number to buy: ')
         if item_number >= len(self.cargo):
             print("That is not a valid cargo ID.")
             return
 
         cargo = self.cargo[item_number]
-        # BUG: non-numeric input causes a crash
         # BUG: can purchase 0 items (how about negative?)
-        quantity = int(input('How many would you like to purchase? '))
+        quantity = int_input('How many would you like to purchase? ')
         if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
             return
@@ -269,7 +267,7 @@ class CargoDepot:
     def sell_cargo(self):
         global game
         game.ship.cargo_hold()
-        item_number = int(input('Enter cargo number to sell '))
+        item_number = int_input('Enter cargo number to sell ')
         if item_number >= len(game.ship.hold):
             print("That is not a valid cargo ID.")
             return
@@ -288,7 +286,7 @@ class CargoDepot:
         broker_skill = 0
         if broker == 'y':
             while broker_skill < 1 or broker_skill > 4:
-                broker_skill = int(input("What level of broker (1-4)? "))
+                broker_skill = int_input("What level of broker (1-4)? ")
 
             broker_confirm = ""
             while broker_confirm != 'y' and broker_confirm != 'n':
@@ -297,9 +295,8 @@ class CargoDepot:
             if broker_confirm == 'n':
                 broker_skill = 0
 
-        # BUG: non-numeric input causes a crash
         # BUG: can purchase 0 items (how about negative?)
-        quantity = int(input('How many would you like to sell? '))
+        quantity = int_input('How many would you like to sell? ')
         if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
             return
@@ -722,7 +719,7 @@ if __name__ == '__main__':
 #  * [DONE] Add monthly crew salaries
 #  * [    ] Add crew members with skills
 #  * [    ] Add proper salary calculation per crew member
-#  * [    ] Protect input from bad data - one example, non-numeric
+#  * [....] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [    ] Extract confirmation input loop to a reusble function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
