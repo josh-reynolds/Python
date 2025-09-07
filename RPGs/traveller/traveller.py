@@ -2,7 +2,7 @@ from random import randint
 
 def pr_yellow_on_red(string):
     """Print string to console, yellow text on red background."""
-    print(f"\033[1;33;41m{string}\033[00m")
+    print(f"\033[1;33;41m {string}\033[00m")
 
 def pr_red(string):
     """Print string to console, colored red."""
@@ -456,7 +456,8 @@ class Ship:
     def __init__(self):
         self.hold = [Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0])]
         self.hold_size = 82
-        self.fuel = 30
+        self.fuel_tank = 30
+        self.current_fuel = 30
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
@@ -690,7 +691,7 @@ class Game:
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
-                  f"\tFuel: {self.ship.fuel} tons")
+                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons")
             command = input("Enter a command (? to list):  ")
             for c in self.commands:
                 if command.lower() == c.key:
@@ -926,6 +927,7 @@ if __name__ == '__main__':
 #  * [    ] Add fuel level check before executing jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
+#  * [    ] Add view StarSystem data action
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
 #  * [DONE] Add extended berthing fee mechanism
@@ -958,6 +960,8 @@ if __name__ == '__main__':
 #            and whether in advance or on the fly)
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [....] Adjust UI elements, play with more ANSI codes
+#  * [    ] Save game state
+#  * [    ] Load game state
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
