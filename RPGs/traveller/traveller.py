@@ -63,6 +63,9 @@ class StarSystem:
         elif self.detail == "trade":
             return f"at the {self.name} trade depot"
 
+    def on_surface(self):
+        return self.detail == "surface" or self.detail == "trade"
+
     def land(self):
         if self.detail == "orbit":
             self.detail = "surface"
@@ -421,9 +424,7 @@ class Financials:
 
     def notify(self, date):
         self.current_date = date.copy()
-        if (date > self.berth_expiry and 
-            (game.location.detail == "surface" or
-             game.location.detail == "trade")):
+        if date > self.berth_expiry and game.location.on_surface():
             self.renew_berth(date)
 
         if date > self.salary_due:
@@ -436,7 +437,7 @@ class Financials:
     # be higher, while at others local government subsidies will 
     # lower or eliminate it.
     def berthing_fee(self):
-        if game.location.detail == "surface":
+        if game.location.on_surface():
             print("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
             self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
