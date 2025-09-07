@@ -408,7 +408,6 @@ class CargoDepot:
         cargo.append(table[roll])
         return cargo
 
-
 class Financials:
     def __init__(self, balance, current_date):
         self.balance = Credits(balance)
@@ -436,8 +435,8 @@ class Financials:
     # additional day spent in port. In some locations this fee will
     # be higher, while at others local government subsidies will 
     # lower or eliminate it.
-    def berthing_fee(self):
-        if game.location.on_surface():
+    def berthing_fee(self, on_surface):
+        if on_surface:
             print("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
             self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
@@ -498,7 +497,7 @@ class Game:
 
     def land(self):
         self.location.land()
-        self.financials.berthing_fee()
+        self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded
 
     def outbound_to_jump(self):
