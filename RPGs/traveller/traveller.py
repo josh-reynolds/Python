@@ -5,14 +5,14 @@ from calendar import Calendar, ImperialDate
 from ship import Ship
 
 class StarSystem:
-    def __init__(self, name, atmosphere, hydrographics, population, government, current_date):
+    def __init__(self, name, atmosphere, hydrographics, population, government, current_date, ship):
         self.name = name
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
         self.government = government
         self.detail = "surface"
-        self.depot = CargoDepot(self, current_date)
+        self.depot = CargoDepot(self, ship, current_date)
 
         self.agricultural = False
         if (atmosphere >= 4 and atmosphere <= 9 and 
@@ -161,8 +161,9 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system, current_date):
+    def __init__(self, system, ship, current_date):
         self.system = system
+        self.ship = ship
         self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
         self.prices = [0]  
@@ -220,7 +221,7 @@ class CargoDepot:
             print("Quantity needs to be a positive number.")
             return
 
-        free_space = game.ship.free_space()
+        free_space = self.ship.free_space()
         if (quantity * cargo.unit_size > free_space):
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
@@ -267,8 +268,8 @@ class CargoDepot:
             cargo.quantity -= quantity
 
         purchased = Cargo(cargo.name, quantity, cargo.price.amount, cargo.unit_size, 
-                          cargo.purchase_dms, cargo.sale_dms, game.location)
-        game.ship.load_cargo(purchased)
+                          cargo.purchase_dms, cargo.sale_dms, self.system)
+        self.ship.load_cargo(purchased)
 
         game.financials.debit(cost)
 
@@ -447,8 +448,8 @@ class Game:
     def __init__(self):
         self.running = False
         self.date = Calendar()
-        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date) 
         self.ship = Ship()
+        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship) 
         self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
         self.financials = Financials(10000000, self.date.current_date)
 
