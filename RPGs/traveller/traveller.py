@@ -1,6 +1,6 @@
 from credits import Credits
 from utilities import die_roll, constrain, actual_value
-from utilities import pr_yellow_on_red, pr_red, pr_green, int_input
+from utilities import pr_yellow_on_red, pr_red, pr_green, int_input, confirm_input
 from calendar import Calendar, ImperialDate
 from ship import Ship
 
@@ -245,12 +245,9 @@ class CargoDepot:
             print(f"Your available balance is {game.financials.balance}.")
             return
 
-        confirmation = ""
-        while confirmation != 'y' and confirmation != 'n':
-            confirmation = input(f"Would you like to purchase " 
-                                 f"{Cargo.quantity_string(cargo, quantity)} of "
-                                 f"{cargo.name} for {cost} (y/n)? ")
-
+        confirmation = confirm_input(f"Would you like to purchase " 
+                                     f"{Cargo.quantity_string(cargo, quantity)} of "
+                                     f"{cargo.name} for {cost} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling purchase.")
             return
@@ -282,19 +279,14 @@ class CargoDepot:
                 print("You cannot resell cargo on the world where it was purchased.")
                 return
 
-        broker = ""
-        while broker != 'y' and broker != 'n':
-            broker = input(f"Would you like to hire a broker (y/n)? ")
+        broker = confirm_input("Would you like to hire a broker (y/n)? ")
 
         broker_skill = 0
         if broker == 'y':
             while broker_skill < 1 or broker_skill > 4:
                 broker_skill = int_input("What level of broker (1-4)? ")
 
-            broker_confirm = ""
-            while broker_confirm != 'y' and broker_confirm != 'n':
-                broker_confirm = input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
-
+            broker_confirm = confirm_input("This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
             if broker_confirm == 'n':
                 broker_skill = 0
 
@@ -340,12 +332,9 @@ class CargoDepot:
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             game.financials.debit(broker_fee)
 
-        confirmation = ""
-        while confirmation != 'y' and confirmation != 'n':
-            confirmation = input(f"Would you like to sell " 
-                                 f"{Cargo.quantity_string(cargo, quantity)} of "
-                                 f"{cargo.name} for {sale_price} (y/n)? ")
-
+        confirmation = confirm_input("Would you like to sell " 
+                                     f"{Cargo.quantity_string(cargo, quantity)} of "
+                                     f"{cargo.name} for {sale_price} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling sale.")
             return

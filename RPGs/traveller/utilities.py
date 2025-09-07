@@ -37,3 +37,9 @@ def int_input(prompt):
         except ValueError:
             print("Please input a number.")
     return result
+
+def confirm_input(prompt):
+    confirmation = ""
+    while confirmation != 'y' and confirmation != 'n':
+        confirmation = input(prompt)
+    return confirmation
