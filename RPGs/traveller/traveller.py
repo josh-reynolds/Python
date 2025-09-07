@@ -191,10 +191,13 @@ class CargoDepot:
             return
 
         cargo = self.cargo[item_number]
-        # BUG: can purchase 0 items (how about negative?)
+
         quantity = int_input('How many would you like to purchase? ')
-        if (quantity > cargo.quantity):
+        if quantity > cargo.quantity:
             print("There is not enough available. Specify a lower quantity.")
+            return
+        if quantity <= 0:
+            print("Quantity needs to be a positive number.")
             return
 
         free_space = game.ship.free_space()
@@ -295,10 +298,12 @@ class CargoDepot:
             if broker_confirm == 'n':
                 broker_skill = 0
 
-        # BUG: can purchase 0 items (how about negative?)
         quantity = int_input('How many would you like to sell? ')
         if (quantity > cargo.quantity):
             print("There is not enough available. Specify a lower quantity.")
+            return
+        if quantity <= 0:
+            print("Quantity needs to be a positive number.")
             return
 
         modifier = 0
@@ -721,7 +726,7 @@ if __name__ == '__main__':
 #  * [    ] Add proper salary calculation per crew member
 #  * [....] Protect input from bad data - one example, non-numeric
 #            values cause crashes
-#  * [    ] Extract confirmation input loop to a reusble function
+#  * [    ] Extract confirmation input loop to a reusable function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
 #  * [    ] Add 'plus days' method to ImperialDate
 #  * [....] Make StarSystem.__eq__ more robust
