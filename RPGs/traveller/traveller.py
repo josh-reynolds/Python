@@ -66,8 +66,24 @@ class Game:
         self.location.join_trade()
         self.commands = trade
 
+    # Lots to add here, selecting destination world,
+    # mishaps, etc.
+
+    # Other question is how to handle per-trip fuel costs.
+    # One model is to assess a cost for travel out to the
+    # jump point, and again for inbound. That does leave open
+    # the possibility of the ship being stranded.
+    # Alternative would be to assess the full trip cost on 
+    # landing.
+    # In both cases, there's the question of the player gaming
+    # the system and either evading costs or getting stuck.
     def jump(self):
-        pass
+        jfc = self.ship.jump_fuel_cost
+        if jfc > self.ship.current_fuel:
+            print(f"Insufficient fuel. Jump costs {jfc} tons, only "
+                  f"{self.ship.current_fuel} tons in tanks.")
+            return
+        j_range = self.ship.jump_range
 
     def view_world(self):
         print(self.location)
@@ -284,7 +300,7 @@ if __name__ == '__main__':
 #  * [    ] Extend payment flow model to reduce coupling between classes
 #  * [    ] Add starport class to StarSystem
 #  * [    ] Add unrefined fuel and its effects
-#  * [    ] Add fuel level check before executing jump
+#  * [DONE] Add fuel level check before executing jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add gas giant presence to StarSystem

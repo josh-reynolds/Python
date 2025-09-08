@@ -8,6 +8,9 @@ class Ship:
         self.hold_size = 82
         self.fuel_tank = 30
         self.current_fuel = 0
+        self.jump_range = 1
+        self.jump_fuel_cost = 20
+        self.trip_fuel_cost = 10
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
