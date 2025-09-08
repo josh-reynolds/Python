@@ -5,14 +5,14 @@ from calendar import Calendar, ImperialDate
 from ship import Ship
 
 class StarSystem:
-    def __init__(self, name, atmosphere, hydrographics, population, government, current_date, ship):
+    def __init__(self, name, atmosphere, hydrographics, population, government, current_date, ship, financials):
         self.name = name
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
         self.government = government
         self.detail = "surface"
-        self.depot = CargoDepot(self, ship, current_date)
+        self.depot = CargoDepot(self, ship, financials, current_date)
 
         self.agricultural = False
         if (atmosphere >= 4 and atmosphere <= 9 and 
@@ -161,9 +161,10 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system, ship, current_date):
+    def __init__(self, system, ship, financials, current_date):
         self.system = system
         self.ship = ship
+        self.financials = financials
         self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
         self.prices = [0]  
@@ -202,7 +203,6 @@ class CargoDepot:
         return modifier
 
     def buy_cargo(self):
-        global game
         self.goods()
         # In Traveller '77, there is only one available cargo
         # per week. Retain this for future versions, though.
@@ -249,9 +249,9 @@ class CargoDepot:
             pr_function = print
         pr_function(f"That quantity will cost {cost}.")
 
-        if cost > game.financials.balance:
+        if cost > self.financials.balance:
             print("You do not have sufficient funds.")
-            print(f"Your available balance is {game.financials.balance}.")
+            print(f"Your available balance is {self.financials.balance}.")
             return
 
         confirmation = confirm_input(f"Would you like to purchase " 
@@ -271,20 +271,19 @@ class CargoDepot:
                           cargo.purchase_dms, cargo.sale_dms, self.system)
         self.ship.load_cargo(purchased)
 
-        game.financials.debit(cost)
+        self.financials.debit(cost)
 
     def sell_cargo(self):
-        global game
-        game.ship.cargo_hold()
+        self.ship.cargo_hold()
         item_number = int_input('Enter cargo number to sell ')
-        if item_number >= len(game.ship.hold):
+        if item_number >= len(self.ship.hold):
             print("That is not a valid cargo ID.")
             return
 
-        cargo = game.ship.hold[item_number]
+        cargo = self.ship.hold[item_number]
 
         if cargo.source_world:
-            if cargo.source_world == game.location:
+            if cargo.source_world == self.system:
                 print("You cannot resell cargo on the world where it was purchased.")
                 return
 
@@ -308,7 +307,7 @@ class CargoDepot:
             return
 
         modifier = self.get_price_modifiers(cargo, "sale")
-        modifier += game.ship.trade_skill()
+        modifier += self.ship.trade_skill()
         modifier += broker_skill
 
         roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
@@ -326,7 +325,7 @@ class CargoDepot:
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
-            game.financials.debit(broker_fee)
+            self.financials.debit(broker_fee)
 
         confirmation = confirm_input("Would you like to sell " 
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
@@ -336,8 +335,8 @@ class CargoDepot:
             return
 
         # proceed with the transaction
-        game.ship.unload_cargo(cargo, quantity)
-        game.financials.credit(sale_price)
+        self.ship.unload_cargo(cargo, quantity)
+        self.financials.credit(sale_price)
 
     def determine_cargo(self):
         cargo = []
@@ -449,9 +448,9 @@ class Game:
         self.running = False
         self.date = Calendar()
         self.ship = Ship()
-        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship) 
-        self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
         self.financials = Financials(10000000, self.date.current_date)
+        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship, self.financials) 
+        self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
 
         # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
