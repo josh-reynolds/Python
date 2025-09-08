@@ -49,6 +49,22 @@ class StarSystem:
             return self.name == other.name
         return False
 
+    def __repr__(self):
+        url = f"{self.atmosphere}{self.hydrographics}{self.population}{self.government}"
+        if self.agricultural:
+            url += " Ag"
+        if self.nonagricultural:
+            url += " Na"
+        if self.industrial:
+            url += " In"
+        if self.nonindustrial:
+            url += " Ni"
+        if self.rich:
+            url += " Ri"
+        if self.poor:
+            url += " Po"
+        return f"{self.name} - {url}"
+
     def description(self):
         if self.detail == "surface":
             return f"on {self.name}"

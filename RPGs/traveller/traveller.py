@@ -5,13 +5,6 @@ from ship import Ship
 from cargo import Cargo
 from star_system import StarSystem
 
-class Command:
-    def __init__(self, key, description, action, message):
-        self.key = key
-        self.description = description
-        self.action = action
-        self.message = message
-
 class Game:
     def __init__(self):
         self.running = False
@@ -76,6 +69,16 @@ class Game:
     def jump(self):
         pass
 
+    def view_world(self):
+        print(self.location)
+
+class Command:
+    def __init__(self, key, description, action, message):
+        self.key = key
+        self.description = description
+        self.action = action
+        self.message = message
+
 game = Game()
 
 always = [Command('q', 'Quit',
@@ -87,6 +90,9 @@ always = [Command('q', 'Quit',
           Command('c', 'Cargo hold contents',
                   game.ship.cargo_hold,
                   'Contents of cargo hold:'),
+          Command('v', 'View world characteristics',
+                  game.view_world,
+                  'Local world characteristics:'),
           Command('w', 'Wait a week',
                   game.date.plus_week,
                   'Waiting')]
@@ -270,7 +276,7 @@ if __name__ == '__main__':
 #  * [    ] Add fuel level check before executing jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
-#  * [    ] Add view StarSystem data action
+#  * [DONE] Add view StarSystem data action
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
 #  * [DONE] Add extended berthing fee mechanism
@@ -309,6 +315,6 @@ if __name__ == '__main__':
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Distinguish between highport and downport
-#  * [....] Separate code out into modules
+#  * [DONE] Separate code out into modules
 #  * [    ] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
