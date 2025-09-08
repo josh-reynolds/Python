@@ -102,7 +102,10 @@ grounded = always + [Command('l', 'Lift off to orbit',
                              'Lifting off to orbit.'),
                      Command('t', 'Trade',
                              game.to_trade,
-                             'Trading goods.')]
+                             'Trading goods.'),
+                     Command('r', 'Refuel',
+                             game.ship.refuel,
+                             'Refuelling ship.')]
 grounded = sorted(grounded, key=lambda command: command.key)
 
 orbit = always + [Command('g', 'Go to jump point',
@@ -272,10 +275,14 @@ if __name__ == '__main__':
 #  * [    ] Advance calendar for in-system activities
 #  * [DONE] Add fuel system to Ship
 #  * [    ] Add fuel expenditure
-#  * [    ] Add refuelling costs at starport
+#  * [....] Add refuelling costs at starport
+#  * [    ] Restructure payment flow & dependencies
+#  * [    ] Add starport class to StarSystem
+#  * [    ] Add unrefined fuel and its effects
 #  * [    ] Add fuel level check before executing jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
+#  * [    ] Add gas giant presence to StarSystem
 #  * [DONE] Add view StarSystem data action
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
@@ -303,6 +310,8 @@ if __name__ == '__main__':
 #  * [    ] Add different ship types and ship design
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
+#  * [    ] Add loan history and statement
+#  * [    ] Add out-of-funds condition (game over?)
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add multiple star systems and map (whether loaded or generated

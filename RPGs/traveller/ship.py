@@ -1,10 +1,13 @@
+from financials import Credits
+from utilities import confirm_input
+
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
         self.hold = []
         self.hold_size = 82
         self.fuel_tank = 30
-        self.current_fuel = 30
+        self.current_fuel = 0
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
@@ -26,6 +29,50 @@ class Ship:
             self.hold.remove(cargo)
         else:
             cargo.quantity -= quantity
+
+    # Book 2 pp. 5-6
+    # Starship fuel costs 500 Cr per ton (refined) or 100 Cr per ton
+    # (unrefined) at most starports.
+    # A power plant, to provide power for one trip ... requires fuel
+    # in accordance with the formula 10 * Pn, where Pn is the power plant
+    # size rating. The formula indicates the amount of fuel in tons, and 
+    # all such fuel is consumed in the process of a normal trip.
+    # A jump drive requires fuel to make one jump (regardless of jump 
+    # number) based on the formula 0.1 * M * Jn, where M equals the mass
+    # displacement of the ship and Jn equals the jump number of the drive.
+    # Book 2 p. 19
+    # Using the type 200 hull, the free trader...
+    # Jump drive-A, maneuver drive-A and power plant-A are all installed...
+    # giving the starship capability for acceleration of 1G and jump-1.
+    # Fuel tankage for 30 tons...
+
+    # From this, trip fuel usage is 10 tons, and jump-1 is 20 tons. The
+    # ship empties its tanks every trip.
+
+    # TO_DO: other angles to add later:
+    #   * skimming from gas giants (Book 2 p. 35)
+    #   * (will need gas giant presence in StarSystem details)
+    #   * effects of unrefined fuel (Book 2 p. 4)
+    #   * (will need starport class in StarSystem details)
+    #   * ship streamlining - needed to land on worlds with atmosphere,
+    #       also for skimming (though this version of the rules doesn't
+    #       explicitly state that...)
+    def refuel(self):
+        if self.current_fuel == self.fuel_tank:
+            print("Fuel tank is full.")
+            return
+        else:
+            amount = self.fuel_tank - self.current_fuel
+            price = Credits(amount * 500)
+            confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
+            if confirm == 'n':
+                return
+            else:
+                print(f"Charging {price} for refuelling")
+                #game.financials.debit(price)      # global reference here, problem!
+                                                   # should this method move up to game?
+                                                   # or report back a charge?
+                self.current_fuel += amount
 
     # Book 2 p. 43
     # If characters are skilled in bribery or admin, they may apply these
@@ -64,5 +111,7 @@ class Ship:
     
     # TO_DO: We should have a full loan payment record and statement
     #        for the player.
+    #        Also, what happens if the player doesn't have enough funds?
+    #        Is this a simple game-over repossesion?
     def loan_payment(self):
         return 37080000 / 240
