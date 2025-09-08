@@ -28,11 +28,16 @@ class Financials:
 
     def notify(self, date):
         self.current_date = date.copy()
-        if date > self.berth_expiry and game.location.on_surface():
+        if date > self.berth_expiry and self.location.on_surface():
             self.renew_berth(date)
 
         if date > self.salary_due:
             self.pay_salaries(date)
+
+    # a bit kludgy, but this should help break the dependency on
+    # the global game object
+    def add_location(self, location):
+        self.location = location
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -69,6 +74,8 @@ class Game:
         self.ship = Ship()
         self.financials = Financials(10000000, self.date.current_date, self.ship)
         self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship, self.financials) 
+        self.financials.add_location(self.location)
+
         self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
 
         # BUG: this will break when we jump to a new system, fix!
