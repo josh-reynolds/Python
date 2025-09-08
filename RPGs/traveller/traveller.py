@@ -13,9 +13,10 @@ class Command:
         self.message = message
 
 class Financials:
-    def __init__(self, balance, current_date):
+    def __init__(self, balance, current_date, ship):
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
+        self.ship = ship
         self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
         self.salary_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
 
@@ -56,7 +57,7 @@ class Financials:
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
 
     def pay_salaries(self, date):
-        amount = Credits(game.ship.crew_salary())
+        amount = Credits(self.ship.crew_salary())
         print(f"Paying crew salaries on {self.salary_due} for {amount}.")
         self.debit(amount)
         self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)
@@ -66,7 +67,7 @@ class Game:
         self.running = False
         self.date = Calendar()
         self.ship = Ship()
-        self.financials = Financials(10000000, self.date.current_date)
+        self.financials = Financials(10000000, self.date.current_date, self.ship)
         self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship, self.financials) 
         self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
 
