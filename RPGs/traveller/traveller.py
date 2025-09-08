@@ -281,7 +281,7 @@ if __name__ == '__main__':
 #            recharging costs, check level before jump, etc.
 #  * [DONE] Add extended berthing fee mechanism
 #  * [    ] Add annual maintenance
-#  * [    ] Add monthly loan payment
+#  * [DONE] Add monthly loan payment
 #  * [DONE] Add monthly crew salaries
 #  * [    ] Add crew members with skills
 #  * [    ] Add proper salary calculation per crew member

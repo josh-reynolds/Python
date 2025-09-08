@@ -28,6 +28,7 @@ class Financials:
         self.ship = ship
         self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
         self.salary_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
+        self.loan_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
 
     def debit(self, amount):
         self.balance -= amount
@@ -42,6 +43,9 @@ class Financials:
 
         if date > self.salary_due:
             self.pay_salaries(date)
+
+        if date > self.loan_due:
+            self.pay_loan(date)
 
     # a bit kludgy, but this should help break the dependency on
     # the global game object
@@ -75,3 +79,9 @@ class Financials:
         print(f"Paying crew salaries on {self.salary_due} for {amount}.")
         self.debit(amount)
         self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)
+
+    def pay_loan(self, date):
+        amount = Credits(self.ship.loan_payment())
+        print(f"Paying ship loan on {self.loan_due} for {amount}.")
+        self.debit(amount)
+        self.loan_due = ImperialDate(self.loan_due.day + 28, self.loan_due.year)
