@@ -72,6 +72,10 @@ class Game:
     def view_world(self):
         print(self.location)
 
+    def refuel(self):
+        cost = self.ship.refuel()
+        self.financials.debit(cost)
+
 class Command:
     def __init__(self, key, description, action, message):
         self.key = key
@@ -104,7 +108,7 @@ grounded = always + [Command('l', 'Lift off to orbit',
                              game.to_trade,
                              'Trading goods.'),
                      Command('r', 'Refuel',
-                             game.ship.refuel,
+                             game.refuel,
                              'Refuelling ship.')]
 grounded = sorted(grounded, key=lambda command: command.key)
 
@@ -275,8 +279,9 @@ if __name__ == '__main__':
 #  * [    ] Advance calendar for in-system activities
 #  * [DONE] Add fuel system to Ship
 #  * [    ] Add fuel expenditure
-#  * [....] Add refuelling costs at starport
-#  * [    ] Restructure payment flow & dependencies
+#  * [DONE] Add refuelling costs at starport
+#  * [DONE] Restructure payment flow & dependencies for fuel
+#  * [    ] Extend payment flow model to reduce coupling between classes
 #  * [    ] Add starport class to StarSystem
 #  * [    ] Add unrefined fuel and its effects
 #  * [    ] Add fuel level check before executing jump

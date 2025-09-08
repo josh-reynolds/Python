@@ -60,7 +60,7 @@ class Ship:
     def refuel(self):
         if self.current_fuel == self.fuel_tank:
             print("Fuel tank is full.")
-            return
+            return Credits(0)
         else:
             amount = self.fuel_tank - self.current_fuel
             price = Credits(amount * 500)
@@ -69,10 +69,8 @@ class Ship:
                 return
             else:
                 print(f"Charging {price} for refuelling")
-                #game.financials.debit(price)      # global reference here, problem!
-                                                   # should this method move up to game?
-                                                   # or report back a charge?
                 self.current_fuel += amount
+                return price
 
     # Book 2 p. 43
     # If characters are skilled in bribery or admin, they may apply these
