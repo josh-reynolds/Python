@@ -1,6 +1,7 @@
 from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
-from credits import Credits
+from financials import Credits
+from calendar import ImperialDate
 
 class Cargo:
     def __init__(self, name, quantity, price, unit_size, 
