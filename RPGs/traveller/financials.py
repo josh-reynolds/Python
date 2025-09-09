@@ -22,13 +22,14 @@ class Credits:
         return Credits(self.amount - other.amount)
 
 class Financials:
-    def __init__(self, balance, current_date, ship):
+    def __init__(self, balance, current_date, ship, location):
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
         self.ship = ship
         self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
         self.salary_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
         self.loan_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
+        self.location = location
 
     def debit(self, amount):
         self.balance -= amount
@@ -46,11 +47,6 @@ class Financials:
 
         if date > self.loan_due:
             self.pay_loan(date)
-
-    # a bit kludgy, but this should help break the dependency on
-    # the global game object
-    def add_location(self, location):
-        self.location = location
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;

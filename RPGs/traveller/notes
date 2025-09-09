@@ -235,7 +235,7 @@
 #  * [DONE] Add refuelling costs at starport
 #  * [DONE] Restructure payment flow & dependencies for fuel
 #  * [    ] Extend payment flow model to reduce coupling between classes
-#  * [    ] Add starport class to StarSystem
+#  * [    ] Add starport classification to StarSystem
 #  * [    ] Add unrefined fuel and its effects
 #  * [DONE] Add fuel level check before executing jump
 #  * [    ] Add select destination before jump (will tie in to subsector map,
@@ -292,5 +292,5 @@
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Distinguish between highport and downport
 #  * [DONE] Separate code out into modules
-#  * [    ] Refactoring and tests!!!
+#  * [....] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
