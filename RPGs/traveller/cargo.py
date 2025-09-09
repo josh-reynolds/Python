@@ -8,17 +8,10 @@ class Cargo:
                  purchase_dms, sale_dms, source_world=None):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
-
-        # would prefer to pass this in as Credits already, but we are taking
-        # input from the cargo table which just has integers
         self.price = Credits(price)
         self.unit_size = unit_size
-
-        # DMs are in order: agricultural, non-agricultural, industrial,
-        #                   non-industrial, rich, poor
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
-
         self.source_world = source_world
 
     def __repr__(self):

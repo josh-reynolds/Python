@@ -42,8 +42,10 @@ class StarSystem:
             hydrographics <= 3):
             self.poor = True
 
-    #   making a big assumption that worlds cannot share the
-    #   same name - good enough for now
+    #  making a big assumption that worlds cannot share the
+    #  same name - good enough for now
+    #  once we add some sort of coordinate, that should fix
+    #  the issue
     def __eq__(self, other):
         if isinstance(other, StarSystem):
             return self.name == other.name
