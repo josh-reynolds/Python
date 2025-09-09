@@ -130,6 +130,28 @@
 # (which holds references to everything already) would know. This is
 # something like a service bus - a blob of data flowing down a pipe,
 # with individual components choosing whether to take action or not.
+#
+# Calendar (ImperialDate)
+# ImperialDate
+# Cargo (Credits)
+# CargoDepot (Cargo, ImperialDate, Credits, Financials, Ship, StarSystem)
+# Financials (Credits, ImperialDate, Ship, StarSystem)
+# Credits
+# Ship (Credits)
+# StarSystem (Ship, Financials, CargoDepot)
+#
+# Should distinguish importing a class vs. calling methods or
+# accessing fields on an existing object. The former is OK, the
+# latter is coupling.
+#
+# The data classes (ImperialDate, Credits, Cargo) are fine, and
+# right now Ship and StarSystem (with a minor exception) are in
+# the same category. StarSystem owns CargoDepot - otherwise it
+# is not coupled at all, so moving the latter up seems like a 
+# good move.
+#
+# Almost all the logic outside of the master Game class is in
+# CargoDepot, Financials, and Calendar. Those are the focus.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------

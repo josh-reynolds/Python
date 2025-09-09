@@ -1,14 +1,13 @@
 from cargo import CargoDepot
 
 class StarSystem:
-    def __init__(self, name, atmosphere, hydrographics, population, government, current_date, ship, financials):
+    def __init__(self, name, atmosphere, hydrographics, population, government):
         self.name = name
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
         self.government = government
         self.detail = "surface"
-        self.depot = CargoDepot(self, ship, financials, current_date)
 
         self.agricultural = False
         if (atmosphere >= 4 and atmosphere <= 9 and 

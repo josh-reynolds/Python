@@ -2,7 +2,7 @@ from financials import Financials
 from utilities import pr_yellow_on_red
 from calendar import Calendar
 from ship import Ship
-from cargo import Cargo
+from cargo import Cargo, CargoDepot
 from star_system import StarSystem
 
 class Game:
@@ -11,7 +11,8 @@ class Game:
         self.date = Calendar()
         self.ship = Ship()
         self.financials = Financials(10000000, self.date.current_date, self.ship)
-        self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship, self.financials) 
+        self.location = StarSystem("Yorbund", 5, 5, 5, 5) 
+        self.depot = CargoDepot(self.location, self.ship, self.financials, self.date.current_date)
         self.financials.add_location(self.location)
 
         self.ship.load_cargo(Cargo("Grain", 20, 300, 1,
@@ -19,7 +20,7 @@ class Game:
                                    {"Ag":-2}))
 
         # BUG: this will break when we jump to a new system, fix!
-        self.date.add_observer(self.location.depot)
+        self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
 
     def run(self):
@@ -139,13 +140,13 @@ trade = always + [Command('l', 'Leave trade interaction',
                           game.leave,
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
-                          game.location.depot.goods,
+                          game.depot.goods,
                           'Available cargo loads:'),
                   Command('b', 'Buy cargo',
-                          game.location.depot.buy_cargo,
+                          game.depot.buy_cargo,
                           'Purchasing cargo'),
                   Command('s', 'Sell cargo',
-                          game.location.depot.sell_cargo,
+                          game.depot.sell_cargo,
                           'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
