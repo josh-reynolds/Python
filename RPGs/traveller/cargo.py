@@ -95,17 +95,17 @@ class CargoDepot:
             table = cargo.sale_dms
         modifier = 0
         if self.system.agricultural:
-            modifier += table[0]
+            modifier += table["Ag"]
         if self.system.nonagricultural:
-            modifier += table[1]
+            modifier += table["Na"]
         if self.system.industrial:
-            modifier += table[2]
+            modifier += table["In"]
         if self.system.nonindustrial:
-            modifier += table[3]
+            modifier += table["Ni"]
         if self.system.rich:
-            modifier += table[4]
+            modifier += table["Ri"]
         if self.system.poor:
-            modifier += table[5]
+            modifier += table["Po"]
         return modifier
 
     def buy_cargo(self):
@@ -259,42 +259,78 @@ class CargoDepot:
         roll = first + second
 
         table = {
-                11 : Cargo("Textiles", "3Dx5", 3000, 1, [-7,-5,0,-3,0,0], [-6,1,0,0,3,0]),
-                12 : Cargo("Polymers", "4Dx5", 7000, 1, [0,0,-2,0,-3,2], [0,0,-2,0,3,0]),
-                13 : Cargo("Liquor", "1Dx5", 10000, 1, [-4,0,0,0,0,0], [-3,0,1,0,2,0]),
-                14 : Cargo("Wood", "2Dx10", 1000, 1, [-6,0,0,0,0,0], [-6,0,1,0,2,0]),
-                15 : Cargo("Crystals", "1Dx1", 20000, 1, [0,-3,4,0,0,0], [0,-3,3,0,3,0]),
-                16 : Cargo("Radioactives", "1Dx1", 1000000, 1, [0,0,7,-3,5,0], [0,0,6,-3,-4,0]),
-                21 : Cargo("Steel", "4Dx10", 500, 1, [0,0,-2,0,-1,1], [0,0,-2,0,-1,3]),
-                22 : Cargo("Copper", "2Dx10", 2000, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
-                23 : Cargo("Aluminum", "5Dx10", 1000, 1, [0,0,-3,0,-2,1], [0,0,-3,4,-1,0]),
-                24 : Cargo("Tin", "3Dx10", 9000, 1, [0,0,-3,0,-2,1], [0,0,-3,0,-1,0]),
-                25 : Cargo("Silver", "1Dx5", 70000, 1, [0,0,5,0,-1,2], [0,0,5,0,-1,0]),
-                26 : Cargo("Special Alloys", "1Dx1", 200000, 1, [0,0,-3,5,-2,0], [0,0,-3,4,-1,0]),
-                31 : Cargo("Petrochemicals", "6Dx5", 10000, 1, [0,-4,1,-5,0,0], [0,-4,3,-5,0,0]),
-                32 : Cargo("Grain", "8Dx5", 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]),
-                33 : Cargo("Meat", "4Dx5", 1500, 1, [-2,2,3,0,0,0], [-2,0,2,0,0,1]),
-                34 : Cargo("Spices", "1Dx5", 6000, 1, [-2,3,2,0,0,0], [-2,0,0,0,2,3]),
-                35 : Cargo("Fruit", "2Dx5", 1000, 1, [-3,1,2,0,0,0], [-2,0,3,0,0,2]),
-                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 1, [0,-3,4,0,0,3], [0,-3,5,0,4,0]),
-                41 : Cargo("Gems", "1Dx1", 1000000, 1, [0,0,4,-8,0,-3], [0,0,4,-2,8,0]),
-                42 : Cargo("Firearms", "2Dx1", 30000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                43 : Cargo("Ammunition", "2Dx1", 30000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                44 : Cargo("Blades", "2Dx1", 10000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                45 : Cargo("Tools", "2Dx1", 10000, 1, [0,0,-3,0,-2,3], [0,0,-2,0,-1,3]),
-                46 : Cargo("Body Armor", "2Dx1", 50000, 1, [0,0,-1,0,-3,3], [0,0,-2,0,1,4]),
-                51 : Cargo("Aircraft", "1Dx1", 1000000, 10, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
-                52 : Cargo("Air/Raft", "1Dx1", 6000000, 6, [0,0,-3,0,-2,0], [0,0,0,2,0,1]),
-                53 : Cargo("Computers", "1Dx1", 10000000, 2, [0,0,-2,0,-2,0], [-3,0,0,2,0,1]),
-                54 : Cargo("ATV", "1Dx1", 3000000, 4, [0,0,-2,0,-2,0], [1,0,0,2,0,1]),
-                55 : Cargo("AFV", "1Dx1", 7000000, 4, [0,0,-5,0,-2,4], [2,-2,0,0,1,0]),
-                56 : Cargo("Farm Machinery", "1Dx1", 150000, 4, [0,0,-5,0,-2,0], [5,-8,0,0,0,1]),
-                61 : Cargo("Electronics Parts", "1Dx5", 100000, 1, [0,0,-4,0,-3,0], [0,0,0,2,0,1]),
-                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 1, [0,0,-5,0,-3,0], [2,0,0,3,0,0]),
-                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 1, [0,0,-4,0,-1,0], [1,2,0,4,0,0]),
-                64 : Cargo("Computer Parts", "1Dx5", 150000, 1, [0,0,-5,0,-3,0], [1,2,0,3,0,0]),
-                65 : Cargo("Machine Tools", "1Dx5", 750000, 1, [0,0,-5,0,-4,0], [1,2,0,3,0,0]),
-                66 : Cargo("Vacc Suits", "1Dx5", 400000, 1, [0,-5,-3,0,-3,0], [0,-1,0,2,0,0])
+                11 : Cargo("Textiles", "3Dx5", 3000, 1, {"Ag":-7,"Na":-5,"In":0,"Ni":-3,"Ri":0,"Po":0}, 
+                                                        {"Ag":-6,"Na":1,"In":0,"Ni":0,"Ri":3,"Po":0}),
+                12 : Cargo("Polymers", "4Dx5", 7000, 1, {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-3,"Po":2}, 
+                                                        {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":3,"Po":0}),
+                13 : Cargo("Liquor", "1Dx5", 10000, 1, {"Ag":-4,"Na":0,"In":0,"Ni":0,"Ri":0,"Po":0}, 
+                                                       {"Ag":-3,"Na":0,"In":1,"Ni":0,"Ri":2,"Po":0}),
+                14 : Cargo("Wood", "2Dx10", 1000, 1, {"Ag":-6,"Na":0,"In":0,"Ni":0,"Ri":0,"Po":0}, 
+                                                     {"Ag":-6,"Na":0,"In":1,"Ni":0,"Ri":2,"Po":0}),
+                15 : Cargo("Crystals", "1Dx1", 20000, 1, {"Ag":0,"Na":-3,"In":4,"Ni":0,"Ri":0,"Po":0}, 
+                                                         {"Ag":0,"Na":-3,"In":3,"Ni":0,"Ri":3,"Po":0}),
+                16 : Cargo("Radioactives", "1Dx1", 1000000, 1, {"Ag":0,"Na":0,"In":7,"Ni":-3,"Ri":5,"Po":0}, 
+                                                               {"Ag":0,"Na":0,"In":6,"Ni":-3,"Ri":-4,"Po":0}),
+                21 : Cargo("Steel", "4Dx10", 500, 1, {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":1}, 
+                                                     {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":3}),
+                22 : Cargo("Copper", "2Dx10", 2000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":1}, 
+                                                       {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-1,"Po":0}),
+                23 : Cargo("Aluminum", "5Dx10", 1000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":1}, 
+                                                         {"Ag":0,"Na":0,"In":-3,"Ni":4,"Ri":-1,"Po":0}),
+                24 : Cargo("Tin", "3Dx10", 9000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":1}, 
+                                                    {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-1,"Po":0}),
+                25 : Cargo("Silver", "1Dx5", 70000, 1, {"Ag":0,"Na":0,"In":5,"Ni":0,"Ri":-1,"Po":2}, 
+                                                       {"Ag":0,"Na":0,"In":5,"Ni":0,"Ri":-1,"Po":0}),
+                26 : Cargo("Special Alloys", "1Dx1", 200000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":5,"Ri":-2,"Po":0}, 
+                                                                {"Ag":0,"Na":0,"In":-3,"Ni":4,"Ri":-1,"Po":0}),
+                31 : Cargo("Petrochemicals", "6Dx5", 10000, 1, {"Ag":0,"Na":-4,"In":1,"Ni":-5,"Ri":0,"Po":0}, 
+                                                               {"Ag":0,"Na":-4,"In":3,"Ni":-5,"Ri":0,"Po":0}),
+                32 : Cargo("Grain", "8Dx5", 300, 1, {"Ag":-2,"Na":1,"In":2,"Ni":0,"Ri":0,"Po":0}, 
+                                                    {"Ag":-2,"Na":0,"In":0,"Ni":0,"Ri":0,"Po":0}),
+                33 : Cargo("Meat", "4Dx5", 1500, 1, {"Ag":-2,"Na":2,"In":3,"Ni":0,"Ri":0,"Po":0}, 
+                                                    {"Ag":-2,"Na":0,"In":2,"Ni":0,"Ri":0,"Po":1}),
+                34 : Cargo("Spices", "1Dx5", 6000, 1, {"Ag":-2,"Na":3,"In":2,"Ni":0,"Ri":0,"Po":0}, 
+                                                      {"Ag":-2,"Na":0,"In":0,"Ni":0,"Ri":2,"Po":3}),
+                35 : Cargo("Fruit", "2Dx5", 1000, 1, {"Ag":-3,"Na":1,"In":2,"Ni":0,"Ri":0,"Po":0}, 
+                                                     {"Ag":-2,"Na":0,"In":3,"Ni":0,"Ri":0,"Po":2}),
+                36 : Cargo("Pharmaceuticals", "1Dx1", 100000, 1, {"Ag":0,"Na":-3,"In":4,"Ni":0,"Ri":0,"Po":3}, 
+                                                                 {"Ag":0,"Na":-3,"In":5,"Ni":0,"Ri":4,"Po":0}),
+                41 : Cargo("Gems", "1Dx1", 1000000, 1, {"Ag":0,"Na":0,"In":4,"Ni":-8,"Ri":0,"Po":-3}, 
+                                                       {"Ag":0,"Na":0,"In":4,"Ni":-2,"Ri":8,"Po":0}),
+                42 : Cargo("Firearms", "2Dx1", 30000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":3}, 
+                                                         {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":3}),
+                43 : Cargo("Ammunition", "2Dx1", 30000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":3}, 
+                                                           {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":3}),
+                44 : Cargo("Blades", "2Dx1", 10000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":3}, 
+                                                       {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":3}),
+                45 : Cargo("Tools", "2Dx1", 10000, 1, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":3}, 
+                                                      {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-1,"Po":3}),
+                46 : Cargo("Body Armor", "2Dx1", 50000, 1, {"Ag":0,"Na":0,"In":-1,"Ni":0,"Ri":-3,"Po":3}, 
+                                                           {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":1,"Po":4}),
+                51 : Cargo("Aircraft", "1Dx1", 1000000, 10, {"Ag":0,"Na":0,"In":-4,"Ni":0,"Ri":-3,"Po":0}, 
+                                                            {"Ag":0,"Na":0,"In":0,"Ni":2,"Ri":0,"Po":1}),
+                52 : Cargo("Air/Raft", "1Dx1", 6000000, 6, {"Ag":0,"Na":0,"In":-3,"Ni":0,"Ri":-2,"Po":0}, 
+                                                           {"Ag":0,"Na":0,"In":0,"Ni":2,"Ri":0,"Po":1}),
+                53 : Cargo("Computers", "1Dx1", 10000000, 2, {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-2,"Po":0}, 
+                                                             {"Ag":-3,"Na":0,"In":0,"Ni":2,"Ri":0,"Po":1}),
+                54 : Cargo("ATV", "1Dx1", 3000000, 4, {"Ag":0,"Na":0,"In":-2,"Ni":0,"Ri":-2,"Po":0}, 
+                                                      {"Ag":1,"Na":0,"In":0,"Ni":2,"Ri":0,"Po":1}),
+                55 : Cargo("AFV", "1Dx1", 7000000, 4, {"Ag":0,"Na":0,"In":-5,"Ni":0,"Ri":-2,"Po":4}, 
+                                                      {"Ag":2,"Na":-2,"In":0,"Ni":0,"Ri":1,"Po":0}),
+                56 : Cargo("Farm Machinery", "1Dx1", 150000, 4, {"Ag":0,"Na":0,"In":-5,"Ni":0,"Ri":-2,"Po":0}, 
+                                                                {"Ag":5,"Na":-8,"In":0,"Ni":0,"Ri":0,"Po":1}),
+                61 : Cargo("Electronics Parts", "1Dx5", 100000, 1, {"Ag":0,"Na":0,"In":-4,"Ni":0,"Ri":-3,"Po":0}, 
+                                                                   {"Ag":0,"Na":0,"In":0,"Ni":2,"Ri":0,"Po":1}),
+                62 : Cargo("Mechanical Parts", "1Dx5", 75000, 1, {"Ag":0,"Na":0,"In":-5,"Ni":0,"Ri":-3,"Po":0}, 
+                                                                 {"Ag":2,"Na":0,"In":0,"Ni":3,"Ri":0,"Po":0}),
+                63 : Cargo("Cybernetic Parts", "1Dx5", 250000, 1, {"Ag":0,"Na":0,"In":-4,"Ni":0,"Ri":-1,"Po":0}, 
+                                                                  {"Ag":1,"Na":2,"In":0,"Ni":4,"Ri":0,"Po":0}),
+                64 : Cargo("Computer Parts", "1Dx5", 150000, 1, {"Ag":0,"Na":0,"In":-5,"Ni":0,"Ri":-3,"Po":0}, 
+                                                                {"Ag":1,"Na":2,"In":0,"Ni":3,"Ri":0,"Po":0}),
+                65 : Cargo("Machine Tools", "1Dx5", 750000, 1, {"Ag":0,"Na":0,"In":-5,"Ni":0,"Ri":-4,"Po":0}, 
+                                                               {"Ag":1,"Na":2,"In":0,"Ni":3,"Ri":0,"Po":0}),
+                66 : Cargo("Vacc Suits", "1Dx5", 400000, 1, {"Ag":0,"Na":-5,"In":-3,"Ni":0,"Ri":-3,"Po":0}, 
+                                                            {"Ag":0,"Na":-1,"In":0,"Ni":2,"Ri":0,"Po":0})
                 }
 
         cargo.append(table[roll])

@@ -14,7 +14,9 @@ class Game:
         self.location = StarSystem("Yorbund", 5, 5, 5, 5, self.date.current_date, self.ship, self.financials) 
         self.financials.add_location(self.location)
 
-        self.ship.load_cargo(Cargo("Grain", 20, 300, 1, [-2,1,2,0,0,0], [-2,0,0,0,0,0]))
+        self.ship.load_cargo(Cargo("Grain", 20, 300, 1,
+                                   {"Ag":-2,"Na":1,"In":2,"Ni":0,"Ri":0,"Po":0}, 
+                                   {"Ag":-2,"Na":0,"In":0,"Ni":0,"Ri":0,"Po":0}))
 
         # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
@@ -285,7 +287,7 @@ if __name__ == '__main__':
 #  * [DONE] Deprecate and remove credit_string() function
 #  * [DONE] Add (basic) math/comparison operators to currency class
 #            (add more operators as needed)
-#  * [    ] Change purchase/sale DMs from lists to hashes to improve data
+#  * [DONE] Change purchase/sale DMs from lists to hashes to improve data
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
 #  * [....] Review Calendar increment scenarios, remove speculative options
