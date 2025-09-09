@@ -71,7 +71,7 @@ class Financials:
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
 
     def pay_salaries(self, date):
-        amount = Credits(self.ship.crew_salary())
+        amount = self.ship.crew_salary()
         print(f"Paying crew salaries on {self.salary_due} for {amount}.")
         self.debit(amount)
         self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)

@@ -1,4 +1,4 @@
-from financials import Financials
+from financials import Financials, Credits
 from utilities import pr_yellow_on_red
 from calendar import Calendar
 from ship import Ship
@@ -14,7 +14,7 @@ class Game:
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.ship, self.financials, self.date.current_date)
 
-        self.ship.load_cargo(Cargo("Grain", 20, 300, 1,
+        self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
                                    {"Ag":-2,"Na":1,"In":2}, 
                                    {"Ag":-2}))
 

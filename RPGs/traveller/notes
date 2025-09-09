@@ -152,6 +152,17 @@
 #
 # Almost all the logic outside of the master Game class is in
 # CargoDepot, Financials, and Calendar. Those are the focus.
+#
+# So, after some initial shuffling, we now have:
+#
+# [OK] ImperialDate
+# [OK] Calendar (ImperialDate)
+# [OK] Cargo
+# [  ] CargoDepot (Cargo, ImperialDate, Credits, Financials, Ship, StarSystem)
+# [OK] Credits
+# [  ] Financials (Credits, ImperialDate, Ship, StarSystem)
+# [OK] Ship (Credits)
+# [OK] StarSystem
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -269,7 +280,7 @@
 #             to add a time element - simplest would be to reset the source_world
 #             field to None, but later for Merchant Prince we may want to retain it)
 #  * [    ] Move cargo data to separate data file
-#  * [    ] Pass Credits in to Cargo ctor, not integer that needs conversion
+#  * [DONE] Pass Credits in to Cargo ctor, not integer that needs conversion
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)

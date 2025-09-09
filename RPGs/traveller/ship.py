@@ -91,7 +91,7 @@ class Ship:
     # Medic     2000 Cr
     # Steward   3000 Cr
     def crew_salary(self):
-        return 15000
+        return Credits(15000)
 
     # Book 2 p. 19
     # Base price for the free trader is 37,080,000 Cr
