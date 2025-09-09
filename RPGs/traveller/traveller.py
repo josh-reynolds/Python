@@ -15,8 +15,8 @@ class Game:
         self.financials.add_location(self.location)
 
         self.ship.load_cargo(Cargo("Grain", 20, 300, 1,
-                                   {"Ag":-2,"Na":1,"In":2,"Ni":0,"Ri":0,"Po":0}, 
-                                   {"Ag":-2,"Na":0,"In":0,"Ni":0,"Ri":0,"Po":0}))
+                                   {"Ag":-2,"Na":1,"In":2}, 
+                                   {"Ag":-2}))
 
         # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.location.depot)
