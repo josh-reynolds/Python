@@ -303,6 +303,8 @@ if __name__ == '__main__':
 #  * [    ] Add starport class to StarSystem
 #  * [    ] Add unrefined fuel and its effects
 #  * [DONE] Add fuel level check before executing jump
+#  * [    ] Add select destination before jump (will tie in to subsector map,
+#            world generation, possibly freight & passenger selection)
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add gas giant presence to StarSystem
@@ -330,6 +332,9 @@ if __name__ == '__main__':
 #             to add a time element - simplest would be to reset the source_world
 #             field to None, but later for Merchant Prince we may want to retain it)
 #  * [    ] Move cargo data to separate data file
+#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
+#           (should be able to view in hold and while trading,
+#            possibly also while choosing a destination world)
 #  * [    ] Add different ship types and ship design
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
