@@ -371,7 +371,8 @@
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
 #  * [    ] Add different ship types and ship design
-#  * [    ] Add display of ship characteristics
+#  * [DONE] Add display of ship characteristics
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Add ship streamlining and effect upon landing/skimming
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
@@ -379,6 +380,8 @@
 #  * [    ] Add out-of-funds condition (game over?)
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
+#  * [    ] Add survival odds for low berth passengers, and report results each trip
+#  * [    ] Add low berth lottery
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor

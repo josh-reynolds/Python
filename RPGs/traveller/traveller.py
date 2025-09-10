@@ -98,6 +98,9 @@ class Game:
     def wait_week(self):
         self.date.plus_week()
 
+    def view_ship(self):
+        print(self.ship)
+
 class Command:
     def __init__(self, key, description, action, message):
         self.key = key
@@ -119,6 +122,9 @@ always = [Command('q', 'Quit',
           Command('v', 'View world characteristics',
                   game.view_world,
                   'Local world characteristics:'),
+          Command('p', 'View ship details',
+                  game.view_ship,
+                  'Ship details:'),
           Command('w', 'Wait a week',
                   game.wait_week,
                   'Waiting')]

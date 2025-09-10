@@ -4,6 +4,14 @@ from utilities import confirm_input
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
+        self.name = "Weaselfish"
+        self.model = "Type A Free Trader"
+        self.hull = 200
+        self.crew = 4
+        self.passengers = 6
+        self.low_berths = 20
+        self.acceleration = 1
+        self.streamlined = True
         self.hold = []
         self.hold_size = 82
         self.fuel_tank = 30
@@ -11,6 +19,11 @@ class Ship:
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
+
+    def __repr__(self):
+        return f"{self.name} -- {self.model}\n" \
+               f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" \
+               f"{self.crew} crew, {self.passengers} passengers, {self.low_berths} low berths"
 
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
