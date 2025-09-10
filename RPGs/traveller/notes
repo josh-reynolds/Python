@@ -207,6 +207,25 @@
 # objects. Most pressing for buy/sell, but even the simple informationals
 # should comply.
 #
+# Separating the child classes from interface actions (like print
+# in the current UI paradigm) is also probably a good thing. They don't 
+# need to know whether their output goes to the console or a
+# GUI window. Be cautious of YAGNI of course. But still, if this is
+# something like MVC, then the child objects are MODEL and shouldn't
+# display anything at all.
+#
+# There are separate issues for the two classes still needing decoupling.
+# CargoDepot is coupled in buy/sell cargo, which are both very long methods.
+# Financials is coupled in notify and the tasks it calls.
+#
+# For the former, should break up the methods into small pieces (that
+# still live in CargoDepot), then move the orchestration logic up to
+# Game.
+#
+# For the latter, lift the observer up to Game - just add this logic in
+# wait_week. At that point we only have one observer so the entire thing
+# may not justify its existence, even though it isn't causing any problems
+# in CargoDepot.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -352,6 +371,7 @@
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
 #  * [    ] Add different ship types and ship design
+#  * [    ] Add display of ship characteristics
 #  * [    ] Add ship streamlining and effect upon landing/skimming
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
@@ -364,6 +384,7 @@
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [....] Adjust UI elements, play with more ANSI codes
 #  * [    ] Should/could we clear the screen?
+#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] If we want to expand beyond just the trade model, add 

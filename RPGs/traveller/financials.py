@@ -43,10 +43,10 @@ class Financials:
             self.renew_berth(date)
 
         if date > self.salary_due:
-            self.pay_salaries(date)
+            self.pay_salaries()
 
         if date > self.loan_due:
-            self.pay_loan(date)
+            self.pay_loan()
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -70,13 +70,13 @@ class Financials:
         self.debit(Credits(days_extra * 100))
         self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
 
-    def pay_salaries(self, date):
+    def pay_salaries(self):
         amount = self.ship.crew_salary()
         print(f"Paying crew salaries on {self.salary_due} for {amount}.")
         self.debit(amount)
         self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)
 
-    def pay_loan(self, date):
+    def pay_loan(self):
         amount = Credits(self.ship.loan_payment())
         print(f"Paying ship loan on {self.loan_due} for {amount}.")
         self.debit(amount)
