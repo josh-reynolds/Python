@@ -1,13 +1,15 @@
 from cargo import CargoDepot
 
 class StarSystem:
-    def __init__(self, name, starport, atmosphere, hydrographics, population, government):
+    def __init__(self, name, starport, atmosphere, hydrographics, 
+                 population, government, gas_giant=True):
         self.name = name
         self.starport = starport
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
         self.government = government
+        self.gas_giant = gas_giant
         self.detail = "surface"
 
         self.agricultural = False
@@ -65,6 +67,8 @@ class StarSystem:
             url += " Ri"
         if self.poor:
             url += " Po"
+        if self.gas_giant:
+            url += " - G"
         return f"{self.name} - {url}"
 
     def description(self):

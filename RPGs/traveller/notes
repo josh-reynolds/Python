@@ -234,6 +234,12 @@
 # ship encounters, but even those are mostly color at least in the
 # initial version). Ship construction is also for some future 
 # version, if ever.
+#
+# Interesting that starport has no impact on trade. You'd think
+# that an E or X class at least has minimal to no cargo available.
+# But let's not critique the system just yet. I'll fill in ambiguous
+# areas as needed, but otherwise keep to RAW. Later maybe we'll
+# explore other editions and/or homebrew our own trading rules.
 # -------------------------------------------------------------
 
 # --------------------------------------------------------------
@@ -259,7 +265,7 @@
 #  * [    ] Extend payment flow model to reduce coupling between classes
 #  * [DONE] Add starport classification to StarSystem
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
-#  * [    ] Add maintenance availability to StarSystem (A + B starports)A
+#  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [DONE] Add fuel level check before executing jump
 #  * [    ] Add select destination before jump (will tie in to subsector map,
@@ -268,7 +274,7 @@
 #  * [    ] Fix handling of observers after jump
 #  * [    ] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
-#  * [    ] Add gas giant presence to StarSystem
+#  * [DONE] Add gas giant presence to StarSystem
 #  * [DONE] Add view StarSystem data action
 #  * [    ] Add extended StarSystem details
 #  * [    ] Add life support system to Ship and corresponding mechanics like
