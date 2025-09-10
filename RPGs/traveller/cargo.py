@@ -111,7 +111,7 @@ class CargoDepot:
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             print("That is not a valid cargo ID.")
-            return None
+            return (None, None)
         return (item_number, source[item_number])
 
     def get_cargo_quantity(self, prompt, cargo):
@@ -131,6 +131,26 @@ class CargoDepot:
                 return True
         return False
 
+    def get_broker(self):
+        broker = confirm_input("Would you like to hire a broker (y/n)? ")
+        broker_skill = 0
+        if broker == 'y':
+            while broker_skill < 1 or broker_skill > 4:
+                broker_skill = int_input("What level of broker (1-4)? ")
+
+            broker_confirm = confirm_input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
+            if broker_confirm == 'n':
+                broker_skill = 0
+        return broker_skill
+
+    def insufficient_hold_space(self, cargo, quantity):
+        free_space = self.ship.free_space()
+        if (quantity * cargo.unit_size > free_space):
+            print("That amount will not fit in your hold.")
+            print(f"You only have {free_space} tons free.")
+            return True
+        return False
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -140,10 +160,7 @@ class CargoDepot:
         if quantity == None:
             return
 
-        free_space = self.ship.free_space()
-        if (quantity * cargo.unit_size > free_space):
-            print("That amount will not fit in your hold.")
-            print(f"You only have {free_space} tons free.")
+        if self.insufficient_hold_space(cargo, quantity):
             return
 
         modifier = self.get_price_modifiers(cargo, "purchase")
@@ -200,16 +217,7 @@ class CargoDepot:
         if self.invalid_cargo_origin(cargo):
             return
 
-        broker = confirm_input("Would you like to hire a broker (y/n)? ")
-
-        broker_skill = 0
-        if broker == 'y':
-            while broker_skill < 1 or broker_skill > 4:
-                broker_skill = int_input("What level of broker (1-4)? ")
-
-            broker_confirm = confirm_input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
-            if broker_confirm == 'n':
-                broker_skill = 0
+        broker_skill = self.get_broker()
 
         quantity = self.get_cargo_quantity("sell", cargo)
         if quantity == None:
