@@ -77,6 +77,7 @@ class CargoDepot:
             self.cargo = self.determine_cargo()
             self.prices = [0]
 
+    # deprecate, replaced with print_cargo_list below...
     def goods(self):
         for i,item in enumerate(self.cargo):
             print(f"{i} - {item}")
@@ -101,16 +102,22 @@ class CargoDepot:
             modifier += table.get("Po",0)
         return modifier
 
-    def buy_cargo(self):
-        self.goods()
-        # In Traveller '77, there is only one available cargo
-        # per week. Retain this for future versions, though.
-        item_number = int_input('Enter cargo number to buy: ')
-        if item_number >= len(self.cargo):
-            print("That is not a valid cargo ID.")
-            return
+    def print_cargo_list(self, cargo_list):
+        for i,item in enumerate(cargo_list):
+            print(f"{i} - {item}")
 
-        cargo = self.cargo[item_number]
+    def get_cargo_lot(self, source, prompt):
+        self.print_cargo_list(source)
+        item_number = int_input(f"Enter cargo number to {prompt}: ")
+        if item_number >= len(source):
+            print("That is not a valid cargo ID.")
+            return None   # caller needs to handle
+        return (item_number, source[item_number])
+
+    def buy_cargo(self):
+        item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
+        if cargo == None:
+            return
 
         quantity = int_input('How many would you like to purchase? ')
         if quantity > cargo.quantity:
@@ -173,13 +180,9 @@ class CargoDepot:
         self.financials.debit(cost)
 
     def sell_cargo(self):
-        self.ship.cargo_hold()
-        item_number = int_input('Enter cargo number to sell ')
-        if item_number >= len(self.ship.hold):
-            print("That is not a valid cargo ID.")
+        item_number, cargo = self.get_cargo_lot(self.ship.hold, "sell")
+        if cargo == None:
             return
-
-        cargo = self.ship.hold[item_number]
 
         if cargo.source_world:
             if cargo.source_world == self.system:

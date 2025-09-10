@@ -25,6 +25,7 @@ class Ship:
                f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" \
                f"{self.crew} crew, {self.passengers} passengers, {self.low_berths} low berths"
 
+    # can we deprecate? use CargoDepot.print_cargo_list()
     def cargo_hold(self):
         for i,item in enumerate(self.hold):
             print(f"{i} - {item}")
