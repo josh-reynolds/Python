@@ -163,6 +163,50 @@
 # [  ] Financials (Credits, ImperialDate, Ship, StarSystem)
 # [OK] Ship (Credits)
 # [OK] StarSystem
+#
+# So, the model I think we're striving for is all actions involve
+# invoking a series of sub-actions which return multi-dimensional
+# costs, then passing the costs to the payees. Tempting to create
+# a little class to represent costs, but that's overengineered at
+# this point. Keep it to a simple tuple until we need more.
+#
+# Current actions:
+#   quit
+#   list commands
+#   cargo hold contents
+#   view world characteristics
+#   wait a week
+#   lift off to orbit
+#   trade
+#   refuel
+#   go to jump point
+#   land on surface
+#   jump to new system
+#   inbound to orbit
+#   leave trade
+#   show goods for sale
+#   buy cargo
+#   sell cargo
+#
+# There will of course be others, like skimming fuel, but these
+# give a good sampling of what to expect. A few types:
+#
+# State transitions (quit, lift off, go to jump, land, jump, inbound, trade, leave)
+#     Change state on object, may have a time cost
+# Informational (list commands, hold contents, world chars., show goods)
+#     Pull information from object
+# Actions (wait, refuel, buy, sell)
+#     Interact with objects, may have multiple costs
+#
+# These distinctions are pretty arbitrary, at least between the first
+# and third. And in some ways even the second if you allow zero-cost as
+# a thing. Anyway.
+#
+# So next step might be to make all actions (Command objects) correspond
+# to a method on Game, and not allow them direct access to the child
+# objects. Most pressing for buy/sell, but even the simple informationals
+# should comply.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -174,6 +218,9 @@
 # landing.
 # In both cases, there's the question of the player gaming
 # the system and either evading costs or getting stuck.
+#
+# Could add a check before outbound to jump point that the ship
+# has at least 2x cost (for there and back).
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -262,7 +309,7 @@
 #  * [    ] Add fuel expenditure
 #  * [DONE] Add refuelling costs at starport
 #  * [DONE] Restructure payment flow & dependencies for fuel
-#  * [    ] Extend payment flow model to reduce coupling between classes
+#  * [....] Extend payment flow model to reduce coupling between classes
 #  * [DONE] Add starport classification to StarSystem
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
@@ -316,6 +363,7 @@
 #            and whether in advance or on the fly)
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [....] Adjust UI elements, play with more ANSI codes
+#  * [    ] Should/could we clear the screen?
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] If we want to expand beyond just the trade model, add 

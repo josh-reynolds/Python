@@ -83,6 +83,21 @@ class Game:
         cost = self.ship.refuel()
         self.financials.debit(cost)
 
+    def buy_cargo(self):
+        self.depot.buy_cargo()
+
+    def sell_cargo(self):
+        self.depot.sell_cargo()
+
+    def goods(self):
+        self.depot.goods()
+
+    def cargo_hold(self):
+        self.ship.cargo_hold()
+
+    def wait_week(self):
+        self.date.plus_week()
+
 class Command:
     def __init__(self, key, description, action, message):
         self.key = key
@@ -99,13 +114,13 @@ always = [Command('q', 'Quit',
                   game.list_commands,
                   'Available commands:'),
           Command('c', 'Cargo hold contents',
-                  game.ship.cargo_hold,
+                  game.cargo_hold,
                   'Contents of cargo hold:'),
           Command('v', 'View world characteristics',
                   game.view_world,
                   'Local world characteristics:'),
           Command('w', 'Wait a week',
-                  game.date.plus_week,
+                  game.wait_week,
                   'Waiting')]
 
 grounded = always + [Command('l', 'Lift off to orbit', 
@@ -139,13 +154,13 @@ trade = always + [Command('l', 'Leave trade interaction',
                           game.leave,
                           'Leaving trader depot.'),
                   Command('g', 'Show goods for sale',
-                          game.depot.goods,
+                          game.goods,
                           'Available cargo loads:'),
                   Command('b', 'Buy cargo',
-                          game.depot.buy_cargo,
+                          game.buy_cargo,
                           'Purchasing cargo'),
                   Command('s', 'Sell cargo',
-                          game.depot.sell_cargo,
+                          game.sell_cargo,
                           'Selling cargo')]
 trade = sorted(trade, key=lambda command: command.key)
 
