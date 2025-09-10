@@ -124,6 +124,13 @@ class CargoDepot:
             return None
         return quantity
 
+    def invalid_cargo_origin(self, cargo):
+        if cargo.source_world:
+            if cargo.source_world == self.system:
+                print("You cannot resell cargo on the world where it was purchased.")
+                return True
+        return False
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -190,10 +197,8 @@ class CargoDepot:
         if cargo == None:
             return
 
-        if cargo.source_world:
-            if cargo.source_world == self.system:
-                print("You cannot resell cargo on the world where it was purchased.")
-                return
+        if self.invalid_cargo_origin(cargo):
+            return
 
         broker = confirm_input("Would you like to hire a broker (y/n)? ")
 

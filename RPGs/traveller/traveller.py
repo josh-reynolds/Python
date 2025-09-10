@@ -85,8 +85,8 @@ class Game:
 
     def buy_cargo(self):
         self.depot.buy_cargo()
-        # get cargo to buy
-        # get quantity to buy
+        # [x] get cargo to buy
+        # [x] get quantity to buy
         # verify quantity against ship hold space
         # determine purchase cost
         # verify cost against financials balance
@@ -97,10 +97,10 @@ class Game:
 
     def sell_cargo(self):
         self.depot.sell_cargo()
-        # get cargo to sell
-        # verify cargo origin against current location
+        # [x] get cargo to sell
+        # [x] verify cargo origin against current location
         # optionally hire a broker
-        # get quantity to sell
+        # [x] get quantity to sell
         # determine sale price
         # deduct broker fee from financials balance
         # confirm sale
