@@ -10,7 +10,7 @@ class Game:
         self.running = False
         self.date = Calendar()
         self.ship = Ship()
-        self.location = StarSystem("Yorbund", 5, 5, 5, 5) 
+        self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5) 
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.ship, self.financials, self.date.current_date)
 

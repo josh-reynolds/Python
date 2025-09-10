@@ -225,6 +225,17 @@
 # one day? or even no delay if they have reserve fuel.
 # -------------------------------------------------------------
 
+# -------------------------------------------------------------
+# Will want to consider what aspects of the starport to bring into
+# play. Fuel availability for sure, as well as maintenance
+# availability. Need to mull over minor damage and whether other
+# repair facilities should be accounted for. Bases? Probably easy
+# to add, have no real play effect, just color (could influence
+# ship encounters, but even those are mostly color at least in the
+# initial version). Ship construction is also for some future 
+# version, if ever.
+# -------------------------------------------------------------
+
 # --------------------------------------------------------------
 # Consolidating TO_DO list:
 
@@ -246,8 +257,10 @@
 #  * [DONE] Add refuelling costs at starport
 #  * [DONE] Restructure payment flow & dependencies for fuel
 #  * [    ] Extend payment flow model to reduce coupling between classes
-#  * [    ] Add starport classification to StarSystem
-#  * [    ] Add unrefined fuel and its effects
+#  * [DONE] Add starport classification to StarSystem
+#  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
+#  * [    ] Add maintenance availability to StarSystem (A + B starports)A
+#  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [DONE] Add fuel level check before executing jump
 #  * [    ] Add select destination before jump (will tie in to subsector map,
 #            world generation, possibly freight & passenger selection)
@@ -257,6 +270,7 @@
 #            StarSystem (abstract the outer system for this purpose)
 #  * [    ] Add gas giant presence to StarSystem
 #  * [DONE] Add view StarSystem data action
+#  * [    ] Add extended StarSystem details
 #  * [    ] Add life support system to Ship and corresponding mechanics like
 #            recharging costs, check level before jump, etc.
 #  * [DONE] Add extended berthing fee mechanism

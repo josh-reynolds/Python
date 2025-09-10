@@ -1,8 +1,9 @@
 from cargo import CargoDepot
 
 class StarSystem:
-    def __init__(self, name, atmosphere, hydrographics, population, government):
+    def __init__(self, name, starport, atmosphere, hydrographics, population, government):
         self.name = name
+        self.starport = starport
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
         self.population = population
@@ -51,7 +52,7 @@ class StarSystem:
         return False
 
     def __repr__(self):
-        url = f"{self.atmosphere}{self.hydrographics}{self.population}{self.government}"
+        url = f"{self.starport}{self.atmosphere}{self.hydrographics}{self.population}{self.government}"
         if self.agricultural:
             url += " Ag"
         if self.nonagricultural:
