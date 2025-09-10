@@ -111,20 +111,26 @@ class CargoDepot:
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             print("That is not a valid cargo ID.")
-            return None   # caller needs to handle
+            return None
         return (item_number, source[item_number])
+
+    def get_cargo_quantity(self, prompt, cargo):
+        quantity = int_input(f"How many would you like to {prompt}? ")
+        if quantity > cargo.quantity:
+            print("There is not enough available. Specify a lower quantity.")
+            return None
+        if quantity <= 0:
+            print("Quantity needs to be a positive number.")
+            return None
+        return quantity
 
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
             return
 
-        quantity = int_input('How many would you like to purchase? ')
-        if quantity > cargo.quantity:
-            print("There is not enough available. Specify a lower quantity.")
-            return
-        if quantity <= 0:
-            print("Quantity needs to be a positive number.")
+        quantity = self.get_cargo_quantity("buy", cargo)
+        if quantity == None:
             return
 
         free_space = self.ship.free_space()
@@ -200,12 +206,8 @@ class CargoDepot:
             if broker_confirm == 'n':
                 broker_skill = 0
 
-        quantity = int_input('How many would you like to sell? ')
-        if (quantity > cargo.quantity):
-            print("There is not enough available. Specify a lower quantity.")
-            return
-        if quantity <= 0:
-            print("Quantity needs to be a positive number.")
+        quantity = self.get_cargo_quantity("sell", cargo)
+        if quantity == None:
             return
 
         modifier = self.get_price_modifiers(cargo, "sale")
