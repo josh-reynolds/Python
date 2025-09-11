@@ -1,7 +1,6 @@
 from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
-from calendar import ImperialDate
 
 class Cargo:
     def __init__(self, name, quantity, price, unit_size, 
@@ -72,7 +71,7 @@ class CargoDepot:
         # purchases, not for sales
 
     def notify(self, date):
-        if date >= ImperialDate(self.current_date.day + 7, self.current_date.year):
+        if date >= self.current_date + 7:
             self.current_date = date.copy()
             self.cargo = self.determine_cargo()
             self.prices = [0]

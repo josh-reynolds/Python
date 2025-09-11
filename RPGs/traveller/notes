@@ -334,6 +334,8 @@
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [DONE] Add fuel level check before executing jump
+#  * [    ] Add fuel level check before travelling to jump point
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add select destination before jump (will tie in to subsector map,
 #            world generation, possibly freight & passenger selection)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
@@ -355,7 +357,7 @@
 #            values cause crashes
 #  * [DONE] Extract confirmation input loop to a reusable function
 #  * [    ] Make type dunder methods more robust with NotImpemented etc.
-#  * [    ] Add 'plus days' method to ImperialDate
+#  * [DONE] Add 'plus days' method to ImperialDate (went with dunder again)
 #  * [....] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [DONE] Add crew skills and their influence on sale prices

@@ -59,5 +59,8 @@ class ImperialDate:
     def __sub__(self, other):
         return self.day - other.day
 
+    def __add__(self, days):
+        return ImperialDate(self.day + days, self.year)
+
     def copy(self):
         return ImperialDate(self.day, self.year)

@@ -1,5 +1,3 @@
-from calendar import ImperialDate
-
 class Credits:
     def __init__(self, amount):
         self.amount = amount
@@ -26,9 +24,9 @@ class Financials:
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
         self.ship = ship
-        self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
-        self.salary_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
-        self.loan_due = ImperialDate(self.current_date.day + 28, self.current_date.year)
+        self.berth_expiry = self.current_date + 6
+        self.salary_due = self.current_date + 28
+        self.loan_due = self.current_date + 28
         self.location = location
 
     def debit(self, amount):
@@ -58,7 +56,7 @@ class Financials:
         if on_surface:
             print("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
-            self.berth_expiry = ImperialDate(self.current_date.day + 6, self.current_date.year)
+            self.berth_expiry = self.current_date + 6
 
     def renew_berth(self, date):
         days_extra = date - self.berth_expiry
@@ -68,16 +66,16 @@ class Financials:
             unit = "days"
         print(f"Renewing berth on {date} for {days_extra} {unit}.")
         self.debit(Credits(days_extra * 100))
-        self.berth_expiry = ImperialDate(date.day + days_extra, date.year)
+        self.berth_expiry = date + days_extra
 
     def pay_salaries(self):
         amount = self.ship.crew_salary()
         print(f"Paying crew salaries on {self.salary_due} for {amount}.")
         self.debit(amount)
-        self.salary_due = ImperialDate(self.salary_due.day + 28, self.salary_due.year)
+        self.salary_due = self.salary_due + 28
 
     def pay_loan(self):
         amount = Credits(self.ship.loan_payment())
         print(f"Paying ship loan on {self.loan_due} for {amount}.")
         self.debit(amount)
-        self.loan_due = ImperialDate(self.loan_due.day + 28, self.loan_due.year)
+        self.loan_due = self.loan_due + 28
