@@ -90,7 +90,7 @@ class Game:
         # [x] verify quantity against ship hold space
         # [x] determine purchase cost
         # [x] verify cost against financials balance
-        # confirm purchase
+        # [x] confirm purchase
         # remove cargo from depot
         # add cargo to ship's hold
         # deduct cost from financials balance
@@ -103,7 +103,7 @@ class Game:
         # [x] get quantity to sell
         # [x] determine sale price
         # [x] deduct broker fee from financials balance
-        # confirm sale
+        # [x] confirm sale
         # remove cargo from ship
         # add price to financials balance
 

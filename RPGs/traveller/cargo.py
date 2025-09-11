@@ -194,6 +194,15 @@ class CargoDepot:
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             self.financials.debit(broker_fee)
 
+    def confirm_transaction(self, prompt, cargo, quantity, price):
+        confirmation = confirm_input(f"Confirming {prompt} of " 
+                                     f"{Cargo.quantity_string(cargo, quantity)} of "
+                                     f"{cargo.name} for {price} (y/n)? ")
+        if confirmation == 'n':
+            print(f"Cancelling {prompt}.")
+            return False
+        return True
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -211,11 +220,7 @@ class CargoDepot:
         if self.insufficient_funds(cost):
             return
 
-        confirmation = confirm_input(f"Would you like to purchase " 
-                                     f"{Cargo.quantity_string(cargo, quantity)} of "
-                                     f"{cargo.name} for {cost} (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling purchase.")
+        if not self.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
         # proceed with the transaction
@@ -248,11 +253,7 @@ class CargoDepot:
 
         self.pay_broker(broker_skill, sale_price)
 
-        confirmation = confirm_input("Would you like to sell " 
-                                     f"{Cargo.quantity_string(cargo, quantity)} of "
-                                     f"{cargo.name} for {sale_price} (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling sale.")
+        if not self.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
         # proceed with the transaction
