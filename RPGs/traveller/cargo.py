@@ -203,6 +203,13 @@ class CargoDepot:
             return False
         return True
 
+    # this overlaps with ship.unload_cargo()...
+    def remove_cargo(self, source, cargo, quantity):
+        if quantity == cargo.quantity:
+            source.remove(cargo)
+        else:
+            cargo.quantity -= quantity
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -224,10 +231,7 @@ class CargoDepot:
             return
 
         # proceed with the transaction
-        if quantity == cargo.quantity:
-            self.cargo.remove(cargo)
-        else:
-            cargo.quantity -= quantity
+        self.remove_cargo(self.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
                           cargo.purchase_dms, cargo.sale_dms, self.system)
@@ -257,7 +261,7 @@ class CargoDepot:
             return
 
         # proceed with the transaction
-        self.ship.unload_cargo(cargo, quantity)
+        self.remove_cargo(self.ship.hold, cargo, quantity)
         self.financials.credit(sale_price)
 
     def determine_cargo(self):

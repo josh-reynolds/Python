@@ -41,6 +41,7 @@ class Ship:
     def load_cargo(self, cargo):
         self.hold.append(cargo)
 
+    # this may be supplanted by CargoDepot.remove_cargo()...
     def unload_cargo(self, cargo, quantity):
         if quantity == cargo.quantity:
             self.hold.remove(cargo)

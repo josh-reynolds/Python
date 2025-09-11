@@ -91,7 +91,7 @@ class Game:
         # [x] determine purchase cost
         # [x] verify cost against financials balance
         # [x] confirm purchase
-        # remove cargo from depot
+        # [x] remove cargo from depot
         # add cargo to ship's hold
         # deduct cost from financials balance
 
@@ -104,7 +104,7 @@ class Game:
         # [x] determine sale price
         # [x] deduct broker fee from financials balance
         # [x] confirm sale
-        # remove cargo from ship
+        # [x] remove cargo from ship
         # add price to financials balance
 
     def goods(self):
