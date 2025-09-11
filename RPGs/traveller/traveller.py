@@ -88,7 +88,7 @@ class Game:
         # [x] get cargo to buy
         # [x] get quantity to buy
         # [x] verify quantity against ship hold space
-        # determine purchase cost
+        # [x] determine purchase cost
         # verify cost against financials balance
         # confirm purchase
         # remove cargo from depot
@@ -101,7 +101,7 @@ class Game:
         # [x] verify cargo origin against current location
         # [x] optionally hire a broker
         # [x] get quantity to sell
-        # determine sale price
+        # [x] determine sale price
         # deduct broker fee from financials balance
         # confirm sale
         # remove cargo from ship

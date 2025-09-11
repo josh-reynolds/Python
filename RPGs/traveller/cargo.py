@@ -151,6 +151,37 @@ class CargoDepot:
             return True
         return False
 
+    def determine_price(self, prompt, cargo, quantity, item_number, broker_skill):
+        modifier = self.get_price_modifiers(cargo, prompt)
+
+        if prompt == "sale":
+            modifier += self.ship.trade_skill()
+            modifier += broker_skill
+            roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+            price_adjustment = actual_value(roll)
+        elif prompt == "purchase":
+            if self.prices[item_number] > 0:
+                price_adjustment = self.prices[item_number]
+            else:
+                roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+                price_adjustment = actual_value(roll)
+                if quantity < cargo.quantity:
+                    price_adjustment += .01
+                self.prices[item_number] = price_adjustment
+
+        price = Credits(cargo.price.amount * price_adjustment * quantity)
+        if ((prompt == "sale" and price_adjustment > 1) or 
+            (prompt == "purchase" and price_adjustment < 1)):
+            pr_function = pr_green
+        elif ((prompt == "sale" and price_adjustment < 1) or 
+              (prompt == "purchase" and price_adjustment > 1)):
+            pr_function = pr_red
+        else:
+            pr_function = print
+
+        pr_function(f"{prompt.capitalize()} price of that quantity is {price}.")
+        return price
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -163,27 +194,7 @@ class CargoDepot:
         if self.insufficient_hold_space(cargo, quantity):
             return
 
-        modifier = self.get_price_modifiers(cargo, "purchase")
-
-        if self.prices[item_number] > 0:
-            price_adjustment = self.prices[item_number]
-        else:
-            roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
-            price_adjustment = actual_value(roll)
-
-            if quantity < cargo.quantity:
-                price_adjustment += .01
-
-            self.prices[item_number] = price_adjustment
-
-        cost = Credits(cargo.price.amount * price_adjustment * quantity)
-        if price_adjustment < 1:
-            pr_function = pr_green
-        elif price_adjustment > 1:
-            pr_function = pr_red
-        else:
-            pr_function = print
-        pr_function(f"That quantity will cost {cost}.")
+        cost = self.determine_price("purchase", cargo, quantity, item_number, None)
 
         if cost > self.financials.balance:
             print("You do not have sufficient funds.")
@@ -223,21 +234,7 @@ class CargoDepot:
         if quantity == None:
             return
 
-        modifier = self.get_price_modifiers(cargo, "sale")
-        modifier += self.ship.trade_skill()
-        modifier += broker_skill
-
-        roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
-        price_adjustment = actual_value(roll)
-
-        sale_price = Credits(cargo.price.amount * price_adjustment * quantity)
-        if price_adjustment > 1:
-            pr_function = pr_green
-        elif price_adjustment < 1:
-            pr_function = pr_red
-        else:
-            pr_function = print
-        pr_function(f"That quantity will sell for {sale_price}.")
+        sale_price = self.determine_price("sale", cargo, quantity, item_number, broker_skill)
 
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
