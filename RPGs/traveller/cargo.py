@@ -210,6 +210,11 @@ class CargoDepot:
         else:
             cargo.quantity -= quantity
 
+    def transfer_cargo(self, cargo, quantity):
+        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
+                          cargo.purchase_dms, cargo.sale_dms, self.system)
+        self.ship.load_cargo(purchased)
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -230,13 +235,8 @@ class CargoDepot:
         if not self.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
-        # proceed with the transaction
         self.remove_cargo(self.cargo, cargo, quantity)
-
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
-                          cargo.purchase_dms, cargo.sale_dms, self.system)
-        self.ship.load_cargo(purchased)
-
+        self.transfer_cargo(cargo, quantity)
         self.financials.debit(cost)
 
     def sell_cargo(self):
@@ -260,7 +260,6 @@ class CargoDepot:
         if not self.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        # proceed with the transaction
         self.remove_cargo(self.ship.hold, cargo, quantity)
         self.financials.credit(sale_price)
 

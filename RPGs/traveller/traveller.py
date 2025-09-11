@@ -92,7 +92,7 @@ class Game:
         # [x] verify cost against financials balance
         # [x] confirm purchase
         # [x] remove cargo from depot
-        # add cargo to ship's hold
+        # [x] add cargo to ship's hold
         # deduct cost from financials balance
 
     def sell_cargo(self):

@@ -378,8 +378,10 @@
 #  * [    ] Add ship streamlining and effect upon landing/skimming
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
-#  * [    ] Add loan history and statement
+#  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Add out-of-funds condition (game over?)
+#  * [    ] Tie-in with game over and save/load game - add front end with
+#  *         restart / new game options, including re-using same star map
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add survival odds for low berth passengers, and report results each trip
