@@ -102,7 +102,7 @@ class Game:
         # [x] optionally hire a broker
         # [x] get quantity to sell
         # [x] determine sale price
-        # deduct broker fee from financials balance
+        # [x] deduct broker fee from financials balance
         # confirm sale
         # remove cargo from ship
         # add price to financials balance

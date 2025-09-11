@@ -188,6 +188,12 @@ class CargoDepot:
             return True
         return False
 
+    def pay_broker(self, broker_skill, sale_price):
+        if broker_skill > 0:
+            broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
+            print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
+            self.financials.debit(broker_fee)
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -240,10 +246,7 @@ class CargoDepot:
 
         sale_price = self.determine_price("sale", cargo, quantity, item_number, broker_skill)
 
-        if broker_skill > 0:
-            broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
-            print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
-            self.financials.debit(broker_fee)
+        self.pay_broker(broker_skill, sale_price)
 
         confirmation = confirm_input("Would you like to sell " 
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
