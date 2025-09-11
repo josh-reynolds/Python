@@ -181,6 +181,13 @@ class CargoDepot:
         pr_function(f"{prompt.capitalize()} price of that quantity is {price}.")
         return price
 
+    def insufficient_funds(self, cost):
+        if cost > self.financials.balance:
+            print("You do not have sufficient funds.")
+            print(f"Your available balance is {self.financials.balance}.")
+            return True
+        return False
+
     def buy_cargo(self):
         item_number, cargo = self.get_cargo_lot(self.cargo, "buy")
         if cargo == None:
@@ -195,9 +202,7 @@ class CargoDepot:
 
         cost = self.determine_price("purchase", cargo, quantity, item_number, None)
 
-        if cost > self.financials.balance:
-            print("You do not have sufficient funds.")
-            print(f"Your available balance is {self.financials.balance}.")
+        if self.insufficient_funds(cost):
             return
 
         confirmation = confirm_input(f"Would you like to purchase " 
