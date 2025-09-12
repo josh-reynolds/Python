@@ -59,9 +59,8 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system, financials, current_date):
+    def __init__(self, system, current_date):
         self.system = system
-        self.financials = financials
         self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
         self.prices = [0]  
@@ -179,18 +178,20 @@ class CargoDepot:
         pr_function(f"{prompt.capitalize()} price of that quantity is {price}.")
         return price
 
-    def insufficient_funds(self, cost):
-        if cost > self.financials.balance:
+    def insufficient_funds(self, cost, balance):
+        if cost > balance:
             print("You do not have sufficient funds.")
-            print(f"Your available balance is {self.financials.balance}.")
+            print(f"Your available balance is {balance}.")
             return True
         return False
 
-    def pay_broker(self, broker_skill, sale_price):
+    def broker_fee(self, broker_skill, sale_price):
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
-            self.financials.debit(broker_fee)
+            return broker_fee
+        else:
+            return 0
 
     def confirm_transaction(self, prompt, cargo, quantity, price):
         confirmation = confirm_input(f"Confirming {prompt} of " 
