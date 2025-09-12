@@ -92,7 +92,9 @@ class Game:
         if quantity == None:
             return
         
-        # [x] verify quantity against ship hold space
+        if self.depot.insufficient_hold_space(cargo, quantity):
+            return
+
         # [x] determine purchase cost
         # [x] verify cost against financials balance
         # [x] confirm purchase

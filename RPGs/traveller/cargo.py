@@ -216,9 +216,6 @@ class CargoDepot:
         self.ship.load_cargo(purchased)
 
     def buy_cargo(self, item_number, cargo, quantity):
-        if self.insufficient_hold_space(cargo, quantity):
-            return
-
         cost = self.determine_price("purchase", cargo, quantity, item_number, None)
 
         if self.insufficient_funds(cost):
