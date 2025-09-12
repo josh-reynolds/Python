@@ -226,6 +226,14 @@
 # wait_week. At that point we only have one observer so the entire thing
 # may not justify its existence, even though it isn't causing any problems
 # in CargoDepot.
+#
+# OK. CargoDepot buy & sell have been broken up, and lifted into
+# Game. This opens the door to removing references to Ship &
+# Financials and fully decoupling the class. Methods of course will
+# continue to slide around to appropriate homes as we go, but for now
+# this is pretty clean. (I _do_ envision some sort of split of Game
+# itself, possibly along MVC lines. We may end up pulling too many
+# things up and that class will become bloated. One step at a time.)
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -306,6 +314,37 @@
 # But let's not critique the system just yet. I'll fill in ambiguous
 # areas as needed, but otherwise keep to RAW. Later maybe we'll
 # explore other editions and/or homebrew our own trading rules.
+# -------------------------------------------------------------
+#
+# -------------------------------------------------------------
+# ROADMAP
+# Mulling over how to tackle ever-increasing TO_DO list.
+# I think we can chunk the work into a few phases:
+#  PHASE ONE <== we are here
+#  * Full feature set for in-system speculative trading. Just a few
+#    maintenance costs left to go.
+#  * Basic travel & resources features.
+#  * Refactoring. In the midst of a big push right now.
+#  * (Should really take my medicine and get tests/pylint/etc. done)
+#  PHASE TWO
+#  * Jumping to a new system and all it implies:
+#    * Multiple systems
+#    * Star map
+#    * Coordinate system
+#    * Save/load?
+#  PHASE THREE
+#  * Adding freight & passengers
+#  * Any other remaining RAW procedures
+#  PHASE FOUR
+#  * Polishing game mechanisms:
+#    * UI work
+#    * Front end and menu
+#    * Save/load if not done earlier
+#    * Player customization: ship name, captain, etc.
+#  PHASE FIVE
+#    * Expand scope with RPG-lite elements and events
+#    * Lift into graphics system? (This could really snowball, be cautious)
+#    * Explore later Traveller versions for ideas (or to support as options)
 # -------------------------------------------------------------
 
 # --------------------------------------------------------------

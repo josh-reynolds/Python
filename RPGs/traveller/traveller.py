@@ -12,7 +12,7 @@ class Game:
         self.ship = Ship()
         self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5) 
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
-        self.depot = CargoDepot(self.location, self.ship, self.financials, self.date.current_date)
+        self.depot = CargoDepot(self.location, self.financials, self.date.current_date)
 
         self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
                                    {"Ag":-2,"Na":1,"In":2}, 
@@ -92,10 +92,11 @@ class Game:
         if quantity == None:
             return
         
-        if self.depot.insufficient_hold_space(cargo, quantity):
+        if self.depot.insufficient_hold_space(cargo, quantity, self.ship.free_space()):
             return
 
-        cost = self.depot.determine_price("purchase", cargo, quantity, item_number, None)
+        cost = self.depot.determine_price("purchase", cargo, quantity, item_number, 
+                                          None, self.ship.trade_skill())
 
         if self.depot.insufficient_funds(cost):
             return
@@ -105,7 +106,9 @@ class Game:
 
         self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
 
-        self.depot.transfer_cargo(cargo, quantity)
+        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
+                          cargo.purchase_dms, cargo.sale_dms, self.location)
+        self.ship.load_cargo(purchased)
 
         self.financials.debit(cost)
 
@@ -123,7 +126,8 @@ class Game:
         if quantity == None:
             return
 
-        sale_price = self.depot.determine_price("sale", cargo, quantity, item_number, broker_skill)
+        sale_price = self.depot.determine_price("sale", cargo, quantity, item_number, 
+                                                broker_skill, self.ship.trade_skill())
 
         self.depot.pay_broker(broker_skill, sale_price)
 

@@ -59,9 +59,8 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system, ship, financials, current_date):
+    def __init__(self, system, financials, current_date):
         self.system = system
-        self.ship = ship
         self.financials = financials
         self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
@@ -142,19 +141,18 @@ class CargoDepot:
                 broker_skill = 0
         return broker_skill
 
-    def insufficient_hold_space(self, cargo, quantity):
-        free_space = self.ship.free_space()
+    def insufficient_hold_space(self, cargo, quantity, free_space):
         if (quantity * cargo.unit_size > free_space):
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
             return True
         return False
 
-    def determine_price(self, prompt, cargo, quantity, item_number, broker_skill):
+    def determine_price(self, prompt, cargo, quantity, item_number, broker_skill, trade_skill):
         modifier = self.get_price_modifiers(cargo, prompt)
 
         if prompt == "sale":
-            modifier += self.ship.trade_skill()
+            modifier += trade_skill
             modifier += broker_skill
             roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
             price_adjustment = actual_value(roll)
@@ -209,11 +207,6 @@ class CargoDepot:
             source.remove(cargo)
         else:
             cargo.quantity -= quantity
-
-    def transfer_cargo(self, cargo, quantity):
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
-                          cargo.purchase_dms, cargo.sale_dms, self.system)
-        self.ship.load_cargo(purchased)
 
     def determine_cargo(self):
         cargo = []
