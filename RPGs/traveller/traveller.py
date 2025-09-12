@@ -105,9 +105,9 @@ class Game:
 
         self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
 
-        # [x] add cargo to ship's hold
-        # [x] deduct cost from financials balance
-        self.depot.buy_cargo(item_number, cargo, quantity, cost)
+        self.depot.transfer_cargo(cargo, quantity)
+
+        self.financials.debit(cost)
 
     def sell_cargo(self):
         item_number, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
@@ -132,8 +132,7 @@ class Game:
 
         self.depot.remove_cargo(self.ship.hold, cargo, quantity)
 
-        # [x] add price to financials balance
-        self.depot.sell_cargo(item_number, cargo, broker_skill, quantity, sale_price)
+        self.financials.credit(sale_price)
 
     def goods(self):
         self.depot.goods()

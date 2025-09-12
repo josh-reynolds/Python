@@ -215,13 +215,6 @@ class CargoDepot:
                           cargo.purchase_dms, cargo.sale_dms, self.system)
         self.ship.load_cargo(purchased)
 
-    def buy_cargo(self, item_number, cargo, quantity, cost):
-        self.transfer_cargo(cargo, quantity)
-        self.financials.debit(cost)
-
-    def sell_cargo(self, item_number, cargo, broker_skill, quantity, sale_price):
-        self.financials.credit(sale_price)
-
     def determine_cargo(self):
         cargo = []
 
