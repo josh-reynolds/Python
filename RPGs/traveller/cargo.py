@@ -235,12 +235,7 @@ class CargoDepot:
         self.transfer_cargo(cargo, quantity)
         self.financials.debit(cost)
 
-    def sell_cargo(self, item_number, cargo):
-        if self.invalid_cargo_origin(cargo):
-            return
-
-        broker_skill = self.get_broker()
-
+    def sell_cargo(self, item_number, cargo, broker_skill):
         quantity = self.get_cargo_quantity("sell", cargo)
         if quantity == None:
             return
