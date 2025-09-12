@@ -95,14 +95,15 @@ class Game:
         if self.depot.insufficient_hold_space(cargo, quantity):
             return
 
-        # [x] determine purchase cost
+        cost = self.depot.determine_price("purchase", cargo, quantity, item_number, None)
+
         # [x] verify cost against financials balance
         # [x] confirm purchase
         # [x] remove cargo from depot
         # [x] add cargo to ship's hold
         # [x] deduct cost from financials balance
 
-        self.depot.buy_cargo(item_number, cargo, quantity)
+        self.depot.buy_cargo(item_number, cargo, quantity, cost)
 
     def sell_cargo(self):
         item_number, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
@@ -118,12 +119,13 @@ class Game:
         if quantity == None:
             return
 
-        # [x] determine sale price
+        sale_price = self.depot.determine_price("sale", cargo, quantity, item_number, broker_skill)
+
         # [x] deduct broker fee from financials balance
         # [x] confirm sale
         # [x] remove cargo from ship
         # [x] add price to financials balance
-        self.depot.sell_cargo(item_number, cargo, broker_skill, quantity)
+        self.depot.sell_cargo(item_number, cargo, broker_skill, quantity, sale_price)
 
     def goods(self):
         self.depot.goods()
