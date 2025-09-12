@@ -216,16 +216,16 @@ class CargoDepot:
         self.ship.load_cargo(purchased)
 
     def buy_cargo(self, item_number, cargo, quantity, cost):
-        if not self.confirm_transaction("purchase", cargo, quantity, cost):
-            return
+        #if not self.confirm_transaction("purchase", cargo, quantity, cost):
+            #return
 
         self.remove_cargo(self.cargo, cargo, quantity)
         self.transfer_cargo(cargo, quantity)
         self.financials.debit(cost)
 
     def sell_cargo(self, item_number, cargo, broker_skill, quantity, sale_price):
-        if not self.confirm_transaction("sale", cargo, quantity, sale_price):
-            return
+        #if not self.confirm_transaction("sale", cargo, quantity, sale_price):
+            #return
 
         self.remove_cargo(self.ship.hold, cargo, quantity)
         self.financials.credit(sale_price)

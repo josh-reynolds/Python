@@ -97,15 +97,15 @@ class Game:
 
         cost = self.depot.determine_price("purchase", cargo, quantity, item_number, None)
 
-        # [x] verify cost against financials balance
         if self.depot.insufficient_funds(cost):
             return
 
-        # [x] confirm purchase
+        if not self.depot.confirm_transaction("purchase", cargo, quantity, cost):
+            return
+
         # [x] remove cargo from depot
         # [x] add cargo to ship's hold
         # [x] deduct cost from financials balance
-
         self.depot.buy_cargo(item_number, cargo, quantity, cost)
 
     def sell_cargo(self):
@@ -124,10 +124,11 @@ class Game:
 
         sale_price = self.depot.determine_price("sale", cargo, quantity, item_number, broker_skill)
 
-        # [x] deduct broker fee from financials balance
         self.depot.pay_broker(broker_skill, sale_price)
 
-        # [x] confirm sale
+        if not self.depot.confirm_transaction("sale", cargo, quantity, sale_price):
+            return
+
         # [x] remove cargo from ship
         # [x] add price to financials balance
         self.depot.sell_cargo(item_number, cargo, broker_skill, quantity, sale_price)
