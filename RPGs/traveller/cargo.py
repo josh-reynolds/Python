@@ -215,11 +215,7 @@ class CargoDepot:
                           cargo.purchase_dms, cargo.sale_dms, self.system)
         self.ship.load_cargo(purchased)
 
-    def buy_cargo(self, item_number, cargo):
-        quantity = self.get_cargo_quantity("buy", cargo)
-        if quantity == None:
-            return
-
+    def buy_cargo(self, item_number, cargo, quantity):
         if self.insufficient_hold_space(cargo, quantity):
             return
 
@@ -235,11 +231,7 @@ class CargoDepot:
         self.transfer_cargo(cargo, quantity)
         self.financials.debit(cost)
 
-    def sell_cargo(self, item_number, cargo, broker_skill):
-        quantity = self.get_cargo_quantity("sell", cargo)
-        if quantity == None:
-            return
-
+    def sell_cargo(self, item_number, cargo, broker_skill, quantity):
         sale_price = self.determine_price("sale", cargo, quantity, item_number, broker_skill)
 
         self.pay_broker(broker_skill, sale_price)

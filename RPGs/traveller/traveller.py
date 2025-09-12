@@ -88,7 +88,10 @@ class Game:
         if cargo == None:
             return
 
-        # [x] get quantity to buy
+        quantity = self.depot.get_cargo_quantity("buy", cargo)
+        if quantity == None:
+            return
+        
         # [x] verify quantity against ship hold space
         # [x] determine purchase cost
         # [x] verify cost against financials balance
@@ -97,7 +100,7 @@ class Game:
         # [x] add cargo to ship's hold
         # [x] deduct cost from financials balance
 
-        self.depot.buy_cargo(item_number, cargo)
+        self.depot.buy_cargo(item_number, cargo, quantity)
 
     def sell_cargo(self):
         item_number, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
@@ -109,13 +112,16 @@ class Game:
 
         broker_skill = self.depot.get_broker()
 
-        # [x] get quantity to sell
+        quantity = self.depot.get_cargo_quantity("sell", cargo)
+        if quantity == None:
+            return
+
         # [x] determine sale price
         # [x] deduct broker fee from financials balance
         # [x] confirm sale
         # [x] remove cargo from ship
         # [x] add price to financials balance
-        self.depot.sell_cargo(item_number, cargo, broker_skill)
+        self.depot.sell_cargo(item_number, cargo, broker_skill, quantity)
 
     def goods(self):
         self.depot.goods()
