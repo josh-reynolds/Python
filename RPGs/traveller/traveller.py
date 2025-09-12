@@ -103,7 +103,8 @@ class Game:
         if not self.depot.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
-        # [x] remove cargo from depot
+        self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
+
         # [x] add cargo to ship's hold
         # [x] deduct cost from financials balance
         self.depot.buy_cargo(item_number, cargo, quantity, cost)
@@ -129,7 +130,8 @@ class Game:
         if not self.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        # [x] remove cargo from ship
+        self.depot.remove_cargo(self.ship.hold, cargo, quantity)
+
         # [x] add price to financials balance
         self.depot.sell_cargo(item_number, cargo, broker_skill, quantity, sale_price)
 
