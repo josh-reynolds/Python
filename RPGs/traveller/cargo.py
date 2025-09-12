@@ -216,9 +216,6 @@ class CargoDepot:
         self.ship.load_cargo(purchased)
 
     def buy_cargo(self, item_number, cargo, quantity, cost):
-        if self.insufficient_funds(cost):
-            return
-
         if not self.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
@@ -227,8 +224,6 @@ class CargoDepot:
         self.financials.debit(cost)
 
     def sell_cargo(self, item_number, cargo, broker_skill, quantity, sale_price):
-        self.pay_broker(broker_skill, sale_price)
-
         if not self.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
