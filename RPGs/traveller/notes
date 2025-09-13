@@ -395,6 +395,7 @@
 #  * [DONE] Add life support system to Ship
 #  * [DONE] Add life support recharging costs
 #  * [DONE] Check life support level before jump
+#  * [DONE] Add fuel level check before travelling to jump point
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Refactoring and tests!!!
 #  * [    ] Add life support expenditure
@@ -402,7 +403,6 @@
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
 #  * [    ] Add fuel expenditure
-#  * [    ] Add fuel level check before travelling to jump point
 #  * [    ] Add annual maintenance
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Make type dunder methods more robust with NotImplemented etc.
@@ -445,6 +445,7 @@
 #  * [    ] Adjust UI elements, play with more ANSI codes
 #  PHASE FIVE ======================================================
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
 #            split out another surface location? Implication of current 'surface' location
 #            is it as the starport, which this is not. Scope creep, maybe hold this one
