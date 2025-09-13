@@ -331,16 +331,17 @@
 #    * Multiple systems
 #    * Star map
 #    * Coordinate system
-#    * Save/load?
 #  PHASE THREE
 #  * Adding freight & passengers
-#  * Any other remaining RAW procedures
+#  * Any other remaining RAW procedures:
+#    * crew, misjumps, etc.
 #  PHASE FOUR
 #  * Polishing game mechanisms:
 #    * UI work
 #    * Front end and menu
 #    * Save/load if not done earlier
 #    * Player customization: ship name, captain, etc.
+#    * Save/load
 #  PHASE FIVE
 #    * Expand scope with RPG-lite elements and events
 #    * Lift into graphics system? (This could really snowball, be cautious)
@@ -350,6 +351,7 @@
 # --------------------------------------------------------------
 # Consolidating TO_DO list:
 
+#  PHASE ONE =======================================================
 #  * [DONE] Create a currency class to keep value vs. display straight
 #  * [DONE] Deprecate and remove credit_string() function
 #  * [DONE] Add (basic) math/comparison operators to currency class
@@ -358,89 +360,96 @@
 #            entry and validation
 #  * [DONE] Regenerate cargo for sale weekly (and reset price adjustment)
 #  * [DONE] Review Calendar increment scenarios, remove speculative options
-#  * [    ] Review Calendar.year() setter for whether it should notify observers
-#  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [DONE] Add 'wait a week' command
-#  * [DONE] Display current date
-#  * [    ] Advance calendar for in-system activities
-#  * [DONE] Add fuel system to Ship
-#  * [    ] Add fuel expenditure
-#  * [DONE] Add refuelling costs at starport
-#  * [DONE] Restructure payment flow & dependencies for fuel
-#  * [....] Extend payment flow model to reduce coupling between classes
-#  * [DONE] Add starport classification to StarSystem
-#  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
-#  * [    ] Add maintenance availability to StarSystem (A + B starports)
-#  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
-#  * [DONE] Add fuel level check before executing jump
-#  * [    ] Add fuel level check before travelling to jump point
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
-#  * [    ] Add select destination before jump (will tie in to subsector map,
-#            world generation, possibly freight & passenger selection)
-#  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
-#  * [    ] Fix handling of observers after jump
-#  * [DONE] Skimming as jump point action, assuming gas giants present in 
-#            StarSystem (abstract the outer system for this purpose)
-#  * [    ] Ocean refuelling option if hydrographics permit it
-#  * [DONE] Add gas giant presence to StarSystem
-#  * [DONE] Add view StarSystem data action
-#  * [    ] Add extended StarSystem details
-#  * [    ] Add life support system to Ship and corresponding mechanics like
-#            recharging costs, check level before jump, etc.
 #  * [DONE] Add extended berthing fee mechanism
-#  * [    ] Add annual maintenance
 #  * [DONE] Add monthly loan payment
 #  * [DONE] Add monthly crew salaries
-#  * [    ] Add crew members with skills
-#  * [    ] Add proper salary calculation per crew member
 #  * [DONE] Protect input from bad data - one example, non-numeric
 #            values cause crashes
 #  * [DONE] Extract confirmation input loop to a reusable function
-#  * [    ] Make type dunder methods more robust with NotImpemented etc.
+#  * [DONE] Display current date
+#  * [DONE] Add fuel system to Ship
+#  * [DONE] Add refuelling costs at starport
+#  * [DONE] Restructure payment flow & dependencies for fuel
+#  * [DONE] Add starport classification to StarSystem
+#  * [DONE] Pass Credits in to Cargo ctor, not integer that needs conversion
+#  * [DONE] Add fuel level check before executing jump
+#  * [DONE] Add gas giant presence to StarSystem
+#  * [DONE] Add view StarSystem data action
+#  * [DONE] Skimming as jump point action, assuming gas giants present in 
+#            StarSystem (abstract the outer system for this purpose)
 #  * [DONE] Add 'plus days' method to ImperialDate (went with dunder again)
-#  * [....] Make StarSystem.__eq__ more robust
 #  * [DONE] Create an unload_cargo method to consolidate proper handling
 #  * [DONE] Add crew skills and their influence on sale prices
 #  * [DONE] Add brokers and their influence on sale prices
-#  * [    ] Review interpretation that skills/brokers only apply to sales
+#  * [DONE] Add display of ship characteristics
 #  * [DONE] Prevent immediate resale of bought cargo
 #            (current solution just prevents sale to source world, may want
 #             to add a time element - simplest would be to reset the source_world
 #             field to None, but later for Merchant Prince we may want to retain it)
-#  * [    ] Move cargo data to separate data file
-#  * [DONE] Pass Credits in to Cargo ctor, not integer that needs conversion
-#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
-#           (should be able to view in hold and while trading,
-#            possibly also while choosing a destination world)
-#  * [    ] Add different ship types and ship design
-#  * [DONE] Add display of ship characteristics
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
+#  * [DONE] Separate code out into modules
+#  * [DONE] Review interpretation that skills/brokers only apply to sales
+#  * [DONE] Review Calendar.year() setter for whether it should notify observers
+#  * [DONE] Make StarSystem.__eq__ more robust
+#  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Add ship streamlining and effect upon landing/skimming
-#  * [    ] Rather than having up-front tests, make some commands dynamically
-#           available in command lists when conditions merit - e.g. only present
-#           skimming as jump point command if the system has a gas giant
-#  * [    ] Replace dummy/test data with 'real' values
-#  * [    ] Add a transaction ledger to Financial class
-#  * [    ] Add loan history and statement (amortization schedule too?)
-#  * [    ] Add out-of-funds condition (game over?)
-#  * [    ] Tie-in with game over and save/load game - add front end with
-#  *         restart / new game options, including re-using same star map
-#  * [    ] Add freight shipping
-#  * [    ] Add passengers
-#  * [    ] Add survival odds for low berth passengers, and report results each trip
-#  * [    ] Add low berth lottery
+#  * [....] Adjust UI elements, play with more ANSI codes
+#  * [....] Refactoring and tests!!!
+#  * [    ] pylint/pydocstyle scrub
+#  * [    ] Longer intervals need to make sure repeating events execute multiple times
+#  * [    ] Advance calendar for in-system activities
+#  * [    ] Add fuel expenditure
+#  * [    ] Add fuel level check before travelling to jump point
+#  * [    ] Add annual maintenance
+#  * [    ] Add maintenance availability to StarSystem (A + B starports)
+#  * [    ] Add life support system to Ship and corresponding mechanics like
+#            recharging costs, check level before jump, etc.
+#  * [    ] Make type dunder methods more robust with NotImplemented etc.
+#  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
-#  * [....] Adjust UI elements, play with more ANSI codes
-#  * [    ] Should/could we clear the screen?
+#  * [    ] Add select destination before jump (will tie in to subsector map,
+#            world generation, possibly freight & passenger selection)
+#  * [    ] Fix handling of observers after jump
+#  PHASE THREE =====================================================
+#  * [    ] Add freight shipping
+#  * [    ] Add passengers
+#  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
+#  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
+#  * [    ] Add crew members with skills
+#  * [    ] Add proper salary calculation per crew member
+#  * [    ] Add survival odds for low berth passengers, and report results each trip
+#  * [    ] Add low berth lottery
+#  PHASE FOUR ======================================================
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
+#  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Move cargo data to separate data file
+#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
+#           (should be able to view in hold and while trading,
+#            possibly also while choosing a destination world)
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Rather than having up-front tests, make some commands dynamically
+#           available in command lists when conditions merit - e.g. only present
+#           skimming as jump point command if the system has a gas giant
+#  * [    ] Tie-in with game over and save/load game - add front end with
+#  *         restart / new game options, including re-using same star map
+#  * [    ] Add out-of-funds condition (game over?)
 #  * [    ] Save game state
 #  * [    ] Load game state
+#  * [    ] Should/could we clear the screen?
+#  PHASE FIVE ======================================================
+#  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Ocean refuelling option if hydrographics permit it (should we then
+#            split out another surface location? Implication of current 'surface' location
+#            is it as the starport, which this is not. Scope creep, maybe hold this one
+#            until phase five...
+#  * [    ] Add extended StarSystem details
+#  * [    ] Add different ship types and ship design
+#  * [    ] Add a transaction ledger to Financial class
+#  * [    ] Add loan history and statement (amortization schedule too?)
+#  * [    ] Distinguish between highport and downport
+#  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
-#  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
-#  * [    ] Distinguish between highport and downport
-#  * [DONE] Separate code out into modules
-#  * [....] Refactoring and tests!!!
-#  * [    ] pylint/pydocstyle scrub

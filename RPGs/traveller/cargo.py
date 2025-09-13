@@ -191,7 +191,7 @@ class CargoDepot:
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             return broker_fee
         else:
-            return 0
+            return Credits(0)
 
     def confirm_transaction(self, prompt, cargo, quantity, price):
         confirmation = confirm_input(f"Confirming {prompt} of " 

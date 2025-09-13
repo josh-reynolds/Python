@@ -4,6 +4,7 @@ class StarSystem:
     def __init__(self, name, starport, atmosphere, hydrographics, 
                  population, government, gas_giant=True):
         self.name = name
+        self.coordinate = 111
         self.starport = starport
         self.atmosphere = atmosphere
         self.hydrographics = hydrographics
@@ -44,14 +45,10 @@ class StarSystem:
             hydrographics <= 3):
             self.poor = True
 
-    #  making a big assumption that worlds cannot share the
-    #  same name - good enough for now
-    #  once we add some sort of coordinate, that should fix
-    #  the issue
     def __eq__(self, other):
-        if isinstance(other, StarSystem):
-            return self.name == other.name
-        return False
+        if type(other) is type(self):
+            return self.name == other.name and self.coordinate == other.coordinate
+        return NotImplemented
 
     def __repr__(self):
         url = f"{self.starport}{self.atmosphere}{self.hydrographics}{self.population}{self.government}"
