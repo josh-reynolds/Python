@@ -11,7 +11,7 @@ class Ship:
         self.passengers = 6
         self.low_berths = 20
         self.acceleration = 1
-        self.streamlined = False
+        self.streamlined = True
         self.hold = []
         self.hold_size = 82
         self.fuel_tank = 30
@@ -19,6 +19,7 @@ class Ship:
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
+        self.life_support_level = 100
 
     def __repr__(self):
         return f"{self.name} -- {self.model}\n" \

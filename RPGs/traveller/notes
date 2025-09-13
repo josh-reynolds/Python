@@ -392,9 +392,11 @@
 #  * [DONE] Review Calendar.year() setter for whether it should notify observers
 #  * [DONE] Make StarSystem.__eq__ more robust
 #  * [DONE] Add ship streamlining and effect upon landing/skimming
+#  * [DONE] Add life support system to Ship
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Adjust UI elements, play with more ANSI codes
 #  * [....] Refactoring and tests!!!
+#  * [    ] Add life support recharging costs
+#  * [    ] Check life support level before jump
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
@@ -402,8 +404,6 @@
 #  * [    ] Add fuel level check before travelling to jump point
 #  * [    ] Add annual maintenance
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
-#  * [    ] Add life support system to Ship and corresponding mechanics like
-#            recharging costs, check level before jump, etc.
 #  * [    ] Make type dunder methods more robust with NotImplemented etc.
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
@@ -441,6 +441,7 @@
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Should/could we clear the screen?
+#  * [    ] Adjust UI elements, play with more ANSI codes
 #  PHASE FIVE ======================================================
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then

@@ -29,7 +29,8 @@ class Game:
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
-                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons")
+                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons "
+                  f"\tLife support: {self.ship.life_support_level}%")
             command = input("Enter a command (? to list):  ")
             for c in self.commands:
                 if command.lower() == c.key:
