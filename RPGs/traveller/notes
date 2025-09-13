@@ -393,10 +393,11 @@
 #  * [DONE] Make StarSystem.__eq__ more robust
 #  * [DONE] Add ship streamlining and effect upon landing/skimming
 #  * [DONE] Add life support system to Ship
+#  * [DONE] Add life support recharging costs
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Refactoring and tests!!!
-#  * [    ] Add life support recharging costs
 #  * [    ] Check life support level before jump
+#  * [    ] Add life support expenditure
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities

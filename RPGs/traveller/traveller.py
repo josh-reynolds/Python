@@ -88,6 +88,10 @@ class Game:
         cost = self.ship.refuel()
         self.financials.debit(cost)
 
+    def recharge(self):
+        cost = self.ship.recharge()
+        self.financials.debit(cost)
+        
     def buy_cargo(self):
         item_number, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo == None:
@@ -214,6 +218,9 @@ grounded = always + [Command('l', 'Lift off to orbit',
                      Command('t', 'Trade',
                              game.to_trade,
                              'Trading goods.'),
+                     Command('f', 'Recharge life support',
+                             game.recharge,
+                             'Replenishing life support system.'),
                      Command('r', 'Refuel',
                              game.refuel,
                              'Refuelling ship.')]

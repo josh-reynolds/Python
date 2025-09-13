@@ -19,7 +19,7 @@ class Ship:
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
-        self.life_support_level = 100
+        self.life_support_level = 0
 
     def __repr__(self):
         return f"{self.name} -- {self.model}\n" \
@@ -85,10 +85,42 @@ class Ship:
             price = Credits(amount * 500)
             confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
             if confirm == 'n':
-                return
+                return Credits(0)
             else:
                 print(f"Charging {price} for refuelling")
                 self.current_fuel += amount
+                return price
+
+    # Book 2 p. 6
+    # Each stateroom on a starship, occupied or not, involves a constant overhead
+    # cost of 2000 Cr per trip made. Each crew member occupies one stateroom; the
+    # remainder are available for high or middle passengers. Each low passage
+    # berth (cold sleep capsule) involves an overhead cost of 100 Cr per trip.
+    #
+    # Notes:
+    # since the charge is applied regardless of whether the stateroom was occupied,
+    # and applies to the whole trip, not smaller segments of time, we really only have
+    # 100% and 0%, no capacity in-between. Not sure it makes sense to measure or
+    # portray this as percentages. Was considering a method to translate number of
+    # staterooms 'used' into an overall ship percentage, but that's really not
+    # necessary.
+    #
+    # Later rulesets differentiate by occupancy, I think. And possibly give time
+    # spans for support duration. Need to check. For now, as with other rules 
+    # oddities, we'll keep it RAW.
+    def recharge(self):
+        if self.life_support_level == 100:
+            print("Life support is fully charged.")
+            return Credits(0)
+        else:
+            price = Credits((self.crew + self.passengers) * 2000 +
+                             self.low_berths * 100)
+            confirm = confirm_input(f"Recharge life support for {price}? ")
+            if confirm == 'n':
+                return Credits(0)
+            else:
+                print(f"Charging {price} for life support replenishment.")
+                self.life_support_level = 100
                 return price
 
     # Book 2 p. 43
