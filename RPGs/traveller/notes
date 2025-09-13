@@ -379,8 +379,9 @@
 #            world generation, possibly freight & passenger selection)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Fix handling of observers after jump
-#  * [    ] Skimming as jump point action, assuming gas giants present in 
+#  * [DONE] Skimming as jump point action, assuming gas giants present in 
 #            StarSystem (abstract the outer system for this purpose)
+#  * [    ] Ocean refuelling option if hydrographics permit it
 #  * [DONE] Add gas giant presence to StarSystem
 #  * [DONE] Add view StarSystem data action
 #  * [    ] Add extended StarSystem details
@@ -414,7 +415,10 @@
 #  * [    ] Add different ship types and ship design
 #  * [DONE] Add display of ship characteristics
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
-#  * [    ] Add ship streamlining and effect upon landing/skimming
+#  * [....] Add ship streamlining and effect upon landing/skimming
+#  * [    ] Rather than having up-front tests, make some commands dynamically
+#           available in command lists when conditions merit - e.g. only present
+#           skimming as jump point command if the system has a gas giant
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Add loan history and statement (amortization schedule too?)

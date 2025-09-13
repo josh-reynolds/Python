@@ -150,6 +150,31 @@ class Game:
     def view_ship(self):
         print(self.ship)
 
+    # Book 2 p. 35
+    # Unrefined fuel may be obtained by skimming the atmosphere of a
+    # gas giant if unavailable elsewhere. Most star systems have at 
+    # least one...
+    #
+    # Traveller '77 does not restrict this to streamlined ships, and
+    # also does not include ocean refuelling, but I think I will be
+    # including both options. (In all likelihood this will lean heavily
+    # toward second edition...)
+    def skim(self):
+        if not self.location.gas_giant:
+            print("There is no gas giant in this system. No fuel skimming possible.")
+            return
+
+        if not self.ship.streamlined:
+            print("Your ship is not streamlined and cannot skim fuel.")
+            return
+
+        if self.ship.current_fuel == self.ship.fuel_tank:
+            print("Fuel tank is already full.")
+            return
+
+        # will need to mark this as unrefined fuel when we implement that
+        self.ship.current_fuel = self.ship.fuel_tank
+
 class Command:
     def __init__(self, key, description, action, message):
         self.key = key
@@ -200,6 +225,9 @@ orbit = sorted(orbit, key=lambda command: command.key)
 jump = always + [Command('j', 'Jump to new system',
                          game.jump,
                          'Executing jump sequence!'),
+                 Command('s', 'Skim fuel from gas giant',
+                         game.skim,
+                         'Skimming fuel from a gas giant planet.'),
                  Command('i', 'Inbound to orbit',
                          game.inbound_from_jump,
                          f"Travel in to orbit {game.location.name}")]
