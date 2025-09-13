@@ -58,8 +58,8 @@ class Game:
         self.commands = grounded
 
     def outbound_to_jump(self):
-        if self.ship.current_fuel < self.ship.trip_fuel_cost:
-            tfc = self.ship.trip_fuel_cost
+        tfc = self.ship.trip_fuel_cost
+        if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
                   f"requires {tfc} tons, only "
                   f"{self.ship.current_fuel} tons in tanks.")
@@ -94,6 +94,16 @@ class Game:
             return
 
         j_range = self.ship.jump_range
+
+        # show systems in range
+        # choose destination
+        # confirm jump
+        print("Executing jump!")
+        # change location to destination, at jump point
+        # deduct life support expenditure
+        self.ship.life_support_level = 0
+        # deduct fuel cost
+        # advance calendar a week
 
     def view_world(self):
         print(self.location)
