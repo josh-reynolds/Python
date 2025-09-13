@@ -394,9 +394,9 @@
 #  * [DONE] Add ship streamlining and effect upon landing/skimming
 #  * [DONE] Add life support system to Ship
 #  * [DONE] Add life support recharging costs
+#  * [DONE] Check life support level before jump
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Refactoring and tests!!!
-#  * [    ] Check life support level before jump
 #  * [    ] Add life support expenditure
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times

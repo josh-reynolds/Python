@@ -76,9 +76,16 @@ class Game:
     def jump(self):
         jfc = self.ship.jump_fuel_cost
         if jfc > self.ship.current_fuel:
-            print(f"Insufficient fuel. Jump costs {jfc} tons, only "
+            print(f"Insufficient fuel. Jump requires {jfc} tons, only "
                   f"{self.ship.current_fuel} tons in tanks.")
             return
+
+        ls = self.ship.life_support_level
+        if ls < 100:
+            print(f"Insufficient life support to survive jump.\n"
+                  f"Life support is at {ls}%.")
+            return
+
         j_range = self.ship.jump_range
 
     def view_world(self):
@@ -236,7 +243,7 @@ orbit = sorted(orbit, key=lambda command: command.key)
 
 jump = always + [Command('j', 'Jump to new system',
                          game.jump,
-                         'Executing jump sequence!'),
+                         'Preparing for jump.'),
                  Command('s', 'Skim fuel from gas giant',
                          game.skim,
                          'Skimming fuel from a gas giant planet.'),
