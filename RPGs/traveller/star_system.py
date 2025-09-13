@@ -11,7 +11,7 @@ class StarSystem:
         self.population = population
         self.government = government
         self.gas_giant = gas_giant
-        self.detail = "surface"
+        self.detail = "orbit"
 
         self.agricultural = False
         if (atmosphere >= 4 and atmosphere <= 9 and 

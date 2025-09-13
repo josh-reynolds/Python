@@ -391,8 +391,8 @@
 #  * [DONE] Review interpretation that skills/brokers only apply to sales
 #  * [DONE] Review Calendar.year() setter for whether it should notify observers
 #  * [DONE] Make StarSystem.__eq__ more robust
+#  * [DONE] Add ship streamlining and effect upon landing/skimming
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Add ship streamlining and effect upon landing/skimming
 #  * [....] Adjust UI elements, play with more ANSI codes
 #  * [....] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
@@ -421,10 +421,12 @@
 #  * [    ] Add proper salary calculation per crew member
 #  * [    ] Add survival odds for low berth passengers, and report results each trip
 #  * [    ] Add low berth lottery
+#  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  PHASE FOUR ======================================================
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,

@@ -23,7 +23,7 @@ class Game:
         self.date.add_observer(self.financials)
 
     def run(self):
-        self.commands = grounded
+        self.commands = orbit   # awkward, needs to change when location ctor detail changes
         self.running = True
         while self.running:
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
@@ -48,6 +48,10 @@ class Game:
         self.commands = orbit
 
     def land(self):
+        if not self.ship.streamlined:
+            print("Your ship is not streamlined and cannot land.")
+            return
+
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded

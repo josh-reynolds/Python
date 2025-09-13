@@ -11,7 +11,7 @@ class Ship:
         self.passengers = 6
         self.low_berths = 20
         self.acceleration = 1
-        self.streamlined = True
+        self.streamlined = False
         self.hold = []
         self.hold_size = 82
         self.fuel_tank = 30
