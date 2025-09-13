@@ -65,10 +65,12 @@ class Game:
                   f"{self.ship.current_fuel} tons in tanks.")
             return
 
+        self.ship.current_fuel -= tfc // 2
         self.location.to_jump_point()
         self.commands = jump
 
     def inbound_from_jump(self):
+        self.ship.current_fuel -= self.ship.trip_fuel_cost // 2
         self.location.from_jump_point()
         self.commands = orbit
 
@@ -103,6 +105,7 @@ class Game:
         # deduct life support expenditure
         self.ship.life_support_level = 0
         # deduct fuel cost
+        self.ship.current_fuel -= jfc
         # advance calendar a week
 
     def view_world(self):

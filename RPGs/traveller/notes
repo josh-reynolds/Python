@@ -397,12 +397,12 @@
 #  * [DONE] Check life support level before jump
 #  * [DONE] Add fuel level check before travelling to jump point
 #  * [DONE] Add life support expenditure
+#  * [DONE] Add fuel expenditure
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Refactoring and tests!!!
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
-#  * [    ] Add fuel expenditure
 #  * [    ] Add annual maintenance
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Make type dunder methods more robust with NotImplemented etc.
