@@ -78,6 +78,28 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(b.year, 100)
         self.assertEqual(b, ImperialDate(2,100))
 
+    def test_date_string(self):
+        a = ImperialDate(1,100)
+        self.assertEqual(f"{a}", "001-100")
+
+    def test_date_equality(self):
+        a = ImperialDate(1,100)
+        b = ImperialDate(1,100)
+        c = ImperialDate(2,100)
+        self.assertEqual(a,b)
+        self.assertNotEqual(a,c)
+        self.assertNotEqual(b,c)
+
+    def test_date_comparison(self):
+        a = ImperialDate(10,100)
+        b = ImperialDate(11,100)
+        c = ImperialDate(1,101)
+        d = ImperialDate(20,99)
+        e = ImperialDate(1,100)
+        self.assertGreater(b,a)
+        self.assertGreater(c,a)
+        self.assertLess(d,a)
+        self.assertLess(e,a)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
