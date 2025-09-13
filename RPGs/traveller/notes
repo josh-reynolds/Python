@@ -400,6 +400,7 @@
 #  * [DONE] Add fuel expenditure
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Refactoring and tests!!!
+#  # [....] Unit tests for ImperialDate
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities

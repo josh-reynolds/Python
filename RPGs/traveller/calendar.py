@@ -1,3 +1,5 @@
+import unittest
+
 class Calendar:
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
@@ -56,11 +58,26 @@ class ImperialDate:
     def __ge__(self, other):
         return self == other or self > other
 
+    # BUG: does not work correctly across year boundary
     def __sub__(self, other):
         return self.day - other.day
 
+    # BUG: ctor handles positive year boundary, but not negative,
+    #      what if we added a negative number of days?
     def __add__(self, days):
         return ImperialDate(self.day + days, self.year)
 
     def copy(self):
         return ImperialDate(self.day, self.year)
+
+class ImperialDateTestCase(unittest.TestCase):
+    def test_date_plus_day(self):
+        a = ImperialDate(1,100)
+        b = a + 1
+        self.assertEqual(b.day, 2)
+        self.assertEqual(b.year, 100)
+        self.assertEqual(b, ImperialDate(2,100))
+
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()
