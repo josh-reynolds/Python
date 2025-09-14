@@ -1,3 +1,5 @@
+import unittest
+
 class Credits:
     def __init__(self, amount):
         self.amount = amount
@@ -79,3 +81,33 @@ class Financials:
         print(f"Paying ship loan on {self.loan_due} for {amount}.")
         self.debit(amount)
         self.loan_due = self.loan_due + 28
+
+class CreditsTestCase(unittest.TestCase):
+    def test_credits_string(self):
+        a = Credits(1)
+        b = Credits(10)
+        c = Credits(100)
+        d = Credits(1000)
+        e = Credits(10000)
+        f = Credits(100000)
+        g = Credits(1000000)
+        h = Credits(11500000)
+        i = Credits(1000000000)
+        self.assertEqual(f"{a}", "1 Cr")
+        self.assertEqual(f"{b}", "10 Cr")
+        self.assertEqual(f"{c}", "100 Cr")
+        self.assertEqual(f"{d}", "1,000 Cr")
+        self.assertEqual(f"{e}", "10,000 Cr")
+        self.assertEqual(f"{f}", "100,000 Cr")
+        self.assertEqual(f"{g}", "1.0 MCr")
+        self.assertEqual(f"{h}", "11.5 MCr")
+        self.assertEqual(f"{i}", "1,000.0 MCr")
+    #def __gt__(self, other):
+    #def __add__(self, other):
+    #def __sub__(self, other):
+
+
+
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

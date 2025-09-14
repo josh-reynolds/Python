@@ -398,15 +398,25 @@
 #  * [DONE] Add fuel level check before travelling to jump point
 #  * [DONE] Add life support expenditure
 #  * [DONE] Add fuel expenditure
+#  # [DONE] Unit tests for ImperialDate
+#  # [DONE] Add test suite
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Refactoring and tests!!!
-#  # [....] Unit tests for ImperialDate
+#  # [....] Unit tests for Credits
+#  # [    ] Unit tests for Calendar
+#  # [    ] Unit tests for Cargo
+#  # [    ] Unit tests for CargoDepot
+#  # [    ] Unit tests for Financials
+#  # [    ] Unit tests for Ship
+#  # [    ] Unit tests for StarSystem
+#  # [    ] Unit tests for Game
+#  # [    ] Unit tests for Command
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
 #  * [    ] Add annual maintenance
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Make type dunder methods more robust with NotImplemented etc.
+#  * [    ] Review need for fraction credits ('cents')
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
