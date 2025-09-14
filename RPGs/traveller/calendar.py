@@ -42,7 +42,7 @@ class ImperialDate:
         self.day = day
         self.year = year
         # neither of these will work for large jumps of
-        # more than a year, do we want to support that?
+        # more than a year
         if self.day > 365:
             self.day -= 365
             self.year += 1
@@ -63,10 +63,14 @@ class ImperialDate:
     def __ge__(self, other):
         return self == other or self > other
 
-    # BUG: does not work correctly across year boundary
     # TO_DO: support both integer and date subtraction
     def __sub__(self, other):
-        return self.day - other.day
+        if self.year == other.year:
+            return self.day - other.day
+        elif self.year > other.year:
+            return self.day - other.day + 365
+        else:
+            return self.day - other.day - 365
 
     def __add__(self, days):
         return ImperialDate(self.day + days, self.year)
@@ -113,6 +117,15 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a + -1, ImperialDate(365,99))
         self.assertEqual(b + -1, ImperialDate(364,100))
         self.assertEqual(a + -10, ImperialDate(356,99))
+
+    def test_date_minus_date(self):
+        a = ImperialDate(1,100)
+        b = ImperialDate(5,100)
+        c = ImperialDate(365,99)
+        self.assertEqual(b-a, 4)
+        self.assertEqual(a-b, -4)
+        self.assertEqual(a-c, 1)
+        self.assertEqual(c-a, -1)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
