@@ -41,9 +41,14 @@ class ImperialDate:
     def __init__(self, day, year):
         self.day = day
         self.year = year
+        # neither of these will work for large jumps of
+        # more than a year, do we want to support that?
         if self.day > 365:
             self.day -= 365
             self.year += 1
+        if self.day < 1:
+            self.day += 365
+            self.year -= 1
 
     def __repr__(self):
         return f"{self.day:03.0f}-{self.year}"
@@ -59,11 +64,10 @@ class ImperialDate:
         return self == other or self > other
 
     # BUG: does not work correctly across year boundary
+    # TO_DO: support both integer and date subtraction
     def __sub__(self, other):
         return self.day - other.day
 
-    # BUG: ctor handles positive year boundary, but not negative,
-    #      what if we added a negative number of days?
     def __add__(self, days):
         return ImperialDate(self.day + days, self.year)
 
@@ -71,13 +75,6 @@ class ImperialDate:
         return ImperialDate(self.day, self.year)
 
 class ImperialDateTestCase(unittest.TestCase):
-    def test_date_plus_day(self):
-        a = ImperialDate(1,100)
-        b = a + 1
-        self.assertEqual(b.day, 2)
-        self.assertEqual(b.year, 100)
-        self.assertEqual(b, ImperialDate(2,100))
-
     def test_date_string(self):
         a = ImperialDate(1,100)
         self.assertEqual(f"{a}", "001-100")
@@ -100,6 +97,23 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertGreater(c,a)
         self.assertLess(d,a)
         self.assertLess(e,a)
+
+    def test_date_copy(self):
+        a = ImperialDate(1,100)
+        b = a.copy()
+        self.assertEqual(b.day, 1)
+        self.assertEqual(b.year, 100)
+        self.assertEqual(a,b)
+
+    def test_date_plus_days(self):
+        a = ImperialDate(1,100)
+        b = ImperialDate(365,100)
+        self.assertEqual(a + 1, ImperialDate(2,100))
+        self.assertEqual(b + 1, ImperialDate(1,101))
+        self.assertEqual(a + -1, ImperialDate(365,99))
+        self.assertEqual(b + -1, ImperialDate(364,100))
+        self.assertEqual(a + -10, ImperialDate(356,99))
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
