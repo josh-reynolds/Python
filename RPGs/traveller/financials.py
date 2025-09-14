@@ -2,6 +2,9 @@ import unittest
 
 class Credits:
     def __init__(self, amount):
+        # should we block negative or zero credits?
+        # unsure... what credits can represent a
+        # balance or a debt, not just a pile of cash?
         self.amount = amount
 
     def __repr__(self):
@@ -18,13 +21,19 @@ class Credits:
         return NotImplemented
 
     def __gt__(self, other):
-        return self.amount > other.amount
+        if type(other) is type(self):
+            return self.amount > other.amount
+        return NotImplemented
 
     def __add__(self, other):
-        return Credits(self.amount + other.amount)
+        if type(other) is type(self):
+            return Credits(self.amount + other.amount)
+        return NotImplemented
 
     def __sub__(self, other):
-        return Credits(self.amount - other.amount)
+        if type(other) is type(self):
+            return Credits(self.amount - other.amount)
+        return NotImplemented
 
 class Financials:
     def __init__(self, balance, current_date, ship, location):
@@ -116,10 +125,15 @@ class CreditsTestCase(unittest.TestCase):
         self.assertLess(a,b)
         self.assertEqual(b,c)
 
-    #def __add__(self, other):
-    #def __sub__(self, other):
+    def test_credits_addition(self):
+        a = Credits(1)
+        b = Credits(1)
+        self.assertEqual(a+b,Credits(2))
 
-
+    def test_credits_subtraction(self):
+        a = Credits(1)
+        b = Credits(2)
+        self.assertEqual(b-a,Credits(1))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

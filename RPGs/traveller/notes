@@ -400,8 +400,9 @@
 #  * [DONE] Add fuel expenditure
 #  # [DONE] Unit tests for ImperialDate
 #  # [DONE] Add test suite
+#  # [DONE] Unit tests for Credits
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  # [....] Unit tests for Credits
+#  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  # [    ] Unit tests for Calendar
 #  # [    ] Unit tests for Cargo
 #  # [    ] Unit tests for CargoDepot
@@ -415,8 +416,8 @@
 #  * [    ] Advance calendar for in-system activities
 #  * [    ] Add annual maintenance
 #  * [    ] Add maintenance availability to StarSystem (A + B starports)
-#  * [    ] Make type dunder methods more robust with NotImplemented etc.
 #  * [    ] Review need for fraction credits ('cents')
+#  * [    ] Review need for negative or zero credits (balances and debts?)
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
