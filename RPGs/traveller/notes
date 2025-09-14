@@ -315,7 +315,52 @@
 # areas as needed, but otherwise keep to RAW. Later maybe we'll
 # explore other editions and/or homebrew our own trading rules.
 # -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# Sketching out annual maintenance procedure.
+# Book 2 p. 6
+# Annually, a starship should be given a complete overhaul...
+# Such maintenance costs 0.1% (1/1000th) of the cash price of the 
+# ship, and requires two weeks at a class A or B starport...
+# Crew members generally take their vacation at this time, but 
+# must still be paid. Provision should also be made for the 
+# expected loss of revenue while the ship is out of service.
 #
+# So, I think to start with, we flag the ship with a 'last 
+# maintenance date' - use the start point of that two week
+# period.
+#
+# Then we should be able to calculate 'days since last 
+# maintenance.' This function will need to know ship maintenance
+# date as well as current date. Model we use in Financials
+# for other expenses (invoked from Game) ought to work.
+# 
+# May want to report on maintenance age, at least when it starts
+# approaching a year. (Exact date ought to be visible all the 
+# time from ship details.) Something like:
+#  GREEN - maintenance less than 10 months ago - don't report
+#  YELLOW - maintenance 10-12 months ago
+#  RED - maintenance more than 12 months ago
+#
+# At least two mechanisms from there:
+#  * if maintenance status is RED, there is a chance of drive
+#    failures and/or misjumps (Book 2 p. 4)
+#  * we'll need a 'perform maintenance' action at starports, which
+#    advances the calendar two weeks, charges the appropriate cost,
+#    and resets the maintenance date on the shipchance of drive
+#      failures and/or misjumps (Book 2 p. 4)
+#    * we'll need a 'perform maintenance' action at starports, which
+#      advances the calendar two weeks, charges the appropriate cost,
+#      and resets the maintenance date on the ship. Since it can
+#      only be performed at class A/B starports, would be nice to
+#      have this command dynamically available, but if not, it should
+#      block at inferior sites.
+#
+# Beyond that, if we want to get fancy, would be nice to provide
+# some assists to the player. They will want to know how far the
+# closest A/B starports are, and gauge travel times.
+# -------------------------------------------------------------
+
 # -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
@@ -403,6 +448,8 @@
 #  # [DONE] Unit tests for Credits
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
+#  * [....] Add annual maintenance
+#  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  # [    ] Unit tests for Calendar
 #  # [    ] Unit tests for Cargo
 #  # [    ] Unit tests for CargoDepot
@@ -414,8 +461,6 @@
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
-#  * [    ] Add annual maintenance
-#  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  * [    ] Review need for fraction credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #  PHASE TWO =======================================================
@@ -457,6 +502,7 @@
 #  * [    ] Adjust UI elements, play with more ANSI codes
 #  PHASE FIVE ======================================================
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
 #            split out another surface location? Implication of current 'surface' location

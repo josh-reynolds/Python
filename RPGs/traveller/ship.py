@@ -1,5 +1,6 @@
 from financials import Credits
 from utilities import confirm_input
+from calendar import ImperialDate
 
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
@@ -20,11 +21,13 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.life_support_level = 0
+        self.last_maintenance = ImperialDate(351,1104)
 
     def __repr__(self):
         return f"{self.name} -- {self.model}\n" \
                f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" \
-               f"{self.crew} crew, {self.passengers} passengers, {self.low_berths} low berths"
+               f"{self.crew} crew, {self.passengers} passenger staterooms, {self.low_berths} low berths\n" \
+               f"Last maintenance: {self.last_maintenance}"
 
     # can we deprecate? use CargoDepot.print_cargo_list()
     def cargo_hold(self):
@@ -164,3 +167,6 @@ class Ship:
     #        Is this a simple game-over repossesion?
     def loan_payment(self):
         return 37080000 / 240
+
+    def maintenance_cost(self):
+        return 37080000 * 0.001
