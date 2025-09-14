@@ -1,4 +1,5 @@
 import unittest
+from utilities import pr_red, pr_yellow
 
 class Credits:
     def __init__(self, amount):
@@ -62,6 +63,12 @@ class Financials:
         if date > self.loan_due:
             self.pay_loan()
 
+        status = self.maintenance_status(date)
+        if status == 'yellow':
+            pr_yellow(f"Days since last maintenance = {date - self.ship.last_maintenance}")
+        if status == 'red':
+            pr_red(f"Days since last maintenance = {date - self.ship.last_maintenance}")
+
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
     # thereafter, a CR 100 per day fee is imposed for each
@@ -95,6 +102,17 @@ class Financials:
         print(f"Paying ship loan on {self.loan_due} for {amount}.")
         self.debit(amount)
         self.loan_due = self.loan_due + 28
+
+    # conceivably an enum or the like would be better, but
+    # we'll stick to simple strings for now...
+    def maintenance_status(self, date):
+        amount = date - self.ship.last_maintenance
+        if amount <= 365 - (2*28):     # 10 months
+            return "green"
+        elif amount <= 365:            # 12 months
+            return "yellow"
+        else:
+            return "red"
 
 class CreditsTestCase(unittest.TestCase):
     def test_credits_string(self):

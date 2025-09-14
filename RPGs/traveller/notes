@@ -342,6 +342,14 @@
 #  YELLOW - maintenance 10-12 months ago
 #  RED - maintenance more than 12 months ago
 #
+# Financials already has a reference to ship that I have not
+# refactored away. Intended to do that, so adding the method
+# there is a bit backward, but whatever model we decide to 
+# decouple will apply here too, so no real harm. (There is some
+# logic to tightly binding Financials and Ship as well, so
+# perhaps one should own the other. Later refactorings will help
+# suss this out.)
+#
 # At least two mechanisms from there:
 #  * if maintenance status is RED, there is a chance of drive
 #    failures and/or misjumps (Book 2 p. 4)

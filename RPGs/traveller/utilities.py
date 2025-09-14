@@ -23,11 +23,15 @@ def pr_yellow_on_red(string):
 
 def pr_red(string):
     """Print string to console, colored red."""
-    print(f"\033[91m{string}\033[00m")
+    print(f"\033[1;31;40m{string}\033[00m")
 
 def pr_green(string):
     """Print string to console, colored green."""
-    print(f"\033[92m{string}\033[00m")
+    print(f"\033[1;32;40m{string}\033[00m")
+
+def pr_yellow(string):
+    """Print string to console, colored yellow."""
+    print(f"\033[1;33;40m{string}\033[00m")
 
 def int_input(prompt):
     while True:
