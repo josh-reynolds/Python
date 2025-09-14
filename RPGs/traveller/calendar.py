@@ -54,7 +54,9 @@ class ImperialDate:
         return f"{self.day:03.0f}-{self.year}"
 
     def __eq__(self, other):
-        return self.day == other.day and self.year == other.year
+        if type(other) is type(self):
+            return self.day == other.day and self.year == other.year
+        return NotImplemented
 
     def __gt__(self, other):
         return self.year > other.year or (self.day > other.day and
@@ -63,14 +65,18 @@ class ImperialDate:
     def __ge__(self, other):
         return self == other or self > other
 
-    # TO_DO: support both integer and date subtraction
     def __sub__(self, other):
-        if self.year == other.year:
-            return self.day - other.day
-        elif self.year > other.year:
-            return self.day - other.day + 365
+        if isinstance(other, ImperialDate):
+            if self.year == other.year:
+                return self.day - other.day
+            elif self.year > other.year:
+                return self.day - other.day + 365
+            else:
+                return self.day - other.day - 365
+        elif isinstance(other, int):
+            return ImperialDate(self.day - other, self.year)
         else:
-            return self.day - other.day - 365
+            return NotImplemented
 
     def __add__(self, days):
         return ImperialDate(self.day + days, self.year)
@@ -90,6 +96,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a,b)
         self.assertNotEqual(a,c)
         self.assertNotEqual(b,c)
+        self.assertNotEqual(a,(1,100))
 
     def test_date_comparison(self):
         a = ImperialDate(10,100)
@@ -126,6 +133,11 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a-b, -4)
         self.assertEqual(a-c, 1)
         self.assertEqual(c-a, -1)
+
+    def test_date_minus_day(self):
+        a = ImperialDate(5,100)
+        self.assertEqual(a-1, ImperialDate(4,100))
+        self.assertEqual(a-5, ImperialDate(365,99))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
