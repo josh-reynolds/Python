@@ -12,6 +12,11 @@ class Credits:
             val = val/1000000
         return f"{val:,} {suffix}"
 
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.amount == other.amount
+        return NotImplemented
+
     def __gt__(self, other):
         return self.amount > other.amount
 
@@ -102,7 +107,15 @@ class CreditsTestCase(unittest.TestCase):
         self.assertEqual(f"{g}", "1.0 MCr")
         self.assertEqual(f"{h}", "11.5 MCr")
         self.assertEqual(f"{i}", "1,000.0 MCr")
-    #def __gt__(self, other):
+
+    def test_credits_comparison(self):
+        a = Credits(1)
+        b = Credits(2)
+        c = Credits(2)
+        self.assertGreater(b,a)
+        self.assertLess(a,b)
+        self.assertEqual(b,c)
+
     #def __add__(self, other):
     #def __sub__(self, other):
 
