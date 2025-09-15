@@ -451,10 +451,11 @@
 #  # [DONE] Add test suite
 #  # [DONE] Unit tests for Credits
 #  * [DONE] Add maintenance availability to StarSystem (A + B starports)
+#  # [DONE] Unit tests for Cargo
+#  * [DONE] Add annual maintenance
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
-#  * [....] Add annual maintenance
-#  # [....] Unit tests for Cargo
+#  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  # [    ] Unit tests for Calendar
 #  # [    ] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
@@ -463,7 +464,6 @@
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
 #  * [    ] pylint/pydocstyle scrub
-#  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
 #  * [    ] Review need for fractional credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
@@ -493,6 +493,7 @@
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
+#  * [    ] Should we add type annotations?
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)

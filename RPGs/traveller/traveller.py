@@ -83,19 +83,19 @@ class Game:
         self.commands = trade
 
     def jump(self):
-        jfc = self.ship.jump_fuel_cost
-        if jfc > self.ship.current_fuel:
-            print(f"Insufficient fuel. Jump requires {jfc} tons, only "
+        jump_fuel = self.ship.jump_fuel_cost
+        if jump_fuel > self.ship.current_fuel:
+            print(f"Insufficient fuel. Jump requires {jump_fuel} tons, only "
                   f"{self.ship.current_fuel} tons in tanks.")
             return
 
-        ls = self.ship.life_support_level
-        if ls < 100:
+        life_support = self.ship.life_support_level
+        if life_support < 100:
             print(f"Insufficient life support to survive jump.\n"
-                  f"Life support is at {ls}%.")
+                  f"Life support is at {life_support}%.")
             return
 
-        j_range = self.ship.jump_range
+        jump_range = self.ship.jump_range
 
         # show systems in range
         # choose destination
@@ -105,7 +105,7 @@ class Game:
         # deduct life support expenditure
         self.ship.life_support_level = 0
         # deduct fuel cost
-        self.ship.current_fuel -= jfc
+        self.ship.current_fuel -= jump_fuel
         # advance calendar a week
 
     def view_world(self):
@@ -224,11 +224,11 @@ class Game:
 
         # perform maintenance
         # TO_DO: should we have a confirmation here?
+        # TO_DO: should we warn or block if maintenance was performed recently?
         print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
         self.ship.last_maintenance = self.date.current_date
         self.financials.debit(cost)
-
-        # advance calendar two weeks
+        self.date.day += 14    # should we wrap this in a method call?
 
 class Command:
     def __init__(self, key, description, action, message):
