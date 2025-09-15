@@ -328,6 +328,19 @@ class CargoTestCase(unittest.TestCase):
         b = Cargo("Bar", 1, 10, 5, {}, {})
         self.assertEqual(b.quantity_string(1), "1 (5 tons/item)")
 
+    def test_cargo_tonnage(self):
+        a = Cargo("Foo", 1, 10, 1, {}, {})
+        self.assertEqual(a.tonnage, 1)
+
+        b = Cargo("Bar", 1, 10, 5, {}, {})
+        self.assertEqual(b.tonnage, 5)
+
+        c = Cargo("Baz", 20, 10, 1, {}, {})
+        self.assertEqual(c.tonnage, 20)
+
+        d = Cargo("Boo", 20, 10, 10, {}, {})
+        self.assertEqual(d.tonnage, 200)
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
