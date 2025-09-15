@@ -11,7 +11,7 @@ class Game:
         self.date = Calendar()
         self.ship = Ship()
         self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5) 
-        self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
+        self.financials = Financials(1000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
 
         self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
@@ -211,6 +211,17 @@ class Game:
         # will need to mark this as unrefined fuel when we implement that
         self.ship.current_fuel = self.ship.fuel_tank
 
+    def maintenance(self):
+        if self.location.starport != 'A' and self.location.starport != 'B':
+            print("Annual maintenance can only be performed at class A or B starports.")
+            return
+
+        cost = self.ship.maintenance_cost()
+        if self.financials.balance < cost:
+            print("You do not have enough funds to pay for maintenance.\n"
+                  f"It will cost {cost}. Your balance is {self.financials.balance}.")
+            return
+
 class Command:
     def __init__(self, key, description, action, message):
         self.key = key
@@ -248,6 +259,9 @@ grounded = always + [Command('l', 'Lift off to orbit',
                      Command('f', 'Recharge life support',
                              game.recharge,
                              'Replenishing life support system.'),
+                     Command('m', 'Annual maintenance',
+                             game.maintenance,
+                             'Performing annual ship maintenance.'),
                      Command('r', 'Refuel',
                              game.refuel,
                              'Refuelling ship.')]

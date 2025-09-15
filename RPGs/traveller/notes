@@ -355,14 +355,10 @@
 #    failures and/or misjumps (Book 2 p. 4)
 #  * we'll need a 'perform maintenance' action at starports, which
 #    advances the calendar two weeks, charges the appropriate cost,
-#    and resets the maintenance date on the shipchance of drive
-#      failures and/or misjumps (Book 2 p. 4)
-#    * we'll need a 'perform maintenance' action at starports, which
-#      advances the calendar two weeks, charges the appropriate cost,
-#      and resets the maintenance date on the ship. Since it can
-#      only be performed at class A/B starports, would be nice to
-#      have this command dynamically available, but if not, it should
-#      block at inferior sites.
+#    and resets the maintenance date on the ship. Since it can
+#    only be performed at class A/B starports, would be nice to
+#    have this command dynamically available, but if not, it should
+#    block at inferior sites.
 #
 # Beyond that, if we want to get fancy, would be nice to provide
 # some assists to the player. They will want to know how far the
@@ -454,10 +450,10 @@
 #  # [DONE] Unit tests for ImperialDate
 #  # [DONE] Add test suite
 #  # [DONE] Unit tests for Credits
+#  * [DONE] Add maintenance availability to StarSystem (A + B starports)
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Add annual maintenance
-#  * [    ] Add maintenance availability to StarSystem (A + B starports)
 #  # [    ] Unit tests for Calendar
 #  # [    ] Unit tests for Cargo
 #  # [    ] Unit tests for CargoDepot
@@ -469,8 +465,9 @@
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
 #  * [    ] Advance calendar for in-system activities
-#  * [    ] Review need for fraction credits ('cents')
+#  * [    ] Review need for fractional credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
+#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)

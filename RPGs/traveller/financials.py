@@ -98,7 +98,7 @@ class Financials:
         self.salary_due = self.salary_due + 28
 
     def pay_loan(self):
-        amount = Credits(self.ship.loan_payment())
+        amount = self.ship.loan_payment()
         print(f"Paying ship loan on {self.loan_due} for {amount}.")
         self.debit(amount)
         self.loan_due = self.loan_due + 28

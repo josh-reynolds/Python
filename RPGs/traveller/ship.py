@@ -166,7 +166,7 @@ class Ship:
     #        Also, what happens if the player doesn't have enough funds?
     #        Is this a simple game-over repossesion?
     def loan_payment(self):
-        return 37080000 / 240
+        return Credits(37080000 / 240)
 
     def maintenance_cost(self):
-        return 37080000 * 0.001
+        return Credits(37080000 * 0.001)
