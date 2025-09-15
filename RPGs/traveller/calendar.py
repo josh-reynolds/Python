@@ -65,14 +65,12 @@ class ImperialDate:
     def __ge__(self, other):
         return self == other or self > other
 
+    def _date_value(self):
+        return self.day + (self.year * 365)
+
     def __sub__(self, other):
         if isinstance(other, ImperialDate):
-            if self.year == other.year:
-                return self.day - other.day
-            elif self.year > other.year:
-                return self.day - other.day + 365
-            else:
-                return self.day - other.day - 365
+            return self._date_value() - other._date_value()
         elif isinstance(other, int):
             return ImperialDate(self.day - other, self.year)
         else:
@@ -129,10 +127,12 @@ class ImperialDateTestCase(unittest.TestCase):
         a = ImperialDate(1,100)
         b = ImperialDate(5,100)
         c = ImperialDate(365,99)
+        d = ImperialDate(1,98)
         self.assertEqual(b-a, 4)
         self.assertEqual(a-b, -4)
         self.assertEqual(a-c, 1)
         self.assertEqual(c-a, -1)
+        self.assertEqual(a-d, 730)
 
     def test_date_minus_day(self):
         a = ImperialDate(5,100)
