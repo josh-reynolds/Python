@@ -11,7 +11,7 @@ class Game:
         self.date = Calendar()
         self.ship = Ship()
         self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5) 
-        self.financials = Financials(1000, self.date.current_date, self.ship, self.location)
+        self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
 
         self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
@@ -221,6 +221,14 @@ class Game:
             print("You do not have enough funds to pay for maintenance.\n"
                   f"It will cost {cost}. Your balance is {self.financials.balance}.")
             return
+
+        # perform maintenance
+        # TO_DO: should we have a confirmation here?
+        print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
+        self.ship.last_maintenance = self.date.current_date
+        self.financials.debit(cost)
+
+        # advance calendar two weeks
 
 class Command:
     def __init__(self, key, description, action, message):

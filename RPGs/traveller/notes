@@ -488,6 +488,8 @@
 #  PHASE FOUR ======================================================
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
+#  * [    ] Review flow, confirmations, notifications - streamline where annoying,
+#           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
@@ -504,7 +506,8 @@
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Should/could we clear the screen?
-#  * [    ] Adjust UI elements, play with more ANSI codes
+#  * [    ] Adjust UI elements, play with more ANSI codes - also review color
+#           coding for warnings, positive/negative messages, etc.
 #  PHASE FIVE ======================================================
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Maintenance assists, plotting routes to service centers
