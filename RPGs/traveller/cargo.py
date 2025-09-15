@@ -308,38 +308,55 @@ class CargoDepot:
 
 class CargoTestCase(unittest.TestCase):
     def test_cargo_quantity(self):
-        a = Cargo("Foo", 10, 10, 1, {}, {})
+        a = Cargo("Foo", 10, Credits(10), 1, {}, {})
         self.assertEqual(a.quantity, 10)
 
-        b = Cargo("Bar", "1Dx1", 10, 1, {}, {})
+        b = Cargo("Bar", "1Dx1", Credits(10), 1, {}, {})
         self.assertGreater(b.quantity, 0)
         self.assertLess(b.quantity, 7)
 
-        c = Cargo("Baz", "1Dx10", 10, 1, {}, {})
+        c = Cargo("Baz", "1Dx10", Credits(10), 1, {}, {})
         self.assertEqual(c.quantity % 10, 0)
         self.assertGreater(c.quantity, 9)
         self.assertLess(c.quantity, 61)
 
     def test_cargo_quantity_string(self):
-        a = Cargo("Foo", 1, 10, 1, {}, {})
+        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
         self.assertEqual(a.quantity_string(1), "1 ton")
         self.assertEqual(a.quantity_string(5), "5 tons")
 
-        b = Cargo("Bar", 1, 10, 5, {}, {})
+        b = Cargo("Bar", 1, Credits(10), 5, {}, {})
         self.assertEqual(b.quantity_string(1), "1 (5 tons/item)")
 
     def test_cargo_tonnage(self):
-        a = Cargo("Foo", 1, 10, 1, {}, {})
+        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
         self.assertEqual(a.tonnage, 1)
 
-        b = Cargo("Bar", 1, 10, 5, {}, {})
+        b = Cargo("Bar", 1, Credits(10), 5, {}, {})
         self.assertEqual(b.tonnage, 5)
 
-        c = Cargo("Baz", 20, 10, 1, {}, {})
+        c = Cargo("Baz", 20, Credits(10), 1, {}, {})
         self.assertEqual(c.tonnage, 20)
 
-        d = Cargo("Boo", 20, 10, 10, {}, {})
+        d = Cargo("Boo", 20, Credits(10), 10, {}, {})
         self.assertEqual(d.tonnage, 200)
+
+    def test_cargo_string(self):
+        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        self.assertEqual(f"{a}", "Foo - 1 ton - 10 Cr/ton")
+
+        b = Cargo("Bar", 5, Credits(10), 1, {}, {})
+        self.assertEqual(f"{b}", "Bar - 5 tons - 10 Cr/ton")
+
+        c = Cargo("Baz", 5, Credits(10), 5, {}, {})
+        self.assertEqual(f"{c}", "Baz - 5 (5 tons/item) - 10 Cr/item")
+
+        class Location:
+            def __init__(self, name):
+                self.name = name
+        location = Location("Uranus")
+        d = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
+        self.assertEqual(f"{d}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
