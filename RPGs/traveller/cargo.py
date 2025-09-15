@@ -20,7 +20,7 @@ class Cargo:
         else:
             unit = "item"
 
-        result = f"{self.name} - {Cargo.quantity_string(self, self.quantity)} - {self.price}/{unit}"
+        result = f"{self.name} - {self.quantity_string(self.quantity)} - {self.price}/{unit}"
         if self.source_world:
             result += f" ({self.source_world.name})"
 
@@ -30,15 +30,19 @@ class Cargo:
     def tonnage(self):
         return self.quantity * self.unit_size
 
-    def quantity_string(cargo, quantity):
+    # passing in quantity because we want to be able to specify
+    # partial lots, not always the full amount (though a quick
+    # grep shows this isn't used elsewhere, so it may have been
+    # refactored away). Consider eliminating this param.
+    def quantity_string(self, quantity):
         string = f"{quantity}"
-        if cargo.unit_size == 1:
+        if self.unit_size == 1:
             if quantity == 1:
                 string += " ton"
             else:
                 string += " tons"
         else:
-            string += f" ({cargo.unit_size} tons/item)"
+            string += f" ({self.unit_size} tons/item)"
         return string
 
     # quantity convention:
@@ -315,6 +319,14 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(c.quantity % 10, 0)
         self.assertGreater(c.quantity, 9)
         self.assertLess(c.quantity, 61)
+
+    def test_cargo_quantity_string(self):
+        a = Cargo("Foo", 1, 10, 1, {}, {})
+        self.assertEqual(a.quantity_string(1), "1 ton")
+        self.assertEqual(a.quantity_string(5), "5 tons")
+
+        b = Cargo("Bar", 1, 10, 5, {}, {})
+        self.assertEqual(b.quantity_string(1), "1 (5 tons/item)")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
