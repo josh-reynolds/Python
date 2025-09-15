@@ -1,3 +1,4 @@
+import unittest
 from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
@@ -300,3 +301,21 @@ class CargoDepot:
 
         cargo.append(table[roll])
         return cargo
+
+class CargoTestCase(unittest.TestCase):
+    def test_cargo_quantity(self):
+        a = Cargo("Foo", 10, 10, 1, {}, {})
+        self.assertEqual(a.quantity, 10)
+
+        b = Cargo("Bar", "1Dx1", 10, 1, {}, {})
+        self.assertGreater(b.quantity, 0)
+        self.assertLess(b.quantity, 7)
+
+        c = Cargo("Baz", "1Dx10", 10, 1, {}, {})
+        self.assertEqual(c.quantity % 10, 0)
+        self.assertGreater(c.quantity, 9)
+        self.assertLess(c.quantity, 61)
+
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

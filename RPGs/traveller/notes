@@ -454,8 +454,8 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Add annual maintenance
+#  # [....] Unit tests for Cargo
 #  # [    ] Unit tests for Calendar
-#  # [    ] Unit tests for Cargo
 #  # [    ] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
 #  # [    ] Unit tests for Ship
@@ -502,7 +502,8 @@
 #           skimming as jump point command if the system has a gas giant
 #  * [    ] Tie-in with game over and save/load game - add front end with
 #  *         restart / new game options, including re-using same star map
-#  * [    ] Add out-of-funds condition (game over?)
+#  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
+#           i.e. balance can't go negative?)
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Should/could we clear the screen?
