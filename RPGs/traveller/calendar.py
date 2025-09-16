@@ -140,7 +140,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a-1, ImperialDate(4,100))
         self.assertEqual(a-5, ImperialDate(365,99))
 
-class CalendarDateTestCase(unittest.TestCase):
+class CalendarTestCase(unittest.TestCase):
     def setUp(self):
         class ObserverMock:
             def __init__(self):
@@ -155,22 +155,22 @@ class CalendarDateTestCase(unittest.TestCase):
                     self.event_count += 1
                     self.paid_date += self.recurrence
 
-        CalendarDateTestCase.a = Calendar()
-        CalendarDateTestCase.a.add_observer(ObserverMock())
+        CalendarTestCase.a = Calendar()
+        CalendarTestCase.a.add_observer(ObserverMock())
 
     def test_recurring_events_from_notification(self):
-        mock = CalendarDateTestCase.a.observers[0]
-        CalendarDateTestCase.a.plus_week()
-        self.assertEqual(CalendarDateTestCase.a.current_date, ImperialDate(8,1105))
+        mock = CalendarTestCase.a.observers[0]
+        CalendarTestCase.a.plus_week()
+        self.assertEqual(CalendarTestCase.a.current_date, ImperialDate(8,1105))
         self.assertEqual(mock.count, 1)
         self.assertEqual(mock.event_count, 8)
         self.assertEqual(mock.paid_date, ImperialDate(8,1105))
 
     def test_longer_recurrence_than_daily(self):
-        mock = CalendarDateTestCase.a.observers[0]
+        mock = CalendarTestCase.a.observers[0]
         mock.recurrence = 3
-        CalendarDateTestCase.a.plus_week()
-        self.assertEqual(CalendarDateTestCase.a.current_date, ImperialDate(8,1105))
+        CalendarTestCase.a.plus_week()
+        self.assertEqual(CalendarTestCase.a.current_date, ImperialDate(8,1105))
         self.assertEqual(mock.count, 1)
         self.assertEqual(mock.event_count, 2)
         self.assertEqual(mock.paid_date, ImperialDate(6,1105))

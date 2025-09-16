@@ -6,6 +6,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('calendar'))
     suite.addTests(loader.loadTestsFromName('cargo'))
     suite.addTests(loader.loadTestsFromName('financials'))
+    suite.addTests(loader.loadTestsFromName('ship'))
     return suite
 
 # ---------------------------------------------------------------------------

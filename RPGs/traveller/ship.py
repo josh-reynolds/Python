@@ -1,3 +1,4 @@
+import unittest
 from financials import Credits
 from utilities import confirm_input
 from calendar import ImperialDate
@@ -170,3 +171,14 @@ class Ship:
 
     def maintenance_cost(self):
         return Credits(37080000 * 0.001)
+
+class ShipTestCase(unittest.TestCase):
+    def setUp(self):
+        ShipTestCase.ship = Ship()
+
+    def test_trade_skill(self):
+        self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
+    
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

@@ -418,8 +418,16 @@
 # have 'paid up date' (whatever concise name should go here...). And
 # due date is actually every _recurrence_ thereafter. These types of
 # events, we're not providing an option to pay early, so they will
-# always be on predictible days in the future. So calculate a modulus
-# and set the paid date to the last such, and move on.
+# always be on predictible days in the future. So calculate an integer
+# division (_not_ modulus) and set the paid date to the last such, 
+# and move on.
+#
+# I was able to test drive this design, and it looks correct so 
+# far. Only problem is that the interesting code lives in my mock
+# observer, not in calendar. So to implement for real, I need to 
+# apply this design to all of the existing observers. And though
+# there's only two subscribed classes, in some ways each event is
+# one. Potentially worth extracting into a class. We will see.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -513,10 +521,10 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  # [....] Unit tests for Calendar
-#  * [    ] Longer intervals need to make sure repeating events execute multiple times
+#  # [....] Unit tests for Ship
+#  * [....] Longer intervals need to make sure repeating events execute multiple times
 #  # [    ] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
-#  # [    ] Unit tests for Ship
 #  # [    ] Unit tests for StarSystem
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
