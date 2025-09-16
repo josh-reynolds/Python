@@ -150,20 +150,30 @@ class CalendarDateTestCase(unittest.TestCase):
                 self.recurrence = 1
             def notify(self, date):
                 self.count += 1
-                duration = date - self.paid_date
+                duration = (date - self.paid_date) // self.recurrence
                 for i in range(duration):
                     self.event_count += 1
+                    self.paid_date += self.recurrence
 
         CalendarDateTestCase.a = Calendar()
         CalendarDateTestCase.a.add_observer(ObserverMock())
 
-    def test_notification(self):
+    def test_recurring_events_from_notification(self):
+        mock = CalendarDateTestCase.a.observers[0]
         CalendarDateTestCase.a.plus_week()
-        count = CalendarDateTestCase.a.observers[0].count
-        paid = CalendarDateTestCase.a.observers[0].event_count
         self.assertEqual(CalendarDateTestCase.a.current_date, ImperialDate(8,1105))
-        self.assertEqual(count, 1)
-        self.assertEqual(paid, 8)
+        self.assertEqual(mock.count, 1)
+        self.assertEqual(mock.event_count, 8)
+        self.assertEqual(mock.paid_date, ImperialDate(8,1105))
+
+    def test_longer_recurrence_than_daily(self):
+        mock = CalendarDateTestCase.a.observers[0]
+        mock.recurrence = 3
+        CalendarDateTestCase.a.plus_week()
+        self.assertEqual(CalendarDateTestCase.a.current_date, ImperialDate(8,1105))
+        self.assertEqual(mock.count, 1)
+        self.assertEqual(mock.event_count, 2)
+        self.assertEqual(mock.paid_date, ImperialDate(6,1105))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
