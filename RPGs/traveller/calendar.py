@@ -144,9 +144,15 @@ class CalendarDateTestCase(unittest.TestCase):
     def setUp(self):
         class ObserverMock:
             def __init__(self):
+                self.paid_date = ImperialDate(365,1104)
                 self.count = 0
+                self.event_count = 0
+                self.recurrence = 1
             def notify(self, date):
                 self.count += 1
+                duration = date - self.paid_date
+                for i in range(duration):
+                    self.event_count += 1
 
         CalendarDateTestCase.a = Calendar()
         CalendarDateTestCase.a.add_observer(ObserverMock())
@@ -154,7 +160,10 @@ class CalendarDateTestCase(unittest.TestCase):
     def test_notification(self):
         CalendarDateTestCase.a.plus_week()
         count = CalendarDateTestCase.a.observers[0].count
+        paid = CalendarDateTestCase.a.observers[0].event_count
+        self.assertEqual(CalendarDateTestCase.a.current_date, ImperialDate(8,1105))
         self.assertEqual(count, 1)
+        self.assertEqual(paid, 8)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

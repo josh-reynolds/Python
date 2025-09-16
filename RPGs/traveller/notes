@@ -414,6 +414,12 @@
 #
 # Ah! Think I just spotted the bug in Financials...
 # 
+# OK. Fixed. But also, I now think 'due date' is mistaken. We should
+# have 'paid up date' (whatever concise name should go here...). And
+# due date is actually every _recurrence_ thereafter. These types of
+# events, we're not providing an option to pay early, so they will
+# always be on predictible days in the future. So calculate a modulus
+# and set the paid date to the last such, and move on.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
