@@ -89,7 +89,7 @@ class Financials:
             unit = "days"
         print(f"Renewing berth on {date} for {days_extra} {unit}.")
         self.debit(Credits(days_extra * 100))
-        self.berth_expiry = date + days_extra
+        self.berth_expiry = date + 1
 
     def pay_salaries(self):
         amount = self.ship.crew_salary()

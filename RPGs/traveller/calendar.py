@@ -12,6 +12,7 @@ class Calendar:
     @day.setter
     def day(self, value):
         self.current_date.day = value
+        # this is redundant with logic in ImperialDate - review
         if self.current_date.day >= 366:
             self.current_date.day = self.day - 365
             self.year += 1
