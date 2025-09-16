@@ -174,8 +174,11 @@ class Ship:
 
 class ShipTestCase(unittest.TestCase):
     class CargoMock:
-        def __init__(self):
-            self.tonnage = 1
+        def __init__(self, quantity):
+            self.quantity = quantity
+        @property
+        def tonnage(self):
+            return self.quantity
 
     def setUp(self):
         ShipTestCase.ship = Ship()
@@ -184,10 +187,28 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
 
     def test_loading_cargo(self):
+        cargo1 = ShipTestCase.CargoMock(1)
+        cargo2 = ShipTestCase.CargoMock(1)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
-        ShipTestCase.ship.load_cargo(ShipTestCase.CargoMock())
+        ShipTestCase.ship.load_cargo(cargo1)
         self.assertEqual(ShipTestCase.ship.free_space(), 81)
+        ShipTestCase.ship.load_cargo(cargo2)
+        self.assertEqual(ShipTestCase.ship.free_space(), 80)
+        self.assertEqual(len(ShipTestCase.ship.hold), 2)
     
+    def test_unloading_cargo(self):
+        cargo = ShipTestCase.CargoMock(20)
+        self.assertEqual(ShipTestCase.ship.free_space(), 82)
+        ShipTestCase.ship.load_cargo(cargo)
+        self.assertEqual(ShipTestCase.ship.free_space(), 62)
+        self.assertEqual(len(ShipTestCase.ship.hold), 1)
+        ShipTestCase.ship.unload_cargo(cargo, 10)
+        self.assertEqual(ShipTestCase.ship.free_space(), 72)
+        self.assertEqual(len(ShipTestCase.ship.hold), 1)
+        ShipTestCase.ship.unload_cargo(cargo, 10)
+        self.assertEqual(ShipTestCase.ship.free_space(), 82)
+        self.assertEqual(len(ShipTestCase.ship.hold), 0)
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
