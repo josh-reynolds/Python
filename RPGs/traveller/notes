@@ -366,6 +366,23 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Reviewing the calendar observers. There are a couple goals:
+# * Financials is coupled to Ship and StarSystem in notify. If
+#   we remove or lift that, we'll only have one observer, so
+#   the entire pattern is in question here. It may be 
+#   over-engineered for the actual use case.
+# * Feature-wise, we need to make sure that repeating events
+#   (which is pretty much all we have) execute multiple times
+#   if the duration is long enough. That doesn't seem to be
+#   the case with the current implementation, though it's 
+#   tricky to tease out. Maybe a mock observer and test case
+#   to help peel it apart? But the solution may need to be
+#   in the observer with current, because they know their
+#   date and frequency.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -455,8 +472,8 @@
 #  * [DONE] Add annual maintenance
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
+#  # [....] Unit tests for Calendar
 #  * [    ] Longer intervals need to make sure repeating events execute multiple times
-#  # [    ] Unit tests for Calendar
 #  # [    ] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
 #  # [    ] Unit tests for Ship

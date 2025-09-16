@@ -139,6 +139,22 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a-1, ImperialDate(4,100))
         self.assertEqual(a-5, ImperialDate(365,99))
 
+class CalendarDateTestCase(unittest.TestCase):
+    def setUp(self):
+        class ObserverMock:
+            def __init__(self):
+                self.count = 0
+            def notify(self, date):
+                self.count += 1
+
+        CalendarDateTestCase.a = Calendar()
+        CalendarDateTestCase.a.add_observer(ObserverMock())
+
+    def test_notification(self):
+        CalendarDateTestCase.a.plus_week()
+        count = CalendarDateTestCase.a.observers[0].count
+        self.assertEqual(count, 1)
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

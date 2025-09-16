@@ -222,7 +222,6 @@ class Game:
                   f"It will cost {cost}. Your balance is {self.financials.balance}.")
             return
 
-        # perform maintenance
         # TO_DO: should we have a confirmation here?
         # TO_DO: should we warn or block if maintenance was performed recently?
         print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
