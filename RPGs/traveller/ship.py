@@ -173,11 +173,20 @@ class Ship:
         return Credits(37080000 * 0.001)
 
 class ShipTestCase(unittest.TestCase):
+    class CargoMock:
+        def __init__(self):
+            self.tonnage = 1
+
     def setUp(self):
         ShipTestCase.ship = Ship()
 
     def test_trade_skill(self):
         self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
+
+    def test_loading_cargo(self):
+        self.assertEqual(ShipTestCase.ship.free_space(), 82)
+        ShipTestCase.ship.load_cargo(ShipTestCase.CargoMock())
+        self.assertEqual(ShipTestCase.ship.free_space(), 81)
     
 # -------------------------------------------------------------------
 if __name__ == '__main__':
