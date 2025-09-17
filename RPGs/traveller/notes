@@ -523,7 +523,7 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Longer intervals need to make sure repeating events execute multiple times
-#  # [    ] Unit tests for CargoDepot
+#  # [....] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
 #  # [    ] Unit tests for StarSystem
 #  # [    ] Unit tests for Game

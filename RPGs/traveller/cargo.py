@@ -79,11 +79,6 @@ class CargoDepot:
             self.cargo = self.determine_cargo()
             self.prices = [0]
 
-    # deprecate, replaced with print_cargo_list below...
-    def goods(self):
-        for i,item in enumerate(self.cargo):
-            print(f"{i} - {item}")
-
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
             table = cargo.purchase_dms
@@ -357,6 +352,10 @@ class CargoTestCase(unittest.TestCase):
         location = Location("Uranus")
         d = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
         self.assertEqual(f"{d}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
+
+class CargoDepotTestCase(unittest.TestCase):
+    def test_notify(self):
+        pass
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

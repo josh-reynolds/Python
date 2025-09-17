@@ -175,7 +175,7 @@ class Game:
         self.financials.credit(sale_price)
 
     def goods(self):
-        self.depot.goods()
+        self.depot.print_cargo_list(self.depot.cargo)
 
     def cargo_hold(self):
         hold = self.ship.cargo_hold()
