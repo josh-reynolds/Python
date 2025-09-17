@@ -1,3 +1,4 @@
+import unittest
 from cargo import CargoDepot
 
 class StarSystem:
@@ -104,3 +105,19 @@ class StarSystem:
     def leave_trade(self):
         if self.detail == "trade":
             self.detail = "surface"
+
+class StarSystemTestCase(unittest.TestCase):
+    def setUp(self):
+        StarSystemTestCase.system = StarSystem("Test", "A", 9, 9, 9, 9, True)
+
+    def test_landing(self):
+        world = StarSystemTestCase.system
+        self.assertEqual(world.detail, "orbit")
+        world.land()
+        self.assertEqual(world.detail, "surface")
+        world.land()
+        self.assertEqual(world.detail, "surface")
+
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

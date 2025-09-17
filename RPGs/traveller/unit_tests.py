@@ -7,6 +7,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('cargo'))
     suite.addTests(loader.loadTestsFromName('financials'))
     suite.addTests(loader.loadTestsFromName('ship'))
+    suite.addTests(loader.loadTestsFromName('star_system'))
     return suite
 
 # ---------------------------------------------------------------------------
