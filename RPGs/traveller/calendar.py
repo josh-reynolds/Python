@@ -141,22 +141,22 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(a-5, ImperialDate(365,99))
 
 class CalendarTestCase(unittest.TestCase):
-    def setUp(self):
-        class ObserverMock:
-            def __init__(self):
-                self.paid_date = ImperialDate(365,1104)
-                self.count = 0
-                self.event_count = 0
-                self.recurrence = 1
-            def notify(self, date):
-                self.count += 1
-                duration = (date - self.paid_date) // self.recurrence
-                for i in range(duration):
-                    self.event_count += 1
-                    self.paid_date += self.recurrence
+    class ObserverMock:
+        def __init__(self):
+            self.paid_date = ImperialDate(365,1104)
+            self.count = 0
+            self.event_count = 0
+            self.recurrence = 1
+        def notify(self, date):
+            self.count += 1
+            duration = (date - self.paid_date) // self.recurrence
+            for i in range(duration):
+                self.event_count += 1
+                self.paid_date += self.recurrence
 
+    def setUp(self):
         CalendarTestCase.a = Calendar()
-        CalendarTestCase.a.add_observer(ObserverMock())
+        CalendarTestCase.a.add_observer(CalendarTestCase.ObserverMock())
 
     def test_recurring_events_from_notification(self):
         calendar = CalendarTestCase.a
@@ -216,8 +216,26 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.year, 1105)
         self.assertEqual(mock.count, 1)
 
-    # calendar string
-    # add observer
+    def test_calendar_string(self):
+        calendar = CalendarTestCase.a
+        self.assertEqual(f"{calendar}", "001-1105")
+
+    def test_add_observer(self):
+        calendar = CalendarTestCase.a
+        mock = calendar.observers[0]
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
+        self.assertEqual(len(calendar.observers), 1)
+
+        calendar.add_observer(CalendarTestCase.ObserverMock())
+        self.assertEqual(len(calendar.observers), 2)
+
+        calendar.plus_week()
+        self.assertEqual(calendar.day, 8)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 1)
+        self.assertEqual(calendar.observers[1].count, 1)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
