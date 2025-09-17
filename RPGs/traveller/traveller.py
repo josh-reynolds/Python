@@ -1,5 +1,5 @@
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red
+from utilities import pr_yellow_on_red, print_list
 from calendar import Calendar
 from ship import Ship
 from cargo import Cargo, CargoDepot
@@ -175,12 +175,10 @@ class Game:
         self.financials.credit(sale_price)
 
     def goods(self):
-        self.depot.print_cargo_list(self.depot.cargo)
+        print_list(self.depot.cargo)
 
     def cargo_hold(self):
-        hold = self.ship.cargo_hold()
-        for i,item in enumerate(hold):
-            print(f"{i} - {item}")
+        print_list(self.ship.cargo_hold())
 
     def wait_week(self):
         self.date.plus_week()

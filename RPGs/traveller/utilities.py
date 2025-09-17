@@ -47,3 +47,7 @@ def confirm_input(prompt):
     while confirmation != 'y' and confirmation != 'n':
         confirmation = input(prompt)
     return confirmation
+
+def print_list(items):
+    for i,item in enumerate(items):
+        print(f"{i} - {item}")
