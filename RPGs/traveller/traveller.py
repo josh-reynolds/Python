@@ -178,7 +178,9 @@ class Game:
         self.depot.goods()
 
     def cargo_hold(self):
-        self.ship.cargo_hold()
+        hold = self.ship.cargo_hold()
+        for i,item in enumerate(hold):
+            print(f"{i} - {item}")
 
     def wait_week(self):
         self.date.plus_week()

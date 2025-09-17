@@ -30,10 +30,8 @@ class Ship:
                f"{self.crew} crew, {self.passengers} passenger staterooms, {self.low_berths} low berths\n" \
                f"Last maintenance: {self.last_maintenance}"
 
-    # can we deprecate? use CargoDepot.print_cargo_list()
     def cargo_hold(self):
-        for i,item in enumerate(self.hold):
-            print(f"{i} - {item}")
+        return self.hold
 
     def free_space(self):
         taken = sum([cargo.tonnage for cargo in self.hold])
@@ -208,6 +206,25 @@ class ShipTestCase(unittest.TestCase):
         ShipTestCase.ship.unload_cargo(cargo, 10)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
+
+    def test_ship_string(self):
+        self.assertEqual(f"{ShipTestCase.ship}",
+                         "Weaselfish -- Type A Free Trader\n"
+                         "200 tons : 1G : jump-1\n"
+                         "4 crew, 6 passenger staterooms, 20 low berths\n"
+                         "Last maintenance: 351-1104")
+
+    def test_cargo_hold_reporting(self):
+        cargo1 = ShipTestCase.CargoMock(20)
+        cargo2 = ShipTestCase.CargoMock(50)
+        self.assertEqual(ShipTestCase.ship.cargo_hold(), [])
+        ShipTestCase.ship.load_cargo(cargo1)
+        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 1)
+        self.assertEqual(ShipTestCase.ship.cargo_hold()[0], cargo1)
+        ShipTestCase.ship.load_cargo(cargo2)
+        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 2)
+        self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

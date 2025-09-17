@@ -553,6 +553,7 @@
 #  PHASE FOUR ======================================================
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
+#  * [    ] Lift all print statements out of model classes
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values
