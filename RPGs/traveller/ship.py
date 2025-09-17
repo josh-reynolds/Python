@@ -225,6 +225,18 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 2)
         self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
 
+    def test_crew_salary(self):
+        self.assertEqual(ShipTestCase.ship.crew_salary(), Credits(15000))
+
+    def test_loan_payment(self):
+        self.assertEqual(ShipTestCase.ship.loan_payment(), Credits(154500))
+
+    def test_maintenance_cost(self):
+        self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
+
+    # refuel
+    # recharge
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
