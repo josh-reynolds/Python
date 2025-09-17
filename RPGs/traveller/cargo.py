@@ -1,6 +1,6 @@
 import unittest
 from utilities import die_roll, constrain, int_input, confirm_input
-from utilities import actual_value, pr_red, pr_green, print_list
+from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
 class Cargo:
@@ -99,11 +99,7 @@ class CargoDepot:
             modifier += table.get("Po",0)
         return modifier
 
-    def print_cargo_list(self, cargo_list):
-        print_list(cargo_list)
-
     def get_cargo_lot(self, source, prompt):
-        self.print_cargo_list(source)
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             print("That is not a valid cargo ID.")

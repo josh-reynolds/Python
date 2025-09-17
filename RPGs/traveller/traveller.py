@@ -120,6 +120,7 @@ class Game:
         self.financials.debit(cost)
         
     def buy_cargo(self):
+        print_list(self.depot.cargo)
         item_number, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo == None:
             return
@@ -149,6 +150,7 @@ class Game:
         self.financials.debit(cost)
 
     def sell_cargo(self):
+        print_list(self.ship.hold)
         item_number, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
         if cargo == None:
             return
