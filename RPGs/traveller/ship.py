@@ -234,9 +234,16 @@ class ShipTestCase(unittest.TestCase):
     def test_maintenance_cost(self):
         self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
 
-    # refuel
-    # recharge
+    @unittest.skip("test has side effects: input & printing")
+    def test_refuel(self):
+        self.assertEqual(ShipTestCase.ship.current_fuel, 0)
+        cost = ShipTestCase.ship.refuel()
+        self.assertEqual(ShipTestCase.ship.current_fuel, 30)
+        self.assertEqual(cost, Credits(15000))    # 'yes' case
+        cost = ShipTestCase.ship.refuel()
+        self.assertEqual(cost, Credits(0))        # full tank case
 
+    # recharge
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
