@@ -181,8 +181,23 @@ class ShipTestCase(unittest.TestCase):
     def setUp(self):
         ShipTestCase.ship = Ship()
 
-    def test_trade_skill(self):
-        self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
+    def test_ship_string(self):
+        self.assertEqual(f"{ShipTestCase.ship}",
+                         "Weaselfish -- Type A Free Trader\n"
+                         "200 tons : 1G : jump-1\n"
+                         "4 crew, 6 passenger staterooms, 20 low berths\n"
+                         "Last maintenance: 351-1104")
+
+    def test_cargo_hold_reporting(self):
+        cargo1 = ShipTestCase.CargoMock(20)
+        cargo2 = ShipTestCase.CargoMock(50)
+        self.assertEqual(ShipTestCase.ship.cargo_hold(), [])
+        ShipTestCase.ship.load_cargo(cargo1)
+        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 1)
+        self.assertEqual(ShipTestCase.ship.cargo_hold()[0], cargo1)
+        ShipTestCase.ship.load_cargo(cargo2)
+        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 2)
+        self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
 
     def test_loading_cargo(self):
         cargo1 = ShipTestCase.CargoMock(1)
@@ -207,33 +222,6 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
 
-    def test_ship_string(self):
-        self.assertEqual(f"{ShipTestCase.ship}",
-                         "Weaselfish -- Type A Free Trader\n"
-                         "200 tons : 1G : jump-1\n"
-                         "4 crew, 6 passenger staterooms, 20 low berths\n"
-                         "Last maintenance: 351-1104")
-
-    def test_cargo_hold_reporting(self):
-        cargo1 = ShipTestCase.CargoMock(20)
-        cargo2 = ShipTestCase.CargoMock(50)
-        self.assertEqual(ShipTestCase.ship.cargo_hold(), [])
-        ShipTestCase.ship.load_cargo(cargo1)
-        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 1)
-        self.assertEqual(ShipTestCase.ship.cargo_hold()[0], cargo1)
-        ShipTestCase.ship.load_cargo(cargo2)
-        self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 2)
-        self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
-
-    def test_crew_salary(self):
-        self.assertEqual(ShipTestCase.ship.crew_salary(), Credits(15000))
-
-    def test_loan_payment(self):
-        self.assertEqual(ShipTestCase.ship.loan_payment(), Credits(154500))
-
-    def test_maintenance_cost(self):
-        self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
-
     @unittest.skip("test has side effects: input & printing")
     def test_refuel(self):
         self.assertEqual(ShipTestCase.ship.current_fuel, 0)
@@ -243,7 +231,26 @@ class ShipTestCase(unittest.TestCase):
         cost = ShipTestCase.ship.refuel()
         self.assertEqual(cost, Credits(0))        # full tank case
 
-    # recharge
+    @unittest.skip("test has side effects: input & printing")
+    def test_recharge(self):
+        self.assertEqual(ShipTestCase.ship.life_support_level, 0)
+        cost = ShipTestCase.ship.recharge()
+        self.assertEqual(ShipTestCase.ship.life_support_level, 100)
+        self.assertEqual(cost, Credits(22000))    # 'yes' case
+        cost = ShipTestCase.ship.recharge()
+        self.assertEqual(cost, Credits(0))        # full life support case
+
+    def test_trade_skill(self):
+        self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
+
+    def test_crew_salary(self):
+        self.assertEqual(ShipTestCase.ship.crew_salary(), Credits(15000))
+
+    def test_loan_payment(self):
+        self.assertEqual(ShipTestCase.ship.loan_payment(), Credits(154500))
+
+    def test_maintenance_cost(self):
+        self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

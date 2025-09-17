@@ -518,10 +518,10 @@
 #  * [DONE] Add maintenance availability to StarSystem (A + B starports)
 #  # [DONE] Unit tests for Cargo
 #  * [DONE] Add annual maintenance
+#  # [DONE] Unit tests for Ship
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  # [....] Unit tests for Calendar
-#  # [....] Unit tests for Ship
 #  * [....] Longer intervals need to make sure repeating events execute multiple times
 #  # [    ] Unit tests for CargoDepot
 #  # [    ] Unit tests for Financials
