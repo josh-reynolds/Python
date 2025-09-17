@@ -177,8 +177,33 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.event_count, 2)
         self.assertEqual(mock.paid_date, ImperialDate(6,1105))
 
-    # get/set day
-    # get/set year
+    def test_day_property(self):
+        calendar = CalendarTestCase.a
+        mock = calendar.observers[0]
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
+
+        calendar.day += 1
+        self.assertEqual(calendar.day, 2)
+        self.assertEqual(mock.count, 1)
+
+        calendar.day += 364
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1106)
+
+    def test_year_property(self):
+        calendar = CalendarTestCase.a
+        mock = calendar.observers[0]
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
+
+        calendar.year += 1
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1106)
+        self.assertEqual(mock.count, 1)
+
     # plus_week
     # calendar string
     # add observer
