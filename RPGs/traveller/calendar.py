@@ -204,7 +204,18 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.year, 1106)
         self.assertEqual(mock.count, 1)
 
-    # plus_week
+    def test_plus_week(self):
+        calendar = CalendarTestCase.a
+        mock = calendar.observers[0]
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
+
+        calendar.plus_week()
+        self.assertEqual(calendar.day, 8)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 1)
+
     # calendar string
     # add observer
 
