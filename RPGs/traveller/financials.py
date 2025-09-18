@@ -41,10 +41,16 @@ class Financials:
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
         self.ship = ship
-        self.berth_expiry = self.current_date + 6
-        self.salary_due = self.current_date + 28
-        self.loan_due = self.current_date + 28
         self.location = location
+
+        self.berth_recurrence = 6
+        self.berth_expiry = self.current_date + self.berth_recurrence
+
+        self.salary_recurrence = 28
+        self.salary_due = self.current_date + self.salary_recurrence
+
+        self.loan_recurrence = 28
+        self.loan_due = self.current_date + self.loan_recurrence
 
     def debit(self, amount):
         self.balance -= amount
@@ -54,15 +60,25 @@ class Financials:
 
     def notify(self, date):
         self.current_date = date.copy()
+
+        self.berth_notification(date)
+        self.salary_notification(date)
+        self.loan_notification(date)
+        self.maintenance_notification(date)
+
+    def berth_notification(self, date):
         if date > self.berth_expiry and self.location.on_surface():
             self.renew_berth(date)
 
+    def salary_notification(self, date):
         if date > self.salary_due:
             self.pay_salaries()
 
+    def loan_notification(self, date):
         if date > self.loan_due:
             self.pay_loan()
 
+    def maintenance_notification(self, date):
         status = self.maintenance_status(date)
         if status == 'yellow':
             pr_yellow(f"Days since last maintenance = {date - self.ship.last_maintenance}")
