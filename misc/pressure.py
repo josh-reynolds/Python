@@ -6,13 +6,15 @@ except IOError as error:
           file=sys.stderr)
     sys.exit(1)
 
+dates = []
 systolic = []
 diastolic = []
 systolic_avgs = []
 diastolic_avgs = []
 
 for line in loaded_txt:
-    sys, dia = line.split()
+    date, sys, dia = line.split()
+    dates.append(date)
     systolic.append(int(sys))
     diastolic.append(int(dia))
 
@@ -30,7 +32,7 @@ for i in range(RUNNING_RANGE, len(systolic)+1):
     diastolic_avgs.append(sum_dia/RUNNING_RANGE)
 
 print(f"{RUNNING_RANGE} day running averages")
-print("systolic/diastolic ~ averages")
+print("date ~ systolic/diastolic ~ averages")
 print("-----------------------------")
 for i in range(0, len(systolic)):
     if systolic_avgs[i] == -1:
@@ -38,5 +40,5 @@ for i in range(0, len(systolic)):
     else:
         averages = f"{systolic_avgs[i]} / {diastolic_avgs[i]}"
     
-    print(f"{systolic[i]} / {diastolic[i]} ~ {averages}")
+    print(f"{dates[i]} ~ {systolic[i]} / {diastolic[i]} ~ {averages}")
 
