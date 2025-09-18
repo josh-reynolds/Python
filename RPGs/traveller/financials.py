@@ -153,6 +153,53 @@ class CreditsTestCase(unittest.TestCase):
         b = Credits(2)
         self.assertEqual(b-a,Credits(1))
 
+class FinancialsTestCase(unittest.TestCase):
+    class DateMock:
+        def __init__(self, value):
+            self.value = value
+
+        def copy(self):
+            return FinancialsTestCase.DateMock(self.value)
+
+        def __add__(self, rhs):
+            return FinancialsTestCase.DateMock(self.value + rhs)
+
+        def __sub__(self, rhs):
+            return self.value - rhs.value
+
+        def __ge__(self, other):
+            return self.value >= other.value
+
+        def __gt__(self, other):
+            return self.value > other.value
+
+        def __repr__(self):
+            return f"{self.value}"
+
+    class ShipMock:
+        def __init__(self):
+            self.last_maintenance = FinancialsTestCase.DateMock(1)
+
+    class SystemMock:
+        def on_surface(self):
+            return True
+
+    def setUp(self):
+        FinancialsTestCase.financials = Financials(1, 
+                                                   FinancialsTestCase.DateMock(1),
+                                                   FinancialsTestCase.ShipMock(), 
+                                                   FinancialsTestCase.SystemMock())
+
+    # test has side effects: printing
+    def test_notify(self):
+        financials = FinancialsTestCase.financials
+
+        date = FinancialsTestCase.DateMock(8)
+        financials.notify(date)
+
+        date = FinancialsTestCase.DateMock(12)
+        financials.notify(date)
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

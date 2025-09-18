@@ -526,7 +526,7 @@
 #  * [....] Longer intervals need to make sure repeating events execute multiple times
 #  # [....] Unit tests for CargoDepot
 #  # [....] Unit tests for StarSystem
-#  # [    ] Unit tests for Financials
+#  # [....] Unit tests for Financials
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
 #  * [    ] pylint/pydocstyle scrub
