@@ -555,6 +555,7 @@
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Lift all print statements out of model classes
+#           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values

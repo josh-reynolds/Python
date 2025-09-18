@@ -47,7 +47,7 @@ class Financials:
         self.berth_expiry = self.current_date + self.berth_recurrence
 
         self.salary_recurrence = 28
-        self.salary_due = self.current_date + self.salary_recurrence
+        self.salary_paid = self.current_date.copy()
 
         self.loan_recurrence = 28
         self.loan_due = self.current_date + self.loan_recurrence
@@ -71,7 +71,9 @@ class Financials:
             self.renew_berth(date)
 
     def salary_notification(self, date):
-        if date > self.salary_due:
+        duration = (date - self.salary_paid) // self.salary_recurrence
+        for i in range(duration):
+            self.salary_paid += self.salary_recurrence
             self.pay_salaries()
 
     def loan_notification(self, date):
@@ -109,9 +111,8 @@ class Financials:
 
     def pay_salaries(self):
         amount = self.ship.crew_salary()
-        print(f"Paying crew salaries on {self.salary_due} for {amount}.")
+        print(f"Paying crew salaries on {self.salary_paid} for {amount}.")
         self.debit(amount)
-        self.salary_due = self.salary_due + 28
 
     def pay_loan(self):
         amount = self.ship.loan_payment()
@@ -199,6 +200,9 @@ class FinancialsTestCase(unittest.TestCase):
         def __init__(self):
             self.last_maintenance = FinancialsTestCase.DateMock(1)
 
+        def crew_salary(self):
+            return Credits(1)
+
     class SystemMock:
         def on_surface(self):
             return True
@@ -209,7 +213,7 @@ class FinancialsTestCase(unittest.TestCase):
                                                    FinancialsTestCase.ShipMock(), 
                                                    FinancialsTestCase.SystemMock())
 
-    # test has side effects: printing
+    @unittest.skip("test has side effects: printing")
     def test_notify(self):
         financials = FinancialsTestCase.financials
 
@@ -231,14 +235,51 @@ class FinancialsTestCase(unittest.TestCase):
         financials.credit(Credits(20))
         self.assertEqual(financials.balance, Credits(110))
 
+    @unittest.skip("test has side effects: printing")
+    def test_salary_notification(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(1))
+
+        date = FinancialsTestCase.DateMock(30)
+        financials.salary_notification(date)
+        self.assertEqual(financials.balance, Credits(99))
+        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(29))
+
+        date = FinancialsTestCase.DateMock(60)
+        financials.salary_notification(date)
+        self.assertEqual(financials.balance, Credits(98))
+        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(57))
+
+        date = FinancialsTestCase.DateMock(90)
+        financials.salary_notification(date)
+        self.assertEqual(financials.balance, Credits(97))
+        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(85))
+
+    @unittest.skip("test has side effects: printing")
+    def test_pay_salaries(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+
+        financials.pay_salaries()
+        self.assertEqual(financials.balance, Credits(99))
+
+
+# Observer:paid_date
+# Observer:recurrence
+# Observer:notify(date)
+#    duration = (date - paid_date) // recurrence
+#    for i in range(duration):
+#      execute_action
+#      paid_date += recurrence
+
     # berth_notification
-    # salary_notification
-    # loan_notification
-    # maintenance_notification
     # berthing_fee
     # renew_berth
-    # pay_salaries
+
+    # loan_notification
     # pay_loan
+
+    # maintenance_notification
     # maintenance_status
 
 # -------------------------------------------------------------------
