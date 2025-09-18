@@ -66,14 +66,17 @@ class Cargo:
             return int(quantity)
 
 class CargoDepot:
-    def __init__(self, system, current_date):
+    def __init__(self, system, refresh_date):
         self.system = system
-        self.current_date = current_date.copy()
+        self.refresh_date = refresh_date.copy()
+        self.recurrence = 7
         self.cargo = self.determine_cargo()
 
     def notify(self, date):
-        if date >= self.current_date + 7:
-            self.current_date = date.copy()
+        duration = (date - self.refresh_date) // self.recurrence
+        for i in  range(duration):
+            self.refresh_date += self.recurrence
+        if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
 
     def get_price_modifiers(self, cargo, transaction_type):
@@ -356,6 +359,9 @@ class CargoDepotTestCase(unittest.TestCase):
         def __add__(self, rhs):
             return CargoDepotTestCase.DateMock(self.value + rhs)
 
+        def __sub__(self, rhs):
+            return self.value - rhs.value
+
         def __ge__(self, other):
             return self.value >= other.value
 
@@ -370,14 +376,16 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_notify(self):
         depot = CargoDepotTestCase.depot
         cargo = depot.cargo
-        self.assertEqual(depot.current_date.value, 1)
-        date = CargoDepotTestCase.DateMock(2)
+        self.assertEqual(depot.refresh_date.value, 1)
+
+        date = CargoDepotTestCase.DateMock(7)
         depot.notify(date)
-        self.assertEqual(depot.current_date.value, 1)
+        self.assertEqual(depot.refresh_date.value, 1)
         self.assertEqual(cargo, depot.cargo)
+
         date = CargoDepotTestCase.DateMock(8)
         depot.notify(date)
-        self.assertEqual(depot.current_date.value, 8)
+        self.assertEqual(depot.refresh_date.value, 8)
         self.assertNotEqual(cargo, depot.cargo)
 
 
