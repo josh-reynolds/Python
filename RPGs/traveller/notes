@@ -520,6 +520,7 @@
 #  * [DONE] Add annual maintenance
 #  # [DONE] Unit tests for Ship
 #  # [DONE] Unit tests for Calendar
+#  * [DONE] BUG: price array isn't updated when we remove Cargo from the Depot
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Longer intervals need to make sure repeating events execute multiple times

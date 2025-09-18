@@ -13,6 +13,8 @@ class Cargo:
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
         self.source_world = source_world
+        self.price_adjustment = 0    # purchase price adjustment
+                                     # '0' indicates not determined yet
 
     def __repr__(self):
         if self.unit_size == 1:
@@ -68,16 +70,11 @@ class CargoDepot:
         self.system = system
         self.current_date = current_date.copy()
         self.cargo = self.determine_cargo()
-        self.prices = [0]  
-        # '0' indicates price modifier has not been determined yet
-        # we are only retaining price modifiers for
-        # purchases, not for sales
 
     def notify(self, date):
         if date >= self.current_date + 7:
             self.current_date = date.copy()
             self.cargo = self.determine_cargo()
-            self.prices = [0]
 
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
@@ -151,14 +148,14 @@ class CargoDepot:
             roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
             price_adjustment = actual_value(roll)
         elif prompt == "purchase":
-            if self.prices[item_number] > 0:
-                price_adjustment = self.prices[item_number]
+            if cargo.price_adjustment > 0:
+                price_adjustment = cargo.price_adjustment
             else:
                 roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
                 price_adjustment = actual_value(roll)
                 if quantity < cargo.quantity:
                     price_adjustment += .01
-                self.prices[item_number] = price_adjustment
+                cargo.price_adjustment = price_adjustment
 
         price = Credits(cargo.price.amount * price_adjustment * quantity)
         if ((prompt == "sale" and price_adjustment > 1) or 
