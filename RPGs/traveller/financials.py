@@ -183,6 +183,9 @@ class FinancialsTestCase(unittest.TestCase):
         def __sub__(self, rhs):
             return self.value - rhs.value
 
+        def __eq__(self, other):
+            return self.value == other.value
+        
         def __ge__(self, other):
             return self.value >= other.value
 
@@ -201,7 +204,7 @@ class FinancialsTestCase(unittest.TestCase):
             return True
 
     def setUp(self):
-        FinancialsTestCase.financials = Financials(1, 
+        FinancialsTestCase.financials = Financials(100, 
                                                    FinancialsTestCase.DateMock(1),
                                                    FinancialsTestCase.ShipMock(), 
                                                    FinancialsTestCase.SystemMock())
@@ -212,9 +215,31 @@ class FinancialsTestCase(unittest.TestCase):
 
         date = FinancialsTestCase.DateMock(8)
         financials.notify(date)
+        self.assertEqual(financials.current_date, date)
 
         date = FinancialsTestCase.DateMock(12)
         financials.notify(date)
+        self.assertEqual(financials.current_date, date)
+
+    def test_debit_and_credit(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+
+        financials.debit(Credits(10))
+        self.assertEqual(financials.balance, Credits(90))
+
+        financials.credit(Credits(20))
+        self.assertEqual(financials.balance, Credits(110))
+
+    # berth_notification
+    # salary_notification
+    # loan_notification
+    # maintenance_notification
+    # berthing_fee
+    # renew_berth
+    # pay_salaries
+    # pay_loan
+    # maintenance_status
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
