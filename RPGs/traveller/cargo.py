@@ -346,8 +346,37 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(f"{d}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
 class CargoDepotTestCase(unittest.TestCase):
+    class DateMock:
+        def __init__(self, value):
+            self.value = value
+
+        def copy(self):
+            return CargoDepotTestCase.DateMock(self.value)
+
+        def __add__(self, rhs):
+            return CargoDepotTestCase.DateMock(self.value + rhs)
+
+        def __ge__(self, other):
+            return self.value >= other.value
+
+    class SystemMock:
+        def __init__(self):
+            self.population = 5
+
+    def setUp(self):
+        CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(), 
+                                              CargoDepotTestCase.DateMock(1))
+
     def test_notify(self):
-        pass
+        depot = CargoDepotTestCase.depot
+        self.assertEqual(depot.current_date.value, 1)
+        date = CargoDepotTestCase.DateMock(2)
+        depot.notify(date)
+        self.assertEqual(depot.current_date.value, 1)
+        date = CargoDepotTestCase.DateMock(8)
+        depot.notify(date)
+        self.assertEqual(depot.current_date.value, 8)
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
