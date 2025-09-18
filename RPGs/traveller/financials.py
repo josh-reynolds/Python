@@ -250,10 +250,10 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.balance, Credits(98))
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(57))
 
-        date = FinancialsTestCase.DateMock(90)
+        date = FinancialsTestCase.DateMock(120)
         financials.salary_notification(date)
-        self.assertEqual(financials.balance, Credits(97))
-        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(85))
+        self.assertEqual(financials.balance, Credits(96))
+        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(113))
 
     @unittest.skip("test has side effects: printing")
     def test_pay_salaries(self):
