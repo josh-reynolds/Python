@@ -369,13 +369,16 @@ class CargoDepotTestCase(unittest.TestCase):
 
     def test_notify(self):
         depot = CargoDepotTestCase.depot
+        cargo = depot.cargo
         self.assertEqual(depot.current_date.value, 1)
         date = CargoDepotTestCase.DateMock(2)
         depot.notify(date)
         self.assertEqual(depot.current_date.value, 1)
+        self.assertEqual(cargo, depot.cargo)
         date = CargoDepotTestCase.DateMock(8)
         depot.notify(date)
         self.assertEqual(depot.current_date.value, 8)
+        self.assertNotEqual(cargo, depot.cargo)
 
 
 # -------------------------------------------------------------------
