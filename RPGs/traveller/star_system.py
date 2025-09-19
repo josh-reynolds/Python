@@ -177,8 +177,22 @@ class StarSystemTestCase(unittest.TestCase):
         world.detail = "trade"
         self.assertEqual(world.description(), "at the Test trade depot")
 
+    def test_on_surface(self):
+        world = StarSystemTestCase.system
+
+        world.detail = "surface"
+        self.assertTrue(world.on_surface())
+
+        world.detail = "trade"
+        self.assertTrue(world.on_surface())
+
+        world.detail = "orbit"
+        self.assertFalse(world.on_surface())
+
+        world.detail = "jump"
+        self.assertFalse(world.on_surface())
+
     # __eq__
-    # on_surface
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
