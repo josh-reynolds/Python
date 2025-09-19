@@ -50,7 +50,7 @@ class Financials:
         self.salary_paid = self.current_date.copy()
 
         self.loan_recurrence = 28
-        self.loan_due = self.current_date + self.loan_recurrence
+        self.loan_paid = self.current_date.copy()
 
     def debit(self, amount):
         self.balance -= amount
@@ -77,7 +77,9 @@ class Financials:
             self.pay_salaries()
 
     def loan_notification(self, date):
-        if date > self.loan_due:
+        duration = (date - self.loan_paid) // self.loan_recurrence
+        for i in range(duration):
+            self.loan_paid += self.loan_recurrence
             self.pay_loan()
 
     def maintenance_notification(self, date):
@@ -116,9 +118,8 @@ class Financials:
 
     def pay_loan(self):
         amount = self.ship.loan_payment()
-        print(f"Paying ship loan on {self.loan_due} for {amount}.")
+        print(f"Paying ship loan on {self.loan_paid} for {amount}.")
         self.debit(amount)
-        self.loan_due = self.loan_due + 28
 
     # conceivably an enum or the like would be better, but
     # we'll stick to simple strings for now...
@@ -203,6 +204,9 @@ class FinancialsTestCase(unittest.TestCase):
         def crew_salary(self):
             return Credits(1)
 
+        def loan_payment(self):
+            return Credits(1)
+
     class SystemMock:
         def on_surface(self):
             return True
@@ -263,6 +267,34 @@ class FinancialsTestCase(unittest.TestCase):
         financials.pay_salaries()
         self.assertEqual(financials.balance, Credits(99))
 
+    @unittest.skip("test has side effects: printing")
+    def test_loan_notification(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(1))
+
+        date = FinancialsTestCase.DateMock(30)
+        financials.loan_notification(date)
+        self.assertEqual(financials.balance, Credits(99))
+        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(29))
+
+        date = FinancialsTestCase.DateMock(60)
+        financials.loan_notification(date)
+        self.assertEqual(financials.balance, Credits(98))
+        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(57))
+
+        date = FinancialsTestCase.DateMock(120)
+        financials.loan_notification(date)
+        self.assertEqual(financials.balance, Credits(96))
+        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(113))
+
+    @unittest.skip("test has side effects: printing")
+    def test_pay_loan(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+
+        financials.pay_loan()
+        self.assertEqual(financials.balance, Credits(99))
+
 
 # Observer:paid_date
 # Observer:recurrence
@@ -275,9 +307,6 @@ class FinancialsTestCase(unittest.TestCase):
     # berth_notification
     # berthing_fee
     # renew_berth
-
-    # loan_notification
-    # pay_loan
 
     # maintenance_notification
     # maintenance_status
