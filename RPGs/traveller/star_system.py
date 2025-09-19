@@ -203,7 +203,33 @@ class StarSystemTestCase(unittest.TestCase):
         world2.coordinate = 000
         self.assertNotEqual(world1, world2)
 
-    # trade mods
+    def test_trade_modifiers(self):
+        ag_world = StarSystem("Agricultural", "A", 5, 5, 7, 5, True)
+        self.assertTrue(ag_world.agricultural)
+        self.assertEqual(f"{ag_world}", "Agricultural - A5575 Ag - G")
+
+        na_world = StarSystem("Non-agricultural", "A", 0, 3, 7, 5, True)
+        self.assertTrue(na_world.nonagricultural)
+        self.assertEqual(f"{na_world}", "Non-agricultural - A0375 Na - G")
+
+        in_world = StarSystem("Industrial", "A", 7, 5, 9, 5, True)
+        self.assertTrue(in_world.industrial)
+        self.assertEqual(f"{in_world}", "Industrial - A7595 In - G")
+
+        ni_world = StarSystem("Non-industrial", "A", 3, 5, 5, 5, True)
+        self.assertTrue(ni_world.nonindustrial)
+        self.assertEqual(f"{ni_world}", "Non-industrial - A3555 Ni - G")
+
+        ri_world = StarSystem("Rich", "A", 6, 5, 8, 5, True)
+        self.assertTrue(ri_world.rich)
+        self.assertEqual(f"{ri_world}", "Rich - A6585 Ri - G")
+
+        po_world = StarSystem("Poor", "A", 4, 0, 7, 5, True)
+        self.assertTrue(po_world.poor)
+        self.assertEqual(f"{po_world}", "Poor - A4075 Po - G")
+
+        plain_world = StarSystem("Plain", "A", 3, 5, 7, 5, True)
+        self.assertEqual(f"{plain_world}", "Plain - A3575 - G")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
