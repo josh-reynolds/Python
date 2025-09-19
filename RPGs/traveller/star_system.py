@@ -118,6 +118,52 @@ class StarSystemTestCase(unittest.TestCase):
         world.land()
         self.assertEqual(world.detail, "surface")
 
+    def test_liftoff(self):
+        world = StarSystemTestCase.system
+        world.detail = "surface"
+        world.liftoff()
+        self.assertEqual(world.detail, "orbit")
+        world.liftoff()
+        self.assertEqual(world.detail, "orbit")
+
+    def test_to_jump_point(self):
+        world = StarSystemTestCase.system
+        self.assertEqual(world.detail, "orbit")
+        world.to_jump_point()
+        self.assertEqual(world.detail, "jump")
+        world.to_jump_point()
+        self.assertEqual(world.detail, "jump")
+
+    def test_from_jump_point(self):
+        world = StarSystemTestCase.system
+        world.detail = "jump"
+        world.from_jump_point()
+        self.assertEqual(world.detail, "orbit")
+        world.from_jump_point()
+        self.assertEqual(world.detail, "orbit")
+
+    def test_join_trade(self):
+        world = StarSystemTestCase.system
+        world.detail = "surface"
+        world.join_trade()
+        self.assertEqual(world.detail, "trade")
+        world.join_trade()
+        self.assertEqual(world.detail, "trade")
+
+    def test_leave_trade(self):
+        world = StarSystemTestCase.system
+        world.detail = "trade"
+        world.leave_trade()
+        self.assertEqual(world.detail, "surface")
+        world.leave_trade()
+        self.assertEqual(world.detail, "surface")
+       
+
+    # __eq__
+    # __repr__
+    # description
+    # on_surface
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
