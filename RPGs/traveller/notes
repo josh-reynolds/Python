@@ -449,6 +449,20 @@
 #      No recurrence. Just calculates a duration and reports
 #      status. Resetting the state is via a separate mechanism.
 #
+# The 'standard observer model' is:
+#  Observer:paid_date
+#  Observer:recurrence
+#  Observer:notify(date)
+#      duration = (date - paid_date) // recurrence
+#      for i in range(duration):
+#          execute_action
+#          paid_date += recurrence
+#
+# All done with the initial set of tests. Need to review to make
+# sure the date ranges chosen make sense - though the tests are
+# passing, I'm not 100% certain I chose good boundary values. Also,
+# might not have emphasized the whole 'repeat on long ranges' thing.
+# Still, scaffolding in place for improvements.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -542,12 +556,12 @@
 #  # [DONE] Unit tests for Ship
 #  # [DONE] Unit tests for Calendar
 #  * [DONE] BUG: price array isn't updated when we remove Cargo from the Depot
+#  # [DONE] Unit tests for Financials
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Longer intervals need to make sure repeating events execute multiple times
 #  # [....] Unit tests for CargoDepot
 #  # [....] Unit tests for StarSystem
-#  # [....] Unit tests for Financials
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
 #  * [    ] pylint/pydocstyle scrub
@@ -556,6 +570,7 @@
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
+#  * [    ] Review observer tests for boundary values and long intervals
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)

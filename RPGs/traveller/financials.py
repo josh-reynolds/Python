@@ -106,13 +106,15 @@ class Financials:
 
     def renew_berth(self, date):
         days_extra = date - self.berth_expiry
-        if days_extra == 1:
-            unit = "day"
-        else:
-            unit = "days"
-        print(f"Renewing berth on {date} for {days_extra} {unit}.")
-        self.debit(Credits(days_extra * 100))
-        self.berth_expiry = date + 1
+        if days_extra > 0:
+            if days_extra == 1:
+                unit = "day"
+            else:
+                unit = "days"
+            amount = Credits(days_extra * 100)
+            print(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
+            self.debit(amount)
+            self.berth_expiry = date + self.berth_recurrence
 
     def pay_salaries(self):
         amount = self.ship.crew_salary()
@@ -399,16 +401,31 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(9))
 
+    @unittest.skip("test has side effects: printing")
     def test_renew_berth(self):
-        pass
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, None)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(1))
+        self.assertEqual(financials.current_date, 
+                         FinancialsTestCase.DateMock(1))
 
-# Observer:paid_date
-# Observer:recurrence
-# Observer:notify(date)
-#    duration = (date - paid_date) // recurrence
-#    for i in range(duration):
-#      execute_action
-#      paid_date += recurrence
+        financials.berth_recurrence = 1
+        financials.berth_expiry = financials.current_date + 6
+        date = FinancialsTestCase.DateMock(7)
+        financials.renew_berth(date)
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, 1)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(7))
+
+        date = FinancialsTestCase.DateMock(8)
+        financials.renew_berth(date)
+        self.assertEqual(financials.balance, Credits(0))
+        self.assertEqual(financials.berth_recurrence, 1)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(9))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
