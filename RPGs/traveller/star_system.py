@@ -192,7 +192,18 @@ class StarSystemTestCase(unittest.TestCase):
         world.detail = "jump"
         self.assertFalse(world.on_surface())
 
-    # __eq__
+    def test_equality(self):
+        world1 = StarSystemTestCase.system
+        world2 = StarSystem("Test", "A", 9, 9, 9, 9, True)
+        world3 = StarSystem("Foo", "A", 9, 9, 9, 9, True)
+
+        self.assertEqual(world1, world2)
+        self.assertNotEqual(world1, world3)
+
+        world2.coordinate = 000
+        self.assertNotEqual(world1, world2)
+
+    # trade mods
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

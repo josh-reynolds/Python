@@ -597,6 +597,7 @@
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Consider moving tests to separate modules
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Should we add type annotations?
