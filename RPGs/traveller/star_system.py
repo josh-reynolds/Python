@@ -157,11 +157,27 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "surface")
         world.leave_trade()
         self.assertEqual(world.detail, "surface")
+
+    def test_world_string(self):
+        world = StarSystemTestCase.system
+        self.assertEqual(f"{world}", "Test - A9999 In - G")
+
+    def test_description(self):
+        world = StarSystemTestCase.system
+
+        world.detail = "surface"
+        self.assertEqual(world.description(), "on Test")
+
+        world.detail = "orbit"
+        self.assertEqual(world.description(), "in orbit around Test")
+
+        world.detail = "jump"
+        self.assertEqual(world.description(), "at the Test jump point")
        
+        world.detail = "trade"
+        self.assertEqual(world.description(), "at the Test trade depot")
 
     # __eq__
-    # __repr__
-    # description
     # on_surface
 
 # -------------------------------------------------------------------
