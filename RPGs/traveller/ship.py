@@ -22,6 +22,12 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.life_support_level = 0
+
+        # TO_DO: this is now out of sync with data in Financials
+        #        needed here for string representation
+        #        note this is the only place we need reference to
+        #        ImperialDate, so could remove that if we change it up
+        #        Should Ship own Financials?
         self.last_maintenance = ImperialDate(351,1104)
 
     def __repr__(self):

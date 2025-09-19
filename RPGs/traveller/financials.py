@@ -52,6 +52,8 @@ class Financials:
         self.loan_recurrence = 28
         self.loan_paid = self.current_date.copy()
 
+        self.last_maintenance = self.current_date - 14
+
     def debit(self, amount):
         self.balance -= amount
 
@@ -85,9 +87,9 @@ class Financials:
     def maintenance_notification(self, date):
         status = self.maintenance_status(date)
         if status == 'yellow':
-            pr_yellow(f"Days since last maintenance = {date - self.ship.last_maintenance}")
+            pr_yellow(f"Days since last maintenance = {date - self.last_maintenance}")
         if status == 'red':
-            pr_red(f"Days since last maintenance = {date - self.ship.last_maintenance}")
+            pr_red(f"Days since last maintenance = {date - self.last_maintenance}")
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -124,7 +126,7 @@ class Financials:
     # conceivably an enum or the like would be better, but
     # we'll stick to simple strings for now...
     def maintenance_status(self, date):
-        amount = date - self.ship.last_maintenance
+        amount = date - self.last_maintenance
         if amount <= 365 - (2*28):     # 10 months
             return "green"
         elif amount <= 365:            # 12 months
@@ -183,7 +185,12 @@ class FinancialsTestCase(unittest.TestCase):
             return FinancialsTestCase.DateMock(self.value + rhs)
 
         def __sub__(self, rhs):
-            return self.value - rhs.value
+            if isinstance(rhs, FinancialsTestCase.DateMock):
+                return self.value - rhs.value
+            elif isinstance(rhs, int):
+                return FinancialsTestCase.DateMock(self.value - rhs)
+            else:
+                return NotImplemented
 
         def __eq__(self, other):
             return self.value == other.value
@@ -295,6 +302,49 @@ class FinancialsTestCase(unittest.TestCase):
         financials.pay_loan()
         self.assertEqual(financials.balance, Credits(99))
 
+    @unittest.skip("test has side effects: printing")
+    def test_maintenance_notification(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
+
+        date = FinancialsTestCase.DateMock(30)
+        financials.maintenance_notification(date)
+        
+        date = FinancialsTestCase.DateMock(296)
+        financials.maintenance_notification(date)
+
+        date = FinancialsTestCase.DateMock(297)
+        financials.maintenance_notification(date)
+
+        date = FinancialsTestCase.DateMock(352)
+        financials.maintenance_notification(date)
+
+        date = FinancialsTestCase.DateMock(353)
+        financials.maintenance_notification(date)
+
+    def test_maintenance_status(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
+
+        date = FinancialsTestCase.DateMock(30)
+        result = financials.maintenance_status(date)
+        self.assertEqual(result, "green")
+
+        date = FinancialsTestCase.DateMock(296)
+        result = financials.maintenance_status(date)
+        self.assertEqual(result, "green")
+
+        date = FinancialsTestCase.DateMock(297)
+        result = financials.maintenance_status(date)
+        self.assertEqual(result, "yellow")
+
+        date = FinancialsTestCase.DateMock(352)
+        result = financials.maintenance_status(date)
+        self.assertEqual(result, "yellow")
+
+        date = FinancialsTestCase.DateMock(353)
+        result = financials.maintenance_status(date)
+        self.assertEqual(result, "red")
 
 # Observer:paid_date
 # Observer:recurrence
@@ -307,9 +357,6 @@ class FinancialsTestCase(unittest.TestCase):
     # berth_notification
     # berthing_fee
     # renew_berth
-
-    # maintenance_notification
-    # maintenance_status
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
