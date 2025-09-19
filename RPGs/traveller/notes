@@ -428,6 +428,27 @@
 # apply this design to all of the existing observers. And though
 # there's only two subscribed classes, in some ways each event is
 # one. Potentially worth extracting into a class. We will see.
+#
+# Almost done with this work. Turns out there are slight variations
+# in the model. Also Financials is riddled with side effects that
+# I will need to address, so while the tests work and helped to drive
+# the code to a better state, I will mark them skip for now.
+#
+# We have a total of five observer events to deal with:
+#  1) CargoDepot.notify() - to refresh cargo selection weekly.
+#      Refreshes cargo weekly, but doesn't need to execute
+#      multiple times, just once if duration has passed.
+#  2) Financials.berth_notifcation() 
+#      Two phases: first part on landing, with six-day coverage.
+#                  then a daily renewal after that.
+#  3) Financials.salary_notification()
+#      Standard observer model with a 28 day recurrence.
+#  4) Financials.loan_notification()
+#      Standard observer model with a 28 day recurrence.
+#  5) Financials.maintenace_notification()
+#      No recurrence. Just calculates a duration and reports
+#      status. Resetting the state is via a separate mechanism.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -534,6 +555,7 @@
 #  * [    ] Review need for fractional credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)

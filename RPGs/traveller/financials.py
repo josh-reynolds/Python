@@ -43,8 +43,8 @@ class Financials:
         self.ship = ship
         self.location = location
 
-        self.berth_recurrence = 6
-        self.berth_expiry = self.current_date + self.berth_recurrence
+        self.berth_recurrence = None
+        self.berth_expiry = None
 
         self.salary_recurrence = 28
         self.salary_paid = self.current_date.copy()
@@ -101,6 +101,7 @@ class Financials:
         if on_surface:
             print("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
+            self.berth_recurrence = 1
             self.berth_expiry = self.current_date + 6
 
     def renew_berth(self, date):
@@ -346,6 +347,32 @@ class FinancialsTestCase(unittest.TestCase):
         result = financials.maintenance_status(date)
         self.assertEqual(result, "red")
 
+    @unittest.skip("test has side effects: printing")
+    def test_berthing_fee(self):
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, None)
+        self.assertEqual(financials.berth_expiry, None)
+        self.assertEqual(financials.current_date, 
+                         FinancialsTestCase.DateMock(1))
+        
+        financials.berthing_fee(False)
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, None)
+        self.assertEqual(financials.berth_expiry, None)
+
+        financials.berthing_fee(True)
+        self.assertEqual(financials.balance, Credits(0))
+        self.assertEqual(financials.berth_recurrence, 1)
+        self.assertEqual(financials.berth_expiry, 
+                         FinancialsTestCase.DateMock(7))
+
+    def test_berth_notification(self):
+        pass
+
+    def test_renew_berth(self):
+        pass
+
 # Observer:paid_date
 # Observer:recurrence
 # Observer:notify(date)
@@ -353,10 +380,6 @@ class FinancialsTestCase(unittest.TestCase):
 #    for i in range(duration):
 #      execute_action
 #      paid_date += recurrence
-
-    # berth_notification
-    # berthing_fee
-    # renew_berth
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
