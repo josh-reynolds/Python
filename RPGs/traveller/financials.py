@@ -44,7 +44,7 @@ class Financials:
         self.location = location
 
         self.berth_recurrence = None
-        self.berth_expiry = None
+        self.berth_expiry = self.current_date.copy()
 
         self.salary_recurrence = 28
         self.salary_paid = self.current_date.copy()
@@ -352,14 +352,16 @@ class FinancialsTestCase(unittest.TestCase):
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
-        self.assertEqual(financials.berth_expiry, None)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(1))
         self.assertEqual(financials.current_date, 
                          FinancialsTestCase.DateMock(1))
         
         financials.berthing_fee(False)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
-        self.assertEqual(financials.berth_expiry, None)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(1))
 
         financials.berthing_fee(True)
         self.assertEqual(financials.balance, Credits(0))
@@ -367,8 +369,35 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_expiry, 
                          FinancialsTestCase.DateMock(7))
 
+    @unittest.skip("test has side effects: printing")
     def test_berth_notification(self):
-        pass
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, None)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(1))
+        self.assertEqual(financials.current_date, 
+                         FinancialsTestCase.DateMock(1))
+
+        date = FinancialsTestCase.DateMock(7)
+        financials.location.on_surface = lambda : False
+        financials.berth_notification(date)
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(financials.berth_recurrence, None)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(1))
+        self.assertEqual(financials.current_date, 
+                         FinancialsTestCase.DateMock(1))
+
+        financials.location.on_surface = lambda : True
+        financials.berth_recurrence = 1
+        financials.berth_expiry = financials.current_date + 6
+        date = FinancialsTestCase.DateMock(8)
+        financials.berth_notification(date)
+        self.assertEqual(financials.balance, Credits(0))
+        self.assertEqual(financials.berth_recurrence, 1)
+        self.assertEqual(financials.berth_expiry,
+                         FinancialsTestCase.DateMock(9))
 
     def test_renew_berth(self):
         pass
