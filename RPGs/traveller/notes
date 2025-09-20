@@ -595,6 +595,7 @@
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
+#  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values

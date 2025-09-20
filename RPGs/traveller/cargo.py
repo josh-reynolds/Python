@@ -374,6 +374,7 @@ class CargoDepotTestCase(unittest.TestCase):
             self.nonindustrial = True
             self.rich = True
             self.poor = True
+            self.name = "Uranus"
 
     def setUp(self):
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(), 
@@ -421,11 +422,35 @@ class CargoDepotTestCase(unittest.TestCase):
         if item_number == 2:
             self.assertEqual(item, "c")
 
+    @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_quantity(self):
         depot = CargoDepotTestCase.depot
+        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
+        result = depot.get_cargo_quantity("buy", cargo)
+        # 0 - None
+        # max - None
+        # 0 < quantity < max - quantity
+
+    @unittest.skip("test has side effects: printing")
     def test_invalid_cargo_origin(self):
         depot = CargoDepotTestCase.depot
+        class Location:
+            def __init__(self, name):
+                self.name = name
+            def __eq__(self, other):
+                return self.name == other.name
+
+        location1 = Location("Uranus")
+        cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {}, location1)
+        self.assertTrue(depot.invalid_cargo_origin(cargo1))
+
+        location2 = Location("Jupiter")
+        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {}, location2)
+        self.assertFalse(depot.invalid_cargo_origin(cargo2))
+
+        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        self.assertFalse(depot.invalid_cargo_origin(cargo3))
 
     def test_get_broker(self):
         depot = CargoDepotTestCase.depot
