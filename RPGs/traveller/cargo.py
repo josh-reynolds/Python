@@ -368,6 +368,12 @@ class CargoDepotTestCase(unittest.TestCase):
     class SystemMock:
         def __init__(self):
             self.population = 5
+            self.agricultural = True
+            self.nonagricultural = True
+            self.industrial = True
+            self.nonindustrial = True
+            self.rich = True
+            self.poor = True
 
     def setUp(self):
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(), 
@@ -388,6 +394,49 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(depot.refresh_date.value, 8)
         self.assertNotEqual(cargo, depot.cargo)
 
+    def test_get_price_modifiers(self):
+        depot = CargoDepotTestCase.depot
+        cargo = Cargo("Test", "1", Credits(1), 1, {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1},
+                                                  {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1})
+
+        modifier = depot.get_price_modifiers(cargo, "purchase")
+        self.assertEqual(modifier, 6)
+
+        modifier = depot.get_price_modifiers(cargo, "sale")
+        self.assertEqual(modifier, 6)
+
+    def test_get_cargo_lot(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_get_cargo_quantity(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_invalid_cargo_origin(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_get_broker(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_insufficient_hold_space(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_determine_price(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_insufficient_funds(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_broker_fee(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_confirm_transaction(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_remove_cargo(self):
+        depot = CargoDepotTestCase.depot
+
+    def test_determine_cargo(self):
+        depot = CargoDepotTestCase.depot
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

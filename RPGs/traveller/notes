@@ -560,8 +560,6 @@
 #  # [DONE] Unit tests for StarSystem
 #  * [DONE] Longer intervals need to make sure repeating events execute multiple times
 #  # [DONE] Unit tests for utilities
-#  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  # [....] Unit tests for CargoDepot
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
@@ -587,6 +585,8 @@
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [....] Make type dunder methods more robust with NotImplemented etc.
+#  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] pylint/pydocstyle scrub
