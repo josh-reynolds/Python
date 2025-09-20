@@ -558,19 +558,16 @@
 #  * [DONE] BUG: price array isn't updated when we remove Cargo from the Depot
 #  # [DONE] Unit tests for Financials
 #  # [DONE] Unit tests for StarSystem
+#  * [DONE] Longer intervals need to make sure repeating events execute multiple times
+#  # [DONE] Unit tests for utilities
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
-#  * [....] Longer intervals need to make sure repeating events execute multiple times
 #  # [....] Unit tests for CargoDepot
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
-#  * [    ] pylint/pydocstyle scrub
 #  * [    ] Advance calendar for in-system activities
 #  * [    ] Review need for fractional credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
-#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
-#  * [    ] Assess need to unset berth recurrence/expiry on takeoff
-#  * [    ] Review observer tests for boundary values and long intervals
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
@@ -589,6 +586,10 @@
 #  * [    ] Add low berth lottery
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  PHASE FOUR ======================================================
+#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [    ] Assess need to unset berth recurrence/expiry on takeoff
+#  * [    ] Review observer tests for boundary values and long intervals
+#  * [    ] pylint/pydocstyle scrub
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
