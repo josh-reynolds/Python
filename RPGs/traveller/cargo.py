@@ -459,8 +459,13 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertLess(depot.get_broker(), 5)
         # y/n | 1-4 | y/n = result 0-4
 
+    @unittest.skip("test has side effects: printing")
     def test_insufficient_hold_space(self):
         depot = CargoDepotTestCase.depot
+        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+
+        self.assertTrue(depot.insufficient_hold_space(cargo, 10, 0))
+        self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
 
     def test_determine_price(self):
         depot = CargoDepotTestCase.depot
