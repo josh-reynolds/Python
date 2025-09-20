@@ -452,8 +452,12 @@ class CargoDepotTestCase(unittest.TestCase):
         cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {})
         self.assertFalse(depot.invalid_cargo_origin(cargo3))
 
+    @unittest.skip("test has side effects: input & printing")
     def test_get_broker(self):
         depot = CargoDepotTestCase.depot
+        self.assertGreater(depot.get_broker(), -1)
+        self.assertLess(depot.get_broker(), 5)
+        # y/n | 1-4 | y/n = result 0-4
 
     def test_insufficient_hold_space(self):
         depot = CargoDepotTestCase.depot
