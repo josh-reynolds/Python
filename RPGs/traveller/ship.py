@@ -1,7 +1,7 @@
 import unittest
+from calendar import ImperialDate
 from financials import Credits
 from utilities import confirm_input
-from calendar import ImperialDate
 
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
@@ -31,10 +31,12 @@ class Ship:
         self.last_maintenance = ImperialDate(351,1104)
 
     def __repr__(self):
-        return f"{self.name} -- {self.model}\n" \
-               f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" \
-               f"{self.crew} crew, {self.passengers} passenger staterooms, {self.low_berths} low berths\n" \
-               f"Last maintenance: {self.last_maintenance}"
+        result = f"{self.name} -- {self.model}\n" +\
+                 f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
+                 f"{self.crew} crew, {self.passengers} passenger staterooms, " +\
+                 f"{self.low_berths} low berths\n" +\
+                 f"Last maintenance: {self.last_maintenance}"
+        return result
 
     def cargo_hold(self):
         return self.hold
@@ -62,9 +64,9 @@ class Ship:
     # (unrefined) at most starports.
     # A power plant, to provide power for one trip ... requires fuel
     # in accordance with the formula 10 * Pn, where Pn is the power plant
-    # size rating. The formula indicates the amount of fuel in tons, and 
+    # size rating. The formula indicates the amount of fuel in tons, and
     # all such fuel is consumed in the process of a normal trip.
-    # A jump drive requires fuel to make one jump (regardless of jump 
+    # A jump drive requires fuel to make one jump (regardless of jump
     # number) based on the formula 0.1 * M * Jn, where M equals the mass
     # displacement of the ship and Jn equals the jump number of the drive.
     # Book 2 p. 19
@@ -88,16 +90,16 @@ class Ship:
         if self.current_fuel == self.fuel_tank:
             print("Fuel tank is full.")
             return Credits(0)
-        else:
-            amount = self.fuel_tank - self.current_fuel
-            price = Credits(amount * 500)
-            confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
-            if confirm == 'n':
-                return Credits(0)
-            else:
-                print(f"Charging {price} for refuelling")
-                self.current_fuel += amount
-                return price
+
+        amount = self.fuel_tank - self.current_fuel
+        price = Credits(amount * 500)
+        confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
+        if confirm == 'n':
+            return Credits(0)
+
+        print(f"Charging {price} for refuelling")
+        self.current_fuel += amount
+        return price
 
     # Book 2 p. 6
     # Each stateroom on a starship, occupied or not, involves a constant overhead
@@ -114,22 +116,22 @@ class Ship:
     # necessary.
     #
     # Later rulesets differentiate by occupancy, I think. And possibly give time
-    # spans for support duration. Need to check. For now, as with other rules 
+    # spans for support duration. Need to check. For now, as with other rules
     # oddities, we'll keep it RAW.
     def recharge(self):
         if self.life_support_level == 100:
             print("Life support is fully charged.")
             return Credits(0)
-        else:
-            price = Credits((self.crew + self.passengers) * 2000 +
-                             self.low_berths * 100)
-            confirm = confirm_input(f"Recharge life support for {price}? ")
-            if confirm == 'n':
-                return Credits(0)
-            else:
-                print(f"Charging {price} for life support replenishment.")
-                self.life_support_level = 100
-                return price
+
+        price = Credits((self.crew + self.passengers) * 2000 +
+                         self.low_berths * 100)
+        confirm = confirm_input(f"Recharge life support for {price}? ")
+        if confirm == 'n':
+            return Credits(0)
+
+        print(f"Charging {price} for life support replenishment.")
+        self.life_support_level = 100
+        return price
 
     # Book 2 p. 43
     # If characters are skilled in bribery or admin, they may apply these
@@ -165,7 +167,7 @@ class Ship:
     # receipt is considered to represent actual possession of the ship
     # for a ten-year period. The ship is ten years older, and the total
     # payment term is reduced by ten years.
-    
+
     # TO_DO: We should have a full loan payment record and statement
     #        for the player.
     #        Also, what happens if the player doesn't have enough funds?
@@ -214,7 +216,7 @@ class ShipTestCase(unittest.TestCase):
         ShipTestCase.ship.load_cargo(cargo2)
         self.assertEqual(ShipTestCase.ship.free_space(), 80)
         self.assertEqual(len(ShipTestCase.ship.hold), 2)
-    
+
     def test_unloading_cargo(self):
         cargo = ShipTestCase.CargoMock(20)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
