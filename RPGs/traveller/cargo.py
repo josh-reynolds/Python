@@ -199,10 +199,11 @@ class CargoDepot:
 
     # this overlaps with ship.unload_cargo()...
     def remove_cargo(self, source, cargo, quantity):
-        if quantity == cargo.quantity:
-            source.remove(cargo)
-        else:
-            cargo.quantity -= quantity
+        if cargo in source:
+            if quantity >= cargo.quantity:
+                source.remove(cargo)
+            else:
+                cargo.quantity -= quantity
 
     def determine_cargo(self):
         cargo = []
@@ -505,9 +506,30 @@ class CargoDepotTestCase(unittest.TestCase):
         result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
         # y/n
 
-    # TO_DO
     def test_remove_cargo(self):
         depot = CargoDepotTestCase.depot
+        cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        source = [cargo1, cargo2]
+
+        depot.remove_cargo(source, cargo3, 10)
+        self.assertEqual(len(source), 2)
+
+        depot.remove_cargo(source, cargo2, 0)
+        self.assertEqual(source[1].quantity, 10)
+        self.assertEqual(len(source), 2)
+
+        depot.remove_cargo(source, cargo2, 1)
+        self.assertEqual(source[1].quantity, 9)
+        self.assertEqual(len(source), 2)
+
+        depot.remove_cargo(source, cargo2, 9)
+        self.assertEqual(len(source), 1)
+
+        depot.remove_cargo(source, cargo1, 11)
+        self.assertEqual(len(source), 0)
+
 
     # TO_DO
     def test_determine_cargo(self):
