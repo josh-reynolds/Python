@@ -7,16 +7,17 @@ def die_roll():
 def constrain(value, min_val, max_val):
     if value <= min_val:
         return min_val
-    elif value >= max_val:
+
+    if value >= max_val:
         return max_val
-    else:
-        return value
+
+    return value
 
 # table from Book 2 p. 42
 def actual_value(roll):
-    actual_value = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
-                    9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
-    return actual_value[roll]
+    actual_value_table = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
+                          9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
+    return actual_value_table[roll]
 
 def pr_yellow_on_red(string):
     """Print string to console, yellow text on red background."""
@@ -45,7 +46,7 @@ def int_input(prompt):
 
 def confirm_input(prompt):
     confirmation = ""
-    while confirmation != 'y' and confirmation != 'n':
+    while confirmation not in ('y', 'n'):
         confirmation = input(prompt)
     return confirmation
 
@@ -56,7 +57,7 @@ def print_list(items):
 class UtilitiesTestCase(unittest.TestCase):
     def test_die_roll(self):
         total = 0
-        for i in range(1000):
+        for _ in range(1000):
             result = die_roll()
             self.assertGreaterEqual(result, 1)
             self.assertLessEqual(result, 6)

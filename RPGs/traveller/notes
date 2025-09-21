@@ -567,7 +567,7 @@
 #  # [DONE] Unit tests for CargoDepot
 #  * [DONE] Advance calendar for in-system activities
 #  * [DONE] Review need for fractional credits ('cents') - not needed
-#  * [....] First pass pylint cleanup
+#  * [DONE] First pass pylint cleanup
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)

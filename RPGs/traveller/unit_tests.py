@@ -1,20 +1,17 @@
 import unittest
 
 def suite():
-    suite = unittest.TestSuite()
+    test_suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    suite.addTests(loader.loadTestsFromName('calendar'))
-    suite.addTests(loader.loadTestsFromName('cargo'))
-    suite.addTests(loader.loadTestsFromName('financials'))
-    suite.addTests(loader.loadTestsFromName('ship'))
-    suite.addTests(loader.loadTestsFromName('star_system'))
-    suite.addTests(loader.loadTestsFromName('utilities'))
-    return suite
+    test_suite.addTests(loader.loadTestsFromName('calendar'))
+    test_suite.addTests(loader.loadTestsFromName('cargo'))
+    test_suite.addTests(loader.loadTestsFromName('financials'))
+    test_suite.addTests(loader.loadTestsFromName('ship'))
+    test_suite.addTests(loader.loadTestsFromName('star_system'))
+    test_suite.addTests(loader.loadTestsFromName('utilities'))
+    return test_suite
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite())
-
-
-
