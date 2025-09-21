@@ -79,13 +79,13 @@ class Financials:
 
     def salary_notification(self, date):
         duration = (date - self.salary_paid) // self.salary_recurrence
-        for i in range(duration):
+        for _ in range(duration):
             self.salary_paid += self.salary_recurrence
             self.pay_salaries()
 
     def loan_notification(self, date):
         duration = (date - self.loan_paid) // self.loan_recurrence
-        for i in range(duration):
+        for _ in range(duration):
             self.loan_paid += self.loan_recurrence
             self.pay_loan()
 
@@ -100,7 +100,7 @@ class Financials:
     # Average cost is CR 100 to land and remain for up to six days;
     # thereafter, a CR 100 per day fee is imposed for each
     # additional day spent in port. In some locations this fee will
-    # be higher, while at others local government subsidies will 
+    # be higher, while at others local government subsidies will
     # lower or eliminate it.
     def berthing_fee(self, on_surface):
         if on_surface:
@@ -137,49 +137,48 @@ class Financials:
         amount = date - self.last_maintenance
         if amount <= 365 - (2*28):     # 10 months
             return "green"
-        elif amount <= 365:            # 12 months
+        if amount <= 365:            # 12 months
             return "yellow"
-        else:
-            return "red"
+        return "red"
 
 class CreditsTestCase(unittest.TestCase):
     def test_credits_string(self):
-        a = Credits(1)
-        b = Credits(10)
-        c = Credits(100)
-        d = Credits(1000)
-        e = Credits(10000)
-        f = Credits(100000)
-        g = Credits(1000000)
-        h = Credits(11500000)
-        i = Credits(1000000000)
-        self.assertEqual(f"{a}", "1 Cr")
-        self.assertEqual(f"{b}", "10 Cr")
-        self.assertEqual(f"{c}", "100 Cr")
-        self.assertEqual(f"{d}", "1,000 Cr")
-        self.assertEqual(f"{e}", "10,000 Cr")
-        self.assertEqual(f"{f}", "100,000 Cr")
-        self.assertEqual(f"{g}", "1.0 MCr")
-        self.assertEqual(f"{h}", "11.5 MCr")
-        self.assertEqual(f"{i}", "1,000.0 MCr")
+        credits1 = Credits(1)
+        credits2 = Credits(10)
+        credits3 = Credits(100)
+        credits4 = Credits(1000)
+        credits5 = Credits(10000)
+        credits6 = Credits(100000)
+        credits7 = Credits(1000000)
+        credits8 = Credits(11500000)
+        credits9 = Credits(1000000000)
+        self.assertEqual(f"{credits1}", "1 Cr")
+        self.assertEqual(f"{credits2}", "10 Cr")
+        self.assertEqual(f"{credits3}", "100 Cr")
+        self.assertEqual(f"{credits4}", "1,000 Cr")
+        self.assertEqual(f"{credits5}", "10,000 Cr")
+        self.assertEqual(f"{credits6}", "100,000 Cr")
+        self.assertEqual(f"{credits7}", "1.0 MCr")
+        self.assertEqual(f"{credits8}", "11.5 MCr")
+        self.assertEqual(f"{credits9}", "1,000.0 MCr")
 
     def test_credits_comparison(self):
-        a = Credits(1)
-        b = Credits(2)
-        c = Credits(2)
-        self.assertGreater(b,a)
-        self.assertLess(a,b)
-        self.assertEqual(b,c)
+        credits1 = Credits(1)
+        credits2 = Credits(2)
+        credits3 = Credits(2)
+        self.assertGreater(credits2,credits1)
+        self.assertLess(credits1,credits2)
+        self.assertEqual(credits2,credits3)
 
     def test_credits_addition(self):
-        a = Credits(1)
-        b = Credits(1)
-        self.assertEqual(a+b,Credits(2))
+        credits1 = Credits(1)
+        credits2 = Credits(1)
+        self.assertEqual(credits1+credits2,Credits(2))
 
     def test_credits_subtraction(self):
-        a = Credits(1)
-        b = Credits(2)
-        self.assertEqual(b-a,Credits(1))
+        credits1 = Credits(1)
+        credits2 = Credits(2)
+        self.assertEqual(credits2-credits1,Credits(1))
 
 class FinancialsTestCase(unittest.TestCase):
     class DateMock:
@@ -195,14 +194,13 @@ class FinancialsTestCase(unittest.TestCase):
         def __sub__(self, rhs):
             if isinstance(rhs, FinancialsTestCase.DateMock):
                 return self.value - rhs.value
-            elif isinstance(rhs, int):
+            if isinstance(rhs, int):
                 return FinancialsTestCase.DateMock(self.value - rhs)
-            else:
-                return NotImplemented
+            return NotImplemented
 
         def __eq__(self, other):
             return self.value == other.value
-        
+
         def __ge__(self, other):
             return self.value >= other.value
 
@@ -227,9 +225,9 @@ class FinancialsTestCase(unittest.TestCase):
             return True
 
     def setUp(self):
-        FinancialsTestCase.financials = Financials(100, 
+        FinancialsTestCase.financials = Financials(100,
                                                    FinancialsTestCase.DateMock(1),
-                                                   FinancialsTestCase.ShipMock(), 
+                                                   FinancialsTestCase.ShipMock(),
                                                    FinancialsTestCase.SystemMock())
 
     @unittest.skip("test has side effects: printing")
@@ -317,7 +315,7 @@ class FinancialsTestCase(unittest.TestCase):
 
         date = FinancialsTestCase.DateMock(30)
         financials.maintenance_notification(date)
-        
+
         date = FinancialsTestCase.DateMock(296)
         financials.maintenance_notification(date)
 
@@ -361,9 +359,9 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, None)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(1))
-        self.assertEqual(financials.current_date, 
+        self.assertEqual(financials.current_date,
                          FinancialsTestCase.DateMock(1))
-        
+
         financials.berthing_fee(False)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
@@ -373,7 +371,7 @@ class FinancialsTestCase(unittest.TestCase):
         financials.berthing_fee(True)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
-        self.assertEqual(financials.berth_expiry, 
+        self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(7))
 
     @unittest.skip("test has side effects: printing")
@@ -383,7 +381,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, None)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(1))
-        self.assertEqual(financials.current_date, 
+        self.assertEqual(financials.current_date,
                          FinancialsTestCase.DateMock(1))
 
         date = FinancialsTestCase.DateMock(7)
@@ -393,7 +391,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, None)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(1))
-        self.assertEqual(financials.current_date, 
+        self.assertEqual(financials.current_date,
                          FinancialsTestCase.DateMock(1))
 
         financials.location.on_surface = lambda : True
@@ -413,7 +411,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, None)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(1))
-        self.assertEqual(financials.current_date, 
+        self.assertEqual(financials.current_date,
                          FinancialsTestCase.DateMock(1))
 
         financials.berth_recurrence = 1
