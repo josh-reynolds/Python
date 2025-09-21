@@ -1,8 +1,6 @@
 import unittest
-from cargo import CargoDepot
-
 class StarSystem:
-    def __init__(self, name, starport, atmosphere, hydrographics, 
+    def __init__(self, name, starport, atmosphere, hydrographics,
                  population, government, gas_giant=True):
         self.name = name
         self.coordinate = 111
@@ -15,35 +13,35 @@ class StarSystem:
         self.detail = "orbit"
 
         self.agricultural = False
-        if (atmosphere >= 4 and atmosphere <= 9 and 
-            hydrographics >= 4 and hydrographics <= 8 and
-            population >= 5 and population <= 7):
+        if (atmosphere in (4, 5, 6, 7, 8, 9) and
+            hydrographics in (4, 5, 6, 7, 8) and
+            population in (5, 6, 7)):
             self.agricultural = True
 
         self.nonagricultural = False
-        if (atmosphere <= 3 and 
-            hydrographics <= 3 and
-            population >= 6):
+        if (atmosphere in (0, 1, 2, 3) and
+            hydrographics in (0, 1, 2, 3) and
+            population in (6, 7, 8, 9, 10)):
             self.nonagricultural = True
 
         self.industrial = False
-        if ((atmosphere <= 2 or atmosphere == 4 or atmosphere == 7 or atmosphere == 9) and
-            population >= 9):
+        if (atmosphere in (0, 1, 2, 4, 7, 9) and
+            population in (9, 10)):
             self.industrial = True
 
         self.nonindustrial = False
-        if population <= 6:
+        if population in (0, 1, 2, 3, 4, 5, 6):
             self.nonindustrial = True
 
         self.rich = False
-        if (government >= 4 and government <= 9 and
-            (atmosphere == 6 or atmosphere == 8) and
-            population >= 6 and population <= 8):
+        if (government in (4, 5, 6, 7, 8, 9) and
+            atmosphere in (6, 8) and
+            population in (6, 7, 8)):
             self.rich = True
 
         self.poor = False
-        if (atmosphere >= 2 and atmosphere <= 5 and
-            hydrographics <= 3):
+        if (atmosphere in (2, 3, 4, 5) and
+            hydrographics in (0, 1, 2, 3)):
             self.poor = True
 
     def __eq__(self, other):
@@ -52,7 +50,8 @@ class StarSystem:
         return NotImplemented
 
     def __repr__(self):
-        url = f"{self.starport}{self.atmosphere}{self.hydrographics}{self.population}{self.government}"
+        url = f"{self.starport}{self.atmosphere}" +\
+              f"{self.hydrographics}{self.population}{self.government}"
         if self.agricultural:
             url += " Ag"
         if self.nonagricultural:
@@ -72,15 +71,22 @@ class StarSystem:
     def description(self):
         if self.detail == "surface":
             return f"on {self.name}"
-        elif self.detail == "orbit":
+
+        if self.detail == "orbit":
             return f"in orbit around {self.name}"
-        elif self.detail == "jump":
+
+        if self.detail == "jump":
             return f"at the {self.name} jump point"
-        elif self.detail == "trade":
+
+        if self.detail == "trade":
             return f"at the {self.name} trade depot"
 
+        return "ERROR"    # should not be able to reach this point
+                          # ensure there are only four (currently)
+                          # possible values for self.detail?
+
     def on_surface(self):
-        return self.detail == "surface" or self.detail == "trade"
+        return self.detail in ('surface', 'trade')
 
     def land(self):
         if self.detail == "orbit":
@@ -173,7 +179,7 @@ class StarSystemTestCase(unittest.TestCase):
 
         world.detail = "jump"
         self.assertEqual(world.description(), "at the Test jump point")
-       
+
         world.detail = "trade"
         self.assertEqual(world.description(), "at the Test trade depot")
 
