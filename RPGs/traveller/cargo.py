@@ -497,9 +497,13 @@ class CargoDepotTestCase(unittest.TestCase):
         fee = depot.broker_fee(4, Credits(100))
         self.assertEqual(fee, Credits(20))
 
-    # TO_DO
+    @unittest.skip("test has side effects: input & printing")
     def test_confirm_transaction(self):
         depot = CargoDepotTestCase.depot
+        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+
+        result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
+        # y/n
 
     # TO_DO
     def test_remove_cargo(self):
