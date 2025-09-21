@@ -1,6 +1,6 @@
+from calendar import Calendar
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, print_list
-from calendar import Calendar
 from ship import Ship
 from cargo import Cargo, CargoDepot
 from star_system import StarSystem
@@ -10,12 +10,12 @@ class Game:
         self.running = False
         self.date = Calendar()
         self.ship = Ship()
-        self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5) 
+        self.location = StarSystem("Yorbund", "A", 5, 5, 5, 5)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
 
         self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
-                                   {"Ag":-2,"Na":1,"In":2}, 
+                                   {"Ag":-2,"Na":1,"In":2},
                                    {"Ag":-2}))
 
         # BUG: this will break when we jump to a new system, fix!
@@ -32,17 +32,17 @@ class Game:
                   f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons "
                   f"\tLife support: {self.ship.life_support_level}%")
             command = input("Enter a command (? to list):  ")
-            for c in self.commands:
-                if command.lower() == c.key:
-                    print(c.message)
-                    c.action()
+            for cmd in self.commands:
+                if command.lower() == cmd.key:
+                    print(cmd.message)
+                    cmd.action()
 
     def quit(self):
         self.running = False
 
     def list_commands(self):
-        for c in self.commands:
-            print(f"{c.key} - {c.description}")
+        for command in self.commands:
+            print(f"{command.key} - {command.description}")
 
     def liftoff(self):
         self.location.liftoff()
@@ -97,7 +97,7 @@ class Game:
                   f"Life support is at {life_support}%.")
             return
 
-        jump_range = self.ship.jump_range
+        #jump_range = self.ship.jump_range
 
         # show systems in range
         # choose destination
@@ -121,17 +121,17 @@ class Game:
     def recharge(self):
         cost = self.ship.recharge()
         self.financials.debit(cost)
-        
+
     def buy_cargo(self):
         print_list(self.depot.cargo)
-        item_number, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
-        if cargo == None:
+        _, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
+        if cargo is None:
             return
 
         quantity = self.depot.get_cargo_quantity("buy", cargo)
-        if quantity == None:
+        if quantity is None:
             return
-        
+
         if self.depot.insufficient_hold_space(cargo, quantity, self.ship.free_space()):
             return
 
@@ -146,7 +146,7 @@ class Game:
 
         self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
 
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size, 
+        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.location)
         self.ship.load_cargo(purchased)
 
@@ -155,8 +155,8 @@ class Game:
 
     def sell_cargo(self):
         print_list(self.ship.hold)
-        item_number, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
-        if cargo == None:
+        _, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
+        if cargo is None:
             return
 
         if self.depot.invalid_cargo_origin(cargo):
@@ -165,7 +165,7 @@ class Game:
         broker_skill = self.depot.get_broker()
 
         quantity = self.depot.get_cargo_quantity("sell", cargo)
-        if quantity == None:
+        if quantity is None:
             return
 
         sale_price = self.depot.determine_price("sale", cargo, quantity,
@@ -195,7 +195,7 @@ class Game:
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
-    # gas giant if unavailable elsewhere. Most star systems have at 
+    # gas giant if unavailable elsewhere. Most star systems have at
     # least one...
     #
     # Traveller '77 does not restrict this to streamlined ships, and
@@ -220,7 +220,7 @@ class Game:
         self.date.day += 1
 
     def maintenance(self):
-        if self.location.starport != 'A' and self.location.starport != 'B':
+        if self.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
 
@@ -265,7 +265,7 @@ always = [Command('q', 'Quit',
                   game.wait_week,
                   'Waiting')]
 
-grounded = always + [Command('l', 'Lift off to orbit', 
+grounded = always + [Command('l', 'Lift off to orbit',
                              game.liftoff,
                              'Lifting off to orbit.'),
                      Command('t', 'Trade',
