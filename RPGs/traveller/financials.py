@@ -26,6 +26,11 @@ class Credits:
             return self.amount > other.amount
         return NotImplemented
 
+    def __ge__(self, other):
+        if type(other) is type(self):
+            return self.amount >= other.amount
+        return NotImplemented
+
     def __add__(self, other):
         if type(other) is type(self):
             return Credits(self.amount + other.amount)

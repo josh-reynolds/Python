@@ -142,7 +142,8 @@ class CargoDepot:
             return True
         return False
 
-    def determine_price(self, prompt, cargo, quantity, item_number, broker_skill, trade_skill):
+    # TO_DO: this method is still too unwieldy - break it up further
+    def determine_price(self, prompt, cargo, quantity, broker_skill, trade_skill):
         modifier = self.get_price_modifiers(cargo, prompt)
 
         if prompt == "sale":
@@ -468,9 +469,25 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(depot.insufficient_hold_space(cargo, 10, 0))
         self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
 
-    # TO_DO
+    @unittest.skip("test has side effects: printing")
     def test_determine_price(self):
         depot = CargoDepotTestCase.depot
+        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+
+        price = depot.determine_price("sale", cargo, 10, 0, 0)
+        self.assertTrue(isinstance(price, Credits))
+        self.assertGreaterEqual(price, Credits(4))
+        self.assertLessEqual(price, Credits(40))
+        
+        self.assertEqual(cargo.price_adjustment, 0)
+        price = depot.determine_price("purchase", cargo, 10, 0, 0)
+        self.assertTrue(isinstance(price, Credits))
+        self.assertGreaterEqual(price, Credits(4))
+        self.assertLessEqual(price, Credits(40))
+        self.assertGreater(cargo.price_adjustment, 0)
+
+        price2 = depot.determine_price("purchase", cargo, 10, 0, 0)
+        self.assertEqual(price2, price)
 
     @unittest.skip("test has side effects: printing")
     def test_insufficient_funds(self):

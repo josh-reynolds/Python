@@ -560,7 +560,7 @@
 #  # [DONE] Unit tests for StarSystem
 #  * [DONE] Longer intervals need to make sure repeating events execute multiple times
 #  # [DONE] Unit tests for utilities
-#  # [....] Unit tests for CargoDepot
+#  # [DONE] Unit tests for CargoDepot
 #  # [    ] Unit tests for Game
 #  # [    ] Unit tests for Command
 #  * [    ] Advance calendar for in-system activities
