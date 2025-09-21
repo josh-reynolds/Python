@@ -467,21 +467,36 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(depot.insufficient_hold_space(cargo, 10, 0))
         self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
 
+    # TO_DO
     def test_determine_price(self):
         depot = CargoDepotTestCase.depot
 
+    @unittest.skip("test has side effects: printing")
     def test_insufficient_funds(self):
         depot = CargoDepotTestCase.depot
 
+        result = depot.insufficient_funds(Credits(2), Credits(1))
+        self.assertTrue(result)
+
+        result = depot.insufficient_funds(Credits(1), Credits(1))
+        self.assertFalse(result)
+
+        result = depot.insufficient_funds(Credits(1), Credits(2))
+        self.assertFalse(result)
+
+    # TO_DO
     def test_broker_fee(self):
         depot = CargoDepotTestCase.depot
 
+    # TO_DO
     def test_confirm_transaction(self):
         depot = CargoDepotTestCase.depot
 
+    # TO_DO
     def test_remove_cargo(self):
         depot = CargoDepotTestCase.depot
 
+    # TO_DO
     def test_determine_cargo(self):
         depot = CargoDepotTestCase.depot
 
