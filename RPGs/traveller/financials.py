@@ -4,7 +4,7 @@ from utilities import pr_red, pr_yellow
 class Credits:
     def __init__(self, amount):
         # should we block negative or zero credits?
-        # unsure... what credits can represent a
+        # unsure... what if credits can represent a
         # balance or a debt, not just a pile of cash?
         self.amount = amount
 

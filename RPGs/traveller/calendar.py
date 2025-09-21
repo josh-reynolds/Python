@@ -72,10 +72,9 @@ class ImperialDate:
     def __sub__(self, other):
         if isinstance(other, ImperialDate):
             return self._date_value() - other._date_value()
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return ImperialDate(self.day - other, self.year)
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __add__(self, days):
         return ImperialDate(self.day + days, self.year)
@@ -85,60 +84,60 @@ class ImperialDate:
 
 class ImperialDateTestCase(unittest.TestCase):
     def test_date_string(self):
-        a = ImperialDate(1,100)
-        self.assertEqual(f"{a}", "001-100")
+        date = ImperialDate(1,100)
+        self.assertEqual(f"{date}", "001-100")
 
     def test_date_equality(self):
-        a = ImperialDate(1,100)
-        b = ImperialDate(1,100)
-        c = ImperialDate(2,100)
-        self.assertEqual(a,b)
-        self.assertNotEqual(a,c)
-        self.assertNotEqual(b,c)
-        self.assertNotEqual(a,(1,100))
+        date1 = ImperialDate(1,100)
+        date2 = ImperialDate(1,100)
+        date3 = ImperialDate(2,100)
+        self.assertEqual(date1,date2)
+        self.assertNotEqual(date1,date3)
+        self.assertNotEqual(date2,date3)
+        self.assertNotEqual(date1,(1,100))
 
     def test_date_comparison(self):
-        a = ImperialDate(10,100)
-        b = ImperialDate(11,100)
-        c = ImperialDate(1,101)
-        d = ImperialDate(20,99)
-        e = ImperialDate(1,100)
-        self.assertGreater(b,a)
-        self.assertGreater(c,a)
-        self.assertLess(d,a)
-        self.assertLess(e,a)
+        date1 = ImperialDate(10,100)
+        date2 = ImperialDate(11,100)
+        date3 = ImperialDate(1,101)
+        date4 = ImperialDate(20,99)
+        date5 = ImperialDate(1,100)
+        self.assertGreater(date2,date1)
+        self.assertGreater(date3,date1)
+        self.assertLess(date4,date1)
+        self.assertLess(date5,date1)
 
     def test_date_copy(self):
-        a = ImperialDate(1,100)
-        b = a.copy()
-        self.assertEqual(b.day, 1)
-        self.assertEqual(b.year, 100)
-        self.assertEqual(a,b)
+        date1 = ImperialDate(1,100)
+        date2 = date1.copy()
+        self.assertEqual(date2.day, 1)
+        self.assertEqual(date2.year, 100)
+        self.assertEqual(date1,date2)
 
     def test_date_plus_days(self):
-        a = ImperialDate(1,100)
-        b = ImperialDate(365,100)
-        self.assertEqual(a + 1, ImperialDate(2,100))
-        self.assertEqual(b + 1, ImperialDate(1,101))
-        self.assertEqual(a + -1, ImperialDate(365,99))
-        self.assertEqual(b + -1, ImperialDate(364,100))
-        self.assertEqual(a + -10, ImperialDate(356,99))
+        date1 = ImperialDate(1,100)
+        date2 = ImperialDate(365,100)
+        self.assertEqual(date1 + 1, ImperialDate(2,100))
+        self.assertEqual(date2 + 1, ImperialDate(1,101))
+        self.assertEqual(date1 + -1, ImperialDate(365,99))
+        self.assertEqual(date2 + -1, ImperialDate(364,100))
+        self.assertEqual(date1 + -10, ImperialDate(356,99))
 
     def test_date_minus_date(self):
-        a = ImperialDate(1,100)
-        b = ImperialDate(5,100)
-        c = ImperialDate(365,99)
-        d = ImperialDate(1,98)
-        self.assertEqual(b-a, 4)
-        self.assertEqual(a-b, -4)
-        self.assertEqual(a-c, 1)
-        self.assertEqual(c-a, -1)
-        self.assertEqual(a-d, 730)
+        date1 = ImperialDate(1,100)
+        date2 = ImperialDate(5,100)
+        date3 = ImperialDate(365,99)
+        date4 = ImperialDate(1,98)
+        self.assertEqual(date2-date1, 4)
+        self.assertEqual(date1-date2, -4)
+        self.assertEqual(date1-date3, 1)
+        self.assertEqual(date3-date1, -1)
+        self.assertEqual(date1-date4, 730)
 
     def test_date_minus_day(self):
-        a = ImperialDate(5,100)
-        self.assertEqual(a-1, ImperialDate(4,100))
-        self.assertEqual(a-5, ImperialDate(365,99))
+        date1 = ImperialDate(5,100)
+        self.assertEqual(date1-1, ImperialDate(4,100))
+        self.assertEqual(date1-5, ImperialDate(365,99))
 
 class CalendarTestCase(unittest.TestCase):
     class ObserverMock:
@@ -150,7 +149,7 @@ class CalendarTestCase(unittest.TestCase):
         def notify(self, date):
             self.count += 1
             duration = (date - self.paid_date) // self.recurrence
-            for i in range(duration):
+            for _ in range(duration):
                 self.event_count += 1
                 self.paid_date += self.recurrence
 

@@ -473,13 +473,13 @@
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
-#  PHASE ONE <== we are here
-#  * Full feature set for in-system speculative trading. Just a few
+#  PHASE ONE
+#  #  * Full feature set for in-system speculative trading. Just a few
 #    maintenance costs left to go.
 #  * Basic travel & resources features.
 #  * Refactoring. In the midst of a big push right now.
 #  * (Should really take my medicine and get tests/pylint/etc. done)
-#  PHASE TWO
+#  PHASE TWO <== we are here
 #  * Jumping to a new system and all it implies:
 #    * Multiple systems
 #    * Star map
@@ -541,8 +541,8 @@
 #             to add a time element - simplest would be to reset the source_world
 #             field to None, but later for Merchant Prince we may want to retain it)
 #  * [DONE] Separate code out into modules
-#  * [DONE] Review interpretation that skills/brokers only apply to sales
-#  * [DONE] Review Calendar.year() setter for whether it should notify observers
+#  * [DONE] Review interpretation that skills/brokers only apply to sales - yes
+#  * [DONE] Review Calendar.year() setter for whether it should notify observers - yes
 #  * [DONE] Make StarSystem.__eq__ more robust
 #  * [DONE] Add ship streamlining and effect upon landing/skimming
 #  * [DONE] Add life support system to Ship
@@ -566,8 +566,8 @@
 #  # [DONE] Unit tests for utilities
 #  # [DONE] Unit tests for CargoDepot
 #  * [DONE] Advance calendar for in-system activities
-#  * [    ] Review need for fractional credits ('cents')
-#  * [    ] Review need for negative or zero credits (balances and debts?)
+#  * [DONE] Review need for fractional credits ('cents') - not needed
+#  * [....] First pass pylint cleanup
 #  PHASE TWO =======================================================
 #  * [    ] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
@@ -602,6 +602,7 @@
 #  # [    ] Break up Game class (MVC?)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
+#  * [    ] Assess whether rounding in Credits ctor can cause errors
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Consider moving tests to separate modules
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
@@ -611,6 +612,7 @@
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Add a 'shore leave' action?
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
 #           skimming as jump point command if the system has a gas giant
@@ -634,6 +636,9 @@
 #  * [    ] Add extended StarSystem details
 #  * [    ] Add different ship types and ship design
 #  * [    ] Add a transaction ledger to Financial class
+#  * [    ] Review need for negative or zero credits (balances and debts?)
+#            Defer - currently all uses are positive, even debts, but haven't
+#            implemented a ledger or more accounting features yet
 #  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Distinguish between highport and downport
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
