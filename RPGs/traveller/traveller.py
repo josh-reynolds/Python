@@ -66,11 +66,13 @@ class Game:
             return
 
         self.ship.current_fuel -= tfc // 2
+        self.date.day += 1
         self.location.to_jump_point()
         self.commands = jump
 
     def inbound_from_jump(self):
         self.ship.current_fuel -= self.ship.trip_fuel_cost // 2
+        self.date.day += 1
         self.location.from_jump_point()
         self.commands = orbit
 
@@ -107,6 +109,7 @@ class Game:
         # deduct fuel cost
         self.ship.current_fuel -= jump_fuel
         # advance calendar a week
+        self.date.plus_week()
 
     def view_world(self):
         print(self.location)
@@ -148,6 +151,7 @@ class Game:
         self.ship.load_cargo(purchased)
 
         self.financials.debit(cost)
+        self.date.day += 1
 
     def sell_cargo(self):
         print_list(self.ship.hold)
@@ -175,6 +179,7 @@ class Game:
         self.depot.remove_cargo(self.ship.hold, cargo, quantity)
 
         self.financials.credit(sale_price)
+        self.date.day += 1
 
     def goods(self):
         print_list(self.depot.cargo)
@@ -212,6 +217,7 @@ class Game:
 
         # will need to mark this as unrefined fuel when we implement that
         self.ship.current_fuel = self.ship.fuel_tank
+        self.date.day += 1
 
     def maintenance(self):
         if self.location.starport != 'A' and self.location.starport != 'B':

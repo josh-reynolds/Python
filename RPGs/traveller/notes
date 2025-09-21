@@ -297,6 +297,10 @@
 # easily 6-7 days if the player does all activities
 # but if they want to go fast, jump in, skim fuel, jump out - just
 # one day? or even no delay if they have reserve fuel.
+#
+# Alright. I think I'll add time costs per the schedule above, and
+# see how it plays. We're applying costs in the action methods in
+# Game, so this should go there as well.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -561,9 +565,7 @@
 #  * [DONE] Longer intervals need to make sure repeating events execute multiple times
 #  # [DONE] Unit tests for utilities
 #  # [DONE] Unit tests for CargoDepot
-#  # [    ] Unit tests for Game
-#  # [    ] Unit tests for Command
-#  * [    ] Advance calendar for in-system activities
+#  * [DONE] Advance calendar for in-system activities
 #  * [    ] Review need for fractional credits ('cents')
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #  PHASE TWO =======================================================
@@ -596,6 +598,8 @@
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
+#  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
+#  # [    ] Break up Game class (MVC?)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Replace dummy/test data with 'real' values
