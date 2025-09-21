@@ -4,7 +4,7 @@ from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
 class Cargo:
-    def __init__(self, name, quantity, price, unit_size, 
+    def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
         self.name = name
         self.quantity = Cargo.determine_quantity(quantity)
@@ -48,22 +48,21 @@ class Cargo:
         return string
 
     # quantity convention:
-    #   if 'quantity' parameter string contains "Dx" then 
+    #   if 'quantity' parameter string contains "Dx" then
     #     the value needs to be randomly generated
     #     otherwise it is an exact amount
     #   value is either tonnage or separate items
     #     as indicated by the unit_size field
     def determine_quantity(quantity):
-        q = str(quantity)
-        if "Dx" in q:
-            die_count, multiplier = [int(n) for n in q.split("Dx")]
+        amount = str(quantity)
+        if "Dx" in amount:
+            die_count, multiplier = [int(n) for n in amount.split("Dx")]
             value = 0
             for _ in range(0, die_count):
                 value += die_roll()
             value *= multiplier
             return value
-        else:
-            return int(quantity)
+        return int(quantity)
 
 class CargoDepot:
     def __init__(self, system, refresh_date):
@@ -74,7 +73,7 @@ class CargoDepot:
 
     def notify(self, date):
         duration = (date - self.refresh_date) // self.recurrence
-        for i in  range(duration):
+        for _ in range(duration):
             self.refresh_date += self.recurrence
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
@@ -130,13 +129,15 @@ class CargoDepot:
             while broker_skill < 1 or broker_skill > 4:
                 broker_skill = int_input("What level of broker (1-4)? ")
 
-            broker_confirm = confirm_input(f"This will incur a {5 * broker_skill}% fee. Confirm (y/n)? ")
+            broker_confirm = confirm_input( "This will incur a " +
+                                           f"{5 * broker_skill}% fee. " +
+                                            "Confirm (y/n)? ")
             if broker_confirm == 'n':
                 broker_skill = 0
         return broker_skill
 
     def insufficient_hold_space(self, cargo, quantity, free_space):
-        if (quantity * cargo.unit_size > free_space):
+        if quantity * cargo.unit_size > free_space:
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
             return True
@@ -162,10 +163,10 @@ class CargoDepot:
                 cargo.price_adjustment = price_adjustment
 
         price = Credits(cargo.price.amount * price_adjustment * quantity)
-        if ((prompt == "sale" and price_adjustment > 1) or 
+        if ((prompt == "sale" and price_adjustment > 1) or
             (prompt == "purchase" and price_adjustment < 1)):
             pr_function = pr_green
-        elif ((prompt == "sale" and price_adjustment < 1) or 
+        elif ((prompt == "sale" and price_adjustment < 1) or
               (prompt == "purchase" and price_adjustment > 1)):
             pr_function = pr_red
         else:
@@ -186,11 +187,10 @@ class CargoDepot:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             return broker_fee
-        else:
-            return Credits(0)
+        return Credits(0)
 
     def confirm_transaction(self, prompt, cargo, quantity, price):
-        confirmation = confirm_input(f"Confirming {prompt} of " 
+        confirmation = confirm_input(f"Confirming {prompt} of "
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
                                      f"{cargo.name} for {price} (y/n)? ")
         if confirmation == 'n':
@@ -210,9 +210,9 @@ class CargoDepot:
         cargo = []
 
         first = die_roll()
-        if (self.system.population <= 5):
+        if self.system.population <= 5:
             first -= 1
-        if (self.system.population >= 9):
+        if self.system.population >= 9:
             first += 1
         first = constrain(first, 1, 6)
         first *= 10
@@ -221,77 +221,77 @@ class CargoDepot:
         roll = first + second
 
         table = {
-                11 : Cargo("Textiles", "3Dx5", Credits(3000), 1, {"Ag":-7,"Na":-5,"Ni":-3}, 
+                11 : Cargo("Textiles", "3Dx5", Credits(3000), 1, {"Ag":-7,"Na":-5,"Ni":-3},
                                                         {"Ag":-6,"Na":1,"Ri":3}),
-                12 : Cargo("Polymers", "4Dx5", Credits(7000), 1, {"In":-2,"Ri":-3,"Po":2}, 
+                12 : Cargo("Polymers", "4Dx5", Credits(7000), 1, {"In":-2,"Ri":-3,"Po":2},
                                                         {"In":-2,"Ri":3}),
-                13 : Cargo("Liquor", "1Dx5", Credits(10000), 1, {"Ag":-4}, 
+                13 : Cargo("Liquor", "1Dx5", Credits(10000), 1, {"Ag":-4},
                                                        {"Ag":-3,"In":1,"Ri":2}),
-                14 : Cargo("Wood", "2Dx10", Credits(1000), 1, {"Ag":-6}, 
+                14 : Cargo("Wood", "2Dx10", Credits(1000), 1, {"Ag":-6},
                                                      {"Ag":-6,"In":1,"Ri":2}),
-                15 : Cargo("Crystals", "1Dx1", Credits(20000), 1, {"Na":-3,"In":4}, 
+                15 : Cargo("Crystals", "1Dx1", Credits(20000), 1, {"Na":-3,"In":4},
                                                          {"Na":-3,"In":3,"Ri":3}),
-                16 : Cargo("Radioactives", "1Dx1", Credits(1000000), 1, {"In":7,"Ni":-3,"Ri":5}, 
+                16 : Cargo("Radioactives", "1Dx1", Credits(1000000), 1, {"In":7,"Ni":-3,"Ri":5},
                                                                {"In":6,"Ni":-3,"Ri":-4}),
-                21 : Cargo("Steel", "4Dx10", Credits(500), 1, {"In":-2,"Ri":-1,"Po":1}, 
+                21 : Cargo("Steel", "4Dx10", Credits(500), 1, {"In":-2,"Ri":-1,"Po":1},
                                                      {"In":-2,"Ri":-1,"Po":3}),
-                22 : Cargo("Copper", "2Dx10", Credits(2000), 1, {"In":-3,"Ri":-2,"Po":1}, 
+                22 : Cargo("Copper", "2Dx10", Credits(2000), 1, {"In":-3,"Ri":-2,"Po":1},
                                                        {"In":-3,"Ri":-1}),
-                23 : Cargo("Aluminum", "5Dx10", Credits(1000), 1, {"In":-3,"Ri":-2,"Po":1}, 
+                23 : Cargo("Aluminum", "5Dx10", Credits(1000), 1, {"In":-3,"Ri":-2,"Po":1},
                                                          {"In":-3,"Ni":4,"Ri":-1}),
-                24 : Cargo("Tin", "3Dx10", Credits(9000), 1, {"In":-3,"Ri":-2,"Po":1}, 
+                24 : Cargo("Tin", "3Dx10", Credits(9000), 1, {"In":-3,"Ri":-2,"Po":1},
                                                     {"In":-3,"Ri":-1}),
-                25 : Cargo("Silver", "1Dx5", Credits(70000), 1, {"In":5,"Ri":-1,"Po":2}, 
+                25 : Cargo("Silver", "1Dx5", Credits(70000), 1, {"In":5,"Ri":-1,"Po":2},
                                                        {"In":5,"Ri":-1}),
-                26 : Cargo("Special Alloys", "1Dx1", Credits(200000), 1, {"In":-3,"Ni":5,"Ri":-2}, 
+                26 : Cargo("Special Alloys", "1Dx1", Credits(200000), 1, {"In":-3,"Ni":5,"Ri":-2},
                                                                 {"In":-3,"Ni":4,"Ri":-1}),
-                31 : Cargo("Petrochemicals", "6Dx5", Credits(10000), 1, {"Na":-4,"In":1,"Ni":-5}, 
+                31 : Cargo("Petrochemicals", "6Dx5", Credits(10000), 1, {"Na":-4,"In":1,"Ni":-5},
                                                                {"Na":-4,"In":3,"Ni":-5}),
-                32 : Cargo("Grain", "8Dx5", Credits(300), 1, {"Ag":-2,"Na":1,"In":2}, 
+                32 : Cargo("Grain", "8Dx5", Credits(300), 1, {"Ag":-2,"Na":1,"In":2},
                                                     {"Ag":-2}),
-                33 : Cargo("Meat", "4Dx5", Credits(1500), 1, {"Ag":-2,"Na":2,"In":3}, 
+                33 : Cargo("Meat", "4Dx5", Credits(1500), 1, {"Ag":-2,"Na":2,"In":3},
                                                     {"Ag":-2,"In":2,"Po":1}),
-                34 : Cargo("Spices", "1Dx5", Credits(6000), 1, {"Ag":-2,"Na":3,"In":2}, 
+                34 : Cargo("Spices", "1Dx5", Credits(6000), 1, {"Ag":-2,"Na":3,"In":2},
                                                       {"Ag":-2,"Ri":2,"Po":3}),
-                35 : Cargo("Fruit", "2Dx5", Credits(1000), 1, {"Ag":-3,"Na":1,"In":2}, 
+                35 : Cargo("Fruit", "2Dx5", Credits(1000), 1, {"Ag":-3,"Na":1,"In":2},
                                                      {"Ag":-2,"In":3,"Po":2}),
-                36 : Cargo("Pharmaceuticals", "1Dx1", Credits(100000), 1, {"Na":-3,"In":4,"Po":3}, 
+                36 : Cargo("Pharmaceuticals", "1Dx1", Credits(100000), 1, {"Na":-3,"In":4,"Po":3},
                                                                  {"Na":-3,"In":5,"Ri":4}),
-                41 : Cargo("Gems", "1Dx1", Credits(1000000), 1, {"In":4,"Ni":-8,"Po":-3}, 
+                41 : Cargo("Gems", "1Dx1", Credits(1000000), 1, {"In":4,"Ni":-8,"Po":-3},
                                                        {"In":4,"Ni":-2,"Ri":8}),
-                42 : Cargo("Firearms", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3}, 
+                42 : Cargo("Firearms", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3},
                                                          {"In":-2,"Ri":-1,"Po":3}),
-                43 : Cargo("Ammunition", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3}, 
+                43 : Cargo("Ammunition", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3},
                                                            {"In":-2,"Ri":-1,"Po":3}),
-                44 : Cargo("Blades", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3}, 
+                44 : Cargo("Blades", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3},
                                                        {"In":-2,"Ri":-1,"Po":3}),
-                45 : Cargo("Tools", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3}, 
+                45 : Cargo("Tools", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3},
                                                       {"In":-2,"Ri":-1,"Po":3}),
-                46 : Cargo("Body Armor", "2Dx1", Credits(50000), 1, {"In":-1,"Ri":-3,"Po":3}, 
+                46 : Cargo("Body Armor", "2Dx1", Credits(50000), 1, {"In":-1,"Ri":-3,"Po":3},
                                                            {"In":-2,"Ri":1,"Po":4}),
-                51 : Cargo("Aircraft", "1Dx1", Credits(1000000), 10, {"In":-4,"Ri":-3}, 
+                51 : Cargo("Aircraft", "1Dx1", Credits(1000000), 10, {"In":-4,"Ri":-3},
                                                             {"Ni":2,"Po":1}),
-                52 : Cargo("Air/Raft", "1Dx1", Credits(6000000), 6, {"In":-3,"Ri":-2}, 
+                52 : Cargo("Air/Raft", "1Dx1", Credits(6000000), 6, {"In":-3,"Ri":-2},
                                                            {"Ni":2,"Po":1}),
-                53 : Cargo("Computers", "1Dx1", Credits(10000000), 2, {"In":-2,"Ri":-2}, 
+                53 : Cargo("Computers", "1Dx1", Credits(10000000), 2, {"In":-2,"Ri":-2},
                                                              {"Ag":-3,"Ni":2,"Po":1}),
-                54 : Cargo("ATV", "1Dx1", Credits(3000000), 4, {"In":-2,"Ri":-2}, 
+                54 : Cargo("ATV", "1Dx1", Credits(3000000), 4, {"In":-2,"Ri":-2},
                                                       {"Ag":1,"Ni":2,"Po":1}),
-                55 : Cargo("AFV", "1Dx1", Credits(7000000), 4, {"In":-5,"Ri":-2,"Po":4}, 
+                55 : Cargo("AFV", "1Dx1", Credits(7000000), 4, {"In":-5,"Ri":-2,"Po":4},
                                                       {"Ag":2,"Na":-2,"Ri":1}),
-                56 : Cargo("Farm Machinery", "1Dx1", Credits(150000), 4, {"In":-5,"Ri":-2}, 
+                56 : Cargo("Farm Machinery", "1Dx1", Credits(150000), 4, {"In":-5,"Ri":-2},
                                                                 {"Ag":5,"Na":-8,"Po":1}),
-                61 : Cargo("Electronics Parts", "1Dx5", Credits(100000), 1, {"In":-4,"Ri":-3}, 
+                61 : Cargo("Electronics Parts", "1Dx5", Credits(100000), 1, {"In":-4,"Ri":-3},
                                                                    {"Ni":2,"Po":1}),
-                62 : Cargo("Mechanical Parts", "1Dx5", Credits(75000), 1, {"In":-5,"Ri":-3}, 
+                62 : Cargo("Mechanical Parts", "1Dx5", Credits(75000), 1, {"In":-5,"Ri":-3},
                                                                  {"Ag":2,"Ni":3}),
-                63 : Cargo("Cybernetic Parts", "1Dx5", Credits(250000), 1, {"In":-4,"Ri":-1}, 
+                63 : Cargo("Cybernetic Parts", "1Dx5", Credits(250000), 1, {"In":-4,"Ri":-1},
                                                                   {"Ag":1,"Na":2,"Ni":4}),
-                64 : Cargo("Computer Parts", "1Dx5", Credits(150000), 1, {"In":-5,"Ri":-3}, 
+                64 : Cargo("Computer Parts", "1Dx5", Credits(150000), 1, {"In":-5,"Ri":-3},
                                                                 {"Ag":1,"Na":2,"Ni":3}),
-                65 : Cargo("Machine Tools", "1Dx5", Credits(750000), 1, {"In":-5,"Ri":-4}, 
+                65 : Cargo("Machine Tools", "1Dx5", Credits(750000), 1, {"In":-5,"Ri":-4},
                                                                {"Ag":1,"Na":2,"Ni":3}),
-                66 : Cargo("Vacc Suits", "1Dx5", Credits(400000), 1, {"Na":-5,"In":-3,"Ri":-1}, 
+                66 : Cargo("Vacc Suits", "1Dx5", Credits(400000), 1, {"Na":-5,"In":-3,"Ri":-1},
                                                             {"Na":-1,"Ni":2,"Po":1})
                 }
 
@@ -300,55 +300,55 @@ class CargoDepot:
 
 class CargoTestCase(unittest.TestCase):
     def test_cargo_quantity(self):
-        a = Cargo("Foo", 10, Credits(10), 1, {}, {})
-        self.assertEqual(a.quantity, 10)
+        cargo1 = Cargo("Foo", 10, Credits(10), 1, {}, {})
+        self.assertEqual(cargo1.quantity, 10)
 
-        b = Cargo("Bar", "1Dx1", Credits(10), 1, {}, {})
-        self.assertGreater(b.quantity, 0)
-        self.assertLess(b.quantity, 7)
+        cargo2 = Cargo("Bar", "1Dx1", Credits(10), 1, {}, {})
+        self.assertGreater(cargo2.quantity, 0)
+        self.assertLess(cargo2.quantity, 7)
 
-        c = Cargo("Baz", "1Dx10", Credits(10), 1, {}, {})
-        self.assertEqual(c.quantity % 10, 0)
-        self.assertGreater(c.quantity, 9)
-        self.assertLess(c.quantity, 61)
+        cargo3 = Cargo("Baz", "1Dx10", Credits(10), 1, {}, {})
+        self.assertEqual(cargo3.quantity % 10, 0)
+        self.assertGreater(cargo3.quantity, 9)
+        self.assertLess(cargo3.quantity, 61)
 
     def test_cargo_quantity_string(self):
-        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
-        self.assertEqual(a.quantity_string(1), "1 ton")
-        self.assertEqual(a.quantity_string(5), "5 tons")
+        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        self.assertEqual(cargo1.quantity_string(1), "1 ton")
+        self.assertEqual(cargo1.quantity_string(5), "5 tons")
 
-        b = Cargo("Bar", 1, Credits(10), 5, {}, {})
-        self.assertEqual(b.quantity_string(1), "1 (5 tons/item)")
+        cargo2 = Cargo("Bar", 1, Credits(10), 5, {}, {})
+        self.assertEqual(cargo2.quantity_string(1), "1 (5 tons/item)")
 
     def test_cargo_tonnage(self):
-        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
-        self.assertEqual(a.tonnage, 1)
+        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        self.assertEqual(cargo1.tonnage, 1)
 
-        b = Cargo("Bar", 1, Credits(10), 5, {}, {})
-        self.assertEqual(b.tonnage, 5)
+        cargo2 = Cargo("Bar", 1, Credits(10), 5, {}, {})
+        self.assertEqual(cargo2.tonnage, 5)
 
-        c = Cargo("Baz", 20, Credits(10), 1, {}, {})
-        self.assertEqual(c.tonnage, 20)
+        cargo3 = Cargo("Baz", 20, Credits(10), 1, {}, {})
+        self.assertEqual(cargo3.tonnage, 20)
 
-        d = Cargo("Boo", 20, Credits(10), 10, {}, {})
-        self.assertEqual(d.tonnage, 200)
+        cargo4 = Cargo("Boo", 20, Credits(10), 10, {}, {})
+        self.assertEqual(cargo4.tonnage, 200)
 
     def test_cargo_string(self):
-        a = Cargo("Foo", 1, Credits(10), 1, {}, {})
-        self.assertEqual(f"{a}", "Foo - 1 ton - 10 Cr/ton")
+        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        self.assertEqual(f"{cargo1}", "Foo - 1 ton - 10 Cr/ton")
 
-        b = Cargo("Bar", 5, Credits(10), 1, {}, {})
-        self.assertEqual(f"{b}", "Bar - 5 tons - 10 Cr/ton")
+        cargo2 = Cargo("Bar", 5, Credits(10), 1, {}, {})
+        self.assertEqual(f"{cargo2}", "Bar - 5 tons - 10 Cr/ton")
 
-        c = Cargo("Baz", 5, Credits(10), 5, {}, {})
-        self.assertEqual(f"{c}", "Baz - 5 (5 tons/item) - 10 Cr/item")
+        cargo3 = Cargo("Baz", 5, Credits(10), 5, {}, {})
+        self.assertEqual(f"{cargo3}", "Baz - 5 (5 tons/item) - 10 Cr/item")
 
         class Location:
             def __init__(self, name):
                 self.name = name
         location = Location("Uranus")
-        d = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
-        self.assertEqual(f"{d}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
+        cargo4 = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
+        self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
 class CargoDepotTestCase(unittest.TestCase):
     class DateMock:
@@ -379,7 +379,7 @@ class CargoDepotTestCase(unittest.TestCase):
             self.name = "Uranus"
 
     def setUp(self):
-        CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(), 
+        CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
                                               CargoDepotTestCase.DateMock(1))
 
     def test_notify(self):
@@ -415,7 +415,7 @@ class CargoDepotTestCase(unittest.TestCase):
         print(cargo_list)
 
         item_number, item = depot.get_cargo_lot(cargo_list, "buy")
-        if item_number == None:
+        if item_number is None:
             self.assertEqual(item, None)
         if item_number == 0:
             self.assertEqual(item, "a")
@@ -429,7 +429,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
-        result = depot.get_cargo_quantity("buy", cargo)
+        _ = depot.get_cargo_quantity("buy", cargo)
         # 0 - None
         # max - None
         # 0 < quantity < max - quantity
@@ -478,7 +478,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(isinstance(price, Credits))
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
-        
+
         self.assertEqual(cargo.price_adjustment, 0)
         price = depot.determine_price("purchase", cargo, 10, 0, 0)
         self.assertTrue(isinstance(price, Credits))
@@ -520,7 +520,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
-        result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
+        _ = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
         # y/n
 
     def test_remove_cargo(self):
