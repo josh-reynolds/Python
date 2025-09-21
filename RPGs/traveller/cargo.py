@@ -530,10 +530,12 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.remove_cargo(source, cargo1, 11)
         self.assertEqual(len(source), 0)
 
-
-    # TO_DO
     def test_determine_cargo(self):
         depot = CargoDepotTestCase.depot
+
+        cargo = depot.determine_cargo()
+        self.assertEqual(len(cargo), 1)
+        self.assertTrue(isinstance(cargo[0], Cargo))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
