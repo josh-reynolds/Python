@@ -10,6 +10,13 @@ from star_system import StarSystem
 # (1, -1, 0), (1, 0, -1)
 # (0, 1, -1), (0, -1, 1)
 # (-1, 0, 1), (-1, 1, 0)
+#
+# the axial rows are straightforward. one
+# coordinate is zero, and the other two are
+# +x/-x. So:
+# (0,x,-x) & (0,-x,x)
+# (x,0,-x) & (-x,0,x)
+# (x,-x,0) & (-x,x,0)
 
 class StarMap:
     def __init__(self, systems):
@@ -32,7 +39,7 @@ class StarMap:
 
     @classmethod
     def distance_between(cls, first, second):
-        return 1
+        return max(abs(second[0]), abs(second[1]), abs(second[2]))
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
@@ -96,6 +103,18 @@ class StarMapTestCase(unittest.TestCase):
     def test_distance_between(self):
         dist = StarMap.distance_between((0,0,0), (1,0,-1))
         self.assertEqual(dist,1)
+
+        dist = StarMap.distance_between((0,0,0), (0,2,-2))
+        self.assertEqual(dist,2)
+
+        dist = StarMap.distance_between((0,0,0), (2,0,-2))
+        self.assertEqual(dist,2)
+
+        dist = StarMap.distance_between((0,0,0), (-2,0,2))
+        self.assertEqual(dist,2)
+
+        dist = StarMap.distance_between((0,0,0), (1,-2,1))
+        self.assertEqual(dist,2)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
