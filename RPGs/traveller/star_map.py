@@ -12,6 +12,9 @@ from star_system import StarSystem
 # (-1, 0, 1), (-1, 1, 0)
 
 class StarMap:
+    def __init__(self, systems):
+        self.systems = systems
+
     def get_systems_within_range(self, origin, distance):
         if origin == (0,0,0):
             return [StarSystem("Kinorb", "A", 5, 5, 5, 5)]
@@ -19,17 +22,16 @@ class StarMap:
             return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
 
     def get_system_at_coordinate(self, coordinate):
-        if coordinate == (0,0,0):
-            return StarSystem("Yorbund", "A", 5, 5, 5, 5)
-        if coordinate == (1,0,-1):
-            return StarSystem("Kinorb", "A", 5, 5, 5, 5)
-        if coordinate == (-1,1,0):
-            return StarSystem("Aramis", "A", 5, 5, 5, 5)
-        return StarSystem("Mithril", "A", 5, 5, 5, 5)
+            return self.systems[coordinate]
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
-        StarMapTestCase.star_map = StarMap()
+        StarMapTestCase.star_map = StarMap({
+            (0,0,0)  : StarSystem("Yorbund", "A", 5, 5, 5, 5),
+            (1,0,-1) : StarSystem("Kinorb", "A", 5, 5, 5, 5),
+            (-1,1,0) : StarSystem("Aramis", "A", 5, 5, 5, 5),
+            (0,-1,1) : StarSystem("Mithril", "A", 5, 5, 5, 5)
+            })
 
     def test_constructor(self):
         star_map = StarMapTestCase.star_map
