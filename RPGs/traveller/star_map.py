@@ -17,12 +17,18 @@ class StarMap:
 
     def get_systems_within_range(self, origin, distance):
         if origin == (0,0,0):
-            return [StarSystem("Kinorb", "A", 5, 5, 5, 5)]
+            return [StarSystem("Kinorb", "A", 5, 5, 5, 5),
+                    StarSystem("Aramis", "A", 5, 5, 5, 5),
+                    StarSystem("Mithril", "A", 5, 5, 5, 5)]
         if origin == (1,0,-1):
+            return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
+        if origin == (-1,1,0):
+            return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
+        if origin == (0,-1,1):
             return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
 
     def get_system_at_coordinate(self, coordinate):
-            return self.systems[coordinate]
+        return self.systems[coordinate]
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
@@ -41,11 +47,25 @@ class StarMapTestCase(unittest.TestCase):
         star_map = StarMapTestCase.star_map
 
         systems = star_map.get_systems_within_range((0,0,0), 1)
-        self.assertEqual(len(systems), 1)
+        self.assertEqual(len(systems), 3)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertEqual(systems[0].name, "Kinorb")
+        self.assertTrue(isinstance(systems[1], StarSystem))
+        self.assertEqual(systems[1].name, "Aramis")
+        self.assertTrue(isinstance(systems[2], StarSystem))
+        self.assertEqual(systems[2].name, "Mithril")
 
         systems = star_map.get_systems_within_range((1,0,-1), 1)
+        self.assertEqual(len(systems), 1)
+        self.assertTrue(isinstance(systems[0], StarSystem))
+        self.assertEqual(systems[0].name, "Yorbund")
+
+        systems = star_map.get_systems_within_range((-1,1,0), 1)
+        self.assertEqual(len(systems), 1)
+        self.assertTrue(isinstance(systems[0], StarSystem))
+        self.assertEqual(systems[0].name, "Yorbund")
+
+        systems = star_map.get_systems_within_range((0,-1,1), 1)
         self.assertEqual(len(systems), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertEqual(systems[0].name, "Yorbund")
