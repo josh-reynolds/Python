@@ -23,16 +23,12 @@ class StarMap:
         self.systems = systems
 
     def get_systems_within_range(self, origin, distance):
-        if origin == (0,0,0):
-            return [StarSystem("Kinorb", "A", 5, 5, 5, 5),
-                    StarSystem("Aramis", "A", 5, 5, 5, 5),
-                    StarSystem("Mithril", "A", 5, 5, 5, 5)]
-        if origin == (1,0,-1):
-            return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
-        if origin == (-1,1,0):
-            return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
-        if origin == (0,-1,1):
-            return [StarSystem("Yorbund", "A", 5, 5, 5, 5)]
+        result = []
+        for coord in self.systems:
+            system = self.systems[coord]
+            if StarMap.distance_between(origin, coord) == 1:
+                result.append(self.systems[coord])
+        return result
 
     def get_system_at_coordinate(self, coordinate):
         return self.systems[coordinate]
