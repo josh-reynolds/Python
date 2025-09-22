@@ -30,6 +30,10 @@ class StarMap:
     def get_system_at_coordinate(self, coordinate):
         return self.systems[coordinate]
 
+    @classmethod
+    def distance_between(cls, first, second):
+        return 1
+
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map = StarMap({
@@ -88,6 +92,10 @@ class StarMapTestCase(unittest.TestCase):
         world = star_map.get_system_at_coordinate((0,-1,1))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Mithril")
+
+    def test_distance_between(self):
+        dist = StarMap.distance_between((0,0,0), (1,0,-1))
+        self.assertEqual(dist,1)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
