@@ -442,7 +442,7 @@
 #  1) CargoDepot.notify() - to refresh cargo selection weekly.
 #      Refreshes cargo weekly, but doesn't need to execute
 #      multiple times, just once if duration has passed.
-#  2) Financials.berth_notifcation() 
+#  2) Financials.berth_notification() 
 #      Two phases: first part on landing, with six-day coverage.
 #                  then a daily renewal after that.
 #  3) Financials.salary_notification()
@@ -467,6 +467,149 @@
 # passing, I'm not 100% certain I chose good boundary values. Also,
 # might not have emphasized the whole 'repeat on long ranges' thing.
 # Still, scaffolding in place for improvements.
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# Working through the design for multiple star systems. A few
+# considerations:
+#
+# * Basics. Traveller maps the universe on a 2D hex grid. One
+#   hex is one parsec, with each hex either being empty or 
+#   occupied by a single star system. In Traveller '77 these
+#   are very rudimentary, with no stellar characteristics and
+#   only the 'mainworld' described at all. The standard map
+#   is an 8 hex by 10 hex subsector (all that exists in '77) - 
+#   later these were grouped into larger sectors (4x4 subsectors).
+#
+#   At least for the intial version(s), I will maintain the 2D 
+#   hex grid standard.
+#
+# * Coordinate system. To distinguish different star systems, and
+#   to calculate distances between them, we need some kind of 
+#   coordinates. The standard Traveller subsector assigns each
+#   hex a row/column coordinate - so they run from 0101 through 
+#   0810. In the expanded sector arrangement, they run from 0101
+#   through 3240.
+#
+#   But these coordinates can be a PITA to work with for anything
+#   but simple layout. Calculating distances between two arbitrary
+#   hexes is rough, and you need a second square (well, rectangular)
+#   grid coordinate overlaying it to handle crossing subsector
+#   boundaries.
+#
+#   In a previous project, I came up with a three-axis system that
+#   works pretty well. Distances are trivial to calculate (the 
+#   highest absolute value of any of the three coordinates). There's
+#   also an interesting checksum built in - if the coordinate is
+#   valid, its three values sum to zero.
+#
+#   Expanding on that, I had considered a 'circular grid.' Rather 
+#   than arbitrary subsector boundaries overlain on the universe,
+#   each world can effectively be the center of its own subsector.
+#   Some products used to publish 'jump maps' that take this view,
+#   like all hexes within 4 parsecs of some central world.
+#
+#   But again, the goal for this first version is compatiblity with
+#   Traveller '77 RAW, so we should use the three-axis system
+#   internally, with conversion to the standard row/column format for
+#   display. My previous project already worked out the math, so we
+#   can lift it.
+#
+# * Canon. Touched on above already. I don't mean canon in terms of 
+#   setting. Traveller '77 doesn't have one, which is part of its
+#   charm (though a bit is implied by things like Credits, naval 
+#   bases, and so on, the Imperium is never mentioned).
+#
+#   I more mean 'rules canon.' As great as Traveller is, there's some
+#   very clunky or outdated ideas in there too. And it is mighty 
+#   tempting to 'fix' them.
+#
+#   For now, resist the tempation. I could see a future version
+#   of this (or a spinoff) going in a different direction. The round
+#   grid mentioned above is one idea (or a 3D grid). Lots of drift
+#   to be found in later Traveller editions, especially in world
+#   building and astrophysics. And I have some ideas about how 
+#   interstellar cultures could work too. But all that is later.
+#   Stick to RAW.
+#
+# * Dynamic generation. OK, this is finally getting into _how_
+#   we're going to implement this feature. There are a couple 
+#   basic approaches I can see:
+#
+#   * Dynamically generate star systems on the fly as we need 
+#     them. Of course we also want persistence, so once 
+#     generated we need to be able to get them back. And 
+#     persistence across game sessions is a consideration
+#     too - is the universe gone once you quit, or can you
+#     resume play in it? I think eventually I'd want the latter,
+#     though we could defer until later.
+#
+#   * Have a pregenerated map to work from. In practice, I would
+#     probably generate the map rather than just enter in the data
+#     from a published source. (Though the latter has some appeal
+#     too - tooling around in the Spinward Marches would be fun.)
+#
+#   I think dynamic will be simpler to get working. Most of the 
+#   pieces built there will also be useful for map generation.
+#   And once we get persistent saved games, that will help us
+#   figure out file formats and so on for the data entry
+#   approach.
+#
+# * Coding strategy. All that said, still not sure exactly how
+#   to tackle. Tempting to sketch out a bunch of classes and
+#   so on. But probably better to work from in-game use cases.
+#   That's been the approach so far, and it seems good. As with
+#   test driven design, each next step is small and pretty 
+#   obvious, even when you don't quite know where things will 
+#   end up.
+#
+#   So let's start from the 'jump' action in Game. Figure out
+#   what's needed there, and build out piece by piece.
+#
+#   * We need fuel & life support costs, jump range, and time.
+#     All that is in place already.
+#
+#   * If the ship qualifies (enough fuel/support, and at the 
+#     jump point), show all systems in range. At jump-1, that's
+#     at most six.
+#
+#   * For the initial bring up, we can have a stub that just
+#     returns a single system. And it should be able to swap
+#     back and forth between that and our original world.
+#
+#   * The new star system can be mock data added by hand. 
+#     Later we'll have some facility for generating a new
+#     world, or looking it up on the internal map.
+#
+#   * Player selects destination, confirm and go!
+# 
+#   * Any global references that are tied to location
+#     need to be fixed up. Already have some comments about
+#     the observers and the command set in the traveller
+#     module; wouldn't be surprised if there are others.
+#
+#   * Last, now that we finally have a reasonably comprehensive
+#     set of unit tests and good-ish hygiene, the new classes
+#     should be developed test first as much as possible, and
+#     conform to pylint feedback too.
+#
+# * Beyond that initial feature, we'll definitely want:
+#
+#   * Ability to see the star map somehow. Might be interesting
+#     in a text interface... Optionally being able to render
+#     out as a bitmap might be cool. Also need associated 
+#     UI actions.
+#
+#   * Hints for the player about things like nearest maintenance
+#     depot, where frontier fuelling is available, etc.
+#
+#   * Of course save/load of star map data, as mentioned above.
+#     (And UI actions...)
+#
+#   * Things like misjumps need to be considered. In some ways
+#     very easy if we assume three-axis coordinates and dynamically
+#     generated universe.
+#   
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -614,6 +757,7 @@
 #            possibly also while choosing a destination world)
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add a 'shore leave' action?
+#  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
 #           skimming as jump point command if the system has a gas giant
@@ -645,3 +789,7 @@
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
+#  BEYOND ==========================================================
+#  * [    ] Alternate shells: GUI, 'Oregon Trail style', etc. Would be amusing to
+#            do ASCII graphics...
+#
