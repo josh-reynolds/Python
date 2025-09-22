@@ -39,7 +39,12 @@ class StarMap:
 
     @classmethod
     def distance_between(cls, first, second):
-        return max(abs(second[0]), abs(second[1]), abs(second[2]))
+        transformed = (second[0]-first[0], 
+                       second[1]-first[1], 
+                       second[2]-first[2])
+        return max(abs(transformed[0]), 
+                   abs(transformed[1]), 
+                   abs(transformed[2]))
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
@@ -115,6 +120,9 @@ class StarMapTestCase(unittest.TestCase):
 
         dist = StarMap.distance_between((0,0,0), (1,-2,1))
         self.assertEqual(dist,2)
+
+        dist = StarMap.distance_between((1,0,-1), (2,0,-2))
+        self.assertEqual(dist,1)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

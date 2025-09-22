@@ -609,6 +609,44 @@
 #   * Things like misjumps need to be considered. In some ways
 #     very easy if we assume three-axis coordinates and dynamically
 #     generated universe.
+#
+# OK, after all that, I almost immediately went off course. It's
+# obvious we'll need some kind of map class to manage all the 
+# systems. So I made a StarMap class. And from there, I started
+# some simple tests to drive a basic interface. And that's 
+# ballooning a bit. The strategy above assumed more of a mock
+# StarMap that would only allow us to bounce between two
+# hard-coded systems, but I'm building something more 
+# full-featured (though still pretty simple).
+#
+# Questions we'll need to address (more of them):
+#
+# * Container for star systems. Very straightforward, and on
+#   its own not enough to justify a class. I'll use a dictionary
+#   with the key being a coordinate tuple. Tempting to make
+#   another little class for coordinates, but premature I think.
+#
+# * Coordinate system and 'space.' We need to be able to distinguish
+#   separate star systems, to calculate distance between them, and
+#   so on. Per the above, coordinate system will be three-axis. My
+#   test driving right now is building up that functionality.
+#
+# * Travel basics. This is the section above. We can hard-code
+#   a map of just two systems and then build up travel mechanics
+#   until they're set.
+#
+# * Populating the map. Once that is all working satisfactorily,
+#   we'll need to decide how to fill in the map. Since we want
+#   dynamic, this will be a JIT system. Request a system by 
+#   coordinate. If it's in the container, return it. If not,
+#   generate it.
+#
+# * Generation of star systems. Finally, we'll need to be able
+#   to create new systems on the fly. Initially we'll just have
+#   hard-coded values, but will need to create for real 
+#   eventually. Traveller world generation procedures are 
+#   easy to implement, so not a big deal. World name generation
+#   may be the most interesting part.
 #   
 # -------------------------------------------------------------
 
@@ -712,7 +750,7 @@
 #  * [DONE] Review need for fractional credits ('cents') - not needed
 #  * [DONE] First pass pylint cleanup
 #  PHASE TWO =======================================================
-#  * [    ] Add multiple star systems and map (whether loaded or generated
+#  * [....] Add multiple star systems and map (whether loaded or generated
 #            and whether in advance or on the fly)
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Add select destination before jump (will tie in to subsector map,
