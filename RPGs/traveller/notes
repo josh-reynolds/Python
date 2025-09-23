@@ -753,6 +753,7 @@
 #  * [DONE] First pass pylint cleanup
 #  PHASE TWO =======================================================
 #  * [DONE] Basic StarMap class with coordinate & distance functionality
+#  * [....] Flesh out jump action sequence
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Add select destination before jump (will tie in to subsector map,
 #            world generation, possibly freight & passenger selection)

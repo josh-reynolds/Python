@@ -1,6 +1,6 @@
 from calendar import Calendar
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red, print_list, int_input
+from utilities import pr_yellow_on_red, print_list, int_input, confirm_input
 from ship import Ship
 from cargo import Cargo, CargoDepot
 from star_system import StarSystem
@@ -114,8 +114,14 @@ class Game:
         if destination_number >= len(destinations):
             print("That is not a valid destination number.")
             return
+        coordinate = destinations[destination_number].coordinate
+        destination = self.star_map.get_system_at_coordinate(coordinate)
 
-        # confirm jump
+        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)?")
+        if confirmation == 'n':
+            print("Cancelling jump.")
+            return
+
         print("Executing jump!")
         # change location to destination, at jump point
         # deduct life support expenditure
