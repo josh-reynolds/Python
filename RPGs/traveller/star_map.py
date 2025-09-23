@@ -45,10 +45,10 @@ class StarMap:
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", "A", 5, 5, 5, 5),
-            (1,0,-1) : StarSystem("Kinorb", "A", 5, 5, 5, 5),
-            (-1,1,0) : StarSystem("Aramis", "A", 5, 5, 5, 5),
-            (0,-1,1) : StarSystem("Mithril", "A", 5, 5, 5, 5)
+            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5),
+            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5),
+            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5),
+            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5)
             })
 
     def test_constructor(self):
@@ -82,6 +82,8 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertEqual(systems[0].name, "Yorbund")
 
+        # BUG: name of the function is "within" - but our test
+        # expectations are "exactly" - need to fix this
         systems = star_map.get_systems_within_range((0,-1,1), 2)
         self.assertEqual(len(systems), 2)
         self.assertTrue(isinstance(systems[0], StarSystem))
