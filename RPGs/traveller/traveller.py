@@ -1,6 +1,6 @@
 from calendar import Calendar
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red, print_list
+from utilities import pr_yellow_on_red, print_list, int_input
 from ship import Ship
 from cargo import Cargo, CargoDepot
 from star_system import StarSystem
@@ -106,13 +106,15 @@ class Game:
             return
 
         jump_range = self.ship.jump_range
-
-        # show systems in range
         destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                               jump_range)
+        print(f"Systems within jump-{jump_range}:")
         print_list(destinations)
+        destination_number = int_input("Enter destination number: ")
+        if destination_number >= len(destinations):
+            print("That is not a valid destination number.")
+            return
 
-        # choose destination
         # confirm jump
         print("Executing jump!")
         # change location to destination, at jump point
