@@ -64,6 +64,7 @@ class Game:
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded
+        print(f"Landing on {self.location.name}")
 
     def outbound_to_jump(self):
         tfc = self.ship.trip_fuel_cost
@@ -83,6 +84,7 @@ class Game:
         self.date.day += 1
         self.location.from_jump_point()
         self.commands = orbit
+        print(f"Travelling in to orbit {self.location.name}")
 
     def leave(self):
         self.location.leave_trade()
@@ -126,6 +128,9 @@ class Game:
         self.location = destination
         self.location.detail = "jump"
         self.commands = jump
+
+        print(f"SELF: {self.location}")
+        print(f"GAME: {game.location}")
 
         self.depot.system = destination
         self.depot.cargo = self.depot.determine_cargo()
@@ -311,7 +316,7 @@ orbit = always + [Command('g', 'Go to jump point',
                           'Travelling to jump point.'),
                   Command('l', 'Land on surface',
                           game.land,
-                          f"Landing on {game.location.name}")]
+                          "")]
 orbit = sorted(orbit, key=lambda command: command.key)
 
 jump = always + [Command('j', 'Jump to new system',
@@ -322,7 +327,7 @@ jump = always + [Command('j', 'Jump to new system',
                          'Skimming fuel from a gas giant planet.'),
                  Command('i', 'Inbound to orbit',
                          game.inbound_from_jump,
-                         f"Travel in to orbit {game.location.name}")]
+                         "")]
 jump = sorted(jump, key=lambda command: command.key)
 
 trade = always + [Command('l', 'Leave trade interaction',
