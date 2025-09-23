@@ -10,25 +10,25 @@ class Game:
     def __init__(self):
         self.running = False
         self.date = Calendar()
-        self.ship = Ship()
-        # TO_DO: use location from the star map
-        self.location = StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5)
-        self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
-        self.depot = CargoDepot(self.location, self.date.current_date)
 
+        self.ship = Ship()
         self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
                                    {"Ag":-2,"Na":1,"In":2},
                                    {"Ag":-2}))
 
+        self.star_map = StarMap({
+            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 7, 5, 9, 5),
+            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 7, 5),
+            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 6, 5, 8, 5),
+            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 4, 0, 7, 5)
+            })
+
+        self.location = self.star_map.get_system_at_coordinate((0,0,0))
+        self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
+        self.depot = CargoDepot(self.location, self.date.current_date)
+
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
-
-        self.star_map = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5),
-            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5),
-            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5),
-            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5)
-            })
 
     def run(self):
         self.commands = orbit   # awkward, needs to change when location ctor detail changes

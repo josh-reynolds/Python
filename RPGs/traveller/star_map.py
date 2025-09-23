@@ -4,13 +4,13 @@ from star_system import StarSystem
 # in the three-axis system:
 #  * the three coordinates sum to zero
 #  * the distance from origin is max(|x|, |y|, |z|)
-#
+
 # the origin is of course (0,0,0)
 # the six surrounding coordinates are:
-# (1, -1, 0), (1, 0, -1)
 # (0, 1, -1), (0, -1, 1)
-# (-1, 0, 1), (-1, 1, 0)
-#
+# (1, 0, -1), (-1, 0, 1)
+# (1, -1, 0), (-1, 1, 0)
+
 # the axial rows are straightforward. one
 # coordinate is zero, and the other two are
 # +x/-x. So:
