@@ -648,6 +648,8 @@
 #   easy to implement, so not a big deal. World name generation
 #   may be the most interesting part.
 #   
+# First two above are basically done. May be tweaks later, of
+# course. Time to work on travel mechanics.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -750,8 +752,7 @@
 #  * [DONE] Review need for fractional credits ('cents') - not needed
 #  * [DONE] First pass pylint cleanup
 #  PHASE TWO =======================================================
-#  * [....] Add multiple star systems and map (whether loaded or generated
-#            and whether in advance or on the fly)
+#  * [DONE] Basic StarMap class with coordinate & distance functionality
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Add select destination before jump (will tie in to subsector map,
 #            world generation, possibly freight & passenger selection)

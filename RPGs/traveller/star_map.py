@@ -26,7 +26,7 @@ class StarMap:
         result = []
         for coord in self.systems:
             system = self.systems[coord]
-            if StarMap.distance_between(origin, coord) == 1:
+            if StarMap.distance_between(origin, coord) == distance:
                 result.append(self.systems[coord])
         return result
 
@@ -81,6 +81,13 @@ class StarMapTestCase(unittest.TestCase):
         self.assertEqual(len(systems), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertEqual(systems[0].name, "Yorbund")
+
+        systems = star_map.get_systems_within_range((0,-1,1), 2)
+        self.assertEqual(len(systems), 2)
+        self.assertTrue(isinstance(systems[0], StarSystem))
+        self.assertTrue(isinstance(systems[1], StarSystem))
+        self.assertTrue(systems[0].name in ("Kinorb", "Aramis"))
+        self.assertTrue(systems[1].name in ("Kinorb", "Aramis"))
 
     def test_get_system_at_coordinate(self):
         star_map = StarMapTestCase.star_map
