@@ -26,7 +26,8 @@ class StarMap:
         result = []
         for coord in self.systems:
             system = self.systems[coord]
-            if StarMap.distance_between(origin, coord) == distance:
+            if (StarMap.distance_between(origin, coord) <= distance and
+                coord != origin):
                 result.append(self.systems[coord])
         return result
 
@@ -82,14 +83,14 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertEqual(systems[0].name, "Yorbund")
 
-        # BUG: name of the function is "within" - but our test
-        # expectations are "exactly" - need to fix this
         systems = star_map.get_systems_within_range((0,-1,1), 2)
-        self.assertEqual(len(systems), 2)
+        self.assertEqual(len(systems), 3)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertTrue(isinstance(systems[1], StarSystem))
-        self.assertTrue(systems[0].name in ("Kinorb", "Aramis"))
-        self.assertTrue(systems[1].name in ("Kinorb", "Aramis"))
+        self.assertTrue(isinstance(systems[2], StarSystem))
+        self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Yorbund"))
+        self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund"))
+        self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund"))
 
     def test_get_system_at_coordinate(self):
         star_map = StarMapTestCase.star_map

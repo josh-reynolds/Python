@@ -61,10 +61,10 @@ class Game:
             print("Your ship is not streamlined and cannot land.")
             return
 
+        print(f"Landing on {self.location.name}.")
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded
-        print(f"Landing on {self.location.name}")
 
     def outbound_to_jump(self):
         tfc = self.ship.trip_fuel_cost
@@ -80,11 +80,11 @@ class Game:
         self.commands = jump
 
     def inbound_from_jump(self):
+        print(f"Travelling in to orbit {self.location.name}.")
         self.ship.current_fuel -= self.ship.trip_fuel_cost // 2
         self.date.day += 1
         self.location.from_jump_point()
         self.commands = orbit
-        print(f"Travelling in to orbit {self.location.name}")
 
     def leave(self):
         self.location.leave_trade()
@@ -128,9 +128,6 @@ class Game:
         self.location = destination
         self.location.detail = "jump"
         self.commands = jump
-
-        print(f"SELF: {self.location}")
-        print(f"GAME: {game.location}")
 
         self.depot.system = destination
         self.depot.cargo = self.depot.determine_cargo()

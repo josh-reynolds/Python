@@ -759,9 +759,10 @@
 #  * [DONE] Fix handling of observers after jump
 #  * [DONE] BUG: Command messages not displaying correct world post-jump
 #  * [DONE] Thoroughly test jump scenarios, verify location is changed everywhere
+#  * [DONE] BUG: StarMap.get_systems_within_range is returning only systems AT range
 #  * [    ] Examine observers post-jump (depot especially) to verify correctness
 #  * [    ] Move Command message into game methods
-#  * [    ] BUG: StarMap.get_systems_within_range is returning only systems AT range
+#  * [    ] Set starting location to StarMap origin point
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
