@@ -28,7 +28,7 @@ class StarMap:
             system = self.systems[coord]
             if (StarMap.distance_between(origin, coord) <= distance and
                 coord != origin):
-                result.append(self.systems[coord])
+                result.append(system)
         return result
 
     def get_system_at_coordinate(self, coordinate):
@@ -36,11 +36,11 @@ class StarMap:
 
     @classmethod
     def distance_between(cls, first, second):
-        transformed = (second[0]-first[0], 
-                       second[1]-first[1], 
+        transformed = (second[0]-first[0],
+                       second[1]-first[1],
                        second[2]-first[2])
-        return max(abs(transformed[0]), 
-                   abs(transformed[1]), 
+        return max(abs(transformed[0]),
+                   abs(transformed[1]),
                    abs(transformed[2]))
 
 class StarMapTestCase(unittest.TestCase):

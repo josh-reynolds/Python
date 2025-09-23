@@ -650,6 +650,12 @@
 #   
 # First two above are basically done. May be tweaks later, of
 # course. Time to work on travel mechanics.
+#
+# Travel is working! We can finally move between systems and
+# trade goods. The basic game flow is working. Lots of polish
+# and little features to add from here, of course. I want to do
+# a little more testing and handle some rough edges spotted
+# during playtest, then we'll get the JIT generation up and running.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -763,8 +769,10 @@
 #  * [DONE] Set starting location to StarMap origin point
 #  * [    ] Examine observers post-jump (depot especially) to verify correctness
 #  * [    ] Move Command message into game methods
+#  * [    ] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
+#  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
