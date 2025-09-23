@@ -767,8 +767,8 @@
 #  * [DONE] Thoroughly test jump scenarios, verify location is changed everywhere
 #  * [DONE] BUG: StarMap.get_systems_within_range is returning only systems AT range
 #  * [DONE] Set starting location to StarMap origin point
+#  * [DONE] Move Command message into game methods
 #  * [    ] Examine observers post-jump (depot especially) to verify correctness
-#  * [    ] Move Command message into game methods
 #  * [    ] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script

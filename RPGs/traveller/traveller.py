@@ -42,17 +42,20 @@ class Game:
             command = input("Enter a command (? to list):  ")
             for cmd in self.commands:
                 if command.lower() == cmd.key:
-                    print(cmd.message)
+                    print()
                     cmd.action()
 
     def quit(self):
+        print("Goodbye.")
         self.running = False
 
     def list_commands(self):
+        print("Available commands:")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
     def liftoff(self):
+        print("Lifting off to orbit.")
         self.location.liftoff()
         self.commands = orbit
 
@@ -67,6 +70,7 @@ class Game:
         self.commands = grounded
 
     def outbound_to_jump(self):
+        print("Travelling to jump point.")
         tfc = self.ship.trip_fuel_cost
         if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
@@ -87,14 +91,17 @@ class Game:
         self.commands = orbit
 
     def leave(self):
+        print("Leaving trader depot.")
         self.location.leave_trade()
         self.commands = grounded
 
     def to_trade(self):
+        print("Trading goods.")
         self.location.join_trade()
         self.commands = trade
 
     def jump(self):
+        print("Preparing for jump.")
         jump_fuel = self.ship.jump_fuel_cost
         if jump_fuel > self.ship.current_fuel:
             print(f"Insufficient fuel. Jump requires {jump_fuel} tons, only "
@@ -138,17 +145,21 @@ class Game:
         self.date.plus_week()
 
     def view_world(self):
+        print("Local world characteristics:")
         print(self.location)
 
     def refuel(self):
+        print("Refuelling ship.")
         cost = self.ship.refuel()
         self.financials.debit(cost)
 
     def recharge(self):
+        print("Replenishing life support system.")
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
     def buy_cargo(self):
+        print("Purchasing cargo.")
         print_list(self.depot.cargo)
         _, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo is None:
@@ -180,6 +191,7 @@ class Game:
         self.date.day += 1
 
     def sell_cargo(self):
+        print("Selling cargo.")
         print_list(self.ship.hold)
         _, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
         if cargo is None:
@@ -208,15 +220,19 @@ class Game:
         self.date.day += 1
 
     def goods(self):
+        print("Available cargo loads:")
         print_list(self.depot.cargo)
 
     def cargo_hold(self):
+        print("Contents of cargo hold:")
         print_list(self.ship.cargo_hold())
 
     def wait_week(self):
+        print("Waiting.")
         self.date.plus_week()
 
     def view_ship(self):
+        print("Ship details:")
         print(self.ship)
 
     # Book 2 p. 35
@@ -229,6 +245,7 @@ class Game:
     # including both options. (In all likelihood this will lean heavily
     # toward second edition...)
     def skim(self):
+        print("Skimming fuel from a gas giant planet.")
         if not self.location.gas_giant:
             print("There is no gas giant in this system. No fuel skimming possible.")
             return
@@ -246,6 +263,7 @@ class Game:
         self.date.day += 1
 
     def maintenance(self):
+        print("Performing annual ship maintenance.")
         if self.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
@@ -264,81 +282,60 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
 
 class Command:
-    def __init__(self, key, description, action, message):
+    def __init__(self, key, description, action):
         self.key = key
         self.description = description
         self.action = action
-        self.message = message
 
 game = Game()
 
 always = [Command('q', 'Quit',
-                  game.quit,
-                  'Goodbye.'),
+                  game.quit),
           Command('?', 'List commands',
-                  game.list_commands,
-                  'Available commands:'),
+                  game.list_commands),
           Command('c', 'Cargo hold contents',
-                  game.cargo_hold,
-                  'Contents of cargo hold:'),
+                  game.cargo_hold),
           Command('v', 'View world characteristics',
-                  game.view_world,
-                  'Local world characteristics:'),
+                  game.view_world),
           Command('p', 'View ship details',
-                  game.view_ship,
-                  'Ship details:'),
+                  game.view_ship),
           Command('w', 'Wait a week',
-                  game.wait_week,
-                  'Waiting')]
+                  game.wait_week)]
 
 grounded = always + [Command('l', 'Lift off to orbit',
-                             game.liftoff,
-                             'Lifting off to orbit.'),
+                             game.liftoff),
                      Command('t', 'Trade',
-                             game.to_trade,
-                             'Trading goods.'),
+                             game.to_trade),
                      Command('f', 'Recharge life support',
-                             game.recharge,
-                             'Replenishing life support system.'),
+                             game.recharge),
                      Command('m', 'Annual maintenance',
-                             game.maintenance,
-                             'Performing annual ship maintenance.'),
+                             game.maintenance),
                      Command('r', 'Refuel',
-                             game.refuel,
-                             'Refuelling ship.')]
+                             game.refuel)]
 grounded = sorted(grounded, key=lambda command: command.key)
 
 orbit = always + [Command('g', 'Go to jump point',
-                          game.outbound_to_jump,
-                          'Travelling to jump point.'),
+                          game.outbound_to_jump),
                   Command('l', 'Land on surface',
-                          game.land,
-                          "")]
+                          game.land)]
 orbit = sorted(orbit, key=lambda command: command.key)
 
 jump = always + [Command('j', 'Jump to new system',
-                         game.jump,
-                         'Preparing for jump.'),
+                         game.jump),
                  Command('s', 'Skim fuel from gas giant',
-                         game.skim,
-                         'Skimming fuel from a gas giant planet.'),
+                         game.skim),
                  Command('i', 'Inbound to orbit',
-                         game.inbound_from_jump,
-                         "")]
+                         game.inbound_from_jump)]
 jump = sorted(jump, key=lambda command: command.key)
 
 trade = always + [Command('l', 'Leave trade interaction',
-                          game.leave,
-                          'Leaving trader depot.'),
+                          game.leave),
                   Command('g', 'Show goods for sale',
-                          game.goods,
-                          'Available cargo loads:'),
+                          game.goods),
                   Command('b', 'Buy cargo',
-                          game.buy_cargo,
-                          'Purchasing cargo'),
+                          game.buy_cargo),
                   Command('s', 'Sell cargo',
-                          game.sell_cargo,
-                          'Selling cargo')]
+                          game.sell_cargo)]
 trade = sorted(trade, key=lambda command: command.key)
 
 if __name__ == '__main__':
