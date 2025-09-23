@@ -753,11 +753,13 @@
 #  * [DONE] First pass pylint cleanup
 #  PHASE TWO =======================================================
 #  * [DONE] Basic StarMap class with coordinate & distance functionality
-#  * [....] Flesh out jump action sequence
-#  * [    ] Create a proper UWP class and generator in the StarSystem ctor
-#  * [    ] Add select destination before jump (will tie in to subsector map,
+#  * [DONE] Add select destination before jump (will tie in to subsector map,
 #            world generation, possibly freight & passenger selection)
-#  * [    ] Fix handling of observers after jump
+#  * [DONE] Flesh out jump action sequence
+#  * [DONE] Fix handling of observers after jump
+#  * [....] Thoroughly test jump scenarios, verify location is changed everywhere
+#  * [    ] BUG: StarMap.get_systems_within_range is returning only systems AT range
+#  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers

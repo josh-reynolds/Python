@@ -11,6 +11,7 @@ class Game:
         self.running = False
         self.date = Calendar()
         self.ship = Ship()
+        # TO_DO: use location from the star map
         self.location = StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
@@ -19,7 +20,6 @@ class Game:
                                    {"Ag":-2,"Na":1,"In":2},
                                    {"Ag":-2}))
 
-        # BUG: this will break when we jump to a new system, fix!
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
 
@@ -123,12 +123,16 @@ class Game:
             return
 
         print("Executing jump!")
-        # change location to destination, at jump point
-        # deduct life support expenditure
+        self.location = destination
+        self.location.detail = "jump"
+        self.commands = jump
+
+        self.depot.system = destination
+        self.depot.cargo = self.depot.determine_cargo()
+        self.financials.location = destination
+
         self.ship.life_support_level = 0
-        # deduct fuel cost
         self.ship.current_fuel -= jump_fuel
-        # advance calendar a week
         self.date.plus_week()
 
     def view_world(self):
