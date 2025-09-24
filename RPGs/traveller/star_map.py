@@ -20,6 +20,7 @@ from star_system import StarSystem
 
 class StarMap:
     def __init__(self, systems):
+        # TO_DO: consider validating coordinates before adding...
         self.systems = systems
 
     # halfway step - final JIT approach should be:
@@ -49,6 +50,10 @@ class StarMap:
         return max(abs(transformed[0]),
                    abs(transformed[1]),
                    abs(transformed[2]))
+
+    @classmethod
+    def valid_coordinate(cls, coord):
+        return sum(coord) == 0
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
@@ -180,6 +185,11 @@ class StarMapTestCase(unittest.TestCase):
 
         dist = StarMap.distance_between((1,0,-1), (2,0,-2))
         self.assertEqual(dist,1)
+
+    def test_valid_coordinate(self):
+        self.assertTrue(StarMap.valid_coordinate((0,0,0)))
+        self.assertFalse(StarMap.valid_coordinate((1,0,0)))
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

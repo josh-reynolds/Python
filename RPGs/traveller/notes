@@ -792,6 +792,8 @@
 #  * [DONE] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
 #  * [DONE] Color initial command message string to make it stand out
 #  * [....] Implement JIT world generation to populate an 'infinite' map
+#  * [    ] Validate coordinates in StarMap ctor before building dictionary
+#           (is this YAGNI? think we will need if we have manual input of star map data)
 #  * [    ] BUG: inbound fuel check too strict, can't travel in post-jump
 #  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
