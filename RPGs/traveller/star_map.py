@@ -58,6 +58,35 @@ class StarMap:
     def valid_coordinate(cls, coord):
         return sum(coord) == 0
 
+    @classmethod
+    def get_coordinates_within_range(cls, origin, range_):
+        result = []
+        for i in range(range_):
+            result += StarMap.get_coordinates_at_range(origin, i+1)
+        return result
+
+    @classmethod
+    def get_coordinates_at_range(cls, origin, range_):
+        result = StarMap.axis_hexes(range_) + StarMap.edge_hexes(range_)
+        return result
+
+    @classmethod
+    def axis_hexes(cls, range_):
+        return [(0,range_,-range_),
+                (0,-range_,range_),
+                (range_,0,-range_),
+                (-range_,0,range_),
+                (range_,-range_,0),
+                (-range_,range_,0)]
+
+    @classmethod
+    def edge_hexes(cls, range_):
+        result = []
+        for i in range(range_-1):
+            for _ in range(6):
+                result.append((0,0,0))    # <== PLACEHOLDER
+        return result
+
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
@@ -195,6 +224,34 @@ class StarMapTestCase(unittest.TestCase):
 
     def test_invalid_ctor_call(self):
         self.assertRaises(ValueError, StarMap, {(1,0,0):None})
+
+    def test_get_coordinates_within_range(self):
+        coords = StarMap.get_coordinates_within_range((0,0,0), 1)
+        self.assertEqual(len(coords), 6)
+        self.assertTrue((0,1,-1) in coords)
+        self.assertTrue((0,-1,1) in coords)
+        self.assertTrue((1,0,-1) in coords)
+        self.assertTrue((-1,0,1) in coords)
+        self.assertTrue((1,-1,0) in coords)
+        self.assertTrue((-1,1,0) in coords)
+
+        coords = StarMap.get_coordinates_within_range((0,0,0), 2)
+        self.assertEqual(len(coords), 18)
+        self.assertTrue((0,2,-2) in coords)
+        self.assertTrue((0,-2,2) in coords)
+        self.assertTrue((2,0,-2) in coords)
+        self.assertTrue((-2,0,2) in coords)
+        self.assertTrue((2,-2,0) in coords)
+        self.assertTrue((-2,2,0) in coords)
+
+        coords = StarMap.get_coordinates_within_range((0,0,0), 3)
+        self.assertEqual(len(coords), 36)
+        self.assertTrue((0,3,-3) in coords)
+        self.assertTrue((0,-3,3) in coords)
+        self.assertTrue((3,0,-3) in coords)
+        self.assertTrue((-3,0,3) in coords)
+        self.assertTrue((3,-3,0) in coords)
+        self.assertTrue((-3,3,0) in coords)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

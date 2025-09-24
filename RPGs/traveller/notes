@@ -670,6 +670,18 @@
 #   edge hex from the first ring. And the hexes in-between are
 #   a combination of translates along two axes.
 #
+#   Another observation is there are axis rows, and six 'pie
+#   slices'. At a given range, there are exactly six axis hexes,
+#   and (range-1)*6 edge hexes.
+#
+#   And another - if you look at a diagram and figure out a 
+#   given edge hex's coordinate (axis hexes are trivial), stepping 
+#   along the two axis rows that bound its slice and adding those
+#   two axis hexes together gives the result, just like with
+#   Cartesian coordinates. So you just need to keep track of
+#   which two axes govern that slice. (And of course adding
+#   two coordinates together is basic vector translation...)
+#
 # * That done, the last bit is easy: get_systems_within_range()
 #   should look at all hexes by coordinate, not by what is present
 #   in the dictionary. An if a given coordinate is not in the 
@@ -797,6 +809,7 @@
 #           (fixed - but should we do the same for outbound? as long as there is
 #            a gas giant it would be fine, but otherwise player can get stranded
 #            potentially...)
+#  * [....] Calculate three-axis coordinates surrounding an origin hex at given range
 #  * [....] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
@@ -827,6 +840,7 @@
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Need to be able to see maintenance date
+#  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
