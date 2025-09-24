@@ -793,8 +793,11 @@
 #  * [DONE] Color initial command message string to make it stand out
 #  * [DONE] Validate coordinates in StarMap ctor before building dictionary
 #           (is this YAGNI? think we will need if we have manual input of star map data)
+#  * [DONE] BUG: inbound fuel check too strict, can't travel in post-jump
+#           (fixed - but should we do the same for outbound? as long as there is
+#            a gas giant it would be fine, but otherwise player can get stranded
+#            potentially...)
 #  * [....] Implement JIT world generation to populate an 'infinite' map
-#  * [    ] BUG: inbound fuel check too strict, can't travel in post-jump
 #  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
@@ -820,7 +823,8 @@
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
-#           identical, and should be merged
+#           identical, and should be merged (consider fuel cost warning & stranding)
+#           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Lift all print statements out of model classes

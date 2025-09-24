@@ -87,14 +87,14 @@ class Game:
 
     def inbound_from_jump(self):
         pr_blue(f"Travelling in to orbit {self.location.name}.")
-        tfc = self.ship.trip_fuel_cost
-        if self.ship.current_fuel < tfc:
-            print(f"Insufficient fuel. Travel to and from the jump point "
-                  f"requires {tfc} tons, only "
+        leg_fc = self.ship.trip_fuel_cost // 2
+        if self.ship.current_fuel < leg_fc:
+            print(f"Insufficient fuel. Travel in from the jump point "
+                  f"requires {leg_fc} tons, only "
                   f"{self.ship.current_fuel} tons in tanks.")
             return
 
-        self.ship.current_fuel -= tfc // 2
+        self.ship.current_fuel -= leg_fc
         self.date.day += 1
         self.location.from_jump_point()
         self.commands = orbit
