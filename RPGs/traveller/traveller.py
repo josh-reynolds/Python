@@ -277,7 +277,7 @@ class Game:
         # TO_DO: should we have a confirmation here?
         # TO_DO: should we warn or block if maintenance was performed recently?
         print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
-        self.ship.last_maintenance = self.date.current_date
+        self.financials.last_maintenance = self.date.current_date
         self.financials.debit(cost)
         self.date.day += 14    # should we wrap this in a method call?
 

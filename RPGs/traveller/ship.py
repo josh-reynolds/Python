@@ -1,5 +1,4 @@
 import unittest
-from calendar import ImperialDate
 from financials import Credits
 from utilities import confirm_input
 
@@ -23,19 +22,11 @@ class Ship:
         self.trip_fuel_cost = 10
         self.life_support_level = 0
 
-        # TO_DO: this is now out of sync with data in Financials
-        #        needed here for string representation
-        #        note this is the only place we need reference to
-        #        ImperialDate, so could remove that if we change it up
-        #        Should Ship own Financials?
-        self.last_maintenance = ImperialDate(351,1104)
-
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\
                  f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
                  f"{self.crew} crew, {self.passengers} passenger staterooms, " +\
-                 f"{self.low_berths} low berths\n" +\
-                 f"Last maintenance: {self.last_maintenance}"
+                 f"{self.low_berths} low berths"
         return result
 
     def cargo_hold(self):
@@ -193,8 +184,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(f"{ShipTestCase.ship}",
                          "Weaselfish -- Type A Free Trader\n"
                          "200 tons : 1G : jump-1\n"
-                         "4 crew, 6 passenger staterooms, 20 low berths\n"
-                         "Last maintenance: 351-1104")
+                         "4 crew, 6 passenger staterooms, 20 low berths")
 
     def test_cargo_hold_reporting(self):
         cargo1 = ShipTestCase.CargoMock(20)

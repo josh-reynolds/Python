@@ -663,7 +663,7 @@
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
 #  PHASE ONE
-#  #  * Full feature set for in-system speculative trading. Just a few
+#  * Full feature set for in-system speculative trading. Just a few
 #    maintenance costs left to go.
 #  * Basic travel & resources features.
 #  * Refactoring. In the midst of a big push right now.
@@ -768,7 +768,11 @@
 #  * [DONE] BUG: StarMap.get_systems_within_range is returning only systems AT range
 #  * [DONE] Set starting location to StarMap origin point
 #  * [DONE] Move Command message into game methods
-#  * [    ] Examine observers post-jump (depot especially) to verify correctness
+#  * [DONE] Examine observers post-jump (depot especially) to verify correctness
+#  * [DONE] BUG: maintenance date discrepancy between Financials & Ship
+#  * [    ] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Need to be able to see maintenance date
 #  * [    ] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
@@ -810,7 +814,6 @@
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add a 'shore leave' action?
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
