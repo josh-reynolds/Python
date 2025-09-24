@@ -656,6 +656,25 @@
 # and little features to add from here, of course. I want to do
 # a little more testing and handle some rough edges spotted
 # during playtest, then we'll get the JIT generation up and running.
+#
+# For JIT, we need a few things:
+#
+# * First, the methods in StarMap need to accommodate a 'None'
+#   entry in the system dictionary.
+#
+# * Second, we need to be able to calculate coordinates relative
+#   to an origin. We can handle distances, but generating new
+#   coordinates, not quite yet. One approach is to handle
+#   as a set of translates - for example, extending the axial
+#   rows is as simple as repeatedly adding the appropriate
+#   edge hex from the first ring. And the hexes in-between are
+#   a combination of translates along two axes.
+#
+# * That done, the last bit is easy: get_systems_within_range()
+#   should look at all hexes by coordinate, not by what is present
+#   in the dictionary. An if a given coordinate is not in the 
+#   dictionary yet, generate it. The result will be either
+#   None or a StarSystem.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -772,7 +791,8 @@
 #  * [DONE] BUG: maintenance date discrepancy between Financials & Ship
 #  * [DONE] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
 #  * [DONE] Color initial command message string to make it stand out
-#  * [    ] Implement JIT world generation to populate an 'infinite' map
+#  * [....] Implement JIT world generation to populate an 'infinite' map
+#  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
