@@ -69,8 +69,9 @@ class Game:
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded
 
+    # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self):
-        print("Travelling to jump point.")
+        print("Travelling out to jump point.")
         tfc = self.ship.trip_fuel_cost
         if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
@@ -85,7 +86,14 @@ class Game:
 
     def inbound_from_jump(self):
         print(f"Travelling in to orbit {self.location.name}.")
-        self.ship.current_fuel -= self.ship.trip_fuel_cost // 2
+        tfc = self.ship.trip_fuel_cost
+        if self.ship.current_fuel < tfc:
+            print(f"Insufficient fuel. Travel to and from the jump point "
+                  f"requires {tfc} tons, only "
+                  f"{self.ship.current_fuel} tons in tanks.")
+            return
+
+        self.ship.current_fuel -= tfc // 2
         self.date.day += 1
         self.location.from_jump_point()
         self.commands = orbit

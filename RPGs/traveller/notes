@@ -770,8 +770,9 @@
 #  * [DONE] Move Command message into game methods
 #  * [DONE] Examine observers post-jump (depot especially) to verify correctness
 #  * [DONE] BUG: maintenance date discrepancy between Financials & Ship
-#  * [    ] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
+#  * [DONE] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Color initial command message string to make it stand out
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
@@ -798,6 +799,8 @@
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
+#  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
+#           identical, and should be merged
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
