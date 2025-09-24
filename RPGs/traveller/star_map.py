@@ -22,12 +22,19 @@ class StarMap:
     def __init__(self, systems):
         self.systems = systems
 
+    # halfway step - final JIT approach should be:
+    # * get all coordinates up to range surrounding origin
+    # * three possibilities:
+    #   1) in dictionary, and StarSystem - add to result
+    #   2) in dictionary, and None - leave out of result
+    #   3) not in dictionary - generate, handle as 1 & 2
     def get_systems_within_range(self, origin, distance):
         result = []
         for coord in self.systems:
             system = self.systems[coord]
             if (StarMap.distance_between(origin, coord) <= distance and
-                coord != origin):
+                coord != origin and
+                system is not None):
                 result.append(system)
         return result
 
@@ -47,9 +54,12 @@ class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
             (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5),
+            (0,1,-1) : None,
+            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5),
             (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5),
-            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5),
-            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5)
+            (-1,0,1) : None,
+            (1,-1,0) : None,
+            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
@@ -72,11 +82,11 @@ class StarMapTestCase(unittest.TestCase):
         systems = star_map1.get_systems_within_range((0,0,0), 1)
         self.assertEqual(len(systems), 3)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertEqual(systems[0].name, "Kinorb")
         self.assertTrue(isinstance(systems[1], StarSystem))
-        self.assertEqual(systems[1].name, "Aramis")
         self.assertTrue(isinstance(systems[2], StarSystem))
-        self.assertEqual(systems[2].name, "Mithril")
+        self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Mithril"))
+        self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Mithril"))
+        self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Mithril"))
 
         systems = star_map1.get_systems_within_range((1,0,-1), 1)
         self.assertEqual(len(systems), 1)
@@ -101,6 +111,12 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Yorbund"))
         self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund"))
         self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund"))
+
+    def test_get_systems_within_range_with_None(self):
+        star_map2 = StarMapTestCase.star_map2
+
+        systems = star_map2.get_systems_within_range((0,0,0), 1)
+        self.assertEqual(len(systems), 0)
 
     def test_get_system_at_coordinate(self):
         star_map1 = StarMapTestCase.star_map1
