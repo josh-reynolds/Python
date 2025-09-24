@@ -771,13 +771,10 @@
 #  * [DONE] Examine observers post-jump (depot especially) to verify correctness
 #  * [DONE] BUG: maintenance date discrepancy between Financials & Ship
 #  * [DONE] BUG: possible to be at jump point with zero fuel, and travel inbound to -5 fuel
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
-#  * [    ] Color initial command message string to make it stand out
-#  * [    ] Need to be able to see maintenance date
+#  * [DONE] Color initial command message string to make it stand out
 #  * [    ] Implement JIT world generation to populate an 'infinite' map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
-#  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
@@ -801,6 +798,8 @@
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Need to be able to see maintenance date
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
@@ -832,6 +831,7 @@
 #  * [    ] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  PHASE FIVE ======================================================
+#  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
@@ -848,9 +848,12 @@
 #  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Distinguish between highport and downport
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
+#  * [    ] Color: jump dimming
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  BEYOND ==========================================================
 #  * [    ] Alternate shells: GUI, 'Oregon Trail style', etc. Would be amusing to
 #            do ASCII graphics...
+#  * [    ] Non-canon variations and features - draw from other RPGs, board games,
+#           videogames, and brainstorming
 #

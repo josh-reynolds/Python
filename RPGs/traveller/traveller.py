@@ -1,6 +1,7 @@
 from calendar import Calendar
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red, print_list, int_input, confirm_input
+from utilities import pr_yellow_on_red, int_input, confirm_input
+from utilities import pr_blue, pr_red, print_list
 from ship import Ship
 from cargo import Cargo, CargoDepot
 from star_system import StarSystem
@@ -46,32 +47,32 @@ class Game:
                     cmd.action()
 
     def quit(self):
-        print("Goodbye.")
+        pr_blue("Goodbye.")
         self.running = False
 
     def list_commands(self):
-        print("Available commands:")
+        pr_blue("Available commands:")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
     def liftoff(self):
-        print("Lifting off to orbit.")
+        pr_blue(f"Lifting off to orbit {self.location.name}.")
         self.location.liftoff()
         self.commands = orbit
 
     def land(self):
+        pr_blue(f"Landing on {self.location.name}.")
         if not self.ship.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return
 
-        print(f"Landing on {self.location.name}.")
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = grounded
 
     # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self):
-        print("Travelling out to jump point.")
+        pr_blue(f"Travelling out to {self.location.name} jump point.")
         tfc = self.ship.trip_fuel_cost
         if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
@@ -85,7 +86,7 @@ class Game:
         self.commands = jump
 
     def inbound_from_jump(self):
-        print(f"Travelling in to orbit {self.location.name}.")
+        pr_blue(f"Travelling in to orbit {self.location.name}.")
         tfc = self.ship.trip_fuel_cost
         if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
@@ -99,17 +100,17 @@ class Game:
         self.commands = orbit
 
     def leave(self):
-        print("Leaving trader depot.")
+        pr_blue(f"Leaving {self.location.name} trade depot.")
         self.location.leave_trade()
         self.commands = grounded
 
     def to_trade(self):
-        print("Trading goods.")
+        pr_blue(f"Entering {self.location.name} trade depot.")
         self.location.join_trade()
         self.commands = trade
 
     def jump(self):
-        print("Preparing for jump.")
+        pr_blue("Preparing for jump.")
         jump_fuel = self.ship.jump_fuel_cost
         if jump_fuel > self.ship.current_fuel:
             print(f"Insufficient fuel. Jump requires {jump_fuel} tons, only "
@@ -139,7 +140,7 @@ class Game:
             print("Cancelling jump.")
             return
 
-        print("Executing jump!")
+        pr_red("Executing jump!")
         self.location = destination
         self.location.detail = "jump"
         self.commands = jump
@@ -153,21 +154,21 @@ class Game:
         self.date.plus_week()
 
     def view_world(self):
-        print("Local world characteristics:")
+        pr_blue("Local world characteristics:")
         print(self.location)
 
     def refuel(self):
-        print("Refuelling ship.")
+        pr_blue("Refuelling ship.")
         cost = self.ship.refuel()
         self.financials.debit(cost)
 
     def recharge(self):
-        print("Replenishing life support system.")
+        pr_blue("Replenishing life support system.")
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
     def buy_cargo(self):
-        print("Purchasing cargo.")
+        pr_blue("Purchasing cargo.")
         print_list(self.depot.cargo)
         _, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo is None:
@@ -199,7 +200,7 @@ class Game:
         self.date.day += 1
 
     def sell_cargo(self):
-        print("Selling cargo.")
+        pr_blue("Selling cargo.")
         print_list(self.ship.hold)
         _, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
         if cargo is None:
@@ -228,19 +229,19 @@ class Game:
         self.date.day += 1
 
     def goods(self):
-        print("Available cargo loads:")
+        pr_blue("Available cargo loads:")
         print_list(self.depot.cargo)
 
     def cargo_hold(self):
-        print("Contents of cargo hold:")
+        pr_blue("Contents of cargo hold:")
         print_list(self.ship.cargo_hold())
 
     def wait_week(self):
-        print("Waiting.")
+        pr_blue("Waiting.")
         self.date.plus_week()
 
     def view_ship(self):
-        print("Ship details:")
+        pr_blue("Ship details:")
         print(self.ship)
 
     # Book 2 p. 35
@@ -253,7 +254,7 @@ class Game:
     # including both options. (In all likelihood this will lean heavily
     # toward second edition...)
     def skim(self):
-        print("Skimming fuel from a gas giant planet.")
+        pr_blue("Skimming fuel from a gas giant planet.")
         if not self.location.gas_giant:
             print("There is no gas giant in this system. No fuel skimming possible.")
             return
@@ -271,7 +272,7 @@ class Game:
         self.date.day += 1
 
     def maintenance(self):
-        print("Performing annual ship maintenance.")
+        pr_blue("Performing annual ship maintenance.")
         if self.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return

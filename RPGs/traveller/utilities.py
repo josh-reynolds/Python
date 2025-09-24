@@ -35,6 +35,10 @@ def pr_yellow(string):
     """Print string to console, colored yellow."""
     print(f"\033[1;33;40m{string}\033[00m")
 
+def pr_blue(string):
+    """Print string to console, colored blue."""
+    print(f"\033[1;36;40m{string}\033[00m")
+
 def int_input(prompt):
     while True:
         try:
