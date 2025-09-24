@@ -22,6 +22,9 @@ class StarMap:
     def __init__(self, systems):
         # TO_DO: consider validating coordinates before adding...
         self.systems = systems
+        for key in self.systems.keys():
+            if not StarMap.valid_coordinate(key):
+                raise ValueError(f"Invalid three-axis coordinate: {key}")
 
     # halfway step - final JIT approach should be:
     # * get all coordinates up to range surrounding origin
@@ -190,6 +193,8 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(StarMap.valid_coordinate((0,0,0)))
         self.assertFalse(StarMap.valid_coordinate((1,0,0)))
 
+    def test_invalid_ctor_call(self):
+        self.assertRaises(ValueError, StarMap, {(1,0,0):None})
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
