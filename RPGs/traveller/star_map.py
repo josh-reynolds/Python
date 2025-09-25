@@ -1,7 +1,7 @@
 import unittest
 from random import randint
 from star_system import StarSystem
-from utilities import die_roll
+from utilities import die_roll, constrain
 
 # in the three-axis system:
 #  * the three coordinates sum to zero
@@ -100,7 +100,11 @@ class StarSystemFactory:
 
         size = die_roll() + die_roll() - 2
 
-        atmosphere = 5
+        atmosphere = constrain(die_roll() + die_roll() - 7 + size,
+                               0, 12)
+        if size == 0:
+            atmosphere = 0
+
         hydrographics = 5
         population = 5
         government = 5
@@ -395,7 +399,8 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
         self.assertGreaterEqual(system.size, 0)
         self.assertLessEqual(system.size,10)
-        self.assertEqual(system.atmosphere, 5)
+        self.assertGreaterEqual(system.atmosphere, 0)
+        self.assertLessEqual(system.atmosphere, 12)
         self.assertEqual(system.hydrographics, 5)
         self.assertEqual(system.population, 5)
         self.assertEqual(system.government, 5)
