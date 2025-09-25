@@ -18,13 +18,13 @@ class Game:
                                    {"Ag":-2}))
 
         self.star_map = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5),
+            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 10),
             (0,1,-1) : None,
-            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 8, 4, 0, 7, 5, 5),
-            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 8, 5, 5, 7, 5, 5),
+            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 8, 4, 0, 7, 5, 5, 10),
+            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 8, 5, 5, 7, 5, 5, 10),
             (-1,0,1) : None,
             (1,-1,0) : None,
-            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 8, 6, 5, 8, 5, 5)
+            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 8, 6, 5, 8, 5, 5, 10)
             })
 
         self.location = self.star_map.get_system_at_coordinate((0,0,0))
@@ -138,7 +138,7 @@ class Game:
         coordinate = destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
-        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)?")
+        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling jump.")
             return

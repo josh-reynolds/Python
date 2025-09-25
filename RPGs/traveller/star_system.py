@@ -1,7 +1,7 @@
 import unittest
 class StarSystem:
     def __init__(self, name, coordinate, starport, size, atmosphere, 
-                 hydrographics, population, government, law, gas_giant=True):
+                 hydrographics, population, government, law, tech, gas_giant=True):
         self.name = name
         self.coordinate = coordinate
         self.starport = starport
@@ -11,6 +11,7 @@ class StarSystem:
         self.population = population
         self.government = government
         self.law = law
+        self.tech = tech
         self.gas_giant = gas_giant
         self.detail = "orbit"
 
@@ -62,7 +63,7 @@ class StarSystem:
     def __repr__(self):
         url = f"{self.starport}{self.size}{self.atmosphere}" +\
               f"{self.hydrographics}{self.population}{self.government}" +\
-              f"{self.law}"
+              f"{self.law}-{self.tech}"
         if self.agricultural:
             url += " Ag"
         if self.nonagricultural:
@@ -125,7 +126,7 @@ class StarSystem:
 
 class StarSystemTestCase(unittest.TestCase):
     def setUp(self):
-        StarSystemTestCase.system = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, True)
+        StarSystemTestCase.system = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
 
     def test_coordinates(self):
         world = StarSystemTestCase.system
@@ -181,7 +182,7 @@ class StarSystemTestCase(unittest.TestCase):
 
     def test_world_string(self):
         world = StarSystemTestCase.system
-        self.assertEqual(f"{world}", "(0, 0, 0) - Test - A999999 In - G")
+        self.assertEqual(f"{world}", "(0, 0, 0) - Test - A999999-9 In - G")
 
     def test_description(self):
         world = StarSystemTestCase.system
@@ -215,8 +216,8 @@ class StarSystemTestCase(unittest.TestCase):
 
     def test_equality(self):
         world1 = StarSystemTestCase.system
-        world2 = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, True)
-        world3 = StarSystem("Foo", (0,0,0), "A", 9, 9, 9, 9, 9, 9, True)
+        world2 = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
+        world3 = StarSystem("Foo", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
 
         self.assertEqual(world1, world2)
         self.assertNotEqual(world1, world3)
@@ -225,32 +226,32 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertNotEqual(world1, world2)
 
     def test_trade_modifiers(self):
-        ag_world = StarSystem("Agricultural", (0,0,0), "A", 8, 5, 5, 7, 5, 5, True)
+        ag_world = StarSystem("Agricultural", (0,0,0), "A", 8, 5, 5, 7, 5, 5, 9, True)
         self.assertTrue(ag_world.agricultural)
-        self.assertEqual(f"{ag_world}", "(0, 0, 0) - Agricultural - A855755 Ag - G")
+        self.assertEqual(f"{ag_world}", "(0, 0, 0) - Agricultural - A855755-9 Ag - G")
 
-        na_world = StarSystem("Non-agricultural", (0,0,0), "A", 8, 0, 3, 7, 5, 5, True)
+        na_world = StarSystem("Non-agricultural", (0,0,0), "A", 8, 0, 3, 7, 5, 5, 9, True)
         self.assertTrue(na_world.nonagricultural)
-        self.assertEqual(f"{na_world}", "(0, 0, 0) - Non-agricultural - A803755 Na - G")
+        self.assertEqual(f"{na_world}", "(0, 0, 0) - Non-agricultural - A803755-9 Na - G")
 
-        in_world = StarSystem("Industrial", (0,0,0), "A", 8, 7, 5, 9, 5, 5, True)
+        in_world = StarSystem("Industrial", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 9, True)
         self.assertTrue(in_world.industrial)
-        self.assertEqual(f"{in_world}", "(0, 0, 0) - Industrial - A875955 In - G")
+        self.assertEqual(f"{in_world}", "(0, 0, 0) - Industrial - A875955-9 In - G")
 
-        ni_world = StarSystem("Non-industrial", (0,0,0), "A", 8, 3, 5, 5, 5, 5, True)
+        ni_world = StarSystem("Non-industrial", (0,0,0), "A", 8, 3, 5, 5, 5, 5, 9, True)
         self.assertTrue(ni_world.nonindustrial)
-        self.assertEqual(f"{ni_world}", "(0, 0, 0) - Non-industrial - A835555 Ni - G")
+        self.assertEqual(f"{ni_world}", "(0, 0, 0) - Non-industrial - A835555-9 Ni - G")
 
-        ri_world = StarSystem("Rich", (0,0,0), "A", 8, 6, 5, 8, 5, 5, True)
+        ri_world = StarSystem("Rich", (0,0,0), "A", 8, 6, 5, 8, 5, 5, 9, True)
         self.assertTrue(ri_world.rich)
-        self.assertEqual(f"{ri_world}", "(0, 0, 0) - Rich - A865855 Ri - G")
+        self.assertEqual(f"{ri_world}", "(0, 0, 0) - Rich - A865855-9 Ri - G")
 
-        po_world = StarSystem("Poor", (0,0,0), "A", 8, 4, 0, 7, 5, 5, True)
+        po_world = StarSystem("Poor", (0,0,0), "A", 8, 4, 0, 7, 5, 5, 9, True)
         self.assertTrue(po_world.poor)
-        self.assertEqual(f"{po_world}", "(0, 0, 0) - Poor - A840755 Po - G")
+        self.assertEqual(f"{po_world}", "(0, 0, 0) - Poor - A840755-9 Po - G")
 
-        plain_world = StarSystem("Plain", (0,0,0), "A", 8, 3, 5, 7, 5, 5, True)
-        self.assertEqual(f"{plain_world}", "(0, 0, 0) - Plain - A835755 - G")
+        plain_world = StarSystem("Plain", (0,0,0), "A", 8, 3, 5, 7, 5, 5, 9, True)
+        self.assertEqual(f"{plain_world}", "(0, 0, 0) - Plain - A835755-9 - G")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
