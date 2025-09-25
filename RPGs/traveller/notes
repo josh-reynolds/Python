@@ -682,6 +682,14 @@
 #   which two axes govern that slice. (And of course adding
 #   two coordinates together is basic vector translation...)
 #
+#   I have this working for everything except the edge hexes. Need
+#   to work out the formula. But another idea occurred to me. What
+#   if we just create the full set of potential hexes based on range,
+#   then eliminate the invalid ones? Tempted to do this and see
+#   which is more performant. I think this new idea would be less
+#   code at a minimum, and probably easier to comprehend, than 
+#   some geometry-based logic.
+#
 # * That done, the last bit is easy: get_systems_within_range()
 #   should look at all hexes by coordinate, not by what is present
 #   in the dictionary. An if a given coordinate is not in the 

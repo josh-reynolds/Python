@@ -18,6 +18,63 @@ from star_system import StarSystem
 # (x,0,-x) & (-x,0,x)
 # (x,-x,0) & (-x,x,0)
 
+# A ring of hexes at a given distance from a
+# central origin hex contains six axial hexes
+# and a variable number of edge hexes. There 
+# are (range-1)*6 such hexes, so 0 at range 1,
+# 6 at range 2, 12 at range 3, etc. So the total
+# number of hexes in a ring are equal to: 
+#   6 + (range-1)*6.
+
+# As noted above, axial hexes are trivial to
+# figure out. Just all the valid variations of
+# +range, -range, and zero (one of each per coord).
+
+# Edge hexes are trickier. They are grouped into
+# six 'pie slices,' each bounded by two different
+# axes. If we call the axes red, blue, green, then
+# the slices are:
+#   +blue, +red     (-green)
+#   -red, -green    (+blue)
+#   +blue, +green   (-red)
+#   -blue, -red     (+green)
+#   +red, +green    (-blue)
+#   -blue, -green   (+red)
+#
+# (Each slice also sits entirely to one side of the
+#  third 'non-bounding' axis, as noted in parens above.)
+#
+# The edge coordinates at a given range are the sum of
+# the corresponding axial hexes along that span, just
+# like with Cartesian coordinates. It's the same sort
+# of transform - go over 3 on the x-axis, and up 2 on
+# the y-axis, and arrive at (3,2). Instead we would
+# go over 3 on the blue-axis, and up 2 on the red-axis,
+# and arrive at (3,2,-5). The third coordinate is 
+# really just a checksum and can be calculated given
+# the other two, since sum(a,b,c) = 0. Tricky bit is this
+# hex is _five_ away from the origin, so arriving at it
+# from just the range value is tricky.
+
+# An alternate strategy:
+# * the complete set of coordinates at a given range x
+#   (including invalid coordinates) is given by:
+#   [(a,b,c) for a in range(-x,x+1) 
+#            for b in range(-x,x+1)
+#            for c in range(-x,x+1)]
+#  
+# * the length of this list is (2x+1)^3, so
+#   27 (3 cubed) at range 1, 125 (5 cubed) at range 2, etc.
+#
+# * we can then filter out the invalid members with a 
+#   simple test, and voila! There's the list at range x.
+#
+#   [a for a in full_list if sum(a)==0]
+#
+# Then, if we want to find hexes around some arbitrary
+# point, we just translate everything to that new origin
+# (by adding the new origin to every coordinate of course).
+
 class StarMap:
     def __init__(self, systems):
         # TO_DO: consider validating coordinates before adding...
@@ -86,6 +143,12 @@ class StarMap:
             for _ in range(6):
                 result.append((0,0,0))    # <== PLACEHOLDER
         return result
+
+    @classmethod
+    def get_all_coords(cls, radius):
+        return [(a,b,c) for a in range(-radius,radius+1) 
+                        for b in range(-radius,radius+1)
+                        for c in range(-radius,radius+1)]
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
@@ -252,6 +315,16 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue((-3,0,3) in coords)
         self.assertTrue((3,-3,0) in coords)
         self.assertTrue((-3,3,0) in coords)
+
+    def test_get_all_coords(self):
+        coords = StarMap.get_all_coords(1)
+        self.assertEqual(len(coords), 27)   # 3 cubed
+
+        coords = StarMap.get_all_coords(2)
+        self.assertEqual(len(coords), 125)  # 5 cubed
+
+        coords = StarMap.get_all_coords(3)
+        self.assertEqual(len(coords), 343)  # 7 cubed
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
