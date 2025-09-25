@@ -116,13 +116,19 @@ class StarMap:
     def valid_coordinate(cls, coord):
         return sum(coord) == 0
 
+    # TO_DO: should we default origin param to (0,0,0)?
     @classmethod
     def get_coordinates_within_range(cls, origin, radius):
         full_list = StarMap.get_all_coords(radius)
+
         filtered = [a for a in full_list if sum(a)==0]
         filtered.remove((0,0,0))
-        return filtered
-        # still need to translate to the origin if not (0,0,0)
+
+        translated = [(f[0] + origin[0],
+                       f[1] + origin[1],
+                       f[2] + origin[2]) for f in filtered]
+
+        return translated
 
     @classmethod
     def get_all_coords(cls, radius):
@@ -311,6 +317,16 @@ class StarMapTestCase(unittest.TestCase):
 
         coords = StarMap.get_all_coords(3)
         self.assertEqual(len(coords), 343)  # 7 cubed
+
+    def test_translated_coords(self):
+        coords = StarMap.get_coordinates_within_range((-1,-1,2), 1)
+        self.assertEqual(len(coords), 6)
+        self.assertTrue((0,-1,1) in coords) # axial hexes
+        self.assertTrue((-1,0,1) in coords)
+        self.assertTrue((-2,0,2) in coords)
+        self.assertTrue((-2,-1,3) in coords)
+        self.assertTrue((-1,-2,3) in coords)
+        self.assertTrue((0,-2,2) in coords) # no edge hexes
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
