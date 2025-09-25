@@ -852,7 +852,7 @@
 #  * [DONE] Add command to list out the star_map
 #  * [DONE] Create a StarSystemFactory (we still want to be able to directly
 #           create a world via params, so don't want this in the ctor)
-#  * [....] Handle UWP formatting issue with 'hex' codes. Should we have a class?
+#  * [DONE] Handle UWP formatting issue with 'hex' codes. Should we have a class?
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
@@ -867,6 +867,7 @@
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Generate world names
+#  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()

@@ -61,9 +61,9 @@ class StarSystem:
     #    chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ"    # omit 'I' and 'O'
     #    e_hex = chars[value]
     def __repr__(self):
-        url = f"{self.starport}{self.size}{self.atmosphere}" +\
-              f"{self.hydrographics}{self.population}{self.government}" +\
-              f"{self.law}-{self.tech}"
+        url = f"{self.starport}{self.size:X}{self.atmosphere:X}" +\
+              f"{self.hydrographics:X}{self.population:X}{self.government:X}" +\
+              f"{self.law:X}-{self.tech:X}"
         if self.agricultural:
             url += " Ag"
         if self.nonagricultural:
