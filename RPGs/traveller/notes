@@ -824,8 +824,8 @@
 #            potentially...)
 #  * [DONE] Calculate three-axis coordinates surrounding an origin hex at given range
 #  * [DONE] Implement JIT world generation to populate an 'infinite' map
-#  * [    ] World strings should include coordinates
-#  * [    ] Verify map persistence
+#  * [DONE] World strings should include coordinates
+#  * [DONE] Verify map persistence
 #  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
