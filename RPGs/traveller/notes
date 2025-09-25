@@ -850,7 +850,7 @@
 #  * [DONE] World strings should include coordinates
 #  * [DONE] Verify map persistence
 #  * [DONE] Add command to list out the star_map
-#  * [....] Create a StarSystemFactory (we still want to be able to directly
+#  * [DONE] Create a StarSystemFactory (we still want to be able to directly
 #           create a world via params, so don't want this in the ctor)
 #  * [....] Handle UWP formatting issue with 'hex' codes. Should we have a class?
 #  * [    ] Write up a manual test script
@@ -866,6 +866,7 @@
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [    ] Generate world names
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()

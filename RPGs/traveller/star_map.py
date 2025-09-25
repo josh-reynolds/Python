@@ -168,7 +168,11 @@ class StarSystemFactory:
 
         tech = constrain(die_roll() + dm, 0, 18)
 
-        gas_giant = True
+        if die_roll() + die_roll() < 10:
+            gas_giant = True
+        else:
+            gas_giant = False
+
         return StarSystem(name, coordinate, starport, size, atmosphere,
                           hydrographics, population, government, law, tech, gas_giant)
 
@@ -479,8 +483,6 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
         self.assertGreaterEqual(system.tech, 0)
         self.assertLessEqual(system.tech, 18)
-
-        self.assertTrue(system.gas_giant)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
