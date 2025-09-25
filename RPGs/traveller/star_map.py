@@ -70,6 +70,8 @@ from star_system import StarSystem
 #   simple test, and voila! There's the list at range x.
 #
 #   [a for a in full_list if sum(a)==0]
+#   a.remove((0,0,0))                   # probably also want
+#                                       # to drop the origin...
 #
 # Then, if we want to find hexes around some arbitrary
 # point, we just translate everything to that new origin
@@ -77,7 +79,6 @@ from star_system import StarSystem
 
 class StarMap:
     def __init__(self, systems):
-        # TO_DO: consider validating coordinates before adding...
         self.systems = systems
         for key in self.systems.keys():
             if not StarMap.valid_coordinate(key):
@@ -116,33 +117,12 @@ class StarMap:
         return sum(coord) == 0
 
     @classmethod
-    def get_coordinates_within_range(cls, origin, range_):
-        result = []
-        for i in range(range_):
-            result += StarMap.get_coordinates_at_range(origin, i+1)
-        return result
-
-    @classmethod
-    def get_coordinates_at_range(cls, origin, range_):
-        result = StarMap.axis_hexes(range_) + StarMap.edge_hexes(range_)
-        return result
-
-    @classmethod
-    def axis_hexes(cls, range_):
-        return [(0,range_,-range_),
-                (0,-range_,range_),
-                (range_,0,-range_),
-                (-range_,0,range_),
-                (range_,-range_,0),
-                (-range_,range_,0)]
-
-    @classmethod
-    def edge_hexes(cls, range_):
-        result = []
-        for i in range(range_-1):
-            for _ in range(6):
-                result.append((0,0,0))    # <== PLACEHOLDER
-        return result
+    def get_coordinates_within_range(cls, origin, radius):
+        full_list = StarMap.get_all_coords(radius)
+        filtered = [a for a in full_list if sum(a)==0]
+        filtered.remove((0,0,0))
+        return filtered
+        # still need to translate to the origin if not (0,0,0)
 
     @classmethod
     def get_all_coords(cls, radius):
@@ -291,30 +271,36 @@ class StarMapTestCase(unittest.TestCase):
     def test_get_coordinates_within_range(self):
         coords = StarMap.get_coordinates_within_range((0,0,0), 1)
         self.assertEqual(len(coords), 6)
-        self.assertTrue((0,1,-1) in coords)
+        self.assertTrue((0,1,-1) in coords) # axial hexes
         self.assertTrue((0,-1,1) in coords)
         self.assertTrue((1,0,-1) in coords)
         self.assertTrue((-1,0,1) in coords)
         self.assertTrue((1,-1,0) in coords)
-        self.assertTrue((-1,1,0) in coords)
+        self.assertTrue((-1,1,0) in coords) # no edge hexes
 
         coords = StarMap.get_coordinates_within_range((0,0,0), 2)
         self.assertEqual(len(coords), 18)
-        self.assertTrue((0,2,-2) in coords)
+        self.assertTrue((0,2,-2) in coords) # axial hexes
         self.assertTrue((0,-2,2) in coords)
         self.assertTrue((2,0,-2) in coords)
         self.assertTrue((-2,0,2) in coords)
         self.assertTrue((2,-2,0) in coords)
         self.assertTrue((-2,2,0) in coords)
+        self.assertTrue((1,1,-2) in coords) # select edge hexes
+        self.assertTrue((-1,-1,2) in coords)
+        self.assertTrue((2,-1,-1) in coords)
 
         coords = StarMap.get_coordinates_within_range((0,0,0), 3)
         self.assertEqual(len(coords), 36)
-        self.assertTrue((0,3,-3) in coords)
+        self.assertTrue((0,3,-3) in coords) # axial hexes
         self.assertTrue((0,-3,3) in coords)
         self.assertTrue((3,0,-3) in coords)
         self.assertTrue((-3,0,3) in coords)
         self.assertTrue((3,-3,0) in coords)
         self.assertTrue((-3,3,0) in coords)
+        self.assertTrue((2,1,-3) in coords) # select edge hexes
+        self.assertTrue((2,-3,1) in coords)
+        self.assertTrue((-3,2,1) in coords)
 
     def test_get_all_coords(self):
         coords = StarMap.get_all_coords(1)
