@@ -247,6 +247,11 @@ class Game:
         pr_blue("Ship details:")
         print(self.ship)
 
+    def view_map(self):
+        pr_blue("All known star systems:")
+        systems = self.star_map.get_all_systems()
+        print_list(systems)
+
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
     # gas giant if unavailable elsewhere. Most star systems have at
@@ -312,7 +317,9 @@ always = [Command('q', 'Quit',
           Command('p', 'View ship details',
                   game.view_ship),
           Command('w', 'Wait a week',
-                  game.wait_week)]
+                  game.wait_week),
+          Command('a', 'View star map',
+                  game.view_map)]
 
 grounded = always + [Command('l', 'Lift off to orbit',
                              game.liftoff),

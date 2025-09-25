@@ -826,7 +826,7 @@
 #  * [DONE] Implement JIT world generation to populate an 'infinite' map
 #  * [DONE] World strings should include coordinates
 #  * [DONE] Verify map persistence
-#  * [    ] Add command to list out the star_map - take input for range?
+#  * [DONE] Add command to list out the star_map
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
@@ -855,6 +855,10 @@
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Need to be able to see maintenance date
+#  * [    ] List star map to take a range parameter?
+#  * [    ] Can we colorize current location in star map listing?
+#  * [    ] Consider generating new star systems when jumping in, rather than
+#           when jumping out as in current implementation
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
