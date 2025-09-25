@@ -890,6 +890,7 @@
 #  # [    ] Break up Game class (MVC?)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
+#  * [    ] Assess whether a '2d6' method, or variable number of dice, is useful
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Consider moving tests to separate modules

@@ -1,6 +1,7 @@
 import unittest
 from random import randint
 from star_system import StarSystem
+from utilities import die_roll
 
 # in the three-axis system:
 #  * the three coordinates sum to zero
@@ -82,7 +83,21 @@ class StarSystemFactory:
     @classmethod
     def generate(cls, coordinate):
         name = "Test"
-        starport = "A"
+
+        roll = die_roll() + die_roll()
+        if roll <= 4:
+            starport = "A"
+        elif roll <= 6:
+            starport = "B"
+        elif roll <= 8:
+            starport = "C"
+        elif roll <= 9:
+            starport = "D"
+        elif roll <= 11:
+            starport = "E"
+        else:
+            starport = "X"
+
         atmosphere = 5
         hydrographics = 5
         population = 5
@@ -375,7 +390,7 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         system = StarSystemFactory.generate((0,0,0))
         self.assertEqual(system.name, "Test")
         self.assertEqual(system.coordinate, (0,0,0))
-        self.assertEqual(system.starport, "A")
+        self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
         self.assertEqual(system.atmosphere, 5)
         self.assertEqual(system.hydrographics, 5)
         self.assertEqual(system.population, 5)
