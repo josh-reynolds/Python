@@ -850,7 +850,9 @@
 #  * [DONE] World strings should include coordinates
 #  * [DONE] Verify map persistence
 #  * [DONE] Add command to list out the star_map
-#  * [....] Create a proper UWP class and generator in the StarSystem ctor
+#  * [....] Create a StarSystemFactory (we still want to be able to directly
+#           create a world via params, so don't want this in the ctor)
+#  * [    ] Handle UWP formatting issue with 'hex' codes. Should we have a class?
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
@@ -917,6 +919,7 @@
 #  PHASE FIVE ======================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Traveller '77 had route determination. Add this?
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
