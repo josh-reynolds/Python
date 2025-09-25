@@ -126,9 +126,13 @@ class StarSystemFactory:
         government = constrain(die_roll() + die_roll() + dm,
                                0,13)
 
+        dm = government - 7
+        law = constrain(die_roll() + die_roll() + dm,
+                               0,9)
+
         gas_giant = True
         return StarSystem(name, coordinate, starport, size, atmosphere,
-                          hydrographics, population, government, gas_giant)
+                          hydrographics, population, government, law, gas_giant)
 
 class StarMap:
     def __init__(self, systems):
@@ -200,17 +204,17 @@ class StarMap:
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5),
+            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5),
             (0,1,-1) : None,
-            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5),
-            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5),
+            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5),
+            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5),
             (-1,0,1) : None,
             (1,-1,0) : None,
-            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5)
+            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5),
+            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5),
             (0,1,-1) : None,
             (0,-1,1) : None,
             (1,0,-1) : None,
@@ -404,10 +408,10 @@ class StarMapTestCase(unittest.TestCase):
         star_map1 = StarMapTestCase.star_map1
         systems = star_map1.get_all_systems()
         self.assertEqual(len(systems), 4)
-        self.assertEqual(systems[0], StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5))
-        self.assertEqual(systems[1], StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5))
-        self.assertEqual(systems[2], StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5))
-        self.assertEqual(systems[3], StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5))
+        self.assertEqual(systems[0], StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[1], StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[2], StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[3], StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5))
 
 class StarSystemFactoryTestCase(unittest.TestCase):
     def test_generate(self):
@@ -431,6 +435,9 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
         self.assertGreaterEqual(system.government, 0)
         self.assertLessEqual(system.government, 13)
+
+        self.assertGreaterEqual(system.law, 0)
+        self.assertLessEqual(system.law, 9)
 
         self.assertTrue(system.gas_giant)
 
