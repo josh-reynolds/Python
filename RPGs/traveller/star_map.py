@@ -98,14 +98,23 @@ class StarSystemFactory:
         else:
             starport = "X"
 
-        size = die_roll() + die_roll() - 2
+        dm = -2
+        size = die_roll() + die_roll() + dm
 
-        atmosphere = constrain(die_roll() + die_roll() - 7 + size,
+        dm = size -7
+        atmosphere = constrain(die_roll() + die_roll() + dm,
                                0, 12)
         if size == 0:
             atmosphere = 0
 
-        hydrographics = 5
+        dm = size - 7
+        if atmosphere <= 1 or atmosphere > 9:
+            dm -= 4
+        hydrographics = constrain(die_roll() + die_roll() + dm,
+                                  0,10)
+        if size <= 1:
+            hydrographics = 0
+
         population = 5
         government = 5
         gas_giant = True
@@ -396,12 +405,18 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         system = StarSystemFactory.generate((0,0,0))
         self.assertEqual(system.name, "Test")
         self.assertEqual(system.coordinate, (0,0,0))
+
         self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
+
         self.assertGreaterEqual(system.size, 0)
         self.assertLessEqual(system.size,10)
+
         self.assertGreaterEqual(system.atmosphere, 0)
         self.assertLessEqual(system.atmosphere, 12)
-        self.assertEqual(system.hydrographics, 5)
+
+        self.assertGreaterEqual(system.hydrographics, 0)
+        self.assertLessEqual(system.hydrographics, 10)
+
         self.assertEqual(system.population, 5)
         self.assertEqual(system.government, 5)
         self.assertTrue(system.gas_giant)
