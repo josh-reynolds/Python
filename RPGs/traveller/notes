@@ -690,6 +690,21 @@
 #   code at a minimum, and probably easier to comprehend, than 
 #   some geometry-based logic.
 #
+#   As it turns out, the list comprehension approach was very
+#   easy to build and verify. And certainly less code overall.
+#   Probably more readable to as long as you're comfortable with
+#   the syntax. I stripped out all the geometry-calculating
+#   methods. Maybe sometime it would be interesting to figure
+#   out, and I suppose there's a theoretical performance
+#   question to understand, but at the scale this program is
+#   working, I don't think it's meaningful. I hope. Stress test 
+#   with a _really_ big map? What's the big-O for my algorithm?
+#   There is a cube of range involved in get_all_coords(),
+#   which makes me a bit leery. We probably only ever run
+#   it with small numbers. Jump-6 is the maximum in Traveller,
+#   and a reasonable maximum for grabbing a bunch of coordinates
+#   all at once. We'll keep an eye on performance and see.
+#
 # * That done, the last bit is easy: get_systems_within_range()
 #   should look at all hexes by coordinate, not by what is present
 #   in the dictionary. An if a given coordinate is not in the 
@@ -700,6 +715,14 @@
 # new systems being added around the edges as needed. Right 
 # now they're all hard-coded to a test value. Need to create
 # some kind of factory to build them. But it works!
+#
+# I did a bit more validation, and some manual testing flying
+# around this little galaxy. It pushed me to implement some
+# better visibility into the map, so coordinates are now shown
+# when printing StarSystems, and we have a command to dump out
+# the entire map at will. It is persistent within a session - 
+# I can travel across the map and back, and still see the same
+# (generated) systems in the same places. On to world factory.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -827,7 +850,7 @@
 #  * [DONE] World strings should include coordinates
 #  * [DONE] Verify map persistence
 #  * [DONE] Add command to list out the star_map
-#  * [    ] Create a proper UWP class and generator in the StarSystem ctor
+#  * [....] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping

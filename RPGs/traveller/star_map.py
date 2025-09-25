@@ -78,6 +78,19 @@ from star_system import StarSystem
 # point, we just translate everything to that new origin
 # (by adding the new origin to every coordinate of course).
 
+class StarSystemFactory:
+    @classmethod
+    def generate(cls, coordinate):
+        name = "Test"
+        starport = "A"
+        atmosphere = 5
+        hydrographics = 5
+        population = 5
+        government = 5
+        gas_giant = True
+        return StarSystem(name, coordinate, starport, atmosphere,
+                          hydrographics, population, government, gas_giant)
+
 class StarMap:
     def __init__(self, systems):
         self.systems = systems
@@ -109,7 +122,7 @@ class StarMap:
     @classmethod
     def generate_new_system(cls, coordinate):
         if randint(1,6) >= 4:
-            return StarSystem("Test", coordinate, "A", 5, 5, 5, 5)
+            return StarSystemFactory.generate(coordinate)
         return None
 
     @classmethod
@@ -356,6 +369,18 @@ class StarMapTestCase(unittest.TestCase):
         self.assertEqual(systems[1], StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5))
         self.assertEqual(systems[2], StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5))
         self.assertEqual(systems[3], StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5))
+
+class StarSystemFactoryTestCase(unittest.TestCase):
+    def test_generate(self):
+        system = StarSystemFactory.generate((0,0,0))
+        self.assertEqual(system.name, "Test")
+        self.assertEqual(system.coordinate, (0,0,0))
+        self.assertEqual(system.starport, "A")
+        self.assertEqual(system.atmosphere, 5)
+        self.assertEqual(system.hydrographics, 5)
+        self.assertEqual(system.population, 5)
+        self.assertEqual(system.government, 5)
+        self.assertTrue(system.gas_giant)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
