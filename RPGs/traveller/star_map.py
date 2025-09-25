@@ -79,6 +79,10 @@ from utilities import die_roll, constrain
 # point, we just translate everything to that new origin
 # (by adding the new origin to every coordinate of course).
 
+# World generation from Traveller '77 Book 3 pp. 4-12
+# constraints based on the tables, though the dice throws
+# in the text can produce values outside this range in
+# some cases
 class StarSystemFactory:
     @classmethod
     def generate(cls, coordinate):
@@ -115,8 +119,13 @@ class StarSystemFactory:
         if size <= 1:
             hydrographics = 0
 
-        population = 5
-        government = 5
+        dm = -2
+        population = die_roll() + die_roll() + dm
+
+        dm = population - 7
+        government = constrain(die_roll() + die_roll() + dm,
+                               0,13)
+
         gas_giant = True
         return StarSystem(name, coordinate, starport, size, atmosphere,
                           hydrographics, population, government, gas_giant)
@@ -417,8 +426,12 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         self.assertGreaterEqual(system.hydrographics, 0)
         self.assertLessEqual(system.hydrographics, 10)
 
-        self.assertEqual(system.population, 5)
-        self.assertEqual(system.government, 5)
+        self.assertGreaterEqual(system.population, 0)
+        self.assertLessEqual(system.population, 10)
+
+        self.assertGreaterEqual(system.government, 0)
+        self.assertLessEqual(system.government, 13)
+
         self.assertTrue(system.gas_giant)
 
 # -------------------------------------------------------------------

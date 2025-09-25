@@ -852,7 +852,7 @@
 #  * [DONE] Add command to list out the star_map
 #  * [....] Create a StarSystemFactory (we still want to be able to directly
 #           create a world via params, so don't want this in the ctor)
-#  * [    ] Handle UWP formatting issue with 'hex' codes. Should we have a class?
+#  * [....] Handle UWP formatting issue with 'hex' codes. Should we have a class?
 #  * [    ] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping

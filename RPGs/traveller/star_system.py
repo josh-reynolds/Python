@@ -50,6 +50,14 @@ class StarSystem:
             return self.name == other.name and self.coordinate == other.coordinate
         return NotImplemented
 
+    # TO_DO: we will need to handle digits > 9. Traveller uses 'extended hex'
+    # for now we can probably get away with simple f-string conversion: 
+    #    f"{value:X}"
+    # Check if '77 can generate any values above 15 (F). It's certainly
+    # possible in later editions, not sure here...
+    # If so, a simple method that indexes a string would work.
+    #    chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ"    # omit 'I' and 'O'
+    #    e_hex = chars[value]
     def __repr__(self):
         url = f"{self.starport}{self.size}{self.atmosphere}" +\
               f"{self.hydrographics}{self.population}{self.government}"
