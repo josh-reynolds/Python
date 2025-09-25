@@ -1,4 +1,5 @@
 import unittest
+from random import randint
 from star_system import StarSystem
 
 # in the three-axis system:
@@ -84,24 +85,27 @@ class StarMap:
             if not StarMap.valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
 
-    # halfway step - final JIT approach should be:
-    # * get all coordinates up to range surrounding origin
-    # * three possibilities:
-    #   1) in dictionary, and StarSystem - add to result
-    #   2) in dictionary, and None - leave out of result
-    #   3) not in dictionary - generate, handle as 1 & 2
     def get_systems_within_range(self, origin, distance):
         result = []
-        for coord in self.systems:
-            system = self.systems[coord]
-            if (StarMap.distance_between(origin, coord) <= distance and
-                coord != origin and
-                system is not None):
-                result.append(system)
+        for coord in StarMap.get_coordinates_within_range(origin, distance):
+            if coord in self.systems:
+                if self.systems[coord] is not None:
+                    result.append(self.systems[coord])
+            else:
+                system = StarMap.generate_new_system(coord)
+                self.systems[coord] = system
+                if system is not None:
+                    result.append(system)
         return result
 
     def get_system_at_coordinate(self, coordinate):
         return self.systems[coordinate]
+
+    @classmethod
+    def generate_new_system(cls, coordinate):
+        if randint(1,6) >= 4:
+            return StarSystem("Test", coordinate, "A", 5, 5, 5, 5)
+        return None
 
     @classmethod
     def distance_between(cls, first, second):
@@ -175,28 +179,24 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Mithril"))
 
         systems = star_map1.get_systems_within_range((1,0,-1), 1)
-        self.assertEqual(len(systems), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertEqual(systems[0].name, "Yorbund")
+        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((-1,1,0), 1)
-        self.assertEqual(len(systems), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertEqual(systems[0].name, "Yorbund")
+        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((0,-1,1), 1)
-        self.assertEqual(len(systems), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertEqual(systems[0].name, "Yorbund")
+        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((0,-1,1), 2)
-        self.assertEqual(len(systems), 3)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertTrue(isinstance(systems[1], StarSystem))
         self.assertTrue(isinstance(systems[2], StarSystem))
-        self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Yorbund"))
-        self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund"))
-        self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund"))
+        self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
+        self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
+        self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
 
     def test_get_systems_within_range_with_None(self):
         star_map2 = StarMapTestCase.star_map2
@@ -327,6 +327,21 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue((-2,-1,3) in coords)
         self.assertTrue((-1,-2,3) in coords)
         self.assertTrue((0,-2,2) in coords) # no edge hexes
+
+    def test_generate_new_system(self):
+        # function output is random, so we can only test
+        # sample sizes - guessing at a reasonable bound,
+        # but this could occasionally fail nontheless
+        worlds = []
+        for _ in range(100):
+            world = StarMap.generate_new_system((0,0,0))
+            if world is not None:
+                worlds.append(world)
+        self.assertTrue(len(worlds) < 75)
+        self.assertTrue(len(worlds) > 25)
+
+        for item in worlds:
+            self.assertTrue(isinstance(item, StarSystem))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

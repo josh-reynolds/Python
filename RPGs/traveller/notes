@@ -695,6 +695,11 @@
 #   in the dictionary. An if a given coordinate is not in the 
 #   dictionary yet, generate it. The result will be either
 #   None or a StarSystem.
+#
+# All this is working. The map is effectively infinite, with 
+# new systems being added around the edges as needed. Right 
+# now they're all hard-coded to a test value. Need to create
+# some kind of factory to build them. But it works!
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -817,8 +822,10 @@
 #           (fixed - but should we do the same for outbound? as long as there is
 #            a gas giant it would be fine, but otherwise player can get stranded
 #            potentially...)
-#  * [....] Calculate three-axis coordinates surrounding an origin hex at given range
-#  * [....] Implement JIT world generation to populate an 'infinite' map
+#  * [DONE] Calculate three-axis coordinates surrounding an origin hex at given range
+#  * [DONE] Implement JIT world generation to populate an 'infinite' map
+#  * [    ] World strings should include coordinates
+#  * [    ] Verify map persistence
 #  * [    ] Add command to list out the star_map - take input for range?
 #  * [    ] Create a proper UWP class and generator in the StarSystem ctor
 #  * [    ] Write up a manual test script
