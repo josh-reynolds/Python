@@ -988,15 +988,25 @@
 #  * [DONE] Only show matching destination when re-entering load_freight() if freight
 #           already loaded
 #  * [DONE] Finish unload_freight() method
+#  * [DONE] Issue warning if jump destination does not match Ship.destination
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded
-#  * [....] Issue warning if jump destination does not match Ship.destination
 #  * [    ] Freight list per-destination should persist
 #  * [    ] Freight list per-destination should be refreshed weekly
 #  * [    ] Only show matching destination for freight if passengers already picked
 #  * [    ] Should we automatically exit freight loop if none left will fit in hold?
 #  * [    ] Should we allow putting freight back?
 #  * [    ] Freight should be blocked (or better, filtered) when selling cargo
+#  * [    ] load_freight() corner case: 0 tons freight selected
+#  * [    ] unload_freight() corner case: destination set but no freight on board
+#  * [    ] unload_freight() corner case: freight for different destination on board
+#  * [    ] unload_freight() corner case: freight for multiple destinations on board
+#  * [    ] multiple destinations is tricky... in that case, what should the field
+#           be set to? And if you offload one set, how does the field look afterwards?
+#           But we ruled this out earlier, right? Implicit expiration date on shipping?
+#  * [    ] load_freight() corner case: running on destination world before offloading,
+#           so flag is still set
+#  * [    ] Adjust reset of destination flag in unload_freight() once we have passengers
 #  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest

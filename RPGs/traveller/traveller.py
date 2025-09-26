@@ -139,6 +139,10 @@ class Game:
         coordinate = destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
+        if self.ship.destination is not None and self.ship.destination != destination:
+            pr_red(f"Your contracted destination is {self.ship.destination.name} " + 
+                   f"not {destination.name}.")
+
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling jump.")
@@ -313,8 +317,6 @@ class Game:
     # Freight list needs to persist between invocations, and
     #   be refreshed weekly like cargo
     # If passengers have been picked already, only show that destination
-    # If freight has already been loaded for a destination, only show
-    #   that destination (if any left)
     # Automatically exit selection loop if no remaining cargoes will fit?
     # Ability to put shipments back?
     def load_freight(self):
