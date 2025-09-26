@@ -737,6 +737,37 @@
 # scribbled on a map, and the generated 'galaxy' hangs 
 # together properly, with persistence and adjacency as
 # expected.
+#
+# One tweak I want to make next: it makes sense to generate
+# worlds when jumping _in_ to the system. It's like being
+# able to see immediate neighbors, and will be necessary when
+# generating freight/passengers anyway. Current implementation
+# only does this when we attempt to jump _out_.
+#
+# Problem is that calling get_systems_within_range() is the way
+# to do this, and is proper whether or not neighboring systems
+# have already been generated. But regardless of which, it will
+# always call the potentially-expensive get_coordinates_within_range().
+# At the jump-1 scale I'm currently testing this is not an 
+# issue, but per the perf discussion above, maybe it will be?
+# Need to profile and test of course. And if it _is_ an issue,
+# we could always set a 'visited' flag on the system so we 
+# don't run it again. 
+#
+# Ah, with a bit more thought... the second call to the method
+# is really for its side effect, and the first call hopes
+# it has already been called. So maybe this should be split up?
+#
+# And yet another thought. If we split it up, the pre-jump
+# version would just dump out the contents of StarMap.systems,
+# filtered by range from origin. Danger there is if current
+# world is somehow not 'visited' this list would be incomplete
+# and could change later. (Not sure how we'd get into this state,
+# just spitballing.) To protect, I suppose we could return
+# all systems, including None, and validate return list length
+# by an easily calculable 'hexes within radius' formula. Then
+# filter out None before displaying. Meh, probably too much
+# fiddling.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -870,7 +901,7 @@
 #  * [DONE] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [DONE] No fuel should be available at E & X starports
-#  * [    ] Consider generating new star systems when jumping in, rather than
+#  * [DONE] Generate new star systems when jumping in, rather than
 #           when jumping out as in current implementation
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
@@ -897,6 +928,9 @@
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
+#  * [    ] Refactoring suggestion: we call get_systems_within_range() twice in Game.jump(),
+#           once for (hopefully) pre-existing data, and once for the side effect of
+#           populating StarMap.systems. Split this up.
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] List star map to take a range parameter?
@@ -944,6 +978,9 @@
 #           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
 #           Or add iceteroid mining as an extreme (and very lengthy) procedure?
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
+#           for perf as discussed above, but even if not I could see map displays
+#           making use of it. Sort of a Fog of War mechanic.
 #  * [    ] Traveller '77 had route determination. Add this?
 #  * [    ] Review starport services, like life support recharge. Seems it
 #           should be restricted like fuel is. None available at E/X?

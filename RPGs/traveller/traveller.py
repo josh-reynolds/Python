@@ -148,6 +148,11 @@ class Game:
         self.location.detail = "jump"
         self.commands = jump
 
+        # TO_DO: calling for side effect of generating
+        #        neighboring systems... refactor this
+        _ = self.star_map.get_systems_within_range(self.location.coordinate,
+                                                   jump_range)
+
         self.depot.system = destination
         self.depot.cargo = self.depot.determine_cargo()
         self.financials.location = destination
