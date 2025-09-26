@@ -160,6 +160,7 @@ class Game:
         pr_blue("Local world characteristics:")
         print(self.location)
 
+    # TO_DO: fuel is not available at E/X starports
     def refuel(self):
         pr_blue("Refuelling ship.")
         cost = self.ship.refuel()

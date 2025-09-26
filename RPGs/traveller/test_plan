@@ -1,0 +1,355 @@
+Expected results based on current hard-coded values in the program. We'll
+have to adapt as the definitions change.
+
+One other thought: since the map (outside the core four worlds) is randomly
+generated each session, it might help to have a scratch hex pad to mark up.
+I especially want to verify map persistence, and world adjacency. The 
+coordinates are very helpful for internal calculation, but a bit opaque
+to look at and immediately understand.
+
+Also, given the variable cargoes, and therefore non-deterministic amounts,
+might be useful to have a ledger tracking changing status values. (Eventually
+would like to have this feature built-in to the game as well...)
+
+Throughout:
+  * Status bar is yellow text on red background
+  * Command messages (first line) are blue text on black background
+  * Other text is standard white on black
+  * A couple warning/failure messages in red/green as noted in tests
+  * Data points do not change unless expected results note it
+
+SCENARIO : GENERAL PLAYTHROUGH ==========================================
+1) Start in orbit around Yorbund.
+    * Date is 001-1105
+    * Status line notes 'in orbit around Yorbund'
+    * 10.0 MCr balance
+    * 62 tons free hold space
+    * 0/30 tons fuel
+    * 0% life support
+2) Command: ?
+    * Available commands: list, view map, hold contents, go to jump,
+      land, view ship, quit, view world, wait a week
+3) Command: a
+    * Worlds:
+      (-1,1,0) Aramis A865855-A Ri G
+      (0,-1,1) Mithril A840755-A Po G
+      (0,0,0)  Yorbund A875955-A In G
+      (1,0,-1) Kinorb A855755-A Ag G
+      (FEEDBACK: should highlight current world in list)
+4) Command: c
+    * Hold contents:
+      Grain - 20 tons - 300 Cr/ton
+5) Command: g
+    * 'Insufficient fuel' message.
+6) Command: p
+    * Ship details:
+      Weaselfish -- Type A Free Trader
+      200 tons : 1G : jump-1
+      4 crew, 6 passenger, 20 low
+7) Command: v
+    * World details:
+      (0,0,0)  Yorbund A875955-A In G
+8) Command: w
+    * Date advances to 008-1105
+    TEST REPEATED WAITING
+9) Command: l
+    * Command indicates "landing on Yorbund"
+    * Message indicates 100 Cr berthing fee
+    * Status bar notes "on Yorbund"
+    * 9.9999 MCr balance
+    TEST REPEATEDLY LANDING AND TAKING OFF
+10) Command: ?
+    * Available commands: list, view map, hold contents, recharge life support,
+      lift off, maintenance, view ship, quit, refuel, trade, view world, wait
+11) Command: a
+    * Worlds:
+      (-1,1,0) Aramis A865855-A Ri G
+      (0,-1,1) Mithril A840755-A Po G
+      (0,0,0)  Yorbund A875955-A In G
+      (1,0,-1) Kinorb A855755-A Ag G
+12) Command: c
+    * Hold contents:
+      Grain - 20 tons - 300 Cr/ton
+13) Command: f
+    * Prompt to recharge, respond 'n', exits command with no changes
+    * Re-issue command, respond 'y'
+    * Prompt indicates 22,000 Cr fee
+    * 100% life support
+    * 9.9779 MCr balance
+    TEST RECHARGE WITH FULL LEVEL
+14) Command: m
+    * Prompt indicates two weeks & 37,080 Cr cost
+    * Prompt also indicates renewing berth on 022-1105 for 8 days (800 Cr)
+    * Date advances to 022-1105
+    * 9.94002 MCr balance
+    (FEEDBACK: no confirmation prompt. no way to view maintenance due date.)
+    TEST RUNNING MAINTENANCE AGAIN
+16) Command: p
+    * Ship details:
+      Weaselfish -- Type A Free Trader
+      200 tons : 1G : jump-1
+      4 crew, 6 passenger, 20 low
+17) Command: r
+    * Prompt to refuel, respond 'n', exits command with no changes
+    * Re-issue command, respond 'y'
+    * Prompt indicates 15,000 Cr fee
+    * 30/30 tons fuel
+    * 9.92502 MCr balance
+    TEST REFUEL WITH FULL TANKS
+18) Command: v
+    * World details:
+      (0,0,0)  Yorbund A875955-A In G
+19) Command: w
+    * Date advances to 029-1105
+    * Prompt indicates renewing berth on 029-1105 for 6 days (600 Cr)
+    * Prompt indicates crew salaries on 029-1105 for 15,000 Cr
+    * Prompt indicates loan payment on 029-1105 for 154,500 Cr
+    * 9.75492 MCr balance
+20) Command: t
+    * Command notes "entering Yorbund trade depot"
+    * Status bar notes "at Yorbund trade depot"
+21) Command: ?
+    * Available commands: list, view map, buy cargo, hold contents, view goods,
+      leave depot, view ship, quit, sell cargo, view world, wait
+22) Command: a
+    * Same star listing as previously
+23) Command: c
+    * Same hold contents as previously
+24) Command: g
+    * Random good displayed
+    * Yorbund is population 9, so this should never be: textiles, polymers, liquor,
+      wood, crystals, radioactives
+25) Command: w
+    * Date advances to 036-1105
+    * Prompt indicates renewing berth on 036-1105 for 6 days (600 Cr)
+    * 9.75432 MCr balance
+26) Command: g
+    * Random good displayed, different from step 24
+    * Same restrictions apply as before
+27) Command: p
+    * Same ship details as previously
+28) Command: v
+    * Same world details as previously
+29) Command: b
+    * Prompt for cargo to buy - should match list in step 26
+    * Enter letters, prompt repeats
+    * Enter number not on list, command exits with no change
+    * Re-issue command, enter cargo number ('0')
+    * Prompt for quantity
+    * Enter letters, prompt repeats
+    * Enter more than available, command exits with no change
+    * Re-issue command, enter cargo number ('0')
+    * Prompt for quantity
+    * Enter 0, command exits with no change
+    * (If quantity is sufficient, test for 63 or more tons, more
+       than fits in hold. Should also exit with no change.)
+    * Re-issue command, enter cargo number ('0')
+    * Prompt for quantity
+    * Enter valid amount (> 0, <= available, <= hold space)
+      Note amount here: 1 ton
+    * Prompt indicates purchase price. Colored red if higher than
+      listing, white if same, green if lower. Note price here: 1.5 MCr
+    * Confirm purchase, enter anything but y/n, prompt repeats
+    * Enter 'n', command exits with no chane
+    * Repeat steps to get to this point.
+    * Displayed price should be the same as previously.
+    * Enter 'y'
+    * Date advances to 037-1105
+    * Balance reduced by purchase amount - this will vary by random
+      chance of cargo selected. Note new balance here: 8.25432 MCr
+    * Free hold space reduced by purchase size. Note here: 61 tons
+    TEST PARTIAL LOTS AND HANDLING FEE
+30) Command: g
+    * If entire cargo was purchased, list should be empty
+31) Command: c
+    * Hold should show previous contents plus newly purchased lot
+    * New lot should have a '(Yorbund)' suffix, indicating point
+      of purchase
+32) Command: s
+    * Prompt for cargo to sell - should match list in step 31
+    * Enter letters, prompt repeats
+    * Enter number not on list, command exits with no change
+    * Re-issue command, enter cargo number just purchased (should
+      be '1')
+    * Command exits with 'cannot resell' message
+    * Re-issue command, enter original cargo ('0')
+    * Prompted to hire a broker - respond anything but y/n, prompt repeats
+    * Respond 'n'
+    * Prompted for quantity. Test letters, zero and too high a quantity
+      again.
+    * Sell again, and enter '10' for quantity.
+    * Prompt indicates sale price. Colored red if low, green if high,
+      white if expected. Enter sale price here: 3,000 Cr
+    * Test confirmation prompt again with bogus characters and 'n', then
+      repeat and respond 'y'
+    * Date advances to 038-1105
+    * Prompt indicates renewing berth on 038-1105 for 1 day (100 Cr)
+    * Balance increased by sale price. Note here: 8.25722 MCr
+    * Free hold space increases by 10. Note here: 71 tons
+    TEST HIRING BROKER
+33) Command: c
+    * Hold should show previous contents from step 31, but quantity
+      of original cargo ('Grain') should be only 10 tons
+34) Command: w
+    * Date advances to 045-1105
+    * Prompt indicates renewing berth on 045-1105 for 6 days (600 Cr)
+    * Note balance here: 8.25662 MCr
+35) Command: l
+    * Status line shows "on Yorbund"
+36) Command: l
+    * Status line shows "in orbit around Yorbund"
+37) Command: w
+    * Date advances to 052-1105
+    * No prompt for berth renewal, balance is unchanged
+38) Command: g
+    * Date advances to 053-1105
+    * Status line shows "at the Yorbund jump point"
+    * Fuel 25/30 tons
+    TEST BLOCK FOR INSUFFICIENT LIFE SUPPORT
+39) Command: ?
+    * Available commands: list, view map, hold contents, go to jump,
+      land, view ship, quit, view world, wait a week
+40) Commands: a,c,p,v
+    * Show same information as previous invocations
+41) Command: s
+    * Fuel 30/30 tons
+    * Date advances to 054-1105
+    * Re-issue command, should fail stating 'full tanks', no changes
+42) Command: w
+    * Date advances to 061-1105
+    * Prompt indicates crew salaries on 057-1105 for 15,000 Cr
+    * Prompt indicates loan payment on 057-1105 for 154,500 Cr
+    * Note new balance here: 8.08712 MCr
+43) Command: i
+    * Status line shows "in obit around Yorbund"
+    * Date advances to 062-1105
+    * Fuel 25/30 tons
+44) Command: g
+    * Status line shows "at the Yorbund jump point"
+    * Date advances to 063-1105
+    * Fuel 20/30 tons
+45) Command: j
+    * Shows three systems within jump-1 range (Aramis, Mithril, Kinorb)
+    * Test bogus destination values, and non-numeric input
+    * Re-issue command, choose Mithril ('1')
+    * Confirmation prompt, test with bogus input, and 'n'. Then
+      repeat and choose 'y'.
+    * 'Executing jump!' displayed in red text
+    * Date advances to 070-1105
+    * Status line shows "at the Mithril jump point"
+    * Fuel 0/30 tons
+    * Life support 0%
+46) Command: i
+    * Failure prompt: 'insufficient fuel'
+    TEST STRANDING
+47) Command: s
+    * Date advances to 071-1105
+    * Fuel 30/30 tons
+    TEST WHEN NO GAS GIANT PRESENT
+48) Command: i
+    * Status line shows "in orbit around Mithril"
+    * Date advances to 072-1105
+    * Fuel 25/30 tons
+49) Command: v
+    * World details:
+      (0,-1,1)  Mithril A840755-A Po G
+50) Command: l
+    * Status line shows "on Mithril"
+51) Command: f
+    * Prompt to recharge for 22,000 Cr
+    * Life support 100%
+    * Note balance here:  8.06502 MCr
+52) Command: t
+    * Command notes "entering Mithril trade depot"
+    * Status line shows "at the Mithril trade depot"
+53) Command: g
+    * Available goods listed. Mithril is population 7,
+      so any cargo is available.
+54) Command: b
+    * Buy some cargo, if possible test variations not
+      covered above (over-filling cargo hold, buying
+      a partial lot)
+    * Date advances to 073-1105
+    * Note free hold space here: 26 tons
+    * Note balance here:  7.91517 MCr
+    * If partial purchase, calculate price and verify
+      1% handling fee was included.
+
+      45 tons Textiles @ 3,000 Cr/ton
+      Purchase price = 149,850 Cr
+      149850 / (45 * 3000) = 1.11    <== 1% fee included
+
+55) Command: c
+    * Verify new purchase has been added to the list,
+      the quantity is correct, and it is marked 'Mithril'
+56) Command: g
+    * If you made a partial purchase, verify cargo is
+      still listed, but with a correctly-reduced quantity.
+57) Command: s
+    * Try selling Mithril cargo - blocked.
+    * Try selling Yorbund cargo - proceeds.
+    * Hire a broker.
+    * Cancel the sale, confirm broker fee is charged.
+    * Sell all Yorbund cargo again, this time to completion.
+    * Confirm broker fee is deducted and sale price is added.
+    * Note balance here: 8.99517 MCr
+    * Note hold space here: 27 tons
+    * Date advances to 074-1105
+    * Re-issue command, sell remaining Grain (cargo 0)
+    * Confirm sale price is added.
+    * Note balance here: 8.99877 MCr
+    * Note hold space here: 37 tons
+    * Date advances to 075-1105
+58) Command: c
+    * Verify hold only contains newly-purchased cargo.
+59) Command: l
+    * Command notes "leaving Mithril trade depot"
+    * Status line shows "on Mithril"
+60) Command: l
+    * Command notes "lifting off to Mithril orbit"
+    * Status line shows "in orbit around Mithril"
+61) Command: g
+    * Command notes "travelling out to Mithril jump point"
+    * Status line shows "at the Mithril jump point"
+    * Date advances to 076-1105
+    * Fuel: 20/30 tons
+62) Command: j
+    * List of systems. Will be random, but hopefully at least
+      one 'Test' system shows. List will also include Yorbund.
+    * Verify Yorbund entry matches previous data.
+    * Choose a 'Test' system for destination. If none, travel
+      through Yorbund to Aramis or Kinorb to find one. (Will
+      need refuelling & recharging of course...) If possible,
+      choose a destination _without_ a gas giant.
+    * Date advances to 083-1105
+    * Status line shows "at the Test jump point"
+    * Fuel: 0/30 tons
+    * Life support 0%
+63) Command: a
+    * Verify star system list includes the four from above, plus
+      all listed in the jump dialog from Mithril.
+
+64) Free travel, try things out as desired, take note of any oddities
+    or design feedback.
+END OF SCRIPT ===========================================================
+
+SCENARIO : MAP PERSISTENCE AND ADJACENCY ================================
+Follow script above, or just fly around as desired, refuelling and 
+recharging at every stop. Use a scratch map to record every world.
+Ideally loop around to come at a an unvisited world from another direction,
+then verify the connection when you get there (i.e. go out to Mithril,
+then loop around to Aramis if possible. Predict Aramis shows up when you
+execute the jump from an adjacent hex.)
+
+Also go back an forth across the map and verify that the 'jump map' from
+a given world remains the same the second time you visit it.
+
+I ran this with the data produced from the first pass above, and it looks
+good. Map data was persistent, and I was able to chart a course through
+'unknown' space and connect to one of the three 'homeworlds' a couple times.
+END OF SCRIPT ===========================================================
+
+SCENARIO : DATES AND RECURRING EVENTS ===================================
+SCENARIO : COMMAND RESTRICTIONS & CONDITIONS ============================
+SCENARIO : QUIT FROM ALL CONTEXTS =======================================
+SCENARIO : FUEL USAGE AND STATE TRANSITIONS =============================

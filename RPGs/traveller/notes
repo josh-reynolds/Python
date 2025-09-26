@@ -723,6 +723,20 @@
 # the entire map at will. It is persistent within a session - 
 # I can travel across the map and back, and still see the same
 # (generated) systems in the same places. On to world factory.
+#
+# And we're done. Infinite map with real Traveller worlds. I
+# still don't have a naming system in place, but the data looks
+# good and everything appears to be working correctly. This is
+# MVP. I want to capture a manual test script before moving on,
+# and take closer look at a few things, like dates and map
+# structure. Then we can add minor features, color, and polish.
+#
+# Test plan is complete, and after playing around a bit, 
+# things look correct. Only issues I've spotted so far are
+# expected design issues I haven't gotten to yet. I also 
+# scribbled on a map, and the generated 'galaxy' hangs 
+# together properly, with persistence and adjacency as
+# expected.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -735,12 +749,12 @@
 #  * Basic travel & resources features.
 #  * Refactoring. In the midst of a big push right now.
 #  * (Should really take my medicine and get tests/pylint/etc. done)
-#  PHASE TWO <== we are here
+#  PHASE TWO
 #  * Jumping to a new system and all it implies:
 #    * Multiple systems
 #    * Star map
 #    * Coordinate system
-#  PHASE THREE
+#  PHASE THREE <== we are here
 #  * Adding freight & passengers
 #  * Any other remaining RAW procedures:
 #    * crew, misjumps, etc.
@@ -853,7 +867,7 @@
 #  * [DONE] Create a StarSystemFactory (we still want to be able to directly
 #           create a world via params, so don't want this in the ctor)
 #  * [DONE] Handle UWP formatting issue with 'hex' codes. Should we have a class?
-#  * [    ] Write up a manual test script
+#  * [DONE] Write up a manual test script
 #  PHASE THREE =====================================================
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
@@ -872,6 +886,7 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
+#  * [    ] No fuel should be available at E & X starports
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
