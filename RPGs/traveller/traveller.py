@@ -126,6 +126,7 @@ class Game:
                   f"Life support is at {life_support}%.")
             return
 
+        # TO_DO: warning if selected destination does not match Ship.destination
         jump_range = self.ship.jump_range
         destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                               jump_range)
@@ -321,9 +322,13 @@ class Game:
 
         # this is lifted almost verbatim from jump() - refactor
         jump_range = self.ship.jump_range
-        destinations = self.star_map.get_systems_within_range(
-                self.location.coordinate,
-                jump_range)
+        if self.ship.destination is not None:
+            destinations = [self.ship.destination]
+        else:
+            destinations = self.star_map.get_systems_within_range(
+                    self.location.coordinate,
+                    jump_range)
+
         print(f"Available freight shipments within jump-{jump_range}:\n")
 
         freight_shipments = []
@@ -351,8 +356,8 @@ class Game:
         print(f"Freight shipments for {destination.name}")
         print(available)
 
-        total_tonnage = 0
         selection = []
+        total_tonnage = 0
         hold_tonnage = self.ship.free_space()
         while True:
             if len(available) == 0:
@@ -385,6 +390,7 @@ class Game:
         print("Done selecting shipments.")
         print(f"{total_tonnage} tons selected.")
 
+        # Corner case: 0 tons selected
         confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
         if confirmation == 'n':
             print("Cancelling freight selection.")
@@ -394,6 +400,7 @@ class Game:
             self.ship.load_cargo(Freight(entry,
                                          self.location,
                                          destination))
+        self.ship.destination = destination
         self.date.day += 1
 
     def unload_freight(self):

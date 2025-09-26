@@ -805,7 +805,7 @@
 #
 # So, roughing out the steps and pieces we'll need:
 #
-# * Obviously a 'freight' command from the trade depot.
+# * Obviously a 'load freight' command from the trade depot.
 #
 # * And by implication, an 'unload freight' on arrival. This
 #   one will be comparatively simple. Just time and payment,
@@ -842,9 +842,9 @@
 #   (we'll get to in a bit) states to generate passegers for
 #   the selected freight destination. But what if there isn't
 #   one? Player either doesn't want freight, or does passengers
-#   first? In this procedure, we only need to worry about the 
-#   second option. Should we restrict the freight list if 
-#   passengers have bought tickets for a destination?
+#   first? In this (freight) procedure, we only need to worry 
+#   about the second option. Should we restrict the freight 
+#   list if passengers have bought tickets for a destination?
 #
 # -------------------------------------------------------------
 
@@ -984,7 +984,19 @@
 #  * [DONE] Assess whether a '2d6' method, or variable number of dice, is useful
 #  * [DONE] Add Freight class
 #  * [DONE] Unit tests for Freight
+#  * [DONE] Add a destination flag to the Ship as aid for freight/passenger procedures
+#  * [DONE] Only show matching destination when re-entering load_freight() if freight
+#           already loaded
 #  * [....] Add freight shipping
+#  * [....] Reset destination flag when all freight & passengers offloaded
+#  * [....] Issue warning if jump destination does not match Ship.destination
+#  * [    ] Freight list per-destination should persist
+#  * [    ] Freight list per-destination should be refreshed weekly
+#  * [    ] Only show matching destination for freight if passengers already picked
+#  * [    ] Should we automatically exit freight loop if none left will fit in hold?
+#  * [    ] Should we allow putting freight back?
+#  * [    ] Freight should be blocked (or better, filtered) when selling cargo
+#  * [    ] Finish unload_freight() stub
 #  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
@@ -1102,4 +1114,9 @@
 #            do ASCII graphics...
 #  * [    ] Non-canon variations and features - draw from other RPGs, board games,
 #           videogames, and brainstorming
+#  * [    ] Other game modes, like Scouts - take a longer-range ship and explore.
+#           Tweak world generation to produce frontier locations.
+#  * [    ] Or cheats, like infinite money, free fuel, etc. (And actually a lot
+#           of cheats start life as aids for testing. Might want a few of these to
+#           help out as the game gets bigger.)
 #
