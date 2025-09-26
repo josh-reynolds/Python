@@ -10,6 +10,10 @@ class Freight:
         self.source_world = source_world
         self.destination_world = destination_world
 
+    def __repr__(self):
+        return f"{self.name} : {self.tonnage} tons : " +\
+               f"{self.source_world.name} -> {self.destination_world.name}"
+
 class Cargo:
     def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
@@ -562,8 +566,16 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(isinstance(cargo[0], Cargo))
 
 class FreightTestCase(unittest.TestCase):
-    pass
+    class SystemMock:
+        def __init__(self, name):
+            self.name = name
 
+    def test_freight_string(self):
+        freight = Freight(10, 
+                          FreightTestCase.SystemMock("Pluto"),
+                          FreightTestCase.SystemMock("Uranus"))
+        self.assertEqual(f"{freight}", 
+                         "Freight : 10 tons : Pluto -> Uranus")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
