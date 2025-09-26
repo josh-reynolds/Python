@@ -869,6 +869,9 @@
 #  * [DONE] Handle UWP formatting issue with 'hex' codes. Should we have a class?
 #  * [DONE] Write up a manual test script
 #  PHASE THREE =====================================================
+#  * [DONE] No fuel should be available at E & X starports
+#  * [    ] Consider generating new star systems when jumping in, rather than
+#           when jumping out as in current implementation
 #  * [    ] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
@@ -878,15 +881,14 @@
 #  * [    ] Add survival odds for low berth passengers, and report results each trip
 #  * [    ] Add low berth lottery
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
+#  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
-#  * [    ] Generate world names
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
-#  * [    ] No fuel should be available at E & X starports
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] pylint/pydocstyle scrub
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
@@ -899,8 +901,6 @@
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] List star map to take a range parameter?
 #  * [    ] Can we colorize current location in star map listing?
-#  * [    ] Consider generating new star systems when jumping in, rather than
-#           when jumping out as in current implementation
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
@@ -935,8 +935,19 @@
 #           coding for warnings, positive/negative messages, etc.
 #  PHASE FIVE ======================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
+#  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
+#  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has
+#           no fuelling options and is dangerous to travel to for normal 
+#           commercial ships. Should flag this somehow. Mark red in listing?
+#  * [    ] End game condition? In my recent test run, I arrived at an E-starport
+#           world with no gas giant. It has a hydrosphere, but I haven't 
+#           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
+#           Or add iceteroid mining as an extreme (and very lengthy) procedure?
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Traveller '77 had route determination. Add this?
+#  * [    ] Review starport services, like life support recharge. Seems it
+#           should be restricted like fuel is. None available at E/X?
+#           Similarly, should a berthing fee be charged if there is no berth?
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
