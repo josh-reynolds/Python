@@ -3,6 +3,13 @@ from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
+class Freight:
+    def __init__(self, tonnage, source_world, destination_world):
+        self.name = "Freight"
+        self.tonnage = tonnage
+        self.source_world = source_world
+        self.destination_world = destination_world
+
 class Cargo:
     def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
@@ -553,6 +560,10 @@ class CargoDepotTestCase(unittest.TestCase):
         cargo = depot.determine_cargo()
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
+
+class FreightTestCase(unittest.TestCase):
+    pass
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

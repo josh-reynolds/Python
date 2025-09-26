@@ -983,6 +983,8 @@
 #           when jumping out as in current implementation
 #  * [DONE] Assess whether a '2d6' method, or variable number of dice, is useful
 #  * [....] Add freight shipping
+#  * [....] Add Freight class
+#  * [....] Unit tests for Freight
 #  * [    ] Refactor freight methods, pushd down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)

@@ -3,7 +3,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
-from cargo import Cargo, CargoDepot
+from cargo import Cargo, CargoDepot, Freight
 from star_system import StarSystem
 from star_map import StarMap
 
@@ -339,8 +339,31 @@ class Game:
         coordinate = destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
+
+        available = freight_shipments[destination_number]
         print(f"Freight shipments for {destination.name}")
-        print(freight_shipments[destination_number])
+        print(available)
+
+        done = False
+        while not done:
+            response = input("Choose a shipment by tonnage ('q' to exit): ")
+            if response == 'q':
+                done = True
+
+            try:
+                response = int(response)
+            except ValueError:
+                print("Please input a number.")
+
+            if response in available:
+                available.remove(response)
+                print(available)
+                self.ship.load_cargo(Freight(response,
+                                             self.location,
+                                             destination))
+                print(f"Cargo space left: {self.ship.free_space()}")
+
+        print("Done selecting shipments")
 
 
 
@@ -348,6 +371,8 @@ class Game:
         # Freight list needs to persist between invocations, and
         #   be refreshed weekly like cargo
         # If passengers have been picked already, only show that destination
+        # Exit loop if all shipments selected?
+        # Ability to put shipments back?
 
         # Player prompted to choose shipments
         #   This repeats until:
