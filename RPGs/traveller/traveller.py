@@ -309,6 +309,13 @@ class Game:
 
     # TO_DO: after getting this working, assess if any pieces should
     #        be pushed down
+    # Freight list needs to persist between invocations, and
+    #   be refreshed weekly like cargo
+    # If passengers have been picked already, only show that destination
+    # If freight has already been loaded for a destination, only show
+    #   that destination (if any left)
+    # Automatically exit selection loop if no remaining cargoes will fit?
+    # Ability to put shipments back?
     def load_freight(self):
         pr_blue("Loading freight.")
 
@@ -344,43 +351,50 @@ class Game:
         print(f"Freight shipments for {destination.name}")
         print(available)
 
-        done = False
-        while not done:
+        total_tonnage = 0
+        selection = []
+        hold_tonnage = self.ship.free_space()
+        while True:
+            if len(available) == 0:
+                break
+
             response = input("Choose a shipment by tonnage ('q' to exit): ")
             if response == 'q':
-                done = True
+                break
 
             try:
                 response = int(response)
             except ValueError:
                 print("Please input a number.")
+                continue
 
             if response in available:
-                available.remove(response)
-                print(available)
-                self.ship.load_cargo(Freight(response,
-                                             self.location,
-                                             destination))
-                print(f"Cargo space left: {self.ship.free_space()}")
+                if response < hold_tonnage:
+                    available.remove(response)
+                    selection.append(response)
+                    total_tonnage += response
+                    hold_tonnage -= response
+                    print(available)
+                    print(f"Cargo space left: {hold_tonnage}")
+                else:
+                    pr_red("That shipment will not fit in your cargo hold.")
+                    pr_red(f"Hold free space: {hold_tonnage}")
+            else:
+                pr_red(f"There are no shipments of size {response}.")
 
-        print("Done selecting shipments")
+        print("Done selecting shipments.")
+        print(f"{total_tonnage} tons selected.")
 
+        confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
+        if confirmation == 'n':
+            print("Cancelling freight selection.")
+            return
 
-
-
-        # Freight list needs to persist between invocations, and
-        #   be refreshed weekly like cargo
-        # If passengers have been picked already, only show that destination
-        # Exit loop if all shipments selected?
-        # Ability to put shipments back?
-
-        # Player prompted to choose shipments
-        #   This repeats until:
-        #     Player exits
-        #     Hold is full, and/or no more shipments will fit
-        # Final confirmation, display choice
-        # Freight added to cargo hold
-        # Date +1 day
+        for entry in selection:
+            self.ship.load_cargo(Freight(entry,
+                                         self.location,
+                                         destination))
+        self.date.day += 1
 
     def unload_freight(self):
         pr_blue("Unloading freight.")
@@ -402,6 +416,7 @@ always = [Command('q', 'Quit',
           Command('?', 'List commands',
                   game.list_commands),
           Command('c', 'Cargo hold contents',
+
                   game.cargo_hold),
           Command('v', 'View world characteristics',
                   game.view_world),
