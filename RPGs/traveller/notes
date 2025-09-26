@@ -987,6 +987,7 @@
 #  * [DONE] Add a destination flag to the Ship as aid for freight/passenger procedures
 #  * [DONE] Only show matching destination when re-entering load_freight() if freight
 #           already loaded
+#  * [DONE] Finish unload_freight() method
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded
 #  * [....] Issue warning if jump destination does not match Ship.destination
@@ -996,9 +997,9 @@
 #  * [    ] Should we automatically exit freight loop if none left will fit in hold?
 #  * [    ] Should we allow putting freight back?
 #  * [    ] Freight should be blocked (or better, filtered) when selling cargo
-#  * [    ] Finish unload_freight() stub
 #  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
+#  * [    ] Add passenger manifest
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Add crew members with skills

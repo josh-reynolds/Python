@@ -351,7 +351,6 @@ class Game:
         coordinate = destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
-
         available = freight_shipments[destination_number]
         print(f"Freight shipments for {destination.name}")
         print(available)
@@ -406,9 +405,25 @@ class Game:
     def unload_freight(self):
         pr_blue("Unloading freight.")
 
-        # Freight removed from cargo hold
-        # Collect payment (1,000 Cr/ton)
-        # Date +1 day
+        # corner case: no freight is on board
+        # corner case: freight for a different destination is on board
+
+        if self.ship.destination == self.location:
+            freight_tonnage = sum([f.tonnage for f in self.ship.hold if isinstance(f, Freight)])
+            self.ship.hold = [c for c in self.ship.hold if isinstance(c, Cargo)]
+
+            payment = Credits(1000 * freight_tonnage)
+            self.financials.credit(Credits(1000 * freight_tonnage))
+            print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
+
+            self.date.day += 1
+
+            self.ship.destination = None   # TO_DO: adjust once we have passengers
+
+        else:
+            # corner case: freight for multiple destinations is on board
+            pr_red("You are not at the contracted destination for this freight!")
+            pr_red(f"This should be unloaded at {self.ship.destination}")
 
 class Command:
     def __init__(self, key, description, action):
