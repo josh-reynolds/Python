@@ -1,7 +1,7 @@
 from calendar import Calendar
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
-from utilities import pr_blue, pr_red, print_list
+from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
 from cargo import Cargo, CargoDepot
 from star_system import StarSystem
@@ -307,14 +307,48 @@ class Game:
         self.financials.debit(cost)
         self.date.day += 14    # should we wrap this in a method call?
 
+    # TO_DO: after getting this working, assess if any pieces should
+    #        be pushed down
     def load_freight(self):
         pr_blue("Loading freight.")
 
-        # Show worlds within range
-        #   If passengers have been picked already, only show that destination
-        # Show freight shipments available per world, either already
-        #   generated or created on the spot
-        # Player prompted to choose a destination
+        # this is lifted almost verbatim from jump() - refactor
+        jump_range = self.ship.jump_range
+        destinations = self.star_map.get_systems_within_range(
+                self.location.coordinate,
+                jump_range)
+        print(f"Available freight shipments within jump-{jump_range}:\n")
+
+        freight_shipments = []
+        for world in destinations:
+            shipments = []
+            for i in range(world.population):
+                shipments.append(die_roll() * 5)
+            shipments = sorted(shipments)
+            freight_shipments.append(shipments)
+
+        for i,world in enumerate(destinations):
+            pr_green(f"{i} - {world}")
+            print("   ", freight_shipments[i])
+            print()
+
+        destination_number = int_input("Enter destination number: ")
+        if destination_number >= len(destinations):
+            print("That is not a valid destination number.")
+            return
+        coordinate = destinations[destination_number].coordinate
+        destination = self.star_map.get_system_at_coordinate(coordinate)
+
+        print(f"Freight shipments for {destination.name}")
+        print(freight_shipments[destination_number])
+
+
+
+
+        # Freight list needs to persist between invocations, and
+        #   be refreshed weekly like cargo
+        # If passengers have been picked already, only show that destination
+
         # Player prompted to choose shipments
         #   This repeats until:
         #     Player exits

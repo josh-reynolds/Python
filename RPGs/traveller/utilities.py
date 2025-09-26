@@ -1,8 +1,11 @@
 import unittest
 from random import randint
 
-def die_roll():
-    return randint(1,6)
+def die_roll(count=1):
+    total = 0
+    for i in range(count):
+        total += randint(1,6)
+    return total
 
 def constrain(value, min_val, max_val):
     if value <= min_val:
@@ -69,6 +72,17 @@ class UtilitiesTestCase(unittest.TestCase):
         average = total/1000
         self.assertGreaterEqual(average, 3.3)
         self.assertLessEqual(average, 3.7)
+
+    def test_rolling_multiple_dice(self):
+        total = 0
+        for _ in range(1000):
+            result = die_roll(2)
+            self.assertGreaterEqual(result,2)
+            self.assertLessEqual(result,12)
+            total += result
+        average = total/1000
+        self.assertGreaterEqual(average, 5.5)
+        self.assertLessEqual(average, 8.5)
 
     def test_constrain(self):
         self.assertEqual(constrain(5,1,10), 5)

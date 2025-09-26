@@ -981,7 +981,9 @@
 #  * [DONE] No fuel should be available at E & X starports
 #  * [DONE] Generate new star systems when jumping in, rather than
 #           when jumping out as in current implementation
+#  * [DONE] Assess whether a '2d6' method, or variable number of dice, is useful
 #  * [....] Add freight shipping
+#  * [    ] Refactor freight methods, pushd down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
@@ -1010,6 +1012,7 @@
 #           once for (hopefully) pre-existing data, and once for the side effect of
 #           populating StarMap.systems. Split this up.
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] List star map to take a range parameter?
 #  * [    ] Can we colorize current location in star map listing?
@@ -1021,7 +1024,6 @@
 #  # [    ] Break up Game class (MVC?)
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
-#  * [    ] Assess whether a '2d6' method, or variable number of dice, is useful
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Consider moving tests to separate modules
