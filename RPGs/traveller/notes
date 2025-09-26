@@ -771,6 +771,84 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# OK, next up is freight and passengers. Let's tackle freight
+# first. It piggybacks on cargo somewhat, and the rules state
+# passengers present themselves _after_ a freight destination
+# has been chosen.
+#
+# First, the basic procedure per the rules (Book 2 p. 7):
+#
+# The referee should determine all worlds accessible to the 
+# starship (depending on jump number), and roll (for each such
+# world) a number of dice equal to the population number of the
+# destination. Each die represents one shipment, expressed in
+# multiples of 5 tons... A starship can carry as many shipments
+# as will fit in the hold, but may not break down the size of 
+# any specific shipment... Cargo is normally shipped at a rate
+# of CR 1000 per ton.
+#
+# So, some observations:
+#
+# * It's implied that these destinations are all one jump away,
+#   so hopping across several connections is not OK. The shipper
+#   would just select a higher-jump transport.
+#
+# * Continuing from that point, there's a time limit, meaning
+#   the player cannot select cargoes from more than one world.
+#   They never state this explicitly, but it reads that way to
+#   me. The text of the passengers section reads similarly.
+#
+# * I've already established that cargo loading takes one day;
+#   the same should apply here. But! This should not be per
+#   shipment. The player should be able to select several
+#   shipments, then one day passes for them all to be loaded.
+#
+# So, roughing out the steps and pieces we'll need:
+#
+# * Obviously a 'freight' command from the trade depot.
+#
+# * And by implication, an 'unload freight' on arrival. This
+#   one will be comparatively simple. Just time and payment,
+#   and removing from the hold.
+#
+# * After executing the command, show a compound list:
+#
+#   * Headings are worlds within range
+#   * Entries within each heading are shipments, just tonnage
+#
+# * Not sure yet how the interface should work. Select a world
+#   first, then prompted to pick shipments (displaying total
+#   size and remaining space each time), followed by a 'load'
+#   to wrap up?
+#
+# * Of couse the player should be able to cancel out at any
+#   point with no penalty. They have to be able to browse.
+#
+# * Loaded freight will appear in the cargo hold. Not sure if
+#   we can overload the Cargo class to handle, or will need
+#   something else. Freight only has three data points: source,
+#   destination, tonnage. (Date and expiry? Check later rules
+#   for embellishments, down the road.)
+#
+# * Another blind spot in the rules: how often is the freight
+#   list refreshed? Seems simplest to align with cargo. Every
+#   week there's a new bunch of freight. And of course we need
+#   to maintain the list between refreshes.
+#
+# * Freight should be blocked (or better yet hidden) from the
+#   'sell cargo' procedure.
+#
+# * Interplay with passengers is interesting. That procedure
+#   (we'll get to in a bit) states to generate passegers for
+#   the selected freight destination. But what if there isn't
+#   one? Player either doesn't want freight, or does passengers
+#   first? In this procedure, we only need to worry about the 
+#   second option. Should we restrict the freight list if 
+#   passengers have bought tickets for a destination?
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -903,7 +981,7 @@
 #  * [DONE] No fuel should be available at E & X starports
 #  * [DONE] Generate new star systems when jumping in, rather than
 #           when jumping out as in current implementation
-#  * [    ] Add freight shipping
+#  * [....] Add freight shipping
 #  * [    ] Add passengers
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
@@ -982,9 +1060,21 @@
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic.
 #  * [    ] Traveller '77 had route determination. Add this?
+#  * [    ] Should freight expire or be assessed a penalty fee for late delivery?
+#           Similar question for passengers. Particularly meaningful in the case
+#           of misjumps.
 #  * [    ] Review starport services, like life support recharge. Seems it
 #           should be restricted like fuel is. None available at E/X?
 #           Similarly, should a berthing fee be charged if there is no berth?
+#           How about cargo, freight and passengers? Later Traveller editions
+#           labelled almost all X starports as Red Zones (doesn't exist in '77).
+#           E is not much better. No good reason for a commercial starship to
+#           go there (though PCs are expected to be more adventurous of course).
+#  * [    ] Think about guard rails. We don't want to go overboard. Learning
+#           which choices are wise and which are foolhardy is part of the game. So
+#           refuelling availability, low-grade starports, getting stranded - let the
+#           player do that! Question is what happens then? Game over conditions,
+#           penalties that let them keep going?
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then

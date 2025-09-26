@@ -307,6 +307,29 @@ class Game:
         self.financials.debit(cost)
         self.date.day += 14    # should we wrap this in a method call?
 
+    def load_freight(self):
+        pr_blue("Loading freight.")
+
+        # Show worlds within range
+        #   If passengers have been picked already, only show that destination
+        # Show freight shipments available per world, either already
+        #   generated or created on the spot
+        # Player prompted to choose a destination
+        # Player prompted to choose shipments
+        #   This repeats until:
+        #     Player exits
+        #     Hold is full, and/or no more shipments will fit
+        # Final confirmation, display choice
+        # Freight added to cargo hold
+        # Date +1 day
+
+    def unload_freight(self):
+        pr_blue("Unloading freight.")
+
+        # Freight removed from cargo hold
+        # Collect payment (1,000 Cr/ton)
+        # Date +1 day
+
 class Command:
     def __init__(self, key, description, action):
         self.key = key
@@ -363,7 +386,11 @@ trade = always + [Command('l', 'Leave trade interaction',
                   Command('b', 'Buy cargo',
                           game.buy_cargo),
                   Command('s', 'Sell cargo',
-                          game.sell_cargo)]
+                          game.sell_cargo),
+                  Command('f', 'Load freight',
+                          game.load_freight),
+                  Command('u', 'Unload freight',
+                          game.unload_freight)]
 trade = sorted(trade, key=lambda command: command.key)
 
 if __name__ == '__main__':
