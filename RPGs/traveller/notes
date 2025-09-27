@@ -1002,6 +1002,7 @@
 #           be set to? And if you offload one set, how does the field look afterwards?
 #           But we ruled this out earlier, right? Implicit expiration date on shipping?
 #  * [DONE] load_freight() corner case: 0 tons freight selected
+#  * [DONE] sell_cargo() corner case: trying to sell with empty hold (or just Freight)
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded
 #  * [    ] Adjust reset of destination flag in unload_freight() once we have passengers
@@ -1010,7 +1011,6 @@
 #  * [    ] Only show matching destination for freight if passengers already picked
 #  * [    ] BUG: when overriding freight destination list due to flag, a non-reachable
 #           world can be selected. Need an intersection between flag and list instead.
-#  * [    ] sell_cargo() corner case: trying to sell with empty hold (or just Freight)
 #  * [    ] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [    ] Consider asserts for constraint violations in freight logic especially. Should
 #           not have a None flag if there is freight in the hold, and should not allow

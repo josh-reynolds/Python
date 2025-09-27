@@ -218,6 +218,11 @@ class Game:
     def sell_cargo(self):
         pr_blue("Selling cargo.")
         cargoes = [c for c in self.ship.hold if isinstance(c, Cargo)]
+
+        if len(cargoes) == 0:
+            print("You have no cargo on board.")
+            return
+
         print_list(cargoes)
         _, cargo = self.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
