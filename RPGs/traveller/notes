@@ -1033,6 +1033,7 @@
 #  * [DONE] Add __hash__ dunder to StarSystem to allow placement in sets
 #  * [DONE] Consider making the destination flag a dynamic query property instead, based
 #           on contents of hold/passenger compartment
+#  * [DONE] Add unit tests for Ship.destination property
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
@@ -1041,7 +1042,8 @@
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
-#  * [    ] Only show matching destination for freight if passengers already picked
+#  * [    ] Only show matching destination for freight if passengers already picked (destination
+#           property ought to take care of this, check)
 #  * [    ] Adjust destination property in Ship once we have passengers
 #  * [    ] Freight list per-destination should persist
 #  * [    ] Freight list per-destination should be refreshed weekly

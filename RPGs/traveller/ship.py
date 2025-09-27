@@ -189,6 +189,10 @@ class ShipTestCase(unittest.TestCase):
         def tonnage(self):
             return self.quantity
 
+    class FreightMock:
+        def __init__(self, destination):
+            self.destination_world = destination
+
     def setUp(self):
         ShipTestCase.ship = Ship()
 
@@ -261,6 +265,27 @@ class ShipTestCase(unittest.TestCase):
 
     def test_maintenance_cost(self):
         self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
+
+    def test_destination(self):
+        ship = ShipTestCase.ship
+        self.assertEqual(ship.destination, None)
+
+        ship.load_cargo(ShipTestCase.CargoMock(20))
+        self.assertEqual(ship.destination, None)
+
+        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
+        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
+        self.assertEqual(ship.destination, "Uranus")
+
+        ship.load_cargo(ShipTestCase.CargoMock(20))
+        self.assertEqual(ship.destination, "Uranus")
+
+        self.assertEqual(len(ship.hold), 4)
+
+        ship.load_cargo(Freight(1, "Pluto", "Jupiter"))
+        with self.assertRaises(ValueError) as cm:
+            ship.destination
+        self.assertEqual(f"{cm.exception}", "Freight for more than one destination in the hold!")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
