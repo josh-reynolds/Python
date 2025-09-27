@@ -337,7 +337,10 @@ class Game:
                     self.location.coordinate,
                     jump_range)
 
-        print(f"Available freight shipments within jump-{jump_range}:\n")
+        if self.ship.destination is not None:
+            print(f"You are under contract. Only showing freight for {self.ship.destination.name}:\n")
+        else:
+            print(f"Available freight shipments within jump-{jump_range}:\n")
 
         freight_shipments = []
         for world in destinations:
@@ -413,11 +416,23 @@ class Game:
     def unload_freight(self):
         pr_blue("Unloading freight.")
 
-        # corner case: no freight is on board
         # corner case: freight for a different destination is on board
+        # truth table: passengers, freight, destination flag,...
+
+        # It should not be possible for there to be freight in the hold,
+        # and a destination flag set to None. Should we assert just
+        # in case, so we could track down any such bug:
+        if self.ship.destination is None:
+            print(f"You have no contracted destination.")
+            return
+
+        freight = [f for f in self.ship.hold if isinstance(f, Freight)]
+        if len(freight) == 0:
+            print(f"You have no freight on board.")
+            return
 
         if self.ship.destination == self.location:
-            freight_tonnage = sum([f.tonnage for f in self.ship.hold if isinstance(f, Freight)])
+            freight_tonnage = sum(f.tonnage for f in freight)
             self.ship.hold = [c for c in self.ship.hold if isinstance(c, Cargo)]
 
             payment = Credits(1000 * freight_tonnage)
@@ -431,7 +446,7 @@ class Game:
         else:
             # corner case: freight for multiple destinations is on board
             pr_red("You are not at the contracted destination for this freight!")
-            pr_red(f"This should be unloaded at {self.ship.destination}")
+            pr_red(f"This should be unloaded at {self.ship.destination.name}")
 
 class Command:
     def __init__(self, key, description, action):

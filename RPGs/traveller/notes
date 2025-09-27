@@ -995,6 +995,7 @@
 #  * [DONE] Test sell_cargo() filtering with discontinuous list
 #  * [DONE] load_freight() corner case: running on destination world before offloading,
 #           so flag is still set
+#  * [DONE] unload_freight() corner case: destination set but no freight on board
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded
 #  * [    ] Adjust reset of destination flag in unload_freight() once we have passengers
@@ -1002,12 +1003,15 @@
 #  * [    ] Freight list per-destination should be refreshed weekly
 #  * [    ] Only show matching destination for freight if passengers already picked
 #  * [    ] load_freight() corner case: 0 tons freight selected
-#  * [    ] unload_freight() corner case: destination set but no freight on board
 #  * [    ] unload_freight() corner case: freight for different destination on board
 #  * [    ] unload_freight() corner case: freight for multiple destinations on board
+#  * [    ] BUG: when overriding freight destination list due to flag, a non-reachable
+#           world can be selected. Need an intersection between flag and list instead.
+#  * [    ] sell_cargo() corner case: trying to sell with empty hold (or just Freight)
 #  * [    ] multiple destinations is tricky... in that case, what should the field
 #           be set to? And if you offload one set, how does the field look afterwards?
 #           But we ruled this out earlier, right? Implicit expiration date on shipping?
+#  * [    ] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
@@ -1084,6 +1088,8 @@
 #           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
 #           Or add iceteroid mining as an extreme (and very lengthy) procedure?
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Should life support percentage be tied to 'days duration?' But what
+#           happens if it hits zero?
 #  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic.
