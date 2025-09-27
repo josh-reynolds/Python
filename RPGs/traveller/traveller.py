@@ -398,9 +398,12 @@ class Game:
                 pr_red(f"There are no shipments of size {response}.")
 
         print("Done selecting shipments.")
+
+        if total_tonnage == 0:
+            print("No freight shipments selected.")
+            return
         print(f"{total_tonnage} tons selected.")
 
-        # Corner case: 0 tons selected
         confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
         if confirmation == 'n':
             print("Cancelling freight selection.")
@@ -416,7 +419,6 @@ class Game:
     def unload_freight(self):
         pr_blue("Unloading freight.")
 
-        # corner case: freight for a different destination is on board
         # truth table: passengers, freight, destination flag,...
 
         # It should not be possible for there to be freight in the hold,
@@ -444,7 +446,6 @@ class Game:
             self.ship.destination = None   # TO_DO: adjust once we have passengers
 
         else:
-            # corner case: freight for multiple destinations is on board
             pr_red("You are not at the contracted destination for this freight!")
             pr_red(f"This should be unloaded at {self.ship.destination.name}")
 
