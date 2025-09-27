@@ -323,9 +323,15 @@ class Game:
         pr_blue("Loading freight.")
 
         # this is lifted almost verbatim from jump() - refactor
+        # (well it was, but we've added some stuff for destination flag -
+        #  should untangle this.)
         jump_range = self.ship.jump_range
         if self.ship.destination is not None:
-            destinations = [self.ship.destination]
+            if self.ship.destination == self.location:
+                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
+                return
+            else:
+                destinations = [self.ship.destination]
         else:
             destinations = self.star_map.get_systems_within_range(
                     self.location.coordinate,
