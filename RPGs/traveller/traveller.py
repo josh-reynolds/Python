@@ -422,7 +422,6 @@ class Game:
             self.ship.load_cargo(Freight(entry,
                                          self.location,
                                          destination))
-        self.ship.destination = destination
         self.date.day += 1
 
     def unload_freight(self):
@@ -451,8 +450,6 @@ class Game:
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
             self.date.day += 1
-
-            self.ship.destination = None   # TO_DO: adjust once we have passengers
 
         else:
             pr_red("You are not at the contracted destination for this freight.")

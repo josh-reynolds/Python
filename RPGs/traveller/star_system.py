@@ -52,6 +52,9 @@ class StarSystem:
             return self.name == other.name and self.coordinate == other.coordinate
         return NotImplemented
 
+    def __hash__(self):
+        return hash((self.coordinate, self.name))
+
     # TO_DO: we will need to handle digits > 9. Traveller uses 'extended hex'
     # for now we can probably get away with simple f-string conversion: 
     #    f"{value:X}"

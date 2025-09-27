@@ -1,4 +1,5 @@
 import unittest
+from cargo import Freight
 from financials import Credits
 from utilities import confirm_input
 
@@ -21,7 +22,6 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.life_support_level = 0
-        self.destination = None
 
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\
@@ -29,6 +29,17 @@ class Ship:
                  f"{self.crew} crew, {self.passengers} passenger staterooms, " +\
                  f"{self.low_berths} low berths"
         return result
+
+    @property
+    def destination(self):
+        freight_destinations = set([f.destination_world for f in self.hold if
+                                                            isinstance(f, Freight)])
+        if len(freight_destinations) == 0:
+               return None
+        elif len(freight_destinations) == 1:
+            return freight_destinations.pop()
+        else:
+            raise ValueError("Freight for more than one destination in the hold!")
 
     def cargo_hold(self):
         return self.hold
