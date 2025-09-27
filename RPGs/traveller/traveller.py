@@ -139,7 +139,7 @@ class Game:
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
         if self.ship.destination is not None and self.ship.destination != destination:
-            pr_red(f"Your contracted destination is {self.ship.destination.name} " + 
+            pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " + 
                    f"not {destination.name}.")
 
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
@@ -327,25 +327,29 @@ class Game:
     def load_freight(self):
         pr_blue("Loading freight.")
 
-        # this is lifted almost verbatim from jump() - refactor
-        # (well it was, but we've added some stuff for destination flag -
-        #  should untangle this.)
         jump_range = self.ship.jump_range
+        potential_destinations = self.star_map.get_systems_within_range(
+                                    self.location.coordinate,
+                                    jump_range)
+
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
+                # peel apart interaction with passengers and flag set/unset
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
                 return
             else:
-                destinations = [self.ship.destination]
-        else:
-            destinations = self.star_map.get_systems_within_range(
-                    self.location.coordinate,
-                    jump_range)
+                if self.ship.destination in potential_destinations:
+                    print("You are under contract. Only showing freight " +
+                          f"for {self.ship.destination.name}:\n")
+                    destinations = [self.ship.destination]
+                else:
+                    print(f"You are under contract to {self.ship.destination.name} " +
+                          "but it is not within jump range of here.")
+                    return
 
-        if self.ship.destination is not None:
-            print(f"You are under contract. Only showing freight for {self.ship.destination.name}:\n")
         else:
             print(f"Available freight shipments within jump-{jump_range}:\n")
+            destinations = potential_destinations
 
         freight_shipments = []
         for world in destinations:
@@ -451,8 +455,8 @@ class Game:
             self.ship.destination = None   # TO_DO: adjust once we have passengers
 
         else:
-            pr_red("You are not at the contracted destination for this freight!")
-            pr_red(f"This should be unloaded at {self.ship.destination.name}")
+            pr_red("You are not at the contracted destination for this freight.")
+            pr_red(f"It should be unloaded at {self.ship.destination.name}")
 
 class Command:
     def __init__(self, key, description, action):

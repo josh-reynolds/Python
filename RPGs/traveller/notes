@@ -846,6 +846,31 @@
 #   about the second option. Should we restrict the freight 
 #   list if passengers have bought tickets for a destination?
 #
+# Basics are working here. The load_freight() method is a bit
+# hairy, so will need cleanup. And I'm discovering lots of
+# corner cases, playing a bit of whack-a-mole.
+#
+# -------------------------------------------------------------
+# destination           hold
+# -------------------------------------------------------------
+# None                  No freight            OK
+#                       Freight - local       BUG
+#                       Freight - other       BUG
+# Contract = local      No freight            OK if passengers
+#                       Freight - local       OK
+#                       Freight - other       BUG
+# Contract = other      No freight            OK if passengers
+#                       Freight - local       BUG
+#                       Freight - other       OK
+#
+# Constraints on freight (and by extension passengers):
+#   * Destination flag must be set if there is freight and/or
+#     passengers on board
+#   * All freight (and passengers) are for the same destination
+#   * Destination flag must match freight/passenger destination
+#
+# Could/should the flag be dynamic, set via query property?
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1003,21 +1028,26 @@
 #           But we ruled this out earlier, right? Implicit expiration date on shipping?
 #  * [DONE] load_freight() corner case: 0 tons freight selected
 #  * [DONE] sell_cargo() corner case: trying to sell with empty hold (or just Freight)
+#  * [DONE] BUG: when overriding freight destination list due to flag, a non-reachable
+#           world can be selected. Need an intersection between flag and list instead.
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded
 #  * [    ] Adjust reset of destination flag in unload_freight() once we have passengers
 #  * [    ] Freight list per-destination should persist
 #  * [    ] Freight list per-destination should be refreshed weekly
-#  * [    ] Only show matching destination for freight if passengers already picked
-#  * [    ] BUG: when overriding freight destination list due to flag, a non-reachable
-#           world can be selected. Need an intersection between flag and list instead.
-#  * [    ] Truth table out the logic for combinations of cargo/freight/passengers/destination
+#  * [    ] Only show matching destination for freight if passengers already picked (should
+#           be covered already via destination flag. Verify!)
+#  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [    ] Consider asserts for constraint violations in freight logic especially. Should
 #           not have a None flag if there is freight in the hold, and should not allow
-#           freght for multiple destinations in the hold.
+#           freight for multiple destinations in the hold.
+#  * [    ] Consider making the destination flag a dynamic query property instead, based
+#           on contents of hold/passenger compartment
 #  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
+#  * [    ] Should we make contracted destination visible? Or is it apparent from
+#           cargo hold and passenger manifest data?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Add crew members with skills
