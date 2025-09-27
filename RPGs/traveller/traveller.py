@@ -126,7 +126,6 @@ class Game:
                   f"Life support is at {life_support}%.")
             return
 
-        # TO_DO: warning if selected destination does not match Ship.destination
         jump_range = self.ship.jump_range
         destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                               jump_range)
@@ -218,8 +217,9 @@ class Game:
 
     def sell_cargo(self):
         pr_blue("Selling cargo.")
-        print_list(self.ship.hold)
-        _, cargo = self.depot.get_cargo_lot(self.ship.hold, "sell")
+        cargoes = [c for c in self.ship.hold if isinstance(c, Cargo)]
+        print_list(cargoes)
+        _, cargo = self.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             return
 
