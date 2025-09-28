@@ -15,6 +15,7 @@ class StarSystem:
         self.tech = tech
         self.gas_giant = gas_giant
         self.detail = "orbit"
+        self.destinations = []
 
         self.agricultural = False
         if (atmosphere in (4, 5, 6, 7, 8, 9) and

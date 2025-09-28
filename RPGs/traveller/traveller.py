@@ -123,15 +123,15 @@ class Game:
             return
 
         jump_range = self.ship.jump_range
-        destinations = self.star_map.get_systems_within_range(self.location.coordinate,
+        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                               jump_range)
         print(f"Systems within jump-{jump_range}:")
-        print_list(destinations)
+        print_list(self.location.destinations)
         destination_number = int_input("Enter destination number: ")
-        if destination_number >= len(destinations):
+        if destination_number >= len(self.location.destinations):
             print("That is not a valid destination number.")
             return
-        coordinate = destinations[destination_number].coordinate
+        coordinate = self.location.destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
         if self.ship.destination is not None and self.ship.destination != destination:
@@ -150,7 +150,7 @@ class Game:
 
         # TO_DO: calling for side effect of generating
         #        neighboring systems... refactor this
-        _ = self.star_map.get_systems_within_range(self.location.coordinate,
+        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                    jump_range)
 
         self.depot.system = destination
@@ -322,9 +322,7 @@ class Game:
         pr_blue("Loading freight.")
 
         jump_range = self.ship.jump_range
-        potential_destinations = self.star_map.get_systems_within_range(
-                                    self.location.coordinate,
-                                    jump_range)
+        potential_destinations = self.location.destinations.copy()
 
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
