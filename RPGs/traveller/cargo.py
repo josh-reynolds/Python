@@ -89,6 +89,28 @@ class CargoDepot:
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
 
+    def get_available_freight(self, destinations):
+        freight_shipments = []
+        for world in destinations:
+            shipments = []
+            for i in range(world.population):
+                shipments.append(die_roll() * 5)
+            shipments = sorted(shipments)
+            freight_shipments.append(shipments)
+
+        for i,world in enumerate(destinations):
+            pr_green(f"{i} - {world}")
+            print("   ", freight_shipments[i])
+            print()
+
+        destination_number = int_input("Enter destination number: ")
+        if destination_number >= len(destinations):
+            print("That is not a valid destination number.")
+            return
+        coordinate = destinations[destination_number].coordinate
+
+        return (coordinate, freight_shipments[destination_number])
+
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
             table = cargo.purchase_dms
@@ -564,6 +586,9 @@ class CargoDepotTestCase(unittest.TestCase):
         cargo = depot.determine_cargo()
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
+
+    def test_get_available_freight(self):
+        pass               # TO_DO
 
 class FreightTestCase(unittest.TestCase):
     class SystemMock:

@@ -1042,12 +1042,12 @@
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
+#  * [....] Freight list per-destination should persist
+#  * [....] Freight list per-destination should be refreshed weekly
+#  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
 #           property ought to take care of this, check)
 #  * [    ] Adjust destination property in Ship once we have passengers
-#  * [    ] Freight list per-destination should persist
-#  * [    ] Freight list per-destination should be refreshed weekly
-#  * [    ] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
 #  * [    ] Should we make contracted destination visible? Or is it apparent from

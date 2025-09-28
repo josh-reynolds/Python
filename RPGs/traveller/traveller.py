@@ -322,8 +322,6 @@ class Game:
     # Freight list needs to persist between invocations, and
     #   be refreshed weekly like cargo
     # If passengers have been picked already, only show that destination
-    # Automatically exit selection loop if no remaining cargoes will fit?
-    # Ability to put shipments back?
     def load_freight(self):
         pr_blue("Loading freight.")
 
@@ -334,7 +332,6 @@ class Game:
 
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
-                # peel apart interaction with passengers and flag set/unset
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
                 return
             else:
@@ -351,27 +348,8 @@ class Game:
             print(f"Available freight shipments within jump-{jump_range}:\n")
             destinations = potential_destinations
 
-        freight_shipments = []
-        for world in destinations:
-            shipments = []
-            for i in range(world.population):
-                shipments.append(die_roll() * 5)
-            shipments = sorted(shipments)
-            freight_shipments.append(shipments)
-
-        for i,world in enumerate(destinations):
-            pr_green(f"{i} - {world}")
-            print("   ", freight_shipments[i])
-            print()
-
-        destination_number = int_input("Enter destination number: ")
-        if destination_number >= len(destinations):
-            print("That is not a valid destination number.")
-            return
-        coordinate = destinations[destination_number].coordinate
+        coordinate, available = self.depot.get_available_freight(destinations)
         destination = self.star_map.get_system_at_coordinate(coordinate)
-
-        available = freight_shipments[destination_number]
         print(f"Freight shipments for {destination.name}")
         print(available)
 
