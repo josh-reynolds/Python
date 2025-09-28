@@ -114,16 +114,12 @@ class Game:
 
     def jump(self):
         pr_blue("Preparing for jump.")
-        jump_fuel = self.ship.jump_fuel_cost
-        if jump_fuel > self.ship.current_fuel:
-            print(f"Insufficient fuel. Jump requires {jump_fuel} tons, only "
-                  f"{self.ship.current_fuel} tons in tanks.")
+        if not self.ship.sufficient_jump_fuel():
+            print(self.ship.insufficient_jump_fuel_message())
             return
 
-        life_support = self.ship.life_support_level
-        if life_support < 100:
-            print(f"Insufficient life support to survive jump.\n"
-                  f"Life support is at {life_support}%.")
+        if not self.ship.sufficient_life_support():
+            print(self.ship.insufficient_life_support_message())
             return
 
         jump_range = self.ship.jump_range

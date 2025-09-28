@@ -104,6 +104,20 @@ class Ship:
         self.current_fuel += amount
         return price
 
+    def sufficient_jump_fuel(self):
+        return self.jump_fuel_cost < self.current_fuel
+
+    def insufficient_jump_fuel_message(self):
+        return f"Insufficient fuel. Jump requires {self.jump_fuel_cost} tons, only " +\
+               f"{self.current_fuel} tons in tanks."
+
+    def sufficient_life_support(self):
+        return self.life_support_level == 100
+
+    def insufficient_life_support_message(self):
+        return f"Insufficient life support to survive jump.\n" + \
+               f"Life support is at {self.life_support_level}%."
+
     # Book 2 p. 6
     # Each stateroom on a starship, occupied or not, involves a constant overhead
     # cost of 2000 Cr per trip made. Each crew member occupies one stateroom; the
@@ -286,6 +300,29 @@ class ShipTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             ship.destination
         self.assertEqual(f"{cm.exception}", "Freight for more than one destination in the hold!")
+
+    def test_sufficient_jump_fuel(self):
+        ship = ShipTestCase.ship
+        ship.current_fuel = 30
+
+        self.assertTrue(ship.sufficient_jump_fuel())
+
+        ship.current_fuel = 19
+        self.assertFalse(ship.sufficient_jump_fuel())
+        self.assertEqual(ship.insufficient_jump_fuel_message(),
+                         "Insufficient fuel. Jump requires 20 tons, only 19 tons in tanks.")
+
+    def test_sufficient_life_support(self):
+        ship = ShipTestCase.ship
+        ship.life_support_level = 100
+
+        self.assertTrue(ship.sufficient_life_support())
+
+        ship.life_support_level = 99
+        self.assertFalse(ship.sufficient_life_support())
+        self.assertEqual(ship.insufficient_life_support_message(),
+                         "Insufficient life support to survive jump.\n" +
+                         "Life support is at 99%.")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
