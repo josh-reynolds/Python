@@ -106,7 +106,7 @@ class CargoDepot:
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):
             print("That is not a valid destination number.")
-            return
+            return (None, None)
         coordinate = destinations[destination_number].coordinate
 
         return (coordinate, freight_shipments[destination_number])
@@ -410,6 +410,9 @@ class CargoDepotTestCase(unittest.TestCase):
             self.rich = True
             self.poor = True
             self.name = "Uranus"
+            self.coordinate = 111
+        def __repr__(self):
+            return f"{self.coordinate} - {self.name}"
 
     def setUp(self):
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
@@ -587,8 +590,16 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
 
+    @unittest.skip("test has side effects: input & printing")
     def test_get_available_freight(self):
-        pass               # TO_DO
+        depot = CargoDepotTestCase.depot
+        world1 = CargoDepotTestCase.SystemMock()
+        world1.name = "Pluto"
+        world2 = CargoDepotTestCase.SystemMock()
+        world2.name = "Jupiter"
+        destinations = [world1, world2]
+
+        coordinate, available = depot.get_available_freight(destinations)
 
 class FreightTestCase(unittest.TestCase):
     class SystemMock:

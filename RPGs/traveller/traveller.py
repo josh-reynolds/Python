@@ -349,6 +349,9 @@ class Game:
             destinations = potential_destinations
 
         coordinate, available = self.depot.get_available_freight(destinations)
+        if available is None:
+            return
+
         destination = self.star_map.get_system_at_coordinate(coordinate)
         print(f"Freight shipments for {destination.name}")
         print(available)
