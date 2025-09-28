@@ -28,6 +28,8 @@ class Game:
             })
 
         self.location = self.star_map.get_system_at_coordinate((0,0,0))
+        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
+                                                              self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
 
@@ -123,8 +125,6 @@ class Game:
             return
 
         jump_range = self.ship.jump_range
-        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
-                                                              jump_range)
         print(f"Systems within jump-{jump_range}:")
         print_list(self.location.destinations)
         destination_number = int_input("Enter destination number: ")

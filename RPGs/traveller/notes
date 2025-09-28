@@ -1107,6 +1107,14 @@
 #           on contents of hold/passenger compartment
 #  * [DONE] Add unit tests for Ship.destination property
 #  * [DONE] Hide all StarSystem() ctor calls behind StarSystemFactory
+#  * [DONE] Move destinations into StarSystem class
+#  * [DONE] Should populate the map for the starting world at launch. Currently
+#           hasn't mattered due to jump-1 ship we're testing, but change to
+#           jump-2 and observe that neighbors aren't generated until the
+#           jump command is issued.
+#  * [DONE] Refactoring suggestion: we call get_systems_within_range() twice in Game.jump(),
+#           once for (hopefully) pre-existing data, and once for the side effect of
+#           populating StarMap.systems. Split this up.
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
@@ -1118,14 +1126,6 @@
 #  * [....] Freight list per-destination should persist
 #  * [....] Freight list per-destination should be refreshed weekly
 #  * [....] Refactor freight methods, push down pieces as appropriate
-#  * [....] Move destinations into StarSystem class
-#  * [    ] Should populate the map for the starting world at launch. Currently
-#           hasn't mattered due to jump-1 ship we're testing, but change to
-#           jump-2 and observe that neighbors aren't generated until the
-#           jump command is issued.
-#  * [    ] Refactoring suggestion: we call get_systems_within_range() twice in Game.jump(),
-#           once for (hopefully) pre-existing data, and once for the side effect of
-#           populating StarMap.systems. Split this up.
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
