@@ -1115,6 +1115,7 @@
 #  * [DONE] Refactoring suggestion: we call get_systems_within_range() twice in Game.jump(),
 #           once for (hopefully) pre-existing data, and once for the side effect of
 #           populating StarMap.systems. Split this up.
+#  * [DONE] Freight list per-destination should persist
 #  * [....] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
@@ -1123,7 +1124,6 @@
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
-#  * [....] Freight list per-destination should persist
 #  * [....] Freight list per-destination should be refreshed weekly
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
@@ -1207,7 +1207,8 @@
 #           happens if it hits zero?
 #  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
 #           for perf as discussed above, but even if not I could see map displays
-#           making use of it. Sort of a Fog of War mechanic.
+#           making use of it. Sort of a Fog of War mechanic. This may be as
+#           simple as whether StarSystem.destinations is populated or not.
 #  * [    ] Traveller '77 had route determination. Add this?
 #  * [    ] Should freight expire or be assessed a penalty fee for late delivery?
 #           Similar question for passengers. Particularly meaningful in the case

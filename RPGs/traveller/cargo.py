@@ -99,7 +99,8 @@ class CargoDepot:
             self.freight[world] = sorted(self.freight[world])
 
     def get_available_freight(self, destinations):
-        self.refresh_freight(destinations)
+        if self.freight == {}:
+            self.refresh_freight(destinations)
 
         for i,world in enumerate(destinations):
             pr_green(f"{i} - {world}")
