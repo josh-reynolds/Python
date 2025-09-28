@@ -158,7 +158,7 @@ class Game:
         self.financials.location = destination
 
         self.ship.life_support_level = 0
-        self.ship.current_fuel -= jump_fuel
+        self.ship.current_fuel -= self.ship.jump_fuel_cost
         self.date.plus_week()
 
     def view_world(self):

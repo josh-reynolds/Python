@@ -705,6 +705,12 @@
 #   and a reasonable maximum for grabbing a bunch of coordinates
 #   all at once. We'll keep an eye on performance and see.
 #
+#   OK. Tried out a jump-6 ship, and the current implementation
+#   generated 60+ worlds in an eyeblink. No observable
+#   perf issue at this scale (and per Traveller canon, jump-6
+#   is the largest possible. Mijumps don't count for this
+#   purpose.) So practically speaking, we're good.
+#
 # * That done, the last bit is easy: get_systems_within_range()
 #   should look at all hexes by coordinate, not by what is present
 #   in the dictionary. An if a given coordinate is not in the 
@@ -869,7 +875,8 @@
 #   * All freight (and passengers) are for the same destination
 #   * Destination flag must match freight/passenger destination
 #
-# Could/should the flag be dynamic, set via query property?
+# Could/should the flag be dynamic, set via query property? Yep.
+# Seems to be an improvement.
 #
 # -------------------------------------------------------------
 
