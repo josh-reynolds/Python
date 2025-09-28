@@ -81,7 +81,7 @@ class CargoDepot:
         self.refresh_date = refresh_date.copy()
         self.recurrence = 7
         self.cargo = self.determine_cargo()
-        self.freight_shipments = {}
+        self.freight = {}
 
     def notify(self, date):
         duration = (date - self.refresh_date) // self.recurrence
@@ -90,26 +90,29 @@ class CargoDepot:
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
 
-    def get_available_freight(self, destinations):
-        self.freight_shipments = {}
+    def refresh_freight(self, destinations):
+        self.freight = {}
         for world in destinations:
-            self.freight_shipments[world] = []
+            self.freight[world] = []
             for i in range(world.population):
-                self.freight_shipments[world].append(die_roll() * 5)
-            self.freight_shipments[world] = sorted(self.freight_shipments[world])
+                self.freight[world].append(die_roll() * 5)
+            self.freight[world] = sorted(self.freight[world])
+
+    def get_available_freight(self, destinations):
+        self.refresh_freight(destinations)
 
         for i,world in enumerate(destinations):
             pr_green(f"{i} - {world}")
-            print("   ", self.freight_shipments[world])
+            print("   ", self.freight[world])
             print()
 
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):
             print("That is not a valid destination number.")
             return (None, None)
-        coordinate = destinations[destination_number].coordinate
+        world = destinations[destination_number]
 
-        return (coordinate, self.freight_shipments[world])
+        return (world.coordinate, self.freight[world])
 
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
