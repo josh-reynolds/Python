@@ -89,6 +89,7 @@ class CargoDepot:
             self.refresh_date += self.recurrence
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
+            self.refresh_freight(self.system.destinations)
 
     def refresh_freight(self, destinations):
         self.freight = {}

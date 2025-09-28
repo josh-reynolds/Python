@@ -1116,7 +1116,8 @@
 #           once for (hopefully) pre-existing data, and once for the side effect of
 #           populating StarMap.systems. Split this up.
 #  * [DONE] Freight list per-destination should persist
-#  * [....] Add freight shipping
+#  * [DONE] Freight list per-destination should be refreshed weekly
+#  * [DONE] Add freight shipping
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
@@ -1124,7 +1125,6 @@
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
-#  * [....] Freight list per-destination should be refreshed weekly
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
