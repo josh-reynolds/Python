@@ -878,6 +878,39 @@
 # Could/should the flag be dynamic, set via query property? Yep.
 # Seems to be an improvement.
 #
+# Almost done with freight. The last significant piece is making
+# the freight list persistent. Currently it's refreshed every
+# time the player invokes the command. They could game the system
+# by repeatedly spamming and exiting to get exactly the freight
+# they want. Not a game-breaker I suppose, but it's also
+# 'unrealistic.' Freight, just like cargo, should show up
+# more slowly.
+#
+# Another benefit is this is pushing me to refactor the ugly
+# load_freight() method. I conciously put that together all
+# in Game, knowing it would need cleanup once I understood
+# the flow.
+#
+# That's progressing but I'm on the threshold of a slightly 
+# larger change. Freight needs to know about destinations.
+# Currently I am only generating destinations in three
+# places - twice in jump() and once in load_cargo(). And 
+# the only place the information is persisted is the 
+# StarMap dictionary. I think it would be helpful if
+# StarSystems knew their 'neighbors.' Yes, this is specific
+# to the ship in question, not the StarSystem proper, but
+# I don't envision any way for the player to change their
+# jump capability for a long time, if ever.
+#
+# So, seems like rather than in jump, we should generate
+# when we create the System. If we do it in the ctor, we'll
+# need to couple too many things IMO. But how about in
+# StarSystemFactory? For that to work, we'll first need
+# to get rid of any 'bare' invocations of the StarSystem
+# ctor. Another method that allows us to specify the 
+# attributes, rather than rolling randomly, should do the
+# trick. Let's go.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1052,6 +1085,8 @@
 #  * [....] Freight list per-destination should persist
 #  * [....] Freight list per-destination should be refreshed weekly
 #  * [....] Refactor freight methods, push down pieces as appropriate
+#  * [....] Hide all StarSystem() ctor calls behind StarSystemFactory
+#  * [    ] Move destinations into StarSystem class
 #  * [    ] Add passengers
 #  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination

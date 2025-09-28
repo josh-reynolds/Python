@@ -85,6 +85,13 @@ from utilities import die_roll, constrain
 # some cases
 class StarSystemFactory:
     @classmethod
+    def create(cls, name, coordinate, starport, size, atmosphere,
+               hydrographics, population, government, law, tech, gas_giant=True):
+        return StarSystem(name, coordinate, starport, size, atmosphere,
+                          hydrographics, population, government, law, 
+                          tech, gas_giant)
+
+    @classmethod
     def generate(cls, coordinate):
         name = "Test"
 
@@ -483,6 +490,28 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
         self.assertGreaterEqual(system.tech, 0)
         self.assertLessEqual(system.tech, 18)
+
+    def test_create(self):
+        world = StarSystemFactory.create("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
+
+        self.assertTrue(isinstance(world, StarSystem))
+        self.assertEqual(world.name, "Yorbund")
+        self.assertEqual(world.coordinate, (0,0,0))
+        self.assertEqual(world.starport, "A")
+        self.assertEqual(world.size, 8)
+        self.assertEqual(world.atmosphere, 7)
+        self.assertEqual(world.hydrographics, 5)
+        self.assertEqual(world.population, 9)
+        self.assertEqual(world.government, 5)
+        self.assertEqual(world.law, 5)
+        self.assertEqual(world.tech, 10)
+        self.assertEqual(world.gas_giant, True)
+        self.assertEqual(world.agricultural, False)
+        self.assertEqual(world.nonagricultural, False)
+        self.assertEqual(world.industrial, True)
+        self.assertEqual(world.nonindustrial, False)
+        self.assertEqual(world.rich, False)
+        self.assertEqual(world.poor, False)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
