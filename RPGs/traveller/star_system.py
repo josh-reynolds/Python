@@ -1,4 +1,5 @@
 import unittest
+
 class StarSystem:
     def __init__(self, name, coordinate, starport, size, atmosphere, 
                  hydrographics, population, government, law, tech, gas_giant=True):

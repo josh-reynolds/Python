@@ -253,17 +253,17 @@ class StarMap:
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
+            (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
             (0,1,-1) : None,
-            (0,-1,1) : StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5),
-            (1,0,-1) : StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5),
+            (0,-1,1) : StarSystemFactory.create("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5),
+            (1,0,-1) : StarSystemFactory.create("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5),
             (-1,0,1) : None,
             (1,-1,0) : None,
-            (-1,1,0) : StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5)
+            (-1,1,0) : StarSystemFactory.create("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
-            (0,0,0)  : StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
+            (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
             (0,1,-1) : None,
             (0,-1,1) : None,
             (1,0,-1) : None,
@@ -457,10 +457,10 @@ class StarMapTestCase(unittest.TestCase):
         star_map1 = StarMapTestCase.star_map1
         systems = star_map1.get_all_systems()
         self.assertEqual(len(systems), 4)
-        self.assertEqual(systems[0], StarSystem("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[1], StarSystem("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[2], StarSystem("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[3], StarSystem("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[0], StarSystemFactory.create("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[1], StarSystemFactory.create("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[2], StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[3], StarSystemFactory.create("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5))
 
 class StarSystemFactoryTestCase(unittest.TestCase):
     def test_generate(self):
