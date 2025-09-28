@@ -1045,11 +1045,11 @@
 #  * [....] Freight list per-destination should persist
 #  * [....] Freight list per-destination should be refreshed weekly
 #  * [....] Refactor freight methods, push down pieces as appropriate
+#  * [    ] Add passengers
+#  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
 #           property ought to take care of this, check)
 #  * [    ] Adjust destination property in Ship once we have passengers
-#  * [    ] Add passengers
-#  * [    ] Add passenger manifest
 #  * [    ] Should we make contracted destination visible? Or is it apparent from
 #           cargo hold and passenger manifest data?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
@@ -1109,6 +1109,10 @@
 #  *         restart / new game options, including re-using same star map
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
+#  * [    ] Should populate the map for the starting world at launch. Currently
+#           hasn't mattered due to jump-1 ship we're testing, but change to
+#           jump-2 and observe that neighbors aren't generated until the
+#           jump command is issued.
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Should/could we clear the screen?

@@ -90,17 +90,16 @@ class CargoDepot:
             self.cargo = self.determine_cargo()
 
     def get_available_freight(self, destinations):
-        freight_shipments = []
+        freight_shipments = {}
         for world in destinations:
-            shipments = []
+            freight_shipments[world] = []
             for i in range(world.population):
-                shipments.append(die_roll() * 5)
-            shipments = sorted(shipments)
-            freight_shipments.append(shipments)
+                freight_shipments[world].append(die_roll() * 5)
+            freight_shipments[world] = sorted(freight_shipments[world])
 
         for i,world in enumerate(destinations):
             pr_green(f"{i} - {world}")
-            print("   ", freight_shipments[i])
+            print("   ", freight_shipments[world])
             print()
 
         destination_number = int_input("Enter destination number: ")
@@ -109,7 +108,7 @@ class CargoDepot:
             return (None, None)
         coordinate = destinations[destination_number].coordinate
 
-        return (coordinate, freight_shipments[destination_number])
+        return (coordinate, freight_shipments[world])
 
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
