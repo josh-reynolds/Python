@@ -107,17 +107,47 @@ class CargoDepot:
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
 
+    # Table from Book 2 p. 7
+    # In RAW the table goes up to population 12, but the system only 
+    # generates populations up to 10, so I am truncating
+    def passenger_origin_table(self, population):
+        if population < 2:
+            return (0,0,0)
+        if population == 2:
+            return (die_roll()-die_roll(), 
+                    die_roll()-die_roll(), 
+                    die_roll(3)-die_roll())
+        if population == 3:
+            return (die_roll(3)-die_roll(2),
+                    die_roll(2)-die_roll(2), 
+                    die_roll(3)-die_roll())
+        if population == 4:
+            return (die_roll(3)-die_roll(3),
+                    die_roll(3)-die_roll(3), 
+                    die_roll(4)-die_roll())
+        if population == 5:
+            return (die_roll(3)-die_roll(2),
+                    die_roll(3)-die_roll(2), 
+                    die_roll(4)-die_roll())
+        if population == 6 or population == 7:
+            return (die_roll(3)-die_roll(2),
+                    die_roll(3)-die_roll(2), 
+                    die_roll(3))
+        if population == 8:
+            return (die_roll(2)-die_roll(),
+                    die_roll(3)-die_roll(2), 
+                    die_roll(4))
+        if population > 8:
+            return (die_roll(2)-die_roll(),
+                    die_roll(2)-die_roll(), 
+                    die_roll(4))
+
+    # passenger counts are a tuple, indexed by the Passengers enum
     def refresh_passengers(self, destinations):
         self.passengers = {}
         for world in destinations:
-            self.passengers[world] = []
-            # TO_DO: need the table from Book 2 here
-            #  how to represent passengers? a little class,
-            #  or an enum?
-            # I think a tuple, with indices by Passenger enum
-            for i in range(world.population):
-                self.passengers[world].append(die_roll() * 5)
-            self.passengers[world] = sorted(self.passengers[world])
+            passengers = self.passenger_origin_table(world.population)
+            self.passengers[world] = passengers
 
     def get_available_freight(self, destinations):
         if self.freight == {}:
