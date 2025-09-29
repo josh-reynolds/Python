@@ -246,9 +246,10 @@ class StarMap:
 
     @classmethod
     def get_all_coords(cls, radius):
-        return [(a,b,c) for a in range(-radius,radius+1) 
-                        for b in range(-radius,radius+1)
-                        for c in range(-radius,radius+1)]
+        span = range(-radius, radius+1)
+        return [(a,b,c) for a in span 
+                        for b in span
+                        for c in span]
 
 class StarMapTestCase(unittest.TestCase):
     def setUp(self):

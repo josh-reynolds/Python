@@ -5,9 +5,9 @@ from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
 class Passenger(Enum):
-    HIGH = 1
-    MIDDLE = 2
-    LOW = 3
+    HIGH = 0
+    MIDDLE = 1
+    LOW = 2
 
 class Freight:
     def __init__(self, tonnage, source_world, destination_world):
@@ -114,6 +114,7 @@ class CargoDepot:
             # TO_DO: need the table from Book 2 here
             #  how to represent passengers? a little class,
             #  or an enum?
+            # I think a tuple, with indices by Passenger enum
             for i in range(world.population):
                 self.passengers[world].append(die_roll() * 5)
             self.passengers[world] = sorted(self.passengers[world])
