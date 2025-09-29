@@ -116,7 +116,45 @@ class Game:
         self.commands = starport
 
     def book_passengers(self):
-        pass     # TO_DO
+        pr_blue("Booking passengers.")
+
+        jump_range = self.ship.jump_range
+        potential_destinations = self.location.destinations.copy()
+
+        # Work through order of operations... if passengers 
+        # automatically disembark at landing, then they can't contribute
+        # to a flag at ths point, just freight
+        # But we don't care if there is freight if we're loading passengers
+        # logic below lifted from load_freight() but will need adjustment
+        # (and probably there as well to account for passengers)
+        if self.ship.destination is not None:
+            if self.ship.destination == self.location:
+                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
+                return
+            else:
+                if self.ship.destination in potential_destinations:
+                    print("You are under contract. Only showing passengers " +
+                          f"for {self.ship.destination.name}:\n")
+                    destinations = [self.ship.destination]
+                else:
+                    print(f"You are under contract to {self.ship.destination.name} " +
+                          "but it is not within jump range of here.")
+                    return
+
+        else:
+            print(f"Available passenger destinations within jump-{jump_range}:\n")
+            destinations = potential_destinations
+
+        # for now we will stuff this in cargo depot, though it may better
+        # be served by a separate class. If it _does_ stay in the depot, we
+        # may want to adjust the nomenclature to make this more clear.
+        coordinate, available = self.depot.get_available_passengers(destinations)
+        if available is None:
+            return
+
+        destination = self.star_map.get_system_at_coordinate(coordinate)
+        print(f"Passengers for {destination.name}")
+        print(available)
 
     def to_depot(self):
         pr_blue(f"Entering {self.location.name} trade depot.")
@@ -326,8 +364,6 @@ class Game:
 
     # TO_DO: after getting this working, assess if any pieces should
     #        be pushed down
-    # Freight list needs to persist between invocations, and
-    #   be refreshed weekly like cargo
     # If passengers have been picked already, only show that destination
     def load_freight(self):
         pr_blue("Loading freight.")

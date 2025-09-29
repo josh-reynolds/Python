@@ -1,7 +1,13 @@
 import unittest
+from enum import Enum
 from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
+
+class Passenger(Enum):
+    HIGH = 1
+    MIDDLE = 2
+    LOW = 3
 
 class Freight:
     def __init__(self, tonnage, source_world, destination_world):
@@ -82,6 +88,7 @@ class CargoDepot:
         self.recurrence = 7
         self.cargo = self.determine_cargo()
         self.freight = {}
+        self.passengers = {}
 
     def notify(self, date):
         duration = (date - self.refresh_date) // self.recurrence
@@ -90,6 +97,7 @@ class CargoDepot:
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self.determine_cargo()
             self.refresh_freight(self.system.destinations)
+            self.refresh_passengers(self.system.destinations)
 
     def refresh_freight(self, destinations):
         self.freight = {}
@@ -98,6 +106,17 @@ class CargoDepot:
             for i in range(world.population):
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
+
+    def refresh_passengers(self, destinations):
+        self.passengers = {}
+        for world in destinations:
+            self.passengers[world] = []
+            # TO_DO: need the table from Book 2 here
+            #  how to represent passengers? a little class,
+            #  or an enum?
+            for i in range(world.population):
+                self.passengers[world].append(die_roll() * 5)
+            self.passengers[world] = sorted(self.passengers[world])
 
     def get_available_freight(self, destinations):
         if self.freight == {}:
@@ -116,6 +135,23 @@ class CargoDepot:
 
         return (world.coordinate, self.freight[world])
 
+    def get_available_passengers(self, destinations):
+        if self.passengers == {}:
+            self.refresh_passengers(destinations)
+
+        for i,world in enumerate(destinations):
+            pr_green(f"{i} - {world}")
+            print("   ", self.passengers[world])
+            print()
+
+        destination_number = int_input("Enter destination number: ")
+        if destination_number >= len(destinations):
+            print("That is not a valid destination number.")
+            return (None, None)
+        world = destinations[destination_number]
+
+        return (world.coordinate, self.passengers[world])
+    
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
             table = cargo.purchase_dms

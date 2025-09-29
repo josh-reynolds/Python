@@ -1232,6 +1232,7 @@
 #  * [DONE] Freight list per-destination should persist
 #  * [DONE] Freight list per-destination should be refreshed weekly
 #  * [DONE] Add freight shipping
+#  * [DONE] Add passenger terminal: location, transition commands, command set
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
@@ -1241,8 +1242,10 @@
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [....] Add passengers
-#  * [....] Add passenger terminal: location, transition commands, command set
-#  * [    ] Add book_passengers()
+#  * [....] Add book_passengers()
+#  * [....] Add Passenger enum
+#  * [....] Add refresh_passengers() and CargoDepot.passengers field
+#  * [....] Add get_available_passengers()
 #  * [    ] Add disembark_passengers()
 #  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
