@@ -3,7 +3,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
-from cargo import Cargo, CargoDepot, Freight
+from cargo import Cargo, CargoDepot, Freight, Passenger
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
 
@@ -155,6 +155,53 @@ class Game:
         destination = self.star_map.get_system_at_coordinate(coordinate)
         print(f"Passengers for {destination.name}")
         print(available)
+
+        selection = (0,0,0)
+        while True:
+            if available == (0,0,0):
+                print(f"No more passengers available for {destination.name}.")
+                break
+
+            response = input("Choose a passenger by type (h, m, l, or q to exit): ")
+            if response == 'q':
+                break
+
+            if response == 'h':
+                if available[Passenger.HIGH.value] == 0:
+                    print("No more high passengers available.")
+                    continue
+                print("Adding a high passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
+                available = tuple(a+b for a,b in zip(available,(-1,0,0)))
+
+            if response == 'm':
+                if available[Passenger.MIDDLE.value] == 0:
+                    print("No more middle passengers available.")
+                    continue
+                print("Adding a middle passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(0,1,0)))
+                available = tuple(a+b for a,b in zip(available,(0,-1,0)))
+
+            if response == 'l':
+                if available[Passenger.LOW.value] == 0:
+                    print("No more low passengers available.")
+                    continue
+                print("Adding a low passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(0,0,1)))
+                available = tuple(a+b for a,b in zip(available,(0,0,-1)))
+
+                                  
+            print(available)
+            print(selection)
+                # show new available
+                # show ship free space
+        print("Done selecting passengers.")
+
+        # exit if none selected
+        # confirm selection
+        # add to ship
+
+
 
     def to_depot(self):
         pr_blue(f"Entering {self.location.name} trade depot.")
@@ -402,6 +449,7 @@ class Game:
         hold_tonnage = self.ship.free_space()
         while True:
             if len(available) == 0:
+                print(f"No more freight available for {destination.name}.")
                 break
 
             response = input("Choose a shipment by tonnage ('q' to exit): ")
