@@ -22,6 +22,7 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.life_support_level = 0
+        self.passengers = (0,0,0)
 
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\

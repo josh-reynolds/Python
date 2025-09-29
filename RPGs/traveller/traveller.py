@@ -168,7 +168,7 @@ class Game:
 
             print(f"Remaining (H, M, L): {available}")
             print(f"Selected (H, M, L): {selection}")
-            print(f"Ship berths (H+M, L): {ship_capacity}\n") 
+            print(f"Empty ship berths (H+M, L): {ship_capacity}\n") 
 
             if response == 'h':
                 if available[Passenger.HIGH.value] == 0:
@@ -213,20 +213,18 @@ class Game:
             return
         print(f"Selected (H, M, L): {selection}")
 
-        # confirm selection
-        # add to ship
-        #print(f"{total_tonnage} tons selected.")
-#
-        #confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
-        #if confirmation == 'n':
-            #print("Cancelling freight selection.")
-            #return
-#
-        #for entry in selection:
-            #self.ship.load_cargo(Freight(entry,
-                                         #self.location,
-                                         #destination))
-        #self.date.day += 1
+        confirmation = confirm_input(f"Book {selection} passengers? (y/n)? ")
+        if confirmation == 'n':
+            print("Cancelling passenger selection.")
+            return
+
+        # TO_DO: need to consider the case where we already have passengers
+        #        on board. The following should work, but need to review above.
+        #        Probably want to wrap passenger field access in a property...
+        self.ship.passengers = tuple(a+b for a,b in zip(self.ship.passengers, selection))
+        self.depot.passengers[destination] = tuple(a-b for a,b in
+                                                   zip(self.depot.passengers[destination],
+                                                       selection))
 
     def to_depot(self):
         pr_blue(f"Entering {self.location.name} trade depot.")

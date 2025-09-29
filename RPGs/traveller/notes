@@ -1013,6 +1013,10 @@
 # to index into it. Seems simple enough. We may need to expand
 # to a full class later if we add names and so on, but right
 # now a passenger is a very simple entity, much like freight.
+# (Though come to think of it, just like freight they also may
+# need to track destination, or we need to account for it somehow
+# for the destination property to work. Currently I just track
+# counts by passage type. This will evolve.)
 #
 # We'll also need a selection loop at the terminal similar to
 # how freight works. Keep picking passengers until satisfied.
@@ -1241,6 +1245,7 @@
 #  * [DONE] Add Passenger enum
 #  * [DONE] Add refresh_passengers() and CargoDepot.passengers field
 #  * [DONE] Add get_available_passengers()
+#  * [DONE] Add book_passengers()
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
@@ -1250,7 +1255,6 @@
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [....] Add passengers
-#  * [....] Add book_passengers()
 #  * [    ] Add disembark_passengers()
 #  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
@@ -1261,6 +1265,8 @@
 #  * [    ] BUG: if player selects freight (and passengers?) then does not confirm the
 #           transaction, the items are still removed from the available freight list
 #           (Passengers uses a tuple, which copies by value, not reference, so it is OK)
+#  * [    ] Review book_passengers() for behavior when passengers are already on board - 
+#           should only be possible for same destination
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
