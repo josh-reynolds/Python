@@ -142,11 +142,37 @@ class CargoDepot:
                     die_roll(2)-die_roll(), 
                     die_roll(4))
 
+    def passenger_destination_table(self, population, counts):
+        if population < 2:
+            return (0,0,0)
+        if population == 2:
+            modifiers = (-1,-2,-4)
+        if population == 3:
+            modifiers = (-1,-1,-3)
+        if population == 4:
+            modifiers = (-1,-1,-2)
+        if population == 5:
+            modifiers = (0,-1,-1)
+        if population == 6:
+            modifiers = (0,0,-1)
+        if population == 7:
+            modifiers = (0,0,0)
+        if population == 8:
+            modifiers = (1,0,0)
+        if population == 9:
+            modifiers = (1,1,0)
+        if population == 10:
+            modifiers = (1,1,2)
+
+        return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
+
     # passenger counts are a tuple, indexed by the Passengers enum
     def refresh_passengers(self, destinations):
         self.passengers = {}
         for world in destinations:
-            passengers = self.passenger_origin_table(world.population)
+            origin_counts = self.passenger_origin_table(self.system.population)
+            passengers = self.passenger_destination_table(world.population, 
+                                                          origin_counts)
             self.passengers[world] = passengers
 
     def get_available_freight(self, destinations):
@@ -673,6 +699,98 @@ class CargoDepotTestCase(unittest.TestCase):
         destinations = [world1, world2]
 
         coordinate, available = depot.get_available_freight(destinations)
+
+    def test_passenger_origin_table(self):
+        depot = CargoDepotTestCase.depot
+
+        self.assertEqual(depot.passenger_origin_table(0), (0,0,0))
+        self.assertEqual(depot.passenger_origin_table(1), (0,0,0))
+
+        self.assertGreater(depot.passenger_origin_table(2)[0], -6)
+        self.assertLess(depot.passenger_origin_table(2)[0], 6)
+        self.assertGreater(depot.passenger_origin_table(2)[1], -6)
+        self.assertLess(depot.passenger_origin_table(2)[1], 6)
+        self.assertGreater(depot.passenger_origin_table(2)[2], -4)
+        self.assertLess(depot.passenger_origin_table(2)[2], 18)
+
+        self.assertGreater(depot.passenger_origin_table(3)[0], -10)
+        self.assertLess(depot.passenger_origin_table(3)[0], 17)
+        self.assertGreater(depot.passenger_origin_table(3)[1], -11)
+        self.assertLess(depot.passenger_origin_table(3)[1], 11)
+        self.assertGreater(depot.passenger_origin_table(3)[2], -4)
+        self.assertLess(depot.passenger_origin_table(3)[2], 18)
+
+        self.assertGreater(depot.passenger_origin_table(4)[0], -16)
+        self.assertLess(depot.passenger_origin_table(4)[0], 16)
+        self.assertGreater(depot.passenger_origin_table(4)[1], -16)
+        self.assertLess(depot.passenger_origin_table(4)[1], 16)
+        self.assertGreater(depot.passenger_origin_table(4)[2], -3)
+        self.assertLess(depot.passenger_origin_table(4)[2], 24)
+
+        self.assertGreater(depot.passenger_origin_table(5)[0], -10)
+        self.assertLess(depot.passenger_origin_table(5)[0], 17)
+        self.assertGreater(depot.passenger_origin_table(5)[1], -10)
+        self.assertLess(depot.passenger_origin_table(5)[1], 17)
+        self.assertGreater(depot.passenger_origin_table(5)[2], -3)
+        self.assertLess(depot.passenger_origin_table(5)[2], 24)
+
+        self.assertGreater(depot.passenger_origin_table(6)[0], -10)
+        self.assertLess(depot.passenger_origin_table(6)[0], 17)
+        self.assertGreater(depot.passenger_origin_table(6)[1], -10)
+        self.assertLess(depot.passenger_origin_table(6)[1], 17)
+        self.assertGreater(depot.passenger_origin_table(6)[2], 2)
+        self.assertLess(depot.passenger_origin_table(6)[2], 19)
+
+        self.assertGreater(depot.passenger_origin_table(7)[0], -10)
+        self.assertLess(depot.passenger_origin_table(7)[0], 17)
+        self.assertGreater(depot.passenger_origin_table(7)[1], -10)
+        self.assertLess(depot.passenger_origin_table(7)[1], 17)
+        self.assertGreater(depot.passenger_origin_table(7)[2], 2)
+        self.assertLess(depot.passenger_origin_table(7)[2], 19)
+
+        self.assertGreater(depot.passenger_origin_table(8)[0], -5)
+        self.assertLess(depot.passenger_origin_table(8)[0], 12)
+        self.assertGreater(depot.passenger_origin_table(8)[1], -10)
+        self.assertLess(depot.passenger_origin_table(8)[1], 17)
+        self.assertGreater(depot.passenger_origin_table(8)[2], 3)
+        self.assertLess(depot.passenger_origin_table(8)[2], 25)
+
+        self.assertGreater(depot.passenger_origin_table(9)[0], -5)
+        self.assertLess(depot.passenger_origin_table(9)[0], 12)
+        self.assertGreater(depot.passenger_origin_table(9)[1], -5)
+        self.assertLess(depot.passenger_origin_table(9)[1], 12)
+        self.assertGreater(depot.passenger_origin_table(9)[2], 3)
+        self.assertLess(depot.passenger_origin_table(9)[2], 25)
+
+        self.assertGreater(depot.passenger_origin_table(10)[0], -5)
+        self.assertLess(depot.passenger_origin_table(10)[0], 12)
+        self.assertGreater(depot.passenger_origin_table(10)[1], -5)
+        self.assertLess(depot.passenger_origin_table(10)[1], 12)
+        self.assertGreater(depot.passenger_origin_table(10)[2], 3)
+        self.assertLess(depot.passenger_origin_table(10)[2], 25)
+
+    def test_passenger_destination_table(self):
+        depot = CargoDepotTestCase.depot
+
+        counts = (4,4,4)
+        self.assertEqual(depot.passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(depot.passenger_destination_table(1, counts), (0,0,0))
+        self.assertEqual(depot.passenger_destination_table(2, counts), (3,2,0))
+        self.assertEqual(depot.passenger_destination_table(3, counts), (3,3,1))
+        self.assertEqual(depot.passenger_destination_table(4, counts), (3,3,2))
+        self.assertEqual(depot.passenger_destination_table(5, counts), (4,3,3))
+        self.assertEqual(depot.passenger_destination_table(6, counts), (4,4,3))
+        self.assertEqual(depot.passenger_destination_table(7, counts), (4,4,4))
+        self.assertEqual(depot.passenger_destination_table(8, counts), (5,4,4))
+        self.assertEqual(depot.passenger_destination_table(9, counts), (5,5,4))
+        self.assertEqual(depot.passenger_destination_table(10, counts), (5,5,6))
+
+        counts = (0,0,0)
+        self.assertEqual(depot.passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(depot.passenger_destination_table(2, counts), (0,0,0))
+
+        counts = (50,50,50)
+        self.assertEqual(depot.passenger_destination_table(7, counts), (40,40,40))
 
 class FreightTestCase(unittest.TestCase):
     class SystemMock:
