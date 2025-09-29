@@ -3,7 +3,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
-from cargo import Cargo, CargoDepot, Freight, PassageClass
+from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
 
@@ -219,9 +219,16 @@ class Game:
             return
 
         # TO_DO: need to consider the case where we already have passengers
-        #        on board. The following should work, but need to review above.
         #        Probably want to wrap passenger field access in a property...
-        self.ship.passengers = tuple(a+b for a,b in zip(self.ship.passengers, selection))
+        high = [Passenger(PassageClass.HIGH, destination) 
+                for _ in range(selection[PassageClass.HIGH.value])]
+        middle = [Passenger(PassageClass.MIDDLE, destination) 
+                  for _ in range(selection[PassageClass.MIDDLE.value])]
+        low = [Passenger(PassageClass.LOW, destination) 
+               for _ in range(selection[PassageClass.LOW.value])]
+        self.ship.passengers += high
+        self.ship.passengers += middle
+        self.ship.passengers += low
         self.depot.passengers[destination] = tuple(a-b for a,b in
                                                    zip(self.depot.passengers[destination],
                                                        selection))
@@ -375,9 +382,9 @@ class Game:
 
     def passenger_manifest(self):
         pr_blue("Passenger manifest:")
-        print(f"High passengers: {self.ship.high_passengers}\n"
-              f"Middle passengers: {self.ship.middle_passengers}\n"
-              f"Low passengers: {self.ship.low_passengers}\n\n"
+        print(f"High passengers: {self.ship.high_passenger_count}\n"
+              f"Middle passengers: {self.ship.middle_passenger_count}\n"
+              f"Low passengers: {self.ship.low_passenger_count}\n\n"
               f"Empty berths: {self.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.ship.empty_low_berths}")
 

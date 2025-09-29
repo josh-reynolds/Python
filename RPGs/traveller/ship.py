@@ -22,7 +22,7 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.life_support_level = 0
-        self.passengers = (0,0,0)
+        self.passengers = []
 
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\
@@ -45,24 +45,27 @@ class Ship:
             raise ValueError("Freight for more than one destination in the hold!")
 
     @property
-    def high_passengers(self):
-        return self.passengers[PassageClass.HIGH.value]
+    def high_passenger_count(self):
+        return sum([1 for passenger in self.passengers if
+                    passenger.passage == PassageClass.HIGH])
 
     @property
-    def middle_passengers(self):
-        return self.passengers[PassageClass.MIDDLE.value]
+    def middle_passenger_count(self):
+        return sum([1 for passenger in self.passengers if
+                    passenger.passage == PassageClass.MIDDLE])
 
     @property
-    def low_passengers(self):
-        return self.passengers[PassageClass.LOW.value]
+    def low_passenger_count(self):
+        return sum([1 for passenger in self.passengers if
+                    passenger.passage == PassageClass.LOW])
 
     @property
     def empty_passenger_berths(self):
-        return self.passenger_berths - self.high_passengers - self.middle_passengers
+        return self.passenger_berths - self.high_passenger_count - self.middle_passenger_count
 
     @property
     def empty_low_berths(self):
-        return self.low_berths - self.low_passengers
+        return self.low_berths - self.low_passenger_count
 
     def cargo_hold(self):
         return self.hold

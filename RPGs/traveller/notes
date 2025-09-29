@@ -1018,6 +1018,16 @@
 # for the destination property to work. Currently I just track
 # counts by passage type. This will evolve.)
 #
+# OK, yeah, destination is a stick in the spokes. Plus the
+# enum syntax isn't as smooth as I'd hoped. To use as an
+# index into the tuple you need to access the value field.
+# It's very verbose and feels like I'd be better served with
+# a few constants. But also, where to stash the destination?
+# I toyed with a fourth field in the tuple, but that causes
+# issues when we zip them up for tuple element addition. I
+# think we should have a Passenger class similar to Freight.
+# Figuring that out now.
+#
 # We'll also need a selection loop at the terminal similar to
 # how freight works. Keep picking passengers until satisfied.
 #
@@ -1247,6 +1257,7 @@
 #  * [DONE] Add get_available_passengers()
 #  * [DONE] Add book_passengers()
 #  * [DONE] Add passenger manifest
+#  * [DONE] Add Passenger class
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should

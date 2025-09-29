@@ -9,6 +9,20 @@ class PassageClass(Enum):
     MIDDLE = 1
     LOW = 2
 
+class Passenger:
+    def __init__(self, passage, destination):
+        if passage == PassageClass.HIGH:
+            self.name = "High passage"
+        if passage == PassageClass.MIDDLE:
+            self.name = "Middle passage"
+        if passage == PassageClass.LOW:
+            self.name = "Low passage"
+        self.passage = passage
+        self.destination = destination
+
+    def __repr__(self):
+        return f"{self.name} to {self.destination}"
+
 class Freight:
     def __init__(self, tonnage, source_world, destination_world):
         self.name = "Freight"
