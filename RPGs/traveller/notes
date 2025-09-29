@@ -1284,6 +1284,8 @@
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
+#  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
+#           instead of choosing one at a time.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] pylint/pydocstyle scrub

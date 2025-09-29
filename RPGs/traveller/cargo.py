@@ -4,7 +4,7 @@ from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
-class Passenger(Enum):
+class PassageClass(Enum):
     HIGH = 0
     MIDDLE = 1
     LOW = 2
@@ -166,7 +166,7 @@ class CargoDepot:
 
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
-    # passenger counts are a tuple, indexed by the Passengers enum
+    # passenger counts are a tuple, indexed by the PassageClass enum
     def refresh_passengers(self, destinations):
         self.passengers = {}
         for world in destinations:

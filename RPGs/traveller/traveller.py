@@ -3,7 +3,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
-from cargo import Cargo, CargoDepot, Freight, Passenger
+from cargo import Cargo, CargoDepot, Freight, PassageClass
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
 
@@ -171,7 +171,7 @@ class Game:
             print(f"Empty ship berths (H+M, L): {ship_capacity}\n") 
 
             if response == 'h':
-                if available[Passenger.HIGH.value] == 0:
+                if available[PassageClass.HIGH.value] == 0:
                     print("No more high passengers available.")
                     continue
                 if ship_capacity[0] == 0:
@@ -183,7 +183,7 @@ class Game:
                 ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
 
             if response == 'm':
-                if available[Passenger.MIDDLE.value] == 0:
+                if available[PassageClass.MIDDLE.value] == 0:
                     print("No more middle passengers available.")
                     continue
                 if ship_capacity[0] == 0:
@@ -195,7 +195,7 @@ class Game:
                 ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
 
             if response == 'l':
-                if available[Passenger.LOW.value] == 0:
+                if available[PassageClass.LOW.value] == 0:
                     print("No more low passengers available.")
                     continue
                 if ship_capacity[1] == 0:
@@ -375,12 +375,11 @@ class Game:
 
     def passenger_manifest(self):
         pr_blue("Passenger manifest:")
-        high = self.ship.passengers[Passenger.HIGH.value]
-        middle = self.ship.passengers[Passenger.MIDDLE.value]
-        low = self.ship.passengers[Passenger.LOW.value]
-        print(f"High passengers: {high}\n"
-              f"Middle passengers: {middle}\n"
-              f"Low passengers: {low}")
+        print(f"High passengers: {self.ship.high_passengers}\n"
+              f"Middle passengers: {self.ship.middle_passengers}\n"
+              f"Low passengers: {self.ship.low_passengers}\n\n"
+              f"Empty berths: {self.ship.empty_passenger_berths}\n"
+              f"Empty low berths: {self.ship.empty_low_berths}")
 
     def wait_week(self):
         pr_blue("Waiting.")

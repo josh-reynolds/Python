@@ -1,5 +1,5 @@
 import unittest
-from cargo import Freight
+from cargo import Freight, PassageClass
 from financials import Credits
 from utilities import confirm_input
 
@@ -43,6 +43,26 @@ class Ship:
             return freight_destinations.pop()
         else:
             raise ValueError("Freight for more than one destination in the hold!")
+
+    @property
+    def high_passengers(self):
+        return self.passengers[PassageClass.HIGH.value]
+
+    @property
+    def middle_passengers(self):
+        return self.passengers[PassageClass.MIDDLE.value]
+
+    @property
+    def low_passengers(self):
+        return self.passengers[PassageClass.LOW.value]
+
+    @property
+    def empty_passenger_berths(self):
+        return self.passenger_berths - self.high_passengers - self.middle_passengers
+
+    @property
+    def empty_low_berths(self):
+        return self.low_berths - self.low_passengers
 
     def cargo_hold(self):
         return self.hold
