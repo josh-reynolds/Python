@@ -153,10 +153,10 @@ class Game:
             return
 
         destination = self.star_map.get_system_at_coordinate(coordinate)
-        print(f"Passengers for {destination.name}")
-        print(available)
+        print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = (0,0,0)
+        ship_capacity = (self.ship.passenger_berths, self.ship.low_berths)
         while True:
             if available == (0,0,0):
                 print(f"No more passengers available for {destination.name}.")
@@ -166,42 +166,67 @@ class Game:
             if response == 'q':
                 break
 
+            print(f"Remaining (H, M, L): {available}")
+            print(f"Selected (H, M, L): {selection}")
+            print(f"Ship berths (H+M, L): {ship_capacity}\n") 
+
             if response == 'h':
                 if available[Passenger.HIGH.value] == 0:
                     print("No more high passengers available.")
                     continue
+                if ship_capacity[0] == 0:
+                    print("No more staterooms available.")
+                    continue
                 print("Adding a high passenger.")
                 selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
                 available = tuple(a+b for a,b in zip(available,(-1,0,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
 
             if response == 'm':
                 if available[Passenger.MIDDLE.value] == 0:
                     print("No more middle passengers available.")
                     continue
+                if ship_capacity[0] == 0:
+                    print("No more staterooms available.")
+                    continue
                 print("Adding a middle passenger.")
                 selection = tuple(a+b for a,b in zip(selection,(0,1,0)))
                 available = tuple(a+b for a,b in zip(available,(0,-1,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
 
             if response == 'l':
                 if available[Passenger.LOW.value] == 0:
                     print("No more low passengers available.")
                     continue
+                if ship_capacity[1] == 0:
+                    print("No more low berths available.")
+                    continue
                 print("Adding a low passenger.")
                 selection = tuple(a+b for a,b in zip(selection,(0,0,1)))
                 available = tuple(a+b for a,b in zip(available,(0,0,-1)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-1)))
 
-                                  
-            print(available)
-            print(selection)
-                # show new available
-                # show ship free space
         print("Done selecting passengers.")
 
-        # exit if none selected
+        if selection == (0,0,0):
+            print("No passengers selected.")
+            return
+        print(f"Selected (H, M, L): {selection}")
+
         # confirm selection
         # add to ship
-
-
+        #print(f"{total_tonnage} tons selected.")
+#
+        #confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
+        #if confirmation == 'n':
+            #print("Cancelling freight selection.")
+            #return
+#
+        #for entry in selection:
+            #self.ship.load_cargo(Freight(entry,
+                                         #self.location,
+                                         #destination))
+        #self.date.day += 1
 
     def to_depot(self):
         pr_blue(f"Entering {self.location.name} trade depot.")

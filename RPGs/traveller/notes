@@ -1260,6 +1260,8 @@
 #           cargo hold and passenger manifest data?
 #  * [    ] BUG: if player selects freight (and passengers?) then does not confirm the
 #           transaction, the items are still removed from the available freight list
+#           (Passengers uses a tuple, which copies by value, not reference, so it is OK)
+#  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Add crew members with skills

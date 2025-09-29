@@ -10,7 +10,7 @@ class Ship:
         self.model = "Type A Free Trader"
         self.hull = 200
         self.crew = 4
-        self.passengers = 6
+        self.passenger_berths = 6
         self.low_berths = 20
         self.acceleration = 1
         self.streamlined = True
@@ -26,7 +26,7 @@ class Ship:
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\
                  f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
-                 f"{self.crew} crew, {self.passengers} passenger staterooms, " +\
+                 f"{self.crew} crew, {self.passenger_berths} passenger staterooms, " +\
                  f"{self.low_berths} low berths"
         return result
 
@@ -140,7 +140,7 @@ class Ship:
             print("Life support is fully charged.")
             return Credits(0)
 
-        price = Credits((self.crew + self.passengers) * 2000 +
+        price = Credits((self.crew + self.passenger_berths) * 2000 +
                          self.low_berths * 100)
         confirm = confirm_input(f"Recharge life support for {price}? ")
         if confirm == 'n':
