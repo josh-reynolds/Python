@@ -27,7 +27,9 @@ class Ship:
         result = f"{self.name} -- {self.model}\n" +\
                  f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
                  f"{self.crew} crew, {self.passenger_berths} passenger staterooms, " +\
-                 f"{self.low_berths} low berths"
+                 f"{self.low_berths} low berths\n" +\
+                 f"Cargo hold {self.hold_size} tons, fuel tank {self.fuel_tank} tons"
+
         return result
 
     @property
@@ -214,7 +216,8 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(f"{ShipTestCase.ship}",
                          "Weaselfish -- Type A Free Trader\n"
                          "200 tons : 1G : jump-1\n"
-                         "4 crew, 6 passenger staterooms, 20 low berths")
+                         "4 crew, 6 passenger staterooms, 20 low berths\n"
+                         "Cargo hold 82 tons, fuel tank 30 tons")
 
     def test_cargo_hold_reporting(self):
         cargo1 = ShipTestCase.CargoMock(20)
