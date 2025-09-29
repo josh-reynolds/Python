@@ -1246,6 +1246,7 @@
 #  * [DONE] Add refresh_passengers() and CargoDepot.passengers field
 #  * [DONE] Add get_available_passengers()
 #  * [DONE] Add book_passengers()
+#  * [DONE] Add passenger manifest
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
@@ -1256,7 +1257,6 @@
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [....] Add passengers
 #  * [    ] Add disembark_passengers()
-#  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
 #           property ought to take care of this, check)
 #  * [    ] Adjust destination property in Ship once we have passengers

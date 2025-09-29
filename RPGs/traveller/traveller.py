@@ -373,6 +373,15 @@ class Game:
         pr_blue("Contents of cargo hold:")
         print_list(self.ship.cargo_hold())
 
+    def passenger_manifest(self):
+        pr_blue("Passenger manifest:")
+        high = self.ship.passengers[Passenger.HIGH.value]
+        middle = self.ship.passengers[Passenger.MIDDLE.value]
+        low = self.ship.passengers[Passenger.LOW.value]
+        print(f"High passengers: {high}\n"
+              f"Middle passengers: {middle}\n"
+              f"Low passengers: {low}")
+
     def wait_week(self):
         pr_blue("Waiting.")
         self.date.plus_week()
@@ -568,6 +577,8 @@ always = [Command('q', 'Quit',
                   game.view_ship),
           Command('w', 'Wait a week',
                   game.wait_week),
+          Command('d', 'Passenger manifest',
+                  game.passenger_manifest),
           Command('a', 'View star map',
                   game.view_map)]
 
@@ -618,6 +629,14 @@ passengers = always + [Command('b', 'Book passengers',
                        Command('l', 'Leave terminal',
                                game.leave_terminal)]
 passengers = sorted(passengers, key=lambda command: command.key)
+
+# keeping command characters straight...
+# ALWAYS:   ? a ~ c d ~ ~ h ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w 
+# STARPORT:           f         l m p   r   t 
+# ORBIT:                g       l
+# JUMP:                     i j           s
+# TRADE:        b     f g       l         s   u
+# PASSENGERS:   b               l
 
 if __name__ == '__main__':
     game.run()
