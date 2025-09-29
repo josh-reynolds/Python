@@ -416,6 +416,7 @@ class CargoDepotTestCase(unittest.TestCase):
             self.poor = True
             self.name = "Uranus"
             self.coordinate = 111
+            self.destinations = []
         def __repr__(self):
             return f"{self.coordinate} - {self.name}"
 

@@ -86,8 +86,8 @@ class StarSystem:
         return f"{self.coordinate} - {self.name} - {url}"
 
     def description(self):
-        if self.detail == "surface":
-            return f"on {self.name}"
+        if self.detail == "starport":
+            return f"at the {self.name} starport"
 
         if self.detail == "orbit":
             return f"in orbit around {self.name}"
@@ -98,19 +98,22 @@ class StarSystem:
         if self.detail == "trade":
             return f"at the {self.name} trade depot"
 
+        if self.detail == "terminal":
+            return f"at the {self.name} passenger terminal"
+
         return "ERROR"    # should not be able to reach this point
-                          # ensure there are only four (currently)
+                          # ensure there are only five (currently)
                           # possible values for self.detail?
 
     def on_surface(self):
-        return self.detail in ('surface', 'trade')
+        return self.detail in ('starport', 'trade', 'terminal')
 
     def land(self):
         if self.detail == "orbit":
-            self.detail = "surface"
+            self.detail = "starport"
 
     def liftoff(self):
-        if self.detail == "surface":
+        if self.detail == "starport":
             self.detail = "orbit"
 
     def to_jump_point(self):
@@ -122,12 +125,20 @@ class StarSystem:
             self.detail = "orbit"
 
     def join_trade(self):
-        if self.detail == "surface":
+        if self.detail == "starport":
             self.detail = "trade"
 
     def leave_trade(self):
         if self.detail == "trade":
-            self.detail = "surface"
+            self.detail = "starport"
+
+    def enter_terminal(self):
+        if self.detail == "starport":
+            self.detail = "terminal"
+
+    def leave_terminal(self):
+        if self.detail == "terminal":
+            self.detail = "starport"
 
 class StarSystemTestCase(unittest.TestCase):
     def setUp(self):
@@ -141,13 +152,13 @@ class StarSystemTestCase(unittest.TestCase):
         world = StarSystemTestCase.system
         self.assertEqual(world.detail, "orbit")
         world.land()
-        self.assertEqual(world.detail, "surface")
+        self.assertEqual(world.detail, "starport")
         world.land()
-        self.assertEqual(world.detail, "surface")
+        self.assertEqual(world.detail, "starport")
 
     def test_liftoff(self):
         world = StarSystemTestCase.system
-        world.detail = "surface"
+        world.detail = "starport"
         world.liftoff()
         self.assertEqual(world.detail, "orbit")
         world.liftoff()
@@ -171,7 +182,7 @@ class StarSystemTestCase(unittest.TestCase):
 
     def test_join_trade(self):
         world = StarSystemTestCase.system
-        world.detail = "surface"
+        world.detail = "starport"
         world.join_trade()
         self.assertEqual(world.detail, "trade")
         world.join_trade()
@@ -181,9 +192,9 @@ class StarSystemTestCase(unittest.TestCase):
         world = StarSystemTestCase.system
         world.detail = "trade"
         world.leave_trade()
-        self.assertEqual(world.detail, "surface")
+        self.assertEqual(world.detail, "starport")
         world.leave_trade()
-        self.assertEqual(world.detail, "surface")
+        self.assertEqual(world.detail, "starport")
 
     def test_world_string(self):
         world = StarSystemTestCase.system
@@ -192,8 +203,8 @@ class StarSystemTestCase(unittest.TestCase):
     def test_description(self):
         world = StarSystemTestCase.system
 
-        world.detail = "surface"
-        self.assertEqual(world.description(), "on Test")
+        world.detail = "starport"
+        self.assertEqual(world.description(), "at the Test starport")
 
         world.detail = "orbit"
         self.assertEqual(world.description(), "in orbit around Test")
@@ -204,13 +215,19 @@ class StarSystemTestCase(unittest.TestCase):
         world.detail = "trade"
         self.assertEqual(world.description(), "at the Test trade depot")
 
+        world.detail = "terminal"
+        self.assertEqual(world.description(), "at the Test passenger terminal")
+
     def test_on_surface(self):
         world = StarSystemTestCase.system
 
-        world.detail = "surface"
+        world.detail = "starport"
         self.assertTrue(world.on_surface())
 
         world.detail = "trade"
+        self.assertTrue(world.on_surface())
+
+        world.detail = "terminal"
         self.assertTrue(world.on_surface())
 
         world.detail = "orbit"

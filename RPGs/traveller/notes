@@ -323,12 +323,12 @@
 # -------------------------------------------------------------
 # Sketching out annual maintenance procedure.
 # Book 2 p. 6
-# Annually, a starship should be given a complete overhaul...
-# Such maintenance costs 0.1% (1/1000th) of the cash price of the 
-# ship, and requires two weeks at a class A or B starport...
-# Crew members generally take their vacation at this time, but 
-# must still be paid. Provision should also be made for the 
-# expected loss of revenue while the ship is out of service.
+#   Annually, a starship should be given a complete overhaul...
+#   Such maintenance costs 0.1% (1/1000th) of the cash price of the 
+#   ship, and requires two weeks at a class A or B starport...
+#   Crew members generally take their vacation at this time, but 
+#   must still be paid. Provision should also be made for the 
+#   expected loss of revenue while the ship is out of service.
 #
 # So, I think to start with, we flag the ship with a 'last 
 # maintenance date' - use the start point of that two week
@@ -784,14 +784,14 @@
 #
 # First, the basic procedure per the rules (Book 2 p. 7):
 #
-# The referee should determine all worlds accessible to the 
-# starship (depending on jump number), and roll (for each such
-# world) a number of dice equal to the population number of the
-# destination. Each die represents one shipment, expressed in
-# multiples of 5 tons... A starship can carry as many shipments
-# as will fit in the hold, but may not break down the size of 
-# any specific shipment... Cargo is normally shipped at a rate
-# of CR 1000 per ton.
+#   The referee should determine all worlds accessible to the 
+#   starship (depending on jump number), and roll (for each such
+#   world) a number of dice equal to the population number of the
+#   destination. Each die represents one shipment, expressed in
+#   multiples of 5 tons... A starship can carry as many shipments
+#   as will fit in the hold, but may not break down the size of 
+#   any specific shipment... Cargo is normally shipped at a rate
+#   of CR 1000 per ton.
 #
 # So, some observations:
 #
@@ -942,6 +942,120 @@
 # entering the trade depot. So we're covered (for everything but
 # the starting world...). Just need to have the work done in
 # Game.jump() preserve its data in the StarSystem class.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# OK. Freight is done. Still needs more refactoring and some
+# careful testing, but unit tests and manual test runs look good
+# so far. Time to sketch out Passengers.
+#
+# Rules procedure (Book 2 pp. 7-8):
+#   After a starship has accepted cargo for a specific destination,
+#   passengers will present themselves... Consult the passenger
+#   table: roll the number of dice specified in the originating
+#   world column. From the result, add or subtract the stated 
+#   number in the destination column. Roll separately for high,
+#   middle and low passage. Treat worlds of population level
+#   greater than 12 as level 12. (NOTE: this ruleset cannot 
+#   produce worlds with population > 10)
+#
+#   Passengers will pay the standard fare for the class of
+#   tranportation they choose (CR 10,000 for high passage,
+#   CR 8,000 for middle passage, CR 1,000 for low passage).
+#   Passage is always sold on the basis of trasport to the 
+#   announced destination, rather than on the basis of jump
+#   distance.
+#
+# First, thematically I think passengers should not come from
+# a CargoDepot. Functionally they may be the same thing, but 
+# there ought to be a Passenger Terminal. Both a class (analogous
+# to CargoDepot, and possibly functionally identical), and a
+# location just like 'trade depot.' So step one is to 
+# stub out the state transitions and class.
+#
+# Second is timing. Seems like the player could sign up 
+# passengers at any time. From the POV of the passengers,
+# they want to know a departure date, and won't board
+# until then. Low-berth passengers could take some time to
+# load, but the others ought to be a fairly short affair, so
+# not sure we should assess a time penalty here. The player
+# chooses passengers for a destination (which may be restricted
+# if they are already under contract for freight), and they 
+# are considered 'loaded' immediately (not sure it's worth 
+# the hassle of signing them up, then only changing the manifest
+# just before launch... would mean too many fiddly steps for the
+# player to deal with).
+#
+# Similarly, the passengers will want to disembark immediately
+# upon arrival at their destination. For color, in the offload
+# message we can have something about going to the passenger
+# terminal, but I don't think the player should have to 
+# invoke this. It should be automatic on landing (or docking
+# with high-port, once we have that) much like assessing
+# berthing fees.
+#
+# But what about low berths, and the low lottery? Hrm. Should
+# we separate walk-on passengers procedure-wise?
+#
+# OK, so assume all that is sorted. We can load and unload 
+# passengers, and presumably get paid at the destination.
+#
+# We'll need some sort of structure to store the passengers,
+# and distinguish between the categories. A very simple scheme
+# would be a flat list with entries of H/M/L. We'd need integrity
+# checks to make sure these don't overflow the available space.
+# And we want to be able to report on occupied berths. (Long
+# term color, having named passengers would be nice. And there's
+# the question of potential hijackers too...)
+#
+# We'll also need a selection loop at the terminal similar to
+# how freight works. Keep picking passengers until satisfied.
+#
+# Passengers might be more dynamic than freight. Not sure yet
+# about how/when to refresh or persist the list. Though you 
+# could imagine at a low-traffic world, the list is pretty static
+# and the passengers may be forced to wait until transport
+# comes through.
+#
+# So our flow is:
+# * From the Starport, go to the Passenger Terminal.
+# * If a destination has been contracted, use that, otherwise
+#   allow choice just like with Freight.
+# * Player is presented with a simple list of passenger
+#   counts, by High/Mid/Low. And should also be able to 
+#   see their available/occupied berths.
+# * Player prompted to choose passengers. Not sure yet how,
+#   seems awkward to ask 'how many High?', 'how many Mid?' etc.
+#   But don't yet see a slicker way to get the input (at least
+#   in a text-based UI).
+# * As with Freight/Cargo, will need to reject selection
+#   if there isn't enough space left.
+# * Once passengers are committed, the passenger manifest is
+#   updated and the destination is set if not already. Same 
+#   integrity constraints here as Freight. Manifest needs
+#   to show destination.
+# * All this takes no time. Assumed that passengers are loaded
+#   before launch. In fact we probably should add a message
+#   to the launch command if any passengers have booked.
+# * Then the ship proceeds to jump and heads to destination.
+# * Same considerations as Freight. But even more so - Passengers
+#   will not be happy if the ship doesn't go directly to the
+#   destination. Think about the penalty suggestion here.
+# * On arrival and landing at the destination, passengers
+#   automatically disembark, and the player is paid. Message here
+#   too to that effect.
+#
+# Actually seems pretty simple, since we've worked a lot of
+# this out in Freight already. We'll see as we dig in.
+#
+# Lots of room for color with Passengers, of course, as 
+# mentioned already. Names, personalities, events, RPG stuff.
+# Could have random chance of long-haul passengers (which would
+# change the algorithm a bunch, since we're constraining both
+# Freight and Passengers to a single one-jump destination at
+# present). Hijackers too (which has a small system in RAW
+# to piggy-back off of).
 #
 # -------------------------------------------------------------
 
@@ -1126,7 +1240,10 @@
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [....] Refactor freight methods, push down pieces as appropriate
-#  * [    ] Add passengers
+#  * [....] Add passengers
+#  * [....] Add passenger terminal: location, transition commands, command set
+#  * [    ] Add book_passengers()
+#  * [    ] Add disembark_passengers()
 #  * [    ] Add passenger manifest
 #  * [    ] Only show matching destination for freight if passengers already picked (destination
 #           property ought to take care of this, check)
@@ -1139,6 +1256,8 @@
 #  * [    ] Add proper salary calculation per crew member
 #  * [    ] Add survival odds for low berth passengers, and report results each trip
 #  * [    ] Add low berth lottery
+#  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
+#           not sure about this one.
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
