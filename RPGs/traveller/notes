@@ -285,18 +285,26 @@
 # player to be fiddling with time as well as money and space?
 #    * to/from jump point - 1 day each
 #    * to/from orbit - no time, don't want to privilege highport
+#    * to/from depot/terminal - no time
 #    * buy cargo (and load into ship) - 1 day
 #    * sell cargo (and load into ship) - 1 day
-#    * find passengers (and embark) - 1 day
+#    * find passengers (and embark) - no time, changed my mind
+#    * disembark passengers - no time (and no separate action)
 #    * find freight (and load into ship) - 1 day
-#    * listing hold/depot contents - no time
+#    * unload freight - 1 day
+#    * listing hold/depot/passengers - no time
+#    * viewing ship/world/map - no time
 #    * refuelling - no time at port, 1 day to skim 
-#    * recharging life support?
+#    * recharging life support - no time
 #    * financial transactions - no time
+#    * wait - 1 week
+#    * maintenance - 2 weeks
+#    * jump - 1 week
 #
-# easily 6-7 days if the player does all activities
+# easily 6-7 days if the player does all in-system activities
 # but if they want to go fast, jump in, skim fuel, jump out - just
-# one day? or even no delay if they have reserve fuel.
+# one day? or even no delay if they have reserve fuel. (Life support
+# is an issue under current implementation though.)
 #
 # Alright. I think I'll add time costs per the schedule above, and
 # see how it plays. We're applying costs in the action methods in
@@ -1097,6 +1105,29 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Since it actually has a rules procedure, the first bit of
+# passenger 'color' is low berth fatalities. From Book 2 p. 2:
+#
+#   Unfortunately, the low passage system involves some intrinsic
+#   dangers... Throw 5+ for each passenger, when he is revived
+#   after the ship has landed. DMs: attending medic of expertise
+#   2 or better, +1; low passenger with an endurance of 6 or less,
+#   -1. Failure to achieve the throw to revive results in death...
+#   Refunds and civil or criminal liability if a low passenger
+#   fails to survive the trip are not allowed.
+#
+# Ok, so two bits to defer until later are medic skill and 
+# passsenger endurance (though the latter would be pretty
+# easy to add in...).
+#
+# The player gets paid regardless, so this should be a simple
+# check against all low passengers at disembarkation, and
+# reporting the results. Low lottery will add a bit more
+# spin to this feature...
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1293,21 +1324,20 @@
 #           not have a None flag if there is freight in the hold, and should not allow
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
-#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Review book_passengers() for behavior when passengers are already on board - 
+#  * [DONE] Review book_passengers() for behavior when passengers are already on board - 
 #           should only be possible for same destination
+#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
+#  * [....] Add survival odds for low berth passengers, and report results each trip
+#  * [    ] Add passenger endurance (affects low berth survival)
+#  * [    ] Add low berth lottery
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
-#  * [    ] Add crew members with skills
+#  * [    ] Add crew members with skills (inc. medic for low berth revival)
 #  * [    ] Add proper salary calculation per crew member
-#  * [    ] Add survival odds for low berth passengers, and report results each trip
-#  * [    ] Add low berth lottery
 #  * [    ] Working passage?
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
 #           not sure about this one.
-#  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
-#  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
@@ -1411,6 +1441,8 @@
 #            implemented a ledger or more accounting features yet
 #  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Distinguish between highport and downport
+#  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
+#  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Color: jump dimming
 #  * [    ] If we want to expand beyond just the trade model, add 

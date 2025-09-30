@@ -77,10 +77,22 @@ class Game:
                               self.ship.low_passenger_count
             if passenger_count > 0:
                 print(f"Passengers disembarking on {self.location.name}.")
+
                 funds = Credits(sum([p.ticket_price.amount for p in self.ship.passengers]))
                 print(f"Receiving {funds} in passenger fares.")
                 self.financials.credit(funds)
+
+                if self.ship.low_passenger_count > 0:
+                    low_passengers = [p for p in self.ship.passengers if
+                                                 p.passage == PassageClass.LOW]
+                    survivors = [p for p in low_passengers if
+                                            die_roll(2) > 4]
+                    print(f"{len(survivors)} of {len(low_passengers)} low passengers "
+                          "survived revival.")
+
                 self.ship.passengers = []
+
+
 
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
@@ -132,12 +144,6 @@ class Game:
         jump_range = self.ship.jump_range
         potential_destinations = self.location.destinations.copy()
 
-        # Work through order of operations... if passengers 
-        # automatically disembark at landing, then they can't contribute
-        # to a flag at ths point, just freight
-        # But we don't care if there is freight if we're loading passengers
-        # logic below lifted from load_freight() but will need adjustment
-        # (and probably there as well to account for passengers)
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
@@ -389,7 +395,11 @@ class Game:
 
     def cargo_hold(self):
         pr_blue("Contents of cargo hold:")
-        print_list(self.ship.cargo_hold())
+        contents = self.ship.cargo_hold()
+        if len(contents) == 0:
+            print("Empty.")
+        else:
+            print_list(contents)
 
     def passenger_manifest(self):
         pr_blue("Passenger manifest:")

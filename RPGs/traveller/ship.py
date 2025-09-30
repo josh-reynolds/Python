@@ -42,7 +42,7 @@ class Ship:
         passenger_destinations = set([p.destination for p in self.passengers])
         passenger_count = len(passenger_destinations)
 
-        if (freight_count > 1 or passenger_count > 1):
+        if freight_count > 1 or passenger_count > 1:
             raise ValueError("More than one destination between Freight and Passengers!")
 
         if freight_count == 0 and passenger_count == 0:
