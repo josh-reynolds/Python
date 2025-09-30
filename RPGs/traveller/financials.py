@@ -41,6 +41,11 @@ class Credits:
             return Credits(self.amount - other.amount)
         return NotImplemented
 
+    def __mul__(self, scalar):
+        if type(scalar) is int:
+            return Credits(self.amount * scalar)
+        return NotImplemented
+
 class Financials:
     def __init__(self, balance, current_date, ship, location):
         self.balance = Credits(balance)
@@ -179,6 +184,10 @@ class CreditsTestCase(unittest.TestCase):
         credits1 = Credits(1)
         credits2 = Credits(2)
         self.assertEqual(credits2-credits1,Credits(1))
+
+    def test_credits_multiplication(self):
+        credits1 = Credits(10)
+        self.assertEqual(credits1 * 5, Credits(50))
 
 class FinancialsTestCase(unittest.TestCase):
     class DateMock:

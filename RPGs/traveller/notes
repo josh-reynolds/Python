@@ -1152,7 +1152,8 @@
 # necessary.)
 #
 # OK, first up is "guess survivors" in Passenger, called from
-# liftoff().
+# liftoff(). Got it. Now to adjust the survival calculation,
+# and the payout.
 #
 # -------------------------------------------------------------
 
@@ -1364,9 +1365,6 @@
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Add crew members with skills (inc. medic for low berth revival)
 #  * [    ] Add proper salary calculation per crew member
-#  * [    ] Working passage?
-#  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
-#           not sure about this one.
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
@@ -1465,6 +1463,9 @@
 #            until phase five...
 #  * [    ] Add extended StarSystem details
 #  * [    ] Add different ship types and ship design
+#  * [    ] Working passage?
+#  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
+#           not sure about this one.
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #            Defer - currently all uses are positive, even debts, but haven't

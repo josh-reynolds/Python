@@ -67,7 +67,8 @@ class Game:
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
         if self.ship.total_passenger_count > 0:
-            print(f"Boarding {self.ship.total_passenger_count} passengers.")
+            print(f"Boarding {self.ship.total_passenger_count} passengers "
+                  f"for {self.ship.destination.name}.")
 
         if self.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.ship.passengers if 
@@ -85,13 +86,12 @@ class Game:
             return
 
         if self.ship.destination == self.location:
-            passenger_count = self.ship.high_passenger_count +\
-                              self.ship.middle_passenger_count +\
-                              self.ship.low_passenger_count
-            if passenger_count > 0:
+            if self.ship.total_passenger_count > 0:
                 print(f"Passengers disembarking on {self.location.name}.")
 
                 funds = Credits(sum([p.ticket_price.amount for p in self.ship.passengers]))
+                low_lottery_amount = Credits(10) * self.ship.low_passenger_count
+                funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
                 self.financials.credit(funds)
 
