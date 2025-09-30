@@ -1326,9 +1326,9 @@
 #           now. Verify!)
 #  * [DONE] Review book_passengers() for behavior when passengers are already on board - 
 #           should only be possible for same destination
+#  * [DONE] Add survival odds for low berth passengers, and report results each trip
+#  * [DONE] Add passenger endurance (affects low berth survival)
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add survival odds for low berth passengers, and report results each trip
-#  * [    ] Add passenger endurance (affects low berth survival)
 #  * [    ] Add low berth lottery
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
@@ -1369,6 +1369,7 @@
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  # [    ] Break up Game class (MVC?)
+#  * [    ] Properly separate __repr__ and __str__ for all classes
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
 #  * [    ] Assess whether rounding in Credits ctor can cause errors

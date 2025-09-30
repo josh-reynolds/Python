@@ -22,6 +22,10 @@ class Passenger:
             self.ticket_price = Credits(1000)
         self.passage = passage
         self.destination = destination
+        if die_roll(2) < 7:
+            self.endurance = -1
+        else:
+            self.endurance = 0
 
     def __repr__(self):
         return f"{self.name} to {self.destination.name}"

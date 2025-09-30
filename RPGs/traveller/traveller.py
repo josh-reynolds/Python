@@ -86,13 +86,11 @@ class Game:
                     low_passengers = [p for p in self.ship.passengers if
                                                  p.passage == PassageClass.LOW]
                     survivors = [p for p in low_passengers if
-                                            die_roll(2) > 4]
+                                            die_roll(2) + p.endurance > 4]
                     print(f"{len(survivors)} of {len(low_passengers)} low passengers "
                           "survived revival.")
 
                 self.ship.passengers = []
-
-
 
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
