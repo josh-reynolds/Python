@@ -29,6 +29,7 @@ class Passenger:
             self.endurance = 0
 
         self.guess = None
+        self.survived = True
 
     def guess_survivors(self, total):
         self.guess = randint(0, total)

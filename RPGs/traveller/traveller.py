@@ -98,10 +98,23 @@ class Game:
                 if self.ship.low_passenger_count > 0:
                     low_passengers = [p for p in self.ship.passengers if
                                                  p.passage == PassageClass.LOW]
-                    survivors = [p for p in low_passengers if
-                                            die_roll(2) + p.endurance > 4]
+                    for p in low_passengers:
+                        if die_roll(2) + p.endurance < 5:
+                            p.survived = False
+
+                    survivors = [p for p in low_passengers if p.survived]
                     print(f"{len(survivors)} of {len(low_passengers)} low passengers "
                           "survived revival.")
+
+                    winner = False
+                    for p in low_passengers:
+                        if p.guess == len(survivors) and p.survived:
+                            winner = True
+
+                    if not winner:
+                        print(f"No surviving low lottery winner. "
+                              f"The captain is awarded {low_lottery_amount}.")
+                        self.financials.credit(low_lottery_amount)
 
                 self.ship.passengers = []
 

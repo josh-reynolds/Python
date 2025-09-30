@@ -1358,8 +1358,8 @@
 #           should only be possible for same destination
 #  * [DONE] Add survival odds for low berth passengers, and report results each trip
 #  * [DONE] Add passenger endurance (affects low berth survival)
+#  * [DONE] Add low berth lottery
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add low berth lottery
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
