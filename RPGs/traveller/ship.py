@@ -62,6 +62,11 @@ class Ship:
             return freight_destination
 
     @property
+    def total_passenger_count(self):
+        return self.high_passenger_count +\
+                self.middle_passenger_count +\
+                self.low_passenger_count
+    @property
     def high_passenger_count(self):
         return sum([1 for passenger in self.passengers if
                     passenger.passage == PassageClass.HIGH])

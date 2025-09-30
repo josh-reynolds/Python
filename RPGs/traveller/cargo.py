@@ -1,5 +1,6 @@
 import unittest
 from enum import Enum
+from random import randint
 from utilities import die_roll, constrain, int_input, confirm_input
 from utilities import actual_value, pr_red, pr_green
 from financials import Credits
@@ -26,6 +27,11 @@ class Passenger:
             self.endurance = -1
         else:
             self.endurance = 0
+
+        self.guess = None
+
+    def guess_survivors(self, total):
+        self.guess = randint(0, total)
 
     def __repr__(self):
         return f"{self.name} to {self.destination.name}"

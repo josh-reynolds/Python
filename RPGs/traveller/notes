@@ -1125,6 +1125,35 @@
 # reporting the results. Low lottery will add a bit more
 # spin to this feature...
 #
+# Low berth survival is done (including endurance, but not medic
+# just yet). So how about the lottery?
+#
+# Book 2 p. 3
+#   It is customary for the captain to contribute CR 10 out of
+#   each low passage towards a lottery in which each low passenger
+#   randomly guesses the number of low passengers who will
+#   survive the trip. If the winner does not himself survive,
+#   the captain receives the money.
+#
+# So, easy enough to generate a random number and attach to each
+# Passenger. But timing... They should be guessing against
+# the entire contingent, at least as of the time they board. So
+# not when they are created (in book_passenger()), but when
+# the ship takes off (in liftoff()).
+#
+# Then we'll also need to tweak the survival logic. Right now
+# we just filter down the low passenger list, so there's no
+# way to check the corpses to see if they have the winning number.
+# And we can only know the winning number after the survival
+# procedure has run.
+#
+# (Also, seems implicit that a winning guess has to be exact,
+# not 'closest,' or the clause about th captain wouldn't be
+# necessary.)
+#
+# OK, first up is "guess survivors" in Passenger, called from
+# liftoff().
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1329,7 +1358,7 @@
 #  * [DONE] Add survival odds for low berth passengers, and report results each trip
 #  * [DONE] Add passenger endurance (affects low berth survival)
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Add low berth lottery
+#  * [....] Add low berth lottery
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)

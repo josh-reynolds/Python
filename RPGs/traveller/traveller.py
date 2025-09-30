@@ -62,6 +62,19 @@ class Game:
 
     def liftoff(self):
         pr_blue(f"Lifting off to orbit {self.location.name}.")
+
+        # corner case - these messages assume passengers are coming
+        # from the current world, which should be true most
+        # of the time, but not necessarily all the time
+        if self.ship.total_passenger_count > 0:
+            print(f"Boarding {self.ship.total_passenger_count} passengers.")
+
+        if self.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.ship.passengers if 
+                              p.passage == PassageClass.LOW]
+            for p in low_passengers:
+                p.guess_survivors(self.ship.low_passenger_count)
+
         self.location.liftoff()
         self.commands = orbit
 
