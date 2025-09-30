@@ -99,7 +99,7 @@ class Game:
                     low_passengers = [p for p in self.ship.passengers if
                                                  p.passage == PassageClass.LOW]
                     for p in low_passengers:
-                        if die_roll(2) + p.endurance + self.ship.medic_skill < 5:
+                        if die_roll(2) + p.endurance + self.ship.medic_skill() < 5:
                             p.survived = False
 
                     survivors = [p for p in low_passengers if p.survived]

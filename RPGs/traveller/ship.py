@@ -3,13 +3,31 @@ from cargo import Freight, PassageClass
 from financials import Credits
 from utilities import confirm_input
 
+class Crew:
+    pass
+class Pilot(Crew):
+    def __init__(self, skill=1, trade=0):
+        self.skill = skill
+        self.trade_skill = trade
+class Engineer(Crew):
+    def __init__(self, skill=1, trade=0):
+        self.skill = skill
+        self.trade_skill = trade
+class Medic(Crew):
+    def __init__(self, skill=1, trade=0):
+        self.skill = skill
+        self.trade_skill = trade
+class Steward(Crew):
+    def __init__(self, skill=1, trade=0):
+        self.skill = skill
+        self.trade_skill = trade
+
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
         self.name = "Weaselfish"
         self.model = "Type A Free Trader"
         self.hull = 200
-        self.crew = 4
         self.passenger_berths = 6
         self.low_berths = 20
         self.acceleration = 1
@@ -23,11 +41,12 @@ class Ship:
         self.trip_fuel_cost = 10
         self.life_support_level = 0
         self.passengers = []
+        self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
 
     def __repr__(self):
         result = f"{self.name} -- {self.model}\n" +\
                  f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
-                 f"{self.crew} crew, {self.passenger_berths} passenger staterooms, " +\
+                 f"{len(self.crew)} crew, {self.passenger_berths} passenger staterooms, " +\
                  f"{self.low_berths} low berths\n" +\
                  f"Cargo hold {self.hold_size} tons, fuel tank {self.fuel_tank} tons"
 
@@ -188,7 +207,7 @@ class Ship:
             print("Life support is fully charged.")
             return Credits(0)
 
-        price = Credits((self.crew + self.passenger_berths) * 2000 +
+        price = Credits((len(self.crew) + self.passenger_berths) * 2000 +
                          self.low_berths * 100)
         confirm = confirm_input(f"Recharge life support for {price}? ")
         if confirm == 'n':
@@ -203,12 +222,18 @@ class Ship:
     # as DMs for the sale of goods. In any given transaction, such DMs may
     # be used by only one person.
     def trade_skill(self):
-        return 1
+        return max([c.trade_skill for c in self.crew])
 
     # Book 2 p. 2 [for low berth survival]
     #   attending medic of expertise 2 or better, +1
     def medic_skill(self):
-        return 1   # see note below, technically this medic should be paid more...
+        skills = [c.skill for c in self.crew if isinstance(c, Medic)]
+        if len(skills) > 0:
+            if max(skills) > 1:
+                return 1
+            else:
+                return 0
+        raise ValueError("No medic on board!")
 
     # Book 2 p. 19
     # ...four for the crew: pilot, engineer, medic and steward...

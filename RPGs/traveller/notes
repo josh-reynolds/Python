@@ -1366,12 +1366,13 @@
 #  * [DONE] Add passenger endurance (affects low berth survival)
 #  * [DONE] Add low berth lottery
 #  * [DONE] Add medic skill to Ship and hook into low berth survival
+#  * [....] Add crew members with individual skills
+#  * [....] Add proper salary calculation per crew member, including seniority/skill
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
+#  * [    ] Add crew roster command
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
-#  * [    ] Add crew members with individual skills
-#  * [    ] Add proper salary calculation per crew member, including seniority/skill
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
