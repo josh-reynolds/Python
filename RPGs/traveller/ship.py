@@ -250,6 +250,10 @@ class ShipTestCase(unittest.TestCase):
         def __init__(self, destination):
             self.destination_world = destination
 
+    class PassengerMock:
+        def __init__(self, destination):
+            self.destination = destination
+
     def setUp(self):
         ShipTestCase.ship = Ship()
 
@@ -367,6 +371,16 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.insufficient_life_support_message(),
                          "Insufficient life support to survive jump.\n" +
                          "Life support is at 99%.")
+
+    def test_invalid_freight_and_passengers(self):
+        ship = ShipTestCase.ship
+        self.assertEqual(ship.destination, None)
+
+        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
+        ship.passengers += [ShipTestCase.PassengerMock("Jupiter")]
+        with self.assertRaises(ValueError) as cm:
+            ship.destination
+        self.assertEqual(f"{cm.exception}", "More than one destination between Freight and Passengers!")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
