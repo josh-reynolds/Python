@@ -543,6 +543,7 @@ class Game:
             return
 
         for entry in selection:
+            self.depot.freight[destination].remove(entry)
             self.ship.load_cargo(Freight(entry,
                                          self.location,
                                          destination))

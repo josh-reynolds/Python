@@ -1267,15 +1267,15 @@
 #  * [DONE] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [DONE] Add passengers
+#  * [DONE] BUG: if player selects freight (and passengers?) then does not confirm the
+#           transaction, the items are still removed from the available freight list
+#           (Passengers uses a tuple, which copies by value, not reference, so it is OK)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
 #           not have a None flag if there is freight in the hold, and should not allow
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] BUG: if player selects freight (and passengers?) then does not confirm the
-#           transaction, the items are still removed from the available freight list
-#           (Passengers uses a tuple, which copies by value, not reference, so it is OK)
 #  * [    ] Review book_passengers() for behavior when passengers are already on board - 
 #           should only be possible for same destination
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?

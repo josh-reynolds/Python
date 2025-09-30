@@ -207,7 +207,7 @@ class CargoDepot:
             return (None, None)
         world = destinations[destination_number]
 
-        return (world.coordinate, self.freight[world])
+        return (world.coordinate, self.freight[world].copy())
 
     def get_available_passengers(self, destinations):
         if self.passengers == {}:
