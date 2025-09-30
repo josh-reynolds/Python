@@ -37,12 +37,29 @@ class Ship:
     def destination(self):
         freight_destinations = set([f.destination_world for f in self.hold if
                                                             isinstance(f, Freight)])
-        if len(freight_destinations) == 0:
+        freight_count = len(freight_destinations)
+
+        passenger_destinations = set([p.destination for p in self.passengers])
+        passenger_count = len(passenger_destinations)
+
+        if (freight_count > 1 or passenger_count > 1):
+            raise ValueError("More than one destination between Freight and Passengers!")
+
+        if freight_count == 0 and passenger_count == 0:
                return None
-        elif len(freight_destinations) == 1:
+
+        if freight_count == 1 and passenger_count == 0:
             return freight_destinations.pop()
-        else:
-            raise ValueError("Freight for more than one destination in the hold!")
+
+        if freight_count == 0 and passenger_count == 1:
+            return passenger_destinations.pop()
+
+        if freight_count == 1 and passenger_count == 1:
+            freight_destination = freight_destinations.pop()
+            passenger_destination = passenger_destinations.pop()
+            if freight_destination != passenger_destination:
+                raise ValueError("More than one destination between Freight and Passengers!")
+            return freight_destination
 
     @property
     def high_passenger_count(self):
@@ -326,7 +343,7 @@ class ShipTestCase(unittest.TestCase):
         ship.load_cargo(Freight(1, "Pluto", "Jupiter"))
         with self.assertRaises(ValueError) as cm:
             ship.destination
-        self.assertEqual(f"{cm.exception}", "Freight for more than one destination in the hold!")
+        self.assertEqual(f"{cm.exception}", "More than one destination between Freight and Passengers!")
 
     def test_sufficient_jump_fuel(self):
         ship = ShipTestCase.ship

@@ -1258,6 +1258,7 @@
 #  * [DONE] Add book_passengers()
 #  * [DONE] Add passenger manifest
 #  * [DONE] Add Passenger class
+#  * [DONE] Adjust destination property in Ship once we have passengers
 #  * [....] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
@@ -1267,10 +1268,9 @@
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
 #  * [....] Refactor freight methods, push down pieces as appropriate
 #  * [....] Add passengers
-#  * [    ] Add disembark_passengers()
-#  * [    ] Only show matching destination for freight if passengers already picked (destination
+#  * [....] Only show matching destination for freight if passengers already picked (destination
 #           property ought to take care of this, check)
-#  * [    ] Adjust destination property in Ship once we have passengers
+#  * [    ] Add disembark_passengers()
 #  * [    ] Should we make contracted destination visible? Or is it apparent from
 #           cargo hold and passenger manifest data?
 #  * [    ] BUG: if player selects freight (and passengers?) then does not confirm the
