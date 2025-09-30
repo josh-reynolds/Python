@@ -1153,7 +1153,7 @@
 #
 # OK, first up is "guess survivors" in Passenger, called from
 # liftoff(). Got it. Now to adjust the survival calculation,
-# and the payout.
+# and the payout. And done.
 #
 # -------------------------------------------------------------
 
@@ -1183,6 +1183,12 @@
 #    * Save/load if not done earlier
 #    * Player customization: ship name, captain, etc.
 #    * Save/load
+#  * Handling technical debt:
+#    * (We _should_ be doing some of this as we go, at least at the
+#       end of each phase...)
+#    * Test coverage
+#    * Refactoring
+#    * Best practices and 'pythonic' coding
 #  PHASE FIVE
 #    * Expand scope with RPG-lite elements and events
 #    * Lift into graphics system? (This could really snowball, be cautious)
@@ -1359,18 +1365,19 @@
 #  * [DONE] Add survival odds for low berth passengers, and report results each trip
 #  * [DONE] Add passenger endurance (affects low berth survival)
 #  * [DONE] Add low berth lottery
+#  * [DONE] Add medic skill to Ship and hook into low berth survival
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
-#  * [    ] Add crew members with skills (inc. medic for low berth revival)
-#  * [    ] Add proper salary calculation per crew member
+#  * [    ] Add crew members with individual skills
+#  * [    ] Add proper salary calculation per crew member, including seniority/skill
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
-#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
-#  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
+#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.

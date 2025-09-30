@@ -205,6 +205,11 @@ class Ship:
     def trade_skill(self):
         return 1
 
+    # Book 2 p. 2 [for low berth survival]
+    #   attending medic of expertise 2 or better, +1
+    def medic_skill(self):
+        return 1   # see note below, technically this medic should be paid more...
+
     # Book 2 p. 19
     # ...four for the crew: pilot, engineer, medic and steward...
     # Book 2 p. 6
@@ -213,6 +218,9 @@ class Ship:
     # Engineer  4000 Cr
     # Medic     2000 Cr
     # Steward   3000 Cr
+    #
+    # (with suitable modifications for expertise or seniority,
+    #  generally +10% for eachlevel of expertise above level-1)
     def crew_salary(self):
         return Credits(15000)
 
