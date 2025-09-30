@@ -1259,21 +1259,21 @@
 #  * [DONE] Add passenger manifest
 #  * [DONE] Add Passenger class
 #  * [DONE] Adjust destination property in Ship once we have passengers
-#  * [....] Reset destination flag when all freight & passengers offloaded (should
+#  * [DONE] Only show matching destination for freight if passengers already picked (destination
+#           property ought to take care of this, check)
+#  * [DONE] Disembark passengers when landing at destination
+#  * [CUT ] Should we make contracted destination visible? Or is it apparent from
+#           cargo hold and passenger manifest data? (Yeah, that's good enough for now...)
+#  * [DONE] Reset destination flag when all freight & passengers offloaded (should
 #           be handled automatically by destination property. Verify!)
+#  * [DONE] Add passengers
 #  * [....] Consider asserts for constraint violations in freight logic especially. Should
 #           not have a None flag if there is freight in the hold, and should not allow
 #           freight for multiple destinations in the hold. (Property may take care of this
 #           now. Verify!)
 #  * [....] Truth table out the logic for combinations of cargo/freight/passengers/destination
-#  * [....] Refactor freight methods, push down pieces as appropriate
-#  * [....] Add passengers
-#  * [....] Only show matching destination for freight if passengers already picked (destination
-#           property ought to take care of this, check)
-#  * [    ] Add disembark_passengers()
-#  * [    ] Should we make contracted destination visible? Or is it apparent from
-#           cargo hold and passenger manifest data?
-#  * [    ] BUG: if player selects freight (and passengers?) then does not confirm the
+#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
+#  * [....] BUG: if player selects freight (and passengers?) then does not confirm the
 #           transaction, the items are still removed from the available freight list
 #           (Passengers uses a tuple, which copies by value, not reference, so it is OK)
 #  * [    ] Review book_passengers() for behavior when passengers are already on board - 
@@ -1285,9 +1285,11 @@
 #  * [    ] Add proper salary calculation per crew member
 #  * [    ] Add survival odds for low berth passengers, and report results each trip
 #  * [    ] Add low berth lottery
+#  * [    ] Working passage?
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
 #           not sure about this one.
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
+#  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
@@ -1297,6 +1299,7 @@
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.
+#  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] pylint/pydocstyle scrub

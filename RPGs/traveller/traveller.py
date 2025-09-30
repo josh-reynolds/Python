@@ -71,6 +71,17 @@ class Game:
             print("Your ship is not streamlined and cannot land.")
             return
 
+        if self.ship.destination == self.location:
+            passenger_count = self.ship.high_passenger_count +\
+                              self.ship.middle_passenger_count +\
+                              self.ship.low_passenger_count
+            if passenger_count > 0:
+                print(f"Passengers disembarking on {self.location.name}.")
+                funds = Credits(sum([p.ticket_price.amount for p in self.ship.passengers]))
+                print(f"Receiving {funds} in passenger fares.")
+                self.financials.credit(funds)
+                self.ship.passengers = []
+
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
         self.commands = starport
@@ -382,9 +393,14 @@ class Game:
 
     def passenger_manifest(self):
         pr_blue("Passenger manifest:")
+        if self.ship.destination == None:
+            destination = "None"
+        else:
+            destination = self.ship.destination.name
         print(f"High passengers: {self.ship.high_passenger_count}\n"
               f"Middle passengers: {self.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.ship.low_passenger_count}\n\n"
+              f"Low passengers: {self.ship.low_passenger_count}\n"
+              f"DESTINATION: {destination}\n\n"
               f"Empty berths: {self.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.ship.empty_low_berths}")
 

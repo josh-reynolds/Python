@@ -13,15 +13,18 @@ class Passenger:
     def __init__(self, passage, destination):
         if passage == PassageClass.HIGH:
             self.name = "High passage"
+            self.ticket_price = Credits(10000)
         if passage == PassageClass.MIDDLE:
             self.name = "Middle passage"
+            self.ticket_price = Credits(8000)
         if passage == PassageClass.LOW:
             self.name = "Low passage"
+            self.ticket_price = Credits(1000)
         self.passage = passage
         self.destination = destination
 
     def __repr__(self):
-        return f"{self.name} to {self.destination}"
+        return f"{self.name} to {self.destination.name}"
 
 class Freight:
     def __init__(self, tonnage, source_world, destination_world):
