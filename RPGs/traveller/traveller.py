@@ -40,10 +40,14 @@ class Game:
         self.commands = orbit   # awkward, needs to change when location ctor detail changes
         self.running = True
         while self.running:
+            if self.ship.fuel_quality == FuelQuality.UNREFINED:
+                fuel_quality ="(U)"
+            else:
+                fuel_quality = ""
             pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
-                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons "
+                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
                   f"\tLife support: {self.ship.life_support_level}%")
             command = input("Enter a command (? to list):  ")
             for cmd in self.commands:

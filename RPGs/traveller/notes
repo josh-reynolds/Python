@@ -1394,7 +1394,7 @@
 #  * [DONE] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [DONE] Add unrefined fuel
 #  * [DONE] Add urefined fuel message to ship details command
-#  * [....] Unrefined fuel status should clear when tanks are emptied - currently
+#  * [DONE] Unrefined fuel status should clear when tanks are emptied - currently
 #           handling via logic in refuel. This might need a property around current_fuel field
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [    ] Add effects of unrefined fuel

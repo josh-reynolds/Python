@@ -86,6 +86,8 @@ class Ship:
     @current_fuel.setter
     def current_fuel(self, value):
         self.fuel = value
+        if self.fuel == 0:
+            self.fuel_quality = FuelQuality.REFINED
 
     @property
     def destination(self):
@@ -185,9 +187,6 @@ class Ship:
 
     # TO_DO: other angles to add later:
     #   * effects of unrefined fuel (Book 2 p. 4)
-    #   * ship streamlining - needed to land on worlds with atmosphere,
-    #       also for skimming (though this version of the rules doesn't
-    #       explicitly state that...)
     def refuel(self, starport):
         if self.current_fuel == self.fuel_tank:
             print("Fuel tank is full.")
@@ -209,9 +208,6 @@ class Ship:
         self.current_fuel += amount
         if starport not in ("A", "B"):
             self.fuel_quality = FuelQuality.UNREFINED
-        # only reset status if we get a full refill of refined fuel
-        if starport in ("A", "B") and amount == self.fuel_tank:
-            self.fuel_quality = FuelQuality.REFINED
         return price
 
     def sufficient_jump_fuel(self):
