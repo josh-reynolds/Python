@@ -59,7 +59,7 @@ class Ship:
         self.hold = []
         self.hold_size = 82
         self.fuel_tank = 30
-        self.current_fuel = 0
+        self.fuel = 0
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
@@ -78,6 +78,14 @@ class Ship:
             result += "\nUnrefined fuel in tanks."
 
         return result
+
+    @property
+    def current_fuel(self):
+        return self.fuel
+
+    @current_fuel.setter
+    def current_fuel(self, value):
+        self.fuel = value
 
     @property
     def destination(self):
@@ -207,7 +215,7 @@ class Ship:
         return price
 
     def sufficient_jump_fuel(self):
-        return self.jump_fuel_cost < self.current_fuel
+        return self.jump_fuel_cost <= self.current_fuel
 
     def insufficient_jump_fuel_message(self):
         return f"Insufficient fuel. Jump requires {self.jump_fuel_cost} tons, only " +\
@@ -432,6 +440,9 @@ class ShipTestCase(unittest.TestCase):
         self.assertFalse(ship.sufficient_jump_fuel())
         self.assertEqual(ship.insufficient_jump_fuel_message(),
                          "Insufficient fuel. Jump requires 20 tons, only 19 tons in tanks.")
+
+        ship.current_fuel = 20
+        self.assertTrue(ship.sufficient_jump_fuel())
 
     def test_sufficient_life_support(self):
         ship = ShipTestCase.ship
