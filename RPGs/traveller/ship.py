@@ -1,4 +1,5 @@
 import unittest
+from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
 from utilities import confirm_input
@@ -41,6 +42,10 @@ class Steward(Crew):
     def salary(self):
         return Credits(3000) * (1 + .1 * (self.skill - 1))
 
+class FuelQuality(Enum):
+    UNREFINED = 0
+    REFINED = 1
+
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
@@ -58,6 +63,7 @@ class Ship:
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
+        self.fuel_quality = FuelQuality.REFINED
         self.life_support_level = 0
         self.passengers = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
@@ -68,6 +74,8 @@ class Ship:
                  f"{len(self.crew)} crew, {self.passenger_berths} passenger staterooms, " +\
                  f"{self.low_berths} low berths\n" +\
                  f"Cargo hold {self.hold_size} tons, fuel tank {self.fuel_tank} tons"
+        if self.fuel_quality == FuelQuality.UNREFINED:
+            result += "\nUnrefined fuel in tanks."
 
         return result
 
@@ -168,26 +176,34 @@ class Ship:
     # ship empties its tanks every trip.
 
     # TO_DO: other angles to add later:
-    #   * skimming from gas giants (Book 2 p. 35)
-    #   * (will need gas giant presence in StarSystem details)
     #   * effects of unrefined fuel (Book 2 p. 4)
-    #   * (will need starport class in StarSystem details)
     #   * ship streamlining - needed to land on worlds with atmosphere,
     #       also for skimming (though this version of the rules doesn't
     #       explicitly state that...)
-    def refuel(self):
+    def refuel(self, starport):
         if self.current_fuel == self.fuel_tank:
             print("Fuel tank is full.")
             return Credits(0)
 
+        if starport not in ("A", "B"):
+            per_ton = 100
+            print("Note: only unrefined fuel available at this facility.")
+        else:
+            per_ton = 500
+
         amount = self.fuel_tank - self.current_fuel
-        price = Credits(amount * 500)
+        price = Credits(amount * per_ton)
         confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
         if confirm == 'n':
             return Credits(0)
 
-        print(f"Charging {price} for refuelling")
+        print(f"Charging {price} for refuelling.")
         self.current_fuel += amount
+        if starport not in ("A", "B"):
+            self.fuel_quality = FuelQuality.UNREFINED
+        # only reset status if we get a full refill of refined fuel
+        if starport in ("A", "B") and amount == self.fuel_tank:
+            self.fuel_quality = FuelQuality.REFINED
         return price
 
     def sufficient_jump_fuel(self):

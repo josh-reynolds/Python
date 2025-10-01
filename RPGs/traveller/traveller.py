@@ -2,7 +2,7 @@ from calendar import Calendar
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
-from ship import Ship
+from ship import Ship, FuelQuality
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
@@ -348,7 +348,7 @@ class Game:
             print(f"No fuel is available at starport {self.location.starport}.")
             return
 
-        cost = self.ship.refuel()
+        cost = self.ship.refuel(self.location.starport)
         self.financials.debit(cost)
 
     def recharge(self):
@@ -488,8 +488,8 @@ class Game:
             print("Fuel tank is already full.")
             return
 
-        # will need to mark this as unrefined fuel when we implement that
         self.ship.current_fuel = self.ship.fuel_tank
+        self.ship.fuel_quality = FuelQuality.UNREFINED
         self.date.day += 1
 
     def maintenance(self):
