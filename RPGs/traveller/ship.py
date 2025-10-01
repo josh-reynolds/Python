@@ -64,6 +64,7 @@ class Ship:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.fuel_quality = FuelQuality.REFINED
+        self.unrefined_jump_counter = 0
         self.life_support_level = 0
         self.passengers = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]

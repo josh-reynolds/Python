@@ -327,6 +327,9 @@ class Game:
             print("Cancelling jump.")
             return
 
+        if self.ship.fuel_quality == FuelQuality.UNREFINED:
+            self.ship.unrefined_jump_counter += 1
+
         pr_red("Executing jump!")
         self.location = destination
         self.location.detail = "jump"
@@ -371,6 +374,7 @@ class Game:
             return
 
         self.ship.fuel_quality = FuelQuality.REFINED
+        self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
 
     def buy_cargo(self):

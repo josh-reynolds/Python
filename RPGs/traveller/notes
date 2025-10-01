@@ -1199,7 +1199,65 @@
 # starships. High Guard introduced fuel purification plants.
 #
 # Well, let's go RAW and add the 'flush' command. We can
-# always change it later to something less punitive.
+# always change it later to something less punitive. I think
+# the more dramatic result is interesting for a videogame
+# anyway. This becomes almost rogue-like if there's failure
+# conditions around every corner.
+#
+# That done, let's figure out the effects bit. This will also
+# interact with ship maintenance. Effects are drive failure
+# and misjump. Will also need to have some way to fix.
+#
+# Book 2 p. 4 again (section above covers fuel.):
+#   Throw once per jump made after annual maintenance has
+#   been skipped: a result of 12 indicates drive failure...
+#   When a drive fails... they may be temporarily repaired
+#   by engineer crew members (throw 10+ to repair, once per
+#   day; allow DM of +level of engineering expertise...). More
+#   comprehensive repairs are then made at the next starport.
+#
+#   At the instant of jump, a jump drive which is a) within
+#   100 diameters of a world or star, b) operating on unrefined
+#   fuel, or c) operating without annual maintenance may
+#   malfunction, resulting in a jump of random length and
+#   direction.
+#
+#   For all jumps (in any situations), throw 12+ for a misjump
+#   to occur. DM +5 if within 100 diameters of a world or star;
+#   +3 if using unrefined fuel (except military and scout ships);
+#   -1 if using refined fuel; +2 if operating beyond the
+#   required date for annual maintenance.
+#
+#   A misjump involves a considerable random jump. Throw one
+#   die to determine the number of dice thrown (1 to 6). Throw
+#   that number of dice to determine the number of hexes long
+#   the jump is. Throw one die to determine which of the six
+#   directions on the hex grid the jump is made.
+#
+# So, from all of this, we will need:
+#
+#  * Counter for jumps with unrefined fuel.
+#  * Check for drive failure at jump, affected by previous
+#    and annual maintenance status.
+#  * Check for misjump at jump.
+#  * Ship 'needs repairs' status. Later rules indicate dead
+#    in the water, but not so clear here.
+#  * 'Repair' command, both on ship and at starport.
+#  * Misjump destination calculation. Nothing says this has 
+#    to be a world; could be deep space, in which case the 
+#    ship is screwed...
+#  * We don't have to worry about the '100 diameters' thing,
+#    assume we can only jump from the 'jump point' which
+#    by definition is at a safe distance. Later we can
+#    consider adding the option. (Lots of bits in the game
+#    that make sense for a party of adventurers, but not
+#    so much for an ostensibly commercial vessel.)
+#
+#  Nothing mentions costs here, either. (Not even in the 
+#  starship combat section.)
+#
+#  May want to flesh this out with some rules from later
+#  editions, but again let's start with RAW '77.
 #
 # -------------------------------------------------------------
 
@@ -1426,6 +1484,7 @@
 #           handling via logic in refuel. This might need a property around current_fuel field
 #  * [DONE] Add 'flush tanks' command to conform to Traveller '77 RAW procedures.
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
+#  * [....] Add unrefined fuel jump counter
 #  * [    ] Add effects of unrefined fuel
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Generate world names
@@ -1529,6 +1588,7 @@
 #  * [    ] Add extended StarSystem details
 #  * [    ] Add different ship types and ship design
 #  * [    ] Working passage?
+#  * [    ] Should we allow the option of 'close jump?'
 #  * [    ] A player _could_ purchase unrefined fuel at A/B starports to save money.
 #           Should we allow that? Makes more sense if we add fuel purification to the game...
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
