@@ -44,7 +44,15 @@ class Game:
                 fuel_quality ="(U)"
             else:
                 fuel_quality = ""
-            pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.")
+
+            if self.ship.repair_status == RepairStatus.BROKEN:
+                repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
+            elif self.ship.repair_status == RepairStatus.BROKEN:
+                repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
+            else:
+                repair_state = ""
+
+            pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.{repair_state}")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
                   f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"

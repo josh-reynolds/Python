@@ -1500,10 +1500,10 @@
 #  * [DONE] Add 'flush tanks' command to conform to Traveller '77 RAW procedures.
 #  * [DONE] Add unrefined fuel jump counter
 #  * [DONE] Add chance for drive failure from unrefined fuel during jump
+#  * [DONE] Add ship repair status, display it too
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add ship repair status, display it too
+#  * [....] Add chance for drive failure from skipped maintenance
 #  * [    ] Restrict ship movement based on repair status
-#  * [    ] Add chance for drive failure from skipped maintenance
 #  * [    ] Add repair actions for engineer in flight, and at starport
 #  * [    ] Add check for misjump and effects of same
 #  * [    ] Generate world names
