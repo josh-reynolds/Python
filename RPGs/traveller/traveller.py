@@ -3,7 +3,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship
-from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger
+from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
 
@@ -117,6 +117,8 @@ class Game:
                         self.financials.credit(low_lottery_amount)
 
                 self.ship.passengers = []
+                self.ship.hold = [item for item in self.ship.hold
+                                  if not isinstance(item, Baggage)]
 
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
@@ -219,6 +221,9 @@ class Game:
                 if ship_capacity[0] == 0:
                     print("No more staterooms available.")
                     continue
+                if self.ship.free_space() < 1:
+                    print("No cargo space available for baggage.")
+                    continue
                 print("Adding a high passenger.")
                 selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
                 available = tuple(a+b for a,b in zip(available,(-1,0,0)))
@@ -264,11 +269,15 @@ class Game:
         #        Probably want to wrap passenger field access in a property...
         high = [Passenger(PassageClass.HIGH, destination) 
                 for _ in range(selection[PassageClass.HIGH.value])]
+        baggage = [Baggage(self.location, destination)
+                   for _ in range(selection[PassageClass.HIGH.value])]
         middle = [Passenger(PassageClass.MIDDLE, destination) 
                   for _ in range(selection[PassageClass.MIDDLE.value])]
         low = [Passenger(PassageClass.LOW, destination) 
                for _ in range(selection[PassageClass.LOW.value])]
+
         self.ship.passengers += high
+        self.ship.hold += baggage
         self.ship.passengers += middle
         self.ship.passengers += low
         self.depot.passengers[destination] = tuple(a-b for a,b in

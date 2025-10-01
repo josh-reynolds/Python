@@ -1158,6 +1158,24 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Next up, we need to make a decision about passenger baggage
+# allowance. The rules are vague, and checking later versions
+# doesn't really clarify. Some of them hint that the passenger
+# cargo _might_ go into the hold, but not explicitly. So I think
+# I'll rule that high passengers (only) get 1 ton of cargo each.
+# The other types fit in their stateroom, or in a locker in the
+# cold sleep room.
+#
+# OK, so we'll need to wire this up in book_passengers(), block
+# booking any high passengers if no more room, and also have
+# a cargo entry so the math on that side works out correctly.
+# We also need to unload baggage when the passenger disembarks.
+# Not worth the effort at this point to link a specific
+# passenger to specific baggage, they're all just generic items.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1373,8 +1391,8 @@
 #           passengers, and arrived at -6 staterooms. On testing, seems to be when
 #           re-entering book_passengers() on same or different world. Ah. See it.
 #           We set up the method with stateroom count, not _empty_ stateroom count...
+#  * [DONE] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Passenger baggage allowance. From the hold or included in stateroom size?
 #  * [    ] Add unrefined fuel and its effects (and query of StarSystem)
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
 #  * [    ] Generate world names

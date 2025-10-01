@@ -45,8 +45,17 @@ class Freight:
         self.destination_world = destination_world
 
     def __repr__(self):
-        return f"{self.name} : {self.tonnage} tons : " +\
+        if self.tonnage > 1:
+            unit = "tons"
+        else:
+            unit = "ton"
+        return f"{self.name} : {self.tonnage} {unit} : " +\
                f"{self.source_world.name} -> {self.destination_world.name}"
+
+class Baggage(Freight):
+    def __init__(self, source_world, destination_world):
+        super().__init__(1, source_world, destination_world)
+        self.name = "Baggage"
 
 class Cargo:
     def __init__(self, name, quantity, price, unit_size,
