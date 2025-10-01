@@ -1252,12 +1252,27 @@
 #    consider adding the option. (Lots of bits in the game
 #    that make sense for a party of adventurers, but not
 #    so much for an ostensibly commercial vessel.)
+#  * Open question: if the drive fails, is this before or
+#    after the jump completes? Let's rule that drive failures
+#    from maintenance happen before, and misjumps and 
+#    failures from fuel happen during/after ('in flight').
+#  * We may want to move the 'tow truck' feature up the list
+#    after this, since many more chances for a ship to get
+#    stuck out at the jump point.
 #
 #  Nothing mentions costs here, either. (Not even in the 
 #  starship combat section.)
 #
 #  May want to flesh this out with some rules from later
 #  editions, but again let's start with RAW '77.
+#
+#  For repairs, I'm thinking three states, which we'll track
+#  with an enum for now: REPAIRED, BROKEN, and PATCHED (state
+#  inbetween the other two). Normal status is REPAIRED. On
+#  drive failure, it goes to BROKEN. An engineer can repair
+#  from BROKEN to PATCHED. A starport can repair either fully.
+#  A BROKEN ship cannot move at all, either jump or maneuver.
+#  A PATCHED ship cannot jump.
 #
 # -------------------------------------------------------------
 
@@ -1483,10 +1498,14 @@
 #  * [DONE] Unrefined fuel status should clear when tanks are emptied - currently
 #           handling via logic in refuel. This might need a property around current_fuel field
 #  * [DONE] Add 'flush tanks' command to conform to Traveller '77 RAW procedures.
+#  * [DONE] Add unrefined fuel jump counter
+#  * [DONE] Add chance for drive failure from unrefined fuel during jump
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add unrefined fuel jump counter
-#  * [    ] Add effects of unrefined fuel
-#  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
+#  * [....] Add ship repair status, display it too
+#  * [    ] Restrict ship movement based on repair status
+#  * [    ] Add chance for drive failure from skipped maintenance
+#  * [    ] Add repair actions for engineer in flight, and at starport
+#  * [    ] Add check for misjump and effects of same
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
@@ -1546,6 +1565,7 @@
 #  * [    ] Should/could we clear the screen?
 #  * [    ] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
+#  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  PHASE FIVE ======================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?

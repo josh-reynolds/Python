@@ -2,7 +2,7 @@ from calendar import Calendar
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
-from ship import Ship, FuelQuality
+from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import StarSystem
 from star_map import StarMap, StarSystemFactory
@@ -334,6 +334,11 @@ class Game:
         self.location = destination
         self.location.detail = "jump"
         self.commands = jump
+
+        if (self.ship.fuel_quality == FuelQuality.UNREFINED and
+            die_roll(2) + self.ship.unrefined_jump_counter > 10):
+            self.ship.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure!")
 
         self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
                                                    jump_range)

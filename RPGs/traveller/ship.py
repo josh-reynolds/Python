@@ -46,6 +46,11 @@ class FuelQuality(Enum):
     UNREFINED = 0
     REFINED = 1
 
+class RepairStatus(Enum):
+    REPAIRED = 0
+    PATCHED = 1
+    BROKEN = 2
+
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
@@ -65,6 +70,7 @@ class Ship:
         self.trip_fuel_cost = 10
         self.fuel_quality = FuelQuality.REFINED
         self.unrefined_jump_counter = 0
+        self.repair_status = RepairStatus.REPAIRED
         self.life_support_level = 0
         self.passengers = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
