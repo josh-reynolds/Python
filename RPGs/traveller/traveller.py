@@ -197,7 +197,8 @@ class Game:
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = (0,0,0)
-        ship_capacity = (self.ship.passenger_berths, self.ship.low_berths)
+        ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
+
         while True:
             if available == (0,0,0):
                 print(f"No more passengers available for {destination.name}.")
