@@ -1245,7 +1245,8 @@
 #  * 'Repair' command, both on ship and at starport.
 #  * Misjump destination calculation. Nothing says this has 
 #    to be a world; could be deep space, in which case the 
-#    ship is screwed...
+#    ship is screwed... Would be more kind to always put
+#    them at a world. We'll try cruel first.
 #  * We don't have to worry about the '100 diameters' thing,
 #    assume we can only jump from the 'jump point' which
 #    by definition is at a safe distance. Later we can
@@ -1261,10 +1262,9 @@
 #    stuck out at the jump point.
 #
 #  Nothing mentions costs here, either. (Not even in the 
-#  starship combat section.)
-#
-#  May want to flesh this out with some rules from later
-#  editions, but again let's start with RAW '77.
+#  starship combat section.) May want to flesh this out 
+#  with some rules from later editions, but again let's
+#  start with RAW '77.
 #
 #  For repairs, I'm thinking three states, which we'll track
 #  with an enum for now: REPAIRED, BROKEN, and PATCHED (state
@@ -1273,6 +1273,12 @@
 #  from BROKEN to PATCHED. A starport can repair either fully.
 #  A BROKEN ship cannot move at all, either jump or maneuver.
 #  A PATCHED ship cannot jump.
+#
+#  Testing (and looking at the math) shows that unrefined fuel
+#  is MUCH more dangerous than skipping maintenance. If you're
+#  going to take chances and save a little, choose the latter...
+#  Unfortunately, starport configuration and the possibility of
+#  wilderness refuelling may leave you little choice.
 #
 # -------------------------------------------------------------
 
@@ -1501,8 +1507,8 @@
 #  * [DONE] Add unrefined fuel jump counter
 #  * [DONE] Add chance for drive failure from unrefined fuel during jump
 #  * [DONE] Add ship repair status, display it too
+#  * [DONE] Add chance for drive failure from skipped maintenance
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add chance for drive failure from skipped maintenance
 #  * [    ] Restrict ship movement based on repair status
 #  * [    ] Add repair actions for engineer in flight, and at starport
 #  * [    ] Add check for misjump and effects of same

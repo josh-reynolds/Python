@@ -335,6 +335,12 @@ class Game:
             print("Cancelling jump.")
             return
 
+        if (self.financials.maintenance_status(self.date.current_date)== "red" and 
+               die_roll(2) == 12):
+            self.ship.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure! Unable to jump.")
+            return
+
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
             self.ship.unrefined_jump_counter += 1
 
