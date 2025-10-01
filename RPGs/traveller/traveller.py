@@ -438,6 +438,10 @@ class Game:
               f"Empty berths: {self.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.ship.empty_low_berths}")
 
+    def crew_roster(self):
+        pr_blue("Crew roster:")
+        print_list(self.ship.crew)
+
     def wait_week(self):
         pr_blue("Waiting.")
         self.date.plus_week()
@@ -636,6 +640,8 @@ always = [Command('q', 'Quit',
                   game.wait_week),
           Command('d', 'Passenger manifest',
                   game.passenger_manifest),
+          Command('e', 'Crew roster',
+                  game.crew_roster),
           Command('a', 'View star map',
                   game.view_map)]
 
@@ -688,12 +694,12 @@ passengers = always + [Command('b', 'Book passengers',
 passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d ~ ~ h ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w 
-# STARPORT:           f         l m p   r   t 
-# ORBIT:                g       l
-# JUMP:                     i j           s
-# TRADE:        b     f g       l         s   u
-# PASSENGERS:   b               l
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w 
+# STARPORT:             f         l m p   r   t 
+# ORBIT:                  g       l
+# JUMP:                       i j           s
+# TRADE:        b       f g       l         s   u
+# PASSENGERS:   b                 l
 
 if __name__ == '__main__':
     game.run()

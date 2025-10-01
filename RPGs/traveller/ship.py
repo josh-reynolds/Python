@@ -9,24 +9,35 @@ class Pilot(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def __repr__(self):
+        return f"Captain Grungebottom - Pilot {self.skill}"
     def salary(self):
         return Credits(6000) * (1 + .1 * (self.skill - 1))
+
 class Engineer(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def __repr__(self):
+        return f"Skins McFlint - Engineer {self.skill}"
     def salary(self):
         return Credits(4000) * (1 + .1 * (self.skill - 1))
+    
 class Medic(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def __repr__(self):
+        return f"Doc Gubbins - Medic {self.skill}"
     def salary(self):
         return Credits(2000) * (1 + .1 * (self.skill - 1))
+
 class Steward(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def __repr__(self):
+        return f"Laszlo the Third - Steward {self.skill}"
     def salary(self):
         return Credits(3000) * (1 + .1 * (self.skill - 1))
 
