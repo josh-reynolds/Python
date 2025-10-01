@@ -355,10 +355,23 @@ class Game:
         cost = self.ship.refuel(self.location.starport)
         self.financials.debit(cost)
 
+    # TO_DO: should this be restricted at low-facility starports (E/X)?
     def recharge(self):
         pr_blue("Replenishing life support system.")
         cost = self.ship.recharge()
         self.financials.debit(cost)
+
+    def flush(self):
+        pr_blue("Flushing out fuel tanks.")
+        if self.ship.fuel_quality == FuelQuality.REFINED:
+            print("Ship fuel tanks are clean. No need to flush.")
+            return
+        if self.location.starport in ('E', 'X'):
+            print(f"There are no facilities to flush tanks at starport {self.location.starport}.")
+            return
+
+        self.ship.fuel_quality = FuelQuality.REFINED
+        self.date.plus_week()
 
     def buy_cargo(self):
         pr_blue("Purchasing cargo.")
@@ -669,6 +682,8 @@ starport = always + [Command('l', 'Lift off to orbit',
                              game.maintenance),
                      Command('p', 'Passenger terminal',
                              game.to_terminal),
+                     Command('u', 'Flush fuel tanks',
+                             game.flush),
                      Command('r', 'Refuel',
                              game.refuel)]
 starport = sorted(starport, key=lambda command: command.key)
@@ -709,7 +724,7 @@ passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
 # ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w 
-# STARPORT:             f         l m p   r   t 
+# STARPORT:             f         l m p   r   t u
 # ORBIT:                  g       l
 # JUMP:                       i j           s
 # TRADE:        b       f g       l         s   u

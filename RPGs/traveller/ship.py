@@ -86,8 +86,6 @@ class Ship:
     @current_fuel.setter
     def current_fuel(self, value):
         self.fuel = value
-        if self.fuel == 0:
-            self.fuel_quality = FuelQuality.REFINED
 
     @property
     def destination(self):

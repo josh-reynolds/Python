@@ -1176,6 +1176,34 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# I just added fuel quality. From A/B starports, it's refined,
+# and from C/D (as well as gas giant skimming), it is 
+# unrefined. My system is to flag the fuel quality on the ship.
+# The flag changes either when putting unrefined in the tanks,
+# or when emptying them completely.
+#
+# Book 2 p. 4:
+#   If unrefined fuel is used, there is a chance that the drive
+#   will fail while in flight (throw 11+ for failure to occur,
+#   throwing once per jump in which unrefined fuel is used, DM 
+#   +1 for each jump made, until the drives are flushed, which 
+#   takes about a week at any starport).
+#
+# This is rough. A wise captain should avoid C/D starports 
+# entirely, to be honest (and E/X as well).
+#
+# Check later rules to see if they are more relaxed about it...
+# OK, flushing the tanks was dropped in Traveller '81 and I
+# don't see it reappearing in later editions. Traveller '81
+# also hints at 'drives made for unrefined fuel' on military 
+# starships. High Guard introduced fuel purification plants.
+#
+# Well, let's go RAW and add the 'flush' command. We can
+# always change it later to something less punitive.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1396,6 +1424,7 @@
 #  * [DONE] Add urefined fuel message to ship details command
 #  * [DONE] Unrefined fuel status should clear when tanks are emptied - currently
 #           handling via logic in refuel. This might need a property around current_fuel field
+#  * [DONE] Add 'flush tanks' command to conform to Traveller '77 RAW procedures.
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [    ] Add effects of unrefined fuel
 #  * [    ] Add misjumps and other ship malfunctions (ties to unrefined fuel & maintenance)
@@ -1409,6 +1438,7 @@
 #  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
+#  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] Replace ValueError and other 'generic' exceptions with custom
@@ -1443,6 +1473,7 @@
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
 #  * [    ] Add a 'shore leave' action?
+#  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
@@ -1498,6 +1529,8 @@
 #  * [    ] Add extended StarSystem details
 #  * [    ] Add different ship types and ship design
 #  * [    ] Working passage?
+#  * [    ] A player _could_ purchase unrefined fuel at A/B starports to save money.
+#           Should we allow that? Makes more sense if we add fuel purification to the game...
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
 #           not sure about this one.
 #  * [    ] Add a transaction ledger to Financial class
