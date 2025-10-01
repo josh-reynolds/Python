@@ -42,8 +42,8 @@ class Credits:
         return NotImplemented
 
     def __mul__(self, scalar):
-        if type(scalar) is int:
-            return Credits(self.amount * scalar)
+        if type(scalar) in (int, float):
+            return Credits(round(self.amount * scalar))
         return NotImplemented
 
 class Financials:

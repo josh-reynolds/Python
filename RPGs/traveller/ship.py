@@ -9,18 +9,26 @@ class Pilot(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def salary(self):
+        return Credits(6000) * (1 + .1 * (self.skill - 1))
 class Engineer(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def salary(self):
+        return Credits(4000) * (1 + .1 * (self.skill - 1))
 class Medic(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def salary(self):
+        return Credits(2000) * (1 + .1 * (self.skill - 1))
 class Steward(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
+    def salary(self):
+        return Credits(3000) * (1 + .1 * (self.skill - 1))
 
 class Ship:
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
@@ -247,7 +255,7 @@ class Ship:
     # (with suitable modifications for expertise or seniority,
     #  generally +10% for eachlevel of expertise above level-1)
     def crew_salary(self):
-        return Credits(15000)
+        return Credits(sum([c.salary().amount for c in self.crew]))
 
     # Book 2 p. 19
     # Base price for the free trader is 37,080,000 Cr
@@ -419,6 +427,30 @@ class ShipTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             ship.destination
         self.assertEqual(f"{cm.exception}", "More than one destination between Freight and Passengers!")
+
+class PilotTestCase(unittest.TestCase):
+    def test_salary(self):
+        self.assertEqual(Pilot(1).salary(), Credits(6000))
+        self.assertEqual(Pilot(2).salary(), Credits(6600))
+        self.assertEqual(Pilot(3).salary(), Credits(7200))
+
+class EngineerTestCase(unittest.TestCase):
+    def test_salary(self):
+        self.assertEqual(Engineer(1).salary(), Credits(4000))
+        self.assertEqual(Engineer(2).salary(), Credits(4400))
+        self.assertEqual(Engineer(3).salary(), Credits(4800))
+
+class MedicTestCase(unittest.TestCase):
+    def test_salary(self):
+        self.assertEqual(Medic(1).salary(), Credits(2000))
+        self.assertEqual(Medic(2).salary(), Credits(2200))
+        self.assertEqual(Medic(3).salary(), Credits(2400))
+
+class StewardTestCase(unittest.TestCase):
+    def test_salary(self):
+        self.assertEqual(Steward(1).salary(), Credits(3000))
+        self.assertEqual(Steward(2).salary(), Credits(3300))
+        self.assertEqual(Steward(3).salary(), Credits(3600))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
