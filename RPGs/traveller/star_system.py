@@ -1,6 +1,15 @@
 import unittest
 
-class StarSystem:
+class Hex:
+    pass
+
+class DeepSpace(Hex):
+    def __init__(self, coordinate):
+        self.coordinate = coordinate
+        self.detail = ""
+        self.destinations = []
+
+class StarSystem(Hex):
     def __init__(self, name, coordinate, starport, size, atmosphere, 
                  hydrographics, population, government, law, tech, gas_giant=True):
         self.name = name

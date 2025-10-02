@@ -1,6 +1,6 @@
 import unittest
 from random import randint
-from star_system import StarSystem
+from star_system import StarSystem, DeepSpace
 from utilities import die_roll, constrain
 
 # in the three-axis system:
@@ -194,12 +194,12 @@ class StarMap:
         result = []
         for coord in StarMap.get_coordinates_within_range(origin, distance):
             if coord in self.systems:
-                if self.systems[coord] is not None:
+                if isinstance(self.systems[coord], StarSystem):
                     result.append(self.systems[coord])
             else:
                 system = StarMap.generate_new_system(coord)
                 self.systems[coord] = system
-                if system is not None:
+                if isinstance(system, StarSystem):
                     result.append(system)
         return result
 
@@ -207,7 +207,8 @@ class StarMap:
         return self.systems[coordinate]
 
     def get_all_systems(self):
-        systems = [s for i,(k,s) in enumerate(self.systems.items()) if s is not None]
+        systems = [s for i,(k,s) in enumerate(self.systems.items()) if 
+                   isinstance(s, StarSystem)]
         systems = sorted(systems, key=lambda system: system.coordinate)
         return systems
 
@@ -215,7 +216,7 @@ class StarMap:
     def generate_new_system(cls, coordinate):
         if randint(1,6) >= 4:
             return StarSystemFactory.generate(coordinate)
-        return None
+        return DeepSpace(coordinate)
 
     @classmethod
     def distance_between(cls, first, second):
@@ -255,22 +256,22 @@ class StarMapTestCase(unittest.TestCase):
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
             (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
-            (0,1,-1) : None,
+            (0,1,-1) : DeepSpace((0,1,-1)),
             (0,-1,1) : StarSystemFactory.create("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5),
             (1,0,-1) : StarSystemFactory.create("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5),
-            (-1,0,1) : None,
-            (1,-1,0) : None,
+            (-1,0,1) : DeepSpace((-1,0,1)),
+            (1,-1,0) : DeepSpace((1,-1,0)),
             (-1,1,0) : StarSystemFactory.create("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
             (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
-            (0,1,-1) : None,
-            (0,-1,1) : None,
-            (1,0,-1) : None,
-            (-1,0,1) : None,
-            (1,-1,0) : None,
-            (-1,1,0) : None,
+            (0,1,-1) : DeepSpace((0,1,-1)),
+            (0,-1,1) : DeepSpace((0,-1,1)),
+            (1,0,-1) : DeepSpace((1,0,-1)),
+            (-1,0,1) : DeepSpace((-1,0,1)),
+            (1,-1,0) : DeepSpace((1,-1,0)),
+            (-1,1,0) : DeepSpace((-1,1,0)),
             })
 
     def test_constructor(self):
@@ -309,7 +310,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
         self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
 
-    def test_get_systems_within_range_with_None(self):
+    def test_get_systems_within_range_with_DeepSpace(self):
         star_map2 = StarMapTestCase.star_map2
 
         systems = star_map2.get_systems_within_range((0,0,0), 1)
@@ -334,7 +335,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Mithril")
 
-    def test_get_systems_with_None(self):
+    def test_get_systems_with_DeepSpace(self):
         star_map2 = StarMapTestCase.star_map2
 
         world = star_map2.get_system_at_coordinate((0,0,0))
@@ -342,22 +343,22 @@ class StarMapTestCase(unittest.TestCase):
         self.assertEqual(world.name, "Yorbund")
 
         world = star_map2.get_system_at_coordinate((0,1,-1))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
         world = star_map2.get_system_at_coordinate((0,-1,1))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
         world = star_map2.get_system_at_coordinate((1,0,-1))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
         world = star_map2.get_system_at_coordinate((-1,0,1))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
         world = star_map2.get_system_at_coordinate((1,-1,0))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
         world = star_map2.get_system_at_coordinate((-1,1,0))
-        self.assertTrue(world is None)
+        self.assertTrue(isinstance(world, DeepSpace))
 
     def test_distance_between(self):
         dist = StarMap.distance_between((0,0,0), (1,0,-1))
@@ -448,11 +449,14 @@ class StarMapTestCase(unittest.TestCase):
             world = StarMap.generate_new_system((0,0,0))
             if world is not None:
                 worlds.append(world)
-        self.assertTrue(len(worlds) < 75)
-        self.assertTrue(len(worlds) > 25)
+        self.assertEqual(len(worlds), 100)
+
+        systems = [s for s in worlds if isinstance(s, StarSystem)]
+        self.assertTrue(len(systems) < 75)
+        self.assertTrue(len(systems) > 25)
 
         for item in worlds:
-            self.assertTrue(isinstance(item, StarSystem))
+            self.assertTrue(type(item) in [DeepSpace, StarSystem])
 
     def test_get_all_systems(self):
         star_map1 = StarMapTestCase.star_map1
