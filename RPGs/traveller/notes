@@ -1325,6 +1325,32 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Last feature for Phase Three: naming star systems. This is
+# a potential rabbit hole. Will try to keep it simple and 
+# scoped. Two approaches occur to me:
+#
+# * Full on generator, probably using the stuff GDW introduced
+#   in the alien book series.
+#
+# * Randomly pick off a word list. I did this a couple times for
+#   previous subsector generators. Grab a dictionary list off
+#   the internet, scrub out obviously unusable words (like 1-2
+#   letter words for instance). Then just randomly choose.
+#   Probably would want to randomly pick a line from the file
+#   rather than load the whole thing up. If we have to do the
+#   latter, maybe discard after creating word so we don't have
+#   memory overhead (though admittedly, don't think it would
+#   be all that bad. Another 'perf is moot until it's not' 
+#   kinda thing.)
+#
+# To get it up and running, let's do the latter. It's pretty
+# simple. Find a file and cook it. Then add a word generator
+# module. That way we can always switch strategies later
+# and the rest of the code doesn't have to know a thing.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1555,8 +1581,10 @@
 #  * [DONE] Add repair action at starport
 #  * [DONE] Add null system class and replace None references
 #  * [DONE] Add check for misjump and effects of same
+#  * [DONE] Add a word generator module, with a get_name() function
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Generate world names
+#  * [....] Generate world names
+#  * [    ] Add a scrubbed word list
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
