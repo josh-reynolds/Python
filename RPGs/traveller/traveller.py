@@ -75,6 +75,10 @@ class Game:
     def liftoff(self):
         pr_blue(f"Lifting off to orbit {self.location.name}.")
 
+        if self.ship.repair_status == RepairStatus.BROKEN:
+            pr_red("Drive failure. Cannot lift off.")
+            return
+
         # corner case - these messages assume passengers are coming
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
@@ -95,6 +99,10 @@ class Game:
         pr_blue(f"Landing on {self.location.name}.")
         if not self.ship.streamlined:
             print("Your ship is not streamlined and cannot land.")
+            return
+
+        if self.ship.repair_status == RepairStatus.BROKEN:
+            pr_red("Drive failure. Cannot land.")
             return
 
         if self.ship.destination == self.location:
@@ -139,6 +147,11 @@ class Game:
     # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self):
         pr_blue(f"Travelling out to {self.location.name} jump point.")
+
+        if self.ship.repair_status == RepairStatus.BROKEN:
+            pr_red("Drive failure. Cannot travel to the jump point.")
+            return
+
         tfc = self.ship.trip_fuel_cost
         if self.ship.current_fuel < tfc:
             print(f"Insufficient fuel. Travel to and from the jump point "
@@ -153,6 +166,11 @@ class Game:
 
     def inbound_from_jump(self):
         pr_blue(f"Travelling in to orbit {self.location.name}.")
+
+        if self.ship.repair_status == RepairStatus.BROKEN:
+            pr_red("Drive failure. Cannot travel to orbit.")
+            return
+
         leg_fc = self.ship.trip_fuel_cost // 2
         if self.ship.current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel in from the jump point "
@@ -308,6 +326,12 @@ class Game:
 
     def jump(self):
         pr_blue("Preparing for jump.")
+
+        if (self.ship.repair_status == RepairStatus.BROKEN or
+            self.ship.repair_status == RepairStatus.PATCHED):
+            pr_red("Drive failure. Cannot perform jump.")
+            return
+
         if not self.ship.sufficient_jump_fuel():
             print(self.ship.insufficient_jump_fuel_message())
             return
@@ -524,6 +548,10 @@ class Game:
             print("Your ship is not streamlined and cannot skim fuel.")
             return
 
+        if self.ship.repair_status == RepairStatus.BROKEN:
+            pr_red("Drive failure. Cannot skim fuel.")
+            return
+
         if self.ship.current_fuel == self.ship.fuel_tank:
             print("Fuel tank is already full.")
             return
@@ -550,6 +578,7 @@ class Game:
         self.financials.last_maintenance = self.date.current_date
         self.financials.debit(cost)
         self.date.day += 14    # should we wrap this in a method call?
+        self.ship.repair_status = RepairStatus.REPAIRED
 
     # TO_DO: after getting this working, assess if any pieces should
     #        be pushed down

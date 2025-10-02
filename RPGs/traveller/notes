@@ -1274,6 +1274,10 @@
 #  A BROKEN ship cannot move at all, either jump or maneuver.
 #  A PATCHED ship cannot jump.
 #
+#  Another quick ruling: annual maintenance will repair the
+#  ship completely if necessary. Seems pretty obvious, though
+#  not explictly mentioned in RAW.
+#
 #  Testing (and looking at the math) shows that unrefined fuel
 #  is MUCH more dangerous than skipping maintenance. If you're
 #  going to take chances and save a little, choose the latter...
@@ -1508,9 +1512,10 @@
 #  * [DONE] Add chance for drive failure from unrefined fuel during jump
 #  * [DONE] Add ship repair status, display it too
 #  * [DONE] Add chance for drive failure from skipped maintenance
+#  * [DONE] Restrict ship movement based on repair status
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Restrict ship movement based on repair status
 #  * [    ] Add repair actions for engineer in flight, and at starport
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add check for misjump and effects of same
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
@@ -1533,7 +1538,6 @@
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] List star map to take a range parameter?
