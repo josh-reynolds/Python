@@ -1296,6 +1296,35 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# On to misjumps. Checking for them is simple enough, but 
+# setting the destination has a couple wrinkles:
+#
+# * First, we could end up in an empty hex. Per 'let's be cruel,'
+#   we'll let that stand for now. But it does mean we won't have
+#   a StarSystem object (just None) upon arrival, and will hit
+#   an error trying to get properties from it.
+#
+#   This _is_ a game over condition, at least for now. So we
+#   could cut to such a message. Though I haven't yet sketched
+#   out what the 'game over' feature should look like...
+#
+#   Alternatively, we could add a null object to the StarSystem
+#   hierarchy, and put that in all 'empty' hexes. It would have
+#   minimal properties to be able to handle this accidental
+#   jump. (And then presumably the player quits the game. Once
+#   we flesh out the full game structure, something slightly 
+#   more involved could happen here.)
+#
+# * Second, per RAW, this destination is chosen from only the
+#   six axial hexes surrounding the origin world. That's largely
+#   to keep it simple for a pen-and-paper procedure. It would
+#   be easy to instead find _all_ hexes at the given distance,
+#   and pick one randomly.
+#
+#   For now, go with axial. Very simple to calculate.
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1525,7 +1554,8 @@
 #  * [DONE] Add repair action for engineer in flight
 #  * [DONE] Add repair action at starport
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Add check for misjump and effects of same
+#  * [....] Add check for misjump and effects of same
+#  * [    ] Add null system class and replace None references
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.

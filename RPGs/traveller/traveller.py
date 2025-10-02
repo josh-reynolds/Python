@@ -1,4 +1,5 @@
 from calendar import Calendar
+from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
@@ -369,7 +370,37 @@ class Game:
             self.ship.unrefined_jump_counter += 1
 
         pr_red("Executing jump!")
-        self.location = destination
+
+        if self.ship.fuel_quality == FuelQuality.UNREFINED:
+            modifier = 3 
+        else:
+            modifier = -1
+        if self.financials.maintenance_status(self.date.current_date) == "red":
+            modifier += 2
+
+        misjump_check = die_roll(2) + modifier
+        if misjump_check > 11:
+            pr_red("MISJUMP!")
+            # TO_DO: all this should move to live with the other
+            #        three-axis calculations
+            distance = randint(1,36)
+            hexes = [(0,distance,-distance),
+                     (0,-distance,distance),
+                     (distance,0,-distance),
+                     (-distance,0,distance),
+                     (distance,-distance,0),
+                     (-distance,distance,0)]
+            misjump_target = choice(hexes)
+            misjump_target = (misjump_target[0] + self.location.coordinate[0],
+                           misjump_target[1] + self.location.coordinate[1],
+                           misjump_target[2] + self.location.coordinate[2])
+            print(f"{misjump_target} at distance {distance}")
+            # TO_DO: this will cause problems if we jump to an empty hex,
+            #        need to have something in place before we uncommnent
+            #self.location = self.star_map.get_system_at_coordinate(misjump_target)
+        else:
+            self.location = destination
+
         self.location.detail = "jump"
         self.commands = jump
 
@@ -433,6 +464,8 @@ class Game:
         if self.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
+
+        print("Your ship is fully repaired and decontaminated.")
         self.ship.repair_status = RepairStatus.REPAIRED
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
@@ -447,6 +480,7 @@ class Game:
             print(f"There are no facilities to flush tanks at starport {self.location.starport}.")
             return
 
+        print("Fuel tanks have been decontaminated.")
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
