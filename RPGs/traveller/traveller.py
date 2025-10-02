@@ -407,8 +407,8 @@ class Game:
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
-    def repair_ship(self):
-        pr_blue("Repairing damage.")
+    def damage_control(self):
+        pr_blue("Ship's engineer repairing damage.")
         if self.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
@@ -421,6 +421,22 @@ class Game:
             print("Ship partially repaired. Visit a starport for further work.")
         else:
             print("No progress today. Drives are still out of commission.")
+
+    # TO_DO: the rules do not cover this procedure. No time or credits
+    #        expenditure, etc. For now I'll just make this one week and free,
+    #        but that probably ought to change.
+    def repair_ship(self):
+        pr_blue("Starport repairs.")
+        if self.location.starport in ["D", "E", "X"]:
+            print(f"No repair facilities available at starport {self.location.starport}")
+            return
+        if self.ship.repair_status == RepairStatus.REPAIRED:
+            print("Your ship is not damaged.")
+            return
+        self.ship.repair_status = RepairStatus.REPAIRED
+        self.ship.fuel_quality = FuelQuality.REFINED
+        self.ship.unrefined_jump_counter = 0
+        self.date.plus_week()
 
     def flush(self):
         pr_blue("Flushing out fuel tanks.")
@@ -736,8 +752,8 @@ always = [Command('q', 'Quit',
                   game.passenger_manifest),
           Command('e', 'Crew roster',
                   game.crew_roster),
-          Command('k', 'Repair ship',
-                  game.repair_ship),
+          Command('k', 'Engineering damage control',
+                  game.damage_control),
           Command('a', 'View star map',
                   game.view_map)]
 
@@ -753,6 +769,8 @@ starport = always + [Command('l', 'Lift off to orbit',
                              game.to_terminal),
                      Command('u', 'Flush fuel tanks',
                              game.flush),
+                     Command('n', 'Repair ship',
+                             game.repair_ship),
                      Command('r', 'Refuel',
                              game.refuel)]
 starport = sorted(starport, key=lambda command: command.key)
@@ -792,11 +810,11 @@ passengers = always + [Command('b', 'Book passengers',
 passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ q ~ ~ ~ ~ v w 
-# STARPORT:             f           l m p   r   t u
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w 
+# STARPORT:             f           l m n p   r   t u
 # ORBIT:                  g         l
-# JUMP:                       i j             s
-# TRADE:        b       f g         l         s   u
+# JUMP:                       i j               s
+# TRADE:        b       f g         l           s   u
 # PASSENGERS:   b                   l
 
 if __name__ == '__main__':

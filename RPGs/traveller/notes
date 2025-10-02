@@ -1274,6 +1274,15 @@
 #  A BROKEN ship cannot move at all, either jump or maneuver.
 #  A PATCHED ship cannot jump.
 #
+#  The rules do state that D/E/X starports have no repair
+#  facilities (Book 2 p. 5). Harsh. This is game over 
+#  conditions.
+#
+#  I'm going to base the repair rules (slim as they are)
+#  on the 'flush tanks' command. Let's assume it also
+#  takes a week, and as a bonus will flush the tanks
+#  at the same time. Costs TBD. Free for now.
+#
 #  Another quick ruling: annual maintenance will repair the
 #  ship completely if necessary. Seems pretty obvious, though
 #  not explictly mentioned in RAW.
@@ -1514,9 +1523,8 @@
 #  * [DONE] Add chance for drive failure from skipped maintenance
 #  * [DONE] Restrict ship movement based on repair status
 #  * [DONE] Add repair action for engineer in flight
+#  * [DONE] Add repair action at starport
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Add repair action at starport
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add check for misjump and effects of same
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
@@ -1527,6 +1535,7 @@
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
 #  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
