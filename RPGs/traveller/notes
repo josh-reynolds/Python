@@ -1513,8 +1513,9 @@
 #  * [DONE] Add ship repair status, display it too
 #  * [DONE] Add chance for drive failure from skipped maintenance
 #  * [DONE] Restrict ship movement based on repair status
+#  * [DONE] Add repair action for engineer in flight
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [    ] Add repair actions for engineer in flight, and at starport
+#  * [    ] Add repair action at starport
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Add check for misjump and effects of same
 #  * [    ] Generate world names

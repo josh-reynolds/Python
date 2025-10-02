@@ -279,6 +279,12 @@ class Ship:
                 return 0
         raise ValueError("No medic on board!")
 
+    def engineering_skill(self):
+        skills = [c.skill for c in self.crew if isinstance(c, Engineer)]
+        if len(skills) > 0:
+                return max(skills)
+        raise ValueError("No engineer on board!")
+
     # Book 2 p. 19
     # ...four for the crew: pilot, engineer, medic and steward...
     # Book 2 p. 6

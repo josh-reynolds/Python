@@ -47,7 +47,7 @@ class Game:
 
             if self.ship.repair_status == RepairStatus.BROKEN:
                 repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-            elif self.ship.repair_status == RepairStatus.BROKEN:
+            elif self.ship.repair_status == RepairStatus.PATCHED:
                 repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
             else:
                 repair_state = ""
@@ -407,6 +407,21 @@ class Game:
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
+    def repair_ship(self):
+        pr_blue("Repairing damage.")
+        if self.ship.repair_status == RepairStatus.REPAIRED:
+            print("Your ship is not damaged.")
+            return
+        if self.ship.repair_status == RepairStatus.PATCHED:
+            print("Further repairs require starport facilities.")
+            return
+        self.date.day += 1
+        if die_roll(2) + self.ship.engineering_skill() > 9:
+            self.ship.repair_status = RepairStatus.PATCHED
+            print("Ship partially repaired. Visit a starport for further work.")
+        else:
+            print("No progress today. Drives are still out of commission.")
+
     def flush(self):
         pr_blue("Flushing out fuel tanks.")
         if self.ship.fuel_quality == FuelQuality.REFINED:
@@ -721,6 +736,8 @@ always = [Command('q', 'Quit',
                   game.passenger_manifest),
           Command('e', 'Crew roster',
                   game.crew_roster),
+          Command('k', 'Repair ship',
+                  game.repair_ship),
           Command('a', 'View star map',
                   game.view_map)]
 
@@ -775,12 +792,12 @@ passengers = always + [Command('b', 'Book passengers',
 passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w 
-# STARPORT:             f         l m p   r   t u
-# ORBIT:                  g       l
-# JUMP:                       i j           s
-# TRADE:        b       f g       l         s   u
-# PASSENGERS:   b                 l
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ q ~ ~ ~ ~ v w 
+# STARPORT:             f           l m p   r   t u
+# ORBIT:                  g         l
+# JUMP:                       i j             s
+# TRADE:        b       f g         l         s   u
+# PASSENGERS:   b                   l
 
 if __name__ == '__main__':
     game.run()
