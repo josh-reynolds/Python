@@ -204,7 +204,7 @@ class StarMap:
         return result
 
     def get_system_at_coordinate(self, coordinate):
-        return self.systems[coordinate]
+        return self.systems.get(coordinate, StarMap.generate_new_system(coordinate))
 
     def get_all_systems(self):
         systems = [s for i,(k,s) in enumerate(self.systems.items()) if 

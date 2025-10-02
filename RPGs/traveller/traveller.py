@@ -5,7 +5,7 @@ from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
-from star_system import StarSystem
+from star_system import StarSystem, DeepSpace
 from star_map import StarMap, StarSystemFactory
 
 class Game:
@@ -20,11 +20,11 @@ class Game:
 
         self.star_map = StarMap({
             (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 10),
-            (0,1,-1) : None,
+            (0,1,-1) : DeepSpace((0,1,-1)),
             (0,-1,1) : StarSystemFactory.create("Mithril", (0,-1,1), "A", 8, 4, 0, 7, 5, 5, 10),
             (1,0,-1) : StarSystemFactory.create("Kinorb", (1,0,-1), "A", 8, 5, 5, 7, 5, 5, 10),
-            (-1,0,1) : None,
-            (1,-1,0) : None,
+            (-1,0,1) : DeepSpace((-1,0,1)),
+            (1,-1,0) : DeepSpace((1,-1,0)),
             (-1,1,0) : StarSystemFactory.create("Aramis", (-1,1,0), "A", 8, 6, 5, 8, 5, 5, 10)
             })
 
@@ -166,6 +166,10 @@ class Game:
         self.commands = jump
 
     def inbound_from_jump(self):
+        if type(self.location) is DeepSpace:
+            pr_red("You are in deep space. There is no inner system to travel to.")
+            return
+
         pr_blue(f"Travelling in to orbit {self.location.name}.")
 
         if self.ship.repair_status == RepairStatus.BROKEN:
@@ -395,9 +399,7 @@ class Game:
                            misjump_target[1] + self.location.coordinate[1],
                            misjump_target[2] + self.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
-            # TO_DO: this will cause problems if we jump to an empty hex,
-            #        need to have something in place before we uncommnent
-            #self.location = self.star_map.get_system_at_coordinate(misjump_target)
+            self.location = self.star_map.get_system_at_coordinate(misjump_target)
         else:
             self.location = destination
 
@@ -606,6 +608,7 @@ class Game:
     def skim(self):
         pr_blue("Skimming fuel from a gas giant planet.")
         if not self.location.gas_giant:
+            # TO_DO: may want to tweak this message in deep space.
             print("There is no gas giant in this system. No fuel skimming possible.")
             return
 

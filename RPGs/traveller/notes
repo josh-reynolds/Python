@@ -1554,8 +1554,8 @@
 #  * [DONE] Add repair action for engineer in flight
 #  * [DONE] Add repair action at starport
 #  * [DONE] Add null system class and replace None references
+#  * [DONE] Add check for misjump and effects of same
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Add check for misjump and effects of same
 #  * [    ] Generate world names
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.

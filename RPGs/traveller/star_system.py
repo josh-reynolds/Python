@@ -8,6 +8,14 @@ class DeepSpace(Hex):
         self.coordinate = coordinate
         self.detail = ""
         self.destinations = []
+        self.population = 0
+        self.gas_giant = False
+
+    def description(self):
+        return "stranded in deep space"
+
+    def __repr__(self):
+        return f"{self.coordinate} - Deep Space"
 
 class StarSystem(Hex):
     def __init__(self, name, coordinate, starport, size, atmosphere, 
