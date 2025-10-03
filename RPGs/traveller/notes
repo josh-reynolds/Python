@@ -1348,6 +1348,15 @@
 # module. That way we can always switch strategies later
 # and the rest of the code doesn't have to know a thing.
 #
+# OK. Got it working. Pretty short list, so there will
+# be repeats, but we can always expand it later. Also,
+# adding prefixes/suffixes, like "New" or "Station" will
+# add even more variety. Good enough for now.
+#
+# I've accumulated a bit of technical debt through this
+# push, so should spend some time cleaning and refactoring
+# before we move on to the next phase.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1582,9 +1591,9 @@
 #  * [DONE] Add null system class and replace None references
 #  * [DONE] Add check for misjump and effects of same
 #  * [DONE] Add a word generator module, with a get_name() function
+#  * [DONE] Generate world names
+#  * [DONE] Add a basic word list
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Generate world names
-#  * [    ] Add a scrubbed word list
 #  PHASE FOUR ======================================================
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1657,6 +1666,8 @@
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Should life support percentage be tied to 'days duration?' But what
 #           happens if it hits zero?
+#  * [    ] Add a much larger list for world names, and add variation like
+#           "New" or "Station"
 #  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic. This may be as

@@ -1,5 +1,6 @@
 import unittest
 from random import randint
+from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace
 from utilities import die_roll, constrain
 
@@ -93,7 +94,7 @@ class StarSystemFactory:
 
     @classmethod
     def generate(cls, coordinate):
-        name = "Test"
+        name = get_world_name()
 
         roll = die_roll() + die_roll()
         if roll <= 4:
@@ -292,23 +293,17 @@ class StarMapTestCase(unittest.TestCase):
 
         systems = star_map1.get_systems_within_range((1,0,-1), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((-1,1,0), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((0,-1,1), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
-        self.assertTrue(systems[0].name in ("Yorbund", "Test"))
 
         systems = star_map1.get_systems_within_range((0,-1,1), 2)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertTrue(isinstance(systems[1], StarSystem))
         self.assertTrue(isinstance(systems[2], StarSystem))
-        self.assertTrue(systems[0].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
-        self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
-        self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Yorbund", "Test"))
 
     def test_get_systems_within_range_with_DeepSpace(self):
         star_map2 = StarMapTestCase.star_map2
@@ -470,7 +465,6 @@ class StarMapTestCase(unittest.TestCase):
 class StarSystemFactoryTestCase(unittest.TestCase):
     def test_generate(self):
         system = StarSystemFactory.generate((0,0,0))
-        self.assertEqual(system.name, "Test")
         self.assertEqual(system.coordinate, (0,0,0))
 
         self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
