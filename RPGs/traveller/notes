@@ -1374,17 +1374,11 @@
 #    * Multiple systems
 #    * Star map
 #    * Coordinate system
-#  PHASE THREE <== we are here
+#  PHASE THREE
 #  * Adding freight & passengers
 #  * Any other remaining RAW procedures:
 #    * crew, misjumps, etc.
-#  PHASE FOUR
-#  * Polishing game mechanisms:
-#    * UI work
-#    * Front end and menu
-#    * Save/load if not done earlier
-#    * Player customization: ship name, captain, etc.
-#    * Save/load
+#  PHASE FOUR <== we are here
 #  * Handling technical debt:
 #    * (We _should_ be doing some of this as we go, at least at the
 #       end of each phase...)
@@ -1392,6 +1386,13 @@
 #    * Refactoring
 #    * Best practices and 'pythonic' coding
 #  PHASE FIVE
+#  * Polishing game mechanisms:
+#    * UI work
+#    * Front end and menu
+#    * Save/load if not done earlier
+#    * Player customization: ship name, captain, etc.
+#    * Save/load
+#  PHASE SIX
 #    * Expand scope with RPG-lite elements and events
 #    * Lift into graphics system? (This could really snowball, be cautious)
 #    * Explore later Traveller versions for ideas (or to support as options)
@@ -1593,50 +1594,51 @@
 #  * [DONE] Add a word generator module, with a get_name() function
 #  * [DONE] Generate world names
 #  * [DONE] Add a basic word list
-#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  PHASE FOUR ======================================================
+#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
+#  * [....] pylint/pydocstyle scrub
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
-#  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
-#           instead of choosing one at a time.
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
 #  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] Replace ValueError and other 'generic' exceptions with custom
-#  * [    ] pylint/pydocstyle scrub
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
-#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Review uses of die_roll and replace with multiple die functionality as necessary
-#  * [    ] Need to be able to see maintenance date
-#  * [    ] List star map to take a range parameter?
-#  * [    ] Can we colorize current location in star map listing?
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
-#  # [    ] Break up Game class (MVC?)
+#  * [    ] Break up Game class (MVC?)
 #  * [    ] Properly separate __repr__ and __str__ for all classes
-#  * [    ] Review flow, confirmations, notifications - streamline where annoying,
-#           slow down where mistakes happen
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
-#  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Consider moving tests to separate modules
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Should we add type annotations?
+#  PHASE FIVE ======================================================
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
+#  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Review flow, confirmations, notifications - streamline where annoying,
+#           slow down where mistakes happen
+#  * [    ] Can we colorize current location in star map listing?
+#  * [    ] Need to be able to see maintenance date
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] List star map to take a range parameter? What's the use case?
+#  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
+#           instead of choosing one at a time.
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
+#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Add a 'shore leave' action?
 #  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
@@ -1653,7 +1655,7 @@
 #  * [    ] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
-#  PHASE FIVE ======================================================
+#  PHASE SIX ======================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has

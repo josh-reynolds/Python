@@ -23,7 +23,7 @@ class Engineer(Crew):
         return f"Skins McFlint - Engineer {self.skill}"
     def salary(self):
         return Credits(4000) * (1 + .1 * (self.skill - 1))
-    
+
 class Medic(Crew):
     def __init__(self, skill=1, trade=0):
         self.skill = skill
@@ -96,31 +96,33 @@ class Ship:
 
     @property
     def destination(self):
-        freight_destinations = set([f.destination_world for f in self.hold if
-                                                            isinstance(f, Freight)])
+        freight_destinations = {f.destination_world for f in self.hold if
+                                                            isinstance(f, Freight)}
         freight_count = len(freight_destinations)
 
-        passenger_destinations = set([p.destination for p in self.passengers])
+        passenger_destinations = {p.destination for p in self.passengers}
         passenger_count = len(passenger_destinations)
 
         if freight_count > 1 or passenger_count > 1:
             raise ValueError("More than one destination between Freight and Passengers!")
 
         if freight_count == 0 and passenger_count == 0:
-               return None
+            result = None
 
         if freight_count == 1 and passenger_count == 0:
-            return freight_destinations.pop()
+            result = freight_destinations.pop()
 
         if freight_count == 0 and passenger_count == 1:
-            return passenger_destinations.pop()
+            result = passenger_destinations.pop()
 
         if freight_count == 1 and passenger_count == 1:
             freight_destination = freight_destinations.pop()
             passenger_destination = passenger_destinations.pop()
             if freight_destination != passenger_destination:
                 raise ValueError("More than one destination between Freight and Passengers!")
-            return freight_destination
+            result = freight_destination
+
+        return result
 
     @property
     def total_passenger_count(self):
@@ -129,18 +131,18 @@ class Ship:
                 self.low_passenger_count
     @property
     def high_passenger_count(self):
-        return sum([1 for passenger in self.passengers if
-                    passenger.passage == PassageClass.HIGH])
+        return sum(1 for passenger in self.passengers if
+                   passenger.passage == PassageClass.HIGH)
 
     @property
     def middle_passenger_count(self):
-        return sum([1 for passenger in self.passengers if
-                    passenger.passage == PassageClass.MIDDLE])
+        return sum(1 for passenger in self.passengers if
+                    passenger.passage == PassageClass.MIDDLE)
 
     @property
     def low_passenger_count(self):
-        return sum([1 for passenger in self.passengers if
-                    passenger.passage == PassageClass.LOW])
+        return sum(1 for passenger in self.passengers if
+                    passenger.passage == PassageClass.LOW)
 
     @property
     def empty_passenger_berths(self):
@@ -154,7 +156,7 @@ class Ship:
         return self.hold
 
     def free_space(self):
-        taken = sum([cargo.tonnage for cargo in self.hold])
+        taken = sum(cargo.tonnage for cargo in self.hold)
         return self.hold_size - taken
 
     # for now keep all cargo lots separate, since the may have had different
@@ -226,7 +228,7 @@ class Ship:
         return self.life_support_level == 100
 
     def insufficient_life_support_message(self):
-        return f"Insufficient life support to survive jump.\n" + \
+        return "Insufficient life support to survive jump.\n" + \
                f"Life support is at {self.life_support_level}%."
 
     # Book 2 p. 6
@@ -266,7 +268,7 @@ class Ship:
     # as DMs for the sale of goods. In any given transaction, such DMs may
     # be used by only one person.
     def trade_skill(self):
-        return max([c.trade_skill for c in self.crew])
+        return max(c.trade_skill for c in self.crew)
 
     # Book 2 p. 2 [for low berth survival]
     #   attending medic of expertise 2 or better, +1
@@ -275,14 +277,13 @@ class Ship:
         if len(skills) > 0:
             if max(skills) > 1:
                 return 1
-            else:
-                return 0
+            return 0
         raise ValueError("No medic on board!")
 
     def engineering_skill(self):
         skills = [c.skill for c in self.crew if isinstance(c, Engineer)]
         if len(skills) > 0:
-                return max(skills)
+            return max(skills)
         raise ValueError("No engineer on board!")
 
     # Book 2 p. 19
@@ -297,7 +298,7 @@ class Ship:
     # (with suitable modifications for expertise or seniority,
     #  generally +10% for eachlevel of expertise above level-1)
     def crew_salary(self):
-        return Credits(sum([c.salary().amount for c in self.crew]))
+        return Credits(sum(c.salary().amount for c in self.crew))
 
     # Book 2 p. 19
     # Base price for the free trader is 37,080,000 Cr
@@ -389,10 +390,10 @@ class ShipTestCase(unittest.TestCase):
     @unittest.skip("test has side effects: input & printing")
     def test_refuel(self):
         self.assertEqual(ShipTestCase.ship.current_fuel, 0)
-        cost = ShipTestCase.ship.refuel()
+        cost = ShipTestCase.ship.refuel("A")
         self.assertEqual(ShipTestCase.ship.current_fuel, 30)
         self.assertEqual(cost, Credits(15000))    # 'yes' case
-        cost = ShipTestCase.ship.refuel()
+        cost = ShipTestCase.ship.refuel("A")
         self.assertEqual(cost, Credits(0))        # full tank case
 
     @unittest.skip("test has side effects: input & printing")
@@ -433,9 +434,10 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(len(ship.hold), 4)
 
         ship.load_cargo(Freight(1, "Pluto", "Jupiter"))
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaises(ValueError) as context:
             ship.destination
-        self.assertEqual(f"{cm.exception}", "More than one destination between Freight and Passengers!")
+        self.assertEqual(f"{context.exception}",
+                         "More than one destination between Freight and Passengers!")
 
     def test_sufficient_jump_fuel(self):
         ship = ShipTestCase.ship
@@ -469,9 +471,11 @@ class ShipTestCase(unittest.TestCase):
 
         ship.load_cargo(Freight(1, "Pluto", "Uranus"))
         ship.passengers += [ShipTestCase.PassengerMock("Jupiter")]
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaises(ValueError) as context:
             ship.destination
-        self.assertEqual(f"{cm.exception}", "More than one destination between Freight and Passengers!")
+        self.assertEqual(f"{context.exception}",
+                         "More than one destination " +
+                         "between Freight and Passengers!")
 
 class PilotTestCase(unittest.TestCase):
     def test_salary(self):

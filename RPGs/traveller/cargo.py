@@ -61,7 +61,7 @@ class Cargo:
     def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
         self.name = name
-        self.quantity = Cargo.determine_quantity(quantity)
+        self.quantity = self.determine_quantity(quantity)
         self.price = price
         self.unit_size = unit_size
         self.purchase_dms = purchase_dms
@@ -107,7 +107,7 @@ class Cargo:
     #     otherwise it is an exact amount
     #   value is either tonnage or separate items
     #     as indicated by the unit_size field
-    def determine_quantity(quantity):
+    def determine_quantity(self, quantity):
         amount = str(quantity)
         if "Dx" in amount:
             die_count, multiplier = [int(n) for n in amount.split("Dx")]
@@ -140,44 +140,45 @@ class CargoDepot:
         self.freight = {}
         for world in destinations:
             self.freight[world] = []
-            for i in range(world.population):
+            for _ in range(world.population):
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
 
     # Table from Book 2 p. 7
-    # In RAW the table goes up to population 12, but the system only 
+    # In RAW the table goes up to population 12, but the system only
     # generates populations up to 10, so I am truncating
     def passenger_origin_table(self, population):
         if population < 2:
-            return (0,0,0)
+            result = (0,0,0)
         if population == 2:
-            return (die_roll()-die_roll(), 
-                    die_roll()-die_roll(), 
-                    die_roll(3)-die_roll())
+            result = (die_roll()-die_roll(),
+                      die_roll()-die_roll(),
+                      die_roll(3)-die_roll())
         if population == 3:
-            return (die_roll(3)-die_roll(2),
-                    die_roll(2)-die_roll(2), 
-                    die_roll(3)-die_roll())
+            result = (die_roll(3)-die_roll(2),
+                      die_roll(2)-die_roll(2),
+                      die_roll(3)-die_roll())
         if population == 4:
-            return (die_roll(3)-die_roll(3),
-                    die_roll(3)-die_roll(3), 
-                    die_roll(4)-die_roll())
+            result = (die_roll(3)-die_roll(3),
+                      die_roll(3)-die_roll(3),
+                      die_roll(4)-die_roll())
         if population == 5:
-            return (die_roll(3)-die_roll(2),
-                    die_roll(3)-die_roll(2), 
-                    die_roll(4)-die_roll())
-        if population == 6 or population == 7:
-            return (die_roll(3)-die_roll(2),
-                    die_roll(3)-die_roll(2), 
-                    die_roll(3))
+            result = (die_roll(3)-die_roll(2),
+                      die_roll(3)-die_roll(2),
+                      die_roll(4)-die_roll())
+        if population in (6, 7):
+            result = (die_roll(3)-die_roll(2),
+                      die_roll(3)-die_roll(2),
+                      die_roll(3))
         if population == 8:
-            return (die_roll(2)-die_roll(),
-                    die_roll(3)-die_roll(2), 
-                    die_roll(4))
+            result = (die_roll(2)-die_roll(),
+                      die_roll(3)-die_roll(2),
+                      die_roll(4))
         if population > 8:
-            return (die_roll(2)-die_roll(),
-                    die_roll(2)-die_roll(), 
-                    die_roll(4))
+            result = (die_roll(2)-die_roll(),
+                      die_roll(2)-die_roll(),
+                      die_roll(4))
+        return result
 
     def passenger_destination_table(self, population, counts):
         if population < 2:
@@ -208,12 +209,12 @@ class CargoDepot:
         self.passengers = {}
         for world in destinations:
             origin_counts = self.passenger_origin_table(self.system.population)
-            passengers = self.passenger_destination_table(world.population, 
+            passengers = self.passenger_destination_table(world.population,
                                                           origin_counts)
             self.passengers[world] = passengers
 
     def get_available_freight(self, destinations):
-        if self.freight == {}:
+        if not self.freight:
             self.refresh_freight(destinations)
 
         for i,world in enumerate(destinations):
@@ -230,7 +231,7 @@ class CargoDepot:
         return (world.coordinate, self.freight[world].copy())
 
     def get_available_passengers(self, destinations):
-        if self.passengers == {}:
+        if not self.passengers:
             self.refresh_passengers(destinations)
 
         for i,world in enumerate(destinations):
@@ -245,7 +246,7 @@ class CargoDepot:
         world = destinations[destination_number]
 
         return (world.coordinate, self.passengers[world])
-    
+
     def get_price_modifiers(self, cargo, transaction_type):
         if transaction_type == "purchase":
             table = cargo.purchase_dms
@@ -735,7 +736,7 @@ class CargoDepotTestCase(unittest.TestCase):
         world2.name = "Jupiter"
         destinations = [world1, world2]
 
-        coordinate, available = depot.get_available_freight(destinations)
+        _, _ = depot.get_available_freight(destinations)
 
     def test_passenger_origin_table(self):
         depot = CargoDepotTestCase.depot
@@ -835,10 +836,10 @@ class FreightTestCase(unittest.TestCase):
             self.name = name
 
     def test_freight_string(self):
-        freight = Freight(10, 
+        freight = Freight(10,
                           FreightTestCase.SystemMock("Pluto"),
                           FreightTestCase.SystemMock("Uranus"))
-        self.assertEqual(f"{freight}", 
+        self.assertEqual(f"{freight}",
                          "Freight : 10 tons : Pluto -> Uranus")
 
 # -------------------------------------------------------------------
