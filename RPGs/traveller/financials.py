@@ -1,7 +1,15 @@
+"""Contains classes to handle financial transactions.
+
+Credits - represents units of money.
+Financials - contains methods to handle financial
+             transactions and track a balance.
+"""
 import unittest
 from utilities import pr_red, pr_yellow
 
 class Credits:
+    """Represents units of money."""
+
     def __init__(self, amount):
         # should we block negative or zero credits?
         # unsure... what if credits can represent a
@@ -47,6 +55,8 @@ class Credits:
         return NotImplemented
 
 class Financials:
+    """Contains methods to handle financial transactions and track a balance. """
+
     def __init__(self, balance, current_date, ship, location):
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
@@ -147,6 +157,8 @@ class Financials:
         return "red"
 
 class CreditsTestCase(unittest.TestCase):
+    """Tests Credits class."""
+
     def test_credits_string(self):
         credits1 = Credits(1)
         credits2 = Credits(10)
@@ -190,7 +202,11 @@ class CreditsTestCase(unittest.TestCase):
         self.assertEqual(credits1 * 5, Credits(50))
 
 class FinancialsTestCase(unittest.TestCase):
+    """Tests Financials class."""
+
     class DateMock:
+        """Mocks a date interface for testing."""
+
         def __init__(self, value):
             self.value = value
 
@@ -220,6 +236,8 @@ class FinancialsTestCase(unittest.TestCase):
             return f"{self.value}"
 
     class ShipMock:
+        """Mocks a ship interface for testing."""
+
         def __init__(self):
             self.last_maintenance = FinancialsTestCase.DateMock(1)
 
@@ -230,6 +248,8 @@ class FinancialsTestCase(unittest.TestCase):
             return Credits(1)
 
     class SystemMock:
+        """Mocks a system interface for testing."""
+
         def on_surface(self):
             return True
 

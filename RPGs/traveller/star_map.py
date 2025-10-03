@@ -1,3 +1,8 @@
+"""Contains classes to create and manage a Traveller star map.
+
+StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
+StarMap - represents a map of StarSystems laid out on a hexagonal grid.
+"""
 import unittest
 from random import randint
 from word_gen import get_world_name
@@ -85,6 +90,8 @@ from utilities import die_roll, constrain
 # in the text can produce values outside this range in
 # some cases
 class StarSystemFactory:
+    """Builds StarSystem objects using the Traveller '77 rules."""
+
     @classmethod
     def create(cls, name, coordinate, starport, size, atmosphere,
                hydrographics, population, government, law, tech, gas_giant=True):
@@ -182,6 +189,8 @@ class StarSystemFactory:
                           hydrographics, population, government, law, tech, gas_giant)
 
 class StarMap:
+    """Represents a map of StarSystems laid out on a hexagonal grid."""
+
     def __init__(self, systems):
         self.systems = systems
         for key in self.systems.keys():
@@ -251,6 +260,7 @@ class StarMap:
                         for c in span]
 
 class StarMapTestCase(unittest.TestCase):
+    """Tests StarMap class."""
     def setUp(self):
         StarMapTestCase.star_map1 = StarMap({
             (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
@@ -468,6 +478,8 @@ class StarMapTestCase(unittest.TestCase):
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
 
 class StarSystemFactoryTestCase(unittest.TestCase):
+    """Tests StarSystemFactory class."""
+
     def test_generate(self):
         system = StarSystemFactory.generate((0,0,0))
         self.assertEqual(system.coordinate, (0,0,0))

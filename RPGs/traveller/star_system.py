@@ -1,10 +1,20 @@
+"""Contains classes to represent Traveller star map hexes.
+
+Hex - base class for map hexes.
+DeepSpace - represents an empty map hex.
+StarSystem - represents a map hex containing a star system.
+"""
 import unittest
 
 class Hex:
+    """Base class for map hexes."""
+
     def __init__(self, coordinate):
         self.coordinate = coordinate
 
 class DeepSpace(Hex):
+    """Represents an empty map hex."""
+
     def __init__(self, coordinate):
         super().__init__(coordinate)
         self.detail = ""
@@ -19,6 +29,8 @@ class DeepSpace(Hex):
         return f"{self.coordinate} - Deep Space"
 
 class StarSystem(Hex):
+    """Represents a map hex containing a star system."""
+
     def __init__(self, name, coordinate, starport, size, atmosphere,
                  hydrographics, population, government, law, tech, gas_giant=True):
         super().__init__(coordinate)
@@ -159,6 +171,7 @@ class StarSystem(Hex):
             self.detail = "starport"
 
 class StarSystemTestCase(unittest.TestCase):
+    """Tests StarSystem class."""
     def setUp(self):
         StarSystemTestCase.system = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
 

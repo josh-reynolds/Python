@@ -1,3 +1,14 @@
+"""Contains classes to manage a starship and its crew.
+
+Crew - base class for crewmembers.
+Pilot - represents a pilot on board a ship.
+Engineer - represents an engineer on board a ship.
+Medic - represents a medic on board a ship.
+Steward - represents a steward on board a ship.
+FuelQuality - enem to represent whether fuel is contaminated or not.
+RepairStatus - enum to represent whether a ship needs repairs.
+Ship - represents a starship.
+"""
 import unittest
 from enum import Enum
 from cargo import Freight, PassageClass
@@ -5,8 +16,11 @@ from financials import Credits
 from utilities import confirm_input
 
 class Crew:
-    pass
+    """Base class for crewmembers."""
+
 class Pilot(Crew):
+    """Represents a pilot on board a ship."""
+
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
@@ -16,6 +30,8 @@ class Pilot(Crew):
         return Credits(6000) * (1 + .1 * (self.skill - 1))
 
 class Engineer(Crew):
+    """Represents an engineer on board a ship."""
+
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
@@ -25,6 +41,8 @@ class Engineer(Crew):
         return Credits(4000) * (1 + .1 * (self.skill - 1))
 
 class Medic(Crew):
+    """Represents a medic on board a ship."""
+
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
@@ -34,6 +52,8 @@ class Medic(Crew):
         return Credits(2000) * (1 + .1 * (self.skill - 1))
 
 class Steward(Crew):
+    """Represents a steward on board a ship."""
+
     def __init__(self, skill=1, trade=0):
         self.skill = skill
         self.trade_skill = trade
@@ -43,15 +63,21 @@ class Steward(Crew):
         return Credits(3000) * (1 + .1 * (self.skill - 1))
 
 class FuelQuality(Enum):
+    """Represents whether fuel is contaminated or not."""
+
     UNREFINED = 0
     REFINED = 1
 
 class RepairStatus(Enum):
+    """Represents whether a ship needs repairs."""
+
     REPAIRED = 0
     PATCHED = 1
     BROKEN = 2
 
 class Ship:
+    """Represents a starship."""
+
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
         self.name = "Weaselfish"
@@ -328,7 +354,11 @@ class Ship:
         return Credits(37080000 * 0.001)
 
 class ShipTestCase(unittest.TestCase):
+    """Tests Ship class."""
+
     class CargoMock:
+        """Mocks a cargo interface for testing."""
+
         def __init__(self, quantity):
             self.quantity = quantity
         @property
@@ -336,10 +366,14 @@ class ShipTestCase(unittest.TestCase):
             return self.quantity
 
     class FreightMock:
+        """Mocks a freight interface for testing."""
+
         def __init__(self, destination):
             self.destination_world = destination
 
     class PassengerMock:
+        """Mocks a passenger interface for testing."""
+
         def __init__(self, destination):
             self.destination = destination
 
@@ -478,24 +512,32 @@ class ShipTestCase(unittest.TestCase):
                          "between Freight and Passengers!")
 
 class PilotTestCase(unittest.TestCase):
+    """Tests Pilot class."""
+
     def test_salary(self):
         self.assertEqual(Pilot(1).salary(), Credits(6000))
         self.assertEqual(Pilot(2).salary(), Credits(6600))
         self.assertEqual(Pilot(3).salary(), Credits(7200))
 
 class EngineerTestCase(unittest.TestCase):
+    """Tests Engineer class."""
+
     def test_salary(self):
         self.assertEqual(Engineer(1).salary(), Credits(4000))
         self.assertEqual(Engineer(2).salary(), Credits(4400))
         self.assertEqual(Engineer(3).salary(), Credits(4800))
 
 class MedicTestCase(unittest.TestCase):
+    """Tests Medic class."""
+
     def test_salary(self):
         self.assertEqual(Medic(1).salary(), Credits(2000))
         self.assertEqual(Medic(2).salary(), Credits(2200))
         self.assertEqual(Medic(3).salary(), Credits(2400))
 
 class StewardTestCase(unittest.TestCase):
+    """Tests Steward class."""
+
     def test_salary(self):
         self.assertEqual(Steward(1).salary(), Credits(3000))
         self.assertEqual(Steward(2).salary(), Credits(3300))
