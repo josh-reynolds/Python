@@ -1,3 +1,13 @@
+"""Contains classes to track payload of a ship.
+
+PassageClass - enum to denote passenger ticket class.
+Passenger - represents a passenger on a ship.
+Freight - represents bulk freight.
+Baggage - represents passenger baggage.
+Cargo - represents speculative cargo.
+CargoDepot - represents a starport location for loading and
+             unloading Passengers, Freight, Cargo and Baggage.
+"""
 import unittest
 from enum import Enum
 from random import randint
@@ -6,11 +16,15 @@ from utilities import actual_value, pr_red, pr_green
 from financials import Credits
 
 class PassageClass(Enum):
+    """Denotes the class of a Passenger's ticket."""
+
     HIGH = 0
     MIDDLE = 1
     LOW = 2
 
 class Passenger:
+    """Represents a passenger on a ship."""
+
     def __init__(self, passage, destination):
         if passage == PassageClass.HIGH:
             self.name = "High passage"
@@ -38,6 +52,8 @@ class Passenger:
         return f"{self.name} to {self.destination.name}"
 
 class Freight:
+    """Represents bulk freight."""
+
     def __init__(self, tonnage, source_world, destination_world):
         self.name = "Freight"
         self.tonnage = tonnage
@@ -53,11 +69,15 @@ class Freight:
                f"{self.source_world.name} -> {self.destination_world.name}"
 
 class Baggage(Freight):
+    """Represents passenger baggage."""
+
     def __init__(self, source_world, destination_world):
         super().__init__(1, source_world, destination_world)
         self.name = "Baggage"
 
 class Cargo:
+    """Represents speculative cargo."""
+
     def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
         self.name = name
@@ -119,6 +139,10 @@ class Cargo:
         return int(quantity)
 
 class CargoDepot:
+    """Represents a starport location for loading and
+       unloading Passengers, Freight, Cargo and Baggage.
+    """
+
     def __init__(self, system, refresh_date):
         self.system = system
         self.refresh_date = refresh_date.copy()
@@ -468,6 +492,8 @@ class CargoDepot:
         return cargo
 
 class CargoTestCase(unittest.TestCase):
+    """Tests Cargo class."""
+
     def test_cargo_quantity(self):
         cargo1 = Cargo("Foo", 10, Credits(10), 1, {}, {})
         self.assertEqual(cargo1.quantity, 10)
@@ -513,6 +539,8 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(f"{cargo3}", "Baz - 5 (5 tons/item) - 10 Cr/item")
 
         class Location:
+            """Mocks a location interface for testing."""
+
             def __init__(self, name):
                 self.name = name
         location = Location("Uranus")
@@ -520,7 +548,11 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
 class CargoDepotTestCase(unittest.TestCase):
+    """Tests CargoDepot class."""
+
     class DateMock:
+        """Mocks a date interface for testing."""
+
         def __init__(self, value):
             self.value = value
 
@@ -537,6 +569,8 @@ class CargoDepotTestCase(unittest.TestCase):
             return self.value >= other.value
 
     class SystemMock:
+        """Mocks a system interface for testing."""
+
         def __init__(self):
             self.population = 5
             self.agricultural = True
@@ -611,6 +645,8 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_invalid_cargo_origin(self):
         depot = CargoDepotTestCase.depot
         class Location:
+            """Mocks a location interface for testing."""
+
             def __init__(self, name):
                 self.name = name
             def __eq__(self, other):
@@ -831,7 +867,11 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(depot.passenger_destination_table(7, counts), (40,40,40))
 
 class FreightTestCase(unittest.TestCase):
+    """Tests Freight class."""
+
     class SystemMock:
+        """Mocks a system interface for testing."""
+
         def __init__(self, name):
             self.name = name
 

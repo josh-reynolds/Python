@@ -1,6 +1,14 @@
+"""Contains classes for tracking time in the game.
+
+Calendar - keeps track of the current date, and notifies
+           observers when it changes.
+ImperialDate - represents a single date Traveller format: DDD-YYYY
+"""
 import unittest
 
 class Calendar:
+    """Tracks the current date and notifies observers when it changes."""
+
     def __init__(self):
         self.current_date = ImperialDate(1,1105)
         self.observers = []
@@ -39,6 +47,8 @@ class Calendar:
         self.observers.append(observer)
 
 class ImperialDate:
+    """Represents a single date in Travller format: DDD-YYYY."""
+
     def __init__(self, day, year):
         self.day = day
         self.year = year
@@ -83,6 +93,8 @@ class ImperialDate:
         return ImperialDate(self.day, self.year)
 
 class ImperialDateTestCase(unittest.TestCase):
+    """Tests ImperialDate class."""
+
     def test_date_string(self):
         date = ImperialDate(1,100)
         self.assertEqual(f"{date}", "001-100")
@@ -140,7 +152,11 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(date1-5, ImperialDate(365,99))
 
 class CalendarTestCase(unittest.TestCase):
+    """Tests Calendar class."""
+
     class ObserverMock:
+        """Mocks an observer interface for testing."""
+
         def __init__(self):
             self.paid_date = ImperialDate(365,1104)
             self.count = 0
