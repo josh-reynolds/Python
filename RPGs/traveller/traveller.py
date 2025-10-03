@@ -1,3 +1,8 @@
+"""Contains the game loop and game logic for a Traveller trading simulation.
+
+Game - contains the game loop and all game logic.
+Command - represents a command available to the player.
+"""
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
@@ -9,6 +14,8 @@ from star_system import DeepSpace
 from star_map import StarMap, StarSystemFactory
 
 class Game:
+    """Contains the game loop and all game logic."""
+
     def __init__(self):
         self.running = False
         self.date = Calendar()
@@ -29,7 +36,8 @@ class Game:
             })
 
         self.location = self.star_map.get_system_at_coordinate((0,0,0))
-        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
+        coord = self.location.coordinate
+        self.location.destinations = self.star_map.get_systems_within_range(coord,
                                                               self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
@@ -409,7 +417,8 @@ class Game:
             self.ship.repair_status = RepairStatus.BROKEN
             pr_red("Warning: drive failure!")
 
-        self.location.destinations = self.star_map.get_systems_within_range(self.location.coordinate,
+        coord = self.location.coordinate
+        self.location.destinations = self.star_map.get_systems_within_range(coord,
                                                    jump_range)
 
         self.depot = CargoDepot(self.location, self.date.current_date)
@@ -763,6 +772,8 @@ class Game:
             pr_red(f"It should be unloaded at {self.ship.destination.name}")
 
 class Command:
+    """Represents a command available to the player."""
+
     def __init__(self, key, description, action):
         self.key = key
         self.description = description

@@ -1,3 +1,4 @@
+"""Contains functions to randomly generate words and names."""
 import random
 import unittest
 
@@ -17,6 +18,8 @@ def random_line(a_file):
     return line
 
 class WordGenTestCase(unittest.TestCase):
+    """Tests word generation functions."""
+
     def test_get_world_name_strips_newline(self):
         self.assertNotEqual(get_world_name()[-1], "\n")
 

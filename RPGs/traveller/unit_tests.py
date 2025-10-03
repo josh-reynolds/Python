@@ -1,3 +1,4 @@
+"""Unit tests for the Traveller trading game."""
 import unittest
 
 def suite():

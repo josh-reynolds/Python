@@ -1,3 +1,4 @@
+"""Contains utility functions."""
 import unittest
 from random import randint
 
@@ -62,6 +63,8 @@ def print_list(items):
         print(f"{i} - {item}")
 
 class UtilitiesTestCase(unittest.TestCase):
+    """Tests utility functions."""
+
     def test_die_roll(self):
         total = 0
         for _ in range(1000):
