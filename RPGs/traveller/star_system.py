@@ -19,7 +19,7 @@ class DeepSpace(Hex):
         return f"{self.coordinate} - Deep Space"
 
 class StarSystem(Hex):
-    def __init__(self, name, coordinate, starport, size, atmosphere, 
+    def __init__(self, name, coordinate, starport, size, atmosphere,
                  hydrographics, population, government, law, tech, gas_giant=True):
         super().__init__(coordinate)
         self.name = name
@@ -76,7 +76,7 @@ class StarSystem(Hex):
         return hash((self.coordinate, self.name))
 
     # TO_DO: we will need to handle digits > 9. Traveller uses 'extended hex'
-    # for now we can probably get away with simple f-string conversion: 
+    # for now we can probably get away with simple f-string conversion:
     #    f"{value:X}"
     # Check if '77 can generate any values above 15 (F). It's certainly
     # possible in later editions, not sure here...
@@ -164,7 +164,7 @@ class StarSystemTestCase(unittest.TestCase):
 
     def test_coordinates(self):
         world = StarSystemTestCase.system
-        self.assertTrue(type(world.coordinate) is tuple)
+        self.assertTrue(isinstance(world.coordinate, tuple))
 
     def test_landing(self):
         world = StarSystemTestCase.system

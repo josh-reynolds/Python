@@ -23,10 +23,10 @@ from utilities import die_roll, constrain
 
 # A ring of hexes at a given distance from a
 # central origin hex contains six axial hexes
-# and a variable number of edge hexes. There 
+# and a variable number of edge hexes. There
 # are (range-1)*6 such hexes, so 0 at range 1,
 # 6 at range 2, 12 at range 3, etc. So the total
-# number of hexes in a ring are equal to: 
+# number of hexes in a ring are equal to:
 #   6 + (range-1)*6.
 
 # As noted above, axial hexes are trivial to
@@ -53,7 +53,7 @@ from utilities import die_roll, constrain
 # of transform - go over 3 on the x-axis, and up 2 on
 # the y-axis, and arrive at (3,2). Instead we would
 # go over 3 on the blue-axis, and up 2 on the red-axis,
-# and arrive at (3,2,-5). The third coordinate is 
+# and arrive at (3,2,-5). The third coordinate is
 # really just a checksum and can be calculated given
 # the other two, since sum(a,b,c) = 0. Tricky bit is this
 # hex is _five_ away from the origin, so arriving at it
@@ -62,14 +62,14 @@ from utilities import die_roll, constrain
 # An alternate strategy:
 # * the complete set of coordinates at a given range x
 #   (including invalid coordinates) is given by:
-#   [(a,b,c) for a in range(-x,x+1) 
+#   [(a,b,c) for a in range(-x,x+1)
 #            for b in range(-x,x+1)
 #            for c in range(-x,x+1)]
-#  
+
 # * the length of this list is (2x+1)^3, so
 #   27 (3 cubed) at range 1, 125 (5 cubed) at range 2, etc.
 #
-# * we can then filter out the invalid members with a 
+# * we can then filter out the invalid members with a
 #   simple test, and voila! There's the list at range x.
 #
 #   [a for a in full_list if sum(a)==0]
@@ -89,7 +89,7 @@ class StarSystemFactory:
     def create(cls, name, coordinate, starport, size, atmosphere,
                hydrographics, population, government, law, tech, gas_giant=True):
         return StarSystem(name, coordinate, starport, size, atmosphere,
-                          hydrographics, population, government, law, 
+                          hydrographics, population, government, law,
                           tech, gas_giant)
 
     @classmethod
@@ -110,76 +110,73 @@ class StarSystemFactory:
         else:
             starport = "X"
 
-        dm = -2
-        size = die_roll() + die_roll() + dm
+        die_modifier = -2
+        size = die_roll() + die_roll() + die_modifier
 
-        dm = size -7
-        atmosphere = constrain(die_roll() + die_roll() + dm,
+        die_modifier = size -7
+        atmosphere = constrain(die_roll() + die_roll() + die_modifier,
                                0, 12)
         if size == 0:
             atmosphere = 0
 
-        dm = size - 7
+        die_modifier = size - 7
         if atmosphere <= 1 or atmosphere > 9:
-            dm -= 4
-        hydrographics = constrain(die_roll() + die_roll() + dm,
+            die_modifier -= 4
+        hydrographics = constrain(die_roll() + die_roll() + die_modifier,
                                   0,10)
         if size <= 1:
             hydrographics = 0
 
-        dm = -2
-        population = die_roll() + die_roll() + dm
+        die_modifier = -2
+        population = die_roll() + die_roll() + die_modifier
 
-        dm = population - 7
-        government = constrain(die_roll() + die_roll() + dm,
+        die_modifier = population - 7
+        government = constrain(die_roll() + die_roll() + die_modifier,
                                0,13)
 
-        dm = government - 7
-        law = constrain(die_roll() + die_roll() + dm,
+        die_modifier = government - 7
+        law = constrain(die_roll() + die_roll() + die_modifier,
                                0,9)
 
         if starport == "A":
-            dm = 6
+            die_modifier = 6
         elif starport == "B":
-            dm = 4
+            die_modifier = 4
         elif starport == "C":
-            dm = 2
+            die_modifier = 2
         elif starport == "X":
-            dm = -2
+            die_modifier = -2
         else:
-            dm = 0
+            die_modifier = 0
 
         if size in (0, 1):
-            dm += 2
+            die_modifier += 2
         if size in (2, 3, 4):
-            dm += 1
+            die_modifier += 1
 
         if atmosphere in (0, 1, 2, 3, 10, 11, 12):
-            dm += 1
+            die_modifier += 1
 
         if hydrographics == 9:
-            dm += 1
+            die_modifier += 1
         if hydrographics == 10:
-            dm += 2
+            die_modifier += 2
 
         if population in (1, 2, 3, 4, 5):
-            dm += 1
+            die_modifier += 1
         if population == 9:
-            dm += 2
+            die_modifier += 2
         if population == 10:
-            dm += 4
+            die_modifier += 4
 
         if government in (0, 5):
-            dm += 1
+            die_modifier += 1
         if government == 13:
-            dm -= 2
+            die_modifier -= 2
 
-        tech = constrain(die_roll() + dm, 0, 18)
+        tech = constrain(die_roll() + die_modifier, 0, 18)
 
-        if die_roll() + die_roll() < 10:
-            gas_giant = True
-        else:
-            gas_giant = False
+        gas_giant = bool(die_roll() + die_roll() < 10)
 
         return StarSystem(name, coordinate, starport, size, atmosphere,
                           hydrographics, population, government, law, tech, gas_giant)
@@ -208,7 +205,7 @@ class StarMap:
         return self.systems.get(coordinate, StarMap.generate_new_system(coordinate))
 
     def get_all_systems(self):
-        systems = [s for i,(k,s) in enumerate(self.systems.items()) if 
+        systems = [s for i,(k,s) in enumerate(self.systems.items()) if
                    isinstance(s, StarSystem)]
         systems = sorted(systems, key=lambda system: system.coordinate)
         return systems
@@ -249,7 +246,7 @@ class StarMap:
     @classmethod
     def get_all_coords(cls, radius):
         span = range(-radius, radius+1)
-        return [(a,b,c) for a in span 
+        return [(a,b,c) for a in span
                         for b in span
                         for c in span]
 
@@ -305,7 +302,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(systems[1], StarSystem))
         self.assertTrue(isinstance(systems[2], StarSystem))
 
-    def test_get_systems_within_range_with_DeepSpace(self):
+    def test_get_systems_within_range_with_deepspace(self):
         star_map2 = StarMapTestCase.star_map2
 
         systems = star_map2.get_systems_within_range((0,0,0), 1)
@@ -330,7 +327,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Mithril")
 
-    def test_get_systems_with_DeepSpace(self):
+    def test_get_systems_with_deepspace(self):
         star_map2 = StarMapTestCase.star_map2
 
         world = star_map2.get_system_at_coordinate((0,0,0))
@@ -457,10 +454,18 @@ class StarMapTestCase(unittest.TestCase):
         star_map1 = StarMapTestCase.star_map1
         systems = star_map1.get_all_systems()
         self.assertEqual(len(systems), 4)
-        self.assertEqual(systems[0], StarSystemFactory.create("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[1], StarSystemFactory.create("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[2], StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[3], StarSystemFactory.create("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[0], StarSystemFactory.create("Aramis",
+                                                              (-1,1,0),
+                                                              "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[1], StarSystemFactory.create("Mithril",
+                                                              (0,-1,1),
+                                                              "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[2], StarSystemFactory.create("Yorbund",
+                                                              (0,0,0),
+                                                              "A", 5, 5, 5, 5, 5, 5, 5))
+        self.assertEqual(systems[3], StarSystemFactory.create("Kinorb",
+                                                              (1,0,-1),
+                                                              "A", 5, 5, 5, 5, 5, 5, 5))
 
 class StarSystemFactoryTestCase(unittest.TestCase):
     def test_generate(self):

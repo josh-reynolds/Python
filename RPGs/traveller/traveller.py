@@ -2,10 +2,10 @@ from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
-from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
+from utilities import pr_blue, pr_red, print_list, die_roll
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
-from star_system import StarSystem, DeepSpace
+from star_system import DeepSpace
 from star_map import StarMap, StarSystemFactory
 
 class Game:
@@ -46,14 +46,14 @@ class Game:
             else:
                 fuel_quality = ""
 
+            repair_state = ""
             if self.ship.repair_status == RepairStatus.BROKEN:
                 repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
             elif self.ship.repair_status == RepairStatus.PATCHED:
                 repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
-            else:
-                repair_state = ""
 
-            pr_yellow_on_red(f"\n{self.date} : You are {self.location.description()}.{repair_state}")
+            pr_yellow_on_red("\n{self.date} : You are " +
+                             f"{self.location.description()}.{repair_state}")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
                   f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
@@ -88,10 +88,10 @@ class Game:
                   f"for {self.ship.destination.name}.")
 
         if self.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.ship.passengers if 
+            low_passengers = [p for p in self.ship.passengers if
                               p.passage == PassageClass.LOW]
-            for p in low_passengers:
-                p.guess_survivors(self.ship.low_passenger_count)
+            for passenger in low_passengers:
+                passenger.guess_survivors(self.ship.low_passenger_count)
 
         self.location.liftoff()
         self.commands = orbit
@@ -110,7 +110,7 @@ class Game:
             if self.ship.total_passenger_count > 0:
                 print(f"Passengers disembarking on {self.location.name}.")
 
-                funds = Credits(sum([p.ticket_price.amount for p in self.ship.passengers]))
+                funds = Credits(sum(p.ticket_price.amount for p in self.ship.passengers))
                 low_lottery_amount = Credits(10) * self.ship.low_passenger_count
                 funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
@@ -119,17 +119,17 @@ class Game:
                 if self.ship.low_passenger_count > 0:
                     low_passengers = [p for p in self.ship.passengers if
                                                  p.passage == PassageClass.LOW]
-                    for p in low_passengers:
-                        if die_roll(2) + p.endurance + self.ship.medic_skill() < 5:
-                            p.survived = False
+                    for passenger in low_passengers:
+                        if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
+                            passenger.survived = False
 
                     survivors = [p for p in low_passengers if p.survived]
                     print(f"{len(survivors)} of {len(low_passengers)} low passengers "
                           "survived revival.")
 
                     winner = False
-                    for p in low_passengers:
-                        if p.guess == len(survivors) and p.survived:
+                    for passenger in low_passengers:
+                        if passenger.guess == len(survivors) and passenger.survived:
                             winner = True
 
                     if not winner:
@@ -166,7 +166,7 @@ class Game:
         self.commands = jump
 
     def inbound_from_jump(self):
-        if type(self.location) is DeepSpace:
+        if isinstance(self.location, DeepSpace):
             pr_red("You are in deep space. There is no inner system to travel to.")
             return
 
@@ -209,15 +209,14 @@ class Game:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
                 return
+            if self.ship.destination in potential_destinations:
+                print("You are under contract. Only showing passengers " +
+                      f"for {self.ship.destination.name}:\n")
+                destinations = [self.ship.destination]
             else:
-                if self.ship.destination in potential_destinations:
-                    print("You are under contract. Only showing passengers " +
-                          f"for {self.ship.destination.name}:\n")
-                    destinations = [self.ship.destination]
-                else:
-                    print(f"You are under contract to {self.ship.destination.name} " +
-                          "but it is not within jump range of here.")
-                    return
+                print(f"You are under contract to {self.ship.destination.name} " +
+                      "but it is not within jump range of here.")
+                return
 
         else:
             print(f"Available passenger destinations within jump-{jump_range}:\n")
@@ -247,7 +246,7 @@ class Game:
 
             print(f"Remaining (H, M, L): {available}")
             print(f"Selected (H, M, L): {selection}")
-            print(f"Empty ship berths (H+M, L): {ship_capacity}\n") 
+            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
             if response == 'h':
                 if available[PassageClass.HIGH.value] == 0:
@@ -302,13 +301,13 @@ class Game:
 
         # TO_DO: need to consider the case where we already have passengers
         #        Probably want to wrap passenger field access in a property...
-        high = [Passenger(PassageClass.HIGH, destination) 
+        high = [Passenger(PassageClass.HIGH, destination)
                 for _ in range(selection[PassageClass.HIGH.value])]
         baggage = [Baggage(self.location, destination)
                    for _ in range(selection[PassageClass.HIGH.value])]
-        middle = [Passenger(PassageClass.MIDDLE, destination) 
+        middle = [Passenger(PassageClass.MIDDLE, destination)
                   for _ in range(selection[PassageClass.MIDDLE.value])]
-        low = [Passenger(PassageClass.LOW, destination) 
+        low = [Passenger(PassageClass.LOW, destination)
                for _ in range(selection[PassageClass.LOW.value])]
 
         self.ship.passengers += high
@@ -332,8 +331,7 @@ class Game:
     def jump(self):
         pr_blue("Preparing for jump.")
 
-        if (self.ship.repair_status == RepairStatus.BROKEN or
-            self.ship.repair_status == RepairStatus.PATCHED):
+        if self.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             pr_red("Drive failure. Cannot perform jump.")
             return
 
@@ -356,7 +354,7 @@ class Game:
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
         if self.ship.destination is not None and self.ship.destination != destination:
-            pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " + 
+            pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " +
                    f"not {destination.name}.")
 
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
@@ -364,7 +362,7 @@ class Game:
             print("Cancelling jump.")
             return
 
-        if (self.financials.maintenance_status(self.date.current_date)== "red" and 
+        if (self.financials.maintenance_status(self.date.current_date)== "red" and
                die_roll(2) == 12):
             self.ship.repair_status = RepairStatus.BROKEN
             pr_red("Warning: drive failure! Unable to jump.")
@@ -376,7 +374,7 @@ class Game:
         pr_red("Executing jump!")
 
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
-            modifier = 3 
+            modifier = 3
         else:
             modifier = -1
         if self.financials.maintenance_status(self.date.current_date) == "red":
@@ -568,7 +566,7 @@ class Game:
 
     def passenger_manifest(self):
         pr_blue("Passenger manifest:")
-        if self.ship.destination == None:
+        if self.ship.destination is None:
             destination = "None"
         else:
             destination = self.ship.destination.name
@@ -661,15 +659,14 @@ class Game:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
                 return
+            if self.ship.destination in potential_destinations:
+                print("You are under contract. Only showing freight " +
+                      f"for {self.ship.destination.name}:\n")
+                destinations = [self.ship.destination]
             else:
-                if self.ship.destination in potential_destinations:
-                    print("You are under contract. Only showing freight " +
-                          f"for {self.ship.destination.name}:\n")
-                    destinations = [self.ship.destination]
-                else:
-                    print(f"You are under contract to {self.ship.destination.name} " +
-                          "but it is not within jump range of here.")
-                    return
+                print(f"You are under contract to {self.ship.destination.name} " +
+                      "but it is not within jump range of here.")
+                return
 
         else:
             print(f"Available freight shipments within jump-{jump_range}:\n")
@@ -743,12 +740,12 @@ class Game:
         # and a destination flag set to None. Should we assert just
         # in case, so we could track down any such bug:
         if self.ship.destination is None:
-            print(f"You have no contracted destination.")
+            print("You have no contracted destination.")
             return
 
         freight = [f for f in self.ship.hold if isinstance(f, Freight)]
         if len(freight) == 0:
-            print(f"You have no freight on board.")
+            print("You have no freight on board.")
             return
 
         if self.ship.destination == self.location:
@@ -847,7 +844,7 @@ passengers = always + [Command('b', 'Book passengers',
 passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w 
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w
 # STARPORT:             f           l m n p   r   t u
 # ORBIT:                  g         l
 # JUMP:                       i j               s

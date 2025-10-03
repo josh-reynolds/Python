@@ -3,7 +3,7 @@ from random import randint
 
 def die_roll(count=1):
     total = 0
-    for i in range(count):
+    for _ in range(count):
         total += randint(1,6)
     return total
 
