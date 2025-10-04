@@ -2,12 +2,14 @@
 from random import randint
 
 def die_roll(count=1):
+    """Roll count six-sided dice and return the total."""
     total = 0
     for _ in range(count):
         total += randint(1,6)
     return total
 
 def constrain(value, min_val, max_val):
+    """Constrain a value within a given range."""
     if value <= min_val:
         return min_val
 
@@ -16,8 +18,8 @@ def constrain(value, min_val, max_val):
 
     return value
 
-# table from Book 2 p. 42
 def actual_value(roll):
+    """Return a value from the table on Book 2 page 42."""
     actual_value_table = {2:.4, 3:.5, 4:.7, 5:.8, 6:.9, 7:1, 8:1.1,
                           9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
     return actual_value_table[roll]
@@ -43,6 +45,7 @@ def pr_blue(string):
     print(f"\033[1;36;40m{string}\033[00m")
 
 def int_input(prompt):
+    """Take input from the user, reprompt if not an integer."""
     while True:
         try:
             result = int(input(prompt))
@@ -52,11 +55,13 @@ def int_input(prompt):
     return result
 
 def confirm_input(prompt):
+    """Take yes or no input from the user, reprompt until match."""
     confirmation = ""
     while confirmation not in ('y', 'n'):
         confirmation = input(prompt)
     return confirmation
 
 def print_list(items):
+    """Print out a list with its index values."""
     for i,item in enumerate(items):
         print(f"{i} - {item}")
