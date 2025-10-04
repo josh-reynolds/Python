@@ -1355,7 +1355,11 @@
 #
 # I've accumulated a bit of technical debt through this
 # push, so should spend some time cleaning and refactoring
-# before we move on to the next phase.
+# before we move on. Phase four was already a mix of
+# engineering cleanup and game mechanics overhaul. So we'll
+# split it up, and tackle the engineering bit first. Easy
+# place to start is to get pylint/pydocstyle clean, and 
+# maybe some Beck-style tidying.
 #
 # -------------------------------------------------------------
 
@@ -1599,6 +1603,7 @@
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] pylint/pydocstyle scrub
+#  * [....] Consider moving tests to separate modules
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
@@ -1620,7 +1625,6 @@
 #  * [    ] Break up Game class (MVC?)
 #  * [    ] Properly separate __repr__ and __str__ for all classes
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
-#  * [    ] Consider moving tests to separate modules
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Should we add type annotations?
