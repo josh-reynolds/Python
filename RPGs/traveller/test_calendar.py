@@ -6,10 +6,12 @@ class ImperialDateTestCase(unittest.TestCase):
     """Tests ImperialDate class."""
 
     def test_date_string(self):
+        """Test an ImperialDate string is properly formatted."""
         date = ImperialDate(1,100)
         self.assertEqual(f"{date}", "001-100")
 
     def test_date_equality(self):
+        """Test equality for ImperialDates."""
         date1 = ImperialDate(1,100)
         date2 = ImperialDate(1,100)
         date3 = ImperialDate(2,100)
@@ -19,6 +21,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertNotEqual(date1,(1,100))
 
     def test_date_comparison(self):
+        """Test comparison between two ImperialDates."""
         date1 = ImperialDate(10,100)
         date2 = ImperialDate(11,100)
         date3 = ImperialDate(1,101)
@@ -30,6 +33,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertLess(date5,date1)
 
     def test_date_copy(self):
+        """Test copying an ImperialDate."""
         date1 = ImperialDate(1,100)
         date2 = date1.copy()
         self.assertEqual(date2.day, 1)
@@ -37,6 +41,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(date1,date2)
 
     def test_date_plus_days(self):
+        """Test adding days to an ImperialDate."""
         date1 = ImperialDate(1,100)
         date2 = ImperialDate(365,100)
         self.assertEqual(date1 + 1, ImperialDate(2,100))
@@ -46,6 +51,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(date1 + -10, ImperialDate(356,99))
 
     def test_date_minus_date(self):
+        """Test subtracting an ImperialDate from another."""
         date1 = ImperialDate(1,100)
         date2 = ImperialDate(5,100)
         date3 = ImperialDate(365,99)
@@ -57,6 +63,7 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(date1-date4, 730)
 
     def test_date_minus_day(self):
+        """Test subtracting a number of days from an ImperialDate."""
         date1 = ImperialDate(5,100)
         self.assertEqual(date1-1, ImperialDate(4,100))
         self.assertEqual(date1-5, ImperialDate(365,99))
@@ -68,11 +75,13 @@ class CalendarTestCase(unittest.TestCase):
         """Mocks an observer interface for testing."""
 
         def __init__(self):
+            """Create an instance of an ObserverMock."""
             self.paid_date = ImperialDate(365,1104)
             self.count = 0
             self.event_count = 0
             self.recurrence = 1
         def notify(self, date):
+            """On notification from Calendar, track the event."""
             self.count += 1
             duration = (date - self.paid_date) // self.recurrence
             for _ in range(duration):
@@ -80,10 +89,12 @@ class CalendarTestCase(unittest.TestCase):
                 self.paid_date += self.recurrence
 
     def setUp(self):
+        """Create fixtures for testing."""
         CalendarTestCase.a = Calendar()
         CalendarTestCase.a.add_observer(CalendarTestCase.ObserverMock())
 
     def test_recurring_events_from_notification(self):
+        """Test repeated Calendar notifications."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         calendar.plus_week()
@@ -93,6 +104,7 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.paid_date, ImperialDate(8,1105))
 
     def test_longer_recurrence_than_daily(self):
+        """Test long duration recurrences."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         mock.recurrence = 3
@@ -103,6 +115,7 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.paid_date, ImperialDate(6,1105))
 
     def test_day_property(self):
+        """Test the day property of a Calendar."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         self.assertEqual(calendar.day, 1)
@@ -118,6 +131,7 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.year, 1106)
 
     def test_year_property(self):
+        """Test the year property of a Calendar."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         self.assertEqual(calendar.day, 1)
@@ -130,6 +144,7 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.count, 1)
 
     def test_plus_week(self):
+        "Test adding a week to a Calendar."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         self.assertEqual(calendar.day, 1)
@@ -142,10 +157,12 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.count, 1)
 
     def test_calendar_string(self):
+        "Test the string representation of a Calendar."""
         calendar = CalendarTestCase.a
         self.assertEqual(f"{calendar}", "001-1105")
 
     def test_add_observer(self):
+        """Test adding an observer to a Calendar."""
         calendar = CalendarTestCase.a
         mock = calendar.observers[0]
         self.assertEqual(calendar.day, 1)
