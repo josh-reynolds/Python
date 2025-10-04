@@ -6,6 +6,7 @@ class WordGenTestCase(unittest.TestCase):
     """Tests word generation functions."""
 
     def test_get_world_name_strips_newline(self):
+        """Test removal of newlines from the end of generated world names."""
         self.assertNotEqual(get_world_name()[-1], "\n")
 
 # -------------------------------------------------------------------

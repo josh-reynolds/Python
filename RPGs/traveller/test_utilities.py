@@ -6,6 +6,7 @@ class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
 
     def test_die_roll(self):
+        """Test random six-sided die rolls."""
         total = 0
         for _ in range(1000):
             result = die_roll()
@@ -17,6 +18,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertLessEqual(average, 3.7)
 
     def test_rolling_multiple_dice(self):
+        """Test rolling multiple six-sided dice."""
         total = 0
         for _ in range(1000):
             result = die_roll(2)
@@ -28,11 +30,13 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertLessEqual(average, 8.5)
 
     def test_constrain(self):
+        """Test constraining a value within bounds."""
         self.assertEqual(constrain(5,1,10), 5)
         self.assertEqual(constrain(5,6,10), 6)
         self.assertEqual(constrain(5,1,4), 4)
 
     def test_actual_value(self):
+        """Test the Traveller actual value table results."""
         self.assertEqual(actual_value(2), .4)
         self.assertEqual(actual_value(3), .5)
         self.assertEqual(actual_value(4), .7)
