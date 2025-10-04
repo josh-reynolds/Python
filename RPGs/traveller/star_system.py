@@ -9,12 +9,14 @@ class Hex:
     """Base class for map hexes."""
 
     def __init__(self, coordinate):
+        """Create an instance of a Hex."""
         self.coordinate = coordinate
 
 class DeepSpace(Hex):
     """Represents an empty map hex."""
 
     def __init__(self, coordinate):
+        """Create an instance of a DeepSpace object."""
         super().__init__(coordinate)
         self.detail = ""
         self.destinations = []
@@ -22,9 +24,11 @@ class DeepSpace(Hex):
         self.gas_giant = False
 
     def description(self):
+        """Return the descriptor for a DeepSpace hex."""
         return "stranded in deep space"
 
     def __repr__(self):
+        """Return the string representation of a DeepSpace object."""
         return f"{self.coordinate} - Deep Space"
 
 class StarSystem(Hex):
@@ -32,6 +36,7 @@ class StarSystem(Hex):
 
     def __init__(self, name, coordinate, starport, size, atmosphere,
                  hydrographics, population, government, law, tech, gas_giant=True):
+        """Create an instance of a StarSystem."""
         super().__init__(coordinate)
         self.name = name
         self.starport = starport
@@ -79,11 +84,13 @@ class StarSystem(Hex):
             self.poor = True
 
     def __eq__(self, other):
+        """Test whether two StarSystem objects are equal."""
         if type(other) is type(self):
             return self.name == other.name and self.coordinate == other.coordinate
         return NotImplemented
 
     def __hash__(self):
+        """Calculate the hash value for a StarSystem object."""
         return hash((self.coordinate, self.name))
 
     # TO_DO: we will need to handle digits > 9. Traveller uses 'extended hex'
@@ -95,6 +102,7 @@ class StarSystem(Hex):
     #    chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ"    # omit 'I' and 'O'
     #    e_hex = chars[value]
     def __repr__(self):
+        """Return the string representation of a StarSystem object."""
         url = f"{self.starport}{self.size:X}{self.atmosphere:X}" +\
               f"{self.hydrographics:X}{self.population:X}{self.government:X}" +\
               f"{self.law:X}-{self.tech:X}"
@@ -115,6 +123,7 @@ class StarSystem(Hex):
         return f"{self.coordinate} - {self.name} - {url}"
 
     def description(self):
+        """Return the descriptor for the current location within the StarSystem."""
         if self.detail == "starport":
             return f"at the {self.name} starport"
 
@@ -135,36 +144,45 @@ class StarSystem(Hex):
                           # possible values for self.detail?
 
     def on_surface(self):
+        """Test whether the player is currently on the world's surface."""
         return self.detail in ('starport', 'trade', 'terminal')
 
     def land(self):
+        """Move from orbit to the starport."""
         if self.detail == "orbit":
             self.detail = "starport"
 
     def liftoff(self):
+        """Move from the starport to orbit."""
         if self.detail == "starport":
             self.detail = "orbit"
 
     def to_jump_point(self):
+        """Move from orbit to the jump point."""
         if self.detail == "orbit":
             self.detail = "jump"
 
     def from_jump_point(self):
+        """Move from the jump point to orbit."""
         if self.detail == "jump":
             self.detail = "orbit"
 
     def join_trade(self):
+        """Move from the starport to the trade depot."""
         if self.detail == "starport":
             self.detail = "trade"
 
     def leave_trade(self):
+        """Move from the trade depot to the starport."""
         if self.detail == "trade":
             self.detail = "starport"
 
     def enter_terminal(self):
+        """Move from the starport to the passenger terminal."""
         if self.detail == "starport":
             self.detail = "terminal"
 
     def leave_terminal(self):
+        """Move from the passenger terminal to the starport."""
         if self.detail == "terminal":
             self.detail = "starport"

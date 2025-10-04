@@ -1613,6 +1613,7 @@
 #  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
+#  * [    ] Properly mark base classes as ABC
 #  * [    ] Replace ValueError and other 'generic' exceptions with custom
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
