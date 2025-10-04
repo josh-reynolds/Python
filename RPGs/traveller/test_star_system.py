@@ -5,13 +5,16 @@ from star_system import StarSystem
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
     def setUp(self):
+        """Create a fixture for testing the StarSystem class."""
         StarSystemTestCase.system = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
 
     def test_coordinates(self):
+        """Test the coordinate property of a StarSystem class."""
         world = StarSystemTestCase.system
         self.assertTrue(isinstance(world.coordinate, tuple))
 
     def test_landing(self):
+        """Test moving from orbit to the starport."""
         world = StarSystemTestCase.system
         self.assertEqual(world.detail, "orbit")
         world.land()
@@ -20,6 +23,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "starport")
 
     def test_liftoff(self):
+        """Test moving from the starport to orbit."""
         world = StarSystemTestCase.system
         world.detail = "starport"
         world.liftoff()
@@ -28,6 +32,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "orbit")
 
     def test_to_jump_point(self):
+        """Test moving from orbit to the jump point."""
         world = StarSystemTestCase.system
         self.assertEqual(world.detail, "orbit")
         world.to_jump_point()
@@ -36,6 +41,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "jump")
 
     def test_from_jump_point(self):
+        """Test moving from the jump point to orbit."""
         world = StarSystemTestCase.system
         world.detail = "jump"
         world.from_jump_point()
@@ -44,6 +50,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "orbit")
 
     def test_join_trade(self):
+        """Test moving from the starport to the trade depot."""
         world = StarSystemTestCase.system
         world.detail = "starport"
         world.join_trade()
@@ -52,6 +59,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "trade")
 
     def test_leave_trade(self):
+        """Test moving from the trade depot to the starport."""
         world = StarSystemTestCase.system
         world.detail = "trade"
         world.leave_trade()
@@ -60,10 +68,12 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.detail, "starport")
 
     def test_world_string(self):
+        """Test the string representation of a StarSystem object."""
         world = StarSystemTestCase.system
         self.assertEqual(f"{world}", "(0, 0, 0) - Test - A999999-9 In - G")
 
     def test_description(self):
+        """Test the descriptive location string of a StarSystem object."""
         world = StarSystemTestCase.system
 
         world.detail = "starport"
@@ -82,6 +92,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.description(), "at the Test passenger terminal")
 
     def test_on_surface(self):
+        """Test detection of whether the player is on the world's surface."""
         world = StarSystemTestCase.system
 
         world.detail = "starport"
@@ -100,6 +111,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertFalse(world.on_surface())
 
     def test_equality(self):
+        """Test for equivalence between two StarSystems."""
         world1 = StarSystemTestCase.system
         world2 = StarSystem("Test", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
         world3 = StarSystem("Foo", (0,0,0), "A", 9, 9, 9, 9, 9, 9, 9, True)
@@ -111,6 +123,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertNotEqual(world1, world2)
 
     def test_trade_modifiers(self):
+        """Test determination of trade modifiers for a StarSystem object."""
         ag_world = StarSystem("Agricultural", (0,0,0), "A", 8, 5, 5, 7, 5, 5, 9, True)
         self.assertTrue(ag_world.agricultural)
         self.assertEqual(f"{ag_world}", "(0, 0, 0) - Agricultural - A855755-9 Ag - G")
