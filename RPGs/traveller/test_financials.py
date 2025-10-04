@@ -6,6 +6,7 @@ class CreditsTestCase(unittest.TestCase):
     """Tests Credits class."""
 
     def test_credits_string(self):
+        """Tests string representation of a Credits object."""
         credits1 = Credits(1)
         credits2 = Credits(10)
         credits3 = Credits(100)
@@ -26,6 +27,7 @@ class CreditsTestCase(unittest.TestCase):
         self.assertEqual(f"{credits9}", "1,000.0 MCr")
 
     def test_credits_comparison(self):
+        """Tests comparison of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(2)
         credits3 = Credits(2)
@@ -34,16 +36,19 @@ class CreditsTestCase(unittest.TestCase):
         self.assertEqual(credits2,credits3)
 
     def test_credits_addition(self):
+        """Tests addition of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(1)
         self.assertEqual(credits1+credits2,Credits(2))
 
     def test_credits_subtraction(self):
+        """Tests subtraction of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(2)
         self.assertEqual(credits2-credits1,Credits(1))
 
     def test_credits_multiplication(self):
+        """Tests multiplication of a Credits object by an integer."""
         credits1 = Credits(10)
         self.assertEqual(credits1 * 5, Credits(50))
 
@@ -54,15 +59,19 @@ class FinancialsTestCase(unittest.TestCase):
         """Mocks a date interface for testing."""
 
         def __init__(self, value):
+            """Create an instance of a DateMock object."""
             self.value = value
 
         def copy(self):
+            """Return a copy of this DateMock object."""
             return FinancialsTestCase.DateMock(self.value)
 
         def __add__(self, rhs):
+            """Add a value to a DateMock."""
             return FinancialsTestCase.DateMock(self.value + rhs)
 
         def __sub__(self, rhs):
+            """Subtract either a DateMock or an integer from a DateMock."""
             if isinstance(rhs, FinancialsTestCase.DateMock):
                 return self.value - rhs.value
             if isinstance(rhs, int):
@@ -70,36 +79,45 @@ class FinancialsTestCase(unittest.TestCase):
             return NotImplemented
 
         def __eq__(self, other):
+            """Test whether two DateMocks are equivalent."""
             return self.value == other.value
 
         def __ge__(self, other):
+            """Test whether one DateMock is greater than or equal to another."""
             return self.value >= other.value
 
         def __gt__(self, other):
+            """Test whether one DateMock is greater than another."""
             return self.value > other.value
 
         def __repr__(self):
+            """Return the string representation of a DateMock object."""
             return f"{self.value}"
 
     class ShipMock:
         """Mocks a ship interface for testing."""
 
         def __init__(self):
+            """Create an instance of a ShipMock object."""
             self.last_maintenance = FinancialsTestCase.DateMock(1)
 
         def crew_salary(self):
+            """Return the amount of monthly salary paid to the Ship's crew."""
             return Credits(1)
 
         def loan_payment(self):
+            """Return the amount paid monthly for the Ship's loan."""
             return Credits(1)
 
     class SystemMock:
         """Mocks a system interface for testing."""
 
         def on_surface(self):
+            """Test whether the player is on the world's surface."""
             return True
 
     def setUp(self):
+        """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
                                                    FinancialsTestCase.DateMock(1),
                                                    FinancialsTestCase.ShipMock(),
@@ -107,6 +125,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_notify(self):
+        """Test notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
 
         date = FinancialsTestCase.DateMock(8)
@@ -118,6 +137,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.current_date, date)
 
     def test_debit_and_credit(self):
+        """Test debiting and crediting a balance managed by a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
 
@@ -129,6 +149,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_salary_notification(self):
+        """Test salary notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(1))
 
@@ -149,6 +170,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_pay_salaries(self):
+        """Test paying monthly crew salaries."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
 
@@ -157,6 +179,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_loan_notification(self):
+        """Test loan notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(1))
 
@@ -177,6 +200,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_pay_loan(self):
+        """Test monthly load payment."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
 
@@ -185,6 +209,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_maintenance_notification(self):
+        """Test maintenance behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
 
@@ -204,6 +229,7 @@ class FinancialsTestCase(unittest.TestCase):
         financials.maintenance_notification(date)
 
     def test_maintenance_status(self):
+        """Test maintenance status notification."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
 
@@ -229,6 +255,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_berthing_fee(self):
+        """Test payment of starport berthing fees."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
@@ -251,6 +278,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_berth_notification(self):
+        """Test berth notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
@@ -281,6 +309,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_renew_berth(self):
+        """Test berth renewal."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)

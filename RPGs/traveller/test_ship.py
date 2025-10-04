@@ -11,27 +11,34 @@ class ShipTestCase(unittest.TestCase):
         """Mocks a cargo interface for testing."""
 
         def __init__(self, quantity):
+            """Create an instance of a CargoMock object."""
             self.quantity = quantity
+
         @property
         def tonnage(self):
+            """Return the quantity of the CargoMock object."""
             return self.quantity
 
     class FreightMock:
         """Mocks a freight interface for testing."""
 
         def __init__(self, destination):
+            """Create an instance of a FreightMock object."""
             self.destination_world = destination
 
     class PassengerMock:
         """Mocks a passenger interface for testing."""
 
         def __init__(self, destination):
+            """Create an instance of a PassengerMock object."""
             self.destination = destination
 
     def setUp(self):
+        """Create a fixture for testing the Ship class."""
         ShipTestCase.ship = Ship()
 
     def test_ship_string(self):
+        """Test the string representation of a Ship object."""
         self.assertEqual(f"{ShipTestCase.ship}",
                          "Weaselfish -- Type A Free Trader\n"
                          "200 tons : 1G : jump-1\n"
@@ -39,6 +46,7 @@ class ShipTestCase(unittest.TestCase):
                          "Cargo hold 82 tons, fuel tank 30 tons")
 
     def test_cargo_hold_reporting(self):
+        """Test reporting of cargo hold contents."""
         cargo1 = ShipTestCase.CargoMock(20)
         cargo2 = ShipTestCase.CargoMock(50)
         self.assertEqual(ShipTestCase.ship.cargo_hold(), [])
@@ -50,6 +58,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
 
     def test_loading_cargo(self):
+        """Test loading cargo into the hold."""
         cargo1 = ShipTestCase.CargoMock(1)
         cargo2 = ShipTestCase.CargoMock(1)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
@@ -60,6 +69,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(len(ShipTestCase.ship.hold), 2)
 
     def test_unloading_cargo(self):
+        """Test unloading cargo from the hold."""
         cargo = ShipTestCase.CargoMock(20)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         ShipTestCase.ship.load_cargo(cargo)
@@ -72,8 +82,9 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
 
-    @unittest.skip("test has side effects: input & printing")
+    @unittest.skip("Test has side effects: input & printing")
     def test_refuel(self):
+        """Test refuelling the Ship."""
         self.assertEqual(ShipTestCase.ship.current_fuel, 0)
         cost = ShipTestCase.ship.refuel("A")
         self.assertEqual(ShipTestCase.ship.current_fuel, 30)
@@ -81,8 +92,9 @@ class ShipTestCase(unittest.TestCase):
         cost = ShipTestCase.ship.refuel("A")
         self.assertEqual(cost, Credits(0))        # full tank case
 
-    @unittest.skip("test has side effects: input & printing")
+    @unittest.skip("Test has side effects: input & printing")
     def test_recharge(self):
+        """Test recharging the Ship's life support."""
         self.assertEqual(ShipTestCase.ship.life_support_level, 0)
         cost = ShipTestCase.ship.recharge()
         self.assertEqual(ShipTestCase.ship.life_support_level, 100)
@@ -91,18 +103,23 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(cost, Credits(0))        # full life support case
 
     def test_trade_skill(self):
+        """Test retrieval of the Ship's trade skill value."""
         self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
 
     def test_crew_salary(self):
+        """Test paying the monthly crew salary."""
         self.assertEqual(ShipTestCase.ship.crew_salary(), Credits(15000))
 
     def test_loan_payment(self):
+        """Test paying the monthly loan."""
         self.assertEqual(ShipTestCase.ship.loan_payment(), Credits(154500))
 
     def test_maintenance_cost(self):
+        """Test paying the annual maintenance fee."""
         self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
 
     def test_destination(self):
+        """Test determination of contracted destination."""
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
 
@@ -120,11 +137,12 @@ class ShipTestCase(unittest.TestCase):
 
         ship.load_cargo(Freight(1, "Pluto", "Jupiter"))
         with self.assertRaises(ValueError) as context:
-            ship.destination
+            _ = ship.destination
         self.assertEqual(f"{context.exception}",
                          "More than one destination between Freight and Passengers!")
 
     def test_sufficient_jump_fuel(self):
+        """Test determination of sufficient fuel to execute a jump."""
         ship = ShipTestCase.ship
         ship.current_fuel = 30
 
@@ -139,6 +157,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertTrue(ship.sufficient_jump_fuel())
 
     def test_sufficient_life_support(self):
+        """Test determination of sufficient life support to execute a jump."""
         ship = ShipTestCase.ship
         ship.life_support_level = 100
 
@@ -151,13 +170,14 @@ class ShipTestCase(unittest.TestCase):
                          "Life support is at 99%.")
 
     def test_invalid_freight_and_passengers(self):
+        """Test trapping of invalid Freight/Passenger combinations."""
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
 
         ship.load_cargo(Freight(1, "Pluto", "Uranus"))
         ship.passengers += [ShipTestCase.PassengerMock("Jupiter")]
         with self.assertRaises(ValueError) as context:
-            ship.destination
+            _ = ship.destination
         self.assertEqual(f"{context.exception}",
                          "More than one destination " +
                          "between Freight and Passengers!")
@@ -166,6 +186,7 @@ class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""
 
     def test_salary(self):
+        """Test retrieval of Pilot salary value."""
         self.assertEqual(Pilot(1).salary(), Credits(6000))
         self.assertEqual(Pilot(2).salary(), Credits(6600))
         self.assertEqual(Pilot(3).salary(), Credits(7200))
@@ -174,6 +195,7 @@ class EngineerTestCase(unittest.TestCase):
     """Tests Engineer class."""
 
     def test_salary(self):
+        """Test retrieval of Engineer salary value."""
         self.assertEqual(Engineer(1).salary(), Credits(4000))
         self.assertEqual(Engineer(2).salary(), Credits(4400))
         self.assertEqual(Engineer(3).salary(), Credits(4800))
@@ -182,6 +204,7 @@ class MedicTestCase(unittest.TestCase):
     """Tests Medic class."""
 
     def test_salary(self):
+        """Test retrieval of Medic salary value."""
         self.assertEqual(Medic(1).salary(), Credits(2000))
         self.assertEqual(Medic(2).salary(), Credits(2200))
         self.assertEqual(Medic(3).salary(), Credits(2400))
@@ -190,6 +213,7 @@ class StewardTestCase(unittest.TestCase):
     """Tests Steward class."""
 
     def test_salary(self):
+        """Test retrieval of Steward salary value."""
         self.assertEqual(Steward(1).salary(), Credits(3000))
         self.assertEqual(Steward(2).salary(), Credits(3300))
         self.assertEqual(Steward(3).salary(), Credits(3600))
@@ -197,4 +221,3 @@ class StewardTestCase(unittest.TestCase):
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
-
