@@ -62,7 +62,7 @@ class Game:
             elif self.ship.repair_status == RepairStatus.PATCHED:
                 repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-            pr_yellow_on_red("\n{self.date} : You are " +
+            pr_yellow_on_red(f"\n{self.date} : You are " +
                              f"{self.location.description()}.{repair_state}")
             print(f"Credits: {self.financials.balance}"
                   f"\tFree hold space: {self.ship.free_space()} tons"
