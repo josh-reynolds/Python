@@ -1,4 +1,4 @@
-"""Contains tests for the star_map module."""
+"""Contains tests for the utilities module."""
 import unittest
 from utilities import actual_value, die_roll, constrain
 

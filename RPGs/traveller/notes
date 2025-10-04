@@ -1599,11 +1599,11 @@
 #  * [DONE] Generate world names
 #  * [DONE] Add a basic word list
 #  PHASE FOUR ======================================================
+#  * [DONE] Consider moving tests to separate modules
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] pylint/pydocstyle scrub
-#  * [....] Consider moving tests to separate modules
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()

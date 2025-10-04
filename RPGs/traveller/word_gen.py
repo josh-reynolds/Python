@@ -1,6 +1,5 @@
 """Contains functions to randomly generate words and names."""
 import random
-import unittest
 
 def get_world_name():
     with open("./words.txt", 'r', encoding='utf-8') as in_file:
@@ -16,13 +15,3 @@ def random_line(a_file):
             continue
         line = a_line
     return line
-
-class WordGenTestCase(unittest.TestCase):
-    """Tests word generation functions."""
-
-    def test_get_world_name_strips_newline(self):
-        self.assertNotEqual(get_world_name()[-1], "\n")
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

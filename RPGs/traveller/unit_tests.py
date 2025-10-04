@@ -11,7 +11,7 @@ def suite():
     test_suite.addTests(loader.loadTestsFromName('test_star_map'))
     test_suite.addTests(loader.loadTestsFromName('test_star_system'))
     test_suite.addTests(loader.loadTestsFromName('test_utilities'))
-    test_suite.addTests(loader.loadTestsFromName('word_gen'))
+    test_suite.addTests(loader.loadTestsFromName('test_word_gen'))
     return test_suite
 
 # ---------------------------------------------------------------------------
