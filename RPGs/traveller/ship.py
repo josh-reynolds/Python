@@ -21,44 +21,64 @@ class Pilot(Crew):
     """Represents a pilot on board a ship."""
 
     def __init__(self, skill=1, trade=0):
+        """Create an instance of a Pilot."""
         self.skill = skill
         self.trade_skill = trade
+
     def __repr__(self):
+        """Return the string representation of a Pilot."""
         return f"Captain Grungebottom - Pilot {self.skill}"
+
     def salary(self):
+        """Return the monthly salary for a Pilot based on expertise."""
         return Credits(6000) * (1 + .1 * (self.skill - 1))
 
 class Engineer(Crew):
     """Represents an engineer on board a ship."""
 
     def __init__(self, skill=1, trade=0):
+        """Create an instance of an Engineer."""
         self.skill = skill
         self.trade_skill = trade
+
     def __repr__(self):
+        """Return the string representation of an Engineer."""
         return f"Skins McFlint - Engineer {self.skill}"
+
     def salary(self):
+        """Return the monthly salary for an Engineer based on expertise."""
         return Credits(4000) * (1 + .1 * (self.skill - 1))
 
 class Medic(Crew):
     """Represents a medic on board a ship."""
 
     def __init__(self, skill=1, trade=0):
+        """Create an instance of a Medic."""
         self.skill = skill
         self.trade_skill = trade
+
     def __repr__(self):
+        """Return the string representation of a Medic."""
         return f"Doc Gubbins - Medic {self.skill}"
+
     def salary(self):
+        """Return the monthly salary for a Medic based on expertise."""
         return Credits(2000) * (1 + .1 * (self.skill - 1))
 
 class Steward(Crew):
     """Represents a steward on board a ship."""
 
     def __init__(self, skill=1, trade=0):
+        """Create an instance of a Steward."""
         self.skill = skill
         self.trade_skill = trade
+
     def __repr__(self):
+        """Return the string representation of a Steward."""
         return f"Laszlo the Third - Steward {self.skill}"
+
     def salary(self):
+        """Return the monthly salary for a Steward based on expertise."""
         return Credits(3000) * (1 + .1 * (self.skill - 1))
 
 class FuelQuality(Enum):
@@ -79,6 +99,7 @@ class Ship:
 
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self):
+        """Create an instance of a Ship."""
         self.name = "Weaselfish"
         self.model = "Type A Free Trader"
         self.hull = 200
@@ -101,6 +122,7 @@ class Ship:
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
 
     def __repr__(self):
+        """Return the string representation of a Ship."""
         result = f"{self.name} -- {self.model}\n" +\
                  f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
                  f"{len(self.crew)} crew, {self.passenger_berths} passenger staterooms, " +\
@@ -113,6 +135,7 @@ class Ship:
 
     @property
     def current_fuel(self):
+        """Return the amount of fuel currently in the tanks."""
         return self.fuel
 
     @current_fuel.setter
@@ -121,6 +144,7 @@ class Ship:
 
     @property
     def destination(self):
+        """Determine Ship's contracted destination based on Freight and Passengers on board."""
         freight_destinations = {f.destination_world for f in self.hold if
                                                             isinstance(f, Freight)}
         freight_count = len(freight_destinations)
@@ -151,36 +175,44 @@ class Ship:
 
     @property
     def total_passenger_count(self):
+        """Return the total number of passengers on board."""
         return self.high_passenger_count +\
                 self.middle_passenger_count +\
                 self.low_passenger_count
     @property
     def high_passenger_count(self):
+        """Return the number of high passengers on board."""
         return sum(1 for passenger in self.passengers if
                    passenger.passage == PassageClass.HIGH)
 
     @property
     def middle_passenger_count(self):
+        """Return the number of middle passengers on board."""
         return sum(1 for passenger in self.passengers if
                     passenger.passage == PassageClass.MIDDLE)
 
     @property
     def low_passenger_count(self):
+        """Return the number of low passengers on board."""
         return sum(1 for passenger in self.passengers if
                     passenger.passage == PassageClass.LOW)
 
     @property
     def empty_passenger_berths(self):
+        """Return the number of unoccupied passenger staterooms."""
         return self.passenger_berths - self.high_passenger_count - self.middle_passenger_count
 
     @property
     def empty_low_berths(self):
+        """Return the number of unoccupied low berths."""
         return self.low_berths - self.low_passenger_count
 
     def cargo_hold(self):
+        """Return the contents of the Ship's cargo hold."""
         return self.hold
 
     def free_space(self):
+        """Return the amount of free space in the cargo hold, in displacement tons."""
         taken = sum(cargo.tonnage for cargo in self.hold)
         return self.hold_size - taken
 
@@ -189,10 +221,12 @@ class Ship:
     # if this turns out not to matter, or we can handle via a transaction log
     # instead, then we could merge identical cargo types together
     def load_cargo(self, cargo):
+        """Load cargo into the Ship's hold."""
         self.hold.append(cargo)
 
     # this may be supplanted by CargoDepot.remove_cargo()...
     def unload_cargo(self, cargo, quantity):
+        """Remove cargo from the Ship's hold."""
         if quantity == cargo.quantity:
             self.hold.remove(cargo)
         else:
@@ -216,10 +250,8 @@ class Ship:
 
     # From this, trip fuel usage is 10 tons, and jump-1 is 20 tons. The
     # ship empties its tanks every trip.
-
-    # TO_DO: other angles to add later:
-    #   * effects of unrefined fuel (Book 2 p. 4)
     def refuel(self, starport):
+        """Refuel the Ship, accounting for fuel type."""
         if self.current_fuel == self.fuel_tank:
             print("Fuel tank is full.")
             return Credits(0)
@@ -243,16 +275,20 @@ class Ship:
         return price
 
     def sufficient_jump_fuel(self):
+        """Test whether there is enough fuel to make a jump."""
         return self.jump_fuel_cost <= self.current_fuel
 
     def insufficient_jump_fuel_message(self):
+        """Return message for when there is not enough fuel for a jump."""
         return f"Insufficient fuel. Jump requires {self.jump_fuel_cost} tons, only " +\
                f"{self.current_fuel} tons in tanks."
 
     def sufficient_life_support(self):
+        """Test whether there is enough life support for a jump."""
         return self.life_support_level == 100
 
     def insufficient_life_support_message(self):
+        """Return message for when there is not enough life support for a jump."""
         return "Insufficient life support to survive jump.\n" + \
                f"Life support is at {self.life_support_level}%."
 
@@ -274,6 +310,7 @@ class Ship:
     # spans for support duration. Need to check. For now, as with other rules
     # oddities, we'll keep it RAW.
     def recharge(self):
+        """Recharge the Ship's life support system."""
         if self.life_support_level == 100:
             print("Life support is fully charged.")
             return Credits(0)
@@ -293,11 +330,13 @@ class Ship:
     # as DMs for the sale of goods. In any given transaction, such DMs may
     # be used by only one person.
     def trade_skill(self):
+        """Return the best trade skill from the Ship's crew."""
         return max(c.trade_skill for c in self.crew)
 
     # Book 2 p. 2 [for low berth survival]
     #   attending medic of expertise 2 or better, +1
     def medic_skill(self):
+        """Return the best medic skill from the Ship's crew."""
         skills = [c.skill for c in self.crew if isinstance(c, Medic)]
         if len(skills) > 0:
             if max(skills) > 1:
@@ -306,6 +345,7 @@ class Ship:
         raise ValueError("No medic on board!")
 
     def engineering_skill(self):
+        """Return the best engneering skill from the Ship's crew."""
         skills = [c.skill for c in self.crew if isinstance(c, Engineer)]
         if len(skills) > 0:
             return max(skills)
@@ -323,6 +363,7 @@ class Ship:
     # (with suitable modifications for expertise or seniority,
     #  generally +10% for eachlevel of expertise above level-1)
     def crew_salary(self):
+        """Return the total monthly salary for the ship's crew."""
         return Credits(sum(c.salary().amount for c in self.crew))
 
     # Book 2 p. 19
@@ -347,7 +388,9 @@ class Ship:
     #        Also, what happens if the player doesn't have enough funds?
     #        Is this a simple game-over repossesion?
     def loan_payment(self):
+        """Return the monthly loan payment amount for the Ship."""
         return Credits(37080000 / 240)
 
     def maintenance_cost(self):
+        """Return the annual maintenance cost for the Ship."""
         return Credits(37080000 * 0.001)

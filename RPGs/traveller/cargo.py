@@ -25,6 +25,7 @@ class Passenger:
     """Represents a passenger on a ship."""
 
     def __init__(self, passage, destination):
+        """Create an instance of a Passenger."""
         if passage == PassageClass.HIGH:
             self.name = "High passage"
             self.ticket_price = Credits(10000)
@@ -45,21 +46,25 @@ class Passenger:
         self.survived = True
 
     def guess_survivors(self, total):
+        """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
 
     def __repr__(self):
+        """Return the string representation of a Passenger."""
         return f"{self.name} to {self.destination.name}"
 
 class Freight:
     """Represents bulk freight."""
 
     def __init__(self, tonnage, source_world, destination_world):
+        """Create an instance of a Freight shipment."""
         self.name = "Freight"
         self.tonnage = tonnage
         self.source_world = source_world
         self.destination_world = destination_world
 
-    def __repr__(self):
+    def __str__(self):
+        """Return a formatted string for a given Freight shipment."""
         if self.tonnage > 1:
             unit = "tons"
         else:
@@ -67,10 +72,15 @@ class Freight:
         return f"{self.name} : {self.tonnage} {unit} : " +\
                f"{self.source_world.name} -> {self.destination_world.name}"
 
+    def __repr__(self):
+        """Return the string representation of a Freight shipment."""
+        return f"Freight({self.tonnage}, {self.source_world}, {self.destination_world}"
+
 class Baggage(Freight):
     """Represents passenger baggage."""
 
     def __init__(self, source_world, destination_world):
+        """Create an instance of Baggage."""
         super().__init__(1, source_world, destination_world)
         self.name = "Baggage"
 
@@ -79,6 +89,7 @@ class Cargo:
 
     def __init__(self, name, quantity, price, unit_size,
                  purchase_dms, sale_dms, source_world=None):
+        """Create an instance of Cargo."""
         self.name = name
         self.quantity = self.determine_quantity(quantity)
         self.price = price
@@ -90,6 +101,7 @@ class Cargo:
                                      # '0' indicates not determined yet
 
     def __repr__(self):
+        """Return the string representation of a Cargo."""
         if self.unit_size == 1:
             unit = "ton"
         else:
@@ -103,6 +115,7 @@ class Cargo:
 
     @property
     def tonnage(self):
+        """Return the total tonnage used by this Cargo."""
         return self.quantity * self.unit_size
 
     # passing in quantity because we want to be able to specify
@@ -110,6 +123,7 @@ class Cargo:
     # grep shows this isn't used elsewhere, so it may have been
     # refactored away). Consider eliminating this param.
     def quantity_string(self, quantity):
+        """Return a string with proper units for a given quantity."""
         string = f"{quantity}"
         if self.unit_size == 1:
             if quantity == 1:
@@ -127,6 +141,7 @@ class Cargo:
     #   value is either tonnage or separate items
     #     as indicated by the unit_size field
     def determine_quantity(self, quantity):
+        """Convert a die roll amount of Cargo to a specific amount."""
         amount = str(quantity)
         if "Dx" in amount:
             die_count, multiplier = [int(n) for n in amount.split("Dx")]
@@ -138,11 +153,14 @@ class Cargo:
         return int(quantity)
 
 class CargoDepot:
-    """Represents a starport location for loading and
-       unloading Passengers, Freight, Cargo and Baggage.
+    """Represents a starport cargo depot.
+
+    Has methods for buying and selling Cargo, loading and unloading
+    Freight, and booking Passengers and their Baggage.
     """
 
     def __init__(self, system, refresh_date):
+        """Create an instance of a CargoDepot."""
         self.system = system
         self.refresh_date = refresh_date.copy()
         self.recurrence = 7
@@ -151,6 +169,7 @@ class CargoDepot:
         self.passengers = {}
 
     def notify(self, date):
+        """On notification from Calendar, refresh available lots."""
         duration = (date - self.refresh_date) // self.recurrence
         for _ in range(duration):
             self.refresh_date += self.recurrence
@@ -160,6 +179,7 @@ class CargoDepot:
             self.refresh_passengers(self.system.destinations)
 
     def refresh_freight(self, destinations):
+        """Refresh available Freight shipments."""
         self.freight = {}
         for world in destinations:
             self.freight[world] = []
@@ -171,6 +191,7 @@ class CargoDepot:
     # In RAW the table goes up to population 12, but the system only
     # generates populations up to 10, so I am truncating
     def passenger_origin_table(self, population):
+        """Return a number of Passengers based on world of origin."""
         if population < 2:
             result = (0,0,0)
         if population == 2:
@@ -204,6 +225,7 @@ class CargoDepot:
         return result
 
     def passenger_destination_table(self, population, counts):
+        """Adjust a number of Passengers based on destination."""
         if population < 2:
             return (0,0,0)
         if population == 2:
@@ -227,8 +249,12 @@ class CargoDepot:
 
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
-    # passenger counts are a tuple, indexed by the PassageClass enum
     def refresh_passengers(self, destinations):
+        """Refresh available passengers.
+
+        Returns a tuple of passenger counts, indexed by the 
+        PassageClass enumeration.
+        """
         self.passengers = {}
         for world in destinations:
             origin_counts = self.passenger_origin_table(self.system.population)
@@ -237,6 +263,7 @@ class CargoDepot:
             self.passengers[world] = passengers
 
     def get_available_freight(self, destinations):
+        """Present a list of worlds and Freight shipments for the player to choose from."""
         if not self.freight:
             self.refresh_freight(destinations)
 
@@ -254,6 +281,7 @@ class CargoDepot:
         return (world.coordinate, self.freight[world].copy())
 
     def get_available_passengers(self, destinations):
+        """Present a list of worlds and Passengers for the player to choose from."""
         if not self.passengers:
             self.refresh_passengers(destinations)
 
@@ -271,6 +299,7 @@ class CargoDepot:
         return (world.coordinate, self.passengers[world])
 
     def get_price_modifiers(self, cargo, transaction_type):
+        """Return sale or purchase die modifers for a given Cargo."""
         if transaction_type == "purchase":
             table = cargo.purchase_dms
         elif transaction_type == "sale":
@@ -291,6 +320,7 @@ class CargoDepot:
         return modifier
 
     def get_cargo_lot(self, source, prompt):
+        """Select a Cargo lot from a list."""
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             print("That is not a valid cargo ID.")
@@ -298,6 +328,7 @@ class CargoDepot:
         return (item_number, source[item_number])
 
     def get_cargo_quantity(self, prompt, cargo):
+        """Get a quantify of Cargo from the player to sell or purchase."""
         quantity = int_input(f"How many would you like to {prompt}? ")
         if quantity > cargo.quantity:
             print("There is not enough available. Specify a lower quantity.")
@@ -308,6 +339,7 @@ class CargoDepot:
         return quantity
 
     def invalid_cargo_origin(self, cargo):
+        """Restrict Cargo sale based on world of origin."""
         if cargo.source_world:
             if cargo.source_world == self.system:
                 print("You cannot resell cargo on the world where it was purchased.")
@@ -315,6 +347,7 @@ class CargoDepot:
         return False
 
     def get_broker(self):
+        """Allow player to select a broker for Cargo sales."""
         broker = confirm_input("Would you like to hire a broker (y/n)? ")
         broker_skill = 0
         if broker == 'y':
@@ -329,6 +362,7 @@ class CargoDepot:
         return broker_skill
 
     def insufficient_hold_space(self, cargo, quantity, free_space):
+        """Check if a given quantity of Cargo will fit in the Ship's hold."""
         if quantity * cargo.unit_size > free_space:
             print("That amount will not fit in your hold.")
             print(f"You only have {free_space} tons free.")
@@ -337,6 +371,7 @@ class CargoDepot:
 
     # TO_DO: this method is still too unwieldy - break it up further
     def determine_price(self, prompt, cargo, quantity, broker_skill, trade_skill):
+        """Calculate the price of a Cargo transaction."""
         modifier = self.get_price_modifiers(cargo, prompt)
 
         if prompt == "sale":
@@ -368,6 +403,7 @@ class CargoDepot:
         return price
 
     def insufficient_funds(self, cost, balance):
+        """Check if the player's bank balance has enough funds for a given cost."""
         if cost > balance:
             print("You do not have sufficient funds.")
             print(f"Your available balance is {balance}.")
@@ -375,6 +411,7 @@ class CargoDepot:
         return False
 
     def broker_fee(self, broker_skill, sale_price):
+        """Calculate a broker's fee for Cargo sale."""
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
             print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
@@ -382,6 +419,7 @@ class CargoDepot:
         return Credits(0)
 
     def confirm_transaction(self, prompt, cargo, quantity, price):
+        """Confirm a sale or purchase."""
         confirmation = confirm_input(f"Confirming {prompt} of "
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
                                      f"{cargo.name} for {price} (y/n)? ")
@@ -392,6 +430,7 @@ class CargoDepot:
 
     # this overlaps with ship.unload_cargo()...
     def remove_cargo(self, source, cargo, quantity):
+        """Remove cargo from a storage location."""
         if cargo in source:
             if quantity >= cargo.quantity:
                 source.remove(cargo)
@@ -399,6 +438,7 @@ class CargoDepot:
                 cargo.quantity -= quantity
 
     def determine_cargo(self):
+        """Randomly determine a Cargo lot."""
         cargo = []
 
         first = die_roll()

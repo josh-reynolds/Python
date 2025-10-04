@@ -10,12 +10,14 @@ class Credits:
     """Represents units of money."""
 
     def __init__(self, amount):
+        """Create an instance of Credits."""
         # should we block negative or zero credits?
         # unsure... what if credits can represent a
         # balance or a debt, not just a pile of cash?
         self.amount = amount
 
     def __repr__(self):
+        """Return the string representation of a Credits object."""
         val = round(self.amount)
         suffix = "Cr"
         if val >= 1000000:
@@ -24,39 +26,46 @@ class Credits:
         return f"{val:,} {suffix}"
 
     def __eq__(self, other):
+        """Test whether two Credits are equal."""
         if type(other) is type(self):
             return self.amount == other.amount
         return NotImplemented
 
     def __gt__(self, other):
+        """Test whether one Credits object is greater than another."""
         if type(other) is type(self):
             return self.amount > other.amount
         return NotImplemented
 
     def __ge__(self, other):
+        """Test whether one Credits object is greater than or equal to another."""
         if type(other) is type(self):
             return self.amount >= other.amount
         return NotImplemented
 
     def __add__(self, other):
+        """Add together two Credits objects and return a new object."""
         if type(other) is type(self):
             return Credits(self.amount + other.amount)
         return NotImplemented
 
     def __sub__(self, other):
+        """Subtract one Credits object from another and return a new object."""
         if type(other) is type(self):
             return Credits(self.amount - other.amount)
         return NotImplemented
 
     def __mul__(self, scalar):
+        """Multiply Credits by a number and return a new object."""
         if type(scalar) in (int, float):
             return Credits(round(self.amount * scalar))
         return NotImplemented
 
 class Financials:
-    """Contains methods to handle financial transactions and track a balance. """
+    """Contains methods to handle financial transactions and track a balance."""
 
     def __init__(self, balance, current_date, ship, location):
+        """Create an instance of a Financials object."""
         self.balance = Credits(balance)
         self.current_date = current_date.copy()
         self.ship = ship
@@ -74,12 +83,15 @@ class Financials:
         self.last_maintenance = self.current_date - 14
 
     def debit(self, amount):
+        """Deduct a specified amount from the Financials balance."""
         self.balance -= amount
 
     def credit(self, amount):
+        """Add the specified amount to the Financials balance."""
         self.balance += amount
 
     def notify(self, date):
+        """On notification from Calendar, check recurring payments.""" 
         self.current_date = date.copy()
 
         self.berth_notification(date)
@@ -88,22 +100,26 @@ class Financials:
         self.maintenance_notification(date)
 
     def berth_notification(self, date):
+        """Pay recurring fee for starport berth."""
         if date > self.berth_expiry and self.location.on_surface():
             self.renew_berth(date)
 
     def salary_notification(self, date):
+        """Pay ship's crew monthly salary."""
         duration = (date - self.salary_paid) // self.salary_recurrence
         for _ in range(duration):
             self.salary_paid += self.salary_recurrence
             self.pay_salaries()
 
     def loan_notification(self, date):
+        """Pay monthly ship loan."""
         duration = (date - self.loan_paid) // self.loan_recurrence
         for _ in range(duration):
             self.loan_paid += self.loan_recurrence
             self.pay_loan()
 
     def maintenance_notification(self, date):
+        """Check days since last maintenance."""
         status = self.maintenance_status(date)
         if status == 'yellow':
             pr_yellow(f"Days since last maintenance = {date - self.last_maintenance}")
@@ -117,6 +133,7 @@ class Financials:
     # be higher, while at others local government subsidies will
     # lower or eliminate it.
     def berthing_fee(self, on_surface):
+        """Deduct fee for berth at a starport from Financials balance."""
         if on_surface:
             print("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
@@ -124,6 +141,7 @@ class Financials:
             self.berth_expiry = self.current_date + 6
 
     def renew_berth(self, date):
+        """Deduct renewal fee for starport berth from Financials balance."""
         days_extra = date - self.berth_expiry
         if days_extra > 0:
             if days_extra == 1:
@@ -136,11 +154,13 @@ class Financials:
             self.berth_expiry = date + self.berth_recurrence
 
     def pay_salaries(self):
+        """Deduct ship salaries from Financials balance."""
         amount = self.ship.crew_salary()
         print(f"Paying crew salaries on {self.salary_paid} for {amount}.")
         self.debit(amount)
 
     def pay_loan(self):
+        """Deduct loan payment from Financials balance."""
         amount = self.ship.loan_payment()
         print(f"Paying ship loan on {self.loan_paid} for {amount}.")
         self.debit(amount)
@@ -148,6 +168,7 @@ class Financials:
     # conceivably an enum or the like would be better, but
     # we'll stick to simple strings for now...
     def maintenance_status(self, date):
+        """Calculate maintenance green/yellow/red status based on days elapsed."""
         amount = date - self.last_maintenance
         if amount <= 365 - (2*28):     # 10 months
             return "green"
