@@ -1603,14 +1603,14 @@
 #  * [DONE] pylint/pydocstyle scrub (not quite 100%, but very close, clean up remainder
 #           as we continue refactoring)
 #  * [DONE] BUG: unable to load freight that exactly fits in the hold (free_space == 0)
+#  * [DONE] BUG: able to add high passengers even when no room in hold for baggage
+#           resulting in negative free space
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
-#  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
-#  * [    ] BUG: able to add high passengers even when no room in hold for baggage
-#           resulting in negative free space
+#  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()

@@ -254,6 +254,7 @@ class Game:
         selection = (0,0,0)
         ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
 
+        ship_hold = self.ship.free_space()
         while True:
             if available == (0,0,0):
                 print(f"No more passengers available for {destination.name}.")
@@ -274,13 +275,14 @@ class Game:
                 if ship_capacity[0] == 0:
                     print("No more staterooms available.")
                     continue
-                if self.ship.free_space() < 1:
+                if ship_hold < 1:
                     print("No cargo space available for baggage.")
                     continue
                 print("Adding a high passenger.")
                 selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
                 available = tuple(a+b for a,b in zip(available,(-1,0,0)))
                 ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
+                ship_hold -= 1
 
             if response == 'm':
                 if available[PassageClass.MIDDLE.value] == 0:
@@ -372,6 +374,7 @@ class Game:
         if destination_number >= len(self.location.destinations):
             print("That is not a valid destination number.")
             return
+
         coordinate = self.location.destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
