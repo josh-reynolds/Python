@@ -1,13 +1,13 @@
 """Contains tests for the cargo module."""
 import unittest
-from cargo import Cargo, CargoDepot, Freight
+from cargo import Cargo, CargoDepot, Freight, Baggage
 from financials import Credits
 
 class CargoTestCase(unittest.TestCase):
     """Tests Cargo class."""
 
     def test_cargo_quantity(self):
-        """Tests whether cargo quantity is determined correctly."""
+        """Test whether cargo quantity is determined correctly."""
         cargo1 = Cargo("Foo", 10, Credits(10), 1, {}, {})
         self.assertEqual(cargo1.quantity, 10)
 
@@ -21,7 +21,7 @@ class CargoTestCase(unittest.TestCase):
         self.assertLess(cargo3.quantity, 61)
 
     def test_cargo_quantity_string(self):
-        """Tests the string representation of cargo quantity."""
+        """Test the string representation of cargo quantity."""
         cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
         self.assertEqual(cargo1.quantity_string(1), "1 ton")
         self.assertEqual(cargo1.quantity_string(5), "5 tons")
@@ -30,7 +30,7 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(cargo2.quantity_string(1), "1 (5 tons/item)")
 
     def test_cargo_tonnage(self):
-        """Tests whether cargo tonnage is calculated correctly."""
+        """Test whether cargo tonnage is calculated correctly."""
         cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
         self.assertEqual(cargo1.tonnage, 1)
 
@@ -44,7 +44,7 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(cargo4.tonnage, 200)
 
     def test_cargo_string(self):
-        """Tests a Cargo's string representation."""
+        """Test a Cargo's string representation."""
         cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
         self.assertEqual(f"{cargo1}", "Foo - 1 ton - 10 Cr/ton")
 
@@ -54,14 +54,18 @@ class CargoTestCase(unittest.TestCase):
         cargo3 = Cargo("Baz", 5, Credits(10), 5, {}, {})
         self.assertEqual(f"{cargo3}", "Baz - 5 (5 tons/item) - 10 Cr/item")
 
+        # pylint: disable=R0903
+        # R0903: Too few public methods (0/2)
         class Location:
             """Mocks a location interface for testing."""
 
             def __init__(self, name):
                 self.name = name
+
         location = Location("Uranus")
         cargo4 = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
         self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
+
 
 class CargoDepotTestCase(unittest.TestCase):
     """Tests CargoDepot class."""
@@ -70,30 +74,32 @@ class CargoDepotTestCase(unittest.TestCase):
         """Mocks a date interface for testing."""
 
         def __init__(self, value):
-            """Creates an instance of a DateMock object."""
+            """Create an instance of a DateMock object."""
             self.value = value
 
         def copy(self):
-            """Returns a copy of a DateMock object."""
+            """Return a copy of a DateMock object."""
             return CargoDepotTestCase.DateMock(self.value)
 
         def __add__(self, rhs):
-            """Adds a value to a DateMock object."""
+            """Add a value to a DateMock object."""
             return CargoDepotTestCase.DateMock(self.value + rhs)
 
         def __sub__(self, rhs):
-            """Subtracts a value from a DateMock object."""
+            """Subtract a value from a DateMock object."""
             return self.value - rhs.value
 
         def __ge__(self, other):
-            """Tests whether another object is greater than or equal to a DateMock."""
+            """Test whether another object is greater than or equal to a DateMock."""
             return self.value >= other.value
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class SystemMock:
         """Mocks a system interface for testing."""
 
         def __init__(self):
-            """Creates an instance of a SystemMock object."""
+            """Create an instance of a SystemMock object."""
             self.population = 5
             self.agricultural = True
             self.nonagricultural = True
@@ -106,11 +112,11 @@ class CargoDepotTestCase(unittest.TestCase):
             self.destinations = []
 
         def __repr__(self):
-            """Returns the string representation of a SystemMock object."""
+            """Return the string representation of a SystemMock object."""
             return f"{self.coordinate} - {self.name}"
 
     def setUp(self):
-        """Creates a test fixture for testing CargoDepots."""
+        """Create a test fixture for testing CargoDepots."""
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
                                               CargoDepotTestCase.DateMock(1))
 
@@ -131,7 +137,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertNotEqual(cargo, depot.cargo)
 
     def test_get_price_modifiers(self):
-        """Tests lookup of price modifiers."""
+        """Test lookup of price modifiers."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", "1", Credits(1), 1, {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1},
                                                   {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1})
@@ -144,7 +150,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_lot(self):
-        """Tests selection of cargo lots."""
+        """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
         cargo_list = ["a", "b", "c"]
         print(cargo_list)
@@ -161,7 +167,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_quantity(self):
-        """Tests selection of cargo quantity."""
+        """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -172,13 +178,17 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_invalid_cargo_origin(self):
-        """Tests validation of cargo origin."""
+        """Test validation of cargo origin."""
         depot = CargoDepotTestCase.depot
+
+        # pylint: disable=R0903
+        # R0903: Too few public methods (1/2)
         class Location:
             """Mocks a location interface for testing."""
 
             def __init__(self, name):
                 self.name = name
+
             def __eq__(self, other):
                 return self.name == other.name
 
@@ -195,7 +205,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_broker(self):
-        """Tests choosing a broker."""
+        """Test choosing a broker."""
         depot = CargoDepotTestCase.depot
         self.assertGreater(depot.get_broker(), -1)
         self.assertLess(depot.get_broker(), 5)
@@ -203,7 +213,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_insufficient_hold_space(self):
-        """Tests validation of cargo hold space."""
+        """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -212,7 +222,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_determine_price(self):
-        """Tests calculation of sale & purchase prices."""
+        """Test calculation of sale & purchase prices."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -233,7 +243,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_insufficient_funds(self):
-        """Tests validation of bank balance."""
+        """Test validation of bank balance."""
         depot = CargoDepotTestCase.depot
 
         result = depot.insufficient_funds(Credits(2), Credits(1))
@@ -247,7 +257,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: printing")
     def test_broker_fee(self):
-        """Tests calculation of broker fees."""
+        """Test calculation of broker fees."""
         depot = CargoDepotTestCase.depot
 
         fee = depot.broker_fee(0, Credits(100))
@@ -261,7 +271,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: input & printing")
     def test_confirm_transaction(self):
-        """Tests transaction confirmation."""
+        """Test transaction confirmation."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -269,7 +279,7 @@ class CargoDepotTestCase(unittest.TestCase):
         # y/n
 
     def test_remove_cargo(self):
-        """Tests removal of cargo from the depot or cargo hold."""
+        """Test removal of cargo from the depot or cargo hold."""
         depot = CargoDepotTestCase.depot
         cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {})
         cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {})
@@ -294,7 +304,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(len(source), 0)
 
     def test_determine_cargo(self):
-        """Tests random determination of cargo lots."""
+        """Test random determination of cargo lots."""
         depot = CargoDepotTestCase.depot
 
         cargo = depot.determine_cargo()
@@ -303,7 +313,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_available_freight(self):
-        """Tests listing of freight in the depot."""
+        """Test listing of freight in the depot."""
         depot = CargoDepotTestCase.depot
         world1 = CargoDepotTestCase.SystemMock()
         world1.name = "Pluto"
@@ -314,7 +324,7 @@ class CargoDepotTestCase(unittest.TestCase):
         _, _ = depot.get_available_freight(destinations)
 
     def test_passenger_origin_table(self):
-        """Tests calculation of passengers by origin world."""
+        """Test calculation of passengers by origin world."""
         depot = CargoDepotTestCase.depot
 
         self.assertEqual(depot.passenger_origin_table(0), (0,0,0))
@@ -384,7 +394,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertLess(depot.passenger_origin_table(10)[2], 25)
 
     def test_passenger_destination_table(self):
-        """Tests determination of passenger count modifiers by destination world."""
+        """Test determination of passenger count modifiers by destination world."""
         depot = CargoDepotTestCase.depot
 
         counts = (4,4,4)
@@ -407,23 +417,75 @@ class CargoDepotTestCase(unittest.TestCase):
         counts = (50,50,50)
         self.assertEqual(depot.passenger_destination_table(7, counts), (40,40,40))
 
+    def test_refresh_freight(self):
+        pass      # TO_DO
+
+    def test_refresh_passengers(self):
+        pass      # TO_DO
+
+    def test_get_available_passengers(self):
+        pass      # TO_DO
+
+
+# pylint: disable=R0903
+# R0903: Too few public methods (0/2)
+class SystemMock:
+    """Mocks a system interface for testing."""
+
+    def __init__(self, name):
+        """Create an instance of a SystemMock."""
+        self.name = name
+
+    def __repr__(self):
+        return f"SystemMock('{self.name}')"
+
+
 class FreightTestCase(unittest.TestCase):
     """Tests Freight class."""
 
-    class SystemMock:
-        """Mocks a system interface for testing."""
-
-        def __init__(self, name):
-            """Create an instance of a SystemMock."""
-            self.name = name
-
     def test_freight_string(self):
-        """Tests the string representation of a Freight object."""
+        """Test the string representation of a Freight object."""
         freight = Freight(10,
-                          FreightTestCase.SystemMock("Pluto"),
-                          FreightTestCase.SystemMock("Uranus"))
+                          SystemMock("Pluto"),
+                          SystemMock("Uranus"))
         self.assertEqual(f"{freight}",
                          "Freight : 10 tons : Pluto -> Uranus")
+
+    def test_freight_repr(self):
+        """Test the repr string of a Freight object."""
+        freight = Freight(10,
+                          SystemMock("Pluto"),
+                          SystemMock("Uranus"))
+        self.assertEqual(f"{freight!r}",
+                         "Freight(10, SystemMock('Pluto'), SystemMock('Uranus'))")
+
+class BaggageTestCase(unittest.TestCase):
+    """Tests Baggage class."""
+
+    def test_baggage_string(self):
+        """Test the string representation of a Baggage object."""
+        baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
+        self.assertEqual(f"{baggage}",
+                         "Baggage : 1 ton : Pluto -> Uranus")
+
+    def test_baggage_repr(self):
+        """Test the repr string of a Baggage object."""
+        baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
+        self.assertEqual(f"{baggage!r}",
+                         "Baggage(SystemMock('Pluto'), SystemMock('Uranus'))")
+
+class PassengerTestCase(unittest.TestCase):
+    """Tests Passenger class."""
+
+    def test_passenger_str(self):
+        pass      # TO_DO
+
+    def test_passenger_repr(self):
+        pass      # TO_DO
+
+    def test_passenger_guess_survivors(self):
+        pass      # TO_DO
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

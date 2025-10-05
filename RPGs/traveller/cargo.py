@@ -21,6 +21,7 @@ class PassageClass(Enum):
     MIDDLE = 1
     LOW = 2
 
+
 class Passenger:
     """Represents a passenger on a ship."""
 
@@ -36,22 +37,30 @@ class Passenger:
             self.name = "Low passage"
             self.ticket_price = Credits(1000)
         self.passage = passage
+
         self.destination = destination
+
         if die_roll(2) < 7:
             self.endurance = -1
         else:
             self.endurance = 0
 
         self.guess = None
+
         self.survived = True
+
+    def __str__(self):
+        """Return a formatted string for a given Passenger."""
+        return f"{self.name} to {self.destination.name}"
+
+    def __repr__(self):
+        """Return the string representation of a Passenger."""
+        return f"Passenger({self.passage!r}, {self.destination!r})"
 
     def guess_survivors(self, total):
         """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
 
-    def __repr__(self):
-        """Return the string representation of a Passenger."""
-        return f"{self.name} to {self.destination.name}"
 
 class Freight:
     """Represents bulk freight."""
@@ -74,7 +83,8 @@ class Freight:
 
     def __repr__(self):
         """Return the string representation of a Freight shipment."""
-        return f"Freight({self.tonnage}, {self.source_world}, {self.destination_world}"
+        return f"Freight({self.tonnage}, {self.source_world}, {self.destination_world})"
+
 
 class Baggage(Freight):
     """Represents passenger baggage."""
@@ -83,6 +93,11 @@ class Baggage(Freight):
         """Create an instance of Baggage."""
         super().__init__(1, source_world, destination_world)
         self.name = "Baggage"
+
+    def __repr__(self):
+        """Return the string representation of a piece of Baggage."""
+        return f"Baggage({self.source_world}, {self.destination_world})"
+
 
 class Cargo:
     """Represents speculative cargo."""
@@ -118,12 +133,12 @@ class Cargo:
         """Return the total tonnage used by this Cargo."""
         return self.quantity * self.unit_size
 
-    # passing in quantity because we want to be able to specify
-    # partial lots, not always the full amount (though a quick
-    # grep shows this isn't used elsewhere, so it may have been
-    # refactored away). Consider eliminating this param.
     def quantity_string(self, quantity):
-        """Return a string with proper units for a given quantity."""
+        """Return a string with proper units for a given quantity.
+
+        The quantity parameter allows specifying partial lots out
+        of a full cargo.
+        """
         string = f"{quantity}"
         if self.unit_size == 1:
             if quantity == 1:
@@ -134,14 +149,15 @@ class Cargo:
             string += f" ({self.unit_size} tons/item)"
         return string
 
-    # quantity convention:
-    #   if 'quantity' parameter string contains "Dx" then
-    #     the value needs to be randomly generated
-    #     otherwise it is an exact amount
-    #   value is either tonnage or separate items
-    #     as indicated by the unit_size field
     def determine_quantity(self, quantity):
-        """Convert a die roll amount of Cargo to a specific amount."""
+        """Convert a die roll amount of Cargo to a specific amount.
+
+        If the quantity parameter string contains "Dx" then it
+        specifies a random quantity to be generated. Otherwise
+        it is an exact amount.
+        The value returned is either tonnage or a number of items
+        as indicated by the Cargo unit_size field.
+        """
         amount = str(quantity)
         if "Dx" in amount:
             die_count, multiplier = [int(n) for n in amount.split("Dx")]
@@ -151,6 +167,7 @@ class Cargo:
             value *= multiplier
             return value
         return int(quantity)
+
 
 class CargoDepot:
     """Represents a starport cargo depot.
@@ -187,11 +204,27 @@ class CargoDepot:
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
 
-    # Table from Book 2 p. 7
-    # In RAW the table goes up to population 12, but the system only
-    # generates populations up to 10, so I am truncating
+    def refresh_passengers(self, destinations):
+        """Refresh available passengers.
+
+        Returns a tuple of passenger counts, indexed by the 
+        PassageClass enumeration.
+        """
+        self.passengers = {}
+        for world in destinations:
+            origin_counts = self.passenger_origin_table(self.system.population)
+            passengers = self.passenger_destination_table(world.population,
+                                                          origin_counts)
+            self.passengers[world] = passengers
+
     def passenger_origin_table(self, population):
-        """Return a number of Passengers based on world of origin."""
+        """Return a number of Passengers based on world of origin.
+
+        This data comes from the table on page 7 of Traveller '77
+        Book 2. In that text, the table goes up to population 12,
+        but the world generation procedure only generates populations
+        up to 10, so those entries are omitted here.
+        """
         if population < 2:
             result = (0,0,0)
         if population == 2:
@@ -225,7 +258,13 @@ class CargoDepot:
         return result
 
     def passenger_destination_table(self, population, counts):
-        """Adjust a number of Passengers based on destination."""
+        """Adjust a number of Passengers based on destination.
+
+        This data comes from the table on page 7 of Traveller '77
+        Book 2. In that text, the table goes up to population 12,
+        but the world generation procedure only generates populations
+        up to 10, so those entries are omitted here.
+        """
         if population < 2:
             return (0,0,0)
         if population == 2:
@@ -248,19 +287,6 @@ class CargoDepot:
             modifiers = (1,1,2)
 
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
-
-    def refresh_passengers(self, destinations):
-        """Refresh available passengers.
-
-        Returns a tuple of passenger counts, indexed by the 
-        PassageClass enumeration.
-        """
-        self.passengers = {}
-        for world in destinations:
-            origin_counts = self.passenger_origin_table(self.system.population)
-            passengers = self.passenger_destination_table(world.population,
-                                                          origin_counts)
-            self.passengers[world] = passengers
 
     def get_available_freight(self, destinations):
         """Present a list of worlds and Freight shipments for the player to choose from."""
@@ -361,14 +387,6 @@ class CargoDepot:
                 broker_skill = 0
         return broker_skill
 
-    def insufficient_hold_space(self, cargo, quantity, free_space):
-        """Check if a given quantity of Cargo will fit in the Ship's hold."""
-        if quantity * cargo.unit_size > free_space:
-            print("That amount will not fit in your hold.")
-            print(f"You only have {free_space} tons free.")
-            return True
-        return False
-
     # TO_DO: this method is still too unwieldy - break it up further
     def determine_price(self, prompt, cargo, quantity, broker_skill, trade_skill):
         """Calculate the price of a Cargo transaction."""
@@ -401,6 +419,14 @@ class CargoDepot:
 
         pr_function(f"{prompt.capitalize()} price of that quantity is {price}.")
         return price
+
+    def insufficient_hold_space(self, cargo, quantity, free_space):
+        """Check if a given quantity of Cargo will fit in the Ship's hold."""
+        if quantity * cargo.unit_size > free_space:
+            print("That amount will not fit in your hold.")
+            print(f"You only have {free_space} tons free.")
+            return True
+        return False
 
     def insufficient_funds(self, cost, balance):
         """Check if the player's bank balance has enough funds for a given cost."""
