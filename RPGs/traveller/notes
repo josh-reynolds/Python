@@ -1607,6 +1607,8 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
+#  * [    ] BUG: able to add high passengers even when no room in hold for baggage
+#           resulting in negative free space
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review and mark or export private/public members
 #  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
@@ -1628,6 +1630,8 @@
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  * [    ] Break up Game class (MVC?)
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
+#  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
+#  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  * [    ] Move cargo data to separate data file
 #  * [    ] Should we add type annotations?

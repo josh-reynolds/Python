@@ -2,7 +2,7 @@
 
 Calendar - keeps track of the current date, and notifies
            observers when it changes.
-ImperialDate - represents a single date Traveller format: DDD-YYYY
+ImperialDate - represents a single date in Traveller format: DDD-YYYY
 """
 
 class Calendar:
@@ -13,6 +13,10 @@ class Calendar:
         self.current_date = ImperialDate(1,1105)
         self.observers = []
 
+    def __repr__(self):
+        """Return the string representation of the current date."""
+        return f"{self.current_date}"
+
     @property
     def day(self):
         """Return the current day."""
@@ -20,6 +24,7 @@ class Calendar:
 
     @day.setter
     def day(self, value):
+        """Set the current day and notify all observers."""
         self.current_date.day = value
         # this is redundant with logic in ImperialDate - review
         if self.current_date.day >= 366:
@@ -35,17 +40,10 @@ class Calendar:
 
     @year.setter
     def year(self, value):
+        """Set the current year and notify all observers."""
         self.current_date.year = value
         for observer in self.observers:
             observer.notify(self.current_date)
-
-    def plus_week(self):
-        """Move the current day forward by seven days."""
-        self.day += 7
-
-    def __repr__(self):
-        """Return the string representation of the current date."""
-        return f"{self.current_date}"
 
     def add_observer(self, observer):
         """Add an observer to the calendar.
@@ -55,8 +53,13 @@ class Calendar:
         """
         self.observers.append(observer)
 
+    def plus_week(self):
+        """Move the current day forward by seven days."""
+        self.day += 7
+
+
 class ImperialDate:
-    """Represents a single date in Travller format: DDD-YYYY."""
+    """Represents a single date in Traveller format: DDD-YYYY."""
 
     def __init__(self, day, year):
         """Create an instance of an ImperialDate."""
@@ -90,8 +93,9 @@ class ImperialDate:
         """Test if one ImperialDate is greater than or equal to another."""
         return self == other or self > other
 
-    def _date_value(self):
-        return self.day + (self.year * 365)
+    def __add__(self, days):
+        """Add an integer number of days to an ImperialDate."""
+        return ImperialDate(self.day + days, self.year)
 
     def __sub__(self, other):
         """Subtract an ImperialDate or an integer from the date."""
@@ -101,10 +105,9 @@ class ImperialDate:
             return ImperialDate(self.day - other, self.year)
         return NotImplemented
 
-    def __add__(self, days):
-        """Add an integer number of days to an ImperialDate."""
-        return ImperialDate(self.day + days, self.year)
-
     def copy(self):
         """Return a copy of the ImperialDate."""
         return ImperialDate(self.day, self.year)
+
+    def _date_value(self):
+        return self.day + (self.year * 365)
