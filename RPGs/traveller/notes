@@ -1609,6 +1609,7 @@
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] BUG: able to add high passengers even when no room in hold for baggage
 #           resulting in negative free space
+#  * [    ] BUG: unable to load cargo that exactly fits in the hold (free_space == 0)
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Review and mark or export private/public members
@@ -1618,6 +1619,7 @@
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] Properly mark base classes as ABC
+#  * [    ] Restrict Passenger.guess_survivors() to low passengers only
 #  * [    ] Consider merging Baggage into Freight - class isn't pulling its weight
 #  * [    ] Replace ValueError and other 'generic' exceptions with custom
 #  * [    ] Refactoring suggestion: have Ship own Financials (or other way around?)

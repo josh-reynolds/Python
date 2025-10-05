@@ -1,6 +1,6 @@
 """Contains tests for the cargo module."""
 import unittest
-from cargo import Cargo, CargoDepot, Freight, Baggage
+from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
 from financials import Credits
 
 class CargoTestCase(unittest.TestCase):
@@ -418,13 +418,30 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(depot.passenger_destination_table(7, counts), (40,40,40))
 
     def test_refresh_freight(self):
-        pass      # TO_DO
+        """Test refreshing freight allotments."""
+        depot = CargoDepotTestCase.depot
+        freight = depot.freight
+        depot.refresh_freight([CargoDepotTestCase.SystemMock()])
+        self.assertNotEqual(depot.freight, freight)
 
     def test_refresh_passengers(self):
-        pass      # TO_DO
+        """Test refreshing prospective passengers."""
+        depot = CargoDepotTestCase.depot
+        passengers = depot.passengers
+        depot.refresh_passengers([CargoDepotTestCase.SystemMock()])
+        self.assertNotEqual(depot.passengers, passengers)
 
+    @unittest.skip("test has side effects: input & printing")
     def test_get_available_passengers(self):
-        pass      # TO_DO
+        """Test listing of passengers in the terminal."""
+        depot = CargoDepotTestCase.depot
+        world1 = CargoDepotTestCase.SystemMock()
+        world1.name = "Pluto"
+        world2 = CargoDepotTestCase.SystemMock()
+        world2.name = "Jupiter"
+        destinations = [world1, world2]
+
+        _, _ = depot.get_available_passengers(destinations)
 
 
 # pylint: disable=R0903
@@ -437,6 +454,7 @@ class SystemMock:
         self.name = name
 
     def __repr__(self):
+        """Return the string representation of a SystemMock object."""
         return f"SystemMock('{self.name}')"
 
 
@@ -478,13 +496,23 @@ class PassengerTestCase(unittest.TestCase):
     """Tests Passenger class."""
 
     def test_passenger_str(self):
-        pass      # TO_DO
+        """Test the string representation of a Passenger object."""
+        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
+        self.assertEqual(f"{passenger}", "Low passage to Uranus")
 
     def test_passenger_repr(self):
-        pass      # TO_DO
+        """Test the repr string of a Passenger object."""
+        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
+        self.assertEqual(f"{passenger!r}", "Passenger(<PassageClass.LOW: 2>, SystemMock('Uranus'))")
 
     def test_passenger_guess_survivors(self):
-        pass      # TO_DO
+        """Test Passenger guesses as to number of low lottery survivors."""
+        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
+        for _ in range(1000):
+            passenger.guess_survivors(10)
+            guess = passenger.guess
+            self.assertGreaterEqual(guess, 0)
+            self.assertLessEqual(guess, 10)
 
 
 # -------------------------------------------------------------------

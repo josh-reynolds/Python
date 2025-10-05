@@ -57,6 +57,7 @@ class Passenger:
         """Return the string representation of a Passenger."""
         return f"Passenger({self.passage!r}, {self.destination!r})"
 
+    # TO_DO: should be restricted to low passengers only
     def guess_survivors(self, total):
         """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
