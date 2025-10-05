@@ -686,16 +686,8 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
 
-    # TO_DO: after getting this working, assess if any pieces should
-    #        be pushed down
-    # If passengers have been picked already, only show that destination
-    def load_freight(self):
-        """Select and load Freight onto the Ship."""
-        pr_blue("Loading freight.")
-
-        jump_range = self.ship.jump_range
-        potential_destinations = self.location.destinations.copy()
-
+    def get_freight_destinations(self, potential_destinations, jump_range):
+        result = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
@@ -703,7 +695,7 @@ class Game:
             if self.ship.destination in potential_destinations:
                 print("You are under contract. Only showing freight " +
                       f"for {self.ship.destination.name}:\n")
-                destinations = [self.ship.destination]
+                result = [self.ship.destination]
             else:
                 print(f"You are under contract to {self.ship.destination.name} " +
                       "but it is not within jump range of here.")
@@ -711,16 +703,11 @@ class Game:
 
         else:
             print(f"Available freight shipments within jump-{jump_range}:\n")
-            destinations = potential_destinations
+            result = potential_destinations
 
-        coordinate, available = self.depot.get_available_freight(destinations)
-        if available is None:
-            return
+        return result
 
-        destination = self.star_map.get_system_at_coordinate(coordinate)
-        print(f"Freight shipments for {destination.name}")
-        print(available)
-
+    def select_freight_lots(self, available):
         selection = []
         total_tonnage = 0
         hold_tonnage = self.ship.free_space()
@@ -754,6 +741,27 @@ class Game:
                 pr_red(f"There are no shipments of size {response}.")
 
         print("Done selecting shipments.")
+        return (total_tonnage, selection)
+
+    # TO_DO: after getting this working, assess if any pieces should
+    #        be pushed down
+    def load_freight(self):
+        """Select and load Freight onto the Ship."""
+        pr_blue("Loading freight.")
+
+        jump_range = self.ship.jump_range
+        potential_destinations = self.location.destinations.copy()
+        destinations = self.get_freight_destinations(potential_destinations, jump_range)
+
+        coordinate, available = self.depot.get_available_freight(destinations)
+        if available is None:
+            return
+
+        destination = self.star_map.get_system_at_coordinate(coordinate)
+        print(f"Freight shipments for {destination.name}")
+        print(available)
+
+        total_tonnage, selection = self.select_freight_lots(available)
 
         if total_tonnage == 0:
             print("No freight shipments selected.")
