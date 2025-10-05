@@ -740,7 +740,7 @@ class Game:
                 continue
 
             if response in available:
-                if response < hold_tonnage:
+                if response <= hold_tonnage:
                     available.remove(response)
                     selection.append(response)
                     total_tonnage += response
