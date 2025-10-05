@@ -1600,10 +1600,11 @@
 #  * [DONE] Add a basic word list
 #  PHASE FOUR ======================================================
 #  * [DONE] Consider moving tests to separate modules
+#  * [DONE] pylint/pydocstyle scrub (not quite 100%, but very close, clean up remainder
+#           as we continue refactoring)
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] pylint/pydocstyle scrub
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [    ] BUG: some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
