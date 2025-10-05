@@ -4,14 +4,14 @@ import unittest
 def suite():
     test_suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    test_suite.addTests(loader.loadTestsFromName('test_calendar'))
-    test_suite.addTests(loader.loadTestsFromName('test_cargo'))
-    test_suite.addTests(loader.loadTestsFromName('test_financials'))
-    test_suite.addTests(loader.loadTestsFromName('test_ship'))
-    test_suite.addTests(loader.loadTestsFromName('test_star_map'))
-    test_suite.addTests(loader.loadTestsFromName('test_star_system'))
-    test_suite.addTests(loader.loadTestsFromName('test_utilities'))
-    test_suite.addTests(loader.loadTestsFromName('test_word_gen'))
+    test_suite.addTests(loader.loadTestsFromName('calendar_test'))
+    test_suite.addTests(loader.loadTestsFromName('cargo_test'))
+    test_suite.addTests(loader.loadTestsFromName('financials_test'))
+    test_suite.addTests(loader.loadTestsFromName('ship_test'))
+    test_suite.addTests(loader.loadTestsFromName('star_map_test'))
+    test_suite.addTests(loader.loadTestsFromName('star_system_test'))
+    test_suite.addTests(loader.loadTestsFromName('utilities_test'))
+    test_suite.addTests(loader.loadTestsFromName('word_gen_test'))
     return test_suite
 
 # ---------------------------------------------------------------------------
