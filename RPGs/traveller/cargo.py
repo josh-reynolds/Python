@@ -107,7 +107,7 @@ class Cargo:
                  purchase_dms, sale_dms, source_world=None):
         """Create an instance of Cargo."""
         self.name = name
-        self.quantity = self.determine_quantity(quantity)
+        self.quantity = self._determine_quantity(quantity)
         self.price = price
         self.unit_size = unit_size
         self.purchase_dms = purchase_dms
@@ -150,7 +150,7 @@ class Cargo:
             string += f" ({self.unit_size} tons/item)"
         return string
 
-    def determine_quantity(self, quantity):
+    def _determine_quantity(self, quantity):
         """Convert a die roll amount of Cargo to a specific amount.
 
         If the quantity parameter string contains "Dx" then it
@@ -182,7 +182,7 @@ class CargoDepot:
         self.system = system
         self.refresh_date = refresh_date.copy()
         self.recurrence = 7
-        self.cargo = self.determine_cargo()
+        self.cargo = self._determine_cargo()
         self.freight = {}
         self.passengers = {}
 
@@ -192,11 +192,11 @@ class CargoDepot:
         for _ in range(duration):
             self.refresh_date += self.recurrence
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
-            self.cargo = self.determine_cargo()
-            self.refresh_freight(self.system.destinations)
-            self.refresh_passengers(self.system.destinations)
+            self.cargo = self._determine_cargo()
+            self._refresh_freight(self.system.destinations)
+            self._refresh_passengers(self.system.destinations)
 
-    def refresh_freight(self, destinations):
+    def _refresh_freight(self, destinations):
         """Refresh available Freight shipments."""
         self.freight = {}
         for world in destinations:
@@ -205,7 +205,7 @@ class CargoDepot:
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
 
-    def refresh_passengers(self, destinations):
+    def _refresh_passengers(self, destinations):
         """Refresh available passengers.
 
         Returns a tuple of passenger counts, indexed by the 
@@ -213,12 +213,12 @@ class CargoDepot:
         """
         self.passengers = {}
         for world in destinations:
-            origin_counts = self.passenger_origin_table(self.system.population)
-            passengers = self.passenger_destination_table(world.population,
+            origin_counts = self._passenger_origin_table(self.system.population)
+            passengers = self._passenger_destination_table(world.population,
                                                           origin_counts)
             self.passengers[world] = passengers
 
-    def passenger_origin_table(self, population):
+    def _passenger_origin_table(self, population):
         """Return a number of Passengers based on world of origin.
 
         This data comes from the table on page 7 of Traveller '77
@@ -258,7 +258,7 @@ class CargoDepot:
                       die_roll(4))
         return result
 
-    def passenger_destination_table(self, population, counts):
+    def _passenger_destination_table(self, population, counts):
         """Adjust a number of Passengers based on destination.
 
         This data comes from the table on page 7 of Traveller '77
@@ -292,7 +292,7 @@ class CargoDepot:
     def get_available_freight(self, destinations):
         """Present a list of worlds and Freight shipments for the player to choose from."""
         if not self.freight:
-            self.refresh_freight(destinations)
+            self._refresh_freight(destinations)
 
         for i,world in enumerate(destinations):
             pr_green(f"{i} - {world}")
@@ -310,7 +310,7 @@ class CargoDepot:
     def get_available_passengers(self, destinations):
         """Present a list of worlds and Passengers for the player to choose from."""
         if not self.passengers:
-            self.refresh_passengers(destinations)
+            self._refresh_passengers(destinations)
 
         for i,world in enumerate(destinations):
             pr_green(f"{i} - {world}")
@@ -325,7 +325,7 @@ class CargoDepot:
 
         return (world.coordinate, self.passengers[world])
 
-    def get_price_modifiers(self, cargo, transaction_type):
+    def _get_price_modifiers(self, cargo, transaction_type):
         """Return sale or purchase die modifers for a given Cargo."""
         if transaction_type == "purchase":
             table = cargo.purchase_dms
@@ -391,7 +391,7 @@ class CargoDepot:
     # TO_DO: this method is still too unwieldy - break it up further
     def determine_price(self, prompt, cargo, quantity, broker_skill, trade_skill):
         """Calculate the price of a Cargo transaction."""
-        modifier = self.get_price_modifiers(cargo, prompt)
+        modifier = self._get_price_modifiers(cargo, prompt)
 
         if prompt == "sale":
             modifier += trade_skill
@@ -464,7 +464,7 @@ class CargoDepot:
             else:
                 cargo.quantity -= quantity
 
-    def determine_cargo(self):
+    def _determine_cargo(self):
         """Randomly determine a Cargo lot."""
         cargo = []
 

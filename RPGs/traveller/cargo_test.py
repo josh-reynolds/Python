@@ -136,16 +136,18 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(depot.refresh_date.value, 8)
         self.assertNotEqual(cargo, depot.cargo)
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _get_price_modifiers of a client class
     def test_get_price_modifiers(self):
         """Test lookup of price modifiers."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", "1", Credits(1), 1, {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1},
                                                   {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1})
 
-        modifier = depot.get_price_modifiers(cargo, "purchase")
+        modifier = depot._get_price_modifiers(cargo, "purchase")
         self.assertEqual(modifier, 6)
 
-        modifier = depot.get_price_modifiers(cargo, "sale")
+        modifier = depot._get_price_modifiers(cargo, "sale")
         self.assertEqual(modifier, 6)
 
     @unittest.skip("test has side effects: input & printing")
@@ -303,11 +305,13 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.remove_cargo(source, cargo1, 11)
         self.assertEqual(len(source), 0)
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _determine_cargo of a client class
     def test_determine_cargo(self):
         """Test random determination of cargo lots."""
         depot = CargoDepotTestCase.depot
 
-        cargo = depot.determine_cargo()
+        cargo = depot._determine_cargo()
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
 
@@ -323,112 +327,118 @@ class CargoDepotTestCase(unittest.TestCase):
 
         _, _ = depot.get_available_freight(destinations)
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _passenger_origin_table of a client class
     def test_passenger_origin_table(self):
         """Test calculation of passengers by origin world."""
         depot = CargoDepotTestCase.depot
 
-        self.assertEqual(depot.passenger_origin_table(0), (0,0,0))
-        self.assertEqual(depot.passenger_origin_table(1), (0,0,0))
+        self.assertEqual(depot._passenger_origin_table(0), (0,0,0))
+        self.assertEqual(depot._passenger_origin_table(1), (0,0,0))
 
-        self.assertGreater(depot.passenger_origin_table(2)[0], -6)
-        self.assertLess(depot.passenger_origin_table(2)[0], 6)
-        self.assertGreater(depot.passenger_origin_table(2)[1], -6)
-        self.assertLess(depot.passenger_origin_table(2)[1], 6)
-        self.assertGreater(depot.passenger_origin_table(2)[2], -4)
-        self.assertLess(depot.passenger_origin_table(2)[2], 18)
+        self.assertGreater(depot._passenger_origin_table(2)[0], -6)
+        self.assertLess(depot._passenger_origin_table(2)[0], 6)
+        self.assertGreater(depot._passenger_origin_table(2)[1], -6)
+        self.assertLess(depot._passenger_origin_table(2)[1], 6)
+        self.assertGreater(depot._passenger_origin_table(2)[2], -4)
+        self.assertLess(depot._passenger_origin_table(2)[2], 18)
 
-        self.assertGreater(depot.passenger_origin_table(3)[0], -10)
-        self.assertLess(depot.passenger_origin_table(3)[0], 17)
-        self.assertGreater(depot.passenger_origin_table(3)[1], -11)
-        self.assertLess(depot.passenger_origin_table(3)[1], 11)
-        self.assertGreater(depot.passenger_origin_table(3)[2], -4)
-        self.assertLess(depot.passenger_origin_table(3)[2], 18)
+        self.assertGreater(depot._passenger_origin_table(3)[0], -10)
+        self.assertLess(depot._passenger_origin_table(3)[0], 17)
+        self.assertGreater(depot._passenger_origin_table(3)[1], -11)
+        self.assertLess(depot._passenger_origin_table(3)[1], 11)
+        self.assertGreater(depot._passenger_origin_table(3)[2], -4)
+        self.assertLess(depot._passenger_origin_table(3)[2], 18)
 
-        self.assertGreater(depot.passenger_origin_table(4)[0], -16)
-        self.assertLess(depot.passenger_origin_table(4)[0], 16)
-        self.assertGreater(depot.passenger_origin_table(4)[1], -16)
-        self.assertLess(depot.passenger_origin_table(4)[1], 16)
-        self.assertGreater(depot.passenger_origin_table(4)[2], -3)
-        self.assertLess(depot.passenger_origin_table(4)[2], 24)
+        self.assertGreater(depot._passenger_origin_table(4)[0], -16)
+        self.assertLess(depot._passenger_origin_table(4)[0], 16)
+        self.assertGreater(depot._passenger_origin_table(4)[1], -16)
+        self.assertLess(depot._passenger_origin_table(4)[1], 16)
+        self.assertGreater(depot._passenger_origin_table(4)[2], -3)
+        self.assertLess(depot._passenger_origin_table(4)[2], 24)
 
-        self.assertGreater(depot.passenger_origin_table(5)[0], -10)
-        self.assertLess(depot.passenger_origin_table(5)[0], 17)
-        self.assertGreater(depot.passenger_origin_table(5)[1], -10)
-        self.assertLess(depot.passenger_origin_table(5)[1], 17)
-        self.assertGreater(depot.passenger_origin_table(5)[2], -3)
-        self.assertLess(depot.passenger_origin_table(5)[2], 24)
+        self.assertGreater(depot._passenger_origin_table(5)[0], -10)
+        self.assertLess(depot._passenger_origin_table(5)[0], 17)
+        self.assertGreater(depot._passenger_origin_table(5)[1], -10)
+        self.assertLess(depot._passenger_origin_table(5)[1], 17)
+        self.assertGreater(depot._passenger_origin_table(5)[2], -3)
+        self.assertLess(depot._passenger_origin_table(5)[2], 24)
 
-        self.assertGreater(depot.passenger_origin_table(6)[0], -10)
-        self.assertLess(depot.passenger_origin_table(6)[0], 17)
-        self.assertGreater(depot.passenger_origin_table(6)[1], -10)
-        self.assertLess(depot.passenger_origin_table(6)[1], 17)
-        self.assertGreater(depot.passenger_origin_table(6)[2], 2)
-        self.assertLess(depot.passenger_origin_table(6)[2], 19)
+        self.assertGreater(depot._passenger_origin_table(6)[0], -10)
+        self.assertLess(depot._passenger_origin_table(6)[0], 17)
+        self.assertGreater(depot._passenger_origin_table(6)[1], -10)
+        self.assertLess(depot._passenger_origin_table(6)[1], 17)
+        self.assertGreater(depot._passenger_origin_table(6)[2], 2)
+        self.assertLess(depot._passenger_origin_table(6)[2], 19)
 
-        self.assertGreater(depot.passenger_origin_table(7)[0], -10)
-        self.assertLess(depot.passenger_origin_table(7)[0], 17)
-        self.assertGreater(depot.passenger_origin_table(7)[1], -10)
-        self.assertLess(depot.passenger_origin_table(7)[1], 17)
-        self.assertGreater(depot.passenger_origin_table(7)[2], 2)
-        self.assertLess(depot.passenger_origin_table(7)[2], 19)
+        self.assertGreater(depot._passenger_origin_table(7)[0], -10)
+        self.assertLess(depot._passenger_origin_table(7)[0], 17)
+        self.assertGreater(depot._passenger_origin_table(7)[1], -10)
+        self.assertLess(depot._passenger_origin_table(7)[1], 17)
+        self.assertGreater(depot._passenger_origin_table(7)[2], 2)
+        self.assertLess(depot._passenger_origin_table(7)[2], 19)
 
-        self.assertGreater(depot.passenger_origin_table(8)[0], -5)
-        self.assertLess(depot.passenger_origin_table(8)[0], 12)
-        self.assertGreater(depot.passenger_origin_table(8)[1], -10)
-        self.assertLess(depot.passenger_origin_table(8)[1], 17)
-        self.assertGreater(depot.passenger_origin_table(8)[2], 3)
-        self.assertLess(depot.passenger_origin_table(8)[2], 25)
+        self.assertGreater(depot._passenger_origin_table(8)[0], -5)
+        self.assertLess(depot._passenger_origin_table(8)[0], 12)
+        self.assertGreater(depot._passenger_origin_table(8)[1], -10)
+        self.assertLess(depot._passenger_origin_table(8)[1], 17)
+        self.assertGreater(depot._passenger_origin_table(8)[2], 3)
+        self.assertLess(depot._passenger_origin_table(8)[2], 25)
 
-        self.assertGreater(depot.passenger_origin_table(9)[0], -5)
-        self.assertLess(depot.passenger_origin_table(9)[0], 12)
-        self.assertGreater(depot.passenger_origin_table(9)[1], -5)
-        self.assertLess(depot.passenger_origin_table(9)[1], 12)
-        self.assertGreater(depot.passenger_origin_table(9)[2], 3)
-        self.assertLess(depot.passenger_origin_table(9)[2], 25)
+        self.assertGreater(depot._passenger_origin_table(9)[0], -5)
+        self.assertLess(depot._passenger_origin_table(9)[0], 12)
+        self.assertGreater(depot._passenger_origin_table(9)[1], -5)
+        self.assertLess(depot._passenger_origin_table(9)[1], 12)
+        self.assertGreater(depot._passenger_origin_table(9)[2], 3)
+        self.assertLess(depot._passenger_origin_table(9)[2], 25)
 
-        self.assertGreater(depot.passenger_origin_table(10)[0], -5)
-        self.assertLess(depot.passenger_origin_table(10)[0], 12)
-        self.assertGreater(depot.passenger_origin_table(10)[1], -5)
-        self.assertLess(depot.passenger_origin_table(10)[1], 12)
-        self.assertGreater(depot.passenger_origin_table(10)[2], 3)
-        self.assertLess(depot.passenger_origin_table(10)[2], 25)
+        self.assertGreater(depot._passenger_origin_table(10)[0], -5)
+        self.assertLess(depot._passenger_origin_table(10)[0], 12)
+        self.assertGreater(depot._passenger_origin_table(10)[1], -5)
+        self.assertLess(depot._passenger_origin_table(10)[1], 12)
+        self.assertGreater(depot._passenger_origin_table(10)[2], 3)
+        self.assertLess(depot._passenger_origin_table(10)[2], 25)
 
     def test_passenger_destination_table(self):
         """Test determination of passenger count modifiers by destination world."""
         depot = CargoDepotTestCase.depot
 
         counts = (4,4,4)
-        self.assertEqual(depot.passenger_destination_table(0, counts), (0,0,0))
-        self.assertEqual(depot.passenger_destination_table(1, counts), (0,0,0))
-        self.assertEqual(depot.passenger_destination_table(2, counts), (3,2,0))
-        self.assertEqual(depot.passenger_destination_table(3, counts), (3,3,1))
-        self.assertEqual(depot.passenger_destination_table(4, counts), (3,3,2))
-        self.assertEqual(depot.passenger_destination_table(5, counts), (4,3,3))
-        self.assertEqual(depot.passenger_destination_table(6, counts), (4,4,3))
-        self.assertEqual(depot.passenger_destination_table(7, counts), (4,4,4))
-        self.assertEqual(depot.passenger_destination_table(8, counts), (5,4,4))
-        self.assertEqual(depot.passenger_destination_table(9, counts), (5,5,4))
-        self.assertEqual(depot.passenger_destination_table(10, counts), (5,5,6))
+        self.assertEqual(depot._passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(depot._passenger_destination_table(1, counts), (0,0,0))
+        self.assertEqual(depot._passenger_destination_table(2, counts), (3,2,0))
+        self.assertEqual(depot._passenger_destination_table(3, counts), (3,3,1))
+        self.assertEqual(depot._passenger_destination_table(4, counts), (3,3,2))
+        self.assertEqual(depot._passenger_destination_table(5, counts), (4,3,3))
+        self.assertEqual(depot._passenger_destination_table(6, counts), (4,4,3))
+        self.assertEqual(depot._passenger_destination_table(7, counts), (4,4,4))
+        self.assertEqual(depot._passenger_destination_table(8, counts), (5,4,4))
+        self.assertEqual(depot._passenger_destination_table(9, counts), (5,5,4))
+        self.assertEqual(depot._passenger_destination_table(10, counts), (5,5,6))
 
         counts = (0,0,0)
-        self.assertEqual(depot.passenger_destination_table(0, counts), (0,0,0))
-        self.assertEqual(depot.passenger_destination_table(2, counts), (0,0,0))
+        self.assertEqual(depot._passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(depot._passenger_destination_table(2, counts), (0,0,0))
 
         counts = (50,50,50)
-        self.assertEqual(depot.passenger_destination_table(7, counts), (40,40,40))
+        self.assertEqual(depot._passenger_destination_table(7, counts), (40,40,40))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _refresh_freight of a client class
     def test_refresh_freight(self):
         """Test refreshing freight allotments."""
         depot = CargoDepotTestCase.depot
         freight = depot.freight
-        depot.refresh_freight([CargoDepotTestCase.SystemMock()])
+        depot._refresh_freight([CargoDepotTestCase.SystemMock()])
         self.assertNotEqual(depot.freight, freight)
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _refresh_passengers of a client class
     def test_refresh_passengers(self):
         """Test refreshing prospective passengers."""
         depot = CargoDepotTestCase.depot
         passengers = depot.passengers
-        depot.refresh_passengers([CargoDepotTestCase.SystemMock()])
+        depot._refresh_passengers([CargoDepotTestCase.SystemMock()])
         self.assertNotEqual(depot.passengers, passengers)
 
     @unittest.skip("test has side effects: input & printing")
