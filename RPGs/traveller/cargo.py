@@ -11,7 +11,7 @@ CargoDepot - represents a starport location for loading and
 from enum import Enum
 from random import randint
 from utilities import die_roll, constrain, int_input, confirm_input
-from utilities import actual_value, pr_red, pr_green
+from utilities import actual_value, pr_red, pr_green, get_lines
 from financials import Credits
 
 class PassageClass(Enum):
@@ -479,80 +479,30 @@ class CargoDepot:
         second = die_roll()
         roll = first + second
 
-        table = {
-                11 : Cargo("Textiles", "3Dx5", Credits(3000), 1, {"Ag":-7,"Na":-5,"Ni":-3},
-                                                        {"Ag":-6,"Na":1,"Ri":3}),
-                12 : Cargo("Polymers", "4Dx5", Credits(7000), 1, {"In":-2,"Ri":-3,"Po":2},
-                                                        {"In":-2,"Ri":3}),
-                13 : Cargo("Liquor", "1Dx5", Credits(10000), 1, {"Ag":-4},
-                                                       {"Ag":-3,"In":1,"Ri":2}),
-                14 : Cargo("Wood", "2Dx10", Credits(1000), 1, {"Ag":-6},
-                                                     {"Ag":-6,"In":1,"Ri":2}),
-                15 : Cargo("Crystals", "1Dx1", Credits(20000), 1, {"Na":-3,"In":4},
-                                                         {"Na":-3,"In":3,"Ri":3}),
-                16 : Cargo("Radioactives", "1Dx1", Credits(1000000), 1, {"In":7,"Ni":-3,"Ri":5},
-                                                               {"In":6,"Ni":-3,"Ri":-4}),
-                21 : Cargo("Steel", "4Dx10", Credits(500), 1, {"In":-2,"Ri":-1,"Po":1},
-                                                     {"In":-2,"Ri":-1,"Po":3}),
-                22 : Cargo("Copper", "2Dx10", Credits(2000), 1, {"In":-3,"Ri":-2,"Po":1},
-                                                       {"In":-3,"Ri":-1}),
-                23 : Cargo("Aluminum", "5Dx10", Credits(1000), 1, {"In":-3,"Ri":-2,"Po":1},
-                                                         {"In":-3,"Ni":4,"Ri":-1}),
-                24 : Cargo("Tin", "3Dx10", Credits(9000), 1, {"In":-3,"Ri":-2,"Po":1},
-                                                    {"In":-3,"Ri":-1}),
-                25 : Cargo("Silver", "1Dx5", Credits(70000), 1, {"In":5,"Ri":-1,"Po":2},
-                                                       {"In":5,"Ri":-1}),
-                26 : Cargo("Special Alloys", "1Dx1", Credits(200000), 1, {"In":-3,"Ni":5,"Ri":-2},
-                                                                {"In":-3,"Ni":4,"Ri":-1}),
-                31 : Cargo("Petrochemicals", "6Dx5", Credits(10000), 1, {"Na":-4,"In":1,"Ni":-5},
-                                                               {"Na":-4,"In":3,"Ni":-5}),
-                32 : Cargo("Grain", "8Dx5", Credits(300), 1, {"Ag":-2,"Na":1,"In":2},
-                                                    {"Ag":-2}),
-                33 : Cargo("Meat", "4Dx5", Credits(1500), 1, {"Ag":-2,"Na":2,"In":3},
-                                                    {"Ag":-2,"In":2,"Po":1}),
-                34 : Cargo("Spices", "1Dx5", Credits(6000), 1, {"Ag":-2,"Na":3,"In":2},
-                                                      {"Ag":-2,"Ri":2,"Po":3}),
-                35 : Cargo("Fruit", "2Dx5", Credits(1000), 1, {"Ag":-3,"Na":1,"In":2},
-                                                     {"Ag":-2,"In":3,"Po":2}),
-                36 : Cargo("Pharmaceuticals", "1Dx1", Credits(100000), 1, {"Na":-3,"In":4,"Po":3},
-                                                                 {"Na":-3,"In":5,"Ri":4}),
-                41 : Cargo("Gems", "1Dx1", Credits(1000000), 1, {"In":4,"Ni":-8,"Po":-3},
-                                                       {"In":4,"Ni":-2,"Ri":8}),
-                42 : Cargo("Firearms", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3},
-                                                         {"In":-2,"Ri":-1,"Po":3}),
-                43 : Cargo("Ammunition", "2Dx1", Credits(30000), 1, {"In":-3,"Ri":-2,"Po":3},
-                                                           {"In":-2,"Ri":-1,"Po":3}),
-                44 : Cargo("Blades", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3},
-                                                       {"In":-2,"Ri":-1,"Po":3}),
-                45 : Cargo("Tools", "2Dx1", Credits(10000), 1, {"In":-3,"Ri":-2,"Po":3},
-                                                      {"In":-2,"Ri":-1,"Po":3}),
-                46 : Cargo("Body Armor", "2Dx1", Credits(50000), 1, {"In":-1,"Ri":-3,"Po":3},
-                                                           {"In":-2,"Ri":1,"Po":4}),
-                51 : Cargo("Aircraft", "1Dx1", Credits(1000000), 10, {"In":-4,"Ri":-3},
-                                                            {"Ni":2,"Po":1}),
-                52 : Cargo("Air/Raft", "1Dx1", Credits(6000000), 6, {"In":-3,"Ri":-2},
-                                                           {"Ni":2,"Po":1}),
-                53 : Cargo("Computers", "1Dx1", Credits(10000000), 2, {"In":-2,"Ri":-2},
-                                                             {"Ag":-3,"Ni":2,"Po":1}),
-                54 : Cargo("ATV", "1Dx1", Credits(3000000), 4, {"In":-2,"Ri":-2},
-                                                      {"Ag":1,"Ni":2,"Po":1}),
-                55 : Cargo("AFV", "1Dx1", Credits(7000000), 4, {"In":-5,"Ri":-2,"Po":4},
-                                                      {"Ag":2,"Na":-2,"Ri":1}),
-                56 : Cargo("Farm Machinery", "1Dx1", Credits(150000), 4, {"In":-5,"Ri":-2},
-                                                                {"Ag":5,"Na":-8,"Po":1}),
-                61 : Cargo("Electronics Parts", "1Dx5", Credits(100000), 1, {"In":-4,"Ri":-3},
-                                                                   {"Ni":2,"Po":1}),
-                62 : Cargo("Mechanical Parts", "1Dx5", Credits(75000), 1, {"In":-5,"Ri":-3},
-                                                                 {"Ag":2,"Ni":3}),
-                63 : Cargo("Cybernetic Parts", "1Dx5", Credits(250000), 1, {"In":-4,"Ri":-1},
-                                                                  {"Ag":1,"Na":2,"Ni":4}),
-                64 : Cargo("Computer Parts", "1Dx5", Credits(150000), 1, {"In":-5,"Ri":-3},
-                                                                {"Ag":1,"Na":2,"Ni":3}),
-                65 : Cargo("Machine Tools", "1Dx5", Credits(750000), 1, {"In":-5,"Ri":-4},
-                                                               {"Ag":1,"Na":2,"Ni":3}),
-                66 : Cargo("Vacc Suits", "1Dx5", Credits(400000), 1, {"Na":-5,"In":-3,"Ri":-1},
-                                                            {"Na":-1,"Ni":2,"Po":1})
-                }
+        table = {}
+        lines = get_lines("./cargo.txt")
+        for line in lines:
+            line = line[:-1]                  # strip final '\n'
+            entry = line.split(', ')
+            table_key = int(entry[0])
+            name = entry[1]
+            quantity = entry[2]
+            price = Credits(int(entry[3]))
+            unit_size = int(entry[4])
+        
+            purchase = entry[5][1:-1]         # strip enclosing '{' + '}'
+            pdms = {}
+            for item in purchase.split(','):
+                key, value = item.split(':')
+                pdms[key] = int(value)
+       
+            sale = entry[6][1:-1]             # strip enclosing '{' + '}'
+            sdms = {}
+            for item in sale.split(','):
+                key, value = item.split(':')
+                sdms[key] = int(value)
+
+            table[table_key] = Cargo(name, quantity, price, unit_size, pdms, sdms)
 
         cargo.append(table[roll])
         return cargo

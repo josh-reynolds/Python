@@ -65,3 +65,10 @@ def print_list(items):
     """Print out a list with its index values."""
     for i,item in enumerate(items):
         print(f"{i} - {item}")
+
+def get_lines(filename):
+    result = []
+    with open(filename, 'r', encoding='utf-8') as a_file:
+        for line in a_file:
+            result.append(line)
+    return result

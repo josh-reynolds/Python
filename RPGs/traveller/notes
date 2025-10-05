@@ -1605,6 +1605,7 @@
 #  * [DONE] BUG: unable to load freight that exactly fits in the hold (free_space == 0)
 #  * [DONE] BUG: able to add high passengers even when no room in hold for baggage
 #           resulting in negative free space
+#  * [DONE] Move cargo data to separate data file
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1637,7 +1638,6 @@
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
-#  * [    ] Move cargo data to separate data file
 #  * [    ] Should we add type annotations?
 #  PHASE FIVE ======================================================
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
