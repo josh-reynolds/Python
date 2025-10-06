@@ -693,12 +693,13 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
 
-    def get_freight_destinations(self, potential_destinations, jump_range):
+    def _get_freight_destinations(self, potential_destinations, jump_range):
+        """Return a list of all reachable destinations with Freight lots."""
         result = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
-                return
+                return result
             if self.ship.destination in potential_destinations:
                 print("You are under contract. Only showing freight " +
                       f"for {self.ship.destination.name}:\n")
@@ -706,7 +707,6 @@ class Game:
             else:
                 print(f"You are under contract to {self.ship.destination.name} " +
                       "but it is not within jump range of here.")
-                return
 
         else:
             print(f"Available freight shipments within jump-{jump_range}:\n")
@@ -714,7 +714,8 @@ class Game:
 
         return result
 
-    def select_freight_lots(self, available):
+    def _select_freight_lots(self, available, destination):
+        """Select Freight lots from a list of available shipments."""
         selection = []
         total_tonnage = 0
         hold_tonnage = self.ship.free_space()
@@ -758,7 +759,9 @@ class Game:
 
         jump_range = self.ship.jump_range
         potential_destinations = self.location.destinations.copy()
-        destinations = self.get_freight_destinations(potential_destinations, jump_range)
+        destinations = self._get_freight_destinations(potential_destinations, jump_range)
+        if not destinations:
+            return
 
         coordinate, available = self.depot.get_available_freight(destinations)
         if available is None:
@@ -768,7 +771,7 @@ class Game:
         print(f"Freight shipments for {destination.name}")
         print(available)
 
-        total_tonnage, selection = self.select_freight_lots(available)
+        total_tonnage, selection = self._select_freight_lots(available, destination)
 
         if total_tonnage == 0:
             print("No freight shipments selected.")
