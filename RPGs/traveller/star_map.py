@@ -97,9 +97,7 @@ class StarSystemFactory:
         """Create an instance of a StarSystem with pre-determined statistics."""
         uwp = UWP(starport, size, atmosphere, hydrographics,
                   population, government, law, tech)
-        return StarSystem(name, coordinate, starport, size, atmosphere,
-                          hydrographics, population, government, law,
-                          tech, uwp, gas_giant)
+        return StarSystem(name, coordinate, uwp, gas_giant)
 
     @classmethod
     def generate(cls, coordinate):
@@ -191,9 +189,7 @@ class StarSystemFactory:
         uwp = UWP(starport, size, atmosphere, hydrographics,
                   population, government, law, tech)
 
-        return StarSystem(name, coordinate, starport, size, atmosphere,
-                          hydrographics, population, government, law,
-                          tech, uwp, gas_giant)
+        return StarSystem(name, coordinate, uwp, gas_giant)
 
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""

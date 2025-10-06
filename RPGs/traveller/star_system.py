@@ -49,54 +49,45 @@ class UWP:
 class StarSystem(Hex):
     """Represents a map hex containing a star system."""
 
-    def __init__(self, name, coordinate, starport, size, atmosphere,
-                 hydrographics, population, government, law, tech, uwp, gas_giant=True):
+    def __init__(self, name, coordinate, uwp, gas_giant=True):
         """Create an instance of a StarSystem."""
         super().__init__(coordinate)
         self.name = name
-        self.starport = starport
-        self.size = size
-        self.atmosphere = atmosphere
-        self.hydrographics = hydrographics
-        self.population = population
-        self.government = government
-        self.law = law
-        self.tech = tech
-        self.gas_giant = gas_giant
         self.uwp = uwp
+        self.gas_giant = gas_giant
         self.detail = "orbit"
         self.destinations = []
 
         self.agricultural = False
-        if (atmosphere in (4, 5, 6, 7, 8, 9) and
-            hydrographics in (4, 5, 6, 7, 8) and
-            population in (5, 6, 7)):
+        if (self.atmosphere in (4, 5, 6, 7, 8, 9) and
+            self.hydrographics in (4, 5, 6, 7, 8) and
+            self.population in (5, 6, 7)):
             self.agricultural = True
 
         self.nonagricultural = False
-        if (atmosphere in (0, 1, 2, 3) and
-            hydrographics in (0, 1, 2, 3) and
-            population in (6, 7, 8, 9, 10)):
+        if (self.atmosphere in (0, 1, 2, 3) and
+            self.hydrographics in (0, 1, 2, 3) and
+            self.population in (6, 7, 8, 9, 10)):
             self.nonagricultural = True
 
         self.industrial = False
-        if (atmosphere in (0, 1, 2, 4, 7, 9) and
-            population in (9, 10)):
+        if (self.atmosphere in (0, 1, 2, 4, 7, 9) and
+            self.population in (9, 10)):
             self.industrial = True
 
         self.nonindustrial = False
-        if population in (0, 1, 2, 3, 4, 5, 6):
+        if self.population in (0, 1, 2, 3, 4, 5, 6):
             self.nonindustrial = True
 
         self.rich = False
-        if (government in (4, 5, 6, 7, 8, 9) and
-            atmosphere in (6, 8) and
-            population in (6, 7, 8)):
+        if (self.government in (4, 5, 6, 7, 8, 9) and
+            self.atmosphere in (6, 8) and
+            self.population in (6, 7, 8)):
             self.rich = True
 
         self.poor = False
-        if (atmosphere in (2, 3, 4, 5) and
-            hydrographics in (0, 1, 2, 3)):
+        if (self.atmosphere in (2, 3, 4, 5) and
+            self.hydrographics in (0, 1, 2, 3)):
             self.poor = True
 
     def __eq__(self, other):
@@ -137,6 +128,46 @@ class StarSystem(Hex):
         if self.gas_giant:
             url += " - G"
         return f"{self.coordinate} - {self.name} - {url}"
+
+    @property
+    def starport(self):
+        """Return the UWP starport value."""
+        return self.uwp.starport
+
+    @property
+    def size(self):
+        """Return the UWP size value."""
+        return self.uwp.size
+
+    @property
+    def atmosphere(self):
+        """Return the UWP atmosphere value."""
+        return self.uwp.atmosphere
+
+    @property
+    def hydrographics(self):
+        """Return the UWP hydrographics value."""
+        return self.uwp.hydrographics
+
+    @property
+    def population(self):
+        """Return the UWP population value."""
+        return self.uwp.population
+
+    @property
+    def government(self):
+        """Return the UWP government value."""
+        return self.uwp.government
+
+    @property
+    def law(self):
+        """Return the UWP law level value."""
+        return self.uwp.law
+
+    @property
+    def tech(self):
+        """Return the UWP tech level value."""
+        return self.uwp.tech
 
     def description(self):
         """Return the descriptor for the current location within the StarSystem."""
