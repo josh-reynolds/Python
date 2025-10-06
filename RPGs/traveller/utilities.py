@@ -81,7 +81,8 @@ def dictionary_from(a_string):
     The entire string is surrounded by braces, and does not end
     with a newline character. Key-value pairs are separated by
     commas (with no spaces), and keys are separated from
-    values by colons.
+    values by colons. Values will be converted to integers
+    as well.
     """
     contents = a_string[1:-1]  # strip enclosing '{' + '}'
     dictionary = {}

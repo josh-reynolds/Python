@@ -396,13 +396,13 @@ class CargoDepot:
         if prompt == "sale":
             modifier += trade_skill
             modifier += broker_skill
-            roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+            roll = constrain((die_roll(2) + modifier), 2, 15)
             price_adjustment = actual_value(roll)
         elif prompt == "purchase":
             if cargo.price_adjustment > 0:
                 price_adjustment = cargo.price_adjustment
             else:
-                roll = constrain((die_roll() + die_roll() + modifier), 2, 15)
+                roll = constrain((die_roll(2) + modifier), 2, 15)
                 price_adjustment = actual_value(roll)
                 if quantity < cargo.quantity:
                     price_adjustment += .01

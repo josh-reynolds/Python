@@ -1606,6 +1606,7 @@
 #  * [DONE] BUG: able to add high passengers even when no room in hold for baggage
 #           resulting in negative free space
 #  * [DONE] Move cargo data to separate data file
+#  * [DONE] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1627,7 +1628,6 @@
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
-#  * [    ] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)

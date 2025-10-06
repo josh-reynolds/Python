@@ -104,7 +104,7 @@ class StarSystemFactory:
         """Randomly generate a StarSystem instance."""
         name = get_world_name()
 
-        roll = die_roll() + die_roll()
+        roll = die_roll(2)
         if roll <= 4:
             starport = "A"
         elif roll <= 6:
@@ -119,10 +119,10 @@ class StarSystemFactory:
             starport = "X"
 
         die_modifier = -2
-        size = die_roll() + die_roll() + die_modifier
+        size = die_roll(2) + die_modifier
 
         die_modifier = size -7
-        atmosphere = constrain(die_roll() + die_roll() + die_modifier,
+        atmosphere = constrain(die_roll(2) + die_modifier,
                                0, 12)
         if size == 0:
             atmosphere = 0
@@ -130,21 +130,21 @@ class StarSystemFactory:
         die_modifier = size - 7
         if atmosphere <= 1 or atmosphere > 9:
             die_modifier -= 4
-        hydrographics = constrain(die_roll() + die_roll() + die_modifier,
-                                  0,10)
+        hydrographics = constrain(die_roll(2) + die_modifier,
+                                  0, 10)
         if size <= 1:
             hydrographics = 0
 
         die_modifier = -2
-        population = die_roll() + die_roll() + die_modifier
+        population = die_roll(2) + die_modifier
 
         die_modifier = population - 7
-        government = constrain(die_roll() + die_roll() + die_modifier,
-                               0,13)
+        government = constrain(die_roll(2) + die_modifier,
+                               0, 13)
 
         die_modifier = government - 7
-        law = constrain(die_roll() + die_roll() + die_modifier,
-                               0,9)
+        law = constrain(die_roll(2) + die_modifier,
+                               0, 9)
 
         if starport == "A":
             die_modifier = 6
@@ -184,7 +184,7 @@ class StarSystemFactory:
 
         tech = constrain(die_roll() + die_modifier, 0, 18)
 
-        gas_giant = bool(die_roll() + die_roll() < 10)
+        gas_giant = bool(die_roll(2) < 10)
 
         return StarSystem(name, coordinate, starport, size, atmosphere,
                           hydrographics, population, government, law, tech, gas_giant)
