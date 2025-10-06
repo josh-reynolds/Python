@@ -120,6 +120,7 @@ class Ship:
         self.life_support_level = 0
         self.passengers = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
+        self.base_price = Credits(37080000)
 
     def __repr__(self):
         """Return the string representation of a Ship."""
@@ -366,9 +367,6 @@ class Ship:
         """Return the total monthly salary for the ship's crew."""
         return Credits(sum(c.salary().amount for c in self.crew))
 
-    # Book 2 p. 19
-    # Base price for the free trader is 37,080,000 Cr
-
     # Book 2 p. 5
     # After a down payment of 20% of the cash price of the starship
     # is made...
@@ -389,8 +387,8 @@ class Ship:
     #        Is this a simple game-over repossesion?
     def loan_payment(self):
         """Return the monthly loan payment amount for the Ship."""
-        return Credits(37080000 / 240)
+        return Credits(self.base_price / 240)
 
     def maintenance_cost(self):
         """Return the annual maintenance cost for the Ship."""
-        return Credits(37080000 * 0.001)
+        return Credits(self.base_price * 0.001)
