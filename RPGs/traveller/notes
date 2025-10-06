@@ -1608,6 +1608,7 @@
 #  * [DONE] Move cargo data to separate data file
 #  * [DONE] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [DONE] Introduce a UWP class
+#  * [DONE] Properly mark base classes as ABC
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1621,7 +1622,6 @@
 #  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
-#  * [    ] Properly mark base classes as ABC
 #  * [    ] Restrict Passenger.guess_survivors() to low passengers only
 #  * [    ] Consider merging Baggage into Freight - class isn't pulling its weight
 #  * [    ] Replace ValueError and other 'generic' exceptions with custom

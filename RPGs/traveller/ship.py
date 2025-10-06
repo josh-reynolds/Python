@@ -9,77 +9,92 @@ FuelQuality - enem to represent whether fuel is contaminated or not.
 RepairStatus - enum to represent whether a ship needs repairs.
 Ship - represents a starship.
 """
+from abc import ABC, abstractmethod
 from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
 from utilities import confirm_input
 
-class Crew:
+class Crew(ABC):
     """Base class for crewmembers."""
+
+    def __init__(self, skill=1, trade=0):
+        """Create an instance of a Crew object."""
+        self.skill = skill
+        self.trade_skill = trade
+
+    @abstractmethod
+    def salary(self):
+        """Return the monthly salary for the crewmember."""
+
 
 class Pilot(Crew):
     """Represents a pilot on board a ship."""
 
     def __init__(self, skill=1, trade=0):
         """Create an instance of a Pilot."""
-        self.skill = skill
-        self.trade_skill = trade
+        super().__init__(skill, trade)
+        self.name = "Captain Grungebottom"
 
     def __repr__(self):
         """Return the string representation of a Pilot."""
-        return f"Captain Grungebottom - Pilot {self.skill}"
+        return f"{self.name} - Pilot {self.skill}"
 
     def salary(self):
         """Return the monthly salary for a Pilot based on expertise."""
         return Credits(6000) * (1 + .1 * (self.skill - 1))
+
 
 class Engineer(Crew):
     """Represents an engineer on board a ship."""
 
     def __init__(self, skill=1, trade=0):
         """Create an instance of an Engineer."""
-        self.skill = skill
-        self.trade_skill = trade
+        super().__init__(skill, trade)
+        self.name = "Skins McFlint"
 
     def __repr__(self):
         """Return the string representation of an Engineer."""
-        return f"Skins McFlint - Engineer {self.skill}"
+        return f"{self.name} - Engineer {self.skill}"
 
     def salary(self):
         """Return the monthly salary for an Engineer based on expertise."""
         return Credits(4000) * (1 + .1 * (self.skill - 1))
+
 
 class Medic(Crew):
     """Represents a medic on board a ship."""
 
     def __init__(self, skill=1, trade=0):
         """Create an instance of a Medic."""
-        self.skill = skill
-        self.trade_skill = trade
+        super().__init__(skill, trade)
+        self.name = "Doc Gubbins"
 
     def __repr__(self):
         """Return the string representation of a Medic."""
-        return f"Doc Gubbins - Medic {self.skill}"
+        return f"{self.name} - Medic {self.skill}"
 
     def salary(self):
         """Return the monthly salary for a Medic based on expertise."""
         return Credits(2000) * (1 + .1 * (self.skill - 1))
+
 
 class Steward(Crew):
     """Represents a steward on board a ship."""
 
     def __init__(self, skill=1, trade=0):
         """Create an instance of a Steward."""
-        self.skill = skill
-        self.trade_skill = trade
+        super().__init__(skill, trade)
+        self.name = "Laszlo the Third"
 
     def __repr__(self):
         """Return the string representation of a Steward."""
-        return f"Laszlo the Third - Steward {self.skill}"
+        return f"{self.name} - Steward {self.skill}"
 
     def salary(self):
         """Return the monthly salary for a Steward based on expertise."""
         return Credits(3000) * (1 + .1 * (self.skill - 1))
+
 
 class FuelQuality(Enum):
     """Represents whether fuel is contaminated or not."""
@@ -87,12 +102,14 @@ class FuelQuality(Enum):
     UNREFINED = 0
     REFINED = 1
 
+
 class RepairStatus(Enum):
     """Represents whether a ship needs repairs."""
 
     REPAIRED = 0
     PATCHED = 1
     BROKEN = 2
+
 
 class Ship:
     """Represents a starship."""

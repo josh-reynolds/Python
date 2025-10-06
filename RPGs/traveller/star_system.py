@@ -4,13 +4,19 @@ Hex - base class for map hexes.
 DeepSpace - represents an empty map hex.
 StarSystem - represents a map hex containing a star system.
 """
+from abc import ABC, abstractmethod
 
-class Hex:
+class Hex(ABC):
     """Base class for map hexes."""
 
     def __init__(self, coordinate):
         """Create an instance of a Hex."""
         self.coordinate = coordinate
+
+    @abstractmethod
+    def description(self):
+        """Return the descriptor for a Hex object."""
+
 
 class DeepSpace(Hex):
     """Represents an empty map hex."""
@@ -23,13 +29,14 @@ class DeepSpace(Hex):
         self.population = 0
         self.gas_giant = False
 
+    def __repr__(self):
+        """Return the string representation of a DeepSpace object."""
+        return f"{self.coordinate} - Deep Space"
+
     def description(self):
         """Return the descriptor for a DeepSpace hex."""
         return "stranded in deep space"
 
-    def __repr__(self):
-        """Return the string representation of a DeepSpace object."""
-        return f"{self.coordinate} - Deep Space"
 
 class UWP:
     """Represents a Traveller Universal World Profile."""
@@ -128,7 +135,7 @@ class StarSystem(Hex):
 
     def __repr__(self):
         """Return the string representation of a StarSystem object."""
-        uwp_string = f"{self.uwp}" 
+        uwp_string = f"{self.uwp}"
         if self.agricultural:
             uwp_string += " Ag"
         if self.nonagricultural:
