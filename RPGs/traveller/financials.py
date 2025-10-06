@@ -61,6 +61,26 @@ class Credits:
             return Credits(round(self.amount * scalar))
         return NotImplemented
 
+    def __truediv__(self, scalar):
+        """Divide Credits by a number and return a new object.
+
+        Note that fractional Credits are not supported, so this method
+        rounds its results.
+        """
+        if type(scalar) in (int, float):
+            return Credits(round(self.amount / scalar))
+        return NotImplemented
+
+    def __floordiv__(self, scalar):
+        """Divide Credits by an integer and return a new object.
+
+        Note that fractional Credits are not supported, so this method
+        rounds its results.
+        """
+        if type(scalar) is int:
+            return Credits(round(self.amount / scalar))
+        return NotImplemented
+
 class Financials:
     """Contains methods to handle financial transactions and track a balance."""
 

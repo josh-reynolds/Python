@@ -387,8 +387,8 @@ class Ship:
     #        Is this a simple game-over repossesion?
     def loan_payment(self):
         """Return the monthly loan payment amount for the Ship."""
-        return Credits(self.base_price / 240)
+        return self.base_price / 240
 
     def maintenance_cost(self):
         """Return the annual maintenance cost for the Ship."""
-        return Credits(self.base_price * 0.001)
+        return self.base_price * 0.001
