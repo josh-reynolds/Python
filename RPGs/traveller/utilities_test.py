@@ -1,6 +1,6 @@
 """Contains tests for the utilities module."""
 import unittest
-from utilities import actual_value, die_roll, constrain, get_lines
+from utilities import actual_value, die_roll, constrain, get_lines, dictionary_from
 
 class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
@@ -64,6 +64,15 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertEqual(lines[0][:12],
                          "11, Textiles")
 
+    def test_dictionary_from(self):
+        """Test string-to-dictionary conversion."""
+        string = "{foo:1,bar:2,baz:3}"
+        dictionary = dictionary_from(string)
+        self.assertTrue(isinstance(dictionary, dict))
+        self.assertEqual(len(dictionary), 3)
+        self.assertEqual(dictionary['foo'], 1)
+        self.assertEqual(dictionary['bar'], 2)
+        self.assertEqual(dictionary['baz'], 3)
 
     # remaining functions are almost purely side-effect,
     # not terribly useful to have unit tests

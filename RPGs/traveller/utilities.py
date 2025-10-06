@@ -67,8 +67,25 @@ def print_list(items):
         print(f"{i} - {item}")
 
 def get_lines(filename):
+    """Read all lines from filename and return as a list."""
     result = []
     with open(filename, 'r', encoding='utf-8') as a_file:
         for line in a_file:
             result.append(line)
     return result
+
+def dictionary_from(a_string):
+    """Convert a specially-formatted string to a dictionary.
+
+    String format is "{key1:value1,key2:value2,key3:value3...}".
+    The entire string is surrounded by braces, and does not end
+    with a newline character. Key-value pairs are separated by
+    commas (with no spaces), and keys are separated from
+    values by colons.
+    """
+    contents = a_string[1:-1]  # strip enclosing '{' + '}'
+    dictionary = {}
+    for item in contents.split(','):
+        key, value = item.split(':')
+        dictionary[key] = int(value)
+    return dictionary
