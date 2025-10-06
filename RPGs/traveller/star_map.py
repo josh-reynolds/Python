@@ -5,7 +5,7 @@ StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
 from word_gen import get_world_name
-from star_system import StarSystem, DeepSpace
+from star_system import StarSystem, DeepSpace, UWP
 from utilities import die_roll, constrain
 
 # in the three-axis system:
@@ -95,9 +95,11 @@ class StarSystemFactory:
     def create(cls, name, coordinate, starport, size, atmosphere,
                hydrographics, population, government, law, tech, gas_giant=True):
         """Create an instance of a StarSystem with pre-determined statistics."""
+        uwp = UWP(starport, size, atmosphere, hydrographics,
+                  population, government, law, tech)
         return StarSystem(name, coordinate, starport, size, atmosphere,
                           hydrographics, population, government, law,
-                          tech, gas_giant)
+                          tech, uwp, gas_giant)
 
     @classmethod
     def generate(cls, coordinate):
@@ -186,8 +188,12 @@ class StarSystemFactory:
 
         gas_giant = bool(die_roll(2) < 10)
 
+        uwp = UWP(starport, size, atmosphere, hydrographics,
+                  population, government, law, tech)
+
         return StarSystem(name, coordinate, starport, size, atmosphere,
-                          hydrographics, population, government, law, tech, gas_giant)
+                          hydrographics, population, government, law,
+                          tech, uwp, gas_giant)
 
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""

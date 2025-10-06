@@ -31,11 +31,26 @@ class DeepSpace(Hex):
         """Return the string representation of a DeepSpace object."""
         return f"{self.coordinate} - Deep Space"
 
+class UWP:
+    """Represents a Traveller Universal World Profile."""
+
+    def __init__(self, starport, size, atmosphere, hydrographics,
+                 population, government, law, tech):
+        """Create an instance of a UWP object."""
+        self.starport = starport
+        self.size = size
+        self.atmosphere = atmosphere
+        self.hydrographics = hydrographics
+        self.population = population
+        self.government = government
+        self.law = law
+        self.tech = tech
+
 class StarSystem(Hex):
     """Represents a map hex containing a star system."""
 
     def __init__(self, name, coordinate, starport, size, atmosphere,
-                 hydrographics, population, government, law, tech, gas_giant=True):
+                 hydrographics, population, government, law, tech, uwp, gas_giant=True):
         """Create an instance of a StarSystem."""
         super().__init__(coordinate)
         self.name = name
@@ -48,6 +63,7 @@ class StarSystem(Hex):
         self.law = law
         self.tech = tech
         self.gas_giant = gas_giant
+        self.uwp = uwp
         self.detail = "orbit"
         self.destinations = []
 
