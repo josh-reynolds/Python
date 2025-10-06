@@ -94,31 +94,31 @@ class Financials:
         """On notification from Calendar, check recurring payments.""" 
         self.current_date = date.copy()
 
-        self.berth_notification(date)
-        self.salary_notification(date)
-        self.loan_notification(date)
-        self.maintenance_notification(date)
+        self._berth_notification(date)
+        self._salary_notification(date)
+        self._loan_notification(date)
+        self._maintenance_notification(date)
 
-    def berth_notification(self, date):
+    def _berth_notification(self, date):
         """Pay recurring fee for starport berth."""
         if date > self.berth_expiry and self.location.on_surface():
-            self.renew_berth(date)
+            self._renew_berth(date)
 
-    def salary_notification(self, date):
+    def _salary_notification(self, date):
         """Pay ship's crew monthly salary."""
         duration = (date - self.salary_paid) // self.salary_recurrence
         for _ in range(duration):
             self.salary_paid += self.salary_recurrence
-            self.pay_salaries()
+            self._pay_salaries()
 
-    def loan_notification(self, date):
+    def _loan_notification(self, date):
         """Pay monthly ship loan."""
         duration = (date - self.loan_paid) // self.loan_recurrence
         for _ in range(duration):
             self.loan_paid += self.loan_recurrence
-            self.pay_loan()
+            self._pay_loan()
 
-    def maintenance_notification(self, date):
+    def _maintenance_notification(self, date):
         """Check days since last maintenance."""
         status = self.maintenance_status(date)
         if status == 'yellow':
@@ -140,7 +140,7 @@ class Financials:
             self.berth_recurrence = 1
             self.berth_expiry = self.current_date + 6
 
-    def renew_berth(self, date):
+    def _renew_berth(self, date):
         """Deduct renewal fee for starport berth from Financials balance."""
         days_extra = date - self.berth_expiry
         if days_extra > 0:
@@ -153,13 +153,13 @@ class Financials:
             self.debit(amount)
             self.berth_expiry = date + self.berth_recurrence
 
-    def pay_salaries(self):
+    def _pay_salaries(self):
         """Deduct ship salaries from Financials balance."""
         amount = self.ship.crew_salary()
         print(f"Paying crew salaries on {self.salary_paid} for {amount}.")
         self.debit(amount)
 
-    def pay_loan(self):
+    def _pay_loan(self):
         """Deduct loan payment from Financials balance."""
         amount = self.ship.loan_payment()
         print(f"Paying ship loan on {self.loan_paid} for {amount}.")

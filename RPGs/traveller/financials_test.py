@@ -147,6 +147,8 @@ class FinancialsTestCase(unittest.TestCase):
         financials.credit(Credits(20))
         self.assertEqual(financials.balance, Credits(110))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _salary_notification of a client class
     @unittest.skip("test has side effects: printing")
     def test_salary_notification(self):
         """Test salary notification behavior of a Financials object."""
@@ -154,29 +156,33 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(1))
 
         date = FinancialsTestCase.DateMock(30)
-        financials.salary_notification(date)
+        financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(99))
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(29))
 
         date = FinancialsTestCase.DateMock(60)
-        financials.salary_notification(date)
+        financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(98))
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(57))
 
         date = FinancialsTestCase.DateMock(120)
-        financials.salary_notification(date)
+        financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(96))
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(113))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _pay_salaries of a client class
     @unittest.skip("test has side effects: printing")
     def test_pay_salaries(self):
         """Test paying monthly crew salaries."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
 
-        financials.pay_salaries()
+        financials._pay_salaries()
         self.assertEqual(financials.balance, Credits(99))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _loan_notification of a client class
     @unittest.skip("test has side effects: printing")
     def test_loan_notification(self):
         """Test loan notification behavior of a Financials object."""
@@ -184,29 +190,33 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(1))
 
         date = FinancialsTestCase.DateMock(30)
-        financials.loan_notification(date)
+        financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(99))
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(29))
 
         date = FinancialsTestCase.DateMock(60)
-        financials.loan_notification(date)
+        financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(98))
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(57))
 
         date = FinancialsTestCase.DateMock(120)
-        financials.loan_notification(date)
+        financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(96))
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(113))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _pay_loan of a client class
     @unittest.skip("test has side effects: printing")
     def test_pay_loan(self):
         """Test monthly load payment."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
 
-        financials.pay_loan()
+        financials._pay_loan()
         self.assertEqual(financials.balance, Credits(99))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _maintenance_notification of a client class
     @unittest.skip("test has side effects: printing")
     def test_maintenance_notification(self):
         """Test maintenance behavior of a Financials object."""
@@ -214,19 +224,19 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
 
         date = FinancialsTestCase.DateMock(30)
-        financials.maintenance_notification(date)
+        financials._maintenance_notification(date)
 
         date = FinancialsTestCase.DateMock(296)
-        financials.maintenance_notification(date)
+        financials._maintenance_notification(date)
 
         date = FinancialsTestCase.DateMock(297)
-        financials.maintenance_notification(date)
+        financials._maintenance_notification(date)
 
         date = FinancialsTestCase.DateMock(352)
-        financials.maintenance_notification(date)
+        financials._maintenance_notification(date)
 
         date = FinancialsTestCase.DateMock(353)
-        financials.maintenance_notification(date)
+        financials._maintenance_notification(date)
 
     def test_maintenance_status(self):
         """Test maintenance status notification."""
@@ -276,6 +286,8 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(7))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _berth_notification of a client class
     @unittest.skip("test has side effects: printing")
     def test_berth_notification(self):
         """Test berth notification behavior of a Financials object."""
@@ -289,7 +301,7 @@ class FinancialsTestCase(unittest.TestCase):
 
         date = FinancialsTestCase.DateMock(7)
         financials.location.on_surface = lambda : False
-        financials.berth_notification(date)
+        financials._berth_notification(date)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, None)
         self.assertEqual(financials.berth_expiry,
@@ -301,12 +313,14 @@ class FinancialsTestCase(unittest.TestCase):
         financials.berth_recurrence = 1
         financials.berth_expiry = financials.current_date + 6
         date = FinancialsTestCase.DateMock(8)
-        financials.berth_notification(date)
+        financials._berth_notification(date)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(9))
 
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _renew_berth of a client class
     @unittest.skip("test has side effects: printing")
     def test_renew_berth(self):
         """Test berth renewal."""
@@ -321,14 +335,14 @@ class FinancialsTestCase(unittest.TestCase):
         financials.berth_recurrence = 1
         financials.berth_expiry = financials.current_date + 6
         date = FinancialsTestCase.DateMock(7)
-        financials.renew_berth(date)
+        financials._renew_berth(date)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          FinancialsTestCase.DateMock(7))
 
         date = FinancialsTestCase.DateMock(8)
-        financials.renew_berth(date)
+        financials._renew_berth(date)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
