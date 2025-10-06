@@ -1607,12 +1607,12 @@
 #           resulting in negative free space
 #  * [DONE] Move cargo data to separate data file
 #  * [DONE] Review uses of die_roll and replace with multiple die functionality as necessary
+#  * [DONE] Introduce a UWP class
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
-#  * [....] Introduce a UWP class
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()

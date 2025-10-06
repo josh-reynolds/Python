@@ -46,6 +46,32 @@ class UWP:
         self.law = law
         self.tech = tech
 
+    def __repr__(self):
+        """Return the string representation of a UWP object."""
+        return f"UWP({self.starport}, {self.size}, {self.atmosphere}, {self.hydrographics}, " +\
+               f"{self.population}, {self.government}, {self.law}, {self.tech}"
+
+    # Check if '77 can generate any values above 15 (F). It's certainly
+    # possible in later editions, not sure here...
+    # If so, a simple method that indexes a string would work.
+    #    chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ"    # omit 'I' and 'O'
+    #    e_hex = chars[value]
+    def __str__(self):
+        """Return a formatted string for a given UWP.
+
+        Traveller uses a modified hex digit to enforce single digits for 
+        all values. They allow values above 15 by extending with the remaining
+        alphabet, excluding 'I' and 'O' to avoid confusion with '1' and '0'.
+
+        The current implementation below only allows for values up to 15 to
+        display correctly, as the 'e-hex' concept was introduced in a later
+        edition of the rules than we're using here.
+        """
+        return  f"{self.starport}{self.size:X}{self.atmosphere:X}" +\
+                f"{self.hydrographics:X}{self.population:X}{self.government:X}" +\
+                f"{self.law:X}-{self.tech:X}"
+
+
 class StarSystem(Hex):
     """Represents a map hex containing a star system."""
 
@@ -100,34 +126,24 @@ class StarSystem(Hex):
         """Calculate the hash value for a StarSystem object."""
         return hash((self.coordinate, self.name))
 
-    # TO_DO: we will need to handle digits > 9. Traveller uses 'extended hex'
-    # for now we can probably get away with simple f-string conversion:
-    #    f"{value:X}"
-    # Check if '77 can generate any values above 15 (F). It's certainly
-    # possible in later editions, not sure here...
-    # If so, a simple method that indexes a string would work.
-    #    chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ"    # omit 'I' and 'O'
-    #    e_hex = chars[value]
     def __repr__(self):
         """Return the string representation of a StarSystem object."""
-        url = f"{self.starport}{self.size:X}{self.atmosphere:X}" +\
-              f"{self.hydrographics:X}{self.population:X}{self.government:X}" +\
-              f"{self.law:X}-{self.tech:X}"
+        uwp_string = f"{self.uwp}" 
         if self.agricultural:
-            url += " Ag"
+            uwp_string += " Ag"
         if self.nonagricultural:
-            url += " Na"
+            uwp_string += " Na"
         if self.industrial:
-            url += " In"
+            uwp_string += " In"
         if self.nonindustrial:
-            url += " Ni"
+            uwp_string += " Ni"
         if self.rich:
-            url += " Ri"
+            uwp_string += " Ri"
         if self.poor:
-            url += " Po"
+            uwp_string += " Po"
         if self.gas_giant:
-            url += " - G"
-        return f"{self.coordinate} - {self.name} - {url}"
+            uwp_string += " - G"
+        return f"{self.coordinate} - {self.name} - {uwp_string}"
 
     @property
     def starport(self):
