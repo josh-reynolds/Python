@@ -109,7 +109,7 @@ class Game:
         self.location.liftoff()
         self.commands = orbit
 
-    def _low_lottery(self):
+    def _low_lottery(self, low_lottery_amount):
         """Run the low passage lottery and apply results."""
         if self.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.ship.passengers if
@@ -153,7 +153,7 @@ class Game:
                 print(f"Receiving {funds} in passenger fares.")
                 self.financials.credit(funds)
 
-                self._low_lottery()
+                self._low_lottery(low_lottery_amount)
 
                 self.ship.passengers = []
                 self.ship.hold = [item for item in self.ship.hold
