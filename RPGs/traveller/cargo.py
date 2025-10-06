@@ -11,7 +11,7 @@ CargoDepot - represents a starport location for loading and
 from enum import Enum
 from random import randint
 from utilities import die_roll, constrain, int_input, confirm_input
-from utilities import actual_value, pr_red, pr_green, get_lines
+from utilities import actual_value, pr_red, pr_green, get_lines, dictionary_from
 from financials import Credits
 
 class PassageClass(Enum):
@@ -482,27 +482,18 @@ class CargoDepot:
         table = {}
         lines = get_lines("./cargo.txt")
         for line in lines:
-            line = line[:-1]                  # strip final '\n'
+            line = line[:-1] # strip final '\n'
+
             entry = line.split(', ')
             table_key = int(entry[0])
             name = entry[1]
             quantity = entry[2]
             price = Credits(int(entry[3]))
             unit_size = int(entry[4])
-        
-            purchase = entry[5][1:-1]         # strip enclosing '{' + '}'
-            pdms = {}
-            for item in purchase.split(','):
-                key, value = item.split(':')
-                pdms[key] = int(value)
-       
-            sale = entry[6][1:-1]             # strip enclosing '{' + '}'
-            sdms = {}
-            for item in sale.split(','):
-                key, value = item.split(':')
-                sdms[key] = int(value)
+            purchase = dictionary_from(entry[5])
+            sale = dictionary_from(entry[6])
 
-            table[table_key] = Cargo(name, quantity, price, unit_size, pdms, sdms)
+            table[table_key] = Cargo(name, quantity, price, unit_size, purchase, sale)
 
         cargo.append(table[roll])
         return cargo
