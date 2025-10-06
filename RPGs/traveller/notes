@@ -1638,7 +1638,7 @@
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
-#  * [    ] Should we add type annotations?
+#  * [    ] Should we add type annotations? (Possibly check out mypy...)
 #  PHASE FIVE ======================================================
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,

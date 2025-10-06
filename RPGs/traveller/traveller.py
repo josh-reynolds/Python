@@ -109,6 +109,29 @@ class Game:
         self.location.liftoff()
         self.commands = orbit
 
+    def _low_lottery(self):
+        """Run the low passage lottery and apply results."""
+        if self.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.ship.passengers if
+                                         p.passage == PassageClass.LOW]
+            for passenger in low_passengers:
+                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
+                    passenger.survived = False
+
+            survivors = [p for p in low_passengers if p.survived]
+            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
+                  "survived revival.")
+
+            winner = False
+            for passenger in low_passengers:
+                if passenger.guess == len(survivors) and passenger.survived:
+                    winner = True
+
+            if not winner:
+                print(f"No surviving low lottery winner. "
+                      f"The captain is awarded {low_lottery_amount}.")
+                self.financials.credit(low_lottery_amount)
+
     def land(self):
         """Move from orbit to the starport."""
         pr_blue(f"Landing on {self.location.name}.")
@@ -130,26 +153,7 @@ class Game:
                 print(f"Receiving {funds} in passenger fares.")
                 self.financials.credit(funds)
 
-                if self.ship.low_passenger_count > 0:
-                    low_passengers = [p for p in self.ship.passengers if
-                                                 p.passage == PassageClass.LOW]
-                    for passenger in low_passengers:
-                        if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
-                            passenger.survived = False
-
-                    survivors = [p for p in low_passengers if p.survived]
-                    print(f"{len(survivors)} of {len(low_passengers)} low passengers "
-                          "survived revival.")
-
-                    winner = False
-                    for passenger in low_passengers:
-                        if passenger.guess == len(survivors) and passenger.survived:
-                            winner = True
-
-                    if not winner:
-                        print(f"No surviving low lottery winner. "
-                              f"The captain is awarded {low_lottery_amount}.")
-                        self.financials.credit(low_lottery_amount)
+                self._low_lottery()
 
                 self.ship.passengers = []
                 self.ship.hold = [item for item in self.ship.hold
