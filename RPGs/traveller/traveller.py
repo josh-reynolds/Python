@@ -241,64 +241,7 @@ class Game:
         destination = self.star_map.get_system_at_coordinate(coordinate)
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
-        selection = (0,0,0)
-        ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
-
-        ship_hold = self.ship.free_space()
-        while True:
-            if available == (0,0,0):
-                print(f"No more passengers available for {destination.name}.")
-                break
-
-            response = input("Choose a passenger by type (h, m, l, or q to exit): ")
-            if response == 'q':
-                break
-
-            print(f"Remaining (H, M, L): {available}")
-            print(f"Selected (H, M, L): {selection}")
-            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
-
-            if response == 'h':
-                if available[PassageClass.HIGH.value] == 0:
-                    print("No more high passengers available.")
-                    continue
-                if ship_capacity[0] == 0:
-                    print("No more staterooms available.")
-                    continue
-                if ship_hold < 1:
-                    print("No cargo space available for baggage.")
-                    continue
-                print("Adding a high passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
-                available = tuple(a+b for a,b in zip(available,(-1,0,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
-                ship_hold -= 1
-
-            if response == 'm':
-                if available[PassageClass.MIDDLE.value] == 0:
-                    print("No more middle passengers available.")
-                    continue
-                if ship_capacity[0] == 0:
-                    print("No more staterooms available.")
-                    continue
-                print("Adding a middle passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(0,1,0)))
-                available = tuple(a+b for a,b in zip(available,(0,-1,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
-
-            if response == 'l':
-                if available[PassageClass.LOW.value] == 0:
-                    print("No more low passengers available.")
-                    continue
-                if ship_capacity[1] == 0:
-                    print("No more low berths available.")
-                    continue
-                print("Adding a low passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(0,0,1)))
-                available = tuple(a+b for a,b in zip(available,(0,0,-1)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-1)))
-
-        print("Done selecting passengers.")
+        selection = self._select_passengers(available, destination)
 
         if selection == (0,0,0):
             print("No passengers selected.")
@@ -721,6 +664,68 @@ class Game:
 
         return result
 
+    def _select_passengers(self, available, destination):
+        """Select Passengers from a list of available candidates."""
+        selection = (0,0,0)
+        ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
+
+        ship_hold = self.ship.free_space()
+        while True:
+            if available == (0,0,0):
+                print(f"No more passengers available for {destination.name}.")
+                break
+
+            response = input("Choose a passenger by type (h, m, l, or q to exit): ")
+            if response == 'q':
+                break
+
+            print(f"Remaining (H, M, L): {available}")
+            print(f"Selected (H, M, L): {selection}")
+            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
+
+            if response == 'h':
+                if available[PassageClass.HIGH.value] == 0:
+                    print("No more high passengers available.")
+                    continue
+                if ship_capacity[0] == 0:
+                    print("No more staterooms available.")
+                    continue
+                if ship_hold < 1:
+                    print("No cargo space available for baggage.")
+                    continue
+                print("Adding a high passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
+                available = tuple(a+b for a,b in zip(available,(-1,0,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
+                ship_hold -= 1
+
+            if response == 'm':
+                if available[PassageClass.MIDDLE.value] == 0:
+                    print("No more middle passengers available.")
+                    continue
+                if ship_capacity[0] == 0:
+                    print("No more staterooms available.")
+                    continue
+                print("Adding a middle passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(0,1,0)))
+                available = tuple(a+b for a,b in zip(available,(0,-1,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
+
+            if response == 'l':
+                if available[PassageClass.LOW.value] == 0:
+                    print("No more low passengers available.")
+                    continue
+                if ship_capacity[1] == 0:
+                    print("No more low berths available.")
+                    continue
+                print("Adding a low passenger.")
+                selection = tuple(a+b for a,b in zip(selection,(0,0,1)))
+                available = tuple(a+b for a,b in zip(available,(0,0,-1)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-1)))
+
+        print("Done selecting passengers.")
+        return selection
+
     def _select_freight_lots(self, available, destination):
         """Select Freight lots from a list of available shipments."""
         selection = []
@@ -758,8 +763,6 @@ class Game:
         print("Done selecting shipments.")
         return (total_tonnage, selection)
 
-    # TO_DO: after getting this working, assess if any pieces should
-    #        be pushed down
     def load_freight(self):
         """Select and load Freight onto the Ship."""
         pr_blue("Loading freight.")
