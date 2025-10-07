@@ -8,7 +8,7 @@ def die_roll(count=1):
         total += randint(1,6)
     return total
 
-def constrain(value, min_val, max_val):
+def constrain(value: int, min_val: int, max_val: int) -> int:
     """Constrain a value within a given range."""
     if value <= min_val:
         return min_val
@@ -74,7 +74,7 @@ def get_lines(filename):
             result.append(line)
     return result
 
-def dictionary_from(a_string):
+def dictionary_from(a_string: str) -> dict[str, int]:
     """Convert a specially-formatted string to a dictionary.
 
     String format is "{key1:value1,key2:value2,key3:value3...}".

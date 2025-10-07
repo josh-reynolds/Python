@@ -1364,6 +1364,56 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Working through tech debt. Plenty to do. I separated the unit
+# tests into their own modules for starters. Then I've been 
+# gradually scrubbing one module at a time. Tackling method
+# docstrings helped clean up the pylint output so it's a
+# useful length. There are a few big methods, especially in
+# the core traveller module, that will be the most interesting.
+# Once they're broken apart, lots of opportunities to move
+# them around, merge, etc.
+#
+# That core module is a bit of a PITA, though. Because it's 
+# almost entirely side effects, I opted to skip unit tests
+# for it alone. And the lack has bit me a couple times 
+# already. We'll get there, but I look forward to isolating
+# the side effect UI stuff and being able to test just about
+# everthing else.
+#
+# So phases within the phase... I'll want to stop cleanup at
+# some point and get back to feature work, so we need a cutoff.
+#
+# First bit I'd like to hit at a minimum is (almost) 100% pylint &
+# pydocstyle hygiene. We'll have to decide case by case when 
+# there's some tricky bits, but I should be able to
+# get 95%+. I also just started fooling with type annotations
+# and mypy, so add that to the bar as well. And finally, each and
+# every method should have at least one unit test. This is a
+# pretty basic level of hygiene.
+#
+# Later goals, we'll do as much as we can before cleanup fatigue
+# sets in. I'd like to:
+#
+# * Get better test coverage. Make sure all branches are touched,
+#   think more about equivalence testing, etc. Also consider
+#   the manual test cases - we have a general script, but some
+#   more targeted 'break stuff' approaches would also be helpful.
+#
+# * Lift up all the UI print/input stuff so we can stop skipping
+#   tests. This may take us partly or all the way to MVC. We
+#   really should be thinking about print & input as UI
+#   components, possibly even wrap them in some component
+#   classes. Always think about how we might convert this
+#   to a full GUI or other graphical approach - what works, 
+#   what breaks?
+#
+# * Scrubbing for Beck/Fowler code smells. There's a bunch, 
+#   and I know I suffer from more than a few, so this is
+#   a can of worms. Bring hot sauce.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1614,6 +1664,7 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
+#  * [....] Should we add type annotations? (Possibly check out mypy...)
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
@@ -1639,7 +1690,6 @@
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
-#  * [    ] Should we add type annotations? (Possibly check out mypy...)
 #  PHASE FIVE ======================================================
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
