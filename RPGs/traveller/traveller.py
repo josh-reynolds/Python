@@ -227,23 +227,9 @@ class Game:
 
         jump_range = self.ship.jump_range
         potential_destinations = self.location.destinations.copy()
-
-        if self.ship.destination is not None:
-            if self.ship.destination == self.location:
-                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
-                return
-            if self.ship.destination in potential_destinations:
-                print("You are under contract. Only showing passengers " +
-                      f"for {self.ship.destination.name}:\n")
-                destinations = [self.ship.destination]
-            else:
-                print(f"You are under contract to {self.ship.destination.name} " +
-                      "but it is not within jump range of here.")
-                return
-
-        else:
-            print(f"Available passenger destinations within jump-{jump_range}:\n")
-            destinations = potential_destinations
+        destinations = self._get_passenger_destinations(potential_destinations, jump_range)
+        if not destinations:
+            return
 
         # for now we will stuff this in cargo depot, though it may better
         # be served by a separate class. If it _does_ stay in the depot, we
@@ -692,6 +678,27 @@ class Game:
         self.financials.debit(cost)
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
+
+    def _get_passenger_destinations(self, potential_destinations, jump_range):
+        """Return a list of all reachable destination with Passengers."""
+        result = []
+        if self.ship.destination is not None:
+            if self.ship.destination == self.location:
+                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
+                return result
+            if self.ship.destination in potential_destinations:
+                print("You are under contract. Only showing passengers " +
+                      f"for {self.ship.destination.name}:\n")
+                result = [self.ship.destination]
+            else:
+                print(f"You are under contract to {self.ship.destination.name} " +
+                      "but it is not within jump range of here.")
+
+        else:
+            print(f"Available passenger destinations within jump-{jump_range}:\n")
+            result = potential_destinations
+
+        return result
 
     def _get_freight_destinations(self, potential_destinations, jump_range):
         """Return a list of all reachable destinations with Freight lots."""
