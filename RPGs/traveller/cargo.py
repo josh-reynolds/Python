@@ -360,13 +360,13 @@ class CargoDepot:
             modifier += table.get("Po",0)
         return modifier
 
-    def get_cargo_lot(self, source: List, prompt: str):
+    def get_cargo_lot(self, source: List[Cargo], prompt: str) -> Cargo | None:
         """Select a Cargo lot from a list."""
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             print("That is not a valid cargo ID.")
-            return (None, None)
-        return (item_number, source[item_number])
+            return None
+        return source[item_number]
 
     def get_cargo_quantity(self, prompt: str, cargo: Cargo) -> None | int:
         """Get a quantify of Cargo from the player to sell or purchase."""

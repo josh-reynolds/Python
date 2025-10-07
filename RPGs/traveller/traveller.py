@@ -454,7 +454,7 @@ class Game:
         """Purchase cargo for speculative trade."""
         pr_blue("Purchasing cargo.")
         print_list(self.depot.cargo)
-        _, cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
+        cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo is None:
             return
 
@@ -493,7 +493,7 @@ class Game:
             return
 
         print_list(cargoes)
-        _, cargo = self.depot.get_cargo_lot(cargoes, "sell")
+        cargo = self.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             return
 

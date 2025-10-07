@@ -1659,6 +1659,7 @@
 #  * [DONE] Review uses of die_roll and replace with multiple die functionality as necessary
 #  * [DONE] Introduce a UWP class
 #  * [DONE] Properly mark base classes as ABC
+#  * [DONE] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1668,7 +1669,6 @@
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
-#  * [    ] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
 #  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
