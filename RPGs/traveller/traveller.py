@@ -42,13 +42,14 @@ class Game:
                                                               self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
+        self.commands = Commands.orbit   # awkward, needs to change
+                                         # when location ctor detail changes
 
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
 
     def run(self):
         """Run the game loop."""
-        self.commands = orbit   # awkward, needs to change when location ctor detail changes
         self.running = True
         while self.running:
             if self.ship.fuel_quality == FuelQuality.UNREFINED:
@@ -107,7 +108,7 @@ class Game:
                 passenger.guess_survivors(self.ship.low_passenger_count)
 
         self.location.liftoff()
-        self.commands = orbit
+        self.commands = Commands.orbit
 
     def _low_lottery(self, low_lottery_amount):
         """Run the low passage lottery and apply results."""
@@ -161,7 +162,7 @@ class Game:
 
         self.location.land()
         self.financials.berthing_fee(self.location.on_surface())
-        self.commands = starport
+        self.commands = Commands.starport
 
     # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self):
@@ -182,7 +183,7 @@ class Game:
         self.ship.current_fuel -= tfc // 2
         self.date.day += 1
         self.location.to_jump_point()
-        self.commands = jump
+        self.commands = Commands.jump
 
     def inbound_from_jump(self):
         """Move from the jump point to orbit."""
@@ -206,20 +207,20 @@ class Game:
         self.ship.current_fuel -= leg_fc
         self.date.day += 1
         self.location.from_jump_point()
-        self.commands = orbit
+        self.commands = Commands.orbit
 
     # almost identical to leave_terminal(), consider merging
     def leave_depot(self):
         """Move from the trade depot to the starport."""
         pr_blue(f"Leaving {self.location.name} trade depot.")
         self.location.leave_trade()
-        self.commands = starport
+        self.commands = Commands.starport
 
     def leave_terminal(self):
         """Move from the passenger terminal to the starport."""
         pr_blue(f"Leaving {self.location.name} passenger terminal.")
         self.location.leave_terminal()
-        self.commands = starport
+        self.commands = Commands.starport
 
     def book_passengers(self):
         """Book passengers for travel to a destination."""
@@ -276,13 +277,13 @@ class Game:
         """Move from the starport to the trade depot."""
         pr_blue(f"Entering {self.location.name} trade depot.")
         self.location.join_trade()
-        self.commands = trade
+        self.commands = Commands.trade
 
     def to_terminal(self):
         """Move from the starport to the passenger terminal."""
         pr_blue(f"Entering {self.location.name} passenger terminal.")
         self.location.enter_terminal()
-        self.commands = passengers
+        self.commands = Commands.passengers
 
     def jump(self):
         """Perform a jump to another StarSystem."""
@@ -360,7 +361,7 @@ class Game:
             self.location = destination
 
         self.location.detail = "jump"
-        self.commands = jump
+        self.commands = Commands.jump
 
         if (self.ship.fuel_quality == FuelQuality.UNREFINED and
             die_roll(2) + self.ship.unrefined_jump_counter > 10):
@@ -843,78 +844,81 @@ class Command:
 
 game = Game()
 
-always = [Command('q', 'Quit',
-                  game.quit),
-          Command('?', 'List commands',
-                  game.list_commands),
-          Command('c', 'Cargo hold contents',
-                  game.cargo_hold),
-          Command('v', 'View world characteristics',
-                  game.view_world),
-          Command('h', 'View ship details',
-                  game.view_ship),
-          Command('w', 'Wait a week',
-                  game.wait_week),
-          Command('d', 'Passenger manifest',
-                  game.passenger_manifest),
-          Command('e', 'Crew roster',
-                  game.crew_roster),
-          Command('k', 'Engineering damage control',
-                  game.damage_control),
-          Command('a', 'View star map',
-                  game.view_map)]
+class Commands:
+    """Collects all command sets together."""
 
-starport = always + [Command('l', 'Lift off to orbit',
-                             game.liftoff),
-                     Command('t', 'Trade depot',
-                             game.to_depot),
-                     Command('f', 'Recharge life support',
-                             game.recharge),
-                     Command('m', 'Annual maintenance',
-                             game.maintenance),
-                     Command('p', 'Passenger terminal',
-                             game.to_terminal),
-                     Command('u', 'Flush fuel tanks',
-                             game.flush),
-                     Command('n', 'Repair ship',
-                             game.repair_ship),
-                     Command('r', 'Refuel',
-                             game.refuel)]
-starport = sorted(starport, key=lambda command: command.key)
+    always = [Command('q', 'Quit',
+                      game.quit),
+              Command('?', 'List commands',
+                      game.list_commands),
+              Command('c', 'Cargo hold contents',
+                      game.cargo_hold),
+              Command('v', 'View world characteristics',
+                      game.view_world),
+              Command('h', 'View ship details',
+                      game.view_ship),
+              Command('w', 'Wait a week',
+                      game.wait_week),
+              Command('d', 'Passenger manifest',
+                      game.passenger_manifest),
+              Command('e', 'Crew roster',
+                      game.crew_roster),
+              Command('k', 'Engineering damage control',
+                      game.damage_control),
+              Command('a', 'View star map',
+                      game.view_map)]
 
-orbit = always + [Command('g', 'Go to jump point',
-                          game.outbound_to_jump),
-                  Command('l', 'Land on surface',
-                          game.land)]
-orbit = sorted(orbit, key=lambda command: command.key)
+    starport = Commands.always + [Command('l', 'Lift off to orbit',
+                                 game.liftoff),
+                                 Command('t', 'Trade depot',
+                                         game.to_depot),
+                                 Command('f', 'Recharge life support',
+                                         game.recharge),
+                                 Command('m', 'Annual maintenance',
+                                         game.maintenance),
+                                 Command('p', 'Passenger terminal',
+                                         game.to_terminal),
+                                 Command('u', 'Flush fuel tanks',
+                                         game.flush),
+                                 Command('n', 'Repair ship',
+                                         game.repair_ship),
+                                 Command('r', 'Refuel',
+                                         game.refuel)]
+    starport = sorted(starport, key=lambda command: command.key)
 
-jump = always + [Command('j', 'Jump to new system',
-                         game.jump),
-                 Command('s', 'Skim fuel from gas giant',
-                         game.skim),
-                 Command('i', 'Inbound to orbit',
-                         game.inbound_from_jump)]
-jump = sorted(jump, key=lambda command: command.key)
+    orbit = Commands.always + [Command('g', 'Go to jump point',
+                              game.outbound_to_jump),
+                              Command('l', 'Land on surface',
+                                      game.land)]
+    orbit = sorted(orbit, key=lambda command: command.key)
 
-trade = always + [Command('l', 'Leave trade depot',
-                          game.leave_depot),
-                  Command('g', 'Show goods for sale',
-                          game.goods),
-                  Command('b', 'Buy cargo',
-                          game.buy_cargo),
-                  Command('s', 'Sell cargo',
-                          game.sell_cargo),
-                  Command('f', 'Load freight',
-                          game.load_freight),
-                  Command('u', 'Unload freight',
-                          game.unload_freight)]
-trade = sorted(trade, key=lambda command: command.key)
+    jump = Commands.always + [Command('j', 'Jump to new system',
+                             game.jump),
+                             Command('s', 'Skim fuel from gas giant',
+                                     game.skim),
+                             Command('i', 'Inbound to orbit',
+                                     game.inbound_from_jump)]
+    jump = sorted(jump, key=lambda command: command.key)
 
-passengers = always + [Command('b', 'Book passengers',
-                               game.book_passengers),
-                       Command('l', 'Leave terminal',
-                               game.leave_terminal)]
-passengers = sorted(passengers, key=lambda command: command.key)
+    trade = Commands.always + [Command('l', 'Leave trade depot',
+                              game.leave_depot),
+                              Command('g', 'Show goods for sale',
+                                      game.goods),
+                              Command('b', 'Buy cargo',
+                                      game.buy_cargo),
+                              Command('s', 'Sell cargo',
+                                      game.sell_cargo),
+                              Command('f', 'Load freight',
+                                      game.load_freight),
+                              Command('u', 'Unload freight',
+                                      game.unload_freight)]
+    trade = sorted(trade, key=lambda command: command.key)
+
+    passengers = Commands.always + [Command('b', 'Book passengers',
+                                            game.book_passengers),
+                                   Command('l', 'Leave terminal',
+                                           game.leave_terminal)]
+    passengers = sorted(passengers, key=lambda command: command.key)
 
 # keeping command characters straight...
 # ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w
