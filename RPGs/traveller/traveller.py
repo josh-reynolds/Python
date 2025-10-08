@@ -286,7 +286,7 @@ class Game:
         self.location.enter_terminal()
         self.commands = Commands.passengers
 
-    def _misjump_check(self):
+    def _misjump_check(self, destination):
         """Test for misjump and report results."""
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
             modifier = 3
@@ -312,8 +312,9 @@ class Game:
                            misjump_target[1] + self.location.coordinate[1],
                            misjump_target[2] + self.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
-            return self.star_map.get_system_at_coordinate(misjump_target)
-        return None
+            self.location = self.star_map.get_system_at_coordinate(misjump_target)
+        else:
+            self.location = destination
 
     def _warn_if_not_contracted(self, destination):
         """Notify the player if they choose a different jump target while under contract."""
@@ -336,7 +337,7 @@ class Game:
             pr_red("Warning: drive failure!")
 
     def jump(self):
-        """Perform a jump to another StarSystem."""
+        """Perform a hyperspace jump to another StarSystem."""
         pr_blue("Preparing for jump.")
 
         self._check_failure_pre_jump()
@@ -375,11 +376,7 @@ class Game:
 
         pr_red("Executing jump!")
 
-        misjump_target = self._misjump_check()
-        if misjump_target:
-            self.location = misjump_target
-        else:
-            self.location = destination
+        self._misjump_check(destination)
         self.location.detail = "jump"
         self.commands = Commands.jump
 
