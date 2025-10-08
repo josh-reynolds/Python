@@ -286,6 +286,36 @@ class Game:
         self.location.enter_terminal()
         self.commands = Commands.passengers
 
+    def _misjump_check(self):
+        """Test for misjump and report results."""
+        if self.ship.fuel_quality == FuelQuality.UNREFINED:
+            modifier = 3
+        else:
+            modifier = -1
+        if self.financials.maintenance_status(self.date.current_date) == "red":
+            modifier += 2
+
+        misjump_check = die_roll(2) + modifier
+        if misjump_check > 11:
+            pr_red("MISJUMP!")
+            # TO_DO: all this should move to live with the other
+            #        three-axis calculations
+            distance = randint(1,36)
+            hexes = [(0,distance,-distance),
+                     (0,-distance,distance),
+                     (distance,0,-distance),
+                     (-distance,0,distance),
+                     (distance,-distance,0),
+                     (-distance,distance,0)]
+            misjump_target = choice(hexes)
+            misjump_target = (misjump_target[0] + self.location.coordinate[0],
+                           misjump_target[1] + self.location.coordinate[1],
+                           misjump_target[2] + self.location.coordinate[2])
+            print(f"{misjump_target} at distance {distance}")
+            return self.star_map.get_system_at_coordinate(misjump_target)
+        else:
+            return None
+
     def jump(self):
         """Perform a jump to another StarSystem."""
         pr_blue("Preparing for jump.")
@@ -333,34 +363,11 @@ class Game:
 
         pr_red("Executing jump!")
 
-        if self.ship.fuel_quality == FuelQuality.UNREFINED:
-            modifier = 3
-        else:
-            modifier = -1
-        if self.financials.maintenance_status(self.date.current_date) == "red":
-            modifier += 2
-
-        misjump_check = die_roll(2) + modifier
-        if misjump_check > 11:
-            pr_red("MISJUMP!")
-            # TO_DO: all this should move to live with the other
-            #        three-axis calculations
-            distance = randint(1,36)
-            hexes = [(0,distance,-distance),
-                     (0,-distance,distance),
-                     (distance,0,-distance),
-                     (-distance,0,distance),
-                     (distance,-distance,0),
-                     (-distance,distance,0)]
-            misjump_target = choice(hexes)
-            misjump_target = (misjump_target[0] + self.location.coordinate[0],
-                           misjump_target[1] + self.location.coordinate[1],
-                           misjump_target[2] + self.location.coordinate[2])
-            print(f"{misjump_target} at distance {distance}")
-            self.location = self.star_map.get_system_at_coordinate(misjump_target)
+        misjump_target = self._misjump_check()
+        if misjump_target:
+            self.location = misjump_target
         else:
             self.location = destination
-
         self.location.detail = "jump"
         self.commands = Commands.jump
 
