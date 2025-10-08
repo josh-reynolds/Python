@@ -313,14 +313,20 @@ class Game:
                            misjump_target[2] + self.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
             return self.star_map.get_system_at_coordinate(misjump_target)
-        else:
-            return None
+        return None
 
     def _warn_if_not_contracted(self, destination):
         """Notify the player if they choose a different jump target while under contract."""
         if self.ship.destination is not None and self.ship.destination != destination:
             pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " +
                    f"not {destination.name}.")
+
+    def _check_failure_post_jump(self):
+        """Test for drive failure after completing a hyperspace jump."""
+        if (self.ship.fuel_quality == FuelQuality.UNREFINED and
+            die_roll(2) + self.ship.unrefined_jump_counter > 10):
+            self.ship.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure!")
 
     def jump(self):
         """Perform a jump to another StarSystem."""
@@ -375,10 +381,7 @@ class Game:
         self.location.detail = "jump"
         self.commands = Commands.jump
 
-        if (self.ship.fuel_quality == FuelQuality.UNREFINED and
-            die_roll(2) + self.ship.unrefined_jump_counter > 10):
-            self.ship.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure!")
+        self._check_failure_post_jump()
 
         coord = self.location.coordinate
         self.location.destinations = self.star_map.get_systems_within_range(coord,
