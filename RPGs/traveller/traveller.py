@@ -321,6 +321,13 @@ class Game:
             pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " +
                    f"not {destination.name}.")
 
+    def _check_failure_pre_jump(self):
+        """Test for drive failure before performing a hyperspace jump."""
+        if (self.financials.maintenance_status(self.date.current_date)== "red" and
+               die_roll(2) == 12):
+            self.ship.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure! Unable to jump.")
+
     def _check_failure_post_jump(self):
         """Test for drive failure after completing a hyperspace jump."""
         if (self.ship.fuel_quality == FuelQuality.UNREFINED and
@@ -332,6 +339,7 @@ class Game:
         """Perform a jump to another StarSystem."""
         pr_blue("Preparing for jump.")
 
+        self._check_failure_pre_jump()
         if self.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             pr_red("Drive failure. Cannot perform jump.")
             return
@@ -360,12 +368,6 @@ class Game:
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling jump.")
-            return
-
-        if (self.financials.maintenance_status(self.date.current_date)== "red" and
-               die_roll(2) == 12):
-            self.ship.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure! Unable to jump.")
             return
 
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
