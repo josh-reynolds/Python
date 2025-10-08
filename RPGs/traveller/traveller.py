@@ -42,8 +42,7 @@ class Game:
                                                               self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
-        self.commands = Commands.orbit   # awkward, needs to change
-                                         # when location ctor detail changes
+        self.commands = None
 
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
@@ -51,6 +50,8 @@ class Game:
     def run(self):
         """Run the game loop."""
         self.running = True
+        self.commands = Commands.orbit   # awkward, needs to change
+                                         # when location ctor detail changes
         while self.running:
             if self.ship.fuel_quality == FuelQuality.UNREFINED:
                 fuel_quality ="(U)"
@@ -842,6 +843,7 @@ class Command:
         self.description = description
         self.action = action
 
+
 game = Game()
 
 class Commands:
@@ -868,57 +870,58 @@ class Commands:
               Command('a', 'View star map',
                       game.view_map)]
 
-    starport = Commands.always + [Command('l', 'Lift off to orbit',
+    starport = always + [Command('l', 'Lift off to orbit',
                                  game.liftoff),
-                                 Command('t', 'Trade depot',
-                                         game.to_depot),
-                                 Command('f', 'Recharge life support',
-                                         game.recharge),
-                                 Command('m', 'Annual maintenance',
-                                         game.maintenance),
-                                 Command('p', 'Passenger terminal',
-                                         game.to_terminal),
-                                 Command('u', 'Flush fuel tanks',
-                                         game.flush),
-                                 Command('n', 'Repair ship',
-                                         game.repair_ship),
-                                 Command('r', 'Refuel',
-                                         game.refuel)]
+                         Command('t', 'Trade depot',
+                                 game.to_depot),
+                         Command('f', 'Recharge life support',
+                                 game.recharge),
+                         Command('m', 'Annual maintenance',
+                                 game.maintenance),
+                         Command('p', 'Passenger terminal',
+                                 game.to_terminal),
+                         Command('u', 'Flush fuel tanks',
+                                 game.flush),
+                         Command('n', 'Repair ship',
+                                 game.repair_ship),
+                         Command('r', 'Refuel',
+                                 game.refuel)]
     starport = sorted(starport, key=lambda command: command.key)
 
-    orbit = Commands.always + [Command('g', 'Go to jump point',
+    orbit = always + [Command('g', 'Go to jump point',
                               game.outbound_to_jump),
-                              Command('l', 'Land on surface',
-                                      game.land)]
+                      Command('l', 'Land on surface',
+                              game.land)]
     orbit = sorted(orbit, key=lambda command: command.key)
 
-    jump = Commands.always + [Command('j', 'Jump to new system',
+    jump = always + [Command('j', 'Jump to new system',
                              game.jump),
-                             Command('s', 'Skim fuel from gas giant',
-                                     game.skim),
-                             Command('i', 'Inbound to orbit',
-                                     game.inbound_from_jump)]
+                     Command('s', 'Skim fuel from gas giant',
+                             game.skim),
+                     Command('i', 'Inbound to orbit',
+                             game.inbound_from_jump)]
     jump = sorted(jump, key=lambda command: command.key)
 
-    trade = Commands.always + [Command('l', 'Leave trade depot',
+    trade = always + [Command('l', 'Leave trade depot',
                               game.leave_depot),
-                              Command('g', 'Show goods for sale',
-                                      game.goods),
-                              Command('b', 'Buy cargo',
-                                      game.buy_cargo),
-                              Command('s', 'Sell cargo',
-                                      game.sell_cargo),
-                              Command('f', 'Load freight',
-                                      game.load_freight),
-                              Command('u', 'Unload freight',
-                                      game.unload_freight)]
+                      Command('g', 'Show goods for sale',
+                              game.goods),
+                      Command('b', 'Buy cargo',
+                              game.buy_cargo),
+                      Command('s', 'Sell cargo',
+                              game.sell_cargo),
+                      Command('f', 'Load freight',
+                              game.load_freight),
+                      Command('u', 'Unload freight',
+                              game.unload_freight)]
     trade = sorted(trade, key=lambda command: command.key)
 
-    passengers = Commands.always + [Command('b', 'Book passengers',
-                                            game.book_passengers),
-                                   Command('l', 'Leave terminal',
-                                           game.leave_terminal)]
+    passengers = always + [Command('b', 'Book passengers',
+                                   game.book_passengers),
+                           Command('l', 'Leave terminal',
+                                   game.leave_terminal)]
     passengers = sorted(passengers, key=lambda command: command.key)
+
 
 # keeping command characters straight...
 # ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w

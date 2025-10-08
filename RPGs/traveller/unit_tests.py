@@ -10,6 +10,7 @@ def suite():
     test_suite.addTests(loader.loadTestsFromName('ship_test'))
     test_suite.addTests(loader.loadTestsFromName('star_map_test'))
     test_suite.addTests(loader.loadTestsFromName('star_system_test'))
+    test_suite.addTests(loader.loadTestsFromName('traveller_test'))
     test_suite.addTests(loader.loadTestsFromName('utilities_test'))
     test_suite.addTests(loader.loadTestsFromName('word_gen_test'))
     return test_suite
