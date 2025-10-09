@@ -417,6 +417,12 @@ class Ship:
             pr_red(f"Warning: your contracted destination is {self.destination.name} " +
                    f"not {destination.name}.")
 
+    def check_failure_pre_jump(self, maintenance_status):
+        """Test for drive failure before performing a hyperspace jump."""
+        if (maintenance_status == "red" and die_roll(2) == 12):
+            self.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure! Unable to jump.")
+
     def check_failure_post_jump(self):
         """Test for drive failure after completing a hyperspace jump."""
         if (self.fuel_quality == FuelQuality.UNREFINED and

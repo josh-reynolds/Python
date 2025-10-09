@@ -211,6 +211,14 @@ class ShipTestCase(unittest.TestCase):
         ship.check_failure_post_jump()
         self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
 
+    @unittest.skip("Test has side effects: printing")
+    def test_check_failure_pre_jump(self) -> None:
+        """Test drive failure check before jump."""
+        ship = ShipTestCase.ship
+        for _ in range(36):
+            ship.check_failure_pre_jump("red")
+        self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
+
 
 class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""

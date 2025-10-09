@@ -316,19 +316,12 @@ class Game:
         else:
             self.location = destination
 
-
-    def _check_failure_pre_jump(self):
-        """Test for drive failure before performing a hyperspace jump."""
-        if (self.financials.maintenance_status(self.date.current_date)== "red" and
-               die_roll(2) == 12):
-            self.ship.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure! Unable to jump.")
-
     def jump(self):
         """Perform a hyperspace jump to another StarSystem."""
         pr_blue("Preparing for jump.")
 
-        self._check_failure_pre_jump()
+        status = self.financials.maintenance_status(self.date.current_date)
+        self.ship.check_failure_pre_jump(status)
         if self.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             pr_red("Drive failure. Cannot perform jump.")
             return

@@ -1681,6 +1681,8 @@
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
+#  * [    ] BUG: misjumped to a distant system and it did not appear in the
+#           'view all systems' list
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
