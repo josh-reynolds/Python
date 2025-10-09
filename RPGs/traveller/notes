@@ -1443,6 +1443,36 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Should track progress on the current refactoring push. I
+# really want to get back to features, but it would be a mistake
+# with some of these structural issues. How close are we?
+#
+# 100% unit tests passing (25 skipped)
+# 100% pydocstyle passing
+#
+# calendar - 10.0 pylint, no type annotations
+# calendar_test- 10.0 pylint, no type annotations
+# cargo - 9.81 pylint, 2 mypy errors, 11 skipped tests
+# cargo_test - 9.94 pylint, 2 mypy errors
+# financials - 9.91 pylint, no type annotations,  9 skipped tests
+# financials_test - 9.95 pylint, no type annotations 
+# ship - 9.84 pylint, 2 mypy errors,  5 skipped tests
+# ship_test - 9.74 pylint, 7 mypy errors
+# star_map - 9.74 pylint, no type annotations
+# star_map_test - 10.0 pylint, no type annotations
+# star_system - 9.70 pylint, no type annotations
+# star_system_test - 10.0 pylint, no type annotations 
+# traveller - 9.89 pylint, 2 mypy errors,  no tests
+# traveller_test - 5.71 pylint, 2 mypy errors
+# utilities - 10.0 pylint
+# utilities_test - 10.0 pylint, no type annotations
+# word_gen - 10.0 pylint
+# word_gen_test - 10.0 pylint
+#
+# (Also, put together a script to gather these scores...)
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1689,6 +1719,8 @@
 #  * [DONE] Introduce a UWP class
 #  * [DONE] Properly mark base classes as ABC
 #  * [DONE] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
+#  * [DONE] BUG: misjumped to a distant system and it did not appear in the
+#           'view all systems' list
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1710,8 +1742,6 @@
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
-#  * [....] BUG: misjumped to a distant system and it did not appear in the
-#           'view all systems' list
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)

@@ -124,8 +124,8 @@ class Cargo:
         self.purchase_dms = purchase_dms
         self.sale_dms = sale_dms
         self.source_world = source_world
-        self.price_adjustment = 0    # purchase price adjustment
-                                     # '0' indicates not determined yet
+        self.price_adjustment = 0.0    # purchase price adjustment
+                                       # '0.0' indicates not determined yet
 
     def __repr__(self) -> str:
         """Return the string representation of a Cargo."""
@@ -321,7 +321,7 @@ class CargoDepot:
 
         return (world.coordinate, self.freight[world].copy())
 
-    def get_available_passengers(self, destinations: List[StarSystem]):
+    def get_available_passengers(self, destinations: List[StarSystem]) -> tuple:
         """Present a list of worlds and Passengers for the player to choose from."""
         if not self.passengers:
             self._refresh_passengers(destinations)
@@ -454,7 +454,7 @@ class CargoDepot:
             return True
         return False
 
-    def broker_fee(self, broker_skill: int, sale_price: Credits):
+    def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
         """Calculate a broker's fee for Cargo sale."""
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))

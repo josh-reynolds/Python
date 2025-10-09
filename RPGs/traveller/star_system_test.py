@@ -4,6 +4,7 @@ from star_system import StarSystem, UWP
 
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
+
     def setUp(self):
         """Create a fixture for testing the StarSystem class."""
         uwp = UWP("A", 9, 9, 9, 9, 9, 9, 9)

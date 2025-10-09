@@ -398,7 +398,7 @@ class Game:
         self.financials.debit(cost)
 
     def damage_control(self):
-        """Partially repair damage to the Ship (Engineer)."""
+        """Repar damage to the Ship (Engineer)."""
         pr_blue("Ship's engineer repairing damage.")
         if self.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
