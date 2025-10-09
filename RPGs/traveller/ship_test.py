@@ -33,6 +33,13 @@ class ShipTestCase(unittest.TestCase):
             """Create an instance of a PassengerMock object."""
             self.destination = destination
 
+    class SystemMock:
+        """Mocks a StarSystem interface for testing."""
+
+        def __init__(self, name):
+            """Create an instance of a SystemMock object."""
+            self.name = name
+
     def setUp(self):
         """Create a fixture for testing the Ship class."""
         ShipTestCase.ship = Ship()
@@ -181,6 +188,20 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "More than one destination " +
                          "between Freight and Passengers!")
+
+    @unittest.skip("Test has side effects: printing")
+    def test_warn_if_not_contracted(self) -> None:
+        """Test warning message if destination does not match the contract."""
+        ship = ShipTestCase.ship
+        source = ShipTestCase.SystemMock("Pluto")
+        contract = ShipTestCase.SystemMock("Uranus")
+        destination = ShipTestCase.SystemMock("Jupiter")
+
+        ship.load_cargo(Freight(1, source, contract))
+        self.assertEqual(ship.destination, contract)
+
+        ship.warn_if_not_contracted(destination)
+
 
 class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""

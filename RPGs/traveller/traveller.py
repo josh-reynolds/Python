@@ -316,11 +316,6 @@ class Game:
         else:
             self.location = destination
 
-    def _warn_if_not_contracted(self, destination):
-        """Notify the player if they choose a different jump target while under contract."""
-        if self.ship.destination is not None and self.ship.destination != destination:
-            pr_red(f"Warning: your contracted destination is {self.ship.destination.name} " +
-                   f"not {destination.name}.")
 
     def _check_failure_pre_jump(self):
         """Test for drive failure before performing a hyperspace jump."""
@@ -364,7 +359,7 @@ class Game:
         coordinate = self.location.destinations[destination_number].coordinate
         destination = self.star_map.get_system_at_coordinate(coordinate)
 
-        self._warn_if_not_contracted(destination)
+        self.ship.warn_if_not_contracted(destination)
 
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
@@ -845,7 +840,7 @@ class Game:
 
         else:
             pr_red("You are not at the contracted destination for this freight.")
-            pr_red(f"It should be unloaded at {self.ship.destination.name}")
+            pr_red(f"It should be unloaded at {self.ship.destination.name}.")
 
 class Command:
     """Represents a command available to the player."""

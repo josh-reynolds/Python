@@ -13,7 +13,8 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
-from utilities import confirm_input
+from star_system import StarSystem
+from utilities import confirm_input, pr_red
 
 class Crew(ABC):
     """Base class for crewmembers."""
@@ -409,3 +410,9 @@ class Ship:
     def maintenance_cost(self):
         """Return the annual maintenance cost for the Ship."""
         return self.base_price * 0.001
+
+    def warn_if_not_contracted(self, destination: StarSystem) -> None:
+        """Notify the player if they choose a different jump target while under contract."""
+        if self.destination is not None and self.destination != destination:
+            pr_red(f"Warning: your contracted destination is {self.destination.name} " +
+                   f"not {destination.name}.")
