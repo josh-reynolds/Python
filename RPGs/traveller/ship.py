@@ -14,7 +14,7 @@ from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
 from star_system import StarSystem
-from utilities import confirm_input, pr_red
+from utilities import confirm_input, pr_red, die_roll
 
 class Crew(ABC):
     """Base class for crewmembers."""
@@ -416,3 +416,10 @@ class Ship:
         if self.destination is not None and self.destination != destination:
             pr_red(f"Warning: your contracted destination is {self.destination.name} " +
                    f"not {destination.name}.")
+
+    def check_failure_post_jump(self):
+        """Test for drive failure after completing a hyperspace jump."""
+        if (self.fuel_quality == FuelQuality.UNREFINED and
+            die_roll(2) + self.unrefined_jump_counter > 10):
+            self.repair_status = RepairStatus.BROKEN
+            pr_red("Warning: drive failure!")

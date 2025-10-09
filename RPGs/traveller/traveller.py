@@ -324,13 +324,6 @@ class Game:
             self.ship.repair_status = RepairStatus.BROKEN
             pr_red("Warning: drive failure! Unable to jump.")
 
-    def _check_failure_post_jump(self):
-        """Test for drive failure after completing a hyperspace jump."""
-        if (self.ship.fuel_quality == FuelQuality.UNREFINED and
-            die_roll(2) + self.ship.unrefined_jump_counter > 10):
-            self.ship.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure!")
-
     def jump(self):
         """Perform a hyperspace jump to another StarSystem."""
         pr_blue("Preparing for jump.")
@@ -375,7 +368,7 @@ class Game:
         self.location.detail = "jump"
         self.commands = Commands.jump
 
-        self._check_failure_post_jump()
+        self.ship.check_failure_post_jump()
 
         coord = self.location.coordinate
         self.location.destinations = self.star_map.get_systems_within_range(coord,

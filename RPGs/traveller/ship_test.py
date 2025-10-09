@@ -1,6 +1,6 @@
 """Contains tests for the ship module."""
 import unittest
-from ship import Ship, Pilot, Engineer, Medic, Steward
+from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
 from financials import Credits
 from cargo import Freight
 
@@ -201,6 +201,15 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.destination, contract)
 
         ship.warn_if_not_contracted(destination)
+
+    @unittest.skip("Test has side effects: printing")
+    def test_check_failure_post_jump(self) -> None:
+        """Test drive failure check after jump."""
+        ship = ShipTestCase.ship
+        ship.fuel_quality = FuelQuality.UNREFINED
+        ship.unrefined_jump_counter = 10
+        ship.check_failure_post_jump()
+        self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
 
 
 class PilotTestCase(unittest.TestCase):
