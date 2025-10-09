@@ -1414,6 +1414,35 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Working out a bug where after a misjump the destination does
+# not appear in the 'view all systems' list. Looks like an
+# oversight in the logic.
+#
+# StarSystems are only added to the StarMap dictionary in
+# get_systems_within_range() (or in the class ctor for 
+# pregenerated worlds), and we only call that when adding 
+# destinations to a given StarSystem. We have to force
+# the call for the starting point. After that, we call again
+# after jumping to each new destination. But note that the
+# destination itself already exists in the dictionary, or
+# we wouldn't be able to select it for jump.
+#
+# Misjumps violate this rule. The player doesn't select the
+# destination - the dice do. So, although we properly 
+# populate the misjump target's neigbors after we arrive,
+# the system itself is never added.
+#
+# I put a one-line fix in _misjump_check() to correct. Still
+# may want to think through the ordering more carefully. We
+# have (so far) three cases when StarSystems are added, and
+# we need to ensure that in all three the new object is
+# added to the StarMap dictionary. So should we move this
+# linkage up? Not sure if that would introduce new problems,
+# so we'll leave the simple fix for the time being. When
+# we start save/load of maps, may need to revisit.
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1681,7 +1710,7 @@
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
-#  * [    ] BUG: misjumped to a distant system and it did not appear in the
+#  * [....] BUG: misjumped to a distant system and it did not appear in the
 #           'view all systems' list
 #  * [    ] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)

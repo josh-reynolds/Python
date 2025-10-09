@@ -313,6 +313,7 @@ class Game:
                            misjump_target[2] + self.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
             self.location = self.star_map.get_system_at_coordinate(misjump_target)
+            self.star_map.systems[misjump_target] = self.location
         else:
             self.location = destination
 
