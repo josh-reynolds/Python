@@ -319,8 +319,8 @@ class CargoDepot:
 
         for i,world in enumerate(destinations):
             self.message_observers(f"{i} - {world}", "green")
-            self.message_observers("   ", self.freight[world])
-            self.message_observers()
+            self.message_observers("   " + str(self.freight[world]))
+            self.message_observers("")
 
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):
@@ -337,8 +337,8 @@ class CargoDepot:
 
         for i,world in enumerate(destinations):
             self.message_observers(f"{i} - {world}", "green")
-            self.message_observers("   ", self.passengers[world])
-            self.message_observers()
+            self.message_observers("   " + str(self.passengers[world]))
+            self.message_observers("")
 
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):

@@ -55,9 +55,9 @@ class Game:
         """Print messages received from model objects."""
         if (priority == "green"):
             pr_function = pr_green
-        elif (priority =="yellow"):
+        elif (priority == "yellow"):
             pr_function = pr_yellow
-        elif (priority =="red"):
+        elif (priority == "red"):
             pr_function = pr_red
         else:
             pr_function = print

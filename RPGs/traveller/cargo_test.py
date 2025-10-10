@@ -115,6 +115,19 @@ class CargoDepotTestCase(unittest.TestCase):
             """Return the string representation of a SystemMock object."""
             return f"{self.coordinate} - {self.name}"
 
+    class ObserverMock:
+        """Mocks an observer for testing."""
+
+        def __init__(self):
+            """Create an instance of an ObserverMock."""
+            self.message = ""
+            self.priority = ""
+
+        def on_notify(self, message, priority):
+            self.message = message
+            self.priority = priority
+
+
     def setUp(self):
         """Create a test fixture for testing CargoDepots."""
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
@@ -171,10 +184,12 @@ class CargoDepotTestCase(unittest.TestCase):
         # max - None
         # 0 < quantity < max - quantity
 
-    @unittest.skip("test has side effects: printing")
     def test_invalid_cargo_origin(self):
         """Test validation of cargo origin."""
         depot = CargoDepotTestCase.depot
+        self.assertEqual(depot.system.name, "Uranus")
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
 
         # pylint: disable=R0903
         # R0903: Too few public methods (1/2)
@@ -187,16 +202,23 @@ class CargoDepotTestCase(unittest.TestCase):
             def __eq__(self, other):
                 return self.name == other.name
 
-        location1 = Location("Uranus")
+        location1 = Location("Jupiter")
         cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {}, location1)
-        self.assertTrue(depot.invalid_cargo_origin(cargo1))
+        self.assertFalse(depot.invalid_cargo_origin(cargo1))
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
-        location2 = Location("Jupiter")
-        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {}, location2)
+        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {})
         self.assertFalse(depot.invalid_cargo_origin(cargo2))
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
-        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {})
-        self.assertFalse(depot.invalid_cargo_origin(cargo3))
+        location2 = Location("Uranus")
+        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {}, location2)
+        self.assertTrue(depot.invalid_cargo_origin(cargo3))
+        self.assertEqual(observer.message, "You cannot resell cargo on the world where it was purchased.")
+        self.assertEqual(observer.priority, "")
+
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_broker(self):
@@ -206,25 +228,42 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertLess(depot.get_broker(), 5)
         # y/n | 1-4 | y/n = result 0-4
 
-    @unittest.skip("test has side effects: printing")
     def test_insufficient_hold_space(self):
         """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
+
+        self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
         self.assertTrue(depot.insufficient_hold_space(cargo, 10, 0))
-        self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
+        self.assertEqual(observer.message, "You only have 0 tons free.")
+        self.assertEqual(observer.priority, "")
 
-    @unittest.skip("test has side effects: printing")
     def test_determine_price(self):
-        """Test calculation of sale & purchase prices."""
+        """Test calculation of sale & purchase prices.
+
+        Since the prices are randomly determined, the tests below need
+        to account for variable output. Also, the determine_price()
+        method will set a priority based on whether the price is good
+        or bad - so validating the observer.priority field is tricky.
+        """
+        # TO_DO: monkeypatch die_roll() so we can get deterministic
+        #        results for testing
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
 
         price = depot.determine_price("sale", cargo, 10, 0, 0)
         self.assertTrue(isinstance(price, Credits))
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
+        self.assertEqual(observer.message[:31], "Sale price of that quantity is ")
+        #self.assertEqual(observer.priority, "")
 
         self.assertEqual(cargo.price_adjustment, 0)
         price = depot.determine_price("purchase", cargo, 10, 0, 0)
@@ -232,37 +271,55 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
         self.assertGreater(cargo.price_adjustment, 0)
+        self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
+        #self.assertEqual(observer.priority, "")
 
         price2 = depot.determine_price("purchase", cargo, 10, 0, 0)
         self.assertEqual(price2, price)
+        self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
+        #self.assertEqual(observer.priority, "")
 
-    @unittest.skip("test has side effects: printing")
     def test_insufficient_funds(self):
         """Test validation of bank balance."""
         depot = CargoDepotTestCase.depot
-
-        result = depot.insufficient_funds(Credits(2), Credits(1))
-        self.assertTrue(result)
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
 
         result = depot.insufficient_funds(Credits(1), Credits(1))
         self.assertFalse(result)
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
         result = depot.insufficient_funds(Credits(1), Credits(2))
         self.assertFalse(result)
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
-    @unittest.skip("test has side effects: printing")
+        result = depot.insufficient_funds(Credits(2), Credits(1))
+        self.assertTrue(result)
+        self.assertEqual(observer.message, "Your available balance is 1 Cr.")
+        self.assertEqual(observer.priority, "")
+
     def test_broker_fee(self):
         """Test calculation of broker fees."""
         depot = CargoDepotTestCase.depot
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
 
         fee = depot.broker_fee(0, Credits(100))
         self.assertEqual(fee, Credits(0))
+        self.assertEqual(observer.message, "")
+        self.assertEqual(observer.priority, "")
 
         fee = depot.broker_fee(1, Credits(100))
         self.assertEqual(fee, Credits(5))
+        self.assertEqual(observer.message, "Deducting 5 Cr broker fee for skill 1.")
+        self.assertEqual(observer.priority, "")
 
         fee = depot.broker_fee(4, Credits(100))
         self.assertEqual(fee, Credits(20))
+        self.assertEqual(observer.message, "Deducting 20 Cr broker fee for skill 4.")
+        self.assertEqual(observer.priority, "")
 
     @unittest.skip("test has side effects: input & printing")
     def test_confirm_transaction(self):

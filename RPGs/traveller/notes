@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 100% unit tests passing (13 skipped)
+# 100% unit tests passing (8 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
@@ -1465,7 +1465,7 @@
 # financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors, 2 skipped tests
-# cargo - 9.81 pylint, 2 mypy errors, 11 skipped tests
+# cargo - 9.81 pylint, 2 mypy errors, 6 skipped tests
 # ship_test - 9.74 pylint, 7 mypy errors
 # star_map - 9.74 pylint, no type annotations
 # star_system - 9.70 pylint, no type annotations
@@ -1739,17 +1739,25 @@
 #  * [DONE] Review (and possibly deprecate) item_number return value from CargoDepot.get_cargo_lot()
 #  * [DONE] BUG: misjumped to a distant system and it did not appear in the
 #           'view all systems' list
+#  * [DONE] Lift all print statements out of model classes
+#           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
 #  * [....] Should we add type annotations? (Possibly check out mypy...)
-#  * [....] Lift all print statements out of model classes
-#           (this might resolve the skipped tests - if not, that's a separate TO_DO)
+#  * [    ] Lift all input statements out of model classes
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
+#  * [    ] Lift and share assorted Mock classes? And/or replace with unittest.Mock
+#           or MagicMock?
+#  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
+#  * [    ] Apply mock.patch or monkeypatch to die_roll() so we can have
+#           deterministic tests
+#  * [    ] Look for multiline message_observer() usage - may need to adjust
+#           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
@@ -1765,7 +1773,6 @@
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Should we extract all the three-axis coordinate math to its own class?
-#  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  * [    ] Break up Game class (MVC?)
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
