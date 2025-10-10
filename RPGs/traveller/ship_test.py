@@ -40,6 +40,12 @@ class ShipTestCase(unittest.TestCase):
             """Create an instance of a SystemMock object."""
             self.name = name
 
+    class ObserverMock:
+       """Mocks an observer for testing."""
+
+       def __init__(self):
+           """Create an instance of an ObserverMock."""
+
     def setUp(self):
         """Create a fixture for testing the Ship class."""
         ShipTestCase.ship = Ship()
@@ -218,6 +224,14 @@ class ShipTestCase(unittest.TestCase):
         for _ in range(36):
             ship.check_failure_pre_jump("red")
         self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
+
+    def test_add_observer(self):
+        """Test adding an observer to the Ship."""
+        ship = ShipTestCase.ship
+        observer = ShipTestCase.ObserverMock()
+
+        ship.add_observer(observer)
+        self.assertEqual(ship.observers[0], observer)
 
 
 class PilotTestCase(unittest.TestCase):

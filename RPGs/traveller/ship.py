@@ -139,6 +139,7 @@ class Ship:
         self.passengers = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
         self.base_price = Credits(37080000)
+        self.observers = []
 
     def __repr__(self):
         """Return the string representation of a Ship."""
@@ -225,6 +226,10 @@ class Ship:
     def empty_low_berths(self):
         """Return the number of unoccupied low berths."""
         return self.low_berths - self.low_passenger_count
+
+    def add_observer(self, observer):
+        """Add an observer to respond to UI messages."""
+        self.observers.append(observer)
 
     def cargo_hold(self):
         """Return the contents of the Ship's cargo hold."""
