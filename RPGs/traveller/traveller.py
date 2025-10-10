@@ -7,7 +7,7 @@ from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
-from utilities import pr_blue, pr_red, print_list, die_roll
+from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace
@@ -44,8 +44,20 @@ class Game:
         self.depot = CargoDepot(self.location, self.date.current_date)
         self.commands = None
 
+        self.ship.add_observer(self)
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
+
+    def on_notify(self, message, priority=""):
+        """Print messages received from model objects."""
+        if (priority == "green"):
+            pr_function = pr_green
+        elif ("red"):
+            pr_function = pr_red
+        else:
+            pr_function = print
+
+        pr_function(message)
 
     def run(self):
         """Run the game loop."""

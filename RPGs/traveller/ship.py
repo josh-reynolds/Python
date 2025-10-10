@@ -231,7 +231,7 @@ class Ship:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)
 
-    def message_observers(self, message, priority="green"):
+    def message_observers(self, message, priority=""):
         for observer in self.observers:
             observer.on_notify(message, priority)
 
@@ -281,12 +281,12 @@ class Ship:
     def refuel(self, starport):
         """Refuel the Ship, accounting for fuel type."""
         if self.current_fuel == self.fuel_tank:
-            message_observers("Fuel tank is full.")
+            self.message_observers("Fuel tank is full.")
             return Credits(0)
 
         if starport not in ("A", "B"):
             per_ton = 100
-            message_observers("Note: only unrefined fuel available at this facility.")
+            self.message_observers("Note: only unrefined fuel available at this facility.")
         else:
             per_ton = 500
 
@@ -296,7 +296,7 @@ class Ship:
         if confirm == 'n':
             return Credits(0)
 
-        message_observers(f"Charging {price} for refuelling.")
+        self.message_observers(f"Charging {price} for refuelling.")
         self.current_fuel += amount
         if starport not in ("A", "B"):
             self.fuel_quality = FuelQuality.UNREFINED
@@ -340,7 +340,7 @@ class Ship:
     def recharge(self):
         """Recharge the Ship's life support system."""
         if self.life_support_level == 100:
-            message_observers("Life support is fully charged.")
+            self.message_observers("Life support is fully charged.")
             return Credits(0)
 
         price = Credits((len(self.crew) + self.passenger_berths) * 2000 +
@@ -349,7 +349,7 @@ class Ship:
         if confirm == 'n':
             return Credits(0)
 
-        message_observers(f"Charging {price} for life support replenishment.")
+        self.message_observers(f"Charging {price} for life support replenishment.")
         self.life_support_level = 100
         return price
 
@@ -423,18 +423,18 @@ class Ship:
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if they choose a different jump target while under contract."""
         if self.destination is not None and self.destination != destination:
-            message_observers(f"Warning: your contracted destination is {self.destination.name} " +
+            self.message_observers(f"Warning: your contracted destination is {self.destination.name} " +
                    f"not {destination.name}.", "red")
 
     def check_failure_pre_jump(self, maintenance_status):
         """Test for drive failure before performing a hyperspace jump."""
         if (maintenance_status == "red" and die_roll(2) == 12):
             self.repair_status = RepairStatus.BROKEN
-            message_observers("Warning: drive failure! Unable to jump.", "red")
+            self.message_observers("Warning: drive failure! Unable to jump.", "red")
 
     def check_failure_post_jump(self):
         """Test for drive failure after completing a hyperspace jump."""
         if (self.fuel_quality == FuelQuality.UNREFINED and
             die_roll(2) + self.unrefined_jump_counter > 10):
             self.repair_status = RepairStatus.BROKEN
-            message_observers("Warning: drive failure!", "red")
+            self.message_observers("Warning: drive failure!", "red")

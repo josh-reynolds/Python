@@ -248,7 +248,7 @@ class ShipTestCase(unittest.TestCase):
 
         ship.message_observers("This is a test")
         self.assertEqual(observer.message, "This is a test")
-        self.assertEqual(observer.priority, "green")
+        self.assertEqual(observer.priority, "")
 
         ship.message_observers("This is another test", "yellow")
         self.assertEqual(observer.message, "This is another test")
