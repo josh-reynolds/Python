@@ -1748,6 +1748,8 @@
 #  * [....] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
 #  * [    ] Should we formalize message priority as an enum or something?
+#  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
+#           end? We may be specializing/overriding on_notify()...
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()

@@ -45,6 +45,7 @@ class Game:
         self.commands = None
 
         self.ship.add_observer(self)
+        self.depot.add_observer(self)
         self.financials.add_observer(self)
 
         self.date.add_observer(self.depot)

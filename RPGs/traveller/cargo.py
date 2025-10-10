@@ -13,7 +13,7 @@ from random import randint
 from typing import Dict, List, Tuple, Any
 from calendar import ImperialDate
 from utilities import die_roll, constrain, int_input, confirm_input
-from utilities import actual_value, pr_red, pr_green, get_lines, dictionary_from
+from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
 from star_system import StarSystem
 
@@ -196,6 +196,7 @@ class CargoDepot:
         self.cargo = self._determine_cargo()
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
+        self.observers = []
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
@@ -206,6 +207,14 @@ class CargoDepot:
             self.cargo = self._determine_cargo()
             self._refresh_freight(self.system.destinations)
             self._refresh_passengers(self.system.destinations)
+
+    def add_observer(self, observer):
+        """Add an observer to respond to UI messages."""
+        self.observers.append(observer)
+
+    def message_observers(self, message, priority=""):
+        for observer in self.observers:
+            observer.on_notify(message, priority)
 
     def _refresh_freight(self, destinations: List[StarSystem]) -> None:
         """Refresh available Freight shipments."""
@@ -309,13 +318,13 @@ class CargoDepot:
             self._refresh_freight(destinations)
 
         for i,world in enumerate(destinations):
-            pr_green(f"{i} - {world}")
-            print("   ", self.freight[world])
-            print()
+            self.message_observers(f"{i} - {world}", "green")
+            self.message_observers("   ", self.freight[world])
+            self.message_observers()
 
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):
-            print("That is not a valid destination number.")
+            self.message_observers("That is not a valid destination number.")
             return (None, None)
         world = destinations[destination_number]
 
@@ -327,13 +336,13 @@ class CargoDepot:
             self._refresh_passengers(destinations)
 
         for i,world in enumerate(destinations):
-            pr_green(f"{i} - {world}")
-            print("   ", self.passengers[world])
-            print()
+            self.message_observers(f"{i} - {world}", "green")
+            self.message_observers("   ", self.passengers[world])
+            self.message_observers()
 
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(destinations):
-            print("That is not a valid destination number.")
+            self.message_observers("That is not a valid destination number.")
             return (None, None)
         world = destinations[destination_number]
 
@@ -364,7 +373,7 @@ class CargoDepot:
         """Select a Cargo lot from a list."""
         item_number = int_input(f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
-            print("That is not a valid cargo ID.")
+            self.message_observers("That is not a valid cargo ID.")
             return None
         return source[item_number]
 
@@ -372,10 +381,10 @@ class CargoDepot:
         """Get a quantify of Cargo from the player to sell or purchase."""
         quantity = int_input(f"How many would you like to {prompt}? ")
         if quantity > cargo.quantity:
-            print("There is not enough available. Specify a lower quantity.")
+            self.message_observers("There is not enough available. Specify a lower quantity.")
             return None
         if quantity <= 0:
-            print("Quantity needs to be a positive number.")
+            self.message_observers("Quantity needs to be a positive number.")
             return None
         return quantity
 
@@ -383,7 +392,7 @@ class CargoDepot:
         """Restrict Cargo sale based on world of origin."""
         if cargo.source_world:
             if cargo.source_world == self.system:
-                print("You cannot resell cargo on the world where it was purchased.")
+                self.message_observers("You cannot resell cargo on the world where it was purchased.")
                 return True
         return False
 
@@ -427,30 +436,31 @@ class CargoDepot:
         price = Credits(cargo.price.amount * price_adjustment * quantity)
         if ((prompt == "sale" and price_adjustment > 1) or
             (prompt == "purchase" and price_adjustment < 1)):
-            pr_function = pr_green
+            pr_function = "green"
         elif ((prompt == "sale" and price_adjustment < 1) or
               (prompt == "purchase" and price_adjustment > 1)):
-            pr_function = pr_red
+            pr_function = "red"
         else:
-            pr_function = print
+            pr_function = ""
 
-        pr_function(f"{prompt.capitalize()} price of that quantity is {price}.")
+        self.message_observers(f"{prompt.capitalize()} price of that quantity is {price}.",
+                               pr_function)
         return price
 
     def insufficient_hold_space(self, cargo: Cargo,
                                 quantity: int, free_space: int) -> bool:
         """Check if a given quantity of Cargo will fit in the Ship's hold."""
         if quantity * cargo.unit_size > free_space:
-            print("That amount will not fit in your hold.")
-            print(f"You only have {free_space} tons free.")
+            self.message_observers("That amount will not fit in your hold.")
+            self.message_observers(f"You only have {free_space} tons free.")
             return True
         return False
 
     def insufficient_funds(self, cost: int, balance: int) -> bool:
         """Check if the player's bank balance has enough funds for a given cost."""
         if cost > balance:
-            print("You do not have sufficient funds.")
-            print(f"Your available balance is {balance}.")
+            self.message_observers("You do not have sufficient funds.")
+            self.message_observers(f"Your available balance is {balance}.")
             return True
         return False
 
@@ -458,7 +468,7 @@ class CargoDepot:
         """Calculate a broker's fee for Cargo sale."""
         if broker_skill > 0:
             broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
-            print(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
+            self.message_observers(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             return broker_fee
         return Credits(0)
 
@@ -469,7 +479,7 @@ class CargoDepot:
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
                                      f"{cargo.name} for {price} (y/n)? ")
         if confirmation == 'n':
-            print(f"Cancelling {prompt}.")
+            self.message_observers(f"Cancelling {prompt}.")
             return False
         return True
 
