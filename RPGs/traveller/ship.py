@@ -14,7 +14,7 @@ from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
 from star_system import StarSystem
-from utilities import confirm_input, pr_red, die_roll
+from utilities import confirm_input, die_roll
 
 class Crew(ABC):
     """Base class for crewmembers."""
@@ -231,9 +231,9 @@ class Ship:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)
 
-    def message_observers(self, message):
+    def message_observers(self, message, priority="green"):
         for observer in self.observers:
-            observer.on_notify(message)
+            observer.on_notify(message, priority)
 
     def cargo_hold(self):
         """Return the contents of the Ship's cargo hold."""
@@ -423,18 +423,18 @@ class Ship:
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if they choose a different jump target while under contract."""
         if self.destination is not None and self.destination != destination:
-            pr_red(f"Warning: your contracted destination is {self.destination.name} " +
-                   f"not {destination.name}.")
+            message_observers(f"Warning: your contracted destination is {self.destination.name} " +
+                   f"not {destination.name}.", "red")
 
     def check_failure_pre_jump(self, maintenance_status):
         """Test for drive failure before performing a hyperspace jump."""
         if (maintenance_status == "red" and die_roll(2) == 12):
             self.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure! Unable to jump.")
+            message_observers("Warning: drive failure! Unable to jump.", "red")
 
     def check_failure_post_jump(self):
         """Test for drive failure after completing a hyperspace jump."""
         if (self.fuel_quality == FuelQuality.UNREFINED and
             die_roll(2) + self.unrefined_jump_counter > 10):
             self.repair_status = RepairStatus.BROKEN
-            pr_red("Warning: drive failure!")
+            message_observers("Warning: drive failure!", "red")

@@ -45,10 +45,12 @@ class ShipTestCase(unittest.TestCase):
 
         def __init__(self):
             """Create an instance of an ObserverMock."""
-            self.contents = ""
+            self.message = ""
+            self.priority = ""
 
-        def on_notify(self, message):
-            self.contents = message
+        def on_notify(self, message, priority):
+            self.message = message
+            self.priority = priority
 
 
     def setUp(self):
@@ -245,7 +247,16 @@ class ShipTestCase(unittest.TestCase):
         ship.add_observer(observer)
 
         ship.message_observers("This is a test")
-        self.assertEqual(observer.contents, "This is a test")
+        self.assertEqual(observer.message, "This is a test")
+        self.assertEqual(observer.priority, "green")
+
+        ship.message_observers("This is another test", "yellow")
+        self.assertEqual(observer.message, "This is another test")
+        self.assertEqual(observer.priority, "yellow")
+
+        ship.message_observers("Yet another test", "red")
+        self.assertEqual(observer.message, "Yet another test")
+        self.assertEqual(observer.priority, "red")
 
 
 class PilotTestCase(unittest.TestCase):
