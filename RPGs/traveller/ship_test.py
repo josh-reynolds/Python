@@ -41,10 +41,15 @@ class ShipTestCase(unittest.TestCase):
             self.name = name
 
     class ObserverMock:
-       """Mocks an observer for testing."""
+        """Mocks an observer for testing."""
 
-       def __init__(self):
-           """Create an instance of an ObserverMock."""
+        def __init__(self):
+            """Create an instance of an ObserverMock."""
+            self.contents = ""
+
+        def on_notify(self, message):
+            self.contents = message
+
 
     def setUp(self):
         """Create a fixture for testing the Ship class."""
@@ -232,6 +237,15 @@ class ShipTestCase(unittest.TestCase):
 
         ship.add_observer(observer)
         self.assertEqual(ship.observers[0], observer)
+
+    def test_message_observers(self):
+        """Test sending messages to observers."""
+        ship = ShipTestCase.ship
+        observer = ShipTestCase.ObserverMock()
+        ship.add_observer(observer)
+
+        ship.message_observers("This is a test")
+        self.assertEqual(observer.contents, "This is a test")
 
 
 class PilotTestCase(unittest.TestCase):

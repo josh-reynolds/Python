@@ -231,6 +231,10 @@ class Ship:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)
 
+    def message_observers(self, message):
+        for observer in self.observers:
+            observer.on_notify(message)
+
     def cargo_hold(self):
         """Return the contents of the Ship's cargo hold."""
         return self.hold
@@ -277,12 +281,12 @@ class Ship:
     def refuel(self, starport):
         """Refuel the Ship, accounting for fuel type."""
         if self.current_fuel == self.fuel_tank:
-            print("Fuel tank is full.")
+            message_observers("Fuel tank is full.")
             return Credits(0)
 
         if starport not in ("A", "B"):
             per_ton = 100
-            print("Note: only unrefined fuel available at this facility.")
+            message_observers("Note: only unrefined fuel available at this facility.")
         else:
             per_ton = 500
 
@@ -292,7 +296,7 @@ class Ship:
         if confirm == 'n':
             return Credits(0)
 
-        print(f"Charging {price} for refuelling.")
+        message_observers(f"Charging {price} for refuelling.")
         self.current_fuel += amount
         if starport not in ("A", "B"):
             self.fuel_quality = FuelQuality.UNREFINED
@@ -336,7 +340,7 @@ class Ship:
     def recharge(self):
         """Recharge the Ship's life support system."""
         if self.life_support_level == 100:
-            print("Life support is fully charged.")
+            message_observers("Life support is fully charged.")
             return Credits(0)
 
         price = Credits((len(self.crew) + self.passenger_berths) * 2000 +
@@ -345,7 +349,7 @@ class Ship:
         if confirm == 'n':
             return Credits(0)
 
-        print(f"Charging {price} for life support replenishment.")
+        message_observers(f"Charging {price} for life support replenishment.")
         self.life_support_level = 100
         return price
 
