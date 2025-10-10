@@ -1450,26 +1450,44 @@
 # 100% unit tests passing (25 skipped)
 # 100% pydocstyle passing
 #
-# calendar - 10.0 pylint, no type annotations
-# calendar_test- 10.0 pylint, no type annotations
-# cargo - 9.81 pylint, 2 mypy errors, 11 skipped tests
-# cargo_test - 9.94 pylint, 2 mypy errors
-# financials - 9.91 pylint, no type annotations,  9 skipped tests
-# financials_test - 9.95 pylint, no type annotations 
-# ship - 9.84 pylint, 2 mypy errors,  5 skipped tests
-# ship_test - 9.74 pylint, 7 mypy errors
-# star_map - 9.74 pylint, no type annotations
-# star_map_test - 10.0 pylint, no type annotations
-# star_system - 9.70 pylint, no type annotations
-# star_system_test - 10.0 pylint, no type annotations 
-# traveller - 9.89 pylint, 2 mypy errors,  no tests
-# traveller_test - 5.71 pylint, 2 mypy errors
-# utilities - 10.0 pylint
-# utilities_test - 10.0 pylint, no type annotations
 # word_gen - 10.0 pylint
 # word_gen_test - 10.0 pylint
+# utilities - 10.0 pylint
+#
+# calendar - 10.0 pylint, no type annotations
+# calendar_test- 10.0 pylint, no type annotations
+# star_map_test - 10.0 pylint, no type annotations
+# utilities_test - 10.0 pylint, no type annotations
+# star_system_test - 10.0 pylint, no type annotations 
+#
+# financials_test - 9.95 pylint, no type annotations 
+# cargo_test - 9.94 pylint, 2 mypy errors
+# financials - 9.91 pylint, no type annotations, 9 skipped tests
+# traveller - 9.89 pylint, 2 mypy errors, no tests
+# ship - 9.84 pylint, 2 mypy errors, 2 skipped tests
+# cargo - 9.81 pylint, 2 mypy errors, 11 skipped tests
+# ship_test - 9.74 pylint, 7 mypy errors
+# star_map - 9.74 pylint, no type annotations
+# star_system - 9.70 pylint, no type annotations
+#
+# traveller_test - 5.71 pylint, 2 mypy errors
 #
 # (Also, put together a script to gather these scores...)
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# OK. So an observer model can help with the print statements
+# scattered around the model classes. Not yet sure how to 
+# handle input, though something similar may apply there too.
+#
+# I was able to build this into Ship, wire up Game to print
+# the received messages, and voila! Nice bonus, the previously
+# skipped unit tests can now be unskipped.
+#
+# Just need to apply this everywhere. Also, I added 'priority'
+# to the protocol to allow for urgent messages. Right now it's
+# just a string that maps to different 'print colored text'
+# functions. May want to formalize this later.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
