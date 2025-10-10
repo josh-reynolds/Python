@@ -150,12 +150,9 @@ class Financials:
     def _maintenance_notification(self, date):
         """Check days since last maintenance."""
         status = self.maintenance_status(date)
-        if status == 'yellow':
+        if status != 'green':
             self.message_observers(f"Days since last maintenance = {date - self.last_maintenance}",
-                                   "yellow")
-        if status == 'red':
-            self.message_observers(f"Days since last maintenance = {date - self.last_maintenance}",
-                                   "red")
+                                   status)
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
