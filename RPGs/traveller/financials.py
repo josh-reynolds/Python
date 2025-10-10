@@ -90,7 +90,7 @@ class Financials:
         self.ship = ship
         self.location = location
 
-        self.berth_recurrence = None
+        self.berth_recurrence = 6
         self.berth_expiry = self.current_date.copy()
 
         self.salary_recurrence = 28

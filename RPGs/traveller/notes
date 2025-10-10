@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 100% unit tests passing (22 skipped)
+# 100% unit tests passing (13 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
@@ -1462,7 +1462,7 @@
 #
 # financials_test - 9.95 pylint, no type annotations 
 # cargo_test - 9.94 pylint, 2 mypy errors
-# financials - 9.91 pylint, no type annotations, 9 skipped tests
+# financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors, 2 skipped tests
 # cargo - 9.81 pylint, 2 mypy errors, 11 skipped tests
