@@ -124,16 +124,16 @@ class FinancialsTestCase(unittest.TestCase):
                                                    FinancialsTestCase.SystemMock())
 
     @unittest.skip("test has side effects: printing")
-    def test_notify(self):
+    def test_on_notify(self):
         """Test notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
 
         date = FinancialsTestCase.DateMock(8)
-        financials.notify(date)
+        financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
 
         date = FinancialsTestCase.DateMock(12)
-        financials.notify(date)
+        financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
 
     def test_debit_and_credit(self):

@@ -31,7 +31,7 @@ class Calendar:
             self.current_date.day = self.day - 365
             self.year += 1
         for observer in self.observers:
-            observer.notify(self.current_date)
+            observer.on_notify(self.current_date)
 
     @property
     def year(self):
@@ -43,12 +43,12 @@ class Calendar:
         """Set the current year and notify all observers."""
         self.current_date.year = value
         for observer in self.observers:
-            observer.notify(self.current_date)
+            observer.on_notify(self.current_date)
 
     def add_observer(self, observer):
         """Add an observer to the calendar.
 
-        The observer is notifed via its notify() method
+        The observer is notifed via its on_notify() method
         when the current date changes.
         """
         self.observers.append(observer)

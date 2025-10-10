@@ -120,19 +120,19 @@ class CargoDepotTestCase(unittest.TestCase):
         CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
                                               CargoDepotTestCase.DateMock(1))
 
-    def test_notify(self):
+    def test_on_notify(self):
         """Test notification behavior of a CargoDepot."""
         depot = CargoDepotTestCase.depot
         cargo = depot.cargo
         self.assertEqual(depot.refresh_date.value, 1)
 
         date = CargoDepotTestCase.DateMock(7)
-        depot.notify(date)
+        depot.on_notify(date)
         self.assertEqual(depot.refresh_date.value, 1)
         self.assertEqual(cargo, depot.cargo)
 
         date = CargoDepotTestCase.DateMock(8)
-        depot.notify(date)
+        depot.on_notify(date)
         self.assertEqual(depot.refresh_date.value, 8)
         self.assertNotEqual(cargo, depot.cargo)
 

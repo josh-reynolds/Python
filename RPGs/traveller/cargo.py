@@ -197,7 +197,7 @@ class CargoDepot:
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
 
-    def notify(self, date: ImperialDate) -> None:
+    def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
         duration = (date - self.refresh_date) // self.recurrence
         for _ in range(duration):

@@ -110,7 +110,7 @@ class Financials:
         """Add the specified amount to the Financials balance."""
         self.balance += amount
 
-    def notify(self, date):
+    def on_notify(self, date):
         """On notification from Calendar, check recurring payments.""" 
         self.current_date = date.copy()
 

@@ -96,7 +96,7 @@ class CalendarTestCase(unittest.TestCase):
             self.event_count = 0
             self.recurrence = 1
 
-        def notify(self, date):
+        def on_notify(self, date):
             """On notification from Calendar, track the event."""
             self.count += 1
             duration = (date - self.paid_date) // self.recurrence
