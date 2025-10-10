@@ -4,7 +4,6 @@ Credits - represents units of money.
 Financials - contains methods to handle financial
              transactions and track a balance.
 """
-from utilities import pr_red, pr_yellow
 
 class Credits:
     """Represents units of money."""
@@ -102,6 +101,16 @@ class Financials:
 
         self.last_maintenance = self.current_date - 14
 
+        self.observers = []
+
+    def add_observer(self, observer):
+        """Add an observer to respond to UI messages."""
+        self.observers.append(observer)
+
+    def message_observers(self, message, priority=""):
+        for observer in self.observers:
+            observer.on_notify(message, priority)
+
     def debit(self, amount):
         """Deduct a specified amount from the Financials balance."""
         self.balance -= amount
@@ -142,9 +151,11 @@ class Financials:
         """Check days since last maintenance."""
         status = self.maintenance_status(date)
         if status == 'yellow':
-            pr_yellow(f"Days since last maintenance = {date - self.last_maintenance}")
+            self.message_observers(f"Days since last maintenance = {date - self.last_maintenance}",
+                                   "yellow")
         if status == 'red':
-            pr_red(f"Days since last maintenance = {date - self.last_maintenance}")
+            self.message_observers(f"Days since last maintenance = {date - self.last_maintenance}",
+                                   "red")
 
     # Book 2 p. 7:
     # Average cost is CR 100 to land and remain for up to six days;
@@ -155,7 +166,7 @@ class Financials:
     def berthing_fee(self, on_surface):
         """Deduct fee for berth at a starport from Financials balance."""
         if on_surface:
-            print("Charging 100 Cr berthing fee.")
+            self.message_observers("Charging 100 Cr berthing fee.")
             self.debit(Credits(100))
             self.berth_recurrence = 1
             self.berth_expiry = self.current_date + 6
@@ -169,20 +180,20 @@ class Financials:
             else:
                 unit = "days"
             amount = Credits(days_extra * 100)
-            print(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
+            self.message_observers(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
             self.debit(amount)
             self.berth_expiry = date + self.berth_recurrence
 
     def _pay_salaries(self):
         """Deduct ship salaries from Financials balance."""
         amount = self.ship.crew_salary()
-        print(f"Paying crew salaries on {self.salary_paid} for {amount}.")
+        self.message_observers(f"Paying crew salaries on {self.salary_paid} for {amount}.")
         self.debit(amount)
 
     def _pay_loan(self):
         """Deduct loan payment from Financials balance."""
         amount = self.ship.loan_payment()
-        print(f"Paying ship loan on {self.loan_paid} for {amount}.")
+        self.message_observers(f"Paying ship loan on {self.loan_paid} for {amount}.")
         self.debit(amount)
 
     # conceivably an enum or the like would be better, but

@@ -7,7 +7,7 @@ from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
-from utilities import pr_blue, pr_red, print_list, die_roll, pr_green
+from utilities import pr_blue, pr_red, print_list, die_roll, pr_green, pr_yellow
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace
@@ -45,6 +45,8 @@ class Game:
         self.commands = None
 
         self.ship.add_observer(self)
+        self.financials.add_observer(self)
+
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
 
@@ -52,7 +54,9 @@ class Game:
         """Print messages received from model objects."""
         if (priority == "green"):
             pr_function = pr_green
-        elif ("red"):
+        elif (priority =="yellow"):
+            pr_function = pr_yellow
+        elif (priority =="red"):
             pr_function = pr_red
         else:
             pr_function = print

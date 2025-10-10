@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 100% unit tests passing (25 skipped)
+# 100% unit tests passing (22 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
