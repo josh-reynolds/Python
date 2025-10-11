@@ -49,9 +49,23 @@ class ShipTestCase(unittest.TestCase):
             self.priority = ""
 
         def on_notify(self, message, priority):
+            """Save message and priority for review on notification."""
             self.message = message
             self.priority = priority
 
+    class ControlsMock:
+        """Mocks a controller for testing."""
+
+        def __init__(self, commands):
+            """Create an instance of a ControlsMock."""
+            self.commands = commands
+            self.invocations = 0
+
+        def get_input(self, constraint, prompt):
+            # not safe if we call too many times...
+            response = self.commands[self.invocations]
+            self.invocations += 1
+            return response
 
     def setUp(self):
         """Create a fixture for testing the Ship class."""
@@ -102,14 +116,22 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
 
-    @unittest.skip("Test has side effects: input & printing")
     def test_refuel(self):
         """Test refuelling the Ship."""
-        self.assertEqual(ShipTestCase.ship.current_fuel, 0)
-        cost = ShipTestCase.ship.refuel("A")
-        self.assertEqual(ShipTestCase.ship.current_fuel, 30)
+        ship = ShipTestCase.ship
+        ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
+        self.assertEqual(ship.current_fuel, 0)
+
+        cost = ship.refuel("A")
+        self.assertEqual(ship.current_fuel, 0)
+        self.assertEqual(cost, Credits(0))        # 'no' case
+
+        self.assertEqual(ship.current_fuel, 0)
+        cost = ship.refuel("A")
+        self.assertEqual(ship.current_fuel, 30)
         self.assertEqual(cost, Credits(15000))    # 'yes' case
-        cost = ShipTestCase.ship.refuel("A")
+
+        cost = ship.refuel("A")
         self.assertEqual(cost, Credits(0))        # full tank case
 
     @unittest.skip("Test has side effects: input & printing")
