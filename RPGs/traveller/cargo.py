@@ -12,7 +12,7 @@ from enum import Enum
 from random import randint
 from typing import Dict, List, Tuple, Any
 from calendar import ImperialDate
-from utilities import die_roll, constrain, int_input, confirm_input
+from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
 from star_system import StarSystem
@@ -197,6 +197,7 @@ class CargoDepot:
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
         self.observers = []
+        self.controls = None
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
@@ -215,6 +216,10 @@ class CargoDepot:
     def message_observers(self, message, priority=""):
         for observer in self.observers:
             observer.on_notify(message, priority)
+
+    def get_input(self, constraint, prompt):
+        """Request input from controls."""
+        return self.controls.get_input(constraint, prompt)
 
     def _refresh_freight(self, destinations: List[StarSystem]) -> None:
         """Refresh available Freight shipments."""
@@ -322,7 +327,7 @@ class CargoDepot:
             self.message_observers("   " + str(self.freight[world]))
             self.message_observers("")
 
-        destination_number = int_input("Enter destination number: ")
+        destination_number = self.get_input('int', "Enter destination number: ")
         if destination_number >= len(destinations):
             self.message_observers("That is not a valid destination number.")
             return (None, None)
@@ -340,7 +345,7 @@ class CargoDepot:
             self.message_observers("   " + str(self.passengers[world]))
             self.message_observers("")
 
-        destination_number = int_input("Enter destination number: ")
+        destination_number = self.get_input('int', "Enter destination number: ")
         if destination_number >= len(destinations):
             self.message_observers("That is not a valid destination number.")
             return (None, None)
@@ -371,7 +376,7 @@ class CargoDepot:
 
     def get_cargo_lot(self, source: List[Cargo], prompt: str) -> Cargo | None:
         """Select a Cargo lot from a list."""
-        item_number = int_input(f"Enter cargo number to {prompt}: ")
+        item_number = self.get_input('int', f"Enter cargo number to {prompt}: ")
         if item_number >= len(source):
             self.message_observers("That is not a valid cargo ID.")
             return None
@@ -379,7 +384,7 @@ class CargoDepot:
 
     def get_cargo_quantity(self, prompt: str, cargo: Cargo) -> None | int:
         """Get a quantify of Cargo from the player to sell or purchase."""
-        quantity = int_input(f"How many would you like to {prompt}? ")
+        quantity = self.get_input('int', f"How many would you like to {prompt}? ")
         if quantity > cargo.quantity:
             self.message_observers("There is not enough available. Specify a lower quantity.")
             return None
@@ -398,13 +403,13 @@ class CargoDepot:
 
     def get_broker(self) -> int:
         """Allow player to select a broker for Cargo sales."""
-        broker = confirm_input("Would you like to hire a broker (y/n)? ")
+        broker = self.get_input('confirm', "Would you like to hire a broker (y/n)? ")
         broker_skill = 0
         if broker == 'y':
             while broker_skill < 1 or broker_skill > 4:
-                broker_skill = int_input("What level of broker (1-4)? ")
+                broker_skill = self.get_input('int', "What level of broker (1-4)? ")
 
-            broker_confirm = confirm_input( "This will incur a " +
+            broker_confirm = self.get_input('confirm', "This will incur a " +
                                            f"{5 * broker_skill}% fee. " +
                                             "Confirm (y/n)? ")
             if broker_confirm == 'n':
@@ -475,7 +480,7 @@ class CargoDepot:
     def confirm_transaction(self, prompt: str, cargo: Cargo,
                             quantity: int, price: Credits) -> bool:
         """Confirm a sale or purchase."""
-        confirmation = confirm_input(f"Confirming {prompt} of "
+        confirmation = self.get_input('confirm', f"Confirming {prompt} of "
                                      f"{Cargo.quantity_string(cargo, quantity)} of "
                                      f"{cargo.name} for {price} (y/n)? ")
         if confirmation == 'n':

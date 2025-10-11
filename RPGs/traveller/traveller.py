@@ -47,6 +47,7 @@ class Game:
         self.ship.add_observer(self)
         self.ship.controls = self
         self.depot.add_observer(self)
+        self.depot.controls = self
         self.financials.add_observer(self)
 
         self.date.add_observer(self.depot)
@@ -398,6 +399,7 @@ class Game:
 
         self.depot = CargoDepot(self.location, self.date.current_date)
         self.depot.add_observer(self)
+        self.depot.controls = self
         self.financials.location = destination
 
         self.ship.life_support_level = 0
