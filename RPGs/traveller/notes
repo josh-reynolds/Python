@@ -1741,6 +1741,8 @@
 #           'view all systems' list
 #  * [DONE] Lift all print statements out of model classes
 #           (this might resolve the skipped tests - if not, that's a separate TO_DO)
+#  * [DONE] BUG: Sale/purchase price lines are not always printing - haven't pinned
+#           down conditions yet. Ah! Need to wire up the observer again post-jump!
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes

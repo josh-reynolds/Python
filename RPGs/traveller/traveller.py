@@ -386,6 +386,7 @@ class Game:
                                                    jump_range)
 
         self.depot = CargoDepot(self.location, self.date.current_date)
+        self.depot.add_observer(self)
         self.financials.location = destination
 
         self.ship.life_support_level = 0
