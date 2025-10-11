@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 100% unit tests passing (8 skipped)
+# 100% unit tests passing (6 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
@@ -1464,7 +1464,7 @@
 # cargo_test - 9.94 pylint, 2 mypy errors
 # financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
-# ship - 9.84 pylint, 2 mypy errors, 2 skipped tests
+# ship - 9.84 pylint, 2 mypy errors
 # cargo - 9.81 pylint, 2 mypy errors, 6 skipped tests
 # ship_test - 9.74 pylint, 7 mypy errors
 # star_map - 9.74 pylint, no type annotations
@@ -1509,6 +1509,14 @@
 #   a list of controllers. Just one. So the pointer will be a
 #   single object, not a collection.
 #
+# OK, easy enough to set up. Got this working in Ship. Basically
+# the same pattern as the observer messages. Now just need to
+# get it working in Cargo and all done. No skipped tests and
+# UI isolated to the Game class.
+#
+# Later we probably want to split up the Controller and View
+# pieces. Game is getting kinda fat.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1543,11 +1551,11 @@
 #    * Front end and menu
 #    * Save/load if not done earlier
 #    * Player customization: ship name, captain, etc.
-#    * Save/load
 #  PHASE SIX
 #    * Expand scope with RPG-lite elements and events
 #    * Lift into graphics system? (This could really snowball, be cautious)
 #    * Explore later Traveller versions for ideas (or to support as options)
+#    * Other game types, like Explorer? To the Stars? Pocket Empires?
 # -------------------------------------------------------------
 
 # --------------------------------------------------------------

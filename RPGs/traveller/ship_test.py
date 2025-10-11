@@ -134,13 +134,20 @@ class ShipTestCase(unittest.TestCase):
         cost = ship.refuel("A")
         self.assertEqual(cost, Credits(0))        # full tank case
 
-    @unittest.skip("Test has side effects: input & printing")
     def test_recharge(self):
         """Test recharging the Ship's life support."""
+        ship = ShipTestCase.ship
+        ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
         self.assertEqual(ShipTestCase.ship.life_support_level, 0)
+
+        cost = ShipTestCase.ship.recharge()
+        self.assertEqual(ShipTestCase.ship.life_support_level, 0)
+        self.assertEqual(cost, Credits(0))        # 'no' case
+
         cost = ShipTestCase.ship.recharge()
         self.assertEqual(ShipTestCase.ship.life_support_level, 100)
         self.assertEqual(cost, Credits(22000))    # 'yes' case
+
         cost = ShipTestCase.ship.recharge()
         self.assertEqual(cost, Credits(0))        # full life support case
 
