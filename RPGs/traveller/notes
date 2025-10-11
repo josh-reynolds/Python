@@ -1488,6 +1488,27 @@
 # to the protocol to allow for urgent messages. Right now it's
 # just a string that maps to different 'print colored text'
 # functions. May want to formalize this later.
+#
+# That seems to be working OK. All print statements isolated to
+# Game and utilities. And I was able to get all the tests 
+# working (that only had print side effects). One gotcha - need
+# to rewire the observers when the subject changes. We make a
+# new CargoDepot after performing a jump. The other two classes
+# we're interested in right now (Ship & Financials) persist for
+# the whole game.
+#
+# So time to tackle input. I think a similar model could work.
+# Honestly, the little wrapper input functions in utilities are
+# almost there. A couple things to change:
+#
+# * First, we'll have a separate 'observer' link, since the 
+#   protocols will be different of course. Let's call it
+#   'controls.'
+#
+# * Second, unlike Views, I don't think it makes sense to have 
+#   a list of controllers. Just one. So the pointer will be a
+#   single object, not a collection.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1749,7 +1770,7 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
 #  * [....] Should we add type annotations? (Possibly check out mypy...)
-#  * [    ] Lift all input statements out of model classes
+#  * [....] Lift all input statements out of model classes
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...

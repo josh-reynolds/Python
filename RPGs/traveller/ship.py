@@ -14,7 +14,7 @@ from enum import Enum
 from cargo import Freight, PassageClass
 from financials import Credits
 from star_system import StarSystem
-from utilities import confirm_input, die_roll
+from utilities import die_roll
 
 class Crew(ABC):
     """Base class for crewmembers."""
@@ -140,6 +140,7 @@ class Ship:
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
         self.base_price = Credits(37080000)
         self.observers = []
+        self.controls = None
 
     def __repr__(self):
         """Return the string representation of a Ship."""
@@ -232,8 +233,13 @@ class Ship:
         self.observers.append(observer)
 
     def message_observers(self, message, priority=""):
+        """Pass a message on to all observers."""
         for observer in self.observers:
             observer.on_notify(message, priority)
+
+    def get_input(self, constraint, prompt):
+        """Request input from controls."""
+        return self.controls.get_input(constraint, prompt)
 
     def cargo_hold(self):
         """Return the contents of the Ship's cargo hold."""
@@ -292,7 +298,7 @@ class Ship:
 
         amount = self.fuel_tank - self.current_fuel
         price = Credits(amount * per_ton)
-        confirm = confirm_input(f"Purchase {amount} tons of fuel for {price}? ")
+        confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")
         if confirm == 'n':
             return Credits(0)
 
@@ -345,7 +351,7 @@ class Ship:
 
         price = Credits((len(self.crew) + self.passenger_berths) * 2000 +
                          self.low_berths * 100)
-        confirm = confirm_input(f"Recharge life support for {price}? ")
+        confirm = self.get_input('confirm', f"Recharge life support for {price}? ")
         if confirm == 'n':
             return Credits(0)
 

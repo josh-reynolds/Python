@@ -45,6 +45,7 @@ class Game:
         self.commands = None
 
         self.ship.add_observer(self)
+        self.ship.controls = self
         self.depot.add_observer(self)
         self.financials.add_observer(self)
 
@@ -63,6 +64,16 @@ class Game:
             pr_function = print
 
         pr_function(message)
+
+    def get_input(self, constraint, prompt):
+        """Get input from the player and return results to the model class."""
+        if constraint == 'confirm':
+            result = confirm_input(prompt)
+        elif constraint == 'int':
+            result = int_input(prompt)
+        else:
+            result = input(prompt)
+        return result
 
     def run(self):
         """Run the game loop."""
