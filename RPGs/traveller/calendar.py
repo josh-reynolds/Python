@@ -4,7 +4,7 @@ Calendar - keeps track of the current date, and notifies
            observers when it changes.
 ImperialDate - represents a single date in Traveller format: DDD-YYYY
 """
-from typing import Any, List
+from typing import Any, List, Self
 
 class Calendar:
     """Tracks the current date and notifies observers when it changes."""
@@ -94,11 +94,11 @@ class ImperialDate:
         """Test if one ImperialDate is greater than or equal to another."""
         return self == other or self > other
 
-    def __add__(self, days: int) -> ImperialDate:
+    def __add__(self, days: int) -> Self:
         """Add an integer number of days to an ImperialDate."""
         return ImperialDate(self.day + days, self.year)
 
-    def __sub__(self, other: Any) -> int | ImperialDate:
+    def __sub__(self, other: Any) -> int | Self:
         """Subtract an ImperialDate or an integer from the date."""
         if isinstance(other, ImperialDate):
             return self._date_value() - other._date_value()
@@ -106,7 +106,7 @@ class ImperialDate:
             return ImperialDate(self.day - other, self.year)
         return NotImplemented
 
-    def copy(self) -> ImperialDate:
+    def copy(self) -> Self:
         """Return a copy of the ImperialDate."""
         return ImperialDate(self.day, self.year)
 

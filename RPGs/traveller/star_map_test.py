@@ -6,7 +6,10 @@ from star_system import StarSystem, DeepSpace
 class StarMapTestCase(unittest.TestCase):
     """Tests StarMap class."""
 
-    def setUp(self):
+    star_map1: StarMap
+    star_map2: StarMap
+
+    def setUp(self) -> None:
         """Create a fixture to test the StarMap class."""
         StarMapTestCase.star_map1 = StarMap({
             (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
@@ -28,12 +31,12 @@ class StarMapTestCase(unittest.TestCase):
             (-1,1,0) : DeepSpace((-1,1,0)),
             })
 
-    def test_constructor(self):
+    def test_constructor(self) -> None:
         """Test construction of a StarMap."""
         star_map1 = StarMapTestCase.star_map1
         self.assertTrue(isinstance(star_map1, StarMap))
 
-    def test_get_systems_within_range(self):
+    def test_get_systems_within_range(self) -> None:
         """Test retrieval of StarSystems within a specified range."""
         star_map1 = StarMapTestCase.star_map1
 
@@ -60,14 +63,14 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(systems[1], StarSystem))
         self.assertTrue(isinstance(systems[2], StarSystem))
 
-    def test_get_systems_within_range_with_deepspace(self):
+    def test_get_systems_within_range_with_deepspace(self) -> None:
         """Test retrieval of StarSystems within range when there are empty hexes."""
         star_map2 = StarMapTestCase.star_map2
 
         systems = star_map2.get_systems_within_range((0,0,0), 1)
         self.assertEqual(len(systems), 0)
 
-    def test_get_system_at_coordinate(self):
+    def test_get_system_at_coordinate(self) -> None:
         """Test retrieval of StarSystems by coordinate value."""
         star_map1 = StarMapTestCase.star_map1
 
@@ -87,7 +90,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Mithril")
 
-    def test_get_systems_with_deepspace(self):
+    def test_get_systems_with_deepspace(self) -> None:
         """Test retrieval of StarSystems by coordinate when there are empty hexes."""
         star_map2 = StarMapTestCase.star_map2
 
@@ -115,7 +118,7 @@ class StarMapTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _distance_between of a client class
-    def test_distance_between(self):
+    def test_distance_between(self) -> None:
         """Test calculation of distance between two three-axis coordinates."""
         dist = StarMap._distance_between((0,0,0), (1,0,-1))
         self.assertEqual(dist,1)
@@ -137,18 +140,18 @@ class StarMapTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _valid_coordinate of a client class
-    def test_valid_coordinate(self):
+    def test_valid_coordinate(self) -> None:
         """Test validation of potential three-axis coordinates."""
         self.assertTrue(StarMap._valid_coordinate((0,0,0)))
         self.assertFalse(StarMap._valid_coordinate((1,0,0)))
 
-    def test_invalid_ctor_call(self):
+    def test_invalid_ctor_call(self) -> None:
         """Test exception thrown by invalid StarMap constructor call."""
         self.assertRaises(ValueError, StarMap, {(1,0,0):None})
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_coordinates_within_range of a client class
-    def test_get_coordinates_within_range(self):
+    def test_get_coordinates_within_range(self) -> None:
         """Test retrieval of all valid three-axis coordinates within range of an origin hex."""
         coords = StarMap._get_coordinates_within_range((0,0,0), 1)
         self.assertEqual(len(coords), 6)
@@ -185,7 +188,7 @@ class StarMapTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_all_coords of a client class
-    def test_get_all_coords(self):
+    def test_get_all_coords(self) -> None:
         """Test getting all potential coordinates at a given range from (0,0,0)."""
         coords = StarMap._get_all_coords(1)
         self.assertEqual(len(coords), 27)   # 3 cubed
@@ -198,7 +201,7 @@ class StarMapTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_coordinates_within_range of a client class
-    def test_translated_coords(self):
+    def test_translated_coords(self) -> None:
         """Test getting all coordinates at a given range from a translated hex."""
         coords = StarMap._get_coordinates_within_range((-1,-1,2), 1)
         self.assertEqual(len(coords), 6)
@@ -211,7 +214,7 @@ class StarMapTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _generate_new_system of a client class
-    def test_generate_new_system(self):
+    def test_generate_new_system(self) -> None:
         """Test generation of new hexes, either StarSystems or DeepSpace.
 
         The function output is random, so we can only test for sample
@@ -232,7 +235,7 @@ class StarMapTestCase(unittest.TestCase):
         for item in worlds:
             self.assertTrue(type(item) in [DeepSpace, StarSystem])
 
-    def test_get_all_systems(self):
+    def test_get_all_systems(self) -> None:
         """Test retrieval of all StarSystems from the fixture StarMap."""
         star_map1 = StarMapTestCase.star_map1
         systems = star_map1.get_all_systems()
@@ -253,7 +256,7 @@ class StarMapTestCase(unittest.TestCase):
 class StarSystemFactoryTestCase(unittest.TestCase):
     """Tests StarSystemFactory class."""
 
-    def test_generate(self):
+    def test_generate(self) -> None:
         """Test rnadom generation of StarSystems."""
         system = StarSystemFactory.generate((0,0,0))
         self.assertEqual(system.coordinate, (0,0,0))
@@ -281,7 +284,7 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         self.assertGreaterEqual(system.tech, 0)
         self.assertLessEqual(system.tech, 18)
 
-    def test_create(self):
+    def test_create(self) -> None:
         """Test creation of StarSystems by explicit parameters."""
         world = StarSystemFactory.create("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
 
