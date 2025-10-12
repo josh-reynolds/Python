@@ -1456,10 +1456,9 @@
 # calendar - 10.0 pylint
 # star_map_test - 10.0 pylint
 # utilities_test - 10.0 pylint
+# star_system_test - 10.0 pylint
 #
 # calendar_test- 10.0 pylint, 1 mypy error
-#
-# star_system_test - 10.0 pylint, no type annotations 
 #
 # financials_test - 9.95 pylint, no type annotations 
 # cargo_test - 9.94 pylint, 2 mypy errors
