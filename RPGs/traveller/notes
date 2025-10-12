@@ -1453,8 +1453,8 @@
 # word_gen - 10.0 pylint
 # word_gen_test - 10.0 pylint
 # utilities - 10.0 pylint
+# calendar - 10.0 pylint
 #
-# calendar - 10.0 pylint, no type annotations
 # calendar_test- 10.0 pylint, no type annotations
 # star_map_test - 10.0 pylint, no type annotations
 # utilities_test - 10.0 pylint, no type annotations
@@ -1843,6 +1843,7 @@
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  PHASE SIX ======================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
+#  * [    ] Generate a bitmap StarMap
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has
 #           no fuelling options and is dangerous to travel to for normal 
