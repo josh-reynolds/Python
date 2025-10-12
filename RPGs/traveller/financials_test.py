@@ -1,11 +1,13 @@
 """Contains tests for the financials module."""
+from __future__ import annotations
 import unittest
+from typing import Any
 from financials import Credits, Financials
 
 class CreditsTestCase(unittest.TestCase):
     """Tests Credits class."""
 
-    def test_credits_string(self):
+    def test_credits_string(self) -> None:
         """Tests string representation of a Credits object."""
         credits1 = Credits(1)
         credits2 = Credits(10)
@@ -26,7 +28,7 @@ class CreditsTestCase(unittest.TestCase):
         self.assertEqual(f"{credits8}", "11.5 MCr")
         self.assertEqual(f"{credits9}", "1,000.0 MCr")
 
-    def test_credits_comparison(self):
+    def test_credits_comparison(self) -> None:
         """Tests comparison of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(2)
@@ -35,19 +37,19 @@ class CreditsTestCase(unittest.TestCase):
         self.assertLess(credits1,credits2)
         self.assertEqual(credits2,credits3)
 
-    def test_credits_addition(self):
+    def test_credits_addition(self) -> None:
         """Tests addition of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(1)
         self.assertEqual(credits1+credits2,Credits(2))
 
-    def test_credits_subtraction(self):
+    def test_credits_subtraction(self) -> None:
         """Tests subtraction of two Credits objects."""
         credits1 = Credits(1)
         credits2 = Credits(2)
         self.assertEqual(credits2-credits1,Credits(1))
 
-    def test_credits_multiplication(self):
+    def test_credits_multiplication(self) -> None:
         """Tests multiplication of a Credits object by an integer."""
         credits1 = Credits(10)
         self.assertEqual(credits1 * 5, Credits(50))
@@ -55,22 +57,24 @@ class CreditsTestCase(unittest.TestCase):
 class FinancialsTestCase(unittest.TestCase):
     """Tests Financials class."""
 
+    financials: Financials
+
     class DateMock:
         """Mocks a date interface for testing."""
 
-        def __init__(self, value):
+        def __init__(self, value: int) -> None:
             """Create an instance of a DateMock object."""
             self.value = value
 
-        def copy(self):
+        def copy(self) -> FinancialsTestCase.DateMock:
             """Return a copy of this DateMock object."""
             return FinancialsTestCase.DateMock(self.value)
 
-        def __add__(self, rhs):
+        def __add__(self, rhs: int) -> FinancialsTestCase.DateMock:
             """Add a value to a DateMock."""
             return FinancialsTestCase.DateMock(self.value + rhs)
 
-        def __sub__(self, rhs):
+        def __sub__(self, rhs: Any) -> FinancialsTestCase.DateMock | int:
             """Subtract either a DateMock or an integer from a DateMock."""
             if isinstance(rhs, FinancialsTestCase.DateMock):
                 return self.value - rhs.value
@@ -78,64 +82,65 @@ class FinancialsTestCase(unittest.TestCase):
                 return FinancialsTestCase.DateMock(self.value - rhs)
             return NotImplemented
 
-        def __eq__(self, other):
+        def __eq__(self, other: Any) -> bool:
             """Test whether two DateMocks are equivalent."""
             return self.value == other.value
 
-        def __ge__(self, other):
+        def __ge__(self, other: Any) -> bool:
             """Test whether one DateMock is greater than or equal to another."""
             return self.value >= other.value
 
-        def __gt__(self, other):
+        def __gt__(self, other: Any) -> bool:
             """Test whether one DateMock is greater than another."""
             return self.value > other.value
 
-        def __repr__(self):
+        def __repr__(self) -> str:
             """Return the string representation of a DateMock object."""
             return f"{self.value}"
 
     class ShipMock:
         """Mocks a ship interface for testing."""
 
-        def __init__(self):
+        def __init__(self) -> None:
             """Create an instance of a ShipMock object."""
             self.last_maintenance = FinancialsTestCase.DateMock(1)
 
-        def crew_salary(self):
+        def crew_salary(self) -> Credits:
             """Return the amount of monthly salary paid to the Ship's crew."""
             return Credits(1)
 
-        def loan_payment(self):
+        def loan_payment(self) -> Credits:
             """Return the amount paid monthly for the Ship's loan."""
             return Credits(1)
 
     class SystemMock:
         """Mocks a system interface for testing."""
 
-        def on_surface(self):
+        def on_surface(self) -> bool:
             """Test whether the player is on the world's surface."""
             return True
 
     class ObserverMock:
         """Mocks an observer for testing."""
 
-        def __init__(self):
+        def __init__(self) -> None:
             """Create an instance of an ObserverMock."""
             self.message = ""
             self.priority = ""
 
-        def on_notify(self, message, priority):
+        def on_notify(self, message: str, priority: str) -> None:
+            """On notification from Calendar, track the event."""
             self.message = message
             self.priority = priority
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
                                                    FinancialsTestCase.DateMock(1),
                                                    FinancialsTestCase.ShipMock(),
                                                    FinancialsTestCase.SystemMock())
 
-    def test_on_notify(self):
+    def test_on_notify(self) -> None:
         """Test notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -153,7 +158,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Renewing berth on 16 for 2 days (200 Cr).")
         self.assertEqual(observer.priority, "")
 
-    def test_debit_and_credit(self):
+    def test_debit_and_credit(self) -> None:
         """Test debiting and crediting a balance managed by a Financials object."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.balance, Credits(100))
@@ -166,7 +171,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _salary_notification of a client class
-    def test_salary_notification(self):
+    def test_salary_notification(self) -> None:
         """Test salary notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -197,7 +202,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _pay_salaries of a client class
-    def test_pay_salaries(self):
+    def test_pay_salaries(self) -> None:
         """Test paying monthly crew salaries."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -212,7 +217,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _loan_notification of a client class
-    def test_loan_notification(self):
+    def test_loan_notification(self) -> None:
         """Test loan notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -243,7 +248,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _pay_loan of a client class
-    def test_pay_loan(self):
+    def test_pay_loan(self) -> None:
         """Test monthly load payment."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -258,7 +263,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _maintenance_notification of a client class
-    def test_maintenance_notification(self):
+    def test_maintenance_notification(self) -> None:
         """Test maintenance behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -291,7 +296,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Days since last maintenance = 366")
         self.assertEqual(observer.priority, "red")
 
-    def test_maintenance_status(self):
+    def test_maintenance_status(self) -> None:
         """Test maintenance status notification."""
         financials = FinancialsTestCase.financials
         self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
@@ -316,7 +321,7 @@ class FinancialsTestCase(unittest.TestCase):
         result = financials.maintenance_status(date)
         self.assertEqual(result, "red")
 
-    def test_berthing_fee(self):
+    def test_berthing_fee(self) -> None:
         """Test payment of starport berthing fees."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -347,7 +352,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _berth_notification of a client class
-    def test_berth_notification(self):
+    def test_berth_notification(self) -> None:
         """Test berth notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()
@@ -386,7 +391,7 @@ class FinancialsTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _renew_berth of a client class
-    def test_renew_berth(self):
+    def test_renew_berth(self) -> None:
         """Test berth renewal."""
         financials = FinancialsTestCase.financials
         observer = FinancialsTestCase.ObserverMock()

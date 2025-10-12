@@ -1459,9 +1459,9 @@
 # star_system_test - 10.0 pylint
 #
 # calendar_test- 10.0 pylint, 1 mypy error
-#
-# financials_test - 9.95 pylint, no type annotations 
 # cargo_test - 9.94 pylint, 2 mypy errors
+# financials_test - 9.93 pylint
+#
 # financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors
