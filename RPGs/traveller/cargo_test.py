@@ -258,14 +258,33 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "You cannot resell cargo on the world where it was purchased.")
         self.assertEqual(observer.priority, "")
 
-
-    @unittest.skip("test has side effects: input & printing")
     def test_get_broker(self):
         """Test choosing a broker."""
         depot = CargoDepotTestCase.depot
-        self.assertGreater(depot.get_broker(), -1)
-        self.assertLess(depot.get_broker(), 5)
-        # y/n | 1-4 | y/n = result 0-4
+        scenarios = ['n', 4, 5, 'y', 'y', 4, 5, 'y', 'n', 1, 'y', 'y', 1, 0, 'y', 'n']
+        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
+
+        # n
+        result = depot.get_broker()
+        self.assertEqual(result, 0)
+
+        # y 0 1 y
+        result = depot.get_broker()
+        self.assertEqual(result, 1)
+
+        # y 1 n
+        result = depot.get_broker()
+        self.assertEqual(result, 0)
+
+        # y 5 4 y
+        result = depot.get_broker()
+        self.assertEqual(result, 4)
+
+        # y 5 4 n
+        result = depot.get_broker()
+        self.assertEqual(result, 0)
 
     def test_insufficient_hold_space(self):
         """Test validation of cargo hold space."""
