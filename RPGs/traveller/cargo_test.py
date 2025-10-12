@@ -379,14 +379,22 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Deducting 20 Cr broker fee for skill 4.")
         self.assertEqual(observer.priority, "")
 
-    @unittest.skip("test has side effects: input & printing")
     def test_confirm_transaction(self):
         """Test transaction confirmation."""
         depot = CargoDepotTestCase.depot
+        scenarios = ['n', 'y']
+        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
-        _ = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
-        # y/n
+        result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
+        self.assertTrue(result)
+
+        result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
+        self.assertFalse(result)
+        self.assertEqual(observer.message, "Cancelling purchase.")
+        self.assertEqual(observer.priority, "")
 
     def test_remove_cargo(self):
         """Test removal of cargo from the depot or cargo hold."""
@@ -423,17 +431,33 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
 
-    @unittest.skip("test has side effects: input & printing")
     def test_get_available_freight(self):
         """Test listing of freight in the depot."""
         depot = CargoDepotTestCase.depot
+        scenarios = [2, 1, 0]
+        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
         world1 = CargoDepotTestCase.SystemMock()
         world1.name = "Pluto"
+        world1.coordinate = 222
         world2 = CargoDepotTestCase.SystemMock()
         world2.name = "Jupiter"
+        world2.coordinate = 111
         destinations = [world1, world2]
 
-        _, _ = depot.get_available_freight(destinations)
+        coord, freight = depot.get_available_freight(destinations)
+        self.assertEqual(coord, 222)
+        self.assertTrue(isinstance(freight, list))
+
+        coord, freight = depot.get_available_freight(destinations)
+        self.assertEqual(coord, 111)
+        self.assertTrue(isinstance(freight, list))
+
+        coord, freight = depot.get_available_freight(destinations)
+        self.assertEqual(coord, None)
+        self.assertTrue(freight is None)
+        self.assertEqual(observer.message, "That is not a valid destination number.")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _passenger_origin_table of a client class
@@ -549,17 +573,34 @@ class CargoDepotTestCase(unittest.TestCase):
         depot._refresh_passengers([CargoDepotTestCase.SystemMock()])
         self.assertNotEqual(depot.passengers, passengers)
 
-    @unittest.skip("test has side effects: input & printing")
+    #@unittest.skip("test has side effects: input & printing")
     def test_get_available_passengers(self):
         """Test listing of passengers in the terminal."""
         depot = CargoDepotTestCase.depot
+        scenarios = [2, 1, 0]
+        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
         world1 = CargoDepotTestCase.SystemMock()
         world1.name = "Pluto"
+        world1.coordinate = 222
         world2 = CargoDepotTestCase.SystemMock()
         world2.name = "Jupiter"
+        world2.coordinate = 111
         destinations = [world1, world2]
 
-        _, _ = depot.get_available_passengers(destinations)
+        coord, passengers = depot.get_available_passengers(destinations)
+        self.assertEqual(coord, 222)
+        self.assertTrue(isinstance(passengers, tuple))
+
+        coord, passengers = depot.get_available_passengers(destinations)
+        self.assertEqual(coord, 111)
+        self.assertTrue(isinstance(passengers, tuple))
+
+        coord, passengers = depot.get_available_passengers(destinations)
+        self.assertEqual(coord, None)
+        self.assertTrue(passengers is None)
+        self.assertEqual(observer.message, "That is not a valid destination number.")
 
 
 # pylint: disable=R0903
