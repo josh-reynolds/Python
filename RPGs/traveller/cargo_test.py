@@ -127,6 +127,16 @@ class CargoDepotTestCase(unittest.TestCase):
             self.message = message
             self.priority = priority
 
+    class ControlsMock:
+        """Mocks a controller for testing."""
+
+        def __init__(self, commands):
+            """Create an instance of a ControlsMock."""
+            self.commands = commands
+
+        def get_input(self, constraint, prompt):
+            # not safe if we call too many times...
+            return self.commands.pop()
 
     def setUp(self):
         """Create a test fixture for testing CargoDepots."""
@@ -163,15 +173,26 @@ class CargoDepotTestCase(unittest.TestCase):
         modifier = depot._get_price_modifiers(cargo, "sale")
         self.assertEqual(modifier, 6)
 
-    @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_lot(self):
         """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
+        depot.controls = CargoDepotTestCase.ControlsMock([2, 1, 0, 7])
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
         cargo_list = ["a", "b", "c"]
-        print(cargo_list)
 
         item = depot.get_cargo_lot(cargo_list, "buy")
-        # select 1, 2 or 3
+        self.assertEqual(observer.message, "That is not a valid cargo ID.")
+        self.assertEqual(observer.priority, "")
+
+        item = depot.get_cargo_lot(cargo_list, "buy")
+        self.assertEqual(item, "a")
+
+        item = depot.get_cargo_lot(cargo_list, "buy")
+        self.assertEqual(item, "b")
+
+        item = depot.get_cargo_lot(cargo_list, "buy")
+        self.assertEqual(item, "c")
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_quantity(self):
