@@ -194,16 +194,34 @@ class CargoDepotTestCase(unittest.TestCase):
         item = depot.get_cargo_lot(cargo_list, "buy")
         self.assertEqual(item, "c")
 
-    @unittest.skip("test has side effects: input & printing")
     def test_get_cargo_quantity(self):
         """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
+        depot.controls = CargoDepotTestCase.ControlsMock([9, 1, 0, -1, 11])
+        observer = CargoDepotTestCase.ObserverMock()
+        depot.add_observer(observer)
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
-        _ = depot.get_cargo_quantity("buy", cargo)
-        # 0 - None
-        # max - None
-        # 0 < quantity < max - quantity
+        amount = depot.get_cargo_quantity("buy", cargo)
+        self.assertEqual(amount, None)
+        self.assertEqual(observer.message, "There is not enough available. Specify a lower quantity.")
+        self.assertEqual(observer.priority, "")
+
+        amount = depot.get_cargo_quantity("buy", cargo)
+        self.assertEqual(amount, None)
+        self.assertEqual(observer.message, "Quantity needs to be a positive number.")
+        self.assertEqual(observer.priority, "")
+
+        amount = depot.get_cargo_quantity("buy", cargo)
+        self.assertEqual(amount, None)
+        self.assertEqual(observer.message, "Quantity needs to be a positive number.")
+        self.assertEqual(observer.priority, "")
+
+        amount = depot.get_cargo_quantity("buy", cargo)
+        self.assertEqual(amount, 1)
+
+        amount = depot.get_cargo_quantity("buy", cargo)
+        self.assertEqual(amount, 9)
 
     def test_invalid_cargo_origin(self):
         """Test validation of cargo origin."""

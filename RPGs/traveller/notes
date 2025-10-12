@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 100% unit tests passing (6 skipped)
+# 100% unit tests passing (4 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
@@ -1465,7 +1465,7 @@
 # financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors
-# cargo - 9.81 pylint, 2 mypy errors, 6 skipped tests
+# cargo - 9.81 pylint, 2 mypy errors, 4 skipped tests
 # ship_test - 9.74 pylint, 7 mypy errors
 # star_map - 9.74 pylint, no type annotations
 # star_system - 9.70 pylint, no type annotations
@@ -1883,6 +1883,7 @@
 #            is it as the starport, which this is not. Scope creep, maybe hold this one
 #            until phase five...
 #  * [    ] Add extended StarSystem details
+#  * [    ] Controls now allows us to have an AI or kiosk mode...
 #  * [    ] Add different ship types and ship design
 #  * [    ] Working passage?
 #  * [    ] Should we allow the option of 'close jump?'
