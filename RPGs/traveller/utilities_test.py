@@ -5,7 +5,7 @@ from utilities import actual_value, die_roll, constrain, get_lines, dictionary_f
 class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
 
-    def test_die_roll(self):
+    def test_die_roll(self) -> None:
         """Test random six-sided die rolls."""
         total = 0
         for _ in range(1000):
@@ -17,7 +17,7 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertGreaterEqual(average, 3.3)
         self.assertLessEqual(average, 3.7)
 
-    def test_rolling_multiple_dice(self):
+    def test_rolling_multiple_dice(self) -> None:
         """Test rolling multiple six-sided dice."""
         total = 0
         for _ in range(1000):
@@ -29,13 +29,13 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertGreaterEqual(average, 5.5)
         self.assertLessEqual(average, 8.5)
 
-    def test_constrain(self):
+    def test_constrain(self) -> None:
         """Test constraining a value within bounds."""
         self.assertEqual(constrain(5,1,10), 5)
         self.assertEqual(constrain(5,6,10), 6)
         self.assertEqual(constrain(5,1,4), 4)
 
-    def test_actual_value(self):
+    def test_actual_value(self) -> None:
         """Test the Traveller actual value table results."""
         self.assertEqual(actual_value(2), .4)
         self.assertEqual(actual_value(3), .5)
@@ -57,14 +57,14 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertRaises(KeyError, actual_value, 1)
         self.assertRaises(KeyError, actual_value, 16)
 
-    def test_get_lines(self):
+    def test_get_lines(self) -> None:
         """Test retrieving all lines from a text file."""
         lines = get_lines("./cargo.txt")
         self.assertEqual(len(lines), 36)
         self.assertEqual(lines[0][:12],
                          "11, Textiles")
 
-    def test_dictionary_from(self):
+    def test_dictionary_from(self) -> None:
         """Test string-to-dictionary conversion."""
         string = "{foo:1,bar:2,baz:3}"
         dictionary = dictionary_from(string)
