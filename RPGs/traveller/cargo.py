@@ -214,6 +214,7 @@ class CargoDepot:
         self.observers.append(observer)
 
     def message_observers(self, message, priority=""):
+        """Send message to all observers with indicated priority."""
         for observer in self.observers:
             observer.on_notify(message, priority)
 

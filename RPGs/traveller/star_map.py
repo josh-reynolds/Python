@@ -4,9 +4,12 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
+from typing import Tuple, Dict, List
 from word_gen import get_world_name
-from star_system import StarSystem, DeepSpace, UWP
+from star_system import StarSystem, DeepSpace, UWP, Hex
 from utilities import die_roll, constrain
+
+Coordinate = Tuple[int, int, int]
 
 # in the three-axis system:
 #  * the three coordinates sum to zero
@@ -92,15 +95,16 @@ class StarSystemFactory:
     """Builds StarSystem objects using the Traveller '77 rules."""
 
     @classmethod
-    def create(cls, name, coordinate, starport, size, atmosphere,
-               hydrographics, population, government, law, tech, gas_giant=True):
+    def create(cls, name: str, coordinate: Coordinate, starport: int,
+               size: int, atmosphere: int, hydrographics: int, population: int,
+               government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
         """Create an instance of a StarSystem with pre-determined statistics."""
         uwp = UWP(starport, size, atmosphere, hydrographics,
                   population, government, law, tech)
         return StarSystem(name, coordinate, uwp, gas_giant)
 
     @classmethod
-    def generate(cls, coordinate):
+    def generate(cls, coordinate: Coordinate) -> StarSystem:
         """Randomly generate a StarSystem instance."""
         name = get_world_name()
 
@@ -194,14 +198,14 @@ class StarSystemFactory:
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""
 
-    def __init__(self, systems):
+    def __init__(self, systems: Dict[Coordinate, Hex]) -> None:
         """Create an instance of a StarMap."""
         self.systems = systems
         for key in self.systems.keys():
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
 
-    def get_systems_within_range(self, origin, distance):
+    def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[Hex]:
         """Return a list of all StarSystems within the specified range in hexes."""
         result = []
         for coord in StarMap._get_coordinates_within_range(origin, distance):
@@ -215,11 +219,11 @@ class StarMap:
                     result.append(system)
         return result
 
-    def get_system_at_coordinate(self, coordinate):
+    def get_system_at_coordinate(self, coordinate: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.systems.get(coordinate, StarMap._generate_new_system(coordinate))
 
-    def get_all_systems(self):
+    def get_all_systems(self) -> List[StarSystem]:
         """Return all known StarSystems contained in the StarMap."""
         systems = [s for i,(k,s) in enumerate(self.systems.items()) if
                    isinstance(s, StarSystem)]
@@ -227,14 +231,14 @@ class StarMap:
         return systems
 
     @classmethod
-    def _generate_new_system(cls, coordinate):
+    def _generate_new_system(cls, coordinate: Coordinate) -> Hex:
         """Randomly create either a StarSystem or a DeepSpace instance."""
         if randint(1,6) >= 4:
             return StarSystemFactory.generate(coordinate)
         return DeepSpace(coordinate)
 
     @classmethod
-    def _distance_between(cls, first, second):
+    def _distance_between(cls, first: Coordinate, second: Coordinate) -> int:
         """Calculate the distance between two three-axis coordinates."""
         transformed = (second[0]-first[0],
                        second[1]-first[1],
@@ -244,13 +248,14 @@ class StarMap:
                    abs(transformed[2]))
 
     @classmethod
-    def _valid_coordinate(cls, coord):
+    def _valid_coordinate(cls, coord: Coordinate) -> bool:
         """Test whether a given tuple is a valid three-axis coordinate."""
         return sum(coord) == 0
 
     # TO_DO: should we default origin param to (0,0,0)?
     @classmethod
-    def _get_coordinates_within_range(cls, origin, radius):
+    def _get_coordinates_within_range(cls, origin: Coordinate,
+                                      radius: int) -> List[Coordinate]:
         """Return a list of all three-axis coordinate within a given range of an origin."""
         full_list = StarMap._get_all_coords(radius)
 
@@ -264,7 +269,7 @@ class StarMap:
         return translated
 
     @classmethod
-    def _get_all_coords(cls, radius):
+    def _get_all_coords(cls, radius: int) -> List[Coordinate]:
         """Return a list of tuples, including both valid and invalid coordinates."""
         span = range(-radius, radius+1)
         return [(a,b,c) for a in span
