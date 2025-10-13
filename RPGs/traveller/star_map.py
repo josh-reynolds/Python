@@ -95,7 +95,7 @@ class StarSystemFactory:
     """Builds StarSystem objects using the Traveller '77 rules."""
 
     @classmethod
-    def create(cls, name: str, coordinate: Coordinate, starport: int,
+    def create(cls, name: str, coordinate: Coordinate, starport: str,
                size: int, atmosphere: int, hydrographics: int, population: int,
                government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
         """Create an instance of a StarSystem with pre-determined statistics."""

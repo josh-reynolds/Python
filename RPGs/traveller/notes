@@ -1462,13 +1462,13 @@
 # cargo_test - 9.94 pylint, 2 mypy errors
 # financials_test - 9.93 pylint
 # financials - 9.92 pylint, 6 mypy errors
-# star_map - 9.74 pylint
-#
-# traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors
 # cargo - 9.81 pylint, 2 mypy errors
+# star_map - 9.74 pylint
 # ship_test - 9.74 pylint, 7 mypy errors
-# star_system - 9.70 pylint, no type annotations
+# star_system - 9.70 pylint
+#
+# traveller - 9.89 pylint, 2 mypy errors, no tests
 #
 # traveller_test - 5.71 pylint, 2 mypy errors
 #
@@ -1773,12 +1773,12 @@
 #  * [DONE] BUG: Sale/purchase price lines are not always printing - haven't pinned
 #           down conditions yet. Ah! Need to wire up the observer again post-jump!
 #  * [DONE] Lift all input statements out of model classes
+#  * [DONE] Should we add type annotations? (Possibly check out mypy...)
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
-#  * [....] Should we add type annotations? (Possibly check out mypy...)
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
