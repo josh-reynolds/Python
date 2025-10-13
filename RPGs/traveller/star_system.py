@@ -17,6 +17,8 @@ class Hex(ABC):
     def __init__(self, coordinate: Coordinate) -> None:
         """Create an instance of a Hex."""
         self.coordinate = coordinate
+        self.name = ""
+        self.destinations: List[Hex] = []
 
     @abstractmethod
     def description(self) -> str:
@@ -30,7 +32,6 @@ class DeepSpace(Hex):
         """Create an instance of a DeepSpace object."""
         super().__init__(coordinate)
         self.detail = ""
-        self.destinations: List[Hex] = []
         self.population = 0
         self.gas_giant = False
 
@@ -95,7 +96,6 @@ class StarSystem(Hex):
         self.uwp = uwp
         self.gas_giant = gas_giant
         self.detail = "orbit"
-        self.destinations: List[Hex] = []
 
         self.agricultural = False
         if (self.atmosphere in (4, 5, 6, 7, 8, 9) and

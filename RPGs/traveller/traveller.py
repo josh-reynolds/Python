@@ -3,6 +3,7 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
+from typing import List, Tuple, Callable
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
@@ -10,13 +11,13 @@ from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green, pr_yellow
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
-from star_system import DeepSpace
-from star_map import StarMap, StarSystemFactory
+from star_system import DeepSpace, Hex
+from star_map import StarMap, StarSystemFactory, Coordinate
 
 class Game:
     """Contains the game loop and all game logic."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
         self.date = Calendar()
@@ -53,7 +54,7 @@ class Game:
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
 
-    def on_notify(self, message, priority=""):
+    def on_notify(self, message: str, priority: str = "") -> None:
         """Print messages received from model objects."""
         if (priority == "green"):
             pr_function = pr_green
@@ -66,7 +67,7 @@ class Game:
 
         pr_function(message)
 
-    def get_input(self, constraint, prompt):
+    def get_input(self, constraint: str, prompt: str) -> str:
         """Get input from the player and return results to the model class."""
         if constraint == 'confirm':
             result = confirm_input(prompt)
@@ -76,7 +77,7 @@ class Game:
             result = input(prompt)
         return result
 
-    def run(self):
+    def run(self) -> None:
         """Run the game loop."""
         self.running = True
         self.commands = Commands.orbit   # awkward, needs to change
@@ -105,18 +106,18 @@ class Game:
                     print()
                     cmd.action()
 
-    def quit(self):
+    def quit(self) -> None:
         """Quit the game."""
         pr_blue("Goodbye.")
         self.running = False
 
-    def list_commands(self):
+    def list_commands(self) -> None:
         """List available commands in the current context."""
         pr_blue("Available commands:")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-    def liftoff(self):
+    def liftoff(self) -> None:
         """Move from the starport to orbit."""
         pr_blue(f"Lifting off to orbit {self.location.name}.")
 
@@ -140,7 +141,7 @@ class Game:
         self.location.liftoff()
         self.commands = Commands.orbit
 
-    def _low_lottery(self, low_lottery_amount):
+    def _low_lottery(self, low_lottery_amount) -> None:
         """Run the low passage lottery and apply results."""
         if self.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.ship.passengers if
@@ -163,7 +164,7 @@ class Game:
                       f"The captain is awarded {low_lottery_amount}.")
                 self.financials.credit(low_lottery_amount)
 
-    def land(self):
+    def land(self) -> None:
         """Move from orbit to the starport."""
         pr_blue(f"Landing on {self.location.name}.")
         if not self.ship.streamlined:
@@ -195,7 +196,7 @@ class Game:
         self.commands = Commands.starport
 
     # TO_DO: almost identical to inbound_from_jump() - combine
-    def outbound_to_jump(self):
+    def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
         pr_blue(f"Travelling out to {self.location.name} jump point.")
 
@@ -215,7 +216,7 @@ class Game:
         self.location.to_jump_point()
         self.commands = Commands.jump
 
-    def inbound_from_jump(self):
+    def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         if isinstance(self.location, DeepSpace):
             pr_red("You are in deep space. There is no inner system to travel to.")
@@ -240,19 +241,19 @@ class Game:
         self.commands = Commands.orbit
 
     # almost identical to leave_terminal(), consider merging
-    def leave_depot(self):
+    def leave_depot(self) -> None:
         """Move from the trade depot to the starport."""
         pr_blue(f"Leaving {self.location.name} trade depot.")
         self.location.leave_trade()
         self.commands = Commands.starport
 
-    def leave_terminal(self):
+    def leave_terminal(self) -> None:
         """Move from the passenger terminal to the starport."""
         pr_blue(f"Leaving {self.location.name} passenger terminal.")
         self.location.leave_terminal()
         self.commands = Commands.starport
 
-    def book_passengers(self):
+    def book_passengers(self) -> None:
         """Book passengers for travel to a destination."""
         pr_blue("Booking passengers.")
 
@@ -303,19 +304,19 @@ class Game:
                                                    zip(self.depot.passengers[destination],
                                                        selection))
 
-    def to_depot(self):
+    def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
         pr_blue(f"Entering {self.location.name} trade depot.")
         self.location.join_trade()
         self.commands = Commands.trade
 
-    def to_terminal(self):
+    def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
         pr_blue(f"Entering {self.location.name} passenger terminal.")
         self.location.enter_terminal()
         self.commands = Commands.passengers
 
-    def _misjump_check(self, destination):
+    def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
             modifier = 3
@@ -346,7 +347,7 @@ class Game:
         else:
             self.location = destination
 
-    def jump(self):
+    def jump(self) -> None:
         """Perform a hyperspace jump to another StarSystem."""
         pr_blue("Preparing for jump.")
 
@@ -406,12 +407,12 @@ class Game:
         self.ship.current_fuel -= self.ship.jump_fuel_cost
         self.date.plus_week()
 
-    def view_world(self):
+    def view_world(self) -> None:
         """View the characteristics of the local world."""
         pr_blue("Local world characteristics:")
         print(self.location)
 
-    def refuel(self):
+    def refuel(self) -> None:
         """Refuel the Ship."""
         pr_blue("Refuelling ship.")
         if self.location.starport in ('E', 'X'):
@@ -422,13 +423,13 @@ class Game:
         self.financials.debit(cost)
 
     # TO_DO: should this be restricted at low-facility starports (E/X)?
-    def recharge(self):
+    def recharge(self) -> None:
         """Recharge the Ship's life support system."""
         pr_blue("Replenishing life support system.")
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
-    def damage_control(self):
+    def damage_control(self) -> None:
         """Repar damage to the Ship (Engineer)."""
         pr_blue("Ship's engineer repairing damage.")
         if self.ship.repair_status == RepairStatus.REPAIRED:
@@ -447,7 +448,7 @@ class Game:
     # TO_DO: the rules do not cover this procedure. No time or credits
     #        expenditure, etc. For now I'll just make this one week and free,
     #        but that probably ought to change.
-    def repair_ship(self):
+    def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
         pr_blue("Starport repairs.")
         if self.location.starport in ["D", "E", "X"]:
@@ -463,7 +464,7 @@ class Game:
         self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
 
-    def flush(self):
+    def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
         pr_blue("Flushing out fuel tanks.")
         if self.ship.fuel_quality == FuelQuality.REFINED:
@@ -478,7 +479,7 @@ class Game:
         self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
 
-    def buy_cargo(self):
+    def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         pr_blue("Purchasing cargo.")
         print_list(self.depot.cargo)
@@ -511,7 +512,7 @@ class Game:
         self.financials.debit(cost)
         self.date.day += 1
 
-    def sell_cargo(self):
+    def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
         pr_blue("Selling cargo.")
         cargoes = [c for c in self.ship.hold if isinstance(c, Cargo)]
@@ -547,12 +548,12 @@ class Game:
         self.financials.credit(sale_price)
         self.date.day += 1
 
-    def goods(self):
+    def goods(self) -> None:
         """Show goods available for purchase."""
         pr_blue("Available cargo loads:")
         print_list(self.depot.cargo)
 
-    def cargo_hold(self):
+    def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
         pr_blue("Contents of cargo hold:")
         contents = self.ship.cargo_hold()
@@ -561,7 +562,7 @@ class Game:
         else:
             print_list(contents)
 
-    def passenger_manifest(self):
+    def passenger_manifest(self) -> None:
         """Show the Passenger's booked for transport."""
         pr_blue("Passenger manifest:")
         if self.ship.destination is None:
@@ -575,22 +576,22 @@ class Game:
               f"Empty berths: {self.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.ship.empty_low_berths}")
 
-    def crew_roster(self):
+    def crew_roster(self) -> None:
         """Show the Ship's crew."""
         pr_blue("Crew roster:")
         print_list(self.ship.crew)
 
-    def wait_week(self):
+    def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
         pr_blue("Waiting.")
         self.date.plus_week()
 
-    def view_ship(self):
+    def view_ship(self) -> None:
         """View the details of the Ship."""
         pr_blue("Ship details:")
         print(self.ship)
 
-    def view_map(self):
+    def view_map(self) -> None:
         """View all known StarSystems."""
         pr_blue("All known star systems:")
         systems = self.star_map.get_all_systems()
@@ -605,7 +606,7 @@ class Game:
     # also does not include ocean refuelling, but I think I will be
     # including both options. (In all likelihood this will lean heavily
     # toward second edition...)
-    def skim(self):
+    def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         pr_blue("Skimming fuel from a gas giant planet.")
         if not self.location.gas_giant:
@@ -629,7 +630,7 @@ class Game:
         self.ship.fuel_quality = FuelQuality.UNREFINED
         self.date.day += 1
 
-    def maintenance(self):
+    def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
         pr_blue("Performing annual ship maintenance.")
         if self.location.starport not in ('A', 'B'):
@@ -650,7 +651,8 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
 
-    def _get_passenger_destinations(self, potential_destinations, jump_range):
+    def _get_passenger_destinations(self, potential_destinations: List[Hex],
+                                    jump_range: int) -> List[Hex]:
         """Return a list of all reachable destination with Passengers."""
         result = []
         if self.ship.destination is not None:
@@ -671,7 +673,8 @@ class Game:
 
         return result
 
-    def _get_freight_destinations(self, potential_destinations, jump_range):
+    def _get_freight_destinations(self, potential_destinations: List[Hex], 
+                                  jump_range: int) -> List[Hex]:
         """Return a list of all reachable destinations with Freight lots."""
         result = []
         if self.ship.destination is not None:
@@ -692,7 +695,8 @@ class Game:
 
         return result
 
-    def _select_passengers(self, available, destination):
+    def _select_passengers(self, available: Tuple[int, int, int],
+                           destination: Hex) -> Tuple[int, int, int]:
         """Select Passengers from a list of available candidates."""
         selection = (0,0,0)
         ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
@@ -754,7 +758,8 @@ class Game:
         print("Done selecting passengers.")
         return selection
 
-    def _select_freight_lots(self, available, destination):
+    def _select_freight_lots(self, available: List[int], 
+                             destination: Hex) -> Tuple[int, List[int]]:
         """Select Freight lots from a list of available shipments."""
         selection = []
         total_tonnage = 0
@@ -791,7 +796,7 @@ class Game:
         print("Done selecting shipments.")
         return (total_tonnage, selection)
 
-    def load_freight(self):
+    def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""
         pr_blue("Loading freight.")
 
@@ -828,7 +833,7 @@ class Game:
                                          destination))
         self.date.day += 1
 
-    def unload_freight(self):
+    def unload_freight(self) -> None:
         """Unload Freight from the Ship and receive payment."""
         pr_blue("Unloading freight.")
 
@@ -863,7 +868,7 @@ class Game:
 class Command:
     """Represents a command available to the player."""
 
-    def __init__(self, key, description, action):
+    def __init__(self, key: str, description: str, action: Callable) -> None:
         """Create an instance of a Command."""
         self.key = key
         self.description = description
