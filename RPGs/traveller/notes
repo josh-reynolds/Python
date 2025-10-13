@@ -1461,8 +1461,8 @@
 # calendar_test- 10.0 pylint, 1 mypy error
 # cargo_test - 9.94 pylint, 2 mypy errors
 # financials_test - 9.93 pylint
+# financials - 9.92 pylint, 6 mypy errors
 #
-# financials - 9.91 pylint, no type annotations
 # traveller - 9.89 pylint, 2 mypy errors, no tests
 # ship - 9.84 pylint, 2 mypy errors
 # cargo - 9.81 pylint, 2 mypy errors

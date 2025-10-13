@@ -196,7 +196,7 @@ class CargoDepot:
         self.cargo = self._determine_cargo()
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
-        self.observers = []
+        self.observers: List[Any] = []
         self.controls = None
 
     def on_notify(self, date: ImperialDate) -> None:
