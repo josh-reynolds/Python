@@ -1,5 +1,7 @@
 """Contains tests for the traveller module."""
 import unittest
+from financials import Credits
+from star_map import StarSystemFactory
 from traveller import Game, Command, Commands
 
 # most of these methods necessarily have side effects,
@@ -8,7 +10,23 @@ from traveller import Game, Command, Commands
 class GameTestCase(unittest.TestCase):
     """Tests game logic."""
 
-    # __init__
+    def test_game_ctor(self):
+        """Tests contstruction of a Game object."""
+        game = Game()
+        self.assertEqual(game.location,
+                         StarSystemFactory.create("Yorbund", (0,0,0), 
+                                                  "A", 8, 7, 5, 9, 5, 5, 10))
+        self.assertEqual(game.financials.balance, Credits(10000000))
+
+
+    # get_input
+    # _get_passenger_destinations
+    # _get_freight_destinations
+    # _select_passengers
+    # _select_freight_lots
+
+    # side effects only ~ ~ ~ ~ ~ ~ ~
+    # on_notify
     # run
     # quit
     # list_commands
@@ -22,6 +40,7 @@ class GameTestCase(unittest.TestCase):
     # book_passengers
     # to_depot
     # to_terminal
+    # _misjump_check
     # jump
     # view_world
     # refuel
@@ -40,10 +59,6 @@ class GameTestCase(unittest.TestCase):
     # view_map
     # skim
     # maintenance
-    # _get_passenger_destinations
-    # _get_freight_destinations
-    # _select_passengers
-    # _select_freight_lots
     # load_freight
     # unload_freight
 
