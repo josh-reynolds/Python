@@ -49,7 +49,7 @@ class GameTestCase(unittest.TestCase):
         # else
 
     # pylint: disable=W0212
-    # W0212: Access to a protected member _get_passenger_destinations of a client class
+    # W0212: Access to a protected member _get_freight_destinations of a client class
     @unittest.skip("test has side effects: printing")
     def test_get_freight_destinations(self) -> None:
         """Test getting list of freight destinations."""
@@ -65,7 +65,30 @@ class GameTestCase(unittest.TestCase):
         #     under contract but not in range
         # else
 
-    # _select_passengers
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _select_passengers of a client class
+    @unittest.skip("test has side effects: printing")
+    def test_select_passengers(self) -> None:
+        """Test selection of passengers from a list."""
+        game = Game()
+        available = (5,5,5)
+        destination = game.location.destinations[0]
+
+        selection = game._select_passengers(available, destination)
+        print(selection)
+
+        # no passengers remaining, auto-exit
+        # quit selection
+        # select high passengers
+        # select all high passengers
+        # no cargo space left
+        # select middle passengers
+        # select all middle passengers
+        # no staterooms left
+        # select low passengers
+        # select all low passengers
+        # no low berths left
+
     # _select_freight_lots
 
     # side effects only ~ ~ ~ ~ ~ ~ ~
