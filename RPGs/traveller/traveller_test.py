@@ -89,7 +89,24 @@ class GameTestCase(unittest.TestCase):
         # select all low passengers
         # no low berths left
 
-    # _select_freight_lots
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _select_freight_lots of a client class
+    @unittest.skip("test has side effects: printing")
+    def test_select_freight_lots(self):
+        """Test selection of freight from a list."""
+        game = Game()
+        available = [5, 10, 15, 20]
+        destination = game.location.destinations[0]
+
+        tonnage, selection = game._select_freight_lots(available, destination)
+        print(tonnage, selection)
+
+        # no freight remaining, auto-exit
+        # quit selection
+        # non-numeric input
+        # freight selection in list
+        # freight selection not in list
+        # not enough space in hold
 
     # side effects only ~ ~ ~ ~ ~ ~ ~
     # on_notify
