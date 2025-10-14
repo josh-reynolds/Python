@@ -573,7 +573,6 @@ class CargoDepotTestCase(unittest.TestCase):
         depot._refresh_passengers([CargoDepotTestCase.SystemMock()])
         self.assertNotEqual(depot.passengers, passengers)
 
-    #@unittest.skip("test has side effects: input & printing")
     def test_get_available_passengers(self):
         """Test listing of passengers in the terminal."""
         depot = CargoDepotTestCase.depot
