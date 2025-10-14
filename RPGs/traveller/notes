@@ -1447,7 +1447,7 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
-# 119/120 unit tests passing (1 skipped)
+# 119/122 unit tests passing (3 skipped)
 # 100% pydocstyle passing
 #
 # word_gen - 10.0 pylint
@@ -1457,7 +1457,7 @@
 # star_map_test - 10.0 pylint
 # utilities_test - 10.0 pylint
 # star_system_test - 10.0 pylint
-# traveller_test - 10.0 pylint, 1 skipped test
+# traveller_test - 10.0 pylint, 3 skipped tests
 #
 # calendar_test- 10.0 pylint, 1 mypy error
 # cargo_test - 9.94 pylint, 2 mypy errors

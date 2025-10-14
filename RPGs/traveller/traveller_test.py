@@ -48,7 +48,23 @@ class GameTestCase(unittest.TestCase):
         #     under contract but not in range
         # else
 
-    # _get_freight_destinations
+    # pylint: disable=W0212
+    # W0212: Access to a protected member _get_passenger_destinations of a client class
+    @unittest.skip("test has side effects: printing")
+    def test_get_freight_destinations(self) -> None:
+        """Test getting list of freight destinations."""
+        game = Game()
+        potential_destinations = game.location.destinations.copy()
+
+        destinations = game._get_freight_destinations(potential_destinations, 1)
+        print(destinations)
+
+        # contracted destination:
+        #     freight on board
+        #     under contract and in range
+        #     under contract but not in range
+        # else
+
     # _select_passengers
     # _select_freight_lots
 
