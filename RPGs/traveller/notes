@@ -1458,6 +1458,7 @@
 # utilities_test - 10.0 pylint
 # star_system_test - 10.0 pylint
 # star_system - 10.0 pylint
+# star_map - 10.0 pylint
 # traveller_test - 10.0 pylint, 5 skipped tests
 #
 # calendar_test- 10.0 pylint, 1 mypy error
@@ -1467,7 +1468,6 @@
 # traveller - 9.89 pylint, 2 mypy errors
 # ship - 9.84 pylint, 2 mypy errors
 # cargo - 9.81 pylint, 2 mypy errors
-# star_map - 9.74 pylint
 # ship_test - 9.74 pylint, 7 mypy errors
 #
 # (Also, put together a script to gather these scores...)
