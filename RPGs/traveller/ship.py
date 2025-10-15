@@ -16,19 +16,28 @@ from financials import Credits
 from star_system import StarSystem
 from utilities import die_roll
 
+# TO_DO: assess collapsing all crew positions into a single class
 class Crew(ABC):
     """Base class for crewmembers."""
 
     def __init__(self, skill=1, trade=0):
         """Create an instance of a Crew object."""
+        self.name = ""
+        self.job = ""
         self.skill = skill
         self.trade_skill = trade
+
+    def __repr__(self) -> str:
+        """Return the string representation of a Crew object."""
+        return f"{self.name} - {self.job} {self.skill}"
 
     @abstractmethod
     def salary(self):
         """Return the monthly salary for the crewmember."""
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Pilot(Crew):
     """Represents a pilot on board a ship."""
 
@@ -36,16 +45,15 @@ class Pilot(Crew):
         """Create an instance of a Pilot."""
         super().__init__(skill, trade)
         self.name = "Captain Grungebottom"
-
-    def __repr__(self):
-        """Return the string representation of a Pilot."""
-        return f"{self.name} - Pilot {self.skill}"
+        self.job = "Pilot"
 
     def salary(self):
         """Return the monthly salary for a Pilot based on expertise."""
         return Credits(6000) * (1 + .1 * (self.skill - 1))
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Engineer(Crew):
     """Represents an engineer on board a ship."""
 
@@ -53,16 +61,15 @@ class Engineer(Crew):
         """Create an instance of an Engineer."""
         super().__init__(skill, trade)
         self.name = "Skins McFlint"
-
-    def __repr__(self):
-        """Return the string representation of an Engineer."""
-        return f"{self.name} - Engineer {self.skill}"
+        self.job = "Engineer"
 
     def salary(self):
         """Return the monthly salary for an Engineer based on expertise."""
         return Credits(4000) * (1 + .1 * (self.skill - 1))
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Medic(Crew):
     """Represents a medic on board a ship."""
 
@@ -70,16 +77,15 @@ class Medic(Crew):
         """Create an instance of a Medic."""
         super().__init__(skill, trade)
         self.name = "Doc Gubbins"
-
-    def __repr__(self):
-        """Return the string representation of a Medic."""
-        return f"{self.name} - Medic {self.skill}"
+        self.job = "Medic"
 
     def salary(self):
         """Return the monthly salary for a Medic based on expertise."""
         return Credits(2000) * (1 + .1 * (self.skill - 1))
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Steward(Crew):
     """Represents a steward on board a ship."""
 
@@ -87,10 +93,7 @@ class Steward(Crew):
         """Create an instance of a Steward."""
         super().__init__(skill, trade)
         self.name = "Laszlo the Third"
-
-    def __repr__(self):
-        """Return the string representation of a Steward."""
-        return f"{self.name} - Steward {self.skill}"
+        self.job = "Steward"
 
     def salary(self):
         """Return the monthly salary for a Steward based on expertise."""
@@ -112,6 +115,9 @@ class RepairStatus(Enum):
     BROKEN = 2
 
 
+# pylint: disable=R0902, R0904
+# R0902: Too many instance attributes (24/7)
+# R0904: Too many public methods (30/20)
 class Ship:
     """Represents a starship."""
 
@@ -429,8 +435,9 @@ class Ship:
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if they choose a different jump target while under contract."""
         if self.destination is not None and self.destination != destination:
-            self.message_observers(f"Warning: your contracted destination is {self.destination.name} " +
-                   f"not {destination.name}.", "red")
+            self.message_observers("Warning: your contracted destination is " +
+                                   f"{self.destination.name} not {destination.name}.",
+                                   "red")
 
     def check_failure_pre_jump(self, maintenance_status):
         """Test for drive failure before performing a hyperspace jump."""
