@@ -91,6 +91,8 @@ class Freight:
         return f"Freight({self.tonnage}, {self.source_world}, {self.destination_world})"
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Baggage(Freight):
     """Represents passenger baggage."""
 
@@ -105,16 +107,20 @@ class Baggage(Freight):
         return f"Baggage({self.source_world}, {self.destination_world})"
 
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (8/7)
 class Cargo:
     """Represents speculative cargo."""
 
+    # pylint: disable=R0913
+    # R0913: Too many arguments (8/5)
     def __init__(self,
                  name: str,
-                 quantity: int,
+                 quantity: str,
                  price: Credits,
                  unit_size: int,
                  purchase_dms: dict[str, int],
-                 sale_dms: dict,
+                 sale_dms: dict[str, int],
                  source_world: StarSystem | None = None) -> None:
         """Create an instance of Cargo."""
         self.name = name
@@ -161,7 +167,7 @@ class Cargo:
             string += f" ({self.unit_size} tons/item)"
         return string
 
-    def _determine_quantity(self, quantity: int) -> int:
+    def _determine_quantity(self, quantity: str) -> int:
         """Convert a die roll amount of Cargo to a specific amount.
 
         If the quantity parameter string contains "Dx" then it
@@ -188,11 +194,12 @@ class CargoDepot:
     Freight, and booking Passengers and their Baggage.
     """
 
+    RECURRENCE = 7
+
     def __init__(self, system: StarSystem, refresh_date: ImperialDate) -> None:
         """Create an instance of a CargoDepot."""
         self.system = system
         self.refresh_date = refresh_date.copy()
-        self.recurrence = 7
         self.cargo = self._determine_cargo()
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
@@ -201,9 +208,9 @@ class CargoDepot:
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
-        duration = (date - self.refresh_date) // self.recurrence
+        duration = (date - self.refresh_date) // CargoDepot.RECURRENCE
         for _ in range(duration):
-            self.refresh_date += self.recurrence
+            self.refresh_date += CargoDepot.RECURRENCE
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self._determine_cargo()
             self._refresh_freight(self.system.destinations)
@@ -318,7 +325,8 @@ class CargoDepot:
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
     def get_available_freight(self,
-                              destinations: List[StarSystem]) -> tuple[Any | None, list[Any] | None]:
+                              destinations: List[StarSystem]
+                              ) -> tuple[Any | None, list[Any] | None]:
         """Present a list of worlds and Freight shipments for the player to choose from."""
         if not self.freight:
             self._refresh_freight(destinations)
@@ -398,7 +406,8 @@ class CargoDepot:
         """Restrict Cargo sale based on world of origin."""
         if cargo.source_world:
             if cargo.source_world == self.system:
-                self.message_observers("You cannot resell cargo on the world where it was purchased.")
+                self.message_observers("You cannot resell cargo on "
+                                       + "the world where it was purchased.")
                 return True
         return False
 
@@ -420,13 +429,12 @@ class CargoDepot:
     # TO_DO: this method is still too unwieldy - break it up further
     def determine_price(self, prompt: str,
                         cargo: Cargo, quantity: int,
-                        broker_skill: int, trade_skill: int) -> Credits:
+                        skill: int) -> Credits:
         """Calculate the price of a Cargo transaction."""
         modifier = self._get_price_modifiers(cargo, prompt)
 
         if prompt == "sale":
-            modifier += trade_skill
-            modifier += broker_skill
+            modifier += skill
             roll = constrain((die_roll(2) + modifier), 2, 15)
             price_adjustment = actual_value(roll)
         elif prompt == "purchase":
@@ -510,8 +518,7 @@ class CargoDepot:
         first = constrain(first, 1, 6)
         first *= 10
 
-        second = die_roll()
-        roll = first + second
+        roll = first + die_roll()
 
         table = {}
         lines = get_lines("./cargo.txt")

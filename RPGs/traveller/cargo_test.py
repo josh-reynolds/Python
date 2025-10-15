@@ -316,7 +316,7 @@ class CargoDepotTestCase(unittest.TestCase):
         observer = CargoDepotTestCase.ObserverMock()
         depot.add_observer(observer)
 
-        price = depot.determine_price("sale", cargo, 10, 0, 0)
+        price = depot.determine_price("sale", cargo, 10, 0)
         self.assertTrue(isinstance(price, Credits))
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
@@ -324,7 +324,7 @@ class CargoDepotTestCase(unittest.TestCase):
         #self.assertEqual(observer.priority, "")
 
         self.assertEqual(cargo.price_adjustment, 0)
-        price = depot.determine_price("purchase", cargo, 10, 0, 0)
+        price = depot.determine_price("purchase", cargo, 10, 0)
         self.assertTrue(isinstance(price, Credits))
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
@@ -332,7 +332,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
         #self.assertEqual(observer.priority, "")
 
-        price2 = depot.determine_price("purchase", cargo, 10, 0, 0)
+        price2 = depot.determine_price("purchase", cargo, 10, 0)
         self.assertEqual(price2, price)
         self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
         #self.assertEqual(observer.priority, "")

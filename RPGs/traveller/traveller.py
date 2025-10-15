@@ -495,7 +495,7 @@ class Game:
             return
 
         cost = self.depot.determine_price("purchase", cargo, quantity,
-                                          None, self.ship.trade_skill())
+                                          self.ship.trade_skill())
 
         if self.depot.insufficient_funds(cost, self.financials.balance):
             return
@@ -536,7 +536,7 @@ class Game:
             return
 
         sale_price = self.depot.determine_price("sale", cargo, quantity,
-                                                broker_skill, self.ship.trade_skill())
+                                                broker_skill + self.ship.trade_skill())
 
         self.financials.debit(self.depot.broker_fee(broker_skill, sale_price))
 
