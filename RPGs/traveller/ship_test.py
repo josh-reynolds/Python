@@ -7,6 +7,8 @@ from cargo import Freight
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class CargoMock:
         """Mocks a cargo interface for testing."""
 
@@ -19,6 +21,8 @@ class ShipTestCase(unittest.TestCase):
             """Return the quantity of the CargoMock object."""
             return self.quantity
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (0/2)
     class FreightMock:
         """Mocks a freight interface for testing."""
 
@@ -26,6 +30,8 @@ class ShipTestCase(unittest.TestCase):
             """Create an instance of a FreightMock object."""
             self.destination_world = destination
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (0/2)
     class PassengerMock:
         """Mocks a passenger interface for testing."""
 
@@ -33,6 +39,8 @@ class ShipTestCase(unittest.TestCase):
             """Create an instance of a PassengerMock object."""
             self.destination = destination
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (0/2)
     class SystemMock:
         """Mocks a StarSystem interface for testing."""
 
@@ -40,6 +48,8 @@ class ShipTestCase(unittest.TestCase):
             """Create an instance of a SystemMock object."""
             self.name = name
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class ObserverMock:
         """Mocks an observer for testing."""
 
@@ -53,6 +63,8 @@ class ShipTestCase(unittest.TestCase):
             self.message = message
             self.priority = priority
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class ControlsMock:
         """Mocks a controller for testing."""
 
@@ -61,7 +73,8 @@ class ShipTestCase(unittest.TestCase):
             self.commands = commands
             self.invocations = 0
 
-        def get_input(self, constraint, prompt):
+        def get_input(self, _constraint: str, _prompt: str) -> str:
+            """Return the next command in the list."""
             # not safe if we call too many times...
             response = self.commands[self.invocations]
             self.invocations += 1
@@ -245,7 +258,8 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.destination, contract)
 
         ship.warn_if_not_contracted(destination)
-        self.assertEqual(observer.message, "Warning: your contracted destination is Uranus not Jupiter.")
+        self.assertEqual(observer.message,
+                         "Warning: your contracted destination is Uranus not Jupiter.")
         self.assertEqual(observer.priority, "red")
 
     def test_check_failure_post_jump(self) -> None:
