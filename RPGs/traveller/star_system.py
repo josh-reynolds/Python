@@ -11,6 +11,8 @@ from typing import List, Any, Tuple
 # we import, so leaving as is for now
 Coordinate = Tuple[int, int, int]
 
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
 class Hex(ABC):
     """Base class for map hexes."""
 
@@ -44,9 +46,13 @@ class DeepSpace(Hex):
         return "stranded in deep space"
 
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (8/7)
 class UWP:
     """Represents a Traveller Universal World Profile."""
 
+    # pylint: disable=R0913
+    # R0902: Too many arguments (9/5)
     def __init__(self, starport: str, size: int, atmosphere: int, hydrographics: int,
                  population: int, government: int, law: int, tech: int) -> None:
         """Create an instance of a UWP object."""
@@ -85,6 +91,8 @@ class UWP:
                 f"{self.law:X}-{self.tech:X}"
 
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (10/7)
 class StarSystem(Hex):
     """Represents a map hex containing a star system."""
 
