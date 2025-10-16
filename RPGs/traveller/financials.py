@@ -5,7 +5,7 @@ Financials - contains methods to handle financial
              transactions and track a balance.
 """
 from __future__ import annotations
-from typing import Any, List
+from typing import Any, List, cast
 from calendar import ImperialDate
 
 class Credits:
@@ -20,7 +20,7 @@ class Credits:
 
     def __repr__(self) -> str:
         """Return the string representation of a Credits object."""
-        val = round(self.amount)
+        val: int | float = round(self.amount)
         suffix = "Cr"
         if val >= 1000000:
             suffix = "MCr"
@@ -83,6 +83,8 @@ class Credits:
             return Credits(round(self.amount / scalar))
         return NotImplemented
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (12/7)
 class Financials:
     """Contains methods to handle financial transactions and track a balance."""
 
@@ -140,14 +142,14 @@ class Financials:
 
     def _salary_notification(self, date: ImperialDate) -> None:
         """Pay ship's crew monthly salary."""
-        duration = (date - self.salary_paid) // self.salary_recurrence
+        duration = cast(int, (date - self.salary_paid)) // self.salary_recurrence
         for _ in range(duration):
             self.salary_paid += self.salary_recurrence
             self._pay_salaries()
 
     def _loan_notification(self, date: ImperialDate) -> None:
         """Pay monthly ship loan."""
-        duration = (date - self.loan_paid) // self.loan_recurrence
+        duration = cast(int, (date - self.loan_paid)) // self.loan_recurrence
         for _ in range(duration):
             self.loan_paid += self.loan_recurrence
             self._pay_loan()
@@ -175,7 +177,7 @@ class Financials:
 
     def _renew_berth(self, date: ImperialDate) -> None:
         """Deduct renewal fee for starport berth from Financials balance."""
-        days_extra = date - self.berth_expiry
+        days_extra = cast(int, date - self.berth_expiry)
         if days_extra > 0:
             if days_extra == 1:
                 unit = "day"
@@ -202,9 +204,9 @@ class Financials:
     # we'll stick to simple strings for now...
     def maintenance_status(self, date: ImperialDate) -> str:
         """Calculate maintenance green/yellow/red status based on days elapsed."""
-        amount = date - self.last_maintenance
+        amount = cast(int, date - self.last_maintenance)
         if amount <= 365 - (2*28):     # 10 months
             return "green"
-        if amount <= 365:            # 12 months
+        if amount <= 365:              # 12 months
             return "yellow"
         return "red"
