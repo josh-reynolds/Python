@@ -2,6 +2,7 @@
 from __future__ import annotations
 import unittest
 from typing import Any
+from calendar import ImperialDate
 from financials import Credits, Financials
 
 class CreditsTestCase(unittest.TestCase):
@@ -59,11 +60,12 @@ class FinancialsTestCase(unittest.TestCase):
 
     financials: Financials
 
-    class DateMock:
+    class DateMock(ImperialDate):
         """Mocks a date interface for testing."""
 
         def __init__(self, value: int) -> None:
             """Create an instance of a DateMock object."""
+            super().__init__(value, value)
             self.value = value
 
         def copy(self) -> FinancialsTestCase.DateMock:
@@ -113,6 +115,8 @@ class FinancialsTestCase(unittest.TestCase):
             """Return the amount paid monthly for the Ship's loan."""
             return Credits(1)
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class SystemMock:
         """Mocks a system interface for testing."""
 
@@ -120,6 +124,8 @@ class FinancialsTestCase(unittest.TestCase):
             """Test whether the player is on the world's surface."""
             return True
 
+    # pylint: disable=R0903
+    # R0903: Too few public methods (1/2)
     class ObserverMock:
         """Mocks an observer for testing."""
 
