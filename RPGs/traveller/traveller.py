@@ -14,6 +14,9 @@ from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex
 from star_map import StarMap, StarSystemFactory, Coordinate
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (8/7)
+# R0904: Too many public methods (34/20)
 class Game:
     """Contains the game loop and all game logic."""
 
@@ -56,11 +59,11 @@ class Game:
 
     def on_notify(self, message: str, priority: str = "") -> None:
         """Print messages received from model objects."""
-        if (priority == "green"):
+        if priority == "green":
             pr_function = pr_green
-        elif (priority == "yellow"):
+        elif priority == "yellow":
             pr_function = pr_yellow
-        elif (priority == "red"):
+        elif priority == "red":
             pr_function = pr_red
         else:
             pr_function = print
@@ -673,7 +676,7 @@ class Game:
 
         return result
 
-    def _get_freight_destinations(self, potential_destinations: List[Hex], 
+    def _get_freight_destinations(self, potential_destinations: List[Hex],
                                   jump_range: int) -> List[Hex]:
         """Return a list of all reachable destinations with Freight lots."""
         result = []
@@ -695,6 +698,8 @@ class Game:
 
         return result
 
+    # R0912: Too many branches (13/12)
+    # R0915: Too many statements (51/50)
     def _select_passengers(self, available: Tuple[int, int, int],
                            destination: Hex) -> Tuple[int, int, int]:
         """Select Passengers from a list of available candidates."""
@@ -716,7 +721,7 @@ class Game:
             print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
             if response == 'h':
-                if available[PassageClass.HIGH.value] == 0:
+                if self._no_passengers_available("high", available):
                     print("No more high passengers available.")
                     continue
                 if ship_capacity[0] == 0:
@@ -732,7 +737,7 @@ class Game:
                 ship_hold -= 1
 
             if response == 'm':
-                if available[PassageClass.MIDDLE.value] == 0:
+                if self._no_passengers_available("middle", available):
                     print("No more middle passengers available.")
                     continue
                 if ship_capacity[0] == 0:
@@ -744,7 +749,7 @@ class Game:
                 ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
 
             if response == 'l':
-                if available[PassageClass.LOW.value] == 0:
+                if self._no_passengers_available("low", available):
                     print("No more low passengers available.")
                     continue
                 if ship_capacity[1] == 0:
@@ -758,7 +763,17 @@ class Game:
         print("Done selecting passengers.")
         return selection
 
-    def _select_freight_lots(self, available: List[int], 
+    def _no_passengers_available(self, passage: str, available: tuple) -> bool:
+        if passage == "high":
+            index = PassageClass.HIGH.value
+        elif passage == "middle":
+            index = PassageClass.MIDDLE.value
+        else:
+            index = PassageClass.LOW.value
+
+        return available[index] == 0
+
+    def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
         """Select Freight lots from a list of available shipments."""
         selection = []
@@ -865,6 +880,8 @@ class Game:
             pr_red("You are not at the contracted destination for this freight.")
             pr_red(f"It should be unloaded at {self.ship.destination.name}.")
 
+# pylint: disable=R0903
+# R0903: Too few public methods (0/2)
 class Command:
     """Represents a command available to the player."""
 
@@ -877,6 +894,8 @@ class Command:
 
 game = Game()
 
+# pylint: disable=R0903
+# R0903: Too few public methods (0/2)
 class Commands:
     """Collects all command sets together."""
 

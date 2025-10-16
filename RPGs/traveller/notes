@@ -1806,7 +1806,7 @@
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  * [    ] Break up Game class (MVC?)
 #  * [    ] Collapse Crew hierarchy?
-#  * [    ] Eliminate pylint disable statements
+#  * [    ] Eliminate unnecessary pylint disable statements
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
