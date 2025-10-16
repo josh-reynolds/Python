@@ -93,8 +93,9 @@ class CargoDepotTestCase(unittest.TestCase):
             """Test whether another object is greater than or equal to a DateMock."""
             return self.value >= other.value
 
-    # pylint: disable=R0903
+    # pylint: disable=R0903, R0902
     # R0903: Too few public methods (1/2)
+    # R0902: Too many instance attributes (10/7)
     class SystemMock:
         """Mocks a system interface for testing."""
 
@@ -124,6 +125,7 @@ class CargoDepotTestCase(unittest.TestCase):
             self.priority = ""
 
         def on_notify(self, message, priority):
+            """On notification from Calendar, track the event."""
             self.message = message
             self.priority = priority
 
@@ -134,7 +136,8 @@ class CargoDepotTestCase(unittest.TestCase):
             """Create an instance of a ControlsMock."""
             self.commands = commands
 
-        def get_input(self, constraint, prompt):
+        def get_input(self, _constraint: str, _prompt: str) -> str:
+            """Return the next command in the list."""
             # not safe if we call too many times...
             return self.commands.pop()
 
@@ -204,7 +207,8 @@ class CargoDepotTestCase(unittest.TestCase):
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
-        self.assertEqual(observer.message, "There is not enough available. Specify a lower quantity.")
+        self.assertEqual(observer.message,
+                         "There is not enough available. Specify a lower quantity.")
         self.assertEqual(observer.priority, "")
 
         amount = depot.get_cargo_quantity("buy", cargo)
@@ -255,7 +259,8 @@ class CargoDepotTestCase(unittest.TestCase):
         location2 = Location("Uranus")
         cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {}, location2)
         self.assertTrue(depot.invalid_cargo_origin(cargo3))
-        self.assertEqual(observer.message, "You cannot resell cargo on the world where it was purchased.")
+        self.assertEqual(observer.message,
+                         "You cannot resell cargo on the world where it was purchased.")
         self.assertEqual(observer.priority, "")
 
     def test_get_broker(self):
@@ -459,8 +464,9 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(freight is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
 
-    # pylint: disable=W0212
+    # pylint: disable=W0212, R0915
     # W0212: Access to a protected member _passenger_origin_table of a client class
+    # R0915: Too many statements (58/50)
     def test_passenger_origin_table(self):
         """Test calculation of passengers by origin world."""
         depot = CargoDepotTestCase.depot

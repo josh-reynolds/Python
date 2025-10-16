@@ -1462,14 +1462,14 @@
 # ship - 10.0 pylint
 # financials - 10.0 pylint
 # financials_test - 10.0 pylint
+# cargo - 10.0 pylint
+# cargo_test - 10.0 pylint
 # traveller_test - 10.0 pylint, 5 skipped tests
 #
 # calendar_test- 10.0 pylint, 1 mypy error
-# cargo - 10.0 pylint, 4 mypy errors
 # ship_test - 10.0 pylint, 5 mypy errors
 #
 # traveller - 9.95 pylint, 2 mypy errors
-# cargo_test - 9.94 pylint, 2 mypy errors
 #
 # (Also, put together a script to gather these scores...)
 # -------------------------------------------------------------

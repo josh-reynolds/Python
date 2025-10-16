@@ -10,7 +10,7 @@ CargoDepot - represents a starport location for loading and
 """
 from enum import Enum
 from random import randint
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, cast
 from calendar import ImperialDate
 from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
@@ -208,13 +208,15 @@ class CargoDepot:
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
-        duration = (date - self.refresh_date) // CargoDepot.RECURRENCE
+        duration = cast(int, (date - self.refresh_date)) // CargoDepot.RECURRENCE
         for _ in range(duration):
             self.refresh_date += CargoDepot.RECURRENCE
         if duration > 0:       # we only need to refresh the cargo once, not repeatedly
             self.cargo = self._determine_cargo()
-            self._refresh_freight(self.system.destinations)
-            self._refresh_passengers(self.system.destinations)
+            self._refresh_freight(cast(List[StarSystem],
+                                       self.system.destinations))
+            self._refresh_passengers(cast(List[StarSystem],
+                                          self.system.destinations))
 
     def add_observer(self, observer):
         """Add an observer to respond to UI messages."""
@@ -447,7 +449,7 @@ class CargoDepot:
                     price_adjustment += .01
                 cargo.price_adjustment = price_adjustment
 
-        price = Credits(cargo.price.amount * price_adjustment * quantity)
+        price = Credits(round(cargo.price.amount * price_adjustment * quantity))
         if ((prompt == "sale" and price_adjustment > 1) or
             (prompt == "purchase" and price_adjustment < 1)):
             pr_function = "green"
@@ -481,7 +483,7 @@ class CargoDepot:
     def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
         """Calculate a broker's fee for Cargo sale."""
         if broker_skill > 0:
-            broker_fee = Credits(sale_price.amount * (.05 * broker_skill))
+            broker_fee = Credits(round(sale_price.amount * (.05 * broker_skill)))
             self.message_observers(f"Deducting {broker_fee} broker fee for skill {broker_skill}.")
             return broker_fee
         return Credits(0)
