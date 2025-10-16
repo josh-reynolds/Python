@@ -44,6 +44,10 @@ def pr_blue(string: str) -> None:
     """Print string to console, colored blue."""
     print(f"\033[1;36;40m{string}\033[00m")
 
+def pr_unformatted(string: str) -> None:
+    """Print string to console with no formatting."""
+    print(f"{string}")
+
 def int_input(prompt: str) -> int:
     """Take input from the user, reprompt if not an integer."""
     while True:

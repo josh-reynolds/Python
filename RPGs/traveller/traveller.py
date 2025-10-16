@@ -3,15 +3,16 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green, pr_yellow
+from utilities import pr_unformatted
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
-from star_system import DeepSpace, Hex
+from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory, Coordinate
 
 # pylint: disable=R0902
@@ -26,7 +27,7 @@ class Game:
         self.date = Calendar()
 
         self.ship = Ship()
-        self.ship.load_cargo(Cargo("Grain", 20, Credits(300), 1,
+        self.ship.load_cargo(Cargo("Grain", '20', Credits(300), 1,
                                    {"Ag":-2,"Na":1,"In":2},
                                    {"Ag":-2}))
 
@@ -40,13 +41,13 @@ class Game:
             (-1,1,0) : StarSystemFactory.create("Aramis", (-1,1,0), "A", 8, 6, 5, 8, 5, 5, 10)
             })
 
-        self.location = self.star_map.get_system_at_coordinate((0,0,0))
+        self.location = cast(StarSystem, self.star_map.get_system_at_coordinate((0,0,0)))
         coord = self.location.coordinate
         self.location.destinations = self.star_map.get_systems_within_range(coord,
                                                               self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
-        self.commands = None
+        self.commands: List[Command] = []
 
         self.ship.add_observer(self)
         self.ship.controls = self
@@ -66,14 +67,14 @@ class Game:
         elif priority == "red":
             pr_function = pr_red
         else:
-            pr_function = print
+            pr_function = pr_unformatted
 
         pr_function(message)
 
-    def get_input(self, constraint: str, prompt: str) -> str:
+    def get_input(self, constraint: str, prompt: str) -> str | int:
         """Get input from the player and return results to the model class."""
         if constraint == 'confirm':
-            result = confirm_input(prompt)
+            result: str | int = confirm_input(prompt)
         elif constraint == 'int':
             result = int_input(prompt)
         else:
@@ -273,7 +274,7 @@ class Game:
         if available is None:
             return
 
-        destination = self.star_map.get_system_at_coordinate(coordinate)
+        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = self._select_passengers(available, destination)
@@ -348,7 +349,7 @@ class Game:
             self.location = self.star_map.get_system_at_coordinate(misjump_target)
             self.star_map.systems[misjump_target] = self.location
         else:
-            self.location = destination
+            self.location = self.star_map.get_system_at_coordinate(destination)
 
     def jump(self) -> None:
         """Perform a hyperspace jump to another StarSystem."""
@@ -377,7 +378,7 @@ class Game:
             return
 
         coordinate = self.location.destinations[destination_number].coordinate
-        destination = self.star_map.get_system_at_coordinate(coordinate)
+        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
 
         self.ship.warn_if_not_contracted(destination)
 
@@ -391,7 +392,7 @@ class Game:
 
         pr_red("Executing jump!")
 
-        self._misjump_check(destination)
+        self._misjump_check(coordinate)
         self.location.detail = "jump"
         self.commands = Commands.jump
 
@@ -655,7 +656,7 @@ class Game:
         self.ship.repair_status = RepairStatus.REPAIRED
 
     def _get_passenger_destinations(self, potential_destinations: List[Hex],
-                                    jump_range: int) -> List[Hex]:
+                                    jump_range: int) -> List[StarSystem]:
         """Return a list of all reachable destination with Passengers."""
         result = []
         if self.ship.destination is not None:
@@ -700,11 +701,12 @@ class Game:
 
     # R0912: Too many branches (13/12)
     # R0915: Too many statements (51/50)
-    def _select_passengers(self, available: Tuple[int, int, int],
+    def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, int, int]:
         """Select Passengers from a list of available candidates."""
-        selection = (0,0,0)
-        ship_capacity = (self.ship.empty_passenger_berths, self.ship.empty_low_berths)
+        selection: Tuple[int, ...] = (0,0,0)
+        ship_capacity: Tuple[int, ...] = (self.ship.empty_passenger_berths,
+                                          self.ship.empty_low_berths)
 
         ship_hold = self.ship.free_space()
         while True:
@@ -825,7 +827,7 @@ class Game:
         if available is None:
             return
 
-        destination = self.star_map.get_system_at_coordinate(coordinate)
+        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
         print(f"Freight shipments for {destination.name}")
         print(available)
 

@@ -204,7 +204,7 @@ class CargoDepot:
         self.freight: Dict[StarSystem, List] = {}
         self.passengers: Dict[StarSystem, Tuple[int, ...]] = {}
         self.observers: List[Any] = []
-        self.controls = None
+        self.controls: Any = None
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
@@ -470,7 +470,7 @@ class CargoDepot:
             return True
         return False
 
-    def insufficient_funds(self, cost: int, balance: int) -> bool:
+    def insufficient_funds(self, cost: Credits, balance: int) -> bool:
         """Check if the player's bank balance has enough funds for a given cost."""
         if cost > balance:
             self.message_observers("You do not have sufficient funds.")
