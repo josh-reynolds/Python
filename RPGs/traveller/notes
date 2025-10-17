@@ -1447,27 +1447,16 @@
 # really want to get back to features, but it would be a mistake
 # with some of these structural issues. How close are we?
 #
+# And done! First completely clean linter output. I punted
+# on a few of the trickier bits and disabled feedback, but 
+# overall the codebase is much cleaner. Let's push the 
+# unaddressed TO_DOs to another cleanup pass after a round
+# of feature work.
+#
 # 119/124 unit tests passing (5 skipped)
 # 100% pydocstyle passing
-#
-# word_gen - 10.0 pylint
-# word_gen_test - 10.0 pylint
-# utilities - 10.0 pylint
-# calendar - 10.0 pylint
-# star_map_test - 10.0 pylint
-# utilities_test - 10.0 pylint
-# star_system_test - 10.0 pylint
-# star_system - 10.0 pylint
-# star_map - 10.0 pylint
-# ship - 10.0 pylint
-# financials - 10.0 pylint
-# financials_test - 10.0 pylint
-# cargo - 10.0 pylint
-# cargo_test - 10.0 pylint
-# calendar_test- 10.0 pylint
-# ship_test - 10.0 pylint
-# traveller_test - 10.0 pylint, 5 skipped tests
-# traveller - 10.0 pylint, 5 mypy errors
+# 100% mypy passing
+# 100% pylint passing
 #
 # Added a shell script to run pylint/pydocstyle/mypy and all
 # unit tests against all python modules. I've brought the
@@ -1481,6 +1470,11 @@
 # a bit noisy, and I don't think they've prevented any bugs.
 # I've had to jump though some strange hoops to make mypy
 # happy, but Python ignores all of it, so hrm.
+#
+# But maybe that's an indicator to keep an eye on. Complicated 
+# type annotations are a code smell. So are any directives to 
+# ignore linting, for mypy and for pylint.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1546,20 +1540,22 @@
 #  * Adding freight & passengers
 #  * Any other remaining RAW procedures:
 #    * crew, misjumps, etc.
-#  PHASE FOUR <== we are here
+#  PHASE FOUR
 #  * Handling technical debt:
 #    * (We _should_ be doing some of this as we go, at least at the
 #       end of each phase...)
 #    * Test coverage
 #    * Refactoring
 #    * Best practices and 'pythonic' coding
-#  PHASE FIVE
+#  PHASE FIVE <== we are here
 #  * Polishing game mechanisms:
 #    * UI work
 #    * Front end and menu
 #    * Save/load if not done earlier
 #    * Player customization: ship name, captain, etc.
 #  PHASE SIX
+#  * Another refactoring push
+#  PHASE SEVEN
 #    * Expand scope with RPG-lite elements and events
 #    * Lift into graphics system? (This could really snowball, be cautious)
 #    * Explore later Traveller versions for ideas (or to support as options)
@@ -1782,6 +1778,44 @@
 #           down conditions yet. Ah! Need to wire up the observer again post-jump!
 #  * [DONE] Lift all input statements out of model classes
 #  * [DONE] Should we add type annotations? (Possibly check out mypy...)
+#  * [DONE] Create a linter script to run all quality checks
+#  * [DONE] Get 100% clean on pylint/pydocstyle/mypy/unittests
+#  PHASE FIVE ======================================================
+#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
+#           (should be able to view in hold and while trading,
+#            possibly also while choosing a destination world)
+#  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Review flow, confirmations, notifications - streamline where annoying,
+#           slow down where mistakes happen
+#  * [    ] Can we colorize current location in star map listing?
+#  * [    ] Need to be able to see maintenance date
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] List star map to take a range parameter? What's the use case?
+#  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
+#           instead of choosing one at a time.
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
+#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
+#  * [    ] Add a 'shore leave' action?
+#  * [    ] Restrict life support recharge at low-facility starports?
+#  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
+#  * [    ] Rather than having up-front tests, make some commands dynamically
+#           available in command lists when conditions merit - e.g. only present
+#           skimming as jump point command if the system has a gas giant
+#  * [    ] Tie-in with game over and save/load game - add front end with
+#  *         restart / new game options, including re-using same star map
+#  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
+#           i.e. balance can't go negative?)
+#  * [    ] Front end menu
+#  * [    ] New game
+#  * [    ] Save game state
+#  * [    ] Load game state
+#  * [    ] Export star map
+#  * [    ] Merge screens/menus and location state transitions?
+#  * [    ] Should/could we clear the screen?
+#  * [    ] Adjust UI elements, play with more ANSI codes - also review color
+#           coding for warnings, positive/negative messages, etc.
+#  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
+#  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
@@ -1821,42 +1855,7 @@
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
-#  PHASE FIVE ======================================================
-#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
-#           (should be able to view in hold and while trading,
-#            possibly also while choosing a destination world)
-#  * [    ] Replace dummy/test data with 'real' values
-#  * [    ] Review flow, confirmations, notifications - streamline where annoying,
-#           slow down where mistakes happen
-#  * [    ] Can we colorize current location in star map listing?
-#  * [    ] Need to be able to see maintenance date
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
-#  * [    ] List star map to take a range parameter? What's the use case?
-#  * [    ] Passenger selection interface is really tedious. Need some way to enter numbers
-#           instead of choosing one at a time.
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
-#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
-#  * [    ] Add a 'shore leave' action?
-#  * [    ] Restrict life support recharge at low-facility starports?
-#  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
-#  * [    ] Rather than having up-front tests, make some commands dynamically
-#           available in command lists when conditions merit - e.g. only present
-#           skimming as jump point command if the system has a gas giant
-#  * [    ] Tie-in with game over and save/load game - add front end with
-#  *         restart / new game options, including re-using same star map
-#  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
-#           i.e. balance can't go negative?)
-#  * [    ] Front end menu
-#  * [    ] New game
-#  * [    ] Save game state
-#  * [    ] Load game state
-#  * [    ] Export star map
-#  * [    ] Merge screens/menus and location state transitions?
-#  * [    ] Should/could we clear the screen?
-#  * [    ] Adjust UI elements, play with more ANSI codes - also review color
-#           coding for warnings, positive/negative messages, etc.
-#  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
-#  PHASE SIX ======================================================
+#  PHASE SEVEN ====================================================
 #  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] Generate a bitmap StarMap
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?

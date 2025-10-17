@@ -4,7 +4,7 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Dict, List
+from typing import Dict, List, cast
 from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
 from utilities import die_roll, constrain, Coordinate
@@ -269,7 +269,7 @@ class StarMap:
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
 
-    def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[Hex]:
+    def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""
         result = []
         for coord in StarMap._get_coordinates_within_range(origin, distance):
@@ -281,7 +281,10 @@ class StarMap:
                 self.systems[coord] = system
                 if isinstance(system, StarSystem):
                     result.append(system)
-        return result
+
+        # although we only add StarSystems to the list,
+        # mypy doesn't recognize that and we need to cast
+        return cast(List[StarSystem], result)
 
     def get_system_at_coordinate(self, coordinate: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""

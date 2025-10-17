@@ -348,11 +348,11 @@ class Game:
             print(f"{misjump_target} at distance {distance}")
 
             # misjump is the only scenario where EmptySpace is a possible
-            # location, so we need to leave his type as Hex
-            self.location = self.star_map.get_system_at_coordinate(misjump_target)
+            # location, so we need to leave this type as Hex
+            self.location = self.star_map.get_system_at_coordinate(misjump_target) # type: ignore
             self.star_map.systems[misjump_target] = self.location
         else:
-            self.location = self.star_map.get_system_at_coordinate(destination)
+            self.location = cast(StarSystem, self.star_map.get_system_at_coordinate(destination))
 
     def jump(self) -> None:
         """Perform a hyperspace jump to another StarSystem."""
@@ -836,7 +836,8 @@ class Game:
             return
 
         destination = cast(StarSystem,
-                           self.star_map.get_system_at_coordinate(coordinate))
+                           self.star_map.get_system_at_coordinate(
+                               cast(Coordinate, coordinate)))
         print(f"Freight shipments for {destination.name}")
         print(available)
 
