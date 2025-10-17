@@ -3,6 +3,7 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
+from time import sleep
 from typing import List, Tuple, Callable, cast
 from calendar import Calendar
 from random import randint, choice
@@ -98,6 +99,7 @@ class Game:
             elif self.ship.repair_status == RepairStatus.PATCHED:
                 repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
+            print("\033[H\033[2J")
             pr_yellow_on_red(f"\n{self.date} : You are " +
                              f"{self.location.description()}.{repair_state}")
             print(f"Credits: {self.financials.balance}"
@@ -109,6 +111,7 @@ class Game:
                 if command.lower() == cmd.key:
                     print()
                     cmd.action()
+                    sleep(4)
 
     def quit(self) -> None:
         """Quit the game."""

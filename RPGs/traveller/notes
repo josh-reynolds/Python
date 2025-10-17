@@ -1782,6 +1782,8 @@
 #  * [DONE] Get 100% clean on pylint/pydocstyle/mypy/unittests
 #  PHASE FIVE ======================================================
 #  * [DONE] Can we colorize current location in star map listing?
+#  * [CUT ] Add a 'shore leave' action? (Is this different from 'wait'? How?)
+#  * [DONE] Should/could we clear the screen?
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
@@ -1795,7 +1797,6 @@
 #           instead of choosing one at a time.
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
-#  * [    ] Add a 'shore leave' action?
 #  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
@@ -1811,7 +1812,6 @@
 #  * [    ] Load game state
 #  * [    ] Export star map
 #  * [    ] Merge screens/menus and location state transitions?
-#  * [    ] Should/could we clear the screen?
 #  * [    ] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
