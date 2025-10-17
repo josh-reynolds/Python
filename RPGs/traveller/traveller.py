@@ -111,7 +111,7 @@ class Game:
                 if command.lower() == cmd.key:
                     print()
                     cmd.action()
-                    sleep(4)
+                    sleep(3)
 
     def quit(self) -> None:
         """Quit the game."""
@@ -721,7 +721,7 @@ class Game:
                 print(f"No more passengers available for {destination.name}.")
                 break
 
-            response = input("Choose a passenger by type (h, m, l, or q to exit): ")
+            response = input("Choose a passenger by type (h, m, l) and number, or q to exit): ")
             if response == 'q':
                 break
 
@@ -729,50 +729,67 @@ class Game:
             print(f"Selected (H, M, L): {selection}")
             print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
-            if response == 'h':
-                if self._no_passengers_available("high", available):
-                    print("No more high passengers available.")
-                    continue
-                if ship_capacity[0] == 0:
-                    print("No more staterooms available.")
-                    continue
-                if ship_hold < 1:
-                    print("No cargo space available for baggage.")
-                    continue
-                print("Adding a high passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(1,0,0)))
-                available = tuple(a+b for a,b in zip(available,(-1,0,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
-                ship_hold -= 1
+            passage, count = response.split()
+            # BUG: need to handle single token response, can't tuple unpack
 
-            if response == 'm':
-                if self._no_passengers_available("middle", available):
-                    print("No more middle passengers available.")
-                    continue
-                if ship_capacity[0] == 0:
-                    print("No more staterooms available.")
-                    continue
-                print("Adding a middle passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(0,1,0)))
-                available = tuple(a+b for a,b in zip(available,(0,-1,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-1,0)))
+            if passage not in ['h', 'm', 'l']:
+                print("Please enter 'h', 'm' or 'l' for passage class.")
+                continue
 
-            if response == 'l':
-                if self._no_passengers_available("low", available):
-                    print("No more low passengers available.")
+            try:
+                count = int(count)
+            except ValueError:
+                print("Please input a number.")
+                continue
+
+            suffix = ""
+            if count > 1:
+                suffix = "s"
+
+            if passage == 'h':
+                if self._no_passengers_available("high", available, count):
+                    print("There are not enough high passengers available.")
                     continue
-                if ship_capacity[1] == 0:
-                    print("No more low berths available.")
+                if ship_capacity[0] - count < 0:
+                    print("There are not enough staterooms available.")
                     continue
-                print("Adding a low passenger.")
-                selection = tuple(a+b for a,b in zip(selection,(0,0,1)))
-                available = tuple(a+b for a,b in zip(available,(0,0,-1)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-1)))
+                if ship_hold - count < 0:
+                    print("There is not enough cargo space available.")
+                    continue
+                print(f"Adding {count} high passenger{suffix}.")
+                selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
+                available = tuple(a+b for a,b in zip(available,(-count,0,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+                ship_hold -= count
+
+            if passage == 'm':
+                if self._no_passengers_available("middle", available, count):
+                    print("There are not enough middle passengers available.")
+                    continue
+                if ship_capacity[0] - count < 0:
+                    print("There are not enough staterooms available.")
+                    continue
+                print(f"Adding {count} middle passenger{suffix}.")
+                selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
+                available = tuple(a+b for a,b in zip(available,(0,-count,0)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+
+            if passage == 'l':
+                if self._no_passengers_available("low", available, count):
+                    print("There are not enough low passengers available.")
+                    continue
+                if ship_capacity[1] - count < 0:
+                    print("There are not enough low berths available.")
+                    continue
+                print(f"Adding {count} low passenger{suffix}.")
+                selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
+                available = tuple(a+b for a,b in zip(available,(0,0,-count)))
+                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
 
         print("Done selecting passengers.")
         return selection
 
-    def _no_passengers_available(self, passage: str, available: tuple) -> bool:
+    def _no_passengers_available(self, passage: str, available: tuple, count: int) -> bool:
         if passage == "high":
             index = PassageClass.HIGH.value
         elif passage == "middle":
@@ -780,7 +797,7 @@ class Game:
         else:
             index = PassageClass.LOW.value
 
-        return available[index] == 0
+        return available[index] - count < 0
 
     def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
