@@ -2,6 +2,7 @@
 import unittest
 
 def suite():
+    """Create a suite of test cases."""
     test_suite = unittest.TestSuite()
     loader = unittest.TestLoader()
     test_suite.addTests(loader.loadTestsFromName('calendar_test'))

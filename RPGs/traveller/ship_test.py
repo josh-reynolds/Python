@@ -4,6 +4,7 @@ from cargo import Freight
 from financials import Credits
 from mock import ObserverMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
+from star_system import StarSystem, UWP
 
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
@@ -42,12 +43,13 @@ class ShipTestCase(unittest.TestCase):
 
     # pylint: disable=R0903
     # R0903: Too few public methods (0/2)
-    class SystemMock:
+    class SystemMock(StarSystem):
         """Mocks a StarSystem interface for testing."""
 
         def __init__(self, name):
             """Create an instance of a SystemMock object."""
-            self.name = name
+            super().__init__(name, (1,1,1),
+                             UWP("A",1,1,1,1,1,1,1), True)
 
     # pylint: disable=R0903
     # R0903: Too few public methods (1/2)

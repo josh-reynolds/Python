@@ -1,5 +1,6 @@
 """Contains tests for the calendar module."""
 import unittest
+from typing import cast
 from calendar import Calendar, ImperialDate
 
 class ImperialDateTestCase(unittest.TestCase):
@@ -101,7 +102,7 @@ class CalendarTestCase(unittest.TestCase):
         def on_notify(self, date: ImperialDate) -> None:
             """On notification from Calendar, track the event."""
             self.count += 1
-            duration = (date - self.paid_date) // self.recurrence
+            duration = cast(int, (date - self.paid_date)) // self.recurrence
             for _ in range(duration):
                 self.event_count += 1
                 self.paid_date += self.recurrence
