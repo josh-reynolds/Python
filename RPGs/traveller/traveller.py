@@ -8,8 +8,8 @@ from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
-from utilities import pr_blue, pr_red, print_list, die_roll, pr_green, pr_yellow
-from utilities import pr_unformatted, Coordinate
+from utilities import pr_blue, pr_red, pr_list, die_roll, pr_green, pr_yellow
+from utilities import pr_unformatted, Coordinate, pr_highlight_list
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
@@ -374,7 +374,7 @@ class Game:
 
         jump_range = self.ship.jump_range
         print(f"Systems within jump-{jump_range}:")
-        print_list(self.location.destinations)
+        pr_list(self.location.destinations)
         destination_number = int_input("Enter destination number: ")
         if destination_number >= len(self.location.destinations):
             print("That is not a valid destination number.")
@@ -489,7 +489,7 @@ class Game:
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         pr_blue("Purchasing cargo.")
-        print_list(self.depot.cargo)
+        pr_list(self.depot.cargo)
         cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo is None:
             return
@@ -528,7 +528,7 @@ class Game:
             print("You have no cargo on board.")
             return
 
-        print_list(cargoes)
+        pr_list(cargoes)
         cargo = self.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             return
@@ -558,7 +558,7 @@ class Game:
     def goods(self) -> None:
         """Show goods available for purchase."""
         pr_blue("Available cargo loads:")
-        print_list(self.depot.cargo)
+        pr_list(self.depot.cargo)
 
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
@@ -567,7 +567,7 @@ class Game:
         if len(contents) == 0:
             print("Empty.")
         else:
-            print_list(contents)
+            pr_list(contents)
 
     def passenger_manifest(self) -> None:
         """Show the Passenger's booked for transport."""
@@ -586,7 +586,7 @@ class Game:
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
         pr_blue("Crew roster:")
-        print_list(self.ship.crew)
+        pr_list(self.ship.crew)
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
@@ -602,7 +602,7 @@ class Game:
         """View all known StarSystems."""
         pr_blue("All known star systems:")
         systems = self.star_map.get_all_systems()
-        print_list(systems)
+        pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a

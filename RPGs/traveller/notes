@@ -1781,13 +1781,13 @@
 #  * [DONE] Create a linter script to run all quality checks
 #  * [DONE] Get 100% clean on pylint/pydocstyle/mypy/unittests
 #  PHASE FIVE ======================================================
+#  * [DONE] Can we colorize current location in star map listing?
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
-#  * [    ] Can we colorize current location in star map listing?
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] List star map to take a range parameter? What's the use case?

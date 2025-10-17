@@ -1,6 +1,6 @@
 """Contains utility functions."""
 from random import randint
-from typing import Tuple
+from typing import Tuple, Any
 
 Coordinate = Tuple[int, int, int]
 
@@ -68,10 +68,18 @@ def confirm_input(prompt: str) -> str:
         confirmation = input(prompt)
     return confirmation
 
-def print_list(items: list) -> None:
+def pr_list(items: list) -> None:
     """Print out a list with its index values."""
     for i,item in enumerate(items):
         print(f"{i} - {item}")
+
+def pr_highlight_list(items: list, highlight: Any, annotation: str = "") -> None:
+    """Print out a list with its index values, highlighting specific entries."""
+    for i,item in enumerate(items):
+        if item == highlight:
+            pr_green(f"{i} - {item}{annotation}")
+        else:
+            print(f"{i} - {item}")
 
 def get_lines(filename: str) -> list[str]:
     """Read all lines from filename and return as a list."""
