@@ -2,6 +2,7 @@
 import unittest
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
 from financials import Credits
+from mock import ObserverMock
 
 class CargoTestCase(unittest.TestCase):
     """Tests Cargo class."""
@@ -116,19 +117,6 @@ class CargoDepotTestCase(unittest.TestCase):
             """Return the string representation of a SystemMock object."""
             return f"{self.coordinate} - {self.name}"
 
-    class ObserverMock:
-        """Mocks an observer for testing."""
-
-        def __init__(self):
-            """Create an instance of an ObserverMock."""
-            self.message = ""
-            self.priority = ""
-
-        def on_notify(self, message, priority):
-            """On notification from Calendar, track the event."""
-            self.message = message
-            self.priority = priority
-
     class ControlsMock:
         """Mocks a controller for testing."""
 
@@ -180,7 +168,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
         depot.controls = CargoDepotTestCase.ControlsMock([2, 1, 0, 7])
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
         cargo_list = ["a", "b", "c"]
 
@@ -201,7 +189,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
         depot.controls = CargoDepotTestCase.ControlsMock([9, 1, 0, -1, 11])
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -231,7 +219,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test validation of cargo origin."""
         depot = CargoDepotTestCase.depot
         self.assertEqual(depot.system.name, "Uranus")
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         # pylint: disable=R0903
@@ -268,7 +256,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 4, 5, 'y', 'y', 4, 5, 'y', 'n', 1, 'y', 'y', 1, 0, 'y', 'n']
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         # n
@@ -295,7 +283,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
@@ -318,7 +306,7 @@ class CargoDepotTestCase(unittest.TestCase):
         #        results for testing
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         price = depot.determine_price("sale", cargo, 10, 0)
@@ -345,7 +333,7 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_insufficient_funds(self):
         """Test validation of bank balance."""
         depot = CargoDepotTestCase.depot
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         result = depot.insufficient_funds(Credits(1), Credits(1))
@@ -366,7 +354,7 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_broker_fee(self):
         """Test calculation of broker fees."""
         depot = CargoDepotTestCase.depot
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
 
         fee = depot.broker_fee(0, Credits(100))
@@ -389,7 +377,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 'y']
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
         cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
 
@@ -441,7 +429,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
         world1 = CargoDepotTestCase.SystemMock()
         world1.name = "Pluto"
@@ -584,7 +572,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
-        observer = CargoDepotTestCase.ObserverMock()
+        observer = ObserverMock()
         depot.add_observer(observer)
         world1 = CargoDepotTestCase.SystemMock()
         world1.name = "Pluto"

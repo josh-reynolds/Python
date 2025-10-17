@@ -1,8 +1,9 @@
 """Contains tests for the ship module."""
 import unittest
-from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
-from financials import Credits
 from cargo import Freight
+from financials import Credits
+from mock import ObserverMock
+from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
 
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
@@ -47,21 +48,6 @@ class ShipTestCase(unittest.TestCase):
         def __init__(self, name):
             """Create an instance of a SystemMock object."""
             self.name = name
-
-    # pylint: disable=R0903
-    # R0903: Too few public methods (1/2)
-    class ObserverMock:
-        """Mocks an observer for testing."""
-
-        def __init__(self):
-            """Create an instance of an ObserverMock."""
-            self.message = ""
-            self.priority = ""
-
-        def on_notify(self, message, priority):
-            """Save message and priority for review on notification."""
-            self.message = message
-            self.priority = priority
 
     # pylint: disable=R0903
     # R0903: Too few public methods (1/2)
@@ -247,7 +233,7 @@ class ShipTestCase(unittest.TestCase):
     def test_warn_if_not_contracted(self) -> None:
         """Test warning message if destination does not match the contract."""
         ship = ShipTestCase.ship
-        observer = ShipTestCase.ObserverMock()
+        observer = ObserverMock()
         ship.add_observer(observer)
 
         source = ShipTestCase.SystemMock("Pluto")
@@ -265,7 +251,7 @@ class ShipTestCase(unittest.TestCase):
     def test_check_failure_post_jump(self) -> None:
         """Test drive failure check after jump."""
         ship = ShipTestCase.ship
-        observer = ShipTestCase.ObserverMock()
+        observer = ObserverMock()
         ship.add_observer(observer)
 
         ship.fuel_quality = FuelQuality.UNREFINED
@@ -278,7 +264,7 @@ class ShipTestCase(unittest.TestCase):
     def test_check_failure_pre_jump(self) -> None:
         """Test drive failure check before jump."""
         ship = ShipTestCase.ship
-        observer = ShipTestCase.ObserverMock()
+        observer = ObserverMock()
         ship.add_observer(observer)
 
         for _ in range(144):                         # 1 in 36 chance of failure
@@ -290,7 +276,7 @@ class ShipTestCase(unittest.TestCase):
     def test_add_observer(self):
         """Test adding an observer to the Ship."""
         ship = ShipTestCase.ship
-        observer = ShipTestCase.ObserverMock()
+        observer = ObserverMock()
 
         ship.add_observer(observer)
         self.assertEqual(ship.observers[0], observer)
@@ -298,7 +284,7 @@ class ShipTestCase(unittest.TestCase):
     def test_message_observers(self):
         """Test sending messages to observers."""
         ship = ShipTestCase.ship
-        observer = ShipTestCase.ObserverMock()
+        observer = ObserverMock()
         ship.add_observer(observer)
 
         ship.message_observers("This is a test")

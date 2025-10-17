@@ -4,6 +4,7 @@ import unittest
 from typing import Any
 from calendar import ImperialDate
 from financials import Credits, Financials
+from mock import ObserverMock
 
 class CreditsTestCase(unittest.TestCase):
     """Tests Credits class."""
@@ -124,21 +125,6 @@ class FinancialsTestCase(unittest.TestCase):
             """Test whether the player is on the world's surface."""
             return True
 
-    # pylint: disable=R0903
-    # R0903: Too few public methods (1/2)
-    class ObserverMock:
-        """Mocks an observer for testing."""
-
-        def __init__(self) -> None:
-            """Create an instance of an ObserverMock."""
-            self.message = ""
-            self.priority = ""
-
-        def on_notify(self, message: str, priority: str) -> None:
-            """On notification from Calendar, track the event."""
-            self.message = message
-            self.priority = priority
-
     def setUp(self) -> None:
         """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
@@ -149,7 +135,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_on_notify(self) -> None:
         """Test notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         date = FinancialsTestCase.DateMock(8)
@@ -180,7 +166,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_salary_notification(self) -> None:
         """Test salary notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(1))
@@ -211,7 +197,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_pay_salaries(self) -> None:
         """Test paying monthly crew salaries."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.balance, Credits(100))
@@ -226,7 +212,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_loan_notification(self) -> None:
         """Test loan notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(1))
@@ -257,7 +243,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_pay_loan(self) -> None:
         """Test monthly load payment."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.balance, Credits(100))
@@ -272,7 +258,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_maintenance_notification(self) -> None:
         """Test maintenance behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
@@ -330,7 +316,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_berthing_fee(self) -> None:
         """Test payment of starport berthing fees."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.balance, Credits(100))
@@ -361,7 +347,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_berth_notification(self) -> None:
         """Test berth notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.balance, Credits(100))
@@ -400,7 +386,7 @@ class FinancialsTestCase(unittest.TestCase):
     def test_renew_berth(self) -> None:
         """Test berth renewal."""
         financials = FinancialsTestCase.financials
-        observer = FinancialsTestCase.ObserverMock()
+        observer = ObserverMock()
         financials.add_observer(observer)
 
         self.assertEqual(financials.balance, Credits(100))
