@@ -15,7 +15,7 @@ from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory, Coordinate
 
-# pylint: disable=R0902
+# pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
 # R0904: Too many public methods (34/20)
 class Game:
@@ -699,6 +699,7 @@ class Game:
 
         return result
 
+    # pylint: disable=R0912, R0915
     # R0912: Too many branches (13/12)
     # R0915: Too many statements (51/50)
     def _select_passengers(self, available: Tuple[int, ...],

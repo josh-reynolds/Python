@@ -9,6 +9,8 @@ from star_system import StarSystem, UWP
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
+    ship: Ship = Ship()
+
     # pylint: disable=R0903
     # R0903: Too few public methods (1/2)
     class CargoMock:

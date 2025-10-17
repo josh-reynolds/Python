@@ -1464,14 +1464,23 @@
 # financials_test - 10.0 pylint
 # cargo - 10.0 pylint
 # cargo_test - 10.0 pylint
+# calendar_test- 10.0 pylint
+# ship_test - 10.0 pylint
 # traveller_test - 10.0 pylint, 5 skipped tests
+# traveller - 10.0 pylint, 13 mypy errors
 #
-# calendar_test- 10.0 pylint, 1 mypy error
-# ship_test - 10.0 pylint, 5 mypy errors
+# Added a shell script to run pylint/pydocstyle/mypy and all
+# unit tests against all python modules. I've brought the
+# errors down enough that the output fits on one screen (though
+# admittedly I've had to disable a handful of pylint issues
+# that will need cleanup later). Just a few annotation issues
+# and we can move on. This is a good baseline to maintain.
+# Don't regress below this point, ever.
 #
-# traveller - 9.95 pylint, 2 mypy errors
-#
-# (Also, put together a script to gather these scores...)
+# I'm still unsure of the value of the annotations. They're
+# a bit noisy, and I don't think they've prevented any bugs.
+# I've had to jump though some strange hoops to make mypy
+# happy, but Python ignores all of it, so hrm.
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1778,16 +1787,16 @@
 #  * [....] Extend payment flow model to reduce coupling between classes
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
+#  * [....] Look for multiline message_observer() usage - may need to adjust
+#           ObserverMock to retain all messages in a queue, currently only holds last one
+#  * [....] Consolidate mock objects into mock module
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
-#  * [    ] Lift and share assorted Mock classes? And/or replace with unittest.Mock
-#           or MagicMock?
+#  * [    ] Review unittest.Mock/MagicMock - should replace homegrown?
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Apply mock.patch or monkeypatch to die_roll() so we can have
 #           deterministic tests
-#  * [    ] Look for multiline message_observer() usage - may need to adjust
-#           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
@@ -1836,6 +1845,7 @@
 #  *         restart / new game options, including re-using same star map
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
+#  * [    ] Front end menu
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Should/could we clear the screen?
