@@ -1,7 +1,9 @@
 """Contains tests for the traveller module."""
 import unittest
+from typing import List, cast
 from financials import Credits
 from star_map import StarSystemFactory
+from star_system import StarSystem
 from traveller import Game
 
 # most of these methods necessarily have side effects,
@@ -37,7 +39,7 @@ class GameTestCase(unittest.TestCase):
     def test_get_passenger_destinations(self) -> None:
         """Test getting list of passenger destinations."""
         game = Game()
-        potential_destinations = game.location.destinations.copy()
+        potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
         destinations = game._get_passenger_destinations(potential_destinations, 1)
         print(destinations)
@@ -54,7 +56,7 @@ class GameTestCase(unittest.TestCase):
     def test_get_freight_destinations(self) -> None:
         """Test getting list of freight destinations."""
         game = Game()
-        potential_destinations = game.location.destinations.copy()
+        potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
         destinations = game._get_freight_destinations(potential_destinations, 1)
         print(destinations)

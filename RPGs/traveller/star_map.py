@@ -4,12 +4,10 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Tuple, Dict, List
+from typing import Dict, List
 from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
-from utilities import die_roll, constrain
-
-Coordinate = Tuple[int, int, int]
+from utilities import die_roll, constrain, Coordinate
 
 # in the three-axis system:
 #  * the three coordinates sum to zero

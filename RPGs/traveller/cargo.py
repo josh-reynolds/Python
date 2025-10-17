@@ -12,7 +12,7 @@ from enum import Enum
 from random import randint
 from typing import Dict, List, Tuple, Any, cast
 from calendar import ImperialDate
-from utilities import die_roll, constrain
+from utilities import die_roll, constrain, Coordinate
 from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
 from star_system import StarSystem
@@ -328,7 +328,7 @@ class CargoDepot:
 
     def get_available_freight(self,
                               destinations: List[StarSystem]
-                              ) -> tuple[Any | None, list[Any] | None]:
+                              ) -> tuple[Coordinate | None, list[Any] | None]:
         """Present a list of worlds and Freight shipments for the player to choose from."""
         if not self.freight:
             self._refresh_freight(destinations)
@@ -472,7 +472,7 @@ class CargoDepot:
             return True
         return False
 
-    def insufficient_funds(self, cost: Credits, balance: int) -> bool:
+    def insufficient_funds(self, cost: Credits, balance: Credits) -> bool:
         """Check if the player's bank balance has enough funds for a given cost."""
         if cost > balance:
             self.message_observers("You do not have sufficient funds.")

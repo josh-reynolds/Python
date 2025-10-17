@@ -1,5 +1,8 @@
 """Contains utility functions."""
 from random import randint
+from typing import Tuple
+
+Coordinate = Tuple[int, int, int]
 
 def die_roll(count: int = 1) -> int:
     """Roll count six-sided dice and return the total."""

@@ -124,7 +124,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world1, world2)
         self.assertNotEqual(world1, world3)
 
-        world2.coordinate = 000
+        world2.coordinate = (1,0,0)
         self.assertNotEqual(world1, world2)
 
     def test_trade_modifiers(self) -> None:

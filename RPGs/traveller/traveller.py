@@ -9,11 +9,11 @@ from random import randint, choice
 from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input
 from utilities import pr_blue, pr_red, print_list, die_roll, pr_green, pr_yellow
-from utilities import pr_unformatted
+from utilities import pr_unformatted, Coordinate
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
-from star_map import StarMap, StarSystemFactory, Coordinate
+from star_map import StarMap, StarSystemFactory
 
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
@@ -346,6 +346,9 @@ class Game:
                            misjump_target[1] + self.location.coordinate[1],
                            misjump_target[2] + self.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
+
+            # misjump is the only scenario where EmptySpace is a possible
+            # location, so we need to leave his type as Hex
             self.location = self.star_map.get_system_at_coordinate(misjump_target)
             self.star_map.systems[misjump_target] = self.location
         else:
@@ -509,7 +512,7 @@ class Game:
 
         self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
 
-        purchased = Cargo(cargo.name, quantity, cargo.price, cargo.unit_size,
+        purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.location)
         self.ship.load_cargo(purchased)
 
@@ -655,10 +658,10 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
 
-    def _get_passenger_destinations(self, potential_destinations: List[Hex],
+    def _get_passenger_destinations(self, potential_destinations: List[StarSystem],
                                     jump_range: int) -> List[StarSystem]:
         """Return a list of all reachable destination with Passengers."""
-        result = []
+        result: List[StarSystem] = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
@@ -677,10 +680,10 @@ class Game:
 
         return result
 
-    def _get_freight_destinations(self, potential_destinations: List[Hex],
-                                  jump_range: int) -> List[Hex]:
+    def _get_freight_destinations(self, potential_destinations: List[StarSystem],
+                                  jump_range: int) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight lots."""
-        result = []
+        result: List[StarSystem] = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
                 pr_red(f"There is still freight to be unloaded on {self.location.name}.")
@@ -703,7 +706,7 @@ class Game:
     # R0912: Too many branches (13/12)
     # R0915: Too many statements (51/50)
     def _select_passengers(self, available: Tuple[int, ...],
-                           destination: Hex) -> Tuple[int, int, int]:
+                           destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
         ship_capacity: Tuple[int, ...] = (self.ship.empty_passenger_berths,
@@ -779,7 +782,7 @@ class Game:
     def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
         """Select Freight lots from a list of available shipments."""
-        selection = []
+        selection: List[int] = []
         total_tonnage = 0
         hold_tonnage = self.ship.free_space()
         while True:
@@ -787,7 +790,8 @@ class Game:
                 print(f"No more freight available for {destination.name}.")
                 break
 
-            response = input("Choose a shipment by tonnage ('q' to exit): ")
+            # can't use int input here since we allow for 'q' as well...
+            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
             if response == 'q':
                 break
 
@@ -799,8 +803,11 @@ class Game:
 
             if response in available:
                 if response <= hold_tonnage:
-                    available.remove(response)
-                    selection.append(response)
+                    # even though we cast to int above in try/catch,
+                    # mypy is unaware, need to cast again to silence
+                    # sort this out...
+                    available.remove(cast(int, response))
+                    selection.append(cast(int, response))
                     total_tonnage += response
                     hold_tonnage -= response
                     print(available)
@@ -828,7 +835,8 @@ class Game:
         if available is None:
             return
 
-        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
+        destination = cast(StarSystem,
+                           self.star_map.get_system_at_coordinate(coordinate))
         print(f"Freight shipments for {destination.name}")
         print(available)
 

@@ -5,11 +5,8 @@ DeepSpace - represents an empty map hex.
 StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
-from typing import List, Any, Tuple
-
-# duplicated from star_map - hitting circular dependencies if
-# we import, so leaving as is for now
-Coordinate = Tuple[int, int, int]
+from typing import List, Any
+from utilities import Coordinate
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -20,7 +17,7 @@ class Hex(ABC):
         """Create an instance of a Hex."""
         self.coordinate = coordinate
         self.name = ""
-        self.destinations: List[Hex] = []
+        self.destinations: List[StarSystem] = []
 
     @abstractmethod
     def description(self) -> str:
