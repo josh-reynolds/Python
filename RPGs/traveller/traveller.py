@@ -16,6 +16,9 @@ from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory
 
+# pylint: disable=C0302
+# C0302: Too many lines in module (1017/1000)
+
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
 # R0904: Too many public methods (34/20)
@@ -729,15 +732,18 @@ class Game:
             print(f"Selected (H, M, L): {selection}")
             print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
-            passage, count = response.split()
-            # BUG: need to handle single token response, can't tuple unpack
+            tokens = response.split()
+            if len(tokens) != 2:
+                print("Please enter in the format: passage number (example: h 5).")
+                continue
 
+            passage = tokens[0]
             if passage not in ['h', 'm', 'l']:
                 print("Please enter 'h', 'm' or 'l' for passage class.")
                 continue
 
             try:
-                count = int(count)
+                count = int(tokens[1])
             except ValueError:
                 print("Please input a number.")
                 continue
@@ -824,7 +830,7 @@ class Game:
             if response in available:
                 if response <= hold_tonnage:
                     # even though we cast to int above in try/catch,
-                    # mypy is unaware, need to cast again to silence
+                    # mypy is unaware, need to cast again to silence it.
                     # sort this out...
                     available.remove(cast(int, response))
                     selection.append(cast(int, response))
