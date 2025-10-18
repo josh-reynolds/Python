@@ -27,25 +27,32 @@ def actual_value(roll: int) -> float:
                           9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
     return actual_value_table[roll]
 
+YELLOW_ON_RED = "\033[1;33;41m"
+BOLD_RED = "\033[1;31;40m"
+BOLD_GREEN = "\033[1;32;40m"
+BOLD_YELLOW = "\033[1;33;40m"
+BOLD_BLUE = "\033[1;36;40m"
+END_FORMAT = "\033[00m"
+
 def pr_yellow_on_red(string: str) -> None:
     """Print string to console, yellow text on red background."""
-    print(f"\033[1;33;41m {string}\033[00m")
+    print(f"{YELLOW_ON_RED}{string}{END_FORMAT}")
 
 def pr_red(string: str) -> None:
     """Print string to console, colored red."""
-    print(f"\033[1;31;40m{string}\033[00m")
+    print(f"{BOLD_RED}{string}{END_FORMAT}")
 
 def pr_green(string: str) -> None:
     """Print string to console, colored green."""
-    print(f"\033[1;32;40m{string}\033[00m")
+    print(f"{BOLD_GREEN}{string}{END_FORMAT}")
 
 def pr_yellow(string: str) -> None:
     """Print string to console, colored yellow."""
-    print(f"\033[1;33;40m{string}\033[00m")
+    print(f"{BOLD_YELLOW}{string}{END_FORMAT}")
 
 def pr_blue(string: str) -> None:
     """Print string to console, colored blue."""
-    print(f"\033[1;36;40m{string}\033[00m")
+    print(f"{BOLD_BLUE}{string}{END_FORMAT}")
 
 def pr_unformatted(string: str) -> None:
     """Print string to console with no formatting."""
