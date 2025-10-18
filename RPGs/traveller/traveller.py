@@ -9,7 +9,7 @@ from typing import List, Tuple, Callable, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red, int_input, confirm_input
+from utilities import pr_yellow_on_red, int_input, confirm_input, get_lines
 from utilities import pr_blue, pr_red, pr_list, die_roll, pr_green, pr_yellow
 from utilities import pr_unformatted, Coordinate, pr_highlight_list
 from ship import Ship, FuelQuality, RepairStatus
@@ -101,12 +101,19 @@ class Game:
                                          # when location ctor detail changes
         while self.running:
             if self.state == State.MENU:
-                string = "   Welcome to the Traveller Trading Game!   "
-                start = 60 - (len(string)//2)
+                # ASCII art from https://patorjk.com/software
+                # 'Grafitti' font
+                title_lines = get_lines("title.txt")
+                
+                string = "Welcome to the Traveller Trading Game!"
+                #start = 60 - (len(string)//2)
 
                 # see wikipedia page for ANSI codes
                 print("\033[H\033[2J")
-                print(f"\033[1;30;41m\033[{start}G{string}\033[00m")
+                for line in title_lines:
+                    print(f"\033[1;31m{line[:-1]}\033[00m")
+                print(f"\033[1m\n{string}\033[00m")
+                #print(f"\033[1;30;41m\033[{start}G{string}\033[00m")
 
                 self.ship.name = input("What is the name of your ship? ")
 
