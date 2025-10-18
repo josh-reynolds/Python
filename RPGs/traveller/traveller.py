@@ -104,15 +104,21 @@ class Game:
                 # ASCII art from https://patorjk.com/software
                 # 'Grafitti' font
                 title_lines = get_lines("title.txt")
-                
+
+                home = "\033[H"
+                clear = "\033[2J"
+                bold = "\033[1m"
+                bold_red = "\033[1;31m"
+                end_format = "\033[00m"
+
                 string = "Welcome to the Traveller Trading Game!"
                 #start = 60 - (len(string)//2)
 
                 # see wikipedia page for ANSI codes
-                print("\033[H\033[2J")
+                print(f"{home}{clear}")
                 for line in title_lines:
-                    print(f"\033[1;31m{line[:-1]}\033[00m")
-                print(f"\033[1m\n{string}\033[00m")
+                    print(f"{bold_red}{line[:-1]}{end_format}")
+                print(f"{bold}\n{string}{end_format}")
                 #print(f"\033[1;30;41m\033[{start}G{string}\033[00m")
 
                 self.ship.name = input("What is the name of your ship? ")
