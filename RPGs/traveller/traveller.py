@@ -116,16 +116,67 @@ class Game:
                     cmd.action()
                     sleep(3)
 
-    def quit(self) -> None:
-        """Quit the game."""
-        pr_blue("Goodbye.")
-        self.running = False
-
+    # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
         """List available commands in the current context."""
         pr_blue("Available commands:")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
+
+    def view_world(self) -> None:
+        """View the characteristics of the local world."""
+        pr_blue("Local world characteristics:")
+        print(self.location)
+
+    def goods(self) -> None:
+        """Show goods available for purchase."""
+        pr_blue("Available cargo loads:")
+        pr_list(self.depot.cargo)
+
+    def cargo_hold(self) -> None:
+        """Show the contents of the Ship's cargo hold."""
+        pr_blue("Contents of cargo hold:")
+        contents = self.ship.cargo_hold()
+        if len(contents) == 0:
+            print("Empty.")
+        else:
+            pr_list(contents)
+
+    def passenger_manifest(self) -> None:
+        """Show the Passenger's booked for transport."""
+        pr_blue("Passenger manifest:")
+        if self.ship.destination is None:
+            destination = "None"
+        else:
+            destination = self.ship.destination.name
+        print(f"High passengers: {self.ship.high_passenger_count}\n"
+              f"Middle passengers: {self.ship.middle_passenger_count}\n"
+              f"Low passengers: {self.ship.low_passenger_count}\n"
+              f"DESTINATION: {destination}\n\n"
+              f"Empty berths: {self.ship.empty_passenger_berths}\n"
+              f"Empty low berths: {self.ship.empty_low_berths}")
+
+    def crew_roster(self) -> None:
+        """Show the Ship's crew."""
+        pr_blue("Crew roster:")
+        pr_list(self.ship.crew)
+
+    def view_ship(self) -> None:
+        """View the details of the Ship."""
+        pr_blue("Ship details:")
+        print(self.ship)
+
+    def view_map(self) -> None:
+        """View all known StarSystems."""
+        pr_blue("All known star systems:")
+        systems = self.star_map.get_all_systems()
+        pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
+
+    # STATE TRANSITIONS ====================================================
+    def quit(self) -> None:
+        """Quit the game."""
+        pr_blue("Goodbye.")
+        self.running = False
 
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
@@ -150,29 +201,6 @@ class Game:
 
         self.location.liftoff()
         self.commands = Commands.orbit
-
-    def _low_lottery(self, low_lottery_amount) -> None:
-        """Run the low passage lottery and apply results."""
-        if self.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.ship.passengers if
-                                         p.passage == PassageClass.LOW]
-            for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
-                    passenger.survived = False
-
-            survivors = [p for p in low_passengers if p.survived]
-            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
-                  "survived revival.")
-
-            winner = False
-            for passenger in low_passengers:
-                if passenger.guess == len(survivors) and passenger.survived:
-                    winner = True
-
-            if not winner:
-                print(f"No surviving low lottery winner. "
-                      f"The captain is awarded {low_lottery_amount}.")
-                self.financials.credit(low_lottery_amount)
 
     def land(self) -> None:
         """Move from orbit to the starport."""
@@ -263,6 +291,42 @@ class Game:
         self.location.leave_terminal()
         self.commands = Commands.starport
 
+    def to_depot(self) -> None:
+        """Move from the starport to the trade depot."""
+        pr_blue(f"Entering {self.location.name} trade depot.")
+        self.location.join_trade()
+        self.commands = Commands.trade
+
+    def to_terminal(self) -> None:
+        """Move from the starport to the passenger terminal."""
+        pr_blue(f"Entering {self.location.name} passenger terminal.")
+        self.location.enter_terminal()
+        self.commands = Commands.passengers
+
+    # ACTIONS ==============================================================
+    def _low_lottery(self, low_lottery_amount) -> None:
+        """Run the low passage lottery and apply results."""
+        if self.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.ship.passengers if
+                                         p.passage == PassageClass.LOW]
+            for passenger in low_passengers:
+                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
+                    passenger.survived = False
+
+            survivors = [p for p in low_passengers if p.survived]
+            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
+                  "survived revival.")
+
+            winner = False
+            for passenger in low_passengers:
+                if passenger.guess == len(survivors) and passenger.survived:
+                    winner = True
+
+            if not winner:
+                print(f"No surviving low lottery winner. "
+                      f"The captain is awarded {low_lottery_amount}.")
+                self.financials.credit(low_lottery_amount)
+
     def book_passengers(self) -> None:
         """Book passengers for travel to a destination."""
         pr_blue("Booking passengers.")
@@ -313,18 +377,6 @@ class Game:
         self.depot.passengers[destination] = tuple(a-b for a,b in
                                                    zip(self.depot.passengers[destination],
                                                        selection))
-
-    def to_depot(self) -> None:
-        """Move from the starport to the trade depot."""
-        pr_blue(f"Entering {self.location.name} trade depot.")
-        self.location.join_trade()
-        self.commands = Commands.trade
-
-    def to_terminal(self) -> None:
-        """Move from the starport to the passenger terminal."""
-        pr_blue(f"Entering {self.location.name} passenger terminal.")
-        self.location.enter_terminal()
-        self.commands = Commands.passengers
 
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
@@ -419,11 +471,6 @@ class Game:
         self.ship.life_support_level = 0
         self.ship.current_fuel -= self.ship.jump_fuel_cost
         self.date.plus_week()
-
-    def view_world(self) -> None:
-        """View the characteristics of the local world."""
-        pr_blue("Local world characteristics:")
-        print(self.location)
 
     def refuel(self) -> None:
         """Refuel the Ship."""
@@ -561,54 +608,10 @@ class Game:
         self.financials.credit(sale_price)
         self.date.day += 1
 
-    def goods(self) -> None:
-        """Show goods available for purchase."""
-        pr_blue("Available cargo loads:")
-        pr_list(self.depot.cargo)
-
-    def cargo_hold(self) -> None:
-        """Show the contents of the Ship's cargo hold."""
-        pr_blue("Contents of cargo hold:")
-        contents = self.ship.cargo_hold()
-        if len(contents) == 0:
-            print("Empty.")
-        else:
-            pr_list(contents)
-
-    def passenger_manifest(self) -> None:
-        """Show the Passenger's booked for transport."""
-        pr_blue("Passenger manifest:")
-        if self.ship.destination is None:
-            destination = "None"
-        else:
-            destination = self.ship.destination.name
-        print(f"High passengers: {self.ship.high_passenger_count}\n"
-              f"Middle passengers: {self.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.ship.low_passenger_count}\n"
-              f"DESTINATION: {destination}\n\n"
-              f"Empty berths: {self.ship.empty_passenger_berths}\n"
-              f"Empty low berths: {self.ship.empty_low_berths}")
-
-    def crew_roster(self) -> None:
-        """Show the Ship's crew."""
-        pr_blue("Crew roster:")
-        pr_list(self.ship.crew)
-
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
         pr_blue("Waiting.")
         self.date.plus_week()
-
-    def view_ship(self) -> None:
-        """View the details of the Ship."""
-        pr_blue("Ship details:")
-        print(self.ship)
-
-    def view_map(self) -> None:
-        """View all known StarSystems."""
-        pr_blue("All known star systems:")
-        systems = self.star_map.get_all_systems()
-        pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a

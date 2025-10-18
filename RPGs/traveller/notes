@@ -489,7 +489,7 @@
 #   is an 8 hex by 10 hex subsector (all that exists in '77) - 
 #   later these were grouped into larger sectors (4x4 subsectors).
 #
-#   At least for the intial version(s), I will maintain the 2D 
+#   At least for the initial version(s), I will maintain the 2D 
 #   hex grid standard.
 #
 # * Coordinate system. To distinguish different star systems, and
@@ -700,7 +700,7 @@
 #
 #   As it turns out, the list comprehension approach was very
 #   easy to build and verify. And certainly less code overall.
-#   Probably more readable to as long as you're comfortable with
+#   Probably more readable too as long as you're comfortable with
 #   the syntax. I stripped out all the geometry-calculating
 #   methods. Maybe sometime it would be interesting to figure
 #   out, and I suppose there's a theoretical performance
@@ -1148,7 +1148,7 @@
 # procedure has run.
 #
 # (Also, seems implicit that a winning guess has to be exact,
-# not 'closest,' or the clause about th captain wouldn't be
+# not 'closest,' or the clause about the captain wouldn't be
 # necessary.)
 #
 # OK, first up is "guess survivors" in Passenger, called from
@@ -1522,6 +1522,44 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Cleared out a couple easy features, but now for something
+# more substantial. I want to get to save/load game, but it
+# makes sense to have a menu, so let's start there. We need
+# a front end where we can start a new game, or load one. Later
+# add other bells and whistles like exporting the map data, etc.
+#
+# So a simple menu. In basic games (usually real-time), there's
+# an FSM governing overall game state, which is either the start 
+# menu or in the game itself (and maybe a GAME_OVER). The main 
+# game loop calls update() and draw() once per tick/frame, and 
+# each of those functions changes behavior based on the game state.
+#
+# Simple enough. But a couple observations:
+#
+# * First, the loop in this game is not real-time, but only
+#   ticks forward after each player command completes. Don't
+#   think that's an issue, but structurally we don't have
+#   update()/draw() to hold all the state behavior switching.
+#
+# * Second, I already have a close analogue to states with
+#   'location.' I had originally thought of them as such, but
+#   functionally they behave just like an FSM, with simple
+#   transitions between each. And frankly I haven't been 
+#   happy with the current muddled implementation. So this
+#   is an opportunity to clean that up. It should straighten
+#   out StarSystem, and probably Command/Commands too.
+#
+# May also be helpful to represent each of these states as
+# an object, like CargoDepot. All the action logic lives in
+# them. I had overloaded CargoDepot with most of this due to
+# fears of code duplication, but seems worthwhile to go ahead
+# with it. If there's duplication, we can handle either via
+# stateless utility functions or some sort of parent class 
+# (or maybe composition).
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -1786,7 +1824,9 @@
 #  * [DONE] Should/could we clear the screen?
 #  * [DONE] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.
-#  * [    ] BUG: single token input in _select_passengers() crashes game:w
+#  * [DONE] BUG: single token input in _select_passengers() crashes game:w
+#  * [....] Front end menu
+#  * [....] Merge screens/menus and location state transitions?
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -1794,6 +1834,8 @@
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
+#  * [    ] Timing of sleep() after each command doesn't feel right - either too long
+#           for immdiate commands, or too short for view commands. Change design.
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] List star map to take a range parameter? What's the use case?
@@ -1808,12 +1850,10 @@
 #  *         restart / new game options, including re-using same star map
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
-#  * [    ] Front end menu
 #  * [    ] New game
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Export star map
-#  * [    ] Merge screens/menus and location state transitions?
 #  * [    ] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
