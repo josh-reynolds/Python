@@ -101,23 +101,28 @@ class Game:
                                          # when location ctor detail changes
         while self.running:
             if self.state == State.MENU:
-                string = "Welcome to the Traveller Trading Game!"
+                string = "   Welcome to the Traveller Trading Game!   "
                 start = 60 - (len(string)//2)
 
                 # see wikipedia page for ANSI codes
                 print("\033[H\033[2J")
-                print(f"\033[1m\033[{start}G{string}\033[00m")  # bold
-                print(f"\033[2m{string}\033[00m")    # faint
-                print(f"\033[3m{string}\033[00m")    # italic (same as inverse)
-                print(f"\033[4m{string}\033[00m")    # underline
-                print(f"\033[5m{string}\033[00m")    # slow blink
-                print(f"\033[6m{string}\033[00m")    # fast blink (same as slow)
-                print(f"\033[7m{string}\033[00m")    # inverse
-                print(f"\033[8m{string}\033[00m")    # hide
-                print(f"\033[9m{string}\033[00m")    # strikethrough
-                print(f"\033[21m{string}\033[00m")   # dbl. underline (same as underline)
-                confirm = input("Press ENTER key to continue.")
+                print(f"\033[1;30;41m\033[{start}G{string}\033[00m")
+
+                self.ship.name = input("What is the name of your ship? ")
+
+                _ = input("Press ENTER key to continue.")
                 self.state = State.PLAY
+
+                #print(f"\033[1m{string}\033[00m")    # bold
+                #print(f"\033[2m{string}\033[00m")    # faint
+                #print(f"\033[3m{string}\033[00m")    # italic (same as inverse)
+                #print(f"\033[4m{string}\033[00m")    # underline
+                #print(f"\033[5m{string}\033[00m")    # slow blink
+                #print(f"\033[6m{string}\033[00m")    # fast blink (same as slow)
+                #print(f"\033[7m{string}\033[00m")    # inverse
+                #print(f"\033[8m{string}\033[00m")    # hide
+                #print(f"\033[9m{string}\033[00m")    # strikethrough
+                #print(f"\033[21m{string}\033[00m")   # dbl. underline (same as underline)
 
             else:
                 if self.ship.fuel_quality == FuelQuality.UNREFINED:
