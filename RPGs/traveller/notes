@@ -1557,6 +1557,63 @@
 # stateless utility functions or some sort of parent class 
 # (or maybe composition).
 #
+# Currently, a 'location' has:
+#
+# * A set of transition commands to other locations, with
+#   appropriate constraints based on other game states. Also
+#   potential costs for the transition.
+#
+# * Transition commands (almost) all wrap a method on
+#   StarSystem that just changes a flag (a string actually).
+#
+# * A descriptor string used by the UI.
+#
+# * A collection of commands it will accept. In addition to
+#   transitions, there are unique actions for each location.
+#   There are also 'view' commands, which are (mostly) allowed
+#   from any location.
+#
+# Challenges with breaking this up:
+#
+# * To avoid coupling, I intentionally routed the commands
+#   through methods on Game. The methods then split into two
+#   parts to segregate the UI pieces from the lower model
+#   classes. (Early versions of this used global objects and/or
+#   passing around of classes, and the commands directly invoked
+#   lower level objects.)
+#
+# * Those UI pieces: View and Controller. It's already clear
+#   the methods in Game are doing too much. They've been partly
+#   broken down, but I haven't taken it far enough yet.
+#
+# CargoDepot (and to a lesser extent Commands) is the only
+# class close to this model. So I think some of the work to be
+# done is:
+#
+# * Create new classes, one per state.
+#
+# * Move logic down from Game into those classes (including
+#   CargoDepot).
+#
+# * Pull location (i.e. state) transitions out of Game and
+#   StarSystem and place into appropriate classes. (But does
+#   this couple them to one another?)
+#
+# * Figure out dispatch from and ownership of Command. The
+#   Commands class probably gets split up between the new
+#   classes.
+#
+# * Probably also separate out Controller and View pieces
+#   from Game, at which point the command methods go away.
+#
+# Seems like some heavy lifting, especially given how 'untestable'
+# the traveller module is. We could get very broken for a long
+# time. Is there an easier way?
+#
+# What if instead we sneak in a little 'menu' state in the
+# game loop, and test out how that would work? Use it as a
+# prototype for what comes next. Let's give that a spin.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1827,6 +1884,8 @@
 #  * [DONE] BUG: single token input in _select_passengers() crashes game:w
 #  * [....] Front end menu
 #  * [....] Merge screens/menus and location state transitions?
+#  * [....] Adjust UI elements, play with more ANSI codes - also review color
+#           coding for warnings, positive/negative messages, etc.
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -1854,8 +1913,6 @@
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Export star map
-#  * [    ] Adjust UI elements, play with more ANSI codes - also review color
-#           coding for warnings, positive/negative messages, etc.
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate

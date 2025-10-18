@@ -3,6 +3,7 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
+from enum import Enum
 from time import sleep
 from typing import List, Tuple, Callable, cast
 from calendar import Calendar
@@ -18,6 +19,12 @@ from star_map import StarMap, StarSystemFactory
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1017/1000)
+
+class State(Enum):
+    """Denotes the current game state."""
+
+    MENU = 1
+    PLAY = 2
 
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
@@ -52,6 +59,8 @@ class Game:
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
         self.commands: List[Command] = []
+
+        self.state = State.MENU
 
         self.ship.add_observer(self)
         self.ship.controls = self
@@ -91,30 +100,50 @@ class Game:
         self.commands = Commands.orbit   # awkward, needs to change
                                          # when location ctor detail changes
         while self.running:
-            if self.ship.fuel_quality == FuelQuality.UNREFINED:
-                fuel_quality ="(U)"
+            if self.state == State.MENU:
+                string = "Welcome to the Traveller Trading Game!"
+                start = 60 - (len(string)//2)
+
+                # see wikipedia page for ANSI codes
+                print("\033[H\033[2J")
+                print(f"\033[1m\033[{start}G{string}\033[00m")  # bold
+                print(f"\033[2m{string}\033[00m")    # faint
+                print(f"\033[3m{string}\033[00m")    # italic (same as inverse)
+                print(f"\033[4m{string}\033[00m")    # underline
+                print(f"\033[5m{string}\033[00m")    # slow blink
+                print(f"\033[6m{string}\033[00m")    # fast blink (same as slow)
+                print(f"\033[7m{string}\033[00m")    # inverse
+                print(f"\033[8m{string}\033[00m")    # hide
+                print(f"\033[9m{string}\033[00m")    # strikethrough
+                print(f"\033[21m{string}\033[00m")   # dbl. underline (same as underline)
+                confirm = input("Press ENTER key to continue.")
+                self.state = State.PLAY
+
             else:
-                fuel_quality = ""
+                if self.ship.fuel_quality == FuelQuality.UNREFINED:
+                    fuel_quality = "(U)"
+                else:
+                    fuel_quality = ""
 
-            repair_state = ""
-            if self.ship.repair_status == RepairStatus.BROKEN:
-                repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-            elif self.ship.repair_status == RepairStatus.PATCHED:
-                repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
+                repair_state = ""
+                if self.ship.repair_status == RepairStatus.BROKEN:
+                    repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
+                elif self.ship.repair_status == RepairStatus.PATCHED:
+                    repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-            print("\033[H\033[2J")
-            pr_yellow_on_red(f"\n{self.date} : You are " +
-                             f"{self.location.description()}.{repair_state}")
-            print(f"Credits: {self.financials.balance}"
-                  f"\tFree hold space: {self.ship.free_space()} tons"
-                  f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
-                  f"\tLife support: {self.ship.life_support_level}%")
-            command = input("Enter a command (? to list):  ")
-            for cmd in self.commands:
-                if command.lower() == cmd.key:
-                    print()
-                    cmd.action()
-                    sleep(3)
+                print("\033[H\033[2J")
+                pr_yellow_on_red(f"\n{self.date} : You are " +
+                                 f"{self.location.description()}.{repair_state}")
+                print(f"Credits: {self.financials.balance}"
+                      f"\tFree hold space: {self.ship.free_space()} tons"
+                      f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
+                      f"\tLife support: {self.ship.life_support_level}%")
+                command = input("Enter a command (? to list):  ")
+                for cmd in self.commands:
+                    if command.lower() == cmd.key:
+                        print()
+                        cmd.action()
+                        sleep(3)
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
