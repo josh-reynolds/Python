@@ -9,10 +9,10 @@ from typing import List, Tuple, Callable, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
-from utilities import pr_yellow_on_red, int_input, confirm_input, get_lines
-from utilities import pr_blue, pr_red, pr_list, die_roll, pr_green, pr_yellow
-from utilities import pr_unformatted, Coordinate, pr_highlight_list
-from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD
+from utilities import int_input, confirm_input, get_lines
+from utilities import pr_list, die_roll, Coordinate, pr_highlight_list
+from utilities import YELLOW_ON_RED, BOLD_YELLOW, BOLD_BLUE
+from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
@@ -74,16 +74,18 @@ class Game:
 
     def on_notify(self, message: str, priority: str = "") -> None:
         """Print messages received from model objects."""
+        fmt = ""
+        end = END_FORMAT
         if priority == "green":
-            pr_function = pr_green
+            fmt = BOLD_GREEN
         elif priority == "yellow":
-            pr_function = pr_yellow
+            fmt = BOLD_YELLOW
         elif priority == "red":
-            pr_function = pr_red
+            fmt = BOLD_RED
         else:
-            pr_function = pr_unformatted
+            end = ""
 
-        pr_function(message)
+        print(fmt + message + end)
 
     def get_input(self, constraint: str, prompt: str) -> str | int:
         """Get input from the player and return results to the model class."""
@@ -132,8 +134,8 @@ class Game:
                     repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
                 print(f"{HOME}{CLEAR}")
-                pr_yellow_on_red(f"\n{self.date} : You are " +
-                                 f"{self.location.description()}.{repair_state}")
+                print(f"{YELLOW_ON_RED}\n{self.date} : You are " +
+                      f"{self.location.description()}.{repair_state}{END_FORMAT}")
                 print(f"Credits: {self.financials.balance}"
                       f"\tFree hold space: {self.ship.free_space()} tons"
                       f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
@@ -148,23 +150,23 @@ class Game:
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
         """List available commands in the current context."""
-        pr_blue("Available commands:")
+        print(f"{BOLD_BLUE}Available commands:{END_FORMAT}")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
     def view_world(self) -> None:
         """View the characteristics of the local world."""
-        pr_blue("Local world characteristics:")
+        print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
         print(self.location)
 
     def goods(self) -> None:
         """Show goods available for purchase."""
-        pr_blue("Available cargo loads:")
+        print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
         pr_list(self.depot.cargo)
 
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
-        pr_blue("Contents of cargo hold:")
+        print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
         contents = self.ship.cargo_hold()
         if len(contents) == 0:
             print("Empty.")
@@ -173,7 +175,7 @@ class Game:
 
     def passenger_manifest(self) -> None:
         """Show the Passenger's booked for transport."""
-        pr_blue("Passenger manifest:")
+        print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
         if self.ship.destination is None:
             destination = "None"
         else:
@@ -187,32 +189,32 @@ class Game:
 
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
-        pr_blue("Crew roster:")
+        print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
         pr_list(self.ship.crew)
 
     def view_ship(self) -> None:
         """View the details of the Ship."""
-        pr_blue("Ship details:")
+        print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
         print(self.ship)
 
     def view_map(self) -> None:
         """View all known StarSystems."""
-        pr_blue("All known star systems:")
+        print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
         systems = self.star_map.get_all_systems()
         pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
 
     # STATE TRANSITIONS ====================================================
     def quit(self) -> None:
         """Quit the game."""
-        pr_blue("Goodbye.")
+        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
         self.running = False
 
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
-        pr_blue(f"Lifting off to orbit {self.location.name}.")
+        print(f"{BOLD_BLUE}Lifting off to orbit {self.location.name}.{END_FORMAT}")
 
         if self.ship.repair_status == RepairStatus.BROKEN:
-            pr_red("Drive failure. Cannot lift off.")
+            print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
             return
 
         # corner case - these messages assume passengers are coming
@@ -233,13 +235,13 @@ class Game:
 
     def land(self) -> None:
         """Move from orbit to the starport."""
-        pr_blue(f"Landing on {self.location.name}.")
+        print(f"{BOLD_BLUE}Landing on {self.location.name}.{END_FORMAT}")
         if not self.ship.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return
 
         if self.ship.repair_status == RepairStatus.BROKEN:
-            pr_red("Drive failure. Cannot land.")
+            print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return
 
         if self.ship.destination == self.location:
@@ -265,10 +267,10 @@ class Game:
     # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
-        pr_blue(f"Travelling out to {self.location.name} jump point.")
+        print(f"{BOLD_BLUE}Travelling out to {self.location.name} jump point.{END_FORMAT}")
 
         if self.ship.repair_status == RepairStatus.BROKEN:
-            pr_red("Drive failure. Cannot travel to the jump point.")
+            print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return
 
         leg_fc = self.ship.trip_fuel_cost // 2
@@ -286,13 +288,14 @@ class Game:
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         if isinstance(self.location, DeepSpace):
-            pr_red("You are in deep space. There is no inner system to travel to.")
+            print(f"{BOLD_RED}You are in deep space. "
+                  f"There is no inner system to travel to.{END_FORMAT}")
             return
 
-        pr_blue(f"Travelling in to orbit {self.location.name}.")
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.location.name}.{END_FORMAT}")
 
         if self.ship.repair_status == RepairStatus.BROKEN:
-            pr_red("Drive failure. Cannot travel to orbit.")
+            print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return
 
         leg_fc = self.ship.trip_fuel_cost // 2
@@ -310,25 +313,25 @@ class Game:
     # almost identical to leave_terminal(), consider merging
     def leave_depot(self) -> None:
         """Move from the trade depot to the starport."""
-        pr_blue(f"Leaving {self.location.name} trade depot.")
+        print(f"{BOLD_BLUE}Leaving {self.location.name} trade depot.{END_FORMAT}")
         self.location.leave_trade()
         self.commands = Commands.starport
 
     def leave_terminal(self) -> None:
         """Move from the passenger terminal to the starport."""
-        pr_blue(f"Leaving {self.location.name} passenger terminal.")
+        print(f"{BOLD_BLUE}Leaving {self.location.name} passenger terminal.{END_FORMAT}")
         self.location.leave_terminal()
         self.commands = Commands.starport
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
-        pr_blue(f"Entering {self.location.name} trade depot.")
+        print(f"{BOLD_BLUE}Entering {self.location.name} trade depot.{END_FORMAT}")
         self.location.join_trade()
         self.commands = Commands.trade
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
-        pr_blue(f"Entering {self.location.name} passenger terminal.")
+        print(f"{BOLD_BLUE}Entering {self.location.name} passenger terminal.{END_FORMAT}")
         self.location.enter_terminal()
         self.commands = Commands.passengers
 
@@ -358,7 +361,7 @@ class Game:
 
     def book_passengers(self) -> None:
         """Book passengers for travel to a destination."""
-        pr_blue("Booking passengers.")
+        print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
         jump_range = self.ship.jump_range
         potential_destinations = self.location.destinations.copy()
@@ -418,7 +421,7 @@ class Game:
 
         misjump_check = die_roll(2) + modifier
         if misjump_check > 11:
-            pr_red("MISJUMP!")
+            print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
             # TO_DO: all this should move to live with the other
             #        three-axis calculations
             distance = randint(1,36)
@@ -443,12 +446,12 @@ class Game:
 
     def jump(self) -> None:
         """Perform a hyperspace jump to another StarSystem."""
-        pr_blue("Preparing for jump.")
+        print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
         status = self.financials.maintenance_status(self.date.current_date)
         self.ship.check_failure_pre_jump(status)
         if self.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
-            pr_red("Drive failure. Cannot perform jump.")
+            print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
             return
 
         if not self.ship.sufficient_jump_fuel():
@@ -480,7 +483,7 @@ class Game:
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
             self.ship.unrefined_jump_counter += 1
 
-        pr_red("Executing jump!")
+        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
         self._misjump_check(coordinate)
         self.location.detail = "jump"
@@ -503,7 +506,7 @@ class Game:
 
     def refuel(self) -> None:
         """Refuel the Ship."""
-        pr_blue("Refuelling ship.")
+        print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
         if self.location.starport in ('E', 'X'):
             print(f"No fuel is available at starport {self.location.starport}.")
             return
@@ -514,13 +517,13 @@ class Game:
     # TO_DO: should this be restricted at low-facility starports (E/X)?
     def recharge(self) -> None:
         """Recharge the Ship's life support system."""
-        pr_blue("Replenishing life support system.")
+        print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
     def damage_control(self) -> None:
         """Repar damage to the Ship (Engineer)."""
-        pr_blue("Ship's engineer repairing damage.")
+        print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
         if self.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
@@ -539,7 +542,7 @@ class Game:
     #        but that probably ought to change.
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
-        pr_blue("Starport repairs.")
+        print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
         if self.location.starport in ["D", "E", "X"]:
             print(f"No repair facilities available at starport {self.location.starport}")
             return
@@ -555,7 +558,7 @@ class Game:
 
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
-        pr_blue("Flushing out fuel tanks.")
+        print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
         if self.ship.fuel_quality == FuelQuality.REFINED:
             print("Ship fuel tanks are clean. No need to flush.")
             return
@@ -570,7 +573,7 @@ class Game:
 
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
-        pr_blue("Purchasing cargo.")
+        print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
         pr_list(self.depot.cargo)
         cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
         if cargo is None:
@@ -603,7 +606,7 @@ class Game:
 
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
-        pr_blue("Selling cargo.")
+        print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
         cargoes = [c for c in self.ship.hold if isinstance(c, Cargo)]
 
         if len(cargoes) == 0:
@@ -639,7 +642,7 @@ class Game:
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
-        pr_blue("Waiting.")
+        print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
         self.date.plus_week()
 
     # Book 2 p. 35
@@ -653,7 +656,7 @@ class Game:
     # toward second edition...)
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
-        pr_blue("Skimming fuel from a gas giant planet.")
+        print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
         if not self.location.gas_giant:
             # TO_DO: may want to tweak this message in deep space.
             print("There is no gas giant in this system. No fuel skimming possible.")
@@ -664,7 +667,7 @@ class Game:
             return
 
         if self.ship.repair_status == RepairStatus.BROKEN:
-            pr_red("Drive failure. Cannot skim fuel.")
+            print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
             return
 
         if self.ship.current_fuel == self.ship.fuel_tank:
@@ -677,7 +680,7 @@ class Game:
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
-        pr_blue("Performing annual ship maintenance.")
+        print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
         if self.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
@@ -702,7 +705,8 @@ class Game:
         result: List[StarSystem] = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
-                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
+                print(f"{BOLD_RED}There is still freight to be "
+                      f"unloaded on {self.location.name}.{END_FORMAT}")
                 return result
             if self.ship.destination in potential_destinations:
                 print("You are under contract. Only showing passengers " +
@@ -724,7 +728,8 @@ class Game:
         result: List[StarSystem] = []
         if self.ship.destination is not None:
             if self.ship.destination == self.location:
-                pr_red(f"There is still freight to be unloaded on {self.location.name}.")
+                print(f"{BOLD_RED}There is still freight to be unloaded "
+                      f"on {self.location.name}.{END_FORMAT}")
                 return result
             if self.ship.destination in potential_destinations:
                 print("You are under contract. Only showing freight " +
@@ -871,17 +876,17 @@ class Game:
                     print(available)
                     print(f"Cargo space left: {hold_tonnage}")
                 else:
-                    pr_red("That shipment will not fit in your cargo hold.")
-                    pr_red(f"Hold free space: {hold_tonnage}")
+                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
+                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
             else:
-                pr_red(f"There are no shipments of size {response}.")
+                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
 
         print("Done selecting shipments.")
         return (total_tonnage, selection)
 
     def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""
-        pr_blue("Loading freight.")
+        print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
 
         jump_range = self.ship.jump_range
         potential_destinations = self.location.destinations.copy()
@@ -920,7 +925,7 @@ class Game:
 
     def unload_freight(self) -> None:
         """Unload Freight from the Ship and receive payment."""
-        pr_blue("Unloading freight.")
+        print(f"{BOLD_BLUE}Unloading freight.{END_FORMAT}")
 
         # truth table: passengers, freight, destination flag,...
 
@@ -947,8 +952,10 @@ class Game:
             self.date.day += 1
 
         else:
-            pr_red("You are not at the contracted destination for this freight.")
-            pr_red(f"It should be unloaded at {self.ship.destination.name}.")
+            print(f"{BOLD_RED}You are not at the contracted "
+                  f"destination for this freight.{END_FORMAT}")
+            print(f"{BOLD_RED}It should be unloaded at "
+                  f"{self.ship.destination.name}.{END_FORMAT}")
 
 # pylint: disable=R0903
 # R0903: Too few public methods (0/2)

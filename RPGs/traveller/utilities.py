@@ -51,30 +51,6 @@ END_FORMAT = "\033[00m"
 #print(f"\033[9m{string}\033[00m")    # strikethrough
 #print(f"\033[21m{string}\033[00m")   # dbl. underline (same as underline)
 
-def pr_yellow_on_red(string: str) -> None:
-    """Print string to console, yellow text on red background."""
-    print(f"{YELLOW_ON_RED}{string}{END_FORMAT}")
-
-def pr_red(string: str) -> None:
-    """Print string to console, colored red."""
-    print(f"{BOLD_RED}{string}{END_FORMAT}")
-
-def pr_green(string: str) -> None:
-    """Print string to console, colored green."""
-    print(f"{BOLD_GREEN}{string}{END_FORMAT}")
-
-def pr_yellow(string: str) -> None:
-    """Print string to console, colored yellow."""
-    print(f"{BOLD_YELLOW}{string}{END_FORMAT}")
-
-def pr_blue(string: str) -> None:
-    """Print string to console, colored blue."""
-    print(f"{BOLD_BLUE}{string}{END_FORMAT}")
-
-def pr_unformatted(string: str) -> None:
-    """Print string to console with no formatting."""
-    print(f"{string}")
-
 def int_input(prompt: str) -> int:
     """Take input from the user, reprompt if not an integer."""
     while True:
@@ -101,7 +77,7 @@ def pr_highlight_list(items: list, highlight: Any, annotation: str = "") -> None
     """Print out a list with its index values, highlighting specific entries."""
     for i,item in enumerate(items):
         if item == highlight:
-            pr_green(f"{i} - {item}{annotation}")
+            print(f"{BOLD_GREEN}{i} - {item}{annotation}{END_FORMAT}")
         else:
             print(f"{i} - {item}")
 
