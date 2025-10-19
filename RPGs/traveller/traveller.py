@@ -3,16 +3,16 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
-from enum import Enum
 from time import sleep
 from typing import List, Tuple, Callable, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
-from utilities import int_input, confirm_input, get_lines
+from menu import Menu
+from utilities import int_input, confirm_input, State
 from utilities import pr_list, die_roll, Coordinate, pr_highlight_list
 from utilities import YELLOW_ON_RED, BOLD_YELLOW, BOLD_BLUE
-from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD, BOLD_GREEN
+from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
@@ -20,12 +20,6 @@ from star_map import StarMap, StarSystemFactory
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1017/1000)
-
-class State(Enum):
-    """Denotes the current game state."""
-
-    MENU = 1
-    PLAY = 2
 
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
@@ -104,22 +98,7 @@ class Game:
                                          # when location ctor detail changes
         while self.running:
             if self.state == State.MENU:
-                # ASCII art from https://patorjk.com/software
-                # 'Grafitti' font
-                title_lines = get_lines("title.txt")
-                string = "Welcome to the Traveller Trading Game!"
-
-                # see wikipedia page for ANSI codes
-                print(f"{HOME}{CLEAR}")
-                for line in title_lines:
-                    line = line[:-1]    # strip newline char
-                    print(f"{BOLD_RED}{line}{END_FORMAT}")
-                print(f"{BOLD}\n{string}{END_FORMAT}")
-
-                self.ship.name = input("What is the name of your ship? ")
-
-                _ = input("Press ENTER key to continue.")
-                self.state = State.PLAY
+                self.state = Menu.update(self.ship)
 
             else:
                 if self.ship.fuel_quality == FuelQuality.UNREFINED:

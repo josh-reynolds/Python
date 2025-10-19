@@ -13,7 +13,7 @@ class GameTestCase(unittest.TestCase):
     """Tests game logic."""
 
     def test_game_ctor(self) -> None:
-        """Tests contstruction of a Game object."""
+        """Tests construction of a Game object."""
         game = Game()
         self.assertEqual(game.location,
                          StarSystemFactory.create("Yorbund", (0,0,0),

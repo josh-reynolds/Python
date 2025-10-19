@@ -1,4 +1,5 @@
 """Contains utility functions."""
+from enum import Enum
 from random import randint
 from typing import Tuple, Any
 
@@ -105,3 +106,10 @@ def dictionary_from(a_string: str) -> dict[str, int]:
         key, value = item.split(':')
         dictionary[key] = int(value)
     return dictionary
+
+
+class State(Enum):
+    """Denotes the current game state."""
+
+    MENU = 1
+    PLAY = 2
