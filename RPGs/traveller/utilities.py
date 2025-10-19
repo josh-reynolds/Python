@@ -28,6 +28,7 @@ def actual_value(roll: int) -> float:
                           9:1.2, 10:1.3, 11:1.5, 12:1.7, 13:2, 14:3, 15:4}
     return actual_value_table[roll]
 
+# see wikipedia page for ANSI codes
 HOME = "\033[H"
 CLEAR = "\033[2J"
 BOLD = "\033[1m"

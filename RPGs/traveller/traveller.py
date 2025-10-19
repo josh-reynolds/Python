@@ -30,6 +30,7 @@ class Game:
     def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
+        self.menu = Menu(self)
         self.date = Calendar()
 
         self.ship = Ship()
@@ -98,7 +99,7 @@ class Game:
                                          # when location ctor detail changes
         while self.running:
             if self.state == State.MENU:
-                self.state = Menu.update(self.ship)
+                self.state = self.menu.update()
 
             else:
                 if self.ship.fuel_quality == FuelQuality.UNREFINED:
