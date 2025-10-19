@@ -124,7 +124,7 @@ class Game:
                     if command.lower() == cmd.key:
                         print()
                         cmd.action()
-                        sleep(3)
+                        sleep(1)
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
@@ -132,16 +132,19 @@ class Game:
         print(f"{BOLD_BLUE}Available commands:{END_FORMAT}")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
+        _ = input("\nPress ENTER key to continue.")
 
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
         print(self.location)
+        _ = input("\nPress ENTER key to continue.")
 
     def goods(self) -> None:
         """Show goods available for purchase."""
         print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
         pr_list(self.depot.cargo)
+        _ = input("\nPress ENTER key to continue.")
 
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
@@ -151,6 +154,7 @@ class Game:
             print("Empty.")
         else:
             pr_list(contents)
+        _ = input("\nPress ENTER key to continue.")
 
     def passenger_manifest(self) -> None:
         """Show the Passenger's booked for transport."""
@@ -165,22 +169,26 @@ class Game:
               f"DESTINATION: {destination}\n\n"
               f"Empty berths: {self.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.ship.empty_low_berths}")
+        _ = input("\nPress ENTER key to continue.")
 
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
         print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
         pr_list(self.ship.crew)
+        _ = input("\nPress ENTER key to continue.")
 
     def view_ship(self) -> None:
         """View the details of the Ship."""
         print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
         print(self.ship)
+        _ = input("\nPress ENTER key to continue.")
 
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
         systems = self.star_map.get_all_systems()
         pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
+        _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
     def quit(self) -> None:

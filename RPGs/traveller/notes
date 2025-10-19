@@ -1882,6 +1882,8 @@
 #  * [DONE] Passenger selection interface is really tedious. Need some way to enter numbers
 #           instead of choosing one at a time.
 #  * [DONE] BUG: single token input in _select_passengers() crashes game:w
+#  * [DONE] Timing of sleep() after each command doesn't feel right - either too long
+#           for immdiate commands, or too short for view commands. Change design.
 #  * [....] Front end menu
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
@@ -1893,8 +1895,6 @@
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
-#  * [    ] Timing of sleep() after each command doesn't feel right - either too long
-#           for immdiate commands, or too short for view commands. Change design.
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] List star map to take a range parameter? What's the use case?
