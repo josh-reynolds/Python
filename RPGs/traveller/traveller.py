@@ -12,6 +12,7 @@ from financials import Financials, Credits
 from utilities import pr_yellow_on_red, int_input, confirm_input, get_lines
 from utilities import pr_blue, pr_red, pr_list, die_roll, pr_green, pr_yellow
 from utilities import pr_unformatted, Coordinate, pr_highlight_list
+from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
@@ -104,38 +105,19 @@ class Game:
                 # ASCII art from https://patorjk.com/software
                 # 'Grafitti' font
                 title_lines = get_lines("title.txt")
-
-                home = "\033[H"
-                clear = "\033[2J"
-                bold = "\033[1m"
-                bold_red = "\033[1;31m"
-                end_format = "\033[00m"
-
                 string = "Welcome to the Traveller Trading Game!"
-                #start = 60 - (len(string)//2)
 
                 # see wikipedia page for ANSI codes
-                print(f"{home}{clear}")
+                print(f"{HOME}{CLEAR}")
                 for line in title_lines:
-                    print(f"{bold_red}{line[:-1]}{end_format}")
-                print(f"{bold}\n{string}{end_format}")
-                #print(f"\033[1;30;41m\033[{start}G{string}\033[00m")
+                    line = line[:-1]    # strip newline char
+                    print(f"{BOLD_RED}{line}{END_FORMAT}")
+                print(f"{BOLD}\n{string}{END_FORMAT}")
 
                 self.ship.name = input("What is the name of your ship? ")
 
                 _ = input("Press ENTER key to continue.")
                 self.state = State.PLAY
-
-                #print(f"\033[1m{string}\033[00m")    # bold
-                #print(f"\033[2m{string}\033[00m")    # faint
-                #print(f"\033[3m{string}\033[00m")    # italic (same as inverse)
-                #print(f"\033[4m{string}\033[00m")    # underline
-                #print(f"\033[5m{string}\033[00m")    # slow blink
-                #print(f"\033[6m{string}\033[00m")    # fast blink (same as slow)
-                #print(f"\033[7m{string}\033[00m")    # inverse
-                #print(f"\033[8m{string}\033[00m")    # hide
-                #print(f"\033[9m{string}\033[00m")    # strikethrough
-                #print(f"\033[21m{string}\033[00m")   # dbl. underline (same as underline)
 
             else:
                 if self.ship.fuel_quality == FuelQuality.UNREFINED:
@@ -149,7 +131,7 @@ class Game:
                 elif self.ship.repair_status == RepairStatus.PATCHED:
                     repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-                print("\033[H\033[2J")
+                print(f"{HOME}{CLEAR}")
                 pr_yellow_on_red(f"\n{self.date} : You are " +
                                  f"{self.location.description()}.{repair_state}")
                 print(f"Credits: {self.financials.balance}"
