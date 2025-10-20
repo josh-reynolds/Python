@@ -1884,7 +1884,8 @@
 #  * [DONE] BUG: single token input in _select_passengers() crashes game:w
 #  * [DONE] Timing of sleep() after each command doesn't feel right - either too long
 #           for immdiate commands, or too short for view commands. Change design.
-#  * [....] Front end menu
+#  * [DONE] New game
+#  * [DONE] Front end menu
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
@@ -1905,11 +1906,8 @@
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
 #           skimming as jump point command if the system has a gas giant
-#  * [    ] Tie-in with game over and save/load game - add front end with
-#  *         restart / new game options, including re-using same star map
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
-#  * [    ] New game
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Export star map

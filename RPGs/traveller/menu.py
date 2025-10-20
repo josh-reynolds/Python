@@ -2,7 +2,9 @@
 
 Menu - draws the screen and gathers input from the player.
 """
+from time import sleep
 from typing import Any, List
+from command import Command
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
 
 # pylint: disable=R0903
@@ -13,7 +15,10 @@ class Menu:
     def __init__(self, parent: Any) -> None:
         """Create a Menu object."""
         self.parent = parent
-        self.commands: List = []
+        self.commands: List = [
+                Command('n', 'New Game', self.new_game),
+                Command('q', 'Quit', self.parent.quit)
+                ]
 
     def update(self) -> State:
         """Draw the screen and present menu choices."""
@@ -28,14 +33,19 @@ class Menu:
             print(f"{BOLD_RED}{line}{END_FORMAT}")
         print(f"{BOLD}\n{string}{END_FORMAT}")
 
-        #command = input("Enter a command (? to list):  ")
-        #for cmd in self.commands:
-            #if command.lower() == cmd.key:
-                #print()
-                #cmd.action()
-                #sleep(1)
+        for command in self.commands:
+            print(f"{command.key} - {command.description}")
 
-        self.parent.ship.name = input("What is the name of your ship? ")
+        command = input("\nEnter a command:  ")
+        for cmd in self.commands:
+            if command.lower() == cmd.key:
+                print()
+                cmd.action()
+                sleep(1)
 
         _ = input("Press ENTER key to continue.")
         return State.PLAY
+
+    def new_game(self) -> None:
+        """Start a new game."""
+        self.parent.ship.name = input("What is the name of your ship? ")
