@@ -162,7 +162,7 @@ from utilities import die_roll, constrain, Coordinate
 # sneaking suspicion the location of the coordinate within the
 # six 3-axis sectors holds the solution.
 #
-# Additional test cases seem to corroborate. Taking the six 
+# Additional test cases seem to corroborate. Taking the six
 # 'spine' hexes out from the origin, four are OK, implying +/-
 # sectors match my algorithm. But the two sectors parallel
 # to the column progression (i.e. left/right) fail. Need a tweak.

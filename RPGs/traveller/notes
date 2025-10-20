@@ -1890,6 +1890,7 @@
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Implement coordinate conversion to Traveller subsector row/column
+#  * [....] Save game state
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -1909,7 +1910,6 @@
 #           skimming as jump point command if the system has a gas giant
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
-#  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Export star map
 #  * [    ] Expand options available in New Game - could expose all sorts of options
