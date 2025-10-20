@@ -22,7 +22,6 @@ class Menu:
         title_lines = get_lines("title.txt")
         string = "Welcome to the Traveller Trading Game!"
 
-        # see wikipedia page for ANSI codes
         print(f"{HOME}{CLEAR}")
         for line in title_lines:
             line = line[:-1]    # strip newline char

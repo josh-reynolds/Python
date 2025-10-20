@@ -14,3 +14,8 @@ class MenuTestCase(unittest.TestCase):
     def test_update(self):
         """Tests the basic front end menu screen."""
         Menu.update(MenuTestCase.ShipMock())
+
+
+# -------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()

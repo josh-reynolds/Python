@@ -4,10 +4,11 @@ Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
 from time import sleep
-from typing import List, Tuple, Callable, cast
+from typing import List, Tuple, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
+from command import Command
 from menu import Menu
 from utilities import int_input, confirm_input, State
 from utilities import pr_list, die_roll, Coordinate, pr_highlight_list
@@ -944,18 +945,6 @@ class Game:
                   f"destination for this freight.{END_FORMAT}")
             print(f"{BOLD_RED}It should be unloaded at "
                   f"{self.ship.destination.name}.{END_FORMAT}")
-
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
-class Command:
-    """Represents a command available to the player."""
-
-    def __init__(self, key: str, description: str, action: Callable) -> None:
-        """Create an instance of a Command."""
-        self.key = key
-        self.description = description
-        self.action = action
-
 
 game = Game()
 

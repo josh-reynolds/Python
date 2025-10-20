@@ -148,12 +148,6 @@ class GameTestCase(unittest.TestCase):
     # unload_freight
 
 
-class CommandTestCase(unittest.TestCase):
-    """Test Command objects."""
-
-    # __init__
-
-
 # for this one, might be helpful to trap whether
 # any keys have been duplicated and thus overwritten
 class CommandsTestCase(unittest.TestCase):

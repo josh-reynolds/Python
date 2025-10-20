@@ -7,6 +7,7 @@ def suite():
     loader = unittest.TestLoader()
     test_suite.addTests(loader.loadTestsFromName('calendar_test'))
     test_suite.addTests(loader.loadTestsFromName('cargo_test'))
+    test_suite.addTests(loader.loadTestsFromName('command_test'))
     test_suite.addTests(loader.loadTestsFromName('financials_test'))
     test_suite.addTests(loader.loadTestsFromName('menu_test'))
     test_suite.addTests(loader.loadTestsFromName('ship_test'))
