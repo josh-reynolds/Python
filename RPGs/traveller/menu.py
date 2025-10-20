@@ -36,6 +36,9 @@ class Menu:
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
+        # duplicates code in Game class, needs refactoring
+        # pylint: disable=R0801
+        # R0801: Similar lines in 2 files
         command = input("\nEnter a command:  ")
         for cmd in self.commands:
             if command.lower() == cmd.key:

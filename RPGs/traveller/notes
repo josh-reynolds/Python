@@ -1889,6 +1889,7 @@
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
+#  * [....] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -1911,6 +1912,9 @@
 #  * [    ] Save game state
 #  * [    ] Load game state
 #  * [    ] Export star map
+#  * [    ] Expand options available in New Game - could expose all sorts of options
+#           here like adjusting world creation parameters, but initially just
+#           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
@@ -1953,7 +1957,6 @@
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  PHASE SEVEN ====================================================
-#  * [    ] Implement coordinate conversion to Traveller subsector row/column
 #  * [    ] Generate a bitmap StarMap
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has

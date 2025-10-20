@@ -4,7 +4,7 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Dict, List, cast
+from typing import Dict, List, Tuple, cast
 from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
 from utilities import die_roll, constrain, Coordinate
@@ -84,6 +84,83 @@ from utilities import die_roll, constrain, Coordinate
 # Then, if we want to find hexes around some arbitrary
 # point, we just translate everything to that new origin
 # (by adding the new origin to every coordinate of course).
+
+# Converting to Traveller coordinates from 3-axis
+# -----------------------------------------------
+# As noted elsewhere, Traveller 77 uses an 8x10 grid of
+# hexes, called a 'subsector.' Each hex is assigned a
+# coordinate by row and column, as RRCC. So coordinates
+# range from 0101 to 0810.
+#
+# Later game editions expanded this to a 'sector,'
+# comprised of sixteen subsectors in a 4x4 grid. Initially
+# worlds were still referenced by subsector coordinates,
+# with the name of the subsector to distinguish. Later
+# they started using coordinates based on the 32x40
+# arrangement in the sector, so coordinates could now
+# range from 0101 to 3240.
+#
+# For conversion, there are a few hurdles to cross:
+#
+# * Column number is easy. It maps directly to one of
+#   the 3-axis values. Arbitrary. My hand-drawn version
+#   I've been using to figure this out happens to use
+#   the second value as the column offset.
+# * Row number needs calculation. I have another project
+#   where I figured this out; will crib if the derivation
+#   doesn't come back to me easily.
+# * Then need to address subsectors and sectors. First
+#   as entities in their own right. I suppose eventually
+#   I'll want to formalize them here, at a minimum for
+#   any export functionality (and possibly import too),
+#   but maybe make them visible in-game too.
+# * But second, the impact on coordinates. Do we convert
+#   to 8x10 or 32x40 values? And how do we handle crossing
+#   boundaries?
+# * Of course there will need to be some base offset. Where
+#   is (0,0,0) located on the sector/subsector map?
+#
+# For the first steps, let's place the origin in the middle
+# of a sector, so at 1620. That way we don't have to worry
+# about boundaries just yet.
+#
+# ( 3, 0,-3)   0603  ( 0,-3)
+# ( 2, 0,-2)   0604  ( 0,-2)
+# ( 1, 0,-1)   0605  ( 0,-1)
+# ( 0, 0, 0)   0606  ( 0, 0)
+# (-1, 0, 1)   0607  ( 0, 1)
+# (-2, 0, 2)   0608  ( 0, 2)
+# (-3, 0, 3)   0609  ( 0, 3)
+#
+# ( 3,-1,-2)   0504  (-1,-2)
+# ( 2,-1,-1)   0505  (-1,-1)
+# ( 1,-1, 0)   0506  (-1, 0)
+# ( 0,-1, 1)   0507  (-1, 1)
+# (-1,-1, 2)   0508  (-1, 2)
+# (-2,-1, 3)   0509  (-1, 3)
+# (-3,-1, 4)   0510  (-1, 4)
+#
+# ( 3, 1,-4)   0703  ( 1,-3)
+# ( 2, 1,-3)   0704  ( 1,-2)
+# ( 1, 1,-2)   0705  ( 1,-1)
+# ( 0, 1,-1)   0706  ( 1, 0)
+# (-1, 1, 0)   0707  ( 1, 1)
+# (-2, 1, 1)   0708  ( 1, 2)
+# (-3, 1, 2)   0709  ( 1, 3)
+#
+# Transcribing from a physical map (above), and I think this is
+# the formula:
+#
+# * Column offset = second 3-axis value
+# * If column offset < 1, row offset = third 3-axis value
+# * If column offset >= 1, row offset = -first 3-axis value
+#
+# Let's try it out...
+# OK, test drove an implementation below, and it works according
+# to the sample above... but grabbing some other coordinates off
+# the map for additional verification, and we have issues. I have
+# sneaking suspicion the location of the coordinate within the
+# six 3-axis sectors holds the solution.
 
 # World generation from Traveller '77 Book 3 pp. 4-12
 # constraints based on the tables, though the dice throws
@@ -342,3 +419,10 @@ class StarMap:
         return [(a,b,c) for a in span
                         for b in span
                         for c in span]
+
+    @classmethod
+    def convert_3_axis(cls, coord: Coordinate, origin: Tuple[int, int]) -> Tuple[int, int]:
+        """Convert a three-axis coordinate to Traveller grid coordinates."""
+        if coord[1] > 0:
+            return (origin[0]+coord[1], origin[1]-coord[0])
+        return (origin[0]+coord[1], origin[1]+coord[2])
