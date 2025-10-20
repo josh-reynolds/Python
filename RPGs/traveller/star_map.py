@@ -161,6 +161,36 @@ from utilities import die_roll, constrain, Coordinate
 # the map for additional verification, and we have issues. I have
 # sneaking suspicion the location of the coordinate within the
 # six 3-axis sectors holds the solution.
+#
+# Additional test cases seem to corroborate. Taking the six 
+# 'spine' hexes out from the origin, four are OK, implying +/-
+# sectors match my algorithm. But the two sectors parallel
+# to the column progression (i.e. left/right) fail. Need a tweak.
+
+# ( 2,-1,-1)   0505 (-1,-1)    ok
+# (-1,-1, 2)   0508 (-1, 2)    ok
+# ( 1, 1,-2)   0705 ( 1,-1)    ok
+# (-2, 1, 1)   0708 ( 1, 2)    ok
+# (-1, 2,-1)   0806 ( 2, 0)    not ok, algorithm produces ( 2, 1)
+# ( 1,-2, 1)   0406 (-2, 0)    not ok, algorithm produces (-2, 1)
+# ( 2,-4, 2)   0206 (-4, 0)    not ok, algorithm produces (-4, 2)
+# (-2, 4,-2)   1006 ( 4, 0)    not ok, algorithm produces ( 4, 2)
+# (-1, 5,-4)   1105 ( 5,-1)    not ok, algorithm produces ( 5, 1)
+# (-4, 5,-1)   1108 ( 5, 2)    not ok, algorithm produces ( 5, 4)
+#
+# so, looking at the sectors, the signs for the first and third
+# coordinate may reveal which is which:
+#
+# left      (+,,+)   col < 0
+# right     (-,,-)   col > 0
+# top-left  (+,,-)   col < 0
+# top-right (+,,-)   col > 0
+# bot-left  (-,,+)   col < 0
+# bot-right (-,,+)   col > 0
+#
+# axial rows have one value at 0, so may belong to two sectors,
+# need to validate - but if so, current simple implementation
+# should work (does in cases tried thus far...)
 
 # World generation from Traveller '77 Book 3 pp. 4-12
 # constraints based on the tables, though the dice throws

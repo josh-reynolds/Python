@@ -294,11 +294,32 @@ class StarMapTestCase(unittest.TestCase):
         #coord = (2,-4,2)
         #self.assertEqual(StarMap.convert_3_axis(coord, origin), (2,6))
 
+        #coord = (2,-3,1)
+        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (3,6))
+
+        coord = (2,-1,-1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,5))
+
+        coord = (1,1,-2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,5))
+
+        coord = (-1,-1,2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,8))
+
+        coord = (-2,1,1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,8))
+
+        #coord = (1,-2,1)
+        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (4,6))
+
+        #coord = (-1,2,-1)
+        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,6))
+
 class StarSystemFactoryTestCase(unittest.TestCase):
     """Tests StarSystemFactory class."""
 
     def test_generate(self) -> None:
-        """Test rnadom generation of StarSystems."""
+        """Test random generation of StarSystems."""
         system = StarSystemFactory.generate((0,0,0))
         self.assertEqual(system.coordinate, (0,0,0))
 
