@@ -172,11 +172,11 @@ from utilities import die_roll, constrain, Coordinate
 # ( 1, 1,-2)   0705 ( 1,-1)    ok
 # (-2, 1, 1)   0708 ( 1, 2)    ok
 # (-1, 2,-1)   0806 ( 2, 0)    not ok, algorithm produces ( 2, 1)
-# ( 1,-2, 1)   0406 (-2, 0)    not ok, algorithm produces (-2, 1)
-# ( 2,-4, 2)   0206 (-4, 0)    not ok, algorithm produces (-4, 2)
 # (-2, 4,-2)   1006 ( 4, 0)    not ok, algorithm produces ( 4, 2)
 # (-1, 5,-4)   1105 ( 5,-1)    not ok, algorithm produces ( 5, 1)
 # (-4, 5,-1)   1108 ( 5, 2)    not ok, algorithm produces ( 5, 4)
+# ( 1,-2, 1)   0406 (-2, 0)    not ok, algorithm produces (-2, 1)
+# ( 2,-4, 2)   0206 (-4, 0)    not ok, algorithm produces (-4, 2)
 #
 # so, looking at the sectors, the signs for the first and third
 # coordinate may reveal which is which:
@@ -191,6 +191,28 @@ from utilities import die_roll, constrain, Coordinate
 # axial rows have one value at 0, so may belong to two sectors,
 # need to validate - but if so, current simple implementation
 # should work (does in cases tried thus far...)
+#
+# referencing my older project, I only converted from traveller
+# coords to three-axis (and not the reverse) so I could use
+# it internally for distance calculations. The formulae were:
+#
+# x = column - 1
+# y = -x - z
+# z = (row - 1) - floor((column - 1)/2)
+#
+# This was only vetted for a single subsector, so just one
+# quadrant of an inverted cartesian grid. And I didn't bother
+# translating away from origin, so IIRC it works from 0101.
+# Also, look like I used the first coordinate as column, instead
+# of second. But it's something to work with...
+#
+# To match this implementation, need to change x/y/z up, and
+# also remove -1 offset.
+#
+# x = row - floor(column/2)
+# y = column
+# z = -x - y
+
 
 # World generation from Traveller '77 Book 3 pp. 4-12
 # constraints based on the tables, though the dice throws

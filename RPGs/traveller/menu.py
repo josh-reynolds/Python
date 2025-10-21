@@ -10,7 +10,7 @@ from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
 class Menu:
-    """Draws the screen and gathers input from the player."""
+    """Draws the menu screen and gathers input from the player."""
 
     def __init__(self, parent: Any) -> None:
         """Create a Menu object."""
@@ -60,3 +60,21 @@ class Menu:
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
             for entry in systems:
                 out_file.write(str(entry) + "\n")
+
+class Play:
+    """Draws the play screen and gathers input from the player."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Menu object."""
+        self.parent = parent
+        self.commands: List = [
+                Command('s', 'Save Game', self.save_game),
+                Command('q', 'Quit', self.parent.quit)
+                ]
+
+    def update(self) -> State:
+        """Draw the screen and present play choices."""
+        return State.PLAY
+
+    def save_game(self) -> None:
+        """Save current game state."""
