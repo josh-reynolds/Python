@@ -3,17 +3,16 @@
 Game - contains the game loop and all game logic.
 Command - represents a command available to the player.
 """
-from time import sleep
 from typing import List, Tuple, cast
 from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from command import Command
-from menu import Menu
+from menu import Menu, Play
 from utilities import int_input, confirm_input, State
 from utilities import pr_list, die_roll, Coordinate, pr_highlight_list
-from utilities import YELLOW_ON_RED, BOLD_YELLOW, BOLD_BLUE
-from utilities import BOLD_RED, END_FORMAT, HOME, CLEAR, BOLD_GREEN
+from utilities import BOLD_YELLOW, BOLD_BLUE
+from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus
 from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
@@ -32,6 +31,7 @@ class Game:
         """Create an instance of Game."""
         self.running = False
         self.menu = Menu(self)
+        self.play = Play(self)
         self.date = Calendar()
 
         self.ship = Ship()
@@ -103,30 +103,7 @@ class Game:
                 self.state = self.menu.update()
 
             else:
-                if self.ship.fuel_quality == FuelQuality.UNREFINED:
-                    fuel_quality = "(U)"
-                else:
-                    fuel_quality = ""
-
-                repair_state = ""
-                if self.ship.repair_status == RepairStatus.BROKEN:
-                    repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-                elif self.ship.repair_status == RepairStatus.PATCHED:
-                    repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
-
-                print(f"{HOME}{CLEAR}")
-                print(f"{YELLOW_ON_RED}\n{self.date} : You are " +
-                      f"{self.location.description()}.{repair_state}{END_FORMAT}")
-                print(f"Credits: {self.financials.balance}"
-                      f"\tFree hold space: {self.ship.free_space()} tons"
-                      f"\tFuel: {self.ship.current_fuel}/{self.ship.fuel_tank} tons {fuel_quality}"
-                      f"\tLife support: {self.ship.life_support_level}%")
-                command = input("Enter a command (? to list):  ")
-                for cmd in self.commands:
-                    if command.lower() == cmd.key:
-                        print()
-                        cmd.action()
-                        sleep(1)
+                self.state = self.play.update()
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
