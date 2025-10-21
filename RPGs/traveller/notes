@@ -1886,11 +1886,13 @@
 #           for immdiate commands, or too short for view commands. Change design.
 #  * [DONE] New game
 #  * [DONE] Front end menu
+#  * [DONE] Implement coordinate conversion to Traveller subsector row/column
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
-#  * [....] Implement coordinate conversion to Traveller subsector row/column
-#  * [....] Save game state
+#  * [....] Save game state (ship, finances, date, map)
+#  * [    ] Coordinate conversion needs to handle subsector/sector bounds
+#  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,

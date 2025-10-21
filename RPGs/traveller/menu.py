@@ -19,7 +19,7 @@ class Menu:
         self.parent = parent
         self.commands: List = [
                 Command('n', 'New Game', self.new_game),
-                Command('s', 'Save Game', self.save_game),
+                Command('l', 'Load Game', self.load_game),
                 Command('q', 'Quit', self.parent.quit)
                 ]
 
@@ -56,12 +56,8 @@ class Menu:
         """Start a new game."""
         self.parent.ship.name = input("What is the name of your ship? ")
 
-    def save_game(self) -> None:
-        """Save current game state."""
-        systems = self.parent.star_map.get_all_systems()
-        with open('save_game.txt', 'w', encoding='utf-8') as out_file:
-            for entry in systems:
-                out_file.write(str(entry) + "\n")
+    def load_game(self) -> None:
+        """Load a previous game."""
 
 class Play:
     """Draws the play screen and gathers input from the player."""
@@ -106,3 +102,7 @@ class Play:
 
     def save_game(self) -> None:
         """Save current game state."""
+        systems = self.parent.star_map.get_all_systems()
+        with open('save_game.txt', 'w', encoding='utf-8') as out_file:
+            for entry in systems:
+                out_file.write(str(entry) + "\n")
