@@ -245,7 +245,7 @@ from utilities import die_roll, constrain, Coordinate
 # both ways. Not sure which is more useful.
 #
 # Alright, little scribbling on a map to find good boundary
-# values and plugging that into the test case reveals the 
+# values and plugging that into the test case reveals the
 # issue: it's based on distance from origin left and right.
 # Not a sector-based problem at all. So the little
 # 'floor(column/2)' bit above is the trick. Need to adjust
