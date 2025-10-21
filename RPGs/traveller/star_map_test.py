@@ -257,63 +257,104 @@ class StarMapTestCase(unittest.TestCase):
         """Test conversion of a three-axis coordinate to Traveller standard."""
         origin = (6,6)
 
-        coord = (0,0,0)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,6))
+        coord = (4,-1,-3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,3))
 
-        coord = (1,0,-1)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,5))
+        coord = (3,-1,-2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,4))
 
-        coord = (-1,0,1)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,7))
-
-        coord = (2,0,-2)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,4))
-
-        coord = (-2,0,2)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,8))
+        coord = (2,-1,-1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,5))
 
         coord = (1,-1,0)
         self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,6))
 
-        coord = (2,-1,-1)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,5))
-
-        coord = (-3,-1,4)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,10))
-
-        coord = (0,1,-1)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,6))
-
-        coord = (-3,1,2)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,9))
-
-        # these break - my solution isn't quite right
-        #coord = (-3,6,-3)
-        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (12,6))
-
-        #coord = (2,-4,2)
-        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (2,6))
-
-        #coord = (2,-3,1)
-        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (3,6))
-
-        coord = (2,-1,-1)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,5))
-
-        coord = (1,1,-2)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,5))
+        coord = (0,-1,1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,7))
 
         coord = (-1,-1,2)
         self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,8))
 
+        coord = (-2,-1,3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,9))
+
+        coord = (-3,-1,4)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (5,10))
+
+        coord = (3,0,-3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,3))
+
+        coord = (2,0,-2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,4))
+
+        coord = (1,0,-1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,5))
+
+        coord = (0,0,0)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,6))
+
+        coord = (-1,0,1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,7))
+
+        coord = (-2,0,2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,8))
+
+        coord = (-3,0,3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,9))
+
+        coord = (-4,0,4)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,10))
+
+        coord = (3,1,-4)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,3))
+
+        coord = (2,1,-3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,4))
+
+        coord = (1,1,-2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,5))
+
+        coord = (0,1,-1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,6))
+
+        coord = (-1,1,0)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,7))
+
         coord = (-2,1,1)
         self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,8))
 
-        #coord = (1,-2,1)
-        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (4,6))
+        coord = (-3,1,2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,9))
 
-        #coord = (-1,2,-1)
-        #self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,6))
+        coord = (-4,1,3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (7,10))
+
+        coord = (-3,6,-3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (12,6))
+
+        coord = (2,-4,2)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (2,6))
+
+        coord = (2,-3,1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (3,6))
+
+        coord = (1,-2,1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (4,6))
+
+        coord = (-1,2,-1)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,6))
+
+        coord = (1,2,-3)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,4))
+
+        coord = (2,2,-4)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,3))
+
+        coord = (3,2,-5)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,2))
+
+        coord = (4,2,-6)
+        self.assertEqual(StarMap.convert_3_axis(coord, origin), (8,1))
 
 class StarSystemFactoryTestCase(unittest.TestCase):
     """Tests StarSystemFactory class."""

@@ -212,6 +212,47 @@ from utilities import die_roll, constrain, Coordinate
 # x = row - floor(column/2)
 # y = column
 # z = -x - y
+#
+# Another insight I had last night: there are actually *six*
+# axes in the three-axis system. Half of them are obscured
+# because they don't align with how we think of axes in
+# a normal Cartesian grid.
+#
+# In the Cartesian setup, axes actually serve two purposes:
+#
+# * Denote increasing/decreasing values for one of the two
+#   coordinate values, x or y.
+#
+# * Indicate a '0 row' or '0 column' for the other value.
+#
+# We don't view these as separate because they are at
+# right angles to one another and thus align with the
+# other axis. The x axis indicates change in x, but also
+# a '0 row' for y. And vice versa.
+#
+# In three-axis, this isn't true. There _is_ a '0 row'
+# at right angles to the primary axis (the 'axial rows'
+# mentioned above), but it does not align with either of
+# the other two primary axes. The 'changing values' axes
+# extend from the spines (vertices) of the origin hex. So
+# maybe a 'major/minor' or 'primary/secondary' terminology
+# will do.
+#
+# I don't know yet if this helps in sorting out the
+# coordinate conversion math. But above I mention 'six
+# sectors' and the bounds for those sectors may matter. Are
+# they bounded by primary or secondary axes? I've drawn it
+# both ways. Not sure which is more useful.
+#
+# Alright, little scribbling on a map to find good boundary
+# values and plugging that into the test case reveals the 
+# issue: it's based on distance from origin left and right.
+# Not a sector-based problem at all. So the little
+# 'floor(column/2)' bit above is the trick. Need to adjust
+# that instead to 'int(column/2)' so it is symmetric around
+# zero, and seems to be right. Going to tweak the test
+# cases to be sure, and to demonstrate better - currently
+# a bunch of duplicate cases while I was faffing about.
 
 
 # World generation from Traveller '77 Book 3 pp. 4-12
@@ -475,6 +516,11 @@ class StarMap:
     @classmethod
     def convert_3_axis(cls, coord: Coordinate, origin: Tuple[int, int]) -> Tuple[int, int]:
         """Convert a three-axis coordinate to Traveller grid coordinates."""
+        new_column = origin[0] + coord[1]
+        column_offset = int(coord[1]/2)
+        new_row_right = origin[1] - coord[0] - column_offset
+        new_row_left = origin[1] + coord[2] + column_offset
+
         if coord[1] > 0:
-            return (origin[0]+coord[1], origin[1]-coord[0])
-        return (origin[0]+coord[1], origin[1]+coord[2])
+            return (new_column, new_row_right)
+        return (new_column, new_row_left)
