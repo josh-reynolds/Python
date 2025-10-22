@@ -1891,6 +1891,7 @@
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
+#  * [....] Extract all the three-axis coordinate math to its own class
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
@@ -1948,7 +1949,6 @@
 #  * [    ] Refactoring suggestion: inbound/outbound methods in Game are almost
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
-#  * [    ] Should we extract all the three-axis coordinate math to its own class?
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  * [    ] Break up Game class (MVC?)
 #  * [    ] Collapse Crew hierarchy?

@@ -8,9 +8,10 @@ from calendar import Calendar
 from random import randint, choice
 from financials import Financials, Credits
 from command import Command
+from coordinate import Coordinate
 from menu import Menu, Play
 from utilities import int_input, confirm_input, State
-from utilities import pr_list, die_roll, Coordinate, pr_highlight_list
+from utilities import pr_list, die_roll, pr_highlight_list
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus

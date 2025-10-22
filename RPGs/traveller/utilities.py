@@ -1,9 +1,7 @@
 """Contains utility functions."""
 from enum import Enum
 from random import randint
-from typing import Tuple, Any
-
-Coordinate = Tuple[int, int, int]
+from typing import Any
 
 def die_roll(count: int = 1) -> int:
     """Roll count six-sided dice and return the total."""
