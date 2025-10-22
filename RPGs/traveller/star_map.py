@@ -4,7 +4,7 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Dict, List, Tuple, cast
+from typing import Dict, List, cast
 from coordinate import Coordinate
 from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
@@ -513,15 +513,3 @@ class StarMap:
         return [(a,b,c) for a in span
                         for b in span
                         for c in span]
-
-    @classmethod
-    def convert_3_axis(cls, coord: Coordinate, origin: Tuple[int, int]) -> Tuple[int, int]:
-        """Convert a three-axis coordinate to Traveller grid coordinates."""
-        new_column = origin[0] + coord[1]
-        column_offset = int(coord[1]/2)
-        new_row_right = origin[1] - coord[0] - column_offset
-        new_row_left = origin[1] + coord[2] + column_offset
-
-        if coord[1] > 0:
-            return (new_column, new_row_right)
-        return (new_column, new_row_left)

@@ -253,49 +253,6 @@ class StarMapTestCase(unittest.TestCase):
                                                               (1,0,-1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
 
-    def test_convert_3_axis(self) -> None:
-        """Test conversion of a three-axis coordinate to Traveller standard."""
-        origin = (6,6)
-
-        coord = (0,0,0)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,6))
-
-        coord = (-3,6,-3)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (12,6))
-
-        coord = (0,6,-6)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (12,3))
-
-        coord = (3,4,-7)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (10,1))
-
-        coord = (5,0,-5)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,1))
-
-        coord = (7,-4,-3)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (2,1))
-
-        coord = (5,-5,0)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (1,4))
-
-        coord = (2,-5,3)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (1,7))
-
-        coord = (0,-5,5)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (1,9))
-
-        coord = (-4,-3,7)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (3,12))
-
-        coord = (-5,0,5)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (6,11))
-
-        coord = (-7,4,3)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (10,11))
-
-        coord = (-6,6,0)
-        self.assertEqual(StarMap.convert_3_axis(coord, origin), (12,9))
-
 class StarSystemFactoryTestCase(unittest.TestCase):
     """Tests StarSystemFactory class."""
 
