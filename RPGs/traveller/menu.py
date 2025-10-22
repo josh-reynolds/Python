@@ -7,7 +7,7 @@ from typing import Any, List
 from command import Command
 from ship import FuelQuality, RepairStatus
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
-from utilities import YELLOW_ON_RED, BOLD_BLUE
+from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -66,9 +66,15 @@ class Play:
         """Create a Menu object."""
         self.parent = parent
         self.commands: List = [
-                Command('?', 'View Commands', self.list_commands),
+                Command('?', 'List commands', self.list_commands),
+                Command('a', 'View star map', self.view_map),
+                Command('c', 'Cargo hold contents', self.cargo_hold),
+                Command('d', 'Passenger manifest', self.passenger_manifest),
+                Command('e', 'Crew roster', self.crew_roster),
+                Command('h', 'View ship details', self.view_ship),
+                Command('q', 'Quit', self.parent.quit),
                 Command('s', 'Save Game', self.save_game),
-                Command('q', 'Quit', self.parent.quit)
+                Command('v', 'View world characteristics', self.view_world),
                 ]
 
     def update(self) -> State:
@@ -109,9 +115,67 @@ class Play:
             for entry in systems:
                 out_file.write(str(entry) + "\n")
 
+    # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
         """List available commands in the current context."""
         print(f"{BOLD_BLUE}Available commands:{END_FORMAT}")
         for command in self.commands:
             print(f"{command.key} - {command.description}")
+        _ = input("\nPress ENTER key to continue.")
+
+    def view_world(self) -> None:
+        """View the characteristics of the local world."""
+        print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
+        print(self.parent.location)
+        _ = input("\nPress ENTER key to continue.")
+
+    # TO_DO: Should only be usable from the trade depot location
+    def goods(self) -> None:
+        """Show goods available for purchase."""
+        print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
+        pr_list(self.parent.depot.cargo)
+        _ = input("\nPress ENTER key to continue.")
+
+    def cargo_hold(self) -> None:
+        """Show the contents of the Ship's cargo hold."""
+        print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
+        contents = self.parent.ship.cargo_hold()
+        if len(contents) == 0:
+            print("Empty.")
+        else:
+            pr_list(contents)
+        _ = input("\nPress ENTER key to continue.")
+
+    def passenger_manifest(self) -> None:
+        """Show the Passenger's booked for transport."""
+        print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
+        if self.parent.ship.destination is None:
+            destination = "None"
+        else:
+            destination = self.parent.ship.destination.name
+        print(f"High passengers: {self.parent.ship.high_passenger_count}\n"
+              f"Middle passengers: {self.parent.ship.middle_passenger_count}\n"
+              f"Low passengers: {self.parent.ship.low_passenger_count}\n"
+              f"DESTINATION: {destination}\n\n"
+              f"Empty berths: {self.parent.ship.empty_passenger_berths}\n"
+              f"Empty low berths: {self.parent.ship.empty_low_berths}")
+        _ = input("\nPress ENTER key to continue.")
+
+    def crew_roster(self) -> None:
+        """Show the Ship's crew."""
+        print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
+        pr_list(self.parent.ship.crew)
+        _ = input("\nPress ENTER key to continue.")
+
+    def view_ship(self) -> None:
+        """View the details of the Ship."""
+        print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
+        print(self.parent.ship)
+        _ = input("\nPress ENTER key to continue.")
+
+    def view_map(self) -> None:
+        """View all known StarSystems."""
+        print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
+        systems = self.parent.star_map.get_all_systems()
+        pr_highlight_list(systems, self.parent.location, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")

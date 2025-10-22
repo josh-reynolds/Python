@@ -11,7 +11,7 @@ from command import Command
 from coordinate import Coordinate
 from menu import Menu, Play
 from utilities import int_input, confirm_input, State
-from utilities import pr_list, die_roll, pr_highlight_list
+from utilities import pr_list, die_roll
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus
@@ -105,70 +105,6 @@ class Game:
 
             else:
                 self.state = self.play.update()
-
-    # VIEW COMMANDS ========================================================
-    def list_commands(self) -> None:
-        """List available commands in the current context."""
-        print(f"{BOLD_BLUE}Available commands:{END_FORMAT}")
-        for command in self.commands:
-            print(f"{command.key} - {command.description}")
-        _ = input("\nPress ENTER key to continue.")
-
-    def view_world(self) -> None:
-        """View the characteristics of the local world."""
-        print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(self.location)
-        _ = input("\nPress ENTER key to continue.")
-
-    def goods(self) -> None:
-        """Show goods available for purchase."""
-        print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
-        pr_list(self.depot.cargo)
-        _ = input("\nPress ENTER key to continue.")
-
-    def cargo_hold(self) -> None:
-        """Show the contents of the Ship's cargo hold."""
-        print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
-        contents = self.ship.cargo_hold()
-        if len(contents) == 0:
-            print("Empty.")
-        else:
-            pr_list(contents)
-        _ = input("\nPress ENTER key to continue.")
-
-    def passenger_manifest(self) -> None:
-        """Show the Passenger's booked for transport."""
-        print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        if self.ship.destination is None:
-            destination = "None"
-        else:
-            destination = self.ship.destination.name
-        print(f"High passengers: {self.ship.high_passenger_count}\n"
-              f"Middle passengers: {self.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.ship.low_passenger_count}\n"
-              f"DESTINATION: {destination}\n\n"
-              f"Empty berths: {self.ship.empty_passenger_berths}\n"
-              f"Empty low berths: {self.ship.empty_low_berths}")
-        _ = input("\nPress ENTER key to continue.")
-
-    def crew_roster(self) -> None:
-        """Show the Ship's crew."""
-        print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
-        pr_list(self.ship.crew)
-        _ = input("\nPress ENTER key to continue.")
-
-    def view_ship(self) -> None:
-        """View the details of the Ship."""
-        print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
-        print(self.ship)
-        _ = input("\nPress ENTER key to continue.")
-
-    def view_map(self) -> None:
-        """View all known StarSystems."""
-        print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
-        systems = self.star_map.get_all_systems()
-        pr_highlight_list(systems, self.location, "\t<- CURRENT LOCATION")
-        _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
     def quit(self) -> None:
@@ -933,24 +869,10 @@ class Commands:
 
     always = [Command('q', 'Quit',
                       game.quit),
-              Command('?', 'List commands',
-                      game.list_commands),
-              Command('c', 'Cargo hold contents',
-                      game.cargo_hold),
-              Command('v', 'View world characteristics',
-                      game.view_world),
-              Command('h', 'View ship details',
-                      game.view_ship),
               Command('w', 'Wait a week',
                       game.wait_week),
-              Command('d', 'Passenger manifest',
-                      game.passenger_manifest),
-              Command('e', 'Crew roster',
-                      game.crew_roster),
               Command('k', 'Engineering damage control',
-                      game.damage_control),
-              Command('a', 'View star map',
-                      game.view_map)]
+                      game.damage_control)]
 
     starport = always + [Command('l', 'Lift off to orbit',
                                  game.liftoff),
@@ -986,8 +908,6 @@ class Commands:
 
     trade = always + [Command('l', 'Leave trade depot',
                               game.leave_depot),
-                      Command('g', 'Show goods for sale',
-                              game.goods),
                       Command('b', 'Buy cargo',
                               game.buy_cargo),
                       Command('s', 'Sell cargo',
