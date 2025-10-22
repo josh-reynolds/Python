@@ -7,7 +7,7 @@ from typing import Any, List
 from command import Command
 from ship import FuelQuality, RepairStatus
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
-from utilities import YELLOW_ON_RED
+from utilities import YELLOW_ON_RED, BOLD_BLUE
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -66,6 +66,7 @@ class Play:
         """Create a Menu object."""
         self.parent = parent
         self.commands: List = [
+                Command('?', 'View Commands', self.list_commands),
                 Command('s', 'Save Game', self.save_game),
                 Command('q', 'Quit', self.parent.quit)
                 ]
@@ -102,7 +103,15 @@ class Play:
 
     def save_game(self) -> None:
         """Save current game state."""
+        print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = self.parent.star_map.get_all_systems()
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
             for entry in systems:
                 out_file.write(str(entry) + "\n")
+
+    def list_commands(self) -> None:
+        """List available commands in the current context."""
+        print(f"{BOLD_BLUE}Available commands:{END_FORMAT}")
+        for command in self.commands:
+            print(f"{command.key} - {command.description}")
+        _ = input("\nPress ENTER key to continue.")
