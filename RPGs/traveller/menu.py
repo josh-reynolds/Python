@@ -5,7 +5,9 @@ Menu - draws the screen and gathers input from the player.
 from abc import ABC, abstractmethod
 from time import sleep
 from typing import Any, List, TypeVar, cast
+from cargo import Baggage, PassageClass
 from command import Command
+from financials import Credits
 from ship import FuelQuality, RepairStatus
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
@@ -245,4 +247,78 @@ class Orbit(Play):
     def __init__(self, parent: Any) -> None:
         """Create an Orbit object."""
         super().__init__(parent)
-        self.commands += []
+        self.commands += [
+                Command('l', 'Land on surface', self.land)
+                ]
+        self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    def land(self) -> None:
+        """Move from orbit to the starport."""
+        print(f"{BOLD_BLUE}Landing on {self.parent.location.name}.{END_FORMAT}")
+        if not self.parent.ship.streamlined:
+            print("Your ship is not streamlined and cannot land.")
+            return
+
+        if self.parent.ship.repair_status == RepairStatus.BROKEN:
+            print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
+            return
+
+        if self.parent.ship.destination == self.parent.location:
+            if self.parent.ship.total_passenger_count > 0:
+                print(f"Passengers disembarking on {self.parent.location.name}.")
+
+                funds = Credits(sum(p.ticket_price.amount for p in self.parent.ship.passengers))
+                low_lottery_amount = Credits(10) * self.parent.ship.low_passenger_count
+                funds -= low_lottery_amount
+                print(f"Receiving {funds} in passenger fares.")
+                self.parent.financials.credit(funds)
+
+                self._low_lottery(low_lottery_amount)
+
+                self.parent.ship.passengers = []
+                self.parent.ship.hold = [item for item in self.parent.ship.hold
+                                  if not isinstance(item, Baggage)]
+
+        self.parent.location.land()
+        self.parent.financials.berthing_fee(self.parent.location.on_surface())
+        #self.commands = Commands.starport
+
+    def _low_lottery(self, low_lottery_amount) -> None:
+        """Run the low passage lottery and apply results."""
+        if self.parent.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.parent.ship.passengers if
+                                         p.passage == PassageClass.LOW]
+            for passenger in low_passengers:
+                if die_roll(2) + passenger.endurance + self.parent.ship.medic_skill() < 5:
+                    passenger.survived = False
+
+            survivors = [p for p in low_passengers if p.survived]
+            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
+                  "survived revival.")
+
+            winner = False
+            for passenger in low_passengers:
+                if passenger.guess == len(survivors) and passenger.survived:
+                    winner = True
+
+            if not winner:
+                print(f"No surviving low lottery winner. "
+                      f"The captain is awarded {low_lottery_amount}.")
+                self.parent.financials.credit(low_lottery_amount)
+
+    # ACTIONS ==============================================================
+
+class Starport(Play):
+    """Contains commands for the Starport state."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Starport object."""
+        super().__init__(parent)
+        self.commands += [
+                ]
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================

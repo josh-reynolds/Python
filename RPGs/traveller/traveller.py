@@ -121,37 +121,6 @@ class Game:
         self.location.liftoff()
         self.commands = Commands.orbit
 
-    def land(self) -> None:
-        """Move from orbit to the starport."""
-        print(f"{BOLD_BLUE}Landing on {self.location.name}.{END_FORMAT}")
-        if not self.ship.streamlined:
-            print("Your ship is not streamlined and cannot land.")
-            return
-
-        if self.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
-            return
-
-        if self.ship.destination == self.location:
-            if self.ship.total_passenger_count > 0:
-                print(f"Passengers disembarking on {self.location.name}.")
-
-                funds = Credits(sum(p.ticket_price.amount for p in self.ship.passengers))
-                low_lottery_amount = Credits(10) * self.ship.low_passenger_count
-                funds -= low_lottery_amount
-                print(f"Receiving {funds} in passenger fares.")
-                self.financials.credit(funds)
-
-                self._low_lottery(low_lottery_amount)
-
-                self.ship.passengers = []
-                self.ship.hold = [item for item in self.ship.hold
-                                  if not isinstance(item, Baggage)]
-
-        self.location.land()
-        self.financials.berthing_fee(self.location.on_surface())
-        self.commands = Commands.starport
-
     # TO_DO: almost identical to inbound_from_jump() - combine
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
@@ -224,29 +193,6 @@ class Game:
         self.commands = Commands.passengers
 
     # ACTIONS ==============================================================
-    def _low_lottery(self, low_lottery_amount) -> None:
-        """Run the low passage lottery and apply results."""
-        if self.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.ship.passengers if
-                                         p.passage == PassageClass.LOW]
-            for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
-                    passenger.survived = False
-
-            survivors = [p for p in low_passengers if p.survived]
-            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
-                  "survived revival.")
-
-            winner = False
-            for passenger in low_passengers:
-                if passenger.guess == len(survivors) and passenger.survived:
-                    winner = True
-
-            if not winner:
-                print(f"No surviving low lottery winner. "
-                      f"The captain is awarded {low_lottery_amount}.")
-                self.financials.credit(low_lottery_amount)
-
     def book_passengers(self) -> None:
         """Book passengers for travel to a destination."""
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
@@ -851,9 +797,7 @@ class Commands:
     starport = sorted(starport, key=lambda command: command.key)
 
     orbit = [Command('g', 'Go to jump point',
-                              game.outbound_to_jump),
-                      Command('l', 'Land on surface',
-                              game.land)]
+                              game.outbound_to_jump)]
     orbit = sorted(orbit, key=lambda command: command.key)
 
     jump = [Command('j', 'Jump to new system',

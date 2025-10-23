@@ -1,5 +1,4 @@
 """Contains utility functions."""
-from enum import Enum
 from random import randint
 from typing import Any
 
