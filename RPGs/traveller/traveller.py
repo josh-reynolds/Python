@@ -104,7 +104,6 @@ class Game:
                 self.state = self.play.update()
 
     # STATE TRANSITIONS ====================================================
-
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.location.name}.{END_FORMAT}")
@@ -536,11 +535,6 @@ class Game:
         self.financials.credit(sale_price)
         self.date.day += 1
 
-    def wait_week(self) -> None:
-        """Advance the Calendar by seven days."""
-        print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
-        self.date.plus_week()
-
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
     # gas giant if unavailable elsewhere. Most star systems have at
@@ -860,9 +854,7 @@ game = Game()
 class Commands:
     """Collects all command sets together."""
 
-    always = [Command('w', 'Wait a week',
-                      game.wait_week),
-              Command('k', 'Engineering damage control',
+    always = [Command('k', 'Engineering damage control',
                       game.damage_control)]
 
     starport = always + [Command('l', 'Lift off to orbit',

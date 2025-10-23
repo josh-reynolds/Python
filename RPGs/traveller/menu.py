@@ -2,7 +2,7 @@
 
 Menu - draws the screen and gathers input from the player.
 """
-from abc import ABC
+from abc import ABC, abstractmethod
 from time import sleep
 from typing import Any, List
 from command import Command
@@ -11,17 +11,12 @@ from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list
 
 class Screen(ABC):
-    """Draw a screen and gather input."""
+    """Base class for game screens."""
 
     def __init__(self, parent: Any) -> None:
         """Create a Screen object."""
         self.parent = parent
         self.commands: List[Command] = []
-
-    def quit(self) -> None:
-        """Quit the game."""
-        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
-        self.parent.running = False
 
     def get_command(self, prompt: str) -> State:
         """Get command input from player and execute it."""
@@ -35,6 +30,19 @@ class Screen(ABC):
                     sleep(1)
                     no_command = False
         return State.PLAY
+
+    @abstractmethod
+    def update(self) -> State:
+        """Draw the screen and gather input."""
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    def quit(self) -> None:
+        """Quit the game."""
+        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
+        self.parent.running = False
+
+    # ACTIONS ==============================================================
 
 
 class Menu(Screen):
@@ -67,6 +75,9 @@ class Menu(Screen):
 
         return self.get_command("\nEnter a command:  ")
 
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================
     def new_game(self) -> None:
         """Start a new game."""
         self.parent.ship.name = input("What is the name of your ship? ")
@@ -93,6 +104,7 @@ class Play(Screen):
                 Command('q', 'Quit', self.quit),
                 Command('s', 'Save Game', self.save_game),
                 Command('v', 'View world characteristics', self.view_world),
+                Command('w', 'Wait a week', self.wait_week),
                 ]
 
     def update(self) -> State:
@@ -119,14 +131,6 @@ class Play(Screen):
               f"\tLife support: {self.parent.ship.life_support_level}%")
 
         return self.get_command ("Enter a command (? to list):  ")
-
-    def save_game(self) -> None:
-        """Save current game state."""
-        print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
-        systems = self.parent.star_map.get_all_systems()
-        with open('save_game.txt', 'w', encoding='utf-8') as out_file:
-            for entry in systems:
-                out_file.write(str(entry) + "\n")
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
@@ -194,3 +198,16 @@ class Play(Screen):
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================
+    def save_game(self) -> None:
+        """Save current game state."""
+        print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
+        systems = self.parent.star_map.get_all_systems()
+        with open('save_game.txt', 'w', encoding='utf-8') as out_file:
+            for entry in systems:
+                out_file.write(str(entry) + "\n")
+
+    def wait_week(self) -> None:
+        """Advance the Calendar by seven days."""
+        print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
+        self.parent.date.plus_week()

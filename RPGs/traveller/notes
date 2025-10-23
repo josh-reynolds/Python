@@ -1931,6 +1931,7 @@
 #  * [....] Consolidate mock objects into mock module
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] State enum is redundant - can just use Screen subclasses directly
+#  * [    ] Could a decorator handle the little pause at the end of view commands?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
 #  * [    ] Review unittest.Mock/MagicMock - should replace homegrown?
