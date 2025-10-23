@@ -416,21 +416,6 @@ class Game:
         cost = self.ship.recharge()
         self.financials.debit(cost)
 
-    def damage_control(self) -> None:
-        """Repar damage to the Ship (Engineer)."""
-        print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
-        if self.ship.repair_status == RepairStatus.REPAIRED:
-            print("Your ship is not damaged.")
-            return
-        if self.ship.repair_status == RepairStatus.PATCHED:
-            print("Further repairs require starport facilities.")
-            return
-        self.date.day += 1
-        if die_roll(2) + self.ship.engineering_skill() > 9:
-            self.ship.repair_status = RepairStatus.PATCHED
-            print("Ship partially repaired. Visit a starport for further work.")
-        else:
-            print("No progress today. Drives are still out of commission.")
 
     # TO_DO: the rules do not cover this procedure. No time or credits
     #        expenditure, etc. For now I'll just make this one week and free,
@@ -854,10 +839,7 @@ game = Game()
 class Commands:
     """Collects all command sets together."""
 
-    always = [Command('k', 'Engineering damage control',
-                      game.damage_control)]
-
-    starport = always + [Command('l', 'Lift off to orbit',
+    starport = [Command('l', 'Lift off to orbit',
                                  game.liftoff),
                          Command('t', 'Trade depot',
                                  game.to_depot),
@@ -875,13 +857,13 @@ class Commands:
                                  game.refuel)]
     starport = sorted(starport, key=lambda command: command.key)
 
-    orbit = always + [Command('g', 'Go to jump point',
+    orbit = [Command('g', 'Go to jump point',
                               game.outbound_to_jump),
                       Command('l', 'Land on surface',
                               game.land)]
     orbit = sorted(orbit, key=lambda command: command.key)
 
-    jump = always + [Command('j', 'Jump to new system',
+    jump = [Command('j', 'Jump to new system',
                              game.jump),
                      Command('s', 'Skim fuel from gas giant',
                              game.skim),
@@ -889,7 +871,7 @@ class Commands:
                              game.inbound_from_jump)]
     jump = sorted(jump, key=lambda command: command.key)
 
-    trade = always + [Command('l', 'Leave trade depot',
+    trade = [Command('l', 'Leave trade depot',
                               game.leave_depot),
                       Command('b', 'Buy cargo',
                               game.buy_cargo),
@@ -901,7 +883,7 @@ class Commands:
                               game.unload_freight)]
     trade = sorted(trade, key=lambda command: command.key)
 
-    passengers = always + [Command('b', 'Book passengers',
+    passengers = [Command('b', 'Book passengers',
                                    game.book_passengers),
                            Command('l', 'Leave terminal',
                                    game.leave_terminal)]

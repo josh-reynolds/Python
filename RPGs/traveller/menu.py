@@ -8,7 +8,7 @@ from typing import Any, List
 from command import Command
 from ship import FuelQuality, RepairStatus
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
-from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list
+from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 
 class Screen(ABC):
     """Base class for game screens."""
@@ -101,6 +101,7 @@ class Play(Screen):
                 Command('d', 'Passenger manifest', self.passenger_manifest),
                 Command('e', 'Crew roster', self.crew_roster),
                 Command('h', 'View ship details', self.view_ship),
+                Command('k', 'Engineering damage control', self.damage_control),
                 Command('q', 'Quit', self.quit),
                 Command('s', 'Save Game', self.save_game),
                 Command('v', 'View world characteristics', self.view_world),
@@ -199,6 +200,25 @@ class Play(Screen):
 
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
+
+    # TO_DO: should this method move to jump point? Only needed/useful
+    #        when the ship is BROKEN, which only happens at the jp.
+    def damage_control(self) -> None:
+        """Repair damage to the Ship (Engineer)."""
+        print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
+        if self.parent.ship.repair_status == RepairStatus.REPAIRED:
+            print("Your ship is not damaged.")
+            return
+        if self.parent.ship.repair_status == RepairStatus.PATCHED:
+            print("Further repairs require starport facilities.")
+            return
+        self.parent.date.day += 1
+        if die_roll(2) + self.parent.ship.engineering_skill() > 9:
+            self.parent.ship.repair_status = RepairStatus.PATCHED
+            print("Ship partially repaired. Visit a starport for further work.")
+        else:
+            print("No progress today. Drives are still out of commission.")
+
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
