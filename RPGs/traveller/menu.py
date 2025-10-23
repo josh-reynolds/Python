@@ -20,7 +20,7 @@ class Menu:
         self.commands: List = [
                 Command('n', 'New Game', self.new_game),
                 Command('l', 'Load Game', self.load_game),
-                Command('q', 'Quit', self.parent.quit)
+                Command('q', 'Quit', self.quit)
                 ]
 
     def update(self) -> State:
@@ -59,6 +59,11 @@ class Menu:
     def load_game(self) -> None:
         """Load a previous game."""
 
+    def quit(self) -> None:
+        """Quit the game."""
+        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
+        self.parent.running = False
+
 class Play:
     """Draws the play screen and gathers input from the player."""
 
@@ -72,7 +77,7 @@ class Play:
                 Command('d', 'Passenger manifest', self.passenger_manifest),
                 Command('e', 'Crew roster', self.crew_roster),
                 Command('h', 'View ship details', self.view_ship),
-                Command('q', 'Quit', self.parent.quit),
+                Command('q', 'Quit', self.quit),
                 Command('s', 'Save Game', self.save_game),
                 Command('v', 'View world characteristics', self.view_world),
                 ]
@@ -179,3 +184,9 @@ class Play:
         systems = self.parent.star_map.get_all_systems()
         pr_highlight_list(systems, self.parent.location, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
+
+    # STATE TRANSITIONS ====================================================
+    def quit(self) -> None:
+        """Quit the game."""
+        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
+        self.parent.running = False

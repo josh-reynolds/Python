@@ -19,9 +19,6 @@ from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
 from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory
 
-# pylint: disable=C0302
-# C0302: Too many lines in module (1017/1000)
-
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (8/7)
 # R0904: Too many public methods (34/20)
@@ -107,10 +104,6 @@ class Game:
                 self.state = self.play.update()
 
     # STATE TRANSITIONS ====================================================
-    def quit(self) -> None:
-        """Quit the game."""
-        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
-        self.running = False
 
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
@@ -867,9 +860,7 @@ game = Game()
 class Commands:
     """Collects all command sets together."""
 
-    always = [Command('q', 'Quit',
-                      game.quit),
-              Command('w', 'Wait a week',
+    always = [Command('w', 'Wait a week',
                       game.wait_week),
               Command('k', 'Engineering damage control',
                       game.damage_control)]
