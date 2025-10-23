@@ -10,8 +10,6 @@ from ship import FuelQuality, RepairStatus
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list
 
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
 class Screen(ABC):
     """Draw a screen and gather input."""
 
@@ -24,6 +22,19 @@ class Screen(ABC):
         """Quit the game."""
         print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
         self.parent.running = False
+
+    def get_command(self, prompt: str) -> State:
+        """Get command input from player and execute it."""
+        no_command = True
+        while no_command:
+            command = input(prompt)
+            for cmd in self.commands:
+                if command.lower() == cmd.key:
+                    print()
+                    cmd.action()
+                    sleep(1)
+                    no_command = False
+        return State.PLAY
 
 
 class Menu(Screen):
@@ -54,22 +65,16 @@ class Menu(Screen):
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-        command_in = input("\nEnter a command:  ")
-        for cmd in self.commands:
-            if command_in.lower() == cmd.key:
-                print()
-                cmd.action()
-                sleep(1)
-
-        _ = input("Press ENTER key to continue.")
-        return State.PLAY
+        return self.get_command("\nEnter a command:  ")
 
     def new_game(self) -> None:
         """Start a new game."""
         self.parent.ship.name = input("What is the name of your ship? ")
+        _ = input("Press ENTER key to continue.")
 
     def load_game(self) -> None:
         """Load a previous game."""
+        _ = input("Press ENTER key to continue.")
 
 
 class Play(Screen):
@@ -112,13 +117,8 @@ class Play(Screen):
               f"\tFree hold space: {self.parent.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.parent.ship.life_support_level}%")
-        command = input("Enter a command (? to list):  ")
-        for cmd in self.commands:
-            if command.lower() == cmd.key:
-                print()
-                cmd.action()
-                sleep(1)
-        return State.PLAY
+
+        return self.get_command ("Enter a command (? to list):  ")
 
     def save_game(self) -> None:
         """Save current game state."""

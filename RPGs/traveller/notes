@@ -1930,6 +1930,7 @@
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
 #  * [    ] Should we formalize message priority as an enum or something?
+#  * [    ] State enum is redundant - can just use Screen subclasses directly
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
 #  * [    ] Review unittest.Mock/MagicMock - should replace homegrown?
