@@ -9,8 +9,8 @@ from random import randint, choice
 from financials import Financials, Credits
 from command import Command
 from coordinate import Coordinate
-from menu import Menu, Play
-from utilities import int_input, confirm_input, State
+from menu import Menu
+from utilities import int_input, confirm_input
 from utilities import pr_list, die_roll
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
@@ -28,8 +28,7 @@ class Game:
     def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
-        self.menu = Menu(self)
-        self.play = Play(self)
+        self.screen = Menu(self)
         self.date = Calendar()
 
         self.ship = Ship()
@@ -54,8 +53,6 @@ class Game:
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
         self.commands: List[Command] = []
-
-        self.state = State.MENU
 
         self.ship.add_observer(self)
         self.ship.controls = self
@@ -97,11 +94,7 @@ class Game:
         self.commands = Commands.orbit   # awkward, needs to change
                                          # when location ctor detail changes
         while self.running:
-            if self.state == State.MENU:
-                self.state = self.menu.update()
-
-            else:
-                self.state = self.play.update()
+            self.screen = self.screen.update()
 
     # STATE TRANSITIONS ====================================================
     def liftoff(self) -> None:

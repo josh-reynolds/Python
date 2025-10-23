@@ -1887,6 +1887,7 @@
 #  * [DONE] New game
 #  * [DONE] Front end menu
 #  * [DONE] Implement coordinate conversion to Traveller subsector row/column
+#  * [DONE] State enum is redundant - can just use Screen subclasses directly
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
@@ -1930,7 +1931,6 @@
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
 #  * [    ] Should we formalize message priority as an enum or something?
-#  * [    ] State enum is redundant - can just use Screen subclasses directly
 #  * [    ] Could a decorator handle the little pause at the end of view commands?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...

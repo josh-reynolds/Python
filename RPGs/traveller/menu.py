@@ -4,11 +4,13 @@ Menu - draws the screen and gathers input from the player.
 """
 from abc import ABC, abstractmethod
 from time import sleep
-from typing import Any, List
+from typing import Any, List, TypeVar, cast
 from command import Command
 from ship import FuelQuality, RepairStatus
-from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
+from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
+
+ScreenT = TypeVar("ScreenT", bound="Screen")
 
 class Screen(ABC):
     """Base class for game screens."""
@@ -18,7 +20,7 @@ class Screen(ABC):
         self.parent = parent
         self.commands: List[Command] = []
 
-    def get_command(self, prompt: str) -> State:
+    def get_command(self, prompt: str) -> None:
         """Get command input from player and execute it."""
         no_command = True
         while no_command:
@@ -29,10 +31,9 @@ class Screen(ABC):
                     cmd.action()
                     sleep(1)
                     no_command = False
-        return State.PLAY
 
     @abstractmethod
-    def update(self) -> State:
+    def update(self: ScreenT) -> ScreenT:
         """Draw the screen and gather input."""
 
     # VIEW COMMANDS ========================================================
@@ -57,7 +58,7 @@ class Menu(Screen):
                 Command('q', 'Quit', self.quit)
                 ]
 
-    def update(self) -> State:
+    def update(self: ScreenT) -> ScreenT:
         """Draw the screen and present menu choices."""
         # ASCII art from https://patorjk.com/software
         # 'Grafitti' font
@@ -73,7 +74,8 @@ class Menu(Screen):
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-        return self.get_command("\nEnter a command:  ")
+        self.get_command("\nEnter a command:  ")
+        return cast(ScreenT, Orbit(self.parent))
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
@@ -89,10 +91,13 @@ class Menu(Screen):
 
 
 class Play(Screen):
-    """Draws the play screen and gathers input from the player."""
+    """Draws the play screen and gathers input from the player.
+
+    Base class for all Play screens.
+    """
 
     def __init__(self, parent: Any) -> None:
-        """Create a Menu object."""
+        """Create a Play Screen object."""
         super().__init__(parent)
         self.commands: List[Command] = [
                 Command('?', 'List commands', self.list_commands),
@@ -108,7 +113,7 @@ class Play(Screen):
                 Command('w', 'Wait a week', self.wait_week),
                 ]
 
-    def update(self) -> State:
+    def update(self: ScreenT) -> ScreenT:
         """Draw the screen and present play choices."""
         if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
             fuel_quality = "(U)"
@@ -131,7 +136,8 @@ class Play(Screen):
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.parent.ship.life_support_level}%")
 
-        return self.get_command ("Enter a command (? to list):  ")
+        self.get_command ("Enter a command (? to list):  ")
+        return self
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:
@@ -165,7 +171,7 @@ class Play(Screen):
         _ = input("\nPress ENTER key to continue.")
 
     def passenger_manifest(self) -> None:
-        """Show the Passenger's booked for transport."""
+        """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
         if self.parent.ship.destination is None:
             destination = "None"
@@ -231,3 +237,12 @@ class Play(Screen):
         """Advance the Calendar by seven days."""
         print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
         self.parent.date.plus_week()
+
+
+class Orbit(Play):
+    """Contains commands for the Orbit state."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create an Orbit object."""
+        super().__init__(parent)
+        self.commands += []
