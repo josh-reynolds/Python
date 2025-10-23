@@ -2,6 +2,7 @@
 
 Menu - draws the screen and gathers input from the player.
 """
+from abc import ABC
 from time import sleep
 from typing import Any, List
 from command import Command
@@ -10,14 +11,28 @@ from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, State
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list
 
 # pylint: disable=R0903
-# R0903: Too few public methods (1/2)
-class Menu:
+# R0903: Too few public methods (0/2)
+class Screen(ABC):
+    """Draw a screen and gather input."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Screen object."""
+        self.parent = parent
+        self.commands: List[Command] = []
+
+    def quit(self) -> None:
+        """Quit the game."""
+        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
+        self.parent.running = False
+
+
+class Menu(Screen):
     """Draws the menu screen and gathers input from the player."""
 
     def __init__(self, parent: Any) -> None:
         """Create a Menu object."""
-        self.parent = parent
-        self.commands: List = [
+        super().__init__(parent)
+        self.commands: List[Command] = [
                 Command('n', 'New Game', self.new_game),
                 Command('l', 'Load Game', self.load_game),
                 Command('q', 'Quit', self.quit)
@@ -39,12 +54,9 @@ class Menu:
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-        # duplicates code in Game class, needs refactoring
-        # pylint: disable=R0801
-        # R0801: Similar lines in 2 files
-        command = input("\nEnter a command:  ")
+        command_in = input("\nEnter a command:  ")
         for cmd in self.commands:
-            if command.lower() == cmd.key:
+            if command_in.lower() == cmd.key:
                 print()
                 cmd.action()
                 sleep(1)
@@ -59,18 +71,14 @@ class Menu:
     def load_game(self) -> None:
         """Load a previous game."""
 
-    def quit(self) -> None:
-        """Quit the game."""
-        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
-        self.parent.running = False
 
-class Play:
+class Play(Screen):
     """Draws the play screen and gathers input from the player."""
 
     def __init__(self, parent: Any) -> None:
         """Create a Menu object."""
-        self.parent = parent
-        self.commands: List = [
+        super().__init__(parent)
+        self.commands: List[Command] = [
                 Command('?', 'List commands', self.list_commands),
                 Command('a', 'View star map', self.view_map),
                 Command('c', 'Cargo hold contents', self.cargo_hold),
@@ -186,7 +194,3 @@ class Play:
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
-    def quit(self) -> None:
-        """Quit the game."""
-        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
-        self.parent.running = False
