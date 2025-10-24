@@ -97,30 +97,6 @@ class Game:
             self.screen = self.screen.update()
 
     # STATE TRANSITIONS ====================================================
-    def liftoff(self) -> None:
-        """Move from the starport to orbit."""
-        print(f"{BOLD_BLUE}Lifting off to orbit {self.location.name}.{END_FORMAT}")
-
-        if self.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
-            return
-
-        # corner case - these messages assume passengers are coming
-        # from the current world, which should be true most
-        # of the time, but not necessarily all the time
-        if self.ship.total_passenger_count > 0:
-            print(f"Boarding {self.ship.total_passenger_count} passengers "
-                  f"for {self.ship.destination.name}.")
-
-        if self.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.ship.passengers if
-                              p.passage == PassageClass.LOW]
-            for passenger in low_passengers:
-                passenger.guess_survivors(self.ship.low_passenger_count)
-
-        self.location.liftoff()
-        self.commands = Commands.starport
-
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         if isinstance(self.location, DeepSpace):
@@ -739,44 +715,35 @@ game = Game()
 class Commands:
     """Collects all command sets together."""
 
-    starport = [Command('l', 'Lift off to orbit',
-                                 game.liftoff),
-                         Command('t', 'Trade depot',
-                                 game.to_depot),
-                         Command('m', 'Annual maintenance',
-                                 game.maintenance),
-                         Command('p', 'Passenger terminal',
-                                 game.to_terminal),
-                         Command('u', 'Flush fuel tanks',
-                                 game.flush),
-                         Command('n', 'Repair ship',
-                                 game.repair_ship)]
+    starport = [
+            Command('t', 'Trade depot', game.to_depot),
+            Command('m', 'Annual maintenance', game.maintenance),
+            Command('p', 'Passenger terminal', game.to_terminal),
+            Command('u', 'Flush fuel tanks', game.flush),
+            Command('n', 'Repair ship', game.repair_ship)
+            ]
     starport = sorted(starport, key=lambda command: command.key)
 
-    jump = [Command('j', 'Jump to new system',
-                             game.jump),
-                     Command('s', 'Skim fuel from gas giant',
-                             game.skim),
-                     Command('i', 'Inbound to orbit',
-                             game.inbound_from_jump)]
+    jump = [
+            Command('j', 'Jump to new system', game.jump),
+            Command('s', 'Skim fuel from gas giant', game.skim),
+            Command('i', 'Inbound to orbit', game.inbound_from_jump)
+            ]
     jump = sorted(jump, key=lambda command: command.key)
 
-    trade = [Command('l', 'Leave trade depot',
-                              game.leave_depot),
-                      Command('b', 'Buy cargo',
-                              game.buy_cargo),
-                      Command('s', 'Sell cargo',
-                              game.sell_cargo),
-                      Command('f', 'Load freight',
-                              game.load_freight),
-                      Command('u', 'Unload freight',
-                              game.unload_freight)]
+    trade = [
+            Command('l', 'Leave trade depot', game.leave_depot),
+            Command('b', 'Buy cargo', game.buy_cargo),
+            Command('s', 'Sell cargo', game.sell_cargo),
+            Command('f', 'Load freight', game.load_freight),
+            Command('u', 'Unload freight', game.unload_freight)
+            ]
     trade = sorted(trade, key=lambda command: command.key)
 
-    passengers = [Command('b', 'Book passengers',
-                                   game.book_passengers),
-                           Command('l', 'Leave terminal',
-                                   game.leave_terminal)]
+    passengers = [
+            Command('b', 'Book passengers', game.book_passengers),
+            Command('l', 'Leave terminal', game.leave_terminal)
+            ]
     passengers = sorted(passengers, key=lambda command: command.key)
 
 

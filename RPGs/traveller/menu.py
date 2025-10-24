@@ -347,11 +347,36 @@ class Starport(Play):
         self.commands += [
                 Command('f', 'Recharge life support', self.recharge),
                 Command('r', 'Refuel', self.refuel),
+                Command('l', 'Lift off to orbit', self.liftoff),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
+    def liftoff(self: ScreenT) -> None | ScreenT:
+        """Move from the starport to orbit."""
+        print(f"{BOLD_BLUE}Lifting off to orbit {self.parent.location.name}.{END_FORMAT}")
+
+        if self.parent.ship.repair_status == RepairStatus.BROKEN:
+            print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
+            return None
+
+        # corner case - these messages assume passengers are coming
+        # from the current world, which should be true most
+        # of the time, but not necessarily all the time
+        if self.parent.ship.total_passenger_count > 0:
+            print(f"Boarding {self.parent.ship.total_passenger_count} passengers "
+                  f"for {self.parent.ship.destination.name}.")
+
+        if self.parent.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.parent.ship.passengers if
+                              p.passage == PassageClass.LOW]
+            for passenger in low_passengers:
+                passenger.guess_survivors(self.parent.ship.low_passenger_count)
+
+        self.parent.location.liftoff()
+        return cast(ScreenT, Orbit(self.parent))
+
     # ACTIONS ==============================================================
     # TO_DO: should this be restricted at low-facility starports (E/X)?
     def recharge(self) -> None:
