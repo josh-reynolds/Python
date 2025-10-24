@@ -91,8 +91,8 @@ class Game:
     def run(self) -> None:
         """Run the game loop."""
         self.running = True
-        self.commands = Commands.orbit   # awkward, needs to change
-                                         # when location ctor detail changes
+        self.commands = Commands.starport   # awkward, needs to change
+                                            # when location ctor detail changes
         while self.running:
             self.screen = self.screen.update()
 
@@ -119,28 +119,7 @@ class Game:
                 passenger.guess_survivors(self.ship.low_passenger_count)
 
         self.location.liftoff()
-        self.commands = Commands.orbit
-
-    # TO_DO: almost identical to inbound_from_jump() - combine
-    def outbound_to_jump(self) -> None:
-        """Move from orbit to the jump point."""
-        print(f"{BOLD_BLUE}Travelling out to {self.location.name} jump point.{END_FORMAT}")
-
-        if self.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
-            return
-
-        leg_fc = self.ship.trip_fuel_cost // 2
-        if self.ship.current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel out to the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{self.ship.current_fuel} tons in tanks.")
-            return
-
-        self.ship.current_fuel -= leg_fc
-        self.date.day += 1
-        self.location.to_jump_point()
-        self.commands = Commands.jump
+        self.commands = Commands.starport
 
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
@@ -165,7 +144,7 @@ class Game:
         self.ship.current_fuel -= leg_fc
         self.date.day += 1
         self.location.from_jump_point()
-        self.commands = Commands.orbit
+        self.commands = Commands.starport
 
     # almost identical to leave_terminal(), consider merging
     def leave_depot(self) -> None:
@@ -346,13 +325,6 @@ class Game:
             return
 
         cost = self.ship.refuel(self.location.starport)
-        self.financials.debit(cost)
-
-    # TO_DO: should this be restricted at low-facility starports (E/X)?
-    def recharge(self) -> None:
-        """Recharge the Ship's life support system."""
-        print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
-        cost = self.ship.recharge()
         self.financials.debit(cost)
 
 
@@ -782,8 +754,6 @@ class Commands:
                                  game.liftoff),
                          Command('t', 'Trade depot',
                                  game.to_depot),
-                         Command('f', 'Recharge life support',
-                                 game.recharge),
                          Command('m', 'Annual maintenance',
                                  game.maintenance),
                          Command('p', 'Passenger terminal',
@@ -795,10 +765,6 @@ class Commands:
                          Command('r', 'Refuel',
                                  game.refuel)]
     starport = sorted(starport, key=lambda command: command.key)
-
-    orbit = [Command('g', 'Go to jump point',
-                              game.outbound_to_jump)]
-    orbit = sorted(orbit, key=lambda command: command.key)
 
     jump = [Command('j', 'Jump to new system',
                              game.jump),

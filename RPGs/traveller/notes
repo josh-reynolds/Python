@@ -1894,6 +1894,7 @@
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Should Coordinate be a class or can it remain a type?
+#  * [....] Break up Game class (MVC?)
 #  * [    ] Move detail from StarSystem into Screen hierarchy
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
@@ -1909,7 +1910,6 @@
 #  * [    ] List star map to take a range parameter? What's the use case?
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
-#  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
@@ -1955,7 +1955,6 @@
 #           identical, and should be merged (consider fuel cost warning & stranding)
 #           (Add another warning if fuel at 'stranding level' and no gas giant?)
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
-#  * [    ] Break up Game class (MVC?)
 #  * [    ] Collapse Crew hierarchy?
 #  * [    ] Sort out confusion in Hex hierarchy type annotation
 #  * [    ] Eliminate unnecessary pylint disable statements
@@ -1974,6 +1973,7 @@
 #           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
 #           Or add iceteroid mining as an extreme (and very lengthy) procedure?
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
+#  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Should life support percentage be tied to 'days duration?' But what
 #           happens if it hits zero?
 #  * [    ] Add a much larger list for world names, and add variation like

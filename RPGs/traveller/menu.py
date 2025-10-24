@@ -254,7 +254,8 @@ class Orbit(Play):
         """Create an Orbit object."""
         super().__init__(parent)
         self.commands += [
-                Command('l', 'Land at starport', self.land)
+                Command('l', 'Land at starport', self.land),
+                Command('g', 'Go to jump point', self.outbound_to_jump)
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -281,6 +282,7 @@ class Orbit(Play):
                 print(f"Receiving {funds} in passenger fares.")
                 self.parent.financials.credit(funds)
 
+                # annotations want ScreenT to have this method
                 self._low_lottery(low_lottery_amount)      #type: ignore[attr-defined]
 
                 self.parent.ship.passengers = []
@@ -314,6 +316,26 @@ class Orbit(Play):
                       f"The captain is awarded {low_lottery_amount}.")
                 self.parent.financials.credit(low_lottery_amount)
 
+    def outbound_to_jump(self: ScreenT) -> None | ScreenT:
+        """Move from orbit to the jump point."""
+        print(f"{BOLD_BLUE}Travelling out to {self.parent.location.name} jump point.{END_FORMAT}")
+
+        if self.parent.ship.repair_status == RepairStatus.BROKEN:
+            print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
+            return None
+
+        leg_fc = self.parent.ship.trip_fuel_cost // 2
+        if self.parent.ship.current_fuel < leg_fc:
+            print(f"Insufficient fuel. Travel out to the jump point "
+                  f"requires {leg_fc} tons, only "
+                  f"{self.parent.ship.current_fuel} tons in tanks.")
+            return None
+
+        self.parent.ship.current_fuel -= leg_fc
+        self.parent.date.day += 1
+        self.parent.location.to_jump_point()
+        return cast(ScreenT, Jump(self.parent))
+
     # ACTIONS ==============================================================
 
 class Starport(Play):
@@ -336,3 +358,48 @@ class Starport(Play):
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.parent.ship.recharge()
         self.parent.financials.debit(cost)
+
+
+class Jump(Play):
+    """Contains commands for the Jump state."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Jump object."""
+        super().__init__(parent)
+        self.commands += [
+                ]
+        self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================
+
+
+class Trade(Play):
+    """Contains commands for the Trade state."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Trade object."""
+        super().__init__(parent)
+        self.commands += [
+                ]
+        self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================
+
+
+class Passengers(Play):
+    """Contains commands for the Passengers state."""
+
+    def __init__(self, parent: Any) -> None:
+        """Create a Passengers object."""
+        super().__init__(parent)
+        self.commands += [
+                ]
+        self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    # VIEW COMMANDS ========================================================
+    # STATE TRANSITIONS ====================================================
+    # ACTIONS ==============================================================
