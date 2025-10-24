@@ -22,17 +22,16 @@ class Screen(ABC):
         self.parent = parent
         self.commands: List[Command] = []
 
-    def get_command(self, prompt: str) -> None:
+    def get_command(self, prompt: str) -> None | ScreenT:
         """Get command input from player and execute it."""
-        no_command = True
-        while no_command:
+        while True:
             command = input(prompt)
             for cmd in self.commands:
                 if command.lower() == cmd.key:
                     print()
-                    cmd.action()
+                    result = cmd.action()
                     sleep(1)
-                    no_command = False
+                    return result
 
     @abstractmethod
     def update(self: ScreenT) -> ScreenT:
@@ -76,16 +75,20 @@ class Menu(Screen):
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-        self.get_command("\nEnter a command:  ")
-        return cast(ScreenT, Orbit(self.parent))
+        new_state = self.get_command("\nEnter a command:  ")
+
+        if new_state:
+            return new_state
+        return self
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
-    def new_game(self) -> None:
+    def new_game(self: ScreenT) -> ScreenT:
         """Start a new game."""
         self.parent.ship.name = input("What is the name of your ship? ")
         _ = input("Press ENTER key to continue.")
+        return cast(ScreenT, Orbit(self.parent))
 
     def load_game(self) -> None:
         """Load a previous game."""
@@ -138,7 +141,10 @@ class Play(Screen):
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.parent.ship.life_support_level}%")
 
-        self.get_command ("Enter a command (? to list):  ")
+        new_state = self.get_command("Enter a command (? to list):  ")
+
+        if new_state:
+            return new_state
         return self
 
     # VIEW COMMANDS ========================================================
@@ -248,22 +254,22 @@ class Orbit(Play):
         """Create an Orbit object."""
         super().__init__(parent)
         self.commands += [
-                Command('l', 'Land on surface', self.land)
+                Command('l', 'Land at starport', self.land)
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def land(self) -> None:
+    def land(self: ScreenT) -> None | ScreenT:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing on {self.parent.location.name}.{END_FORMAT}")
         if not self.parent.ship.streamlined:
             print("Your ship is not streamlined and cannot land.")
-            return
+            return None
 
         if self.parent.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
-            return
+            return None
 
         if self.parent.ship.destination == self.parent.location:
             if self.parent.ship.total_passenger_count > 0:
@@ -275,7 +281,7 @@ class Orbit(Play):
                 print(f"Receiving {funds} in passenger fares.")
                 self.parent.financials.credit(funds)
 
-                self._low_lottery(low_lottery_amount)
+                self._low_lottery(low_lottery_amount)      #type: ignore[attr-defined]
 
                 self.parent.ship.passengers = []
                 self.parent.ship.hold = [item for item in self.parent.ship.hold
@@ -283,7 +289,7 @@ class Orbit(Play):
 
         self.parent.location.land()
         self.parent.financials.berthing_fee(self.parent.location.on_surface())
-        #self.commands = Commands.starport
+        return cast(ScreenT, Starport(self.parent))
 
     def _low_lottery(self, low_lottery_amount) -> None:
         """Run the low passage lottery and apply results."""
@@ -317,8 +323,16 @@ class Starport(Play):
         """Create a Starport object."""
         super().__init__(parent)
         self.commands += [
+                Command('f', 'Recharge life support', self.recharge),
                 ]
+        self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
+    # TO_DO: should this be restricted at low-facility starports (E/X)?
+    def recharge(self) -> None:
+        """Recharge the Ship's life support system."""
+        print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
+        cost = self.parent.ship.recharge()
+        self.parent.financials.debit(cost)

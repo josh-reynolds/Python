@@ -1894,6 +1894,7 @@
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Should Coordinate be a class or can it remain a type?
+#  * [    ] Move detail from StarSystem into Screen hierarchy
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
