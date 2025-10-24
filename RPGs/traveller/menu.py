@@ -346,6 +346,7 @@ class Starport(Play):
         super().__init__(parent)
         self.commands += [
                 Command('f', 'Recharge life support', self.recharge),
+                Command('r', 'Refuel', self.refuel),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -357,6 +358,16 @@ class Starport(Play):
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.parent.ship.recharge()
+        self.parent.financials.debit(cost)
+
+    def refuel(self) -> None:
+        """Refuel the Ship."""
+        print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
+        if self.parent.location.starport in ('E', 'X'):
+            print(f"No fuel is available at starport {self.parent.location.starport}.")
+            return
+
+        cost = self.parent.ship.refuel(self.parent.location.starport)
         self.parent.financials.debit(cost)
 
 

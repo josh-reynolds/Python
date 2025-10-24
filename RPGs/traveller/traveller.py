@@ -317,17 +317,6 @@ class Game:
         self.ship.current_fuel -= self.ship.jump_fuel_cost
         self.date.plus_week()
 
-    def refuel(self) -> None:
-        """Refuel the Ship."""
-        print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        if self.location.starport in ('E', 'X'):
-            print(f"No fuel is available at starport {self.location.starport}.")
-            return
-
-        cost = self.ship.refuel(self.location.starport)
-        self.financials.debit(cost)
-
-
     # TO_DO: the rules do not cover this procedure. No time or credits
     #        expenditure, etc. For now I'll just make this one week and free,
     #        but that probably ought to change.
@@ -761,9 +750,7 @@ class Commands:
                          Command('u', 'Flush fuel tanks',
                                  game.flush),
                          Command('n', 'Repair ship',
-                                 game.repair_ship),
-                         Command('r', 'Refuel',
-                                 game.refuel)]
+                                 game.repair_ship)]
     starport = sorted(starport, key=lambda command: command.key)
 
     jump = [Command('j', 'Jump to new system',
