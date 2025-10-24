@@ -9,6 +9,7 @@ from cargo import Baggage, PassageClass
 from command import Command
 from financials import Credits
 from ship import FuelQuality, RepairStatus
+from star_system import DeepSpace
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 
@@ -348,6 +349,8 @@ class Starport(Play):
                 Command('f', 'Recharge life support', self.recharge),
                 Command('r', 'Refuel', self.refuel),
                 Command('l', 'Lift off to orbit', self.liftoff),
+                Command('t', 'Trade depot', self.to_depot),
+                Command('p', 'Passenger terminal', self.to_terminal),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -377,6 +380,18 @@ class Starport(Play):
         self.parent.location.liftoff()
         return cast(ScreenT, Orbit(self.parent))
 
+    def to_depot(self: ScreenT) -> None | ScreenT:
+        """Move from the starport to the trade depot."""
+        print(f"{BOLD_BLUE}Entering {self.parent.location.name} trade depot.{END_FORMAT}")
+        self.parent.location.join_trade()
+        return cast(ScreenT, Trade(self.parent))
+
+    def to_terminal(self: ScreenT) -> None | ScreenT:
+        """Move from the starport to the passenger terminal."""
+        print(f"{BOLD_BLUE}Entering {self.parent.location.name} passenger terminal.{END_FORMAT}")
+        self.parent.location.enter_terminal()
+        return cast(ScreenT, Passengers(self.parent))
+
     # ACTIONS ==============================================================
     # TO_DO: should this be restricted at low-facility starports (E/X)?
     def recharge(self) -> None:
@@ -403,11 +418,37 @@ class Jump(Play):
         """Create a Jump object."""
         super().__init__(parent)
         self.commands += [
+                Command('i', 'Inbound to orbit', self.inbound_from_jump)
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
+    def inbound_from_jump(self: ScreenT) -> None | ScreenT:
+        """Move from the jump point to orbit."""
+        if isinstance(self.parent.location, DeepSpace):
+            print(f"{BOLD_RED}You are in deep space. "
+                  f"There is no inner system to travel to.{END_FORMAT}")
+            return None
+
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.parent.location.name}.{END_FORMAT}")
+
+        if self.parent.ship.repair_status == RepairStatus.BROKEN:
+            print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
+            return None
+
+        leg_fc = self.parent.ship.trip_fuel_cost // 2
+        if self.parent.ship.current_fuel < leg_fc:
+            print(f"Insufficient fuel. Travel in from the jump point "
+                  f"requires {leg_fc} tons, only "
+                  f"{self.parent.ship.current_fuel} tons in tanks.")
+            return None
+
+        self.parent.ship.current_fuel -= leg_fc
+        self.parent.date.day += 1
+        self.parent.location.from_jump_point()
+        return cast(ScreenT, Orbit(self.parent))
+
     # ACTIONS ==============================================================
 
 
@@ -418,11 +459,18 @@ class Trade(Play):
         """Create a Trade object."""
         super().__init__(parent)
         self.commands += [
+                Command('l', 'Leave trade depot', self.leave_depot),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
+    def leave_depot(self: ScreenT) -> None | ScreenT:
+        """Move from the trade depot to the starport."""
+        print(f"{BOLD_BLUE}Leaving {self.parent.location.name} trade depot.{END_FORMAT}")
+        self.parent.location.leave_trade()
+        return cast(ScreenT, Starport(self.parent))
+
     # ACTIONS ==============================================================
 
 
@@ -433,9 +481,16 @@ class Passengers(Play):
         """Create a Passengers object."""
         super().__init__(parent)
         self.commands += [
+                Command('l', 'Leave terminal', self.leave_terminal)
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
+    def leave_terminal(self: ScreenT) -> None | ScreenT:
+        """Move from the passenger terminal to the starport."""
+        print(f"{BOLD_BLUE}Leaving {self.parent.location.name} passenger terminal.{END_FORMAT}")
+        self.parent.location.leave_terminal()
+        return cast(ScreenT, Starport(self.parent))
+
     # ACTIONS ==============================================================

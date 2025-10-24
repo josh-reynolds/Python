@@ -1,7 +1,6 @@
 """Contains the game loop and game logic for a Traveller trading simulation.
 
 Game - contains the game loop and all game logic.
-Command - represents a command available to the player.
 """
 from typing import List, Tuple, cast
 from calendar import Calendar
@@ -97,56 +96,6 @@ class Game:
             self.screen = self.screen.update()
 
     # STATE TRANSITIONS ====================================================
-    def inbound_from_jump(self) -> None:
-        """Move from the jump point to orbit."""
-        if isinstance(self.location, DeepSpace):
-            print(f"{BOLD_RED}You are in deep space. "
-                  f"There is no inner system to travel to.{END_FORMAT}")
-            return
-
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.location.name}.{END_FORMAT}")
-
-        if self.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
-            return
-
-        leg_fc = self.ship.trip_fuel_cost // 2
-        if self.ship.current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel in from the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{self.ship.current_fuel} tons in tanks.")
-            return
-
-        self.ship.current_fuel -= leg_fc
-        self.date.day += 1
-        self.location.from_jump_point()
-        self.commands = Commands.starport
-
-    # almost identical to leave_terminal(), consider merging
-    def leave_depot(self) -> None:
-        """Move from the trade depot to the starport."""
-        print(f"{BOLD_BLUE}Leaving {self.location.name} trade depot.{END_FORMAT}")
-        self.location.leave_trade()
-        self.commands = Commands.starport
-
-    def leave_terminal(self) -> None:
-        """Move from the passenger terminal to the starport."""
-        print(f"{BOLD_BLUE}Leaving {self.location.name} passenger terminal.{END_FORMAT}")
-        self.location.leave_terminal()
-        self.commands = Commands.starport
-
-    def to_depot(self) -> None:
-        """Move from the starport to the trade depot."""
-        print(f"{BOLD_BLUE}Entering {self.location.name} trade depot.{END_FORMAT}")
-        self.location.join_trade()
-        self.commands = Commands.trade
-
-    def to_terminal(self) -> None:
-        """Move from the starport to the passenger terminal."""
-        print(f"{BOLD_BLUE}Entering {self.location.name} passenger terminal.{END_FORMAT}")
-        self.location.enter_terminal()
-        self.commands = Commands.passengers
-
     # ACTIONS ==============================================================
     def book_passengers(self) -> None:
         """Book passengers for travel to a destination."""
@@ -716,9 +665,7 @@ class Commands:
     """Collects all command sets together."""
 
     starport = [
-            Command('t', 'Trade depot', game.to_depot),
             Command('m', 'Annual maintenance', game.maintenance),
-            Command('p', 'Passenger terminal', game.to_terminal),
             Command('u', 'Flush fuel tanks', game.flush),
             Command('n', 'Repair ship', game.repair_ship)
             ]
@@ -727,12 +674,10 @@ class Commands:
     jump = [
             Command('j', 'Jump to new system', game.jump),
             Command('s', 'Skim fuel from gas giant', game.skim),
-            Command('i', 'Inbound to orbit', game.inbound_from_jump)
             ]
     jump = sorted(jump, key=lambda command: command.key)
 
     trade = [
-            Command('l', 'Leave trade depot', game.leave_depot),
             Command('b', 'Buy cargo', game.buy_cargo),
             Command('s', 'Sell cargo', game.sell_cargo),
             Command('f', 'Load freight', game.load_freight),
@@ -742,7 +687,6 @@ class Commands:
 
     passengers = [
             Command('b', 'Book passengers', game.book_passengers),
-            Command('l', 'Leave terminal', game.leave_terminal)
             ]
     passengers = sorted(passengers, key=lambda command: command.key)
 
