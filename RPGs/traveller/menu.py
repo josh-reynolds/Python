@@ -572,8 +572,8 @@ class Jump(Play):
                                                    jump_range)
 
         self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
-        self.parent.depot.add_observer(self)
-        self.parent.depot.controls = self
+        self.parent.depot.add_observer(self.parent)
+        self.parent.depot.controls = self.parent
         self.parent.financials.location = destination
 
         self.parent.ship.life_support_level = 0
