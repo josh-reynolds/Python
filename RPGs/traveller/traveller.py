@@ -14,7 +14,7 @@ from utilities import pr_list, die_roll
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship, FuelQuality, RepairStatus
-from cargo import Cargo, CargoDepot, Freight, PassageClass, Passenger, Baggage
+from cargo import Cargo, CargoDepot, Freight
 from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory
 
@@ -97,57 +97,6 @@ class Game:
 
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
-    def book_passengers(self) -> None:
-        """Book passengers for travel to a destination."""
-        print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
-
-        jump_range = self.ship.jump_range
-        potential_destinations = self.location.destinations.copy()
-        destinations = self._get_passenger_destinations(potential_destinations, jump_range)
-        if not destinations:
-            return
-
-        # for now we will stuff this in cargo depot, though it may better
-        # be served by a separate class. If it _does_ stay in the depot, we
-        # may want to adjust the nomenclature to make this more clear.
-        coordinate, available = self.depot.get_available_passengers(destinations)
-        if available is None:
-            return
-
-        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
-        print(f"Passengers for {destination.name} (H,M,L): {available}")
-
-        selection = self._select_passengers(available, destination)
-
-        if selection == (0,0,0):
-            print("No passengers selected.")
-            return
-        print(f"Selected (H, M, L): {selection}")
-
-        confirmation = confirm_input(f"Book {selection} passengers? (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling passenger selection.")
-            return
-
-        # TO_DO: need to consider the case where we already have passengers
-        #        Probably want to wrap passenger field access in a property...
-        high = [Passenger(PassageClass.HIGH, destination)
-                for _ in range(selection[PassageClass.HIGH.value])]
-        baggage = [Baggage(self.location, destination)
-                   for _ in range(selection[PassageClass.HIGH.value])]
-        middle = [Passenger(PassageClass.MIDDLE, destination)
-                  for _ in range(selection[PassageClass.MIDDLE.value])]
-        low = [Passenger(PassageClass.LOW, destination)
-               for _ in range(selection[PassageClass.LOW.value])]
-
-        self.ship.passengers += high
-        self.ship.hold += baggage
-        self.ship.passengers += middle
-        self.ship.passengers += low
-        self.depot.passengers[destination] = tuple(a-b for a,b in
-                                                   zip(self.depot.passengers[destination],
-                                                       selection))
-
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
         if self.ship.fuel_quality == FuelQuality.UNREFINED:
@@ -399,28 +348,6 @@ class Game:
         self.date.day += 14    # should we wrap this in a method call?
         self.ship.repair_status = RepairStatus.REPAIRED
 
-    def _get_passenger_destinations(self, potential_destinations: List[StarSystem],
-                                    jump_range: int) -> List[StarSystem]:
-        """Return a list of all reachable destination with Passengers."""
-        result: List[StarSystem] = []
-        if self.ship.destination is not None:
-            if self.ship.destination == self.location:
-                print(f"{BOLD_RED}There is still freight to be "
-                      f"unloaded on {self.location.name}.{END_FORMAT}")
-                return result
-            if self.ship.destination in potential_destinations:
-                print("You are under contract. Only showing passengers " +
-                      f"for {self.ship.destination.name}:\n")
-                result = [self.ship.destination]
-            else:
-                print(f"You are under contract to {self.ship.destination.name} " +
-                      "but it is not within jump range of here.")
-
-        else:
-            print(f"Available passenger destinations within jump-{jump_range}:\n")
-            result = potential_destinations
-
-        return result
 
     def _get_freight_destinations(self, potential_destinations: List[StarSystem],
                                   jump_range: int) -> List[StarSystem]:
@@ -444,103 +371,6 @@ class Game:
             result = potential_destinations
 
         return result
-
-    # pylint: disable=R0912, R0915
-    # R0912: Too many branches (13/12)
-    # R0915: Too many statements (51/50)
-    def _select_passengers(self, available: Tuple[int, ...],
-                           destination: Hex) -> Tuple[int, ...]:
-        """Select Passengers from a list of available candidates."""
-        selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.ship.empty_passenger_berths,
-                                          self.ship.empty_low_berths)
-
-        ship_hold = self.ship.free_space()
-        while True:
-            if available == (0,0,0):
-                print(f"No more passengers available for {destination.name}.")
-                break
-
-            response = input("Choose a passenger by type (h, m, l) and number, or q to exit): ")
-            if response == 'q':
-                break
-
-            print(f"Remaining (H, M, L): {available}")
-            print(f"Selected (H, M, L): {selection}")
-            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
-
-            tokens = response.split()
-            if len(tokens) != 2:
-                print("Please enter in the format: passage number (example: h 5).")
-                continue
-
-            passage = tokens[0]
-            if passage not in ['h', 'm', 'l']:
-                print("Please enter 'h', 'm' or 'l' for passage class.")
-                continue
-
-            try:
-                count = int(tokens[1])
-            except ValueError:
-                print("Please input a number.")
-                continue
-
-            suffix = ""
-            if count > 1:
-                suffix = "s"
-
-            if passage == 'h':
-                if self._no_passengers_available("high", available, count):
-                    print("There are not enough high passengers available.")
-                    continue
-                if ship_capacity[0] - count < 0:
-                    print("There are not enough staterooms available.")
-                    continue
-                if ship_hold - count < 0:
-                    print("There is not enough cargo space available.")
-                    continue
-                print(f"Adding {count} high passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
-                available = tuple(a+b for a,b in zip(available,(-count,0,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
-                ship_hold -= count
-
-            if passage == 'm':
-                if self._no_passengers_available("middle", available, count):
-                    print("There are not enough middle passengers available.")
-                    continue
-                if ship_capacity[0] - count < 0:
-                    print("There are not enough staterooms available.")
-                    continue
-                print(f"Adding {count} middle passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
-                available = tuple(a+b for a,b in zip(available,(0,-count,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
-
-            if passage == 'l':
-                if self._no_passengers_available("low", available, count):
-                    print("There are not enough low passengers available.")
-                    continue
-                if ship_capacity[1] - count < 0:
-                    print("There are not enough low berths available.")
-                    continue
-                print(f"Adding {count} low passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
-                available = tuple(a+b for a,b in zip(available,(0,0,-count)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
-
-        print("Done selecting passengers.")
-        return selection
-
-    def _no_passengers_available(self, passage: str, available: tuple, count: int) -> bool:
-        if passage == "high":
-            index = PassageClass.HIGH.value
-        elif passage == "middle":
-            index = PassageClass.MIDDLE.value
-        else:
-            index = PassageClass.LOW.value
-
-        return available[index] - count < 0
 
     def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
@@ -684,12 +514,6 @@ class Commands:
             Command('u', 'Unload freight', game.unload_freight)
             ]
     trade = sorted(trade, key=lambda command: command.key)
-
-    passengers = [
-            Command('b', 'Book passengers', game.book_passengers),
-            ]
-    passengers = sorted(passengers, key=lambda command: command.key)
-
 
 # keeping command characters straight...
 # ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w

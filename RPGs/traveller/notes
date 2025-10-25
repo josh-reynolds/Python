@@ -1936,10 +1936,12 @@
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
 #  * [    ] Review unittest.Mock/MagicMock - should replace homegrown?
+#  * [    ] Scrub for static-only classes and convert to modules if necessary
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Apply mock.patch or monkeypatch to die_roll() so we can have
 #           deterministic tests
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
+#  * [    ] Extract text strings
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Now that we have file operations, need to properly trap errors (FileNotFound etc.)
