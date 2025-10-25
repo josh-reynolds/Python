@@ -20,7 +20,7 @@ from utilities import int_input
 # C0302: Too many lines in module (1078/1000)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ ~ q ~ s ~ ~ v w
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w ~ ~ z
 # STARPORT:             f           l m n   p   r   t u
 # ORBIT:                  g         l
 # JUMP:                       i j                 s
@@ -131,9 +131,9 @@ class Play(Screen):
                 Command('h', 'View ship details', self.view_ship),
                 Command('k', 'Engineering damage control', self.damage_control),
                 Command('q', 'Quit', self.quit),
-                Command('s', 'Save Game', self.save_game),
                 Command('v', 'View world characteristics', self.view_world),
                 Command('w', 'Wait a week', self.wait_week),
+                Command('z', 'Save Game', self.save_game),
                 ]
 
     def update(self: ScreenT) -> ScreenT:

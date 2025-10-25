@@ -1890,13 +1890,14 @@
 #  * [DONE] State enum is redundant - can just use Screen subclasses directly
 #  * [DONE] Should Coordinate be a class or can it remain a type?
 #  * [DONE] Break up Game class (MVC?)
+#  * [DONE] BUG: save game and sell cargo use the same command key
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
+#  * [    ] BUG: game crashes when selling cargo post-jump
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
-#  * [    ] BUG: save game and sell cargo use the same command key
 #  * [    ] Move detail from StarSystem into Screen hierarchy
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
