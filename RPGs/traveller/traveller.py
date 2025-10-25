@@ -4,16 +4,15 @@ Game - contains the game loop and all game logic.
 """
 from typing import List, Tuple, cast
 from calendar import Calendar
-from random import randint, choice
 from financials import Financials, Credits
 from command import Command
 from coordinate import Coordinate
 from menu import Menu
 from utilities import int_input, confirm_input
-from utilities import pr_list, die_roll
+from utilities import pr_list
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
-from ship import Ship, FuelQuality, RepairStatus
+from ship import Ship
 from cargo import Cargo, CargoDepot, Freight
 from star_system import DeepSpace, Hex, StarSystem
 from star_map import StarMap, StarSystemFactory
@@ -51,7 +50,6 @@ class Game:
                                                               self.ship.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
-        self.commands: List[Command] = []
 
         self.ship.add_observer(self)
         self.ship.controls = self
@@ -90,106 +88,10 @@ class Game:
     def run(self) -> None:
         """Run the game loop."""
         self.running = True
-        self.commands = Commands.jump   # awkward, needs to change
-                                            # when location ctor detail changes
         while self.running:
             self.screen = self.screen.update()
 
     # ACTIONS ==============================================================
-    def _misjump_check(self, destination: Coordinate) -> None:
-        """Test for misjump and report results."""
-        if self.ship.fuel_quality == FuelQuality.UNREFINED:
-            modifier = 3
-        else:
-            modifier = -1
-        if self.financials.maintenance_status(self.date.current_date) == "red":
-            modifier += 2
-
-        misjump_check = die_roll(2) + modifier
-        if misjump_check > 11:
-            print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            # TO_DO: all this should move to live with the other
-            #        three-axis calculations
-            distance = randint(1,36)
-            hexes = [(0,distance,-distance),
-                     (0,-distance,distance),
-                     (distance,0,-distance),
-                     (-distance,0,distance),
-                     (distance,-distance,0),
-                     (-distance,distance,0)]
-            misjump_target = choice(hexes)
-            misjump_target = (misjump_target[0] + self.location.coordinate[0],
-                           misjump_target[1] + self.location.coordinate[1],
-                           misjump_target[2] + self.location.coordinate[2])
-            print(f"{misjump_target} at distance {distance}")
-
-            # misjump is the only scenario where EmptySpace is a possible
-            # location, so we need to leave this type as Hex
-            self.location = self.star_map.get_system_at_coordinate(misjump_target) # type: ignore
-            self.star_map.systems[misjump_target] = self.location
-        else:
-            self.location = cast(StarSystem, self.star_map.get_system_at_coordinate(destination))
-
-    def jump(self) -> None:
-        """Perform a hyperspace jump to another StarSystem."""
-        print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
-
-        status = self.financials.maintenance_status(self.date.current_date)
-        self.ship.check_failure_pre_jump(status)
-        if self.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
-            print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
-            return
-
-        if not self.ship.sufficient_jump_fuel():
-            print(self.ship.insufficient_jump_fuel_message())
-            return
-
-        if not self.ship.sufficient_life_support():
-            print(self.ship.insufficient_life_support_message())
-            return
-
-        jump_range = self.ship.jump_range
-        print(f"Systems within jump-{jump_range}:")
-        pr_list(self.location.destinations)
-        destination_number = int_input("Enter destination number: ")
-        if destination_number >= len(self.location.destinations):
-            print("That is not a valid destination number.")
-            return
-
-        coordinate = self.location.destinations[destination_number].coordinate
-        destination = cast(StarSystem, self.star_map.get_system_at_coordinate(coordinate))
-
-        self.ship.warn_if_not_contracted(destination)
-
-        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling jump.")
-            return
-
-        if self.ship.fuel_quality == FuelQuality.UNREFINED:
-            self.ship.unrefined_jump_counter += 1
-
-        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
-
-        self._misjump_check(coordinate)
-        self.location.detail = "jump"
-        self.commands = Commands.jump
-
-        self.ship.check_failure_post_jump()
-
-        coord = self.location.coordinate
-        self.location.destinations = self.star_map.get_systems_within_range(coord,
-                                                   jump_range)
-
-        self.depot = CargoDepot(self.location, self.date.current_date)
-        self.depot.add_observer(self)
-        self.depot.controls = self
-        self.financials.location = destination
-
-        self.ship.life_support_level = 0
-        self.ship.current_fuel -= self.ship.jump_fuel_cost
-        self.date.plus_week()
-
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
@@ -257,39 +159,6 @@ class Game:
         self.depot.remove_cargo(self.ship.hold, cargo, quantity)
 
         self.financials.credit(sale_price)
-        self.date.day += 1
-
-    # Book 2 p. 35
-    # Unrefined fuel may be obtained by skimming the atmosphere of a
-    # gas giant if unavailable elsewhere. Most star systems have at
-    # least one...
-    #
-    # Traveller '77 does not restrict this to streamlined ships, and
-    # also does not include ocean refuelling, but I think I will be
-    # including both options. (In all likelihood this will lean heavily
-    # toward second edition...)
-    def skim(self) -> None:
-        """Refuel the Ship by skimming from a gas giant planet."""
-        print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.location.gas_giant:
-            # TO_DO: may want to tweak this message in deep space.
-            print("There is no gas giant in this system. No fuel skimming possible.")
-            return
-
-        if not self.ship.streamlined:
-            print("Your ship is not streamlined and cannot skim fuel.")
-            return
-
-        if self.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
-            return
-
-        if self.ship.current_fuel == self.ship.fuel_tank:
-            print("Fuel tank is already full.")
-            return
-
-        self.ship.current_fuel = self.ship.fuel_tank
-        self.ship.fuel_quality = FuelQuality.UNREFINED
         self.date.day += 1
 
     def _get_freight_destinations(self, potential_destinations: List[StarSystem],
@@ -436,12 +305,6 @@ game = Game()
 # R0903: Too few public methods (0/2)
 class Commands:
     """Collects all command sets together."""
-
-    jump = [
-            Command('j', 'Jump to new system', game.jump),
-            Command('s', 'Skim fuel from gas giant', game.skim),
-            ]
-    jump = sorted(jump, key=lambda command: command.key)
 
     trade = [
             Command('b', 'Buy cargo', game.buy_cargo),
