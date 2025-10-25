@@ -95,7 +95,6 @@ class Game:
         while self.running:
             self.screen = self.screen.update()
 
-    # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
@@ -327,28 +326,6 @@ class Game:
         self.ship.fuel_quality = FuelQuality.UNREFINED
         self.date.day += 1
 
-    def maintenance(self) -> None:
-        """Perform annual maintenance on the Ship."""
-        print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
-        if self.location.starport not in ('A', 'B'):
-            print("Annual maintenance can only be performed at class A or B starports.")
-            return
-
-        cost = self.ship.maintenance_cost()
-        if self.financials.balance < cost:
-            print("You do not have enough funds to pay for maintenance.\n"
-                  f"It will cost {cost}. Your balance is {self.financials.balance}.")
-            return
-
-        # TO_DO: should we have a confirmation here?
-        # TO_DO: should we warn or block if maintenance was performed recently?
-        print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
-        self.financials.last_maintenance = self.date.current_date
-        self.financials.debit(cost)
-        self.date.day += 14    # should we wrap this in a method call?
-        self.ship.repair_status = RepairStatus.REPAIRED
-
-
     def _get_freight_destinations(self, potential_destinations: List[StarSystem],
                                   jump_range: int) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight lots."""
@@ -495,7 +472,6 @@ class Commands:
     """Collects all command sets together."""
 
     starport = [
-            Command('m', 'Annual maintenance', game.maintenance),
             Command('u', 'Flush fuel tanks', game.flush),
             Command('n', 'Repair ship', game.repair_ship)
             ]

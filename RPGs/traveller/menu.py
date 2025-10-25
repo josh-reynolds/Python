@@ -351,6 +351,7 @@ class Starport(Play):
                 Command('l', 'Lift off to orbit', self.liftoff),
                 Command('t', 'Trade depot', self.to_depot),
                 Command('p', 'Passenger terminal', self.to_terminal),
+                Command('m', 'Annual maintenance', self.maintenance),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -409,6 +410,27 @@ class Starport(Play):
 
         cost = self.parent.ship.refuel(self.parent.location.starport)
         self.parent.financials.debit(cost)
+
+    def maintenance(self) -> None:
+        """Perform annual maintenance on the Ship."""
+        print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
+        if self.parent.location.starport not in ('A', 'B'):
+            print("Annual maintenance can only be performed at class A or B starports.")
+            return
+
+        cost = self.parent.ship.maintenance_cost()
+        if self.parent.financials.balance < cost:
+            print("You do not have enough funds to pay for maintenance.\n"
+                  f"It will cost {cost}. Your balance is {self.parent.financials.balance}.")
+            return
+
+        # TO_DO: should we have a confirmation here?
+        # TO_DO: should we warn or block if maintenance was performed recently?
+        print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
+        self.parent.financials.last_maintenance = self.parent.date.current_date
+        self.parent.financials.debit(cost)
+        self.parent.date.day += 14    # should we wrap this in a method call?
+        self.parent.ship.repair_status = RepairStatus.REPAIRED
 
 
 class Jump(Play):
