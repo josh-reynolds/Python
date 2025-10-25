@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
-from cargo import Baggage, PassageClass, Passenger, CargoDepot
+from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo
 from command import Command
 from coordinate import Coordinate
 from financials import Credits
@@ -651,6 +651,8 @@ class Trade(Play):
         super().__init__(parent)
         self.commands += [
                 Command('l', 'Leave trade depot', self.leave_depot),
+                Command('b', 'Buy cargo', self.buy_cargo),
+                Command('s', 'Sell cargo', self.sell_cargo),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -663,6 +665,76 @@ class Trade(Play):
         return cast(ScreenT, Starport(self.parent))
 
     # ACTIONS ==============================================================
+    def buy_cargo(self) -> None:
+        """Purchase cargo for speculative trade."""
+        print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
+        pr_list(self.parent.depot.cargo)
+        cargo = self.parent.depot.get_cargo_lot(self.parent.depot.cargo, "buy")
+        if cargo is None:
+            return
+
+        quantity = self.parent.depot.get_cargo_quantity("buy", cargo)
+        if quantity is None:
+            return
+
+        if self.parent.depot.insufficient_hold_space(cargo,
+                                                     quantity,
+                                                     self.parent.ship.free_space()):
+            return
+
+        cost = self.parent.depot.determine_price("purchase", cargo, quantity,
+                                          self.parent.ship.trade_skill())
+
+        if self.parent.depot.insufficient_funds(cost, self.parent.financials.balance):
+            return
+
+        if not self.parent.depot.confirm_transaction("purchase", cargo, quantity, cost):
+            return
+
+        self.parent.depot.remove_cargo(self.parent.depot.cargo, cargo, quantity)
+
+        purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
+                          cargo.purchase_dms, cargo.sale_dms, self.parent.location)
+        self.parent.ship.load_cargo(purchased)
+
+        self.parent.financials.debit(cost)
+        self.parent.date.day += 1
+
+    def sell_cargo(self) -> None:
+        """Sell cargo in speculative trade."""
+        print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
+        cargoes = [c for c in self.parent.ship.hold if isinstance(c, Cargo)]
+
+        if len(cargoes) == 0:
+            print("You have no cargo on board.")
+            return
+
+        pr_list(cargoes)
+        cargo = self.parent.depot.get_cargo_lot(cargoes, "sell")
+        if cargo is None:
+            return
+
+        if self.parent.depot.invalid_cargo_origin(cargo):
+            return
+
+        broker_skill = self.parent.depot.get_broker()
+
+        quantity = self.parent.depot.get_cargo_quantity("sell", cargo)
+        if quantity is None:
+            return
+
+        sale_price = self.parent.depot.determine_price("sale", cargo, quantity,
+                                                broker_skill + self.parent.ship.trade_skill())
+
+        self.parent.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price))
+
+        if not self.parent.depot.confirm_transaction("sale", cargo, quantity, sale_price):
+            return
+
+        self.parent.depot.remove_cargo(self.parent.ship.hold, cargo, quantity)
+
+        self.parent.financials.credit(sale_price)
+        self.parent.date.day += 1
 
 
 class Passengers(Play):

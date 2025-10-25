@@ -1888,13 +1888,15 @@
 #  * [DONE] Front end menu
 #  * [DONE] Implement coordinate conversion to Traveller subsector row/column
 #  * [DONE] State enum is redundant - can just use Screen subclasses directly
+#  * [DONE] Should Coordinate be a class or can it remain a type?
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [....] Should Coordinate be a class or can it remain a type?
 #  * [....] Break up Game class (MVC?)
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
+#  * [    ] BUG: save game and sell cargo use the same command key
 #  * [    ] Move detail from StarSystem into Screen hierarchy
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
@@ -1908,7 +1910,6 @@
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] List star map to take a range parameter? What's the use case?
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically

@@ -9,7 +9,6 @@ from command import Command
 from coordinate import Coordinate
 from menu import Menu
 from utilities import int_input, confirm_input
-from utilities import pr_list
 from utilities import BOLD_YELLOW, BOLD_BLUE
 from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship
@@ -92,75 +91,6 @@ class Game:
             self.screen = self.screen.update()
 
     # ACTIONS ==============================================================
-    def buy_cargo(self) -> None:
-        """Purchase cargo for speculative trade."""
-        print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
-        pr_list(self.depot.cargo)
-        cargo = self.depot.get_cargo_lot(self.depot.cargo, "buy")
-        if cargo is None:
-            return
-
-        quantity = self.depot.get_cargo_quantity("buy", cargo)
-        if quantity is None:
-            return
-
-        if self.depot.insufficient_hold_space(cargo, quantity, self.ship.free_space()):
-            return
-
-        cost = self.depot.determine_price("purchase", cargo, quantity,
-                                          self.ship.trade_skill())
-
-        if self.depot.insufficient_funds(cost, self.financials.balance):
-            return
-
-        if not self.depot.confirm_transaction("purchase", cargo, quantity, cost):
-            return
-
-        self.depot.remove_cargo(self.depot.cargo, cargo, quantity)
-
-        purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
-                          cargo.purchase_dms, cargo.sale_dms, self.location)
-        self.ship.load_cargo(purchased)
-
-        self.financials.debit(cost)
-        self.date.day += 1
-
-    def sell_cargo(self) -> None:
-        """Sell cargo in speculative trade."""
-        print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
-        cargoes = [c for c in self.ship.hold if isinstance(c, Cargo)]
-
-        if len(cargoes) == 0:
-            print("You have no cargo on board.")
-            return
-
-        pr_list(cargoes)
-        cargo = self.depot.get_cargo_lot(cargoes, "sell")
-        if cargo is None:
-            return
-
-        if self.depot.invalid_cargo_origin(cargo):
-            return
-
-        broker_skill = self.depot.get_broker()
-
-        quantity = self.depot.get_cargo_quantity("sell", cargo)
-        if quantity is None:
-            return
-
-        sale_price = self.depot.determine_price("sale", cargo, quantity,
-                                                broker_skill + self.ship.trade_skill())
-
-        self.financials.debit(self.depot.broker_fee(broker_skill, sale_price))
-
-        if not self.depot.confirm_transaction("sale", cargo, quantity, sale_price):
-            return
-
-        self.depot.remove_cargo(self.ship.hold, cargo, quantity)
-
-        self.financials.credit(sale_price)
-        self.date.day += 1
-
     def _get_freight_destinations(self, potential_destinations: List[StarSystem],
                                   jump_range: int) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight lots."""
@@ -307,8 +237,6 @@ class Commands:
     """Collects all command sets together."""
 
     trade = [
-            Command('b', 'Buy cargo', game.buy_cargo),
-            Command('s', 'Sell cargo', game.sell_cargo),
             Command('f', 'Load freight', game.load_freight),
             Command('u', 'Unload freight', game.unload_freight)
             ]
