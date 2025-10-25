@@ -57,7 +57,7 @@ class Menu(Screen):
         self.commands: List[Command] = [
                 Command('n', 'New Game', self.new_game),
                 Command('l', 'Load Game', self.load_game),
-                Command('q', 'Quit', self.quit)
+                Command('q', 'Quit', self.quit),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -256,7 +256,7 @@ class Orbit(Play):
         super().__init__(parent)
         self.commands += [
                 Command('l', 'Land at starport', self.land),
-                Command('g', 'Go to jump point', self.outbound_to_jump)
+                Command('g', 'Go to jump point', self.outbound_to_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -352,6 +352,8 @@ class Starport(Play):
                 Command('t', 'Trade depot', self.to_depot),
                 Command('p', 'Passenger terminal', self.to_terminal),
                 Command('m', 'Annual maintenance', self.maintenance),
+                Command('u', 'Flush fuel tanks', self.flush),
+                Command('n', 'Repair ship', self.repair_ship),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -432,6 +434,41 @@ class Starport(Play):
         self.parent.date.day += 14    # should we wrap this in a method call?
         self.parent.ship.repair_status = RepairStatus.REPAIRED
 
+    def flush(self) -> None:
+        """Decontaminate the Ship's fuel tanks."""
+        print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
+        if self.parent.ship.fuel_quality == FuelQuality.REFINED:
+            print("Ship fuel tanks are clean. No need to flush.")
+            return
+        if self.parent.location.starport in ('E', 'X'):
+            print(f"There are no facilities to flush tanks "
+                  f"at starport {self.parent.location.starport}.")
+            return
+
+        print("Fuel tanks have been decontaminated.")
+        self.parent.ship.fuel_quality = FuelQuality.REFINED
+        self.parent.ship.unrefined_jump_counter = 0
+        self.parent.date.plus_week()
+
+    # TO_DO: the rules do not cover this procedure. No time or credits
+    #        expenditure, etc. For now I'll just make this one week and free,
+    #        but that probably ought to change.
+    def repair_ship(self) -> None:
+        """Fully repair damage to the Ship (Starport)."""
+        print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
+        if self.parent.location.starport in ["D", "E", "X"]:
+            print(f"No repair facilities available at starport {self.parent.location.starport}")
+            return
+        if self.parent.ship.repair_status == RepairStatus.REPAIRED:
+            print("Your ship is not damaged.")
+            return
+
+        print("Your ship is fully repaired and decontaminated.")
+        self.parent.ship.repair_status = RepairStatus.REPAIRED
+        self.parent.ship.fuel_quality = FuelQuality.REFINED
+        self.parent.ship.unrefined_jump_counter = 0
+        self.parent.date.plus_week()
+
 
 class Jump(Play):
     """Contains commands for the Jump state."""
@@ -440,7 +477,7 @@ class Jump(Play):
         """Create a Jump object."""
         super().__init__(parent)
         self.commands += [
-                Command('i', 'Inbound to orbit', self.inbound_from_jump)
+                Command('i', 'Inbound to orbit', self.inbound_from_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 

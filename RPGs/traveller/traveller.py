@@ -90,7 +90,7 @@ class Game:
     def run(self) -> None:
         """Run the game loop."""
         self.running = True
-        self.commands = Commands.starport   # awkward, needs to change
+        self.commands = Commands.jump   # awkward, needs to change
                                             # when location ctor detail changes
         while self.running:
             self.screen = self.screen.update()
@@ -188,40 +188,6 @@ class Game:
 
         self.ship.life_support_level = 0
         self.ship.current_fuel -= self.ship.jump_fuel_cost
-        self.date.plus_week()
-
-    # TO_DO: the rules do not cover this procedure. No time or credits
-    #        expenditure, etc. For now I'll just make this one week and free,
-    #        but that probably ought to change.
-    def repair_ship(self) -> None:
-        """Fully repair damage to the Ship (Starport)."""
-        print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
-        if self.location.starport in ["D", "E", "X"]:
-            print(f"No repair facilities available at starport {self.location.starport}")
-            return
-        if self.ship.repair_status == RepairStatus.REPAIRED:
-            print("Your ship is not damaged.")
-            return
-
-        print("Your ship is fully repaired and decontaminated.")
-        self.ship.repair_status = RepairStatus.REPAIRED
-        self.ship.fuel_quality = FuelQuality.REFINED
-        self.ship.unrefined_jump_counter = 0
-        self.date.plus_week()
-
-    def flush(self) -> None:
-        """Decontaminate the Ship's fuel tanks."""
-        print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
-        if self.ship.fuel_quality == FuelQuality.REFINED:
-            print("Ship fuel tanks are clean. No need to flush.")
-            return
-        if self.location.starport in ('E', 'X'):
-            print(f"There are no facilities to flush tanks at starport {self.location.starport}.")
-            return
-
-        print("Fuel tanks have been decontaminated.")
-        self.ship.fuel_quality = FuelQuality.REFINED
-        self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
 
     def buy_cargo(self) -> None:
@@ -470,12 +436,6 @@ game = Game()
 # R0903: Too few public methods (0/2)
 class Commands:
     """Collects all command sets together."""
-
-    starport = [
-            Command('u', 'Flush fuel tanks', game.flush),
-            Command('n', 'Repair ship', game.repair_ship)
-            ]
-    starport = sorted(starport, key=lambda command: command.key)
 
     jump = [
             Command('j', 'Jump to new system', game.jump),
