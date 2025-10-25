@@ -165,13 +165,6 @@ class Play(Screen):
         print(self.parent.location)
         _ = input("\nPress ENTER key to continue.")
 
-    # TO_DO: Should only be usable from the trade depot location
-    def goods(self) -> None:
-        """Show goods available for purchase."""
-        print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
-        pr_list(self.parent.depot.cargo)
-        _ = input("\nPress ENTER key to continue.")
-
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
         print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
@@ -653,10 +646,17 @@ class Trade(Play):
                 Command('l', 'Leave trade depot', self.leave_depot),
                 Command('b', 'Buy cargo', self.buy_cargo),
                 Command('s', 'Sell cargo', self.sell_cargo),
+                Command('g', 'View trade goods', self.goods),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     # VIEW COMMANDS ========================================================
+    def goods(self) -> None:
+        """Show goods available for purchase."""
+        print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
+        pr_list(self.parent.depot.cargo)
+        _ = input("\nPress ENTER key to continue.")
+
     # STATE TRANSITIONS ====================================================
     def leave_depot(self: ScreenT) -> None | ScreenT:
         """Move from the trade depot to the starport."""
