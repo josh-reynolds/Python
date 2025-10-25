@@ -1,26 +1,22 @@
 """Contains the game loop and game logic for a Traveller trading simulation.
 
-Game - contains the game loop and all game logic.
+Game - contains the game loop and basic controller/view logic.
 """
-from typing import List, Tuple, cast
+from typing import cast
 from calendar import Calendar
 from financials import Financials, Credits
-from command import Command
-from coordinate import Coordinate
 from menu import Menu
 from utilities import int_input, confirm_input
-from utilities import BOLD_YELLOW, BOLD_BLUE
-from utilities import BOLD_RED, END_FORMAT, BOLD_GREEN
+from utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship
-from cargo import Cargo, CargoDepot, Freight
-from star_system import DeepSpace, Hex, StarSystem
+from cargo import Cargo, CargoDepot
+from star_system import DeepSpace, StarSystem
 from star_map import StarMap, StarSystemFactory
 
-# pylint: disable=R0902, R0904
+# pylint: disable=R0902
 # R0902: Too many instance attributes (8/7)
-# R0904: Too many public methods (34/20)
 class Game:
-    """Contains the game loop and all game logic."""
+    """Contains the game loop and basic congtrollre/view logic."""
 
     def __init__(self) -> None:
         """Create an instance of Game."""
@@ -90,165 +86,5 @@ class Game:
         while self.running:
             self.screen = self.screen.update()
 
-    # ACTIONS ==============================================================
-    def _get_freight_destinations(self, potential_destinations: List[StarSystem],
-                                  jump_range: int) -> List[StarSystem]:
-        """Return a list of all reachable destinations with Freight lots."""
-        result: List[StarSystem] = []
-        if self.ship.destination is not None:
-            if self.ship.destination == self.location:
-                print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.location.name}.{END_FORMAT}")
-                return result
-            if self.ship.destination in potential_destinations:
-                print("You are under contract. Only showing freight " +
-                      f"for {self.ship.destination.name}:\n")
-                result = [self.ship.destination]
-            else:
-                print(f"You are under contract to {self.ship.destination.name} " +
-                      "but it is not within jump range of here.")
-
-        else:
-            print(f"Available freight shipments within jump-{jump_range}:\n")
-            result = potential_destinations
-
-        return result
-
-    def _select_freight_lots(self, available: List[int],
-                             destination: Hex) -> Tuple[int, List[int]]:
-        """Select Freight lots from a list of available shipments."""
-        selection: List[int] = []
-        total_tonnage = 0
-        hold_tonnage = self.ship.free_space()
-        while True:
-            if len(available) == 0:
-                print(f"No more freight available for {destination.name}.")
-                break
-
-            # can't use int input here since we allow for 'q' as well...
-            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
-            if response == 'q':
-                break
-
-            try:
-                response = int(response)
-            except ValueError:
-                print("Please input a number.")
-                continue
-
-            if response in available:
-                if response <= hold_tonnage:
-                    # even though we cast to int above in try/catch,
-                    # mypy is unaware, need to cast again to silence it.
-                    # sort this out...
-                    available.remove(cast(int, response))
-                    selection.append(cast(int, response))
-                    total_tonnage += response
-                    hold_tonnage -= response
-                    print(available)
-                    print(f"Cargo space left: {hold_tonnage}")
-                else:
-                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
-                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
-            else:
-                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
-
-        print("Done selecting shipments.")
-        return (total_tonnage, selection)
-
-    def load_freight(self) -> None:
-        """Select and load Freight onto the Ship."""
-        print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
-
-        jump_range = self.ship.jump_range
-        potential_destinations = self.location.destinations.copy()
-        destinations = self._get_freight_destinations(potential_destinations, jump_range)
-        if not destinations:
-            return
-
-        coordinate, available = self.depot.get_available_freight(destinations)
-        if available is None:
-            return
-
-        destination = cast(StarSystem,
-                           self.star_map.get_system_at_coordinate(
-                               cast(Coordinate, coordinate)))
-        print(f"Freight shipments for {destination.name}")
-        print(available)
-
-        total_tonnage, selection = self._select_freight_lots(available, destination)
-
-        if total_tonnage == 0:
-            print("No freight shipments selected.")
-            return
-        print(f"{total_tonnage} tons selected.")
-
-        confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling freight selection.")
-            return
-
-        for entry in selection:
-            self.depot.freight[destination].remove(entry)
-            self.ship.load_cargo(Freight(entry,
-                                         self.location,
-                                         destination))
-        self.date.day += 1
-
-    def unload_freight(self) -> None:
-        """Unload Freight from the Ship and receive payment."""
-        print(f"{BOLD_BLUE}Unloading freight.{END_FORMAT}")
-
-        # truth table: passengers, freight, destination flag,...
-
-        # It should not be possible for there to be freight in the hold,
-        # and a destination flag set to None. Should we assert just
-        # in case, so we could track down any such bug:
-        if self.ship.destination is None:
-            print("You have no contracted destination.")
-            return
-
-        freight = [f for f in self.ship.hold if isinstance(f, Freight)]
-        if len(freight) == 0:
-            print("You have no freight on board.")
-            return
-
-        if self.ship.destination == self.location:
-            freight_tonnage = sum(f.tonnage for f in freight)
-            self.ship.hold = [c for c in self.ship.hold if isinstance(c, Cargo)]
-
-            payment = Credits(1000 * freight_tonnage)
-            self.financials.credit(Credits(1000 * freight_tonnage))
-            print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
-
-            self.date.day += 1
-
-        else:
-            print(f"{BOLD_RED}You are not at the contracted "
-                  f"destination for this freight.{END_FORMAT}")
-            print(f"{BOLD_RED}It should be unloaded at "
-                  f"{self.ship.destination.name}.{END_FORMAT}")
-
-game = Game()
-
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
-class Commands:
-    """Collects all command sets together."""
-
-    trade = [
-            Command('f', 'Load freight', game.load_freight),
-            Command('u', 'Unload freight', game.unload_freight)
-            ]
-    trade = sorted(trade, key=lambda command: command.key)
-
-# keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ q ~ ~ ~ ~ v w
-# STARPORT:             f           l m n p   r   t u
-# ORBIT:                  g         l
-# JUMP:                       i j               s
-# TRADE:        b       f g         l           s   u
-# PASSENGERS:   b                   l
-
 if __name__ == '__main__':
-    game.run()
+    Game().run()

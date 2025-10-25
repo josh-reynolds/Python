@@ -1,14 +1,12 @@
 """Contains tests for the traveller module."""
 import unittest
-from typing import List, cast
 from financials import Credits
 from star_map import StarSystemFactory
-from star_system import StarSystem
 from traveller import Game
 
 # most of these methods necessarily have side effects,
 # so we're going to have to tease out the testable bits
-# and or monkeypatch or mock
+# and/or monkeypatch/mock
 class GameTestCase(unittest.TestCase):
     """Tests game logic."""
 
@@ -33,87 +31,9 @@ class GameTestCase(unittest.TestCase):
         result3 = game.get_input('int', "Integer input test.")
         self.assertTrue(isinstance(result3, int))
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _get_freight_destinations of a client class
-    @unittest.skip("test has side effects: printing")
-    def test_get_freight_destinations(self) -> None:
-        """Test getting list of freight destinations."""
-        game = Game()
-        potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
-
-        destinations = game._get_freight_destinations(potential_destinations, 1)
-        print(destinations)
-
-        # contracted destination:
-        #     freight on board
-        #     under contract and in range
-        #     under contract but not in range
-        # else
-
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _select_freight_lots of a client class
-    @unittest.skip("test has side effects: printing")
-    def test_select_freight_lots(self):
-        """Test selection of freight from a list."""
-        game = Game()
-        available = [5, 10, 15, 20]
-        destination = game.location.destinations[0]
-
-        tonnage, selection = game._select_freight_lots(available, destination)
-        print(tonnage, selection)
-
-        # no freight remaining, auto-exit
-        # quit selection
-        # non-numeric input
-        # freight selection in list
-        # freight selection not in list
-        # not enough space in hold
-
     # side effects only ~ ~ ~ ~ ~ ~ ~
     # on_notify
     # run
-    # quit
-    # list_commands
-    # liftoff
-    # _low_lottery
-    # land
-    # outbound_to_jump
-    # inbound_from_jump
-    # leave_depot
-    # leave_terminal
-    # book_passengers
-    # to_depot
-    # to_terminal
-    # _misjump_check
-    # jump
-    # view_world
-    # refuel
-    # recharge
-    # damage_control
-    # repair_ship
-    # flush
-    # buy_cargo
-    # sell_cargo
-    # goods
-    # cargo_hold
-    # passenger_manifest
-    # crew_roster
-    # wait_week
-    # view_ship
-    # view_map
-    # skim
-    # maintenance
-    # load_freight
-    # unload_freight
-
-
-# for this one, might be helpful to trap whether
-# any keys have been duplicated and thus overwritten
-class CommandsTestCase(unittest.TestCase):
-    """Tests command lists."""
-
-    # no methods
-
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

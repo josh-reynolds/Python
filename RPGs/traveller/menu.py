@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
-from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo
+from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from command import Command
 from coordinate import Coordinate
 from financials import Credits
@@ -15,6 +15,20 @@ from star_system import DeepSpace, StarSystem, Hex
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 from utilities import int_input
+
+# pylint: disable=C0302
+# C0302: Too many lines in module (1078/1000)
+
+# keeping command characters straight...
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ ~ q ~ s ~ ~ v w
+# STARPORT:             f           l m n   p   r   t u
+# ORBIT:                  g         l
+# JUMP:                       i j                 s
+# TRADE:        b       f g         l             s   u
+# PASSENGERS:   b                   l
+
+# TO_DO: might be helpful to have unit test to trap whether any keys
+#        have been duplicated and thus overwritten
 
 ScreenT = TypeVar("ScreenT", bound="Screen")
 
@@ -647,6 +661,8 @@ class Trade(Play):
                 Command('b', 'Buy cargo', self.buy_cargo),
                 Command('s', 'Sell cargo', self.sell_cargo),
                 Command('g', 'View trade goods', self.goods),
+                Command('f', 'Load freight', self.load_freight),
+                Command('u', 'Unload freight', self.unload_freight),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -735,6 +751,144 @@ class Trade(Play):
 
         self.parent.financials.credit(sale_price)
         self.parent.date.day += 1
+
+    def load_freight(self) -> None:
+        """Select and load Freight onto the Ship."""
+        print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
+
+        jump_range = self.parent.ship.jump_range
+        potential_destinations = self.parent.location.destinations.copy()
+        destinations = self._get_freight_destinations(potential_destinations, jump_range)
+        if not destinations:
+            return
+
+        coordinate, available = self.parent.depot.get_available_freight(destinations)
+        if available is None:
+            return
+
+        destination = cast(StarSystem,
+                           self.parent.star_map.get_system_at_coordinate(
+                               cast(Coordinate, coordinate)))
+        print(f"Freight shipments for {destination.name}")
+        print(available)
+
+        total_tonnage, selection = self._select_freight_lots(available, destination)
+
+        if total_tonnage == 0:
+            print("No freight shipments selected.")
+            return
+        print(f"{total_tonnage} tons selected.")
+
+        confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
+        if confirmation == 'n':
+            print("Cancelling freight selection.")
+            return
+
+        for entry in selection:
+            self.parent.depot.freight[destination].remove(entry)
+            self.parent.ship.load_cargo(Freight(entry,
+                                         self.parent.location,
+                                         destination))
+        self.parent.date.day += 1
+
+    def _get_freight_destinations(self, potential_destinations: List[StarSystem],
+                                  jump_range: int) -> List[StarSystem]:
+        """Return a list of all reachable destinations with Freight lots."""
+        result: List[StarSystem] = []
+        if self.parent.ship.destination is not None:
+            if self.parent.ship.destination == self.parent.location:
+                print(f"{BOLD_RED}There is still freight to be unloaded "
+                      f"on {self.parent.location.name}.{END_FORMAT}")
+                return result
+            if self.parent.ship.destination in potential_destinations:
+                print("You are under contract. Only showing freight " +
+                      f"for {self.parent.ship.destination.name}:\n")
+                result = [self.parent.ship.destination]
+            else:
+                print(f"You are under contract to {self.parent.ship.destination.name} " +
+                      "but it is not within jump range of here.")
+
+        else:
+            print(f"Available freight shipments within jump-{jump_range}:\n")
+            result = potential_destinations
+
+        return result
+
+    def _select_freight_lots(self, available: List[int],
+                             destination: Hex) -> Tuple[int, List[int]]:
+        """Select Freight lots from a list of available shipments."""
+        selection: List[int] = []
+        total_tonnage = 0
+        hold_tonnage = self.parent.ship.free_space()
+        while True:
+            if len(available) == 0:
+                print(f"No more freight available for {destination.name}.")
+                break
+
+            # can't use int input here since we allow for 'q' as well...
+            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
+            if response == 'q':
+                break
+
+            try:
+                response = int(response)
+            except ValueError:
+                print("Please input a number.")
+                continue
+
+            if response in available:
+                if response <= hold_tonnage:
+                    # even though we cast to int above in try/catch,
+                    # mypy is unaware, need to cast again to silence it.
+                    # sort this out...
+                    available.remove(cast(int, response))
+                    selection.append(cast(int, response))
+                    total_tonnage += response
+                    hold_tonnage -= response
+                    print(available)
+                    print(f"Cargo space left: {hold_tonnage}")
+                else:
+                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
+                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
+            else:
+                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
+
+        print("Done selecting shipments.")
+        return (total_tonnage, selection)
+
+    def unload_freight(self) -> None:
+        """Unload Freight from the Ship and receive payment."""
+        print(f"{BOLD_BLUE}Unloading freight.{END_FORMAT}")
+
+        # truth table: passengers, freight, destination flag,...
+
+        # It should not be possible for there to be freight in the hold,
+        # and a destination flag set to None. Should we assert just
+        # in case, so we could track down any such bug:
+        if self.parent.ship.destination is None:
+            print("You have no contracted destination.")
+            return
+
+        freight = [f for f in self.parent.ship.hold if isinstance(f, Freight)]
+        if len(freight) == 0:
+            print("You have no freight on board.")
+            return
+
+        if self.parent.ship.destination == self.parent.location:
+            freight_tonnage = sum(f.tonnage for f in freight)
+            self.parent.ship.hold = [c for c in self.parent.ship.hold if isinstance(c, Cargo)]
+
+            payment = Credits(1000 * freight_tonnage)
+            self.parent.financials.credit(Credits(1000 * freight_tonnage))
+            print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
+
+            self.parent.date.day += 1
+
+        else:
+            print(f"{BOLD_RED}You are not at the contracted "
+                  f"destination for this freight.{END_FORMAT}")
+            print(f"{BOLD_RED}It should be unloaded at "
+                  f"{self.parent.ship.destination.name}.{END_FORMAT}")
 
 
 class Passengers(Play):
