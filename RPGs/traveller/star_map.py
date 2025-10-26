@@ -4,7 +4,7 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Dict, List, cast
+from typing import Dict, List, cast, Tuple
 from coordinate import Coordinate
 from word_gen import get_world_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
@@ -430,15 +430,30 @@ class StarSystemFactory:
         return 0
 
 
+# pylint: disable=R0903
+# R0903: Too few public methods (0/2)
+class Subsector:
+    """Represents a Traveller subsector."""
+
+    def __init__(self, name: str, coordinate: Tuple[int, int]) -> None:
+        """Create an instance of a Subsector."""
+        self.name = name
+        self.coordinate = coordinate
+
+
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""
 
+    # TO_DO: this assumes we start with at least one pre-defined StarSystem,
+    #        which makes sense I think. Would it ever be valid to start
+    #        with a completely blank map?
     def __init__(self, systems: Dict[Coordinate, Hex]) -> None:
         """Create an instance of a StarMap."""
         self.systems = systems
         for key in self.systems.keys():
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
+        self.subsectors: List[Subsector] = []
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""
