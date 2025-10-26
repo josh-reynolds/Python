@@ -19,92 +19,225 @@ Throughout:
   * Data points do not change unless expected results note it
 
 SCENARIO : GENERAL PLAYTHROUGH ==========================================
-1) Start in orbit around Yorbund.
+1) Start on menu screen
+    * Title ('Traveller77') displayed in red ASCII graphics
+    * Welcome message with three options (New Game, Load Game, Quit)
+    * Bogus input just repeats prompt
+2) Command: q
+    * Goodbye message displayed in blue
+    * Game exits after brief pause.
+3) Restart game, command: l
+    * No response, not implemented yet. 
+    * Prompt to continue.
+4) Command: n
+    * Prompted for name of ship
+      Note name here: foo
+    * Prompt to continue.
+5) Game screen.
     * Date is 001-1105
     * Status line notes 'in orbit around Yorbund'
     * 10.0 MCr balance
     * 62 tons free hold space
     * 0/30 tons fuel
     * 0% life support
-2) Command: ?
-    * Available commands: list, view map, hold contents, go to jump,
-      land, view ship, quit, view world, wait a week
-3) Command: a
+6) Command: ?
+    * Available commands: list, view map, hold contents, passenger manifest,
+      crew roster, go to jump, view ship, damage control, land, quit, 
+      view world, wait a week, save game
+      (FEEDBACK: 'game' should not be capitalized in 'Save Game')
+    * Prompt to continue.
+7) Command: a
     * Worlds:
-      (-1,1,0) Aramis A865855-A Ri G
-      (0,-1,1) Mithril A840755-A Po G
-      (0,0,0)  Yorbund A875955-A In G
-      (1,0,-1) Kinorb A855755-A Ag G
-      (FEEDBACK: should highlight current world in list)
-4) Command: c
+      (-1,1,0) | (1, 1) - Aramis - A865855-A Ri - G
+      (0,-1,1) | (-1, 1) -  Mithril - A840755-A Po - G
+      (0,0,0) | (0, 0) - Yorbund - A875955-A In - G     <-- CURRENT LOCATION
+      (1,0,-1) | (0, -1) - Kinorb - A855755-A Ag - G
+    * Yorbund line is in green
+    * Prompt to continue.
+8) Command: c
     * Hold contents:
       Grain - 20 tons - 300 Cr/ton
-5) Command: g
+    * Prompt to continue.
+9) Command: d
+    * Passenger manifest:
+      High passengers: 0
+      Middle passengers: 0
+      Low passengers: 0
+      DESTINATION: None
+
+      Empty berths: 6
+      Empty low berths: 20
+    * Prompt to continue.
+10) Command: e
+    * Crew roster:
+      Captain Grungebottom - Pilot 1
+      Skins McFlint - Engineer 1
+      Doc Gubbins - Medic 1
+      Laszlo the Third - Steward 1
+    * Prompt to continue.
+11) Command: g
+    * Go to jump point
     * 'Insufficient fuel' message.
-6) Command: p
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+12) Command: h
     * Ship details:
-      Weaselfish -- Type A Free Trader
+      foo -- Type A Free Trader
       200 tons : 1G : jump-1
       4 crew, 6 passenger, 20 low
-7) Command: v
+      hold 82 tons, fuel 30 tons
+    * Prompt to continue.
+13) Command: k
+    * Damage control
+    * 'Your ship is not damaged' message.
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+14) Command: v
     * World details:
-      (0,0,0)  Yorbund A875955-A In G
-8) Command: w
+      (0,0,0) | (0, 0) - Yorbund - A875955-A In - G
+    * Prompt to continue.
+15) Command: w
     * Date advances to 008-1105
-    TEST REPEATED WAITING
-9) Command: l
+    TEST REPEATED WAITING (LATER SCENARIO)
+    * Clear back to prompt after brief delay.
+16) Command: z
+    * Save game
+    * Clear back to prompt after brief delay.
+17) Command: q
+    * Goodbye message displayed in blue
+    * Game exits after brief pause.
+18) Examine 'save_game.txt'
+    * Same contents as map listing above (minus <-- CURRENT LOCATION marker)
+19) Restart game, new game, same ship name ('foo')
+20) Command: l
     * Command indicates "landing on Yorbund"
     * Message indicates 100 Cr berthing fee
-    * Status bar notes "on Yorbund"
+    * Status bar notes "at the Yorbund starport"
     * 9.9999 MCr balance
-    TEST REPEATEDLY LANDING AND TAKING OFF
-10) Command: ?
-    * Available commands: list, view map, hold contents, recharge life support,
-      lift off, maintenance, view ship, quit, refuel, trade, view world, wait
-11) Command: a
+    TEST REPEATEDLY LANDING AND TAKING OFF (LATER SCENARIO)
+    * Clear back to prompt after brief delay.
+21) Command: ?
+    * Available commands: list, view map, hold contents, passenger manifest,
+      crew roster, recharge life support, view ship, damage control, liftoff,
+      maintenance, repair, terminal, quit, refuel, trade, flush, view world,
+      wait a week, save game
+      (FEEDBACK: 'game' should not be capitalized in 'Save Game')
+    * Prompt to continue.
+22) Command: a
     * Worlds:
-      (-1,1,0) Aramis A865855-A Ri G
-      (0,-1,1) Mithril A840755-A Po G
-      (0,0,0)  Yorbund A875955-A In G
-      (1,0,-1) Kinorb A855755-A Ag G
-12) Command: c
+      (-1,1,0) | (1, 1) - Aramis - A865855-A Ri - G
+      (0,-1,1) | (-1, 1) -  Mithril - A840755-A Po - G
+      (0,0,0) | (0, 0) - Yorbund - A875955-A In - G     <-- CURRENT LOCATION
+      (1,0,-1) | (0, -1) - Kinorb - A855755-A Ag - G
+    * Yorbund line is in green
+    * Prompt to continue.
+23) Command: c
     * Hold contents:
       Grain - 20 tons - 300 Cr/ton
-13) Command: f
+    * Prompt to continue.
+24) Command: d
+    * Passenger manifest:
+      High passengers: 0
+      Middle passengers: 0
+      Low passengers: 0
+      DESTINATION: None
+
+      Empty berths: 6
+      Empty low berths: 20
+    * Prompt to continue.
+25) Command: e
+    * Crew roster:
+      Captain Grungebottom - Pilot 1
+      Skins McFlint - Engineer 1
+      Doc Gubbins - Medic 1
+      Laszlo the Third - Steward 1
+    * Prompt to continue.
+26) Command: f
     * Prompt to recharge, respond 'n', exits command with no changes
     * Re-issue command, respond 'y'
     * Prompt indicates 22,000 Cr fee
     * 100% life support
     * 9.9779 MCr balance
-    TEST RECHARGE WITH FULL LEVEL
-14) Command: m
-    * Prompt indicates two weeks & 37,080 Cr cost
-    * Prompt also indicates renewing berth on 022-1105 for 8 days (800 Cr)
-    * Date advances to 022-1105
-    * 9.94002 MCr balance
-    (FEEDBACK: no confirmation prompt. no way to view maintenance due date.)
-    TEST RUNNING MAINTENANCE AGAIN
-16) Command: p
+    * Re-issue command
+    * 'Life support is fully charged.' message.
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+27) Command: h
     * Ship details:
-      Weaselfish -- Type A Free Trader
+      foo -- Type A Free Trader
       200 tons : 1G : jump-1
       4 crew, 6 passenger, 20 low
-17) Command: r
+      hold 82 tons, fuel 30 tons
+    * Prompt to continue.
+28) Command: k
+    * Damage control
+    * 'Your ship is not damaged' message.
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+29) Command: m
+    * Prompt indicates two weeks & 37,080 Cr cost
+    * Prompt also indicates renewing berth on 022-1105 for 8 days (800 Cr)
+    * Date advances to 015-1105
+    * 9.94002 MCr balance
+    (FEEDBACK: no confirmation prompt. no way to view maintenance due date.)
+    (FEEDBACK: message is up too briefly to fully read.)
+    * Re-issue command
+    * Maintenance repeated
+    * Date advances to 029-1105
+    * 9.73214 MCr balance
+    (Same feedback as above.)
+    (FEEDBACK: should not be able to run maintenance back-to-back.)
+30) Command: n
+    * Repair ship.
+    * 'Your ship is not damaged.' message.
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+31) Command: r
     * Prompt to refuel, respond 'n', exits command with no changes
     * Re-issue command, respond 'y'
     * Prompt indicates 15,000 Cr fee
     * 30/30 tons fuel
-    * 9.92502 MCr balance
-    TEST REFUEL WITH FULL TANKS
-18) Command: v
+    * 9.71714 MCr balance
+    * Re-issue command
+    * 'Fuel tank is full.' message.
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+32) Command: u
+    * Flush tanks.
+    * 'Ship fuel tanks are clean. No need to flush.' message
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Clear back to prompt after brief delay.
+33) Command: v
     * World details:
-      (0,0,0)  Yorbund A875955-A In G
+      (0,0,0) | (0, 0) - Yorbund - A875955-A In - G
+    * Prompt to continue.
 19) Command: w
-    * Date advances to 029-1105
-    * Prompt indicates renewing berth on 029-1105 for 6 days (600 Cr)
-    * Prompt indicates crew salaries on 029-1105 for 15,000 Cr
-    * Prompt indicates loan payment on 029-1105 for 154,500 Cr
-    * 9.75492 MCr balance
+    * Prompt indicates renewing berth on ???-1105 for 6 days (600 Cr)
+      (FEEDBACK: message is up too briefly to fully read.)
+    * Date advances to 036-1105
+    * 9.71654 MCr balance
+    * Re-issue command
+    * Prompt indicates renewing berth on ???-1105 for 6 days (600 Cr)
+    * Re-issue command
+    * Prompt indicates renewing berth on ???-1105 for 6 days (600 Cr)
+    * Re-issue command
+    * Prompt indicates renewing berth on ???-1105 for 6 days (600 Cr)
+    * Prompt indicates crew salaries on ???-1105 for 15,000 Cr
+    * Prompt indicates loan payment on ???-1105 for 154,500 Cr
+    * Date advances to 057-1105
+    * 9.54524 MCr balance
+
+
+
+
+
+    
+
+
+
+defer: liftoff, quit, passenger terminal, trade depot
+
+
 20) Command: t
     * Command notes "entering Yorbund trade depot"
     * Status bar notes "at Yorbund trade depot"
@@ -353,3 +486,5 @@ SCENARIO : DATES AND RECURRING EVENTS ===================================
 SCENARIO : COMMAND RESTRICTIONS & CONDITIONS ============================
 SCENARIO : QUIT FROM ALL CONTEXTS =======================================
 SCENARIO : FUEL USAGE AND STATE TRANSITIONS =============================
+SCENARIO : CONTAMINATED FUEL, CLEANUP & MISHAPS =========================
+SCENARIO : SAVE & LOAD GAME =============================================
