@@ -1614,6 +1614,60 @@
 # game loop, and test out how that would work? Use it as a
 # prototype for what comes next. Let's give that a spin.
 #
+# OK. Started with the 'little menu' using an enum to govern
+# state in the game loop. Needed to duplicate some of the
+# command-handling logic, but everything worked. Also mocked
+# up a very basic 'save game' that just dumps the map
+# listing to a file. We'll hold off on a real implemetation 
+# of save/load for now.
+#
+# After that was running, I pushed through much of the 
+# 'heavy lifting' mentioned above. Heavily refactored
+# Game and dropped almost all its methods down to the 
+# new Screen class hierarchy. The screen are the states.
+# Was able to do away with the state enum, now we just
+# switch screens. Also was able to kill the weird Commands
+# class. Only a couple pieces left: pulling remaining 
+# controller/view stuff out of Game, and lifting
+# the location transition code out of StarSystem.
+#
+# The methods pushed down are still bloated and need lots
+# more work, but at least now they're split between several
+# classes. Also I have the entire screen hierarchy in one
+# module, so they will get split up as this continues. And
+# they still all route up through Game to access model state.
+# Probably want to clean that up too.
+#
+# For now this was a good refactoring push. Switching back
+# to some more little features for a bit. Save/load is one.
+# Coordinate conversion is another.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# I sorted out coordinate conversion. Extensive notes in the
+# star_map module (which should proabably move here). I punted
+# on subsectors, though. The converted coordinates are relative
+# only. Still need to put them on a map.
+#
+# I'm thinking a subsector entity that lives in StarMap (which
+# probably holds a list of them). Subsectors should be very
+# simple, at least for now - just a name and a coordinate. The
+# first subsector is at (0,0) and the others are placed relative
+# to it.
+#
+# To convert a 2-coord from relative to absolute, we need to
+# calculate its subsector offset, then retrieve (or create)
+# the appropriate subsector. This is pretty simple bounds
+# checking. We'll also need to know the position of the hex 
+# coordinate origin within the origin subsector - simplest to 
+# assume this is always (0101), but would be good to move this 
+# to any arbitrary location in the subsector.
+#
+# Still not entirely sure when we'll want to do the relatve-to-
+# absolute conversion. Should Hexes know about their parent
+# subsector? Or do we just do this when creating map views/lists?
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1892,13 +1946,13 @@
 #  * [DONE] Break up Game class (MVC?)
 #  * [DONE] BUG: save game and sell cargo use the same command key
 #  * [DONE] BUG: game crashes when selling cargo post-jump
+#  * [DONE] Move detail from StarSystem into Screen hierarchy
 #  * [....] Merge screens/menus and location state transitions?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
-#  * [    ] Move detail from StarSystem into Screen hierarchy
 #  * [    ] Coordinate conversion needs to handle subsector/sector bounds
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()

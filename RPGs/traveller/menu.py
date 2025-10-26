@@ -300,8 +300,8 @@ class Orbit(Play):
                 self.parent.ship.hold = [item for item in self.parent.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.parent.location.land()
         self.parent.financials.berthing_fee(self.parent.location.on_surface())
+        self.parent.location.detail = "starport"
         return cast(ScreenT, Starport(self.parent))
 
     def _low_lottery(self, low_lottery_amount) -> None:
@@ -344,7 +344,7 @@ class Orbit(Play):
 
         self.parent.ship.current_fuel -= leg_fc
         self.parent.date.day += 1
-        self.parent.location.to_jump_point()
+        self.parent.location.detail = "jump"
         return cast(ScreenT, Jump(self.parent))
 
     # ACTIONS ==============================================================
@@ -390,19 +390,19 @@ class Starport(Play):
             for passenger in low_passengers:
                 passenger.guess_survivors(self.parent.ship.low_passenger_count)
 
-        self.parent.location.liftoff()
+        self.parent.location.detail = "orbit"
         return cast(ScreenT, Orbit(self.parent))
 
     def to_depot(self: ScreenT) -> None | ScreenT:
         """Move from the starport to the trade depot."""
         print(f"{BOLD_BLUE}Entering {self.parent.location.name} trade depot.{END_FORMAT}")
-        self.parent.location.join_trade()
+        self.parent.location.detail = "trade"
         return cast(ScreenT, Trade(self.parent))
 
     def to_terminal(self: ScreenT) -> None | ScreenT:
         """Move from the starport to the passenger terminal."""
         print(f"{BOLD_BLUE}Entering {self.parent.location.name} passenger terminal.{END_FORMAT}")
-        self.parent.location.enter_terminal()
+        self.parent.location.detail = "terminal"
         return cast(ScreenT, Passengers(self.parent))
 
     # ACTIONS ==============================================================
@@ -517,7 +517,7 @@ class Jump(Play):
 
         self.parent.ship.current_fuel -= leg_fc
         self.parent.date.day += 1
-        self.parent.location.from_jump_point()
+        self.parent.location.detail = "orbit"
         return cast(ScreenT, Orbit(self.parent))
 
     # ACTIONS ==============================================================
@@ -677,7 +677,7 @@ class Trade(Play):
     def leave_depot(self: ScreenT) -> None | ScreenT:
         """Move from the trade depot to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.parent.location.name} trade depot.{END_FORMAT}")
-        self.parent.location.leave_trade()
+        self.parent.location.detail = "starport"
         return cast(ScreenT, Starport(self.parent))
 
     # ACTIONS ==============================================================
@@ -908,7 +908,7 @@ class Passengers(Play):
     def leave_terminal(self: ScreenT) -> None | ScreenT:
         """Move from the passenger terminal to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.parent.location.name} passenger terminal.{END_FORMAT}")
-        self.parent.location.leave_terminal()
+        self.parent.location.detail = "starport"
         return cast(ScreenT, Starport(self.parent))
 
     # ACTIONS ==============================================================

@@ -19,60 +19,6 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(world.coordinate, (0,0,0))
         self.assertEqual(world.trav_coord, (0,0))
 
-    def test_landing(self) -> None:
-        """Test moving from orbit to the starport."""
-        world = StarSystemTestCase.system
-        self.assertEqual(world.detail, "orbit")
-        world.land()
-        self.assertEqual(world.detail, "starport")
-        world.land()
-        self.assertEqual(world.detail, "starport")
-
-    def test_liftoff(self) -> None:
-        """Test moving from the starport to orbit."""
-        world = StarSystemTestCase.system
-        world.detail = "starport"
-        world.liftoff()
-        self.assertEqual(world.detail, "orbit")
-        world.liftoff()
-        self.assertEqual(world.detail, "orbit")
-
-    def test_to_jump_point(self) -> None:
-        """Test moving from orbit to the jump point."""
-        world = StarSystemTestCase.system
-        self.assertEqual(world.detail, "orbit")
-        world.to_jump_point()
-        self.assertEqual(world.detail, "jump")
-        world.to_jump_point()
-        self.assertEqual(world.detail, "jump")
-
-    def test_from_jump_point(self) -> None:
-        """Test moving from the jump point to orbit."""
-        world = StarSystemTestCase.system
-        world.detail = "jump"
-        world.from_jump_point()
-        self.assertEqual(world.detail, "orbit")
-        world.from_jump_point()
-        self.assertEqual(world.detail, "orbit")
-
-    def test_join_trade(self) -> None:
-        """Test moving from the starport to the trade depot."""
-        world = StarSystemTestCase.system
-        world.detail = "starport"
-        world.join_trade()
-        self.assertEqual(world.detail, "trade")
-        world.join_trade()
-        self.assertEqual(world.detail, "trade")
-
-    def test_leave_trade(self) -> None:
-        """Test moving from the trade depot to the starport."""
-        world = StarSystemTestCase.system
-        world.detail = "trade"
-        world.leave_trade()
-        self.assertEqual(world.detail, "starport")
-        world.leave_trade()
-        self.assertEqual(world.detail, "starport")
-
     def test_world_string(self) -> None:
         """Test the string representation of a StarSystem object."""
         world = StarSystemTestCase.system
