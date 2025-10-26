@@ -51,14 +51,37 @@ class CoordinateTestCase(unittest.TestCase):
         coord = (0,0,0)
         self.assertEqual(absolute(coord), ((1,1), (0,0)))
 
+        # NEEDS REVIEW, seems like off-by-one in row number
+        # possibly by alternate columns - double-check
+        # expected results against a map
         coord = (-1,1,0)
         self.assertEqual(absolute(coord), ((2,2), (0,0)))
+
+        coord = (-1,0,1)
+        self.assertEqual(absolute(coord), ((1,2), (0,0)))
 
         coord = (0,-1,1)
         self.assertEqual(absolute(coord), ((8,2), (-1,0)))
 
         coord = (1,0,-1)
         self.assertEqual(absolute(coord), ((1,10), (0,-1)))
+
+        coord = (-12,7,5)
+        self.assertEqual(absolute(coord), ((8,10), (0,0)))
+
+    def test_get_numbers(self) -> None:
+        """Print some values to get test data."""
+        coord = (0,7,-7)
+        print(convert_3_axis(coord))
+        print(absolute(coord))
+
+        coord = (-7,7,0)
+        print(convert_3_axis(coord))
+        print(absolute(coord))
+
+        coord = (-12,7,5)
+        print(convert_3_axis(coord))
+        print(absolute(coord))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
