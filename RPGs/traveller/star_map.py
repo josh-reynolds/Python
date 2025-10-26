@@ -453,7 +453,9 @@ class StarMap:
         for key in self.systems.keys():
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
-        self.subsectors: List[Subsector] = []
+        self.subsectors = [
+                Subsector("TEST", (0,0)),
+                ]
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""

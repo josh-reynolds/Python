@@ -1948,12 +1948,13 @@
 #  * [DONE] BUG: game crashes when selling cargo post-jump
 #  * [DONE] Move detail from StarSystem into Screen hierarchy
 #  * [DONE] Merge screens/menus and location state transitions?
+#  * [DONE] Add subsectors
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [....] Add subsectors
-#  * [    ] Coordinate conversion needs to handle subsector/sector bounds
+#  * [....] Coordinate conversion needs to handle subsector/sector bounds
+#  * [    ] Subsector naming
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()

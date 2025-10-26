@@ -1,6 +1,6 @@
 """Contains tests for the coordinate module."""
 import unittest
-from coordinate import convert_3_axis
+from coordinate import convert_3_axis, absolute
 
 class CoordinateTestCase(unittest.TestCase):
     """Tests 3-axis Coordinate functions."""
@@ -45,6 +45,12 @@ class CoordinateTestCase(unittest.TestCase):
 
         coord = (-6,6,0)
         self.assertEqual(convert_3_axis(coord), (6,3))
+
+    def test_subsector_placement(self) -> None:
+        """Test conversion to absolute coordinates on a subsector map."""
+        coord = (0,0,0)
+        self.assertEqual(absolute(coord), ((1,1), (0,0)))
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
