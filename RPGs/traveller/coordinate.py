@@ -20,4 +20,12 @@ def absolute(coord: Coordinate) -> Tuple[Tuple[int, int], Tuple[int, int]]:
     Return values are the coordinates within the subsector (ranging from
     (1,1) to (8,10)) followed by the coordinates of the subsector itself.
     """
-    return ((1,1), (0,0))
+    two_axis = convert_3_axis(coord)
+
+    x_offset = two_axis[0] // 8
+    x_precision = two_axis[0] % 8 + 1
+
+    y_offset = two_axis[1] // 10
+    y_precision = two_axis[1] % 10 + 1
+
+    return ((x_precision, y_precision), (x_offset, y_offset))

@@ -51,6 +51,14 @@ class CoordinateTestCase(unittest.TestCase):
         coord = (0,0,0)
         self.assertEqual(absolute(coord), ((1,1), (0,0)))
 
+        coord = (-1,1,0)
+        self.assertEqual(absolute(coord), ((2,2), (0,0)))
+
+        coord = (0,-1,1)
+        self.assertEqual(absolute(coord), ((8,2), (-1,0)))
+
+        coord = (1,0,-1)
+        self.assertEqual(absolute(coord), ((1,10), (0,-1)))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
