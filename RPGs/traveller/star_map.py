@@ -487,7 +487,11 @@ class StarMap:
         coordinates within a subsector (ranging from (1,1) to (8,10)) and i / j are
         the coordinates of the subsector itself.
         """
-        return "TEST 0101"
+        hex_coord, sub_coord = coord
+
+        hex_string = str(hex_coord[0]).zfill(2) + str(hex_coord[1]).zfill(2)
+
+        return f"TEST {hex_string}"
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""

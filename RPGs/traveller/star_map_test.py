@@ -257,8 +257,21 @@ class StarMapTestCase(unittest.TestCase):
         """Test conversion of absolute Traveller coordinates to a string."""
         star_map = StarMapTestCase.star_map1
 
+        # should populate map with some subsectors to control expected results
+        # subsectors should be stored in a hash by coordinate like star_systems
+
         result = star_map.pretty_coordinates(((1, 1), (0, 0)))
         self.assertEqual(result, "TEST 0101")
+
+        result = star_map.pretty_coordinates(((2, 1), (0, 0)))
+        self.assertEqual(result, "TEST 0201")
+
+        result = star_map.pretty_coordinates(((8, 10), (0, 0)))
+        self.assertEqual(result, "TEST 0810")
+
+        # assorted coordinates in known subsectors
+        # coordinates in unknown subsectors
+        #   haven't implemented naming, so will have a fixed value (like TEST)
 
 
 class StarSystemFactoryTestCase(unittest.TestCase):

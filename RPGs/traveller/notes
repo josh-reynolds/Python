@@ -1955,6 +1955,8 @@
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [    ] Subsector naming
+#  * [    ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
+#  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
