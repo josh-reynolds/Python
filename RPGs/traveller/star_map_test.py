@@ -253,6 +253,14 @@ class StarMapTestCase(unittest.TestCase):
                                                               (1,0,-1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
 
+    def test_pretty_coordinates(self) -> None:
+        """Test conversion of absolute Traveller coordinates to a string."""
+        star_map = StarMapTestCase.star_map1
+
+        result = star_map.pretty_coordinates(((1, 1), (0, 0)))
+        self.assertEqual(result, "TEST 0101")
+
+
 class StarSystemFactoryTestCase(unittest.TestCase):
     """Tests StarSystemFactory class."""
 

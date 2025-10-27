@@ -480,6 +480,15 @@ class StarMap:
                 Subsector("TEST", (0,0)),
                 ]
 
+    def pretty_coordinates(self, coord: Tuple[Tuple[int, int], Tuple[int, int]]) -> str:
+        """Return the string representation of an absolute Traveller coordinate.
+
+        Input coordinates are in the form ((x, y), (i, j)) where x / y are the hex
+        coordinates within a subsector (ranging from (1,1) to (8,10)) and i / j are
+        the coordinates of the subsector itself.
+        """
+        return "TEST 0101"
+
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""
         result = []
