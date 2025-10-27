@@ -6,7 +6,7 @@ StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
 from typing import List, Any
-from coordinate import Coordinate, convert_3_axis
+from coordinate import Coordinate, convert_3_axis, absolute
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -16,7 +16,7 @@ class Hex(ABC):
     def __init__(self, coordinate: Coordinate) -> None:
         """Create an instance of a Hex."""
         self.coordinate = coordinate
-        self.trav_coord = convert_3_axis(coordinate)
+        self.trav_coord = absolute(coordinate)
         self.name = ""
         self.destinations: List[StarSystem] = []
 
