@@ -10,6 +10,15 @@ class CoordinateTestCase(unittest.TestCase):
         coord = (0,0,0)
         self.assertEqual(convert_3_axis(coord), (0,0))
 
+        coord = (-1,2,-1)
+        self.assertEqual(convert_3_axis(coord), (2,0))
+
+        coord = (-1,3,-2)
+        self.assertEqual(convert_3_axis(coord), (3,0))
+
+        coord = (-2,3,-1)
+        self.assertEqual(convert_3_axis(coord), (3,1))
+
         coord = (-3,6,-3)
         self.assertEqual(convert_3_axis(coord), (6,0))
 
@@ -54,6 +63,16 @@ class CoordinateTestCase(unittest.TestCase):
         # NEEDS REVIEW, seems like off-by-one in row number
         # possibly by alternate columns - double-check
         # expected results against a map
+
+        # Ah. Think I see. My sketch used 0606 as the origin because
+        # it's a 12x12 grid and that's roughly at the center. But
+        # because it is an even column number, it has skewed the
+        # coordinate conversion. Need to adjust, possibly in both
+        # methods.
+
+        # This may also invalidate the concept of 'relative 2-axis
+        # coordinates,' since you need to know whether the origin is
+        # in an even or odd column.
         coord = (-1,1,0)
         self.assertEqual(absolute(coord), ((2,2), (0,0)))
 

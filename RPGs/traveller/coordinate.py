@@ -3,7 +3,7 @@ from typing import Tuple
 
 Coordinate = Tuple[int, int, int]
 
-def convert_3_axis(coord: Coordinate) -> Tuple[int, int]:
+def convert_3_axis(coord: Coordinate, origin_column: str = "even") -> Tuple[int, int]:
     """Convert a three-axis coordinate to Traveller grid coordinates."""
     new_column = coord[1]
     column_offset = int(coord[1]/2)
