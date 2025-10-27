@@ -1,6 +1,6 @@
 """Contains tests for the star_map module."""
 import unittest
-from star_map import StarMap, StarSystemFactory
+from star_map import StarMap, StarSystemFactory, Subsector
 from star_system import StarSystem, DeepSpace
 
 class StarMapTestCase(unittest.TestCase):
@@ -256,6 +256,9 @@ class StarMapTestCase(unittest.TestCase):
     def test_pretty_coordinates(self) -> None:
         """Test conversion of absolute Traveller coordinates to a string."""
         star_map = StarMapTestCase.star_map1
+        star_map.subsectors[(-1,0)]  = Subsector("LEFT", (-1,0))
+        star_map.subsectors[(-1,-1)] = Subsector("UP LEFT", (-1,-1))
+        star_map.subsectors[(0,-1)]  = Subsector("UP", (0,-1))
 
         # should populate map with some subsectors to control expected results
         # subsectors should be stored in a hash by coordinate like star_systems
@@ -269,6 +272,14 @@ class StarMapTestCase(unittest.TestCase):
         result = star_map.pretty_coordinates(((8, 10), (0, 0)))
         self.assertEqual(result, "TEST 0810")
 
+        result = star_map.pretty_coordinates(((8, 1), (-1, 0)))
+        self.assertEqual(result, "LEFT 0801")
+
+        result = star_map.pretty_coordinates(((8, 10), (-1, -1)))
+        self.assertEqual(result, "UP LEFT 0810")
+
+        result = star_map.pretty_coordinates(((1, 10), (0, -1)))
+        self.assertEqual(result, "UP 0110")
         # assorted coordinates in known subsectors
         # coordinates in unknown subsectors
         #   haven't implemented naming, so will have a fixed value (like TEST)

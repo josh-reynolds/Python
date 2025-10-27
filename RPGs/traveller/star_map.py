@@ -458,6 +458,9 @@ class StarSystemFactory:
 class Subsector:
     """Represents a Traveller subsector."""
 
+    # TO_DO: we now have subsectors in a hash by coordinate, so
+    #        the field is redundant and this class is reduced to a
+    #        simple string... consider killing it
     def __init__(self, name: str, coordinate: Tuple[int, int]) -> None:
         """Create an instance of a Subsector."""
         self.name = name
@@ -476,9 +479,9 @@ class StarMap:
         for key in self.systems.keys():
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
-        self.subsectors = [
-                Subsector("TEST", (0,0)),
-                ]
+        self.subsectors = {
+                (0,0) : Subsector("TEST", (0,0)),
+                }
 
     def pretty_coordinates(self, coord: Tuple[Tuple[int, int], Tuple[int, int]]) -> str:
         """Return the string representation of an absolute Traveller coordinate.
@@ -488,10 +491,10 @@ class StarMap:
         the coordinates of the subsector itself.
         """
         hex_coord, sub_coord = coord
-
         hex_string = str(hex_coord[0]).zfill(2) + str(hex_coord[1]).zfill(2)
+        sub_string = self.subsectors[sub_coord].name
 
-        return f"TEST {hex_string}"
+        return f"{sub_string} {hex_string}"
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""

@@ -1957,6 +1957,7 @@
 #  * [    ] Subsector naming
 #  * [    ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
 #  * [    ] Trap out-of-range subsector coords - where/when?
+#  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
