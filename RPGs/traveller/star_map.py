@@ -255,6 +255,29 @@ from utilities import die_roll, constrain
 # cases to be sure, and to demonstrate better - currently
 # a bunch of duplicate cases while I was faffing about.
 
+# There was a flaw in the above logic, just discovered while
+# attempting to translate coordinates to a Traveller subsector.
+# It's a blind spot. The solution above is correct, but only
+# represents half the story. All the manual scribbling I did to
+# derive the formulae used 0606 on a 12x12 hex grid, as it
+# is roughly central.
+
+# Unfortunately, the fact that's an even column number matters.
+# If we shift to odd (like the 0101 top-left hex), the results
+# break. I worked up more test data and validated expected
+# results, then was able to tweak the formula.
+
+# Unfortunately it now needs to know at least this even/odd
+# characteristic, albeit not the exact origin coordinate. Not
+# sure the way this is called is the best way yet, but at least
+# the test results are correct. We're going to assume for the
+# purposes of this game that the origin is always 0101 in the
+# (0,0) subsector. Can always change later.
+
+# Too some degree this invalidates the idea of relative
+# Traveller coordinates, since we always need to consider
+# half of the origin. But no matter.
+
 
 # World generation from Traveller '77 Book 3 pp. 4-12
 # constraints based on the tables, though the dice throws
