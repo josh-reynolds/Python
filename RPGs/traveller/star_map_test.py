@@ -260,17 +260,14 @@ class StarMapTestCase(unittest.TestCase):
         star_map.subsectors[(-1,-1)] = Subsector("UP LEFT", (-1,-1))
         star_map.subsectors[(0,-1)]  = Subsector("UP", (0,-1))
 
-        # should populate map with some subsectors to control expected results
-        # subsectors should be stored in a hash by coordinate like star_systems
-
         result = star_map.pretty_coordinates(((1, 1), (0, 0)))
-        self.assertEqual(result, "TEST 0101")
+        self.assertEqual(result, "ORIGIN 0101")
 
         result = star_map.pretty_coordinates(((2, 1), (0, 0)))
-        self.assertEqual(result, "TEST 0201")
+        self.assertEqual(result, "ORIGIN 0201")
 
         result = star_map.pretty_coordinates(((8, 10), (0, 0)))
-        self.assertEqual(result, "TEST 0810")
+        self.assertEqual(result, "ORIGIN 0810")
 
         result = star_map.pretty_coordinates(((8, 1), (-1, 0)))
         self.assertEqual(result, "LEFT 0801")
@@ -280,9 +277,12 @@ class StarMapTestCase(unittest.TestCase):
 
         result = star_map.pretty_coordinates(((1, 10), (0, -1)))
         self.assertEqual(result, "UP 0110")
-        # assorted coordinates in known subsectors
-        # coordinates in unknown subsectors
-        #   haven't implemented naming, so will have a fixed value (like TEST)
+
+        result = star_map.pretty_coordinates(((1, 1), (1, 1)))
+        self.assertEqual(result, "TEST 0101")
+
+        result = star_map.pretty_coordinates(((5, 7), (10, 6)))
+        self.assertEqual(result, "TEST 0507")
 
 
 class StarSystemFactoryTestCase(unittest.TestCase):

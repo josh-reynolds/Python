@@ -480,7 +480,7 @@ class StarMap:
             if not StarMap._valid_coordinate(key):
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
         self.subsectors = {
-                (0,0) : Subsector("TEST", (0,0)),
+                (0,0) : Subsector("ORIGIN", (0,0)),
                 }
 
     def pretty_coordinates(self, coord: Tuple[Tuple[int, int], Tuple[int, int]]) -> str:
@@ -492,9 +492,20 @@ class StarMap:
         """
         hex_coord, sub_coord = coord
         hex_string = str(hex_coord[0]).zfill(2) + str(hex_coord[1]).zfill(2)
-        sub_string = self.subsectors[sub_coord].name
+
+        if sub_coord in self.subsectors:
+            sub = self.subsectors[sub_coord]
+        else:
+            sub = StarMap._generate_new_subsector(sub_coord)
+            self.subsectors[sub_coord] = sub
+        sub_string = sub.name
 
         return f"{sub_string} {hex_string}"
+
+    @classmethod
+    def _generate_new_subsector(cls, coordinate: Tuple[int, int]) -> Subsector:
+        """Return a new subsector."""
+        return Subsector("TEST", coordinate)
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""
