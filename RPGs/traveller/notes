@@ -1668,6 +1668,91 @@
 # absolute conversion. Should Hexes know about their parent
 # subsector? Or do we just do this when creating map views/lists?
 #
+# Sorted out the conversion. There was a bug in my initial
+# implementation - turns out whether the origin is in an even
+# or odd column matters. But I think it's good now - bunch of
+# test cases, and confirmed expected results against a hand-drawn
+# map. Relative 2-axis is less convincing now, though, since we
+# need to know a little bit about the origin. I _am_ assuming
+# the origin is 0101 for now, but the function is flexible enough
+# it could allow the thing to move around.
+#
+# As for subsectors, they are very simple - so much so that there
+# isn't really justification for a full class. Right now they
+# just have a name and a coordinate; and the coordinate is already
+# present in the container dictionary in StarMap. Would be
+# simpler to just store the name there and dispense with the class.
+# Going to hold onto it a bit longer to see if any code or data
+# wants to live there. If not, it goes. (I know longer term we
+# may want to express StarSystem generation parameters through
+# a Subsector, but YAGNI, right?)
+#
+# Names for subsectors aren't done yet. Given the very short list
+# I'm using for StarSystems right now, there would be lots of
+# duplication, which I suppose doesn't really matter during testing.
+# More than that, though, I think we'll probably want a separate
+# function to generate the names, with different suffixes like
+# "Marches" or "Deep" or "Reach."
+#
+# The lookup in StarMap works much like StarSystem: check the 
+# dictionary for the supplied coordinate, and if it isn't there,
+# create a new one. Seems fine.
+#
+# Which brings us back to use cases. When do we care? I think we'll
+# want subsectors in the star map view/list, and when we export the
+# same. Possibly in the world detail view. But they don't have any
+# game effect.
+#
+# The natural place to put this would be __str__ in StarSystem. But
+# that class doesn't have any awareness of StarMap, which it needs
+# to look up subsectors. A couple options:
+#
+# * Rework the container in StarMap, so the map contains Subsectors,
+#   which contain StarSystems. And probably parent back-references
+#   as needed. This gives the Subsector class a reason to exist.
+#
+# * Remove coordinates from StarSystem, and separate out the string
+#   generation, with the StarMap putting together both pieces (coord
+#   and world strings). Subsectors can stay just as string names.
+#   One small issue: StarSystem also uses coordinate in __eq__ and
+#   __hash__. Could probably change this to something based on its
+#   UWP instead. Still need to walk through the potential call
+#   chain to see how this would work. I do like how de-coupled this
+#   is. No reason for StarSystems to know anything about coordinates
+#   or maps.
+#
+# Alright, taking a look at the map list in-game, and visualizing
+# how it ought to look after incorporating subsector names. If we
+# include them inline for each system, it's going to look very
+# repetitive. Would be better to have section headers, and group
+# systems under their respective subsector. I _think_ this would
+# be easier under the first approach above, but not sure.
+#
+# I do think that long (medium?) term, the 3-axis stuff becomes
+# internal-only, not player-facing. It's easier to work with for
+# sure, but not so easy to visualize relationships just looking
+# at a list of coordinates. Even after all the time I've spent with
+# it, it's much easier to picture layout from Traveller coordinates.
+#
+# After some more thought, the first approach will make it more
+# difficult to find all systems within range. We'd have to check
+# neigboring subsectors. Right now it's all one big list. Since
+# they're just references, I suppose we could have _both_, but 
+# that's more overhead to manage, so...
+#
+# I'm going to try lifting coordinates out of StarSystem. And maybe
+# we flesh the coordinate class out with its conversions. If we have
+# _that_ as the key into the systems list, we can easily lift the
+# corresponding subsector coordinates when we need them. May need
+# to move various string methods around - StarMap probably owns 
+# returning a string combining subsector/coordinate stuff with
+# the StarSystem details.
+#
+# (Actually, would be harmless to leave the coordinate in Hex.
+# If we just have a StarSystem, will be useful to be able to look
+# things up in StarMap, calculate distances, and so on. Just don't
+# want/need a backreference to its parent container.)
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -1954,10 +2039,12 @@
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [    ] Subsector naming
+#  * [....] Subsector naming
 #  * [    ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
+#  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
+#           existing data
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()

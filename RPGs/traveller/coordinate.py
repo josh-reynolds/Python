@@ -1,7 +1,41 @@
 """Contains three-axis coordinate definition and methods to convert and manage them."""
-from typing import Tuple
+from typing import Tuple, Any, Iterator
 
-Coordinate = Tuple[int, int, int]
+class Coordinate:
+    """Represents a 3-axis coordinate on a hex grid."""
+
+    def __init__(self, first: int, second: int, third: int) -> None:
+        """Create an instance of a Coordinate."""
+        self.coords = (first, second, third)
+
+    def __getitem__(self, index: int) -> int:
+        """Return one of the Coordinate's three values."""
+        return self.coords[index]
+
+    def __str__(self) -> str:
+        """Return string representation of a Coordinate object."""
+        return f"{self.coords}"
+
+    def __eq__(self, other: Any) -> bool:
+        """Test if two Coordinates are equal."""
+        if type(other) is type(self):
+            return self[0] == other[0] and self[1] == other[1] and self[2] == other[2]
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        """Calculate the hash value for a Coordinate object."""
+        return hash(self.coords)
+
+    def __lt__(self, other: Any) -> bool:
+        """Test if one Coordinate is greater than another."""
+        if type(other) is type(self):
+            return self.coords < other.coords
+        return NotImplemented
+
+    def __iter__(self) -> Iterator:
+        """Return an iterator over coordinate values."""
+        return iter(self.coords)
+
 
 def convert_3_axis(coord: Coordinate, origin_column: str = "odd") -> Tuple[int, int]:
     """Convert a three-axis coordinate to Traveller grid coordinates."""

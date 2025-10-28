@@ -1,5 +1,6 @@
 """Contains tests for the star_map module."""
 import unittest
+from coordinate import Coordinate
 from star_map import StarMap, StarSystemFactory, Subsector
 from star_system import StarSystem, DeepSpace
 
@@ -12,23 +13,33 @@ class StarMapTestCase(unittest.TestCase):
     def setUp(self) -> None:
         """Create a fixture to test the StarMap class."""
         StarMapTestCase.star_map1 = StarMap({
-            (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
-            (0,1,-1) : DeepSpace((0,1,-1)),
-            (0,-1,1) : StarSystemFactory.create("Mithril", (0,-1,1), "A", 5, 5, 5, 5, 5, 5, 5),
-            (1,0,-1) : StarSystemFactory.create("Kinorb", (1,0,-1), "A", 5, 5, 5, 5, 5, 5, 5),
-            (-1,0,1) : DeepSpace((-1,0,1)),
-            (1,-1,0) : DeepSpace((1,-1,0)),
-            (-1,1,0) : StarSystemFactory.create("Aramis", (-1,1,0), "A", 5, 5, 5, 5, 5, 5, 5)
+            Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",
+                                                          Coordinate(0,0,0),
+                                                          "A", 5, 5, 5, 5, 5, 5, 5),
+            Coordinate(0,1,-1) : DeepSpace(Coordinate(0,1,-1)),
+            Coordinate(0,-1,1) : StarSystemFactory.create("Mithril",
+                                                          Coordinate(0,-1,1),
+                                                          "A", 5, 5, 5, 5, 5, 5, 5),
+            Coordinate(1,0,-1) : StarSystemFactory.create("Kinorb",
+                                                          Coordinate(1,0,-1),
+                                                          "A", 5, 5, 5, 5, 5, 5, 5),
+            Coordinate(-1,0,1) : DeepSpace(Coordinate(-1,0,1)),
+            Coordinate(1,-1,0) : DeepSpace(Coordinate(1,-1,0)),
+            Coordinate(-1,1,0) : StarSystemFactory.create("Aramis",
+                                                          Coordinate(-1,1,0),
+                                                          "A", 5, 5, 5, 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
-            (0,0,0)  : StarSystemFactory.create("Yorbund", (0,0,0), "A", 5, 5, 5, 5, 5, 5, 5),
-            (0,1,-1) : DeepSpace((0,1,-1)),
-            (0,-1,1) : DeepSpace((0,-1,1)),
-            (1,0,-1) : DeepSpace((1,0,-1)),
-            (-1,0,1) : DeepSpace((-1,0,1)),
-            (1,-1,0) : DeepSpace((1,-1,0)),
-            (-1,1,0) : DeepSpace((-1,1,0)),
+            Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",
+                                                          Coordinate(0,0,0),
+                                                          "A", 5, 5, 5, 5, 5, 5, 5),
+            Coordinate(0,1,-1) : DeepSpace(Coordinate(0,1,-1)),
+            Coordinate(0,-1,1) : DeepSpace(Coordinate(0,-1,1)),
+            Coordinate(1,0,-1) : DeepSpace(Coordinate(1,0,-1)),
+            Coordinate(-1,0,1) : DeepSpace(Coordinate(-1,0,1)),
+            Coordinate(1,-1,0) : DeepSpace(Coordinate(1,-1,0)),
+            Coordinate(-1,1,0) : DeepSpace(Coordinate(-1,1,0)),
             })
 
     def test_constructor(self) -> None:
@@ -40,7 +51,7 @@ class StarMapTestCase(unittest.TestCase):
         """Test retrieval of StarSystems within a specified range."""
         star_map1 = StarMapTestCase.star_map1
 
-        systems = star_map1.get_systems_within_range((0,0,0), 1)
+        systems = star_map1.get_systems_within_range(Coordinate(0,0,0), 1)
         self.assertEqual(len(systems), 3)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertTrue(isinstance(systems[1], StarSystem))
@@ -49,16 +60,16 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(systems[1].name in ("Kinorb", "Aramis", "Mithril"))
         self.assertTrue(systems[2].name in ("Kinorb", "Aramis", "Mithril"))
 
-        systems = star_map1.get_systems_within_range((1,0,-1), 1)
+        systems = star_map1.get_systems_within_range(Coordinate(1,0,-1), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
 
-        systems = star_map1.get_systems_within_range((-1,1,0), 1)
+        systems = star_map1.get_systems_within_range(Coordinate(-1,1,0), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
 
-        systems = star_map1.get_systems_within_range((0,-1,1), 1)
+        systems = star_map1.get_systems_within_range(Coordinate(0,-1,1), 1)
         self.assertTrue(isinstance(systems[0], StarSystem))
 
-        systems = star_map1.get_systems_within_range((0,-1,1), 2)
+        systems = star_map1.get_systems_within_range(Coordinate(0,-1,1), 2)
         self.assertTrue(isinstance(systems[0], StarSystem))
         self.assertTrue(isinstance(systems[1], StarSystem))
         self.assertTrue(isinstance(systems[2], StarSystem))
@@ -67,26 +78,26 @@ class StarMapTestCase(unittest.TestCase):
         """Test retrieval of StarSystems within range when there are empty hexes."""
         star_map2 = StarMapTestCase.star_map2
 
-        systems = star_map2.get_systems_within_range((0,0,0), 1)
+        systems = star_map2.get_systems_within_range(Coordinate(0,0,0), 1)
         self.assertEqual(len(systems), 0)
 
     def test_get_system_at_coordinate(self) -> None:
         """Test retrieval of StarSystems by coordinate value."""
         star_map1 = StarMapTestCase.star_map1
 
-        world = star_map1.get_system_at_coordinate((0,0,0))
+        world = star_map1.get_system_at_coordinate(Coordinate(0,0,0))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Yorbund")
 
-        world = star_map1.get_system_at_coordinate((1,0,-1))
+        world = star_map1.get_system_at_coordinate(Coordinate(1,0,-1))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Kinorb")
 
-        world = star_map1.get_system_at_coordinate((-1,1,0))
+        world = star_map1.get_system_at_coordinate(Coordinate(-1,1,0))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Aramis")
 
-        world = star_map1.get_system_at_coordinate((0,-1,1))
+        world = star_map1.get_system_at_coordinate(Coordinate(0,-1,1))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Mithril")
 
@@ -94,56 +105,56 @@ class StarMapTestCase(unittest.TestCase):
         """Test retrieval of StarSystems by coordinate when there are empty hexes."""
         star_map2 = StarMapTestCase.star_map2
 
-        world = star_map2.get_system_at_coordinate((0,0,0))
+        world = star_map2.get_system_at_coordinate(Coordinate(0,0,0))
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Yorbund")
 
-        world = star_map2.get_system_at_coordinate((0,1,-1))
+        world = star_map2.get_system_at_coordinate(Coordinate(0,1,-1))
         self.assertTrue(isinstance(world, DeepSpace))
 
-        world = star_map2.get_system_at_coordinate((0,-1,1))
+        world = star_map2.get_system_at_coordinate(Coordinate(0,-1,1))
         self.assertTrue(isinstance(world, DeepSpace))
 
-        world = star_map2.get_system_at_coordinate((1,0,-1))
+        world = star_map2.get_system_at_coordinate(Coordinate(1,0,-1))
         self.assertTrue(isinstance(world, DeepSpace))
 
-        world = star_map2.get_system_at_coordinate((-1,0,1))
+        world = star_map2.get_system_at_coordinate(Coordinate(-1,0,1))
         self.assertTrue(isinstance(world, DeepSpace))
 
-        world = star_map2.get_system_at_coordinate((1,-1,0))
+        world = star_map2.get_system_at_coordinate(Coordinate(1,-1,0))
         self.assertTrue(isinstance(world, DeepSpace))
 
-        world = star_map2.get_system_at_coordinate((-1,1,0))
+        world = star_map2.get_system_at_coordinate(Coordinate(-1,1,0))
         self.assertTrue(isinstance(world, DeepSpace))
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _distance_between of a client class
     def test_distance_between(self) -> None:
         """Test calculation of distance between two three-axis coordinates."""
-        dist = StarMap._distance_between((0,0,0), (1,0,-1))
+        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(1,0,-1))
         self.assertEqual(dist,1)
 
-        dist = StarMap._distance_between((0,0,0), (0,2,-2))
+        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(0,2,-2))
         self.assertEqual(dist,2)
 
-        dist = StarMap._distance_between((0,0,0), (2,0,-2))
+        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(2,0,-2))
         self.assertEqual(dist,2)
 
-        dist = StarMap._distance_between((0,0,0), (-2,0,2))
+        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(-2,0,2))
         self.assertEqual(dist,2)
 
-        dist = StarMap._distance_between((0,0,0), (1,-2,1))
+        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(1,-2,1))
         self.assertEqual(dist,2)
 
-        dist = StarMap._distance_between((1,0,-1), (2,0,-2))
+        dist = StarMap._distance_between(Coordinate(1,0,-1), Coordinate(2,0,-2))
         self.assertEqual(dist,1)
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _valid_coordinate of a client class
     def test_valid_coordinate(self) -> None:
         """Test validation of potential three-axis coordinates."""
-        self.assertTrue(StarMap._valid_coordinate((0,0,0)))
-        self.assertFalse(StarMap._valid_coordinate((1,0,0)))
+        self.assertTrue(StarMap._valid_coordinate(Coordinate(0,0,0)))
+        self.assertFalse(StarMap._valid_coordinate(Coordinate(1,0,0)))
 
     def test_invalid_ctor_call(self) -> None:
         """Test exception thrown by invalid StarMap constructor call."""
@@ -153,38 +164,38 @@ class StarMapTestCase(unittest.TestCase):
     # W0212: Access to a protected member _get_coordinates_within_range of a client class
     def test_get_coordinates_within_range(self) -> None:
         """Test retrieval of all valid three-axis coordinates within range of an origin hex."""
-        coords = StarMap._get_coordinates_within_range((0,0,0), 1)
+        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 1)
         self.assertEqual(len(coords), 6)
-        self.assertTrue((0,1,-1) in coords) # axial hexes
-        self.assertTrue((0,-1,1) in coords)
-        self.assertTrue((1,0,-1) in coords)
-        self.assertTrue((-1,0,1) in coords)
-        self.assertTrue((1,-1,0) in coords)
-        self.assertTrue((-1,1,0) in coords) # no edge hexes
+        self.assertTrue(Coordinate(0,1,-1) in coords) # axial hexes
+        self.assertTrue(Coordinate(0,-1,1) in coords)
+        self.assertTrue(Coordinate(1,0,-1) in coords)
+        self.assertTrue(Coordinate(-1,0,1) in coords)
+        self.assertTrue(Coordinate(1,-1,0) in coords)
+        self.assertTrue(Coordinate(-1,1,0) in coords) # no edge hexes
 
-        coords = StarMap._get_coordinates_within_range((0,0,0), 2)
+        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 2)
         self.assertEqual(len(coords), 18)
-        self.assertTrue((0,2,-2) in coords) # axial hexes
-        self.assertTrue((0,-2,2) in coords)
-        self.assertTrue((2,0,-2) in coords)
-        self.assertTrue((-2,0,2) in coords)
-        self.assertTrue((2,-2,0) in coords)
-        self.assertTrue((-2,2,0) in coords)
-        self.assertTrue((1,1,-2) in coords) # select edge hexes
-        self.assertTrue((-1,-1,2) in coords)
-        self.assertTrue((2,-1,-1) in coords)
+        self.assertTrue(Coordinate(0,2,-2) in coords) # axial hexes
+        self.assertTrue(Coordinate(0,-2,2) in coords)
+        self.assertTrue(Coordinate(2,0,-2) in coords)
+        self.assertTrue(Coordinate(-2,0,2) in coords)
+        self.assertTrue(Coordinate(2,-2,0) in coords)
+        self.assertTrue(Coordinate(-2,2,0) in coords)
+        self.assertTrue(Coordinate(1,1,-2) in coords) # select edge hexes
+        self.assertTrue(Coordinate(-1,-1,2) in coords)
+        self.assertTrue(Coordinate(2,-1,-1) in coords)
 
-        coords = StarMap._get_coordinates_within_range((0,0,0), 3)
+        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 3)
         self.assertEqual(len(coords), 36)
-        self.assertTrue((0,3,-3) in coords) # axial hexes
-        self.assertTrue((0,-3,3) in coords)
-        self.assertTrue((3,0,-3) in coords)
-        self.assertTrue((-3,0,3) in coords)
-        self.assertTrue((3,-3,0) in coords)
-        self.assertTrue((-3,3,0) in coords)
-        self.assertTrue((2,1,-3) in coords) # select edge hexes
-        self.assertTrue((2,-3,1) in coords)
-        self.assertTrue((-3,2,1) in coords)
+        self.assertTrue(Coordinate(0,3,-3) in coords) # axial hexes
+        self.assertTrue(Coordinate(0,-3,3) in coords)
+        self.assertTrue(Coordinate(3,0,-3) in coords)
+        self.assertTrue(Coordinate(-3,0,3) in coords)
+        self.assertTrue(Coordinate(3,-3,0) in coords)
+        self.assertTrue(Coordinate(-3,3,0) in coords)
+        self.assertTrue(Coordinate(2,1,-3) in coords) # select edge hexes
+        self.assertTrue(Coordinate(2,-3,1) in coords)
+        self.assertTrue(Coordinate(-3,2,1) in coords)
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_all_coords of a client class
@@ -203,14 +214,14 @@ class StarMapTestCase(unittest.TestCase):
     # W0212: Access to a protected member _get_coordinates_within_range of a client class
     def test_translated_coords(self) -> None:
         """Test getting all coordinates at a given range from a translated hex."""
-        coords = StarMap._get_coordinates_within_range((-1,-1,2), 1)
+        coords = StarMap._get_coordinates_within_range(Coordinate(-1,-1,2), 1)
         self.assertEqual(len(coords), 6)
-        self.assertTrue((0,-1,1) in coords) # axial hexes
-        self.assertTrue((-1,0,1) in coords)
-        self.assertTrue((-2,0,2) in coords)
-        self.assertTrue((-2,-1,3) in coords)
-        self.assertTrue((-1,-2,3) in coords)
-        self.assertTrue((0,-2,2) in coords) # no edge hexes
+        self.assertTrue(Coordinate(0,-1,1) in coords) # axial hexes
+        self.assertTrue(Coordinate(-1,0,1) in coords)
+        self.assertTrue(Coordinate(-2,0,2) in coords)
+        self.assertTrue(Coordinate(-2,-1,3) in coords)
+        self.assertTrue(Coordinate(-1,-2,3) in coords)
+        self.assertTrue(Coordinate(0,-2,2) in coords) # no edge hexes
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _generate_new_system of a client class
@@ -223,7 +234,7 @@ class StarMapTestCase(unittest.TestCase):
         """
         worlds = []
         for _ in range(100):
-            world = StarMap._generate_new_system((0,0,0))
+            world = StarMap._generate_new_system(Coordinate(0,0,0))
             if world is not None:
                 worlds.append(world)
         self.assertEqual(len(worlds), 100)
@@ -241,16 +252,16 @@ class StarMapTestCase(unittest.TestCase):
         systems = star_map1.get_all_systems()
         self.assertEqual(len(systems), 4)
         self.assertEqual(systems[0], StarSystemFactory.create("Aramis",
-                                                              (-1,1,0),
+                                                              Coordinate(-1,1,0),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
         self.assertEqual(systems[1], StarSystemFactory.create("Mithril",
-                                                              (0,-1,1),
+                                                              Coordinate(0,-1,1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
         self.assertEqual(systems[2], StarSystemFactory.create("Yorbund",
-                                                              (0,0,0),
+                                                              Coordinate(0,0,0),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
         self.assertEqual(systems[3], StarSystemFactory.create("Kinorb",
-                                                              (1,0,-1),
+                                                              Coordinate(1,0,-1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
 
     def test_pretty_coordinates(self) -> None:
@@ -290,8 +301,8 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
     def test_generate(self) -> None:
         """Test random generation of StarSystems."""
-        system = StarSystemFactory.generate((0,0,0))
-        self.assertEqual(system.coordinate, (0,0,0))
+        system = StarSystemFactory.generate(Coordinate(0,0,0))
+        self.assertEqual(system.coordinate, Coordinate(0,0,0))
 
         self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
 
@@ -318,11 +329,11 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
     def test_create(self) -> None:
         """Test creation of StarSystems by explicit parameters."""
-        world = StarSystemFactory.create("Yorbund", (0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
+        world = StarSystemFactory.create("Yorbund", Coordinate(0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
 
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Yorbund")
-        self.assertEqual(world.coordinate, (0,0,0))
+        self.assertEqual(world.coordinate, Coordinate(0,0,0))
         self.assertEqual(world.starport, "A")
         self.assertEqual(world.size, 8)
         self.assertEqual(world.atmosphere, 7)

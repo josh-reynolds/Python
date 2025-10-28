@@ -565,11 +565,11 @@ class StarMap:
         full_list = StarMap._get_all_coords(radius)
 
         filtered = [a for a in full_list if sum(a)==0]
-        filtered.remove((0,0,0))
+        filtered.remove(Coordinate(0,0,0))
 
-        translated = [(f[0] + origin[0],
-                       f[1] + origin[1],
-                       f[2] + origin[2]) for f in filtered]
+        translated = [Coordinate(f[0] + origin[0],
+                                 f[1] + origin[1],
+                                 f[2] + origin[2]) for f in filtered]
 
         return translated
 
@@ -577,6 +577,6 @@ class StarMap:
     def _get_all_coords(cls, radius: int) -> List[Coordinate]:
         """Return a list of tuples, including both valid and invalid coordinates."""
         span = range(-radius, radius+1)
-        return [(a,b,c) for a in span
-                        for b in span
-                        for c in span]
+        return [Coordinate(a,b,c) for a in span
+                                  for b in span
+                                  for c in span]

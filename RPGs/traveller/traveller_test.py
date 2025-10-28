@@ -1,5 +1,6 @@
 """Contains tests for the traveller module."""
 import unittest
+from coordinate import Coordinate
 from financials import Credits
 from star_map import StarSystemFactory
 from traveller import Game
@@ -14,7 +15,7 @@ class GameTestCase(unittest.TestCase):
         """Tests construction of a Game object."""
         game = Game()
         self.assertEqual(game.location,
-                         StarSystemFactory.create("Yorbund", (0,0,0),
+                         StarSystemFactory.create("Yorbund", Coordinate(0,0,0),
                                                   "A", 8, 7, 5, 9, 5, 5, 10))
         self.assertEqual(game.financials.balance, Credits(10000000))
 
