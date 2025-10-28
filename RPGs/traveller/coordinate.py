@@ -7,6 +7,7 @@ class Coordinate:
     def __init__(self, first: int, second: int, third: int) -> None:
         """Create an instance of a Coordinate."""
         self.coords = (first, second, third)
+        self.trav_coord = absolute(self.coords)
 
     def __getitem__(self, index: int) -> int:
         """Return one of the Coordinate's three values."""
@@ -14,7 +15,7 @@ class Coordinate:
 
     def __str__(self) -> str:
         """Return string representation of a Coordinate object."""
-        return f"{self.coords}"
+        return f"{self.coords} | {self.trav_coord}"
 
     def __eq__(self, other: Any) -> bool:
         """Test if two Coordinates are equal."""
@@ -37,7 +38,7 @@ class Coordinate:
         return iter(self.coords)
 
 
-def convert_3_axis(coord: Coordinate, origin_column: str = "odd") -> Tuple[int, int]:
+def convert_3_axis(coord: Tuple[int, int, int], origin_column: str = "odd") -> Tuple[int, int]:
     """Convert a three-axis coordinate to Traveller grid coordinates."""
     new_column = coord[1]
     column_offset = int(coord[1]/2)
@@ -55,7 +56,7 @@ def convert_3_axis(coord: Coordinate, origin_column: str = "odd") -> Tuple[int, 
 
 # TO_DO: may want to rework how we handle origin and column here
 #        for now we'll stick with the assumption it is fixed at (1,1)
-def absolute(coord: Coordinate) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+def absolute(coord: Tuple[int, int, int]) -> Tuple[Tuple[int, int], Tuple[int, int]]:
     """Convert a three-axis coordinate to a position on a subsector map.
 
     Return values are the coordinates within the subsector (ranging from

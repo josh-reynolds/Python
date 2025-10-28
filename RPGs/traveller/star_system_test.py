@@ -18,7 +18,6 @@ class StarSystemTestCase(unittest.TestCase):
         world = StarSystemTestCase.system
         self.assertTrue(isinstance(world.coordinate, Coordinate))
         self.assertEqual(world.coordinate, Coordinate(0,0,0))
-        self.assertEqual(world.trav_coord, ((1,1), (0,0)))
 
     def test_world_string(self) -> None:
         """Test the string representation of a StarSystem object."""

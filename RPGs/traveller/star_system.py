@@ -6,7 +6,7 @@ StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
 from typing import List, Any
-from coordinate import Coordinate, absolute
+from coordinate import Coordinate
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -16,7 +16,6 @@ class Hex(ABC):
     def __init__(self, coordinate: Coordinate) -> None:
         """Create an instance of a Hex."""
         self.coordinate = coordinate
-        self.trav_coord = absolute(coordinate)
         self.name = ""
         self.destinations: List[StarSystem] = []
 
@@ -37,7 +36,7 @@ class DeepSpace(Hex):
 
     def __repr__(self) -> str:
         """Return the string representation of a DeepSpace object."""
-        return f"{self.coordinate} | {self.trav_coord} - Deep Space"
+        return f"{self.coordinate} - Deep Space"
 
     def description(self) -> str:
         """Return the descriptor for a DeepSpace hex."""
@@ -162,7 +161,7 @@ class StarSystem(Hex):
             uwp_string += " Po"
         if self.gas_giant:
             uwp_string += " - G"
-        return f"{self.coordinate} | {self.trav_coord} - {self.name} - {uwp_string}"
+        return f"{self.coordinate} - {self.name} - {uwp_string}"
 
     @property
     def starport(self) -> str:

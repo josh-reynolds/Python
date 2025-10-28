@@ -1,6 +1,7 @@
 """Contains tests for the ship module."""
 import unittest
 from cargo import Freight
+from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
@@ -50,7 +51,7 @@ class ShipTestCase(unittest.TestCase):
 
         def __init__(self, name):
             """Create an instance of a SystemMock object."""
-            super().__init__(name, (1,1,1),
+            super().__init__(name, Coordinate(1,1,1),
                              UWP("A",1,1,1,1,1,1,1), True)
 
     # pylint: disable=R0903
