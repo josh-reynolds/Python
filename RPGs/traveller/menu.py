@@ -218,11 +218,19 @@ class Play(Screen):
         print(self.parent.ship)
         _ = input("\nPress ENTER key to continue.")
 
+    # TO_DO: some duplication with view_world() - refactor
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
         systems = self.parent.star_map.get_all_systems()
-        pr_highlight_list(systems, self.parent.location, "\t<- CURRENT LOCATION")
+        system_strings = []
+        for sys in systems:
+            coord = sys.coordinate.trav_coord
+            sub_string = self.parent.star_map.pretty_coordinates(coord)
+            combined = f"{sub_string} : {sys}"
+            system_strings.append(combined)
+        # BUG: change to list of strings breaks highlighting functionality
+        pr_highlight_list(system_strings, self.parent.location, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
