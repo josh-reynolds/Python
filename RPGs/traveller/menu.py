@@ -176,7 +176,9 @@ class Play(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(self.parent.location)
+        coord = self.parent.location.coordinate.trav_coord
+        sub_string = self.parent.star_map.pretty_coordinates(coord)
+        print(f"{sub_string} : {self.parent.location}")
         _ = input("\nPress ENTER key to continue.")
 
     def cargo_hold(self) -> None:
