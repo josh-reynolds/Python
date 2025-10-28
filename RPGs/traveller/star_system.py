@@ -36,7 +36,7 @@ class DeepSpace(Hex):
 
     def __repr__(self) -> str:
         """Return the string representation of a DeepSpace object."""
-        return f"{self.coordinate} - Deep Space"
+        return "Deep Space"
 
     def description(self) -> str:
         """Return the descriptor for a DeepSpace hex."""
@@ -161,7 +161,7 @@ class StarSystem(Hex):
             uwp_string += " Po"
         if self.gas_giant:
             uwp_string += " - G"
-        return f"{self.coordinate} - {self.name} - {uwp_string}"
+        return f"{self.name} - {uwp_string}"
 
     @property
     def starport(self) -> str:

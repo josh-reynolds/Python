@@ -22,7 +22,7 @@ class StarSystemTestCase(unittest.TestCase):
     def test_world_string(self) -> None:
         """Test the string representation of a StarSystem object."""
         world = StarSystemTestCase.system
-        self.assertEqual(f"{world}", "(0, 0, 0) | ((1, 1), (0, 0)) - Test - A999999-9 In - G")
+        self.assertEqual(f"{world}", "Test - A999999-9 In - G")
 
     def test_description(self) -> None:
         """Test the descriptive location string of a StarSystem object."""
@@ -81,42 +81,42 @@ class StarSystemTestCase(unittest.TestCase):
         ag_world = StarSystem("Agricultural", Coordinate(0,0,0), uwp, True)
         self.assertTrue(ag_world.agricultural)
         self.assertEqual(f"{ag_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Agricultural - A855755-9 Ag - G")
+                         "Agricultural - A855755-9 Ag - G")
 
         uwp = UWP("A", 8, 0, 3, 7, 5, 5, 9)
         na_world = StarSystem("Non-agricultural", Coordinate(0,0,0), uwp, True)
         self.assertTrue(na_world.nonagricultural)
         self.assertEqual(f"{na_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Non-agricultural - A803755-9 Na - G")
+                         "Non-agricultural - A803755-9 Na - G")
 
         uwp = UWP("A", 8, 7, 5, 9, 5, 5, 9)
         in_world = StarSystem("Industrial", Coordinate(0,0,0), uwp, True)
         self.assertTrue(in_world.industrial)
         self.assertEqual(f"{in_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Industrial - A875955-9 In - G")
+                         "Industrial - A875955-9 In - G")
 
         uwp = UWP("A", 8, 3, 5, 5, 5, 5, 9)
         ni_world = StarSystem("Non-industrial", Coordinate(0,0,0), uwp, True)
         self.assertTrue(ni_world.nonindustrial)
         self.assertEqual(f"{ni_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Non-industrial - A835555-9 Ni - G")
+                         "Non-industrial - A835555-9 Ni - G")
 
         uwp = UWP("A", 8, 6, 5, 8, 5, 5, 9)
         ri_world = StarSystem("Rich", Coordinate(0,0,0), uwp, True)
         self.assertTrue(ri_world.rich)
         self.assertEqual(f"{ri_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Rich - A865855-9 Ri - G")
+                         "Rich - A865855-9 Ri - G")
 
         uwp = UWP("A", 8, 4, 0, 7, 5, 5, 9)
         po_world = StarSystem("Poor", Coordinate(0,0,0), uwp, True)
         self.assertTrue(po_world.poor)
         self.assertEqual(f"{po_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Poor - A840755-9 Po - G")
+                         "Poor - A840755-9 Po - G")
 
         uwp = UWP("A", 8, 3, 5, 7, 5, 5, 9)
         plain_world = StarSystem("Plain", Coordinate(0,0,0), uwp, True)
         self.assertEqual(f"{plain_world}",
-                         "(0, 0, 0) | ((1, 1), (0, 0)) - Plain - A835755-9 - G")
+                         "Plain - A835755-9 - G")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
