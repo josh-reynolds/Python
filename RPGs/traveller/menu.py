@@ -224,13 +224,15 @@ class Play(Screen):
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
         systems = self.parent.star_map.get_all_systems()
         system_strings = []
+        highlight = ""
         for sys in systems:
             coord = sys.coordinate.trav_coord
             sub_string = self.parent.star_map.pretty_coordinates(coord)
             combined = f"{sub_string} : {sys}"
             system_strings.append(combined)
-        # BUG: change to list of strings breaks highlighting functionality
-        pr_highlight_list(system_strings, self.parent.location, "\t<- CURRENT LOCATION")
+            if sys == self.parent.location:
+                highlight = combined
+        pr_highlight_list(system_strings, highlight, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
