@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from coordinate import Coordinate
-from star_system import StarSystem, UWP
+from star_system import StarSystem, UWP, uwp_from
 
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
@@ -125,12 +125,12 @@ class UWPTestCase(unittest.TestCase):
     def test_from_string(self) -> None:
         """Test importing a UWP from a string."""
         string = "A123456-7"
-        actual = UWP.import_a(string)
+        actual = uwp_from(string)
         expected = UWP('A', 1, 2, 3, 4, 5, 6, 7)
         self.assertEqual(actual, expected)
 
         string = "A877777-7"
-        actual = UWP.import_a(string)
+        actual = uwp_from(string)
         expected = UWP('A', 8, 7, 7, 7, 7, 7, 7)
         self.assertEqual(actual, expected)
 
