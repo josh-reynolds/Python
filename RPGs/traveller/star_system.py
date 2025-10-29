@@ -5,7 +5,7 @@ DeepSpace - represents an empty map hex.
 StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
-from typing import List, Any
+from typing import List, Any, Self
 from coordinate import Coordinate
 
 # pylint: disable=R0903
@@ -65,7 +65,7 @@ class UWP:
     def __repr__(self) -> str:
         """Return the string representation of a UWP object."""
         return f"UWP({self.starport}, {self.size}, {self.atmosphere}, {self.hydrographics}, " +\
-               f"{self.population}, {self.government}, {self.law}, {self.tech}"
+               f"{self.population}, {self.government}, {self.law}, {self.tech})"
 
     # Check if '77 can generate any values above 15 (F). It's certainly
     # possible in later editions, not sure here...
@@ -86,6 +86,24 @@ class UWP:
         return  f"{self.starport}{self.size:X}{self.atmosphere:X}" +\
                 f"{self.hydrographics:X}{self.population:X}{self.government:X}" +\
                 f"{self.law:X}-{self.tech:X}"
+
+    def __eq__(self, other: Any) -> bool:
+        """Test equality for UWPs."""
+        if type(other) is type(self):
+            return self.starport == other.starport and\
+                    self.size == other.size and\
+                    self.atmosphere == other.atmosphere and\
+                    self.hydrographics == other.hydrographics and\
+                    self.population == other.population and\
+                    self.government == other.government and\
+                    self.law == other.law and\
+                    self.tech == other.tech
+        return NotImplemented
+
+    @classmethod
+    def import_a(cls, from_string: str) -> Self:
+        """Create a UWP object from a string representation."""
+        return UWP('A', 7, 7, 7, 7, 7, 7, 7)
 
 
 # pylint: disable=R0902

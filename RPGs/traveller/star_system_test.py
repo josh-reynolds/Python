@@ -118,6 +118,24 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(f"{plain_world}",
                          "Plain - A835755-9 - G")
 
+
+class UWPTestCase(unittest.TestCase):
+    """Tests UWP class."""
+
+    def test_from_string(self) -> None:
+        """Test importing a UWP from a string."""
+        string = "A777777-7"
+        uwp = UWP.import_a(string)
+        self.assertEqual(UWP.import_a(string), UWP('A', 7, 7, 7, 7, 7, 7, 7))
+        # basic import
+        # e-hex values
+        # invalid values
+        # too-long input
+        # too-short input
+
+
+
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

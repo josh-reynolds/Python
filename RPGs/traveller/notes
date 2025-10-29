@@ -1753,6 +1753,81 @@
 # things up in StarMap, calculate distances, and so on. Just don't
 # want/need a backreference to its parent container.)
 #
+# OK. Coordinates and subsectors seem to be working fine now. Still
+# some refactoring cleanup to do, of course.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# Next feature: save/load game. A few thoughts:
+#
+# * Need to decide on format. I like having human-readable data
+#   files, so probably not pickle. JSON?
+# * Consider import of existing data too. Should this be in the
+#   same format? What would that look like for the importer?
+# * Already noted below that save should not overwrite previous
+#   saves.
+# * Should we have an auto-save? After each jump perhaps?
+# * I also like the Terraria approach where the world and the player
+#   are separate and can be mixed/matched. So you could have:
+#
+#   1) New world & new player
+#   2) Loaded world & new player
+#   3) New world & loaded player
+#   4) Loaded world & loaded player
+#
+#   "world" includes all the map data. "player" includes the ship,
+#   date, crew and financials. (Starting location would either be
+#   origin or a saved coordinate in case 4.)
+#
+# Start with basics of saving the map (and player current location),
+# and loading back into it.
+#
+# Some quick experimentation shows our objects are not simply
+# convertible to JSON. Going to need to write some converters.
+# But! I also know that a naive JSON dump can be very verbose,
+# with tons of quotes and field names. Tying into the import
+# concern above, I'd really like something concise to ease
+# data entry.
+#
+# So some sort of import/export method in each class under
+# consideration, that takes/returns a string. And then we
+# can clump these strings together in JSON or an even simpler
+# format and write or read from a file.
+#
+# Easy conversion for classes that:
+#
+# a) Are immutable
+# b) Have attributes deterministically generated from ctor args
+#
+# In that case, we can just capture the ctor args in a structured
+# string. Any complex args, rinse and repeat until we get down
+# to primitives.
+#
+# The 'not so easy' conversion needs to snap any mutable/random
+# state, and expose mutators to allow them to be set on import.
+#
+# For the map, we have the following entities:
+#
+# * Subsector(str, tuple(int,int))               # immutable
+# * StarMap(dict(Coordinate:Hex))                # systems/subsectors mutable, 
+#                                                  subsectors not exposed in ctor args
+# * Hex(Coordinate)                              # destinations mutable
+# * DeepSpace(Coordinate)                        # destinations mutable (in theory)
+# * StarSystem(str, Coordinate, UWP, bool)       # destinations, detail mutable
+# * Coordinate(int, int, int)                    # immutable
+# * UWP(str, int, int, int, int, int, int, int)  # immutable
+#
+# StarSystemFactory.create() is already close to an importer, will
+# probably get swept up in this effort.
+#
+# Classes marked 'immutable' above aren't truly - like many things in Python,
+# it's more a convention than enforced. But current design doesn't modify those
+# objects once created (and if it ever becomes a problem, I could add machinery
+# to enforce the immutability).
+#
+# Anyway. UWP and Coordinate look pretty straightforward, so let's start there.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
