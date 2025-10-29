@@ -312,8 +312,8 @@ class Orbit(Play):
                 self.parent.ship.hold = [item for item in self.parent.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.parent.financials.berthing_fee(self.parent.location.on_surface())
         self.parent.location.detail = "starport"
+        self.parent.financials.berthing_fee(self.parent.location.on_surface())
         return cast(ScreenT, Starport(self.parent))
 
     def _low_lottery(self, low_lottery_amount) -> None:

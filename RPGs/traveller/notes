@@ -2039,11 +2039,11 @@
 #  * [DONE] Add a much larger list for world names, and add variation like
 #           "New" or "Station"
 #  * [DONE] Subsector naming
+#  * [DONE] BUG: berthing fee is not being applied when landing on a world
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [    ] BUG: berthing fee is not being applied when landing on a world
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
