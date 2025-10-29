@@ -124,17 +124,20 @@ class UWPTestCase(unittest.TestCase):
 
     def test_from_string(self) -> None:
         """Test importing a UWP from a string."""
-        string = "A777777-7"
-        uwp = UWP.import_a(string)
-        self.assertEqual(UWP.import_a(string), UWP('A', 7, 7, 7, 7, 7, 7, 7))
-        # basic import
+        string = "A123456-7"
+        actual = UWP.import_a(string)
+        expected = UWP('A', 1, 2, 3, 4, 5, 6, 7)
+        self.assertEqual(actual, expected)
+
+        string = "A877777-7"
+        actual = UWP.import_a(string)
+        expected = UWP('A', 8, 7, 7, 7, 7, 7, 7)
+        self.assertEqual(actual, expected)
+
         # e-hex values
         # invalid values
         # too-long input
         # too-short input
-
-
-
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

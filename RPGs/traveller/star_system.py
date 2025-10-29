@@ -102,8 +102,16 @@ class UWP:
 
     @classmethod
     def import_a(cls, from_string: str) -> Self:
-        """Create a UWP object from a string representation."""
-        return UWP('A', 7, 7, 7, 7, 7, 7, 7)
+        """Create a UWP object from a string representation.
+
+        String format matches UWP.__str__ : wdddddd-d
+        """
+        args = list(from_string)
+        # args[7] is a dash character and should be omitted
+
+        # mypy doesn't like this return value, need to adjust
+        return UWP(args[0], int(args[1]), int(args[2]), int(args[3]),
+                   int(args[4]), int(args[5]), int(args[6]), int(args[8]))
 
 
 # pylint: disable=R0902
