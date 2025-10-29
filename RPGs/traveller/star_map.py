@@ -470,6 +470,8 @@ class Subsector:
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""
 
+    subsector_counter: int = 0
+
     # TO_DO: this assumes we start with at least one pre-defined StarSystem,
     #        which makes sense I think. Would it ever be valid to start
     #        with a completely blank map?
@@ -505,7 +507,9 @@ class StarMap:
     @classmethod
     def _generate_new_subsector(cls, coordinate: Tuple[int, int]) -> Subsector:
         """Return a new subsector."""
-        return Subsector("TEST", coordinate)
+        name = f"TEST-{StarMap.subsector_counter}"
+        StarMap.subsector_counter += 1
+        return Subsector(name, coordinate)
 
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""

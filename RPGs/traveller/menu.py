@@ -607,12 +607,12 @@ class Jump(Play):
             # TO_DO: all this should move to live with the other
             #        three-axis calculations
             distance = randint(1,36)
-            hexes = [(0,distance,-distance),
-                     (0,-distance,distance),
-                     (distance,0,-distance),
-                     (-distance,0,distance),
-                     (distance,-distance,0),
-                     (-distance,distance,0)]
+            hexes = [Coordinate(0,distance,-distance),
+                     Coordinate(0,-distance,distance),
+                     Coordinate(distance,0,-distance),
+                     Coordinate(-distance,0,distance),
+                     Coordinate(distance,-distance,0),
+                     Coordinate(-distance,distance,0)]
             misjump_target = choice(hexes)
             misjump_target = Coordinate(misjump_target[0] + self.parent.location.coordinate[0],
                                         misjump_target[1] + self.parent.location.coordinate[1],

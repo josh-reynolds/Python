@@ -290,10 +290,10 @@ class StarMapTestCase(unittest.TestCase):
         self.assertEqual(result, "UP 0110")
 
         result = star_map.pretty_coordinates(((1, 1), (1, 1)))
-        self.assertEqual(result, "TEST 0101")
+        self.assertEqual(result, "TEST-0 0101")
 
         result = star_map.pretty_coordinates(((5, 7), (10, 6)))
-        self.assertEqual(result, "TEST 0507")
+        self.assertEqual(result, "TEST-1 0507")
 
 
 class StarSystemFactoryTestCase(unittest.TestCase):
