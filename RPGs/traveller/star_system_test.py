@@ -134,8 +134,23 @@ class UWPTestCase(unittest.TestCase):
         expected = UWP('A', 8, 7, 7, 7, 7, 7, 7)
         self.assertEqual(actual, expected)
 
-        # e-hex values
-        # invalid values
+        string = "AAAAAAA-A"
+        actual = uwp_from(string)
+        expected = UWP('A', 10, 10, 10, 10, 10, 10, 10)
+        self.assertEqual(actual, expected)
+
+        string = "AG77777-7"
+        with self.assertRaises(ValueError) as context:
+            _ = uwp_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 16: 'G'")
+
+        string = "M777777-7"
+        with self.assertRaises(ValueError) as context:
+            _ = uwp_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for starport: 'M'")
+
         # too-long input
         # too-short input
 

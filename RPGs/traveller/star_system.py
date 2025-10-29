@@ -104,11 +104,15 @@ def uwp_from(string: str) -> UWP:
     """Create a UWP object from a string representation.
 
     String format matches UWP.__str__ : wdddddd-d
+    Digits are hexadecimal values.
     """
     args = list(string)
+    if args[0] not in ['A', 'B', 'C', 'D', 'E', 'X']:
+        raise ValueError(f"invalid literal for starport: '{args[0]}'")
+
     # args[7] is a dash character and should be omitted
-    return UWP(args[0], int(args[1]), int(args[2]), int(args[3]),
-               int(args[4]), int(args[5]), int(args[6]), int(args[8]))
+    return UWP(args[0], int(args[1], 16), int(args[2], 16), int(args[3], 16),
+               int(args[4], 16), int(args[5], 16), int(args[6], 16), int(args[8], 16))
 
 
 # pylint: disable=R0902
