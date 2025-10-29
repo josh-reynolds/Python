@@ -8,7 +8,8 @@ def get_world_name() -> str:
         word = random_line(in_file)[:-1]   # strip trailing newline
     expand = random.randint(1,6)
     if expand == 1:
-        word = "New " + word
+        prefix = random.choice(["New ", "Greater ", "Lesser ", "Port ", "Outpost "])
+        word = prefix + word
     elif expand == 2:
         word += random.choice([" Station", " Platfom", " Colony", " Depot", " Base",
                               " Claim", " Exchange", " Landing", " Port", " Relay",
