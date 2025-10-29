@@ -3,7 +3,7 @@ import random
 from io import TextIOWrapper
 
 def get_world_name() -> str:
-    """Return a random word from the words.txt file."""
+    """Return a randomly-generated world name."""
     with open("./words.txt", 'r', encoding='utf-8') as in_file:
         word = random_line(in_file)[:-1]   # strip trailing newline
     expand = random.randint(1,6)
@@ -17,6 +17,15 @@ def get_world_name() -> str:
     elif expand == 3:
         digits = random.randint(2,12)
         word += f"-{digits}"
+    return word
+
+def get_subsector_name() -> str:
+    """Return a randomly-generated subsector name."""
+    with open("./words.txt", 'r', encoding='utf-8') as in_file:
+        word = random_line(in_file)[:-1]   # strip trailing newline
+    if random.randint(1,6) < 3:
+        suffix = random.choice([" Marches", " Deep", " Span", " Zone", " Void", " Sector"])
+        word += suffix
     return word
 
 # From Stack Overflow 3540288

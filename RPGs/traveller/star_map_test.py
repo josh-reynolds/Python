@@ -289,11 +289,12 @@ class StarMapTestCase(unittest.TestCase):
         result = star_map.pretty_coordinates(((1, 10), (0, -1)))
         self.assertEqual(result, "UP 0110")
 
+        # test randomly generated - only coordinates are predictable
         result = star_map.pretty_coordinates(((1, 1), (1, 1)))
-        self.assertEqual(result, "TEST-0 0101")
+        self.assertEqual(result[-4:], "0101")
 
         result = star_map.pretty_coordinates(((5, 7), (10, 6)))
-        self.assertEqual(result, "TEST-1 0507")
+        self.assertEqual(result[-4:], "0507")
 
 
 class StarSystemFactoryTestCase(unittest.TestCase):

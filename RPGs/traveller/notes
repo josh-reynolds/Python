@@ -2036,11 +2036,15 @@
 #  * [DONE] Add subsectors
 #  * [DONE] Coordinate conversion needs to handle subsector/sector bounds
 #  * [CUT ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
+#  * [DONE] Add a much larger list for world names, and add variation like
+#           "New" or "Station"
+#  * [DONE] Subsector naming
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [....] Subsector naming
+#  * [    ] BUG: berthing fee is not being applied when landing on a world
+#  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
@@ -2057,6 +2061,11 @@
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
 #  * [    ] List star map to take a range parameter? What's the use case?
+#           Might be necessary if the list gets very large. Tests so far haven't had
+#           more than a dozen or so worlds, but especially if we allow imported maps
+#           this will be unwieldy.
+#           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
+#           another that allows choosing a subsector by name and displaying its contents.
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
@@ -2125,12 +2134,12 @@
 #           world with no gas giant. It has a hydrosphere, but I haven't 
 #           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
 #           Or add iceteroid mining as an extreme (and very lengthy) procedure?
+#  * [    ] Other end-game conditions: misjump to deep space, travel in to an E/X
+#           world without refelling from gas giant...
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
 #  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Should life support percentage be tied to 'days duration?' But what
 #           happens if it hits zero?
-#  * [    ] Add a much larger list for world names, and add variation like
-#           "New" or "Station"
 #  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic. This may be as
@@ -2146,6 +2155,7 @@
 #           labelled almost all X starports as Red Zones (doesn't exist in '77).
 #           E is not much better. No good reason for a commercial starship to
 #           go there (though PCs are expected to be more adventurous of course).
+#  * [    ] In the same vein, doesn't make sense to charge a berthing fee at E/X starports
 #  * [    ] Think about guard rails. We don't want to go overboard. Learning
 #           which choices are wise and which are foolhardy is part of the game. So
 #           refuelling availability, low-grade starports, getting stranded - let the
@@ -2166,7 +2176,6 @@
 #           Should we allow that? Makes more sense if we add fuel purification to the game...
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
 #           not sure about this one.
-#  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Review need for negative or zero credits (balances and debts?)
 #            Defer - currently all uses are positive, even debts, but haven't
 #            implemented a ledger or more accounting features yet
