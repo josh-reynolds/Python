@@ -2035,12 +2035,12 @@
 #  * [DONE] Merge screens/menus and location state transitions?
 #  * [DONE] Add subsectors
 #  * [DONE] Coordinate conversion needs to handle subsector/sector bounds
+#  * [CUT ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Subsector naming
-#  * [    ] Storing/retrieval of StarSystem from StarMap - should this involve Subsector?
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import

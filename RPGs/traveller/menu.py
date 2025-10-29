@@ -614,9 +614,9 @@ class Jump(Play):
                      (distance,-distance,0),
                      (-distance,distance,0)]
             misjump_target = choice(hexes)
-            misjump_target = (misjump_target[0] + self.parent.location.coordinate[0],
-                           misjump_target[1] + self.parent.location.coordinate[1],
-                           misjump_target[2] + self.parent.location.coordinate[2])
+            misjump_target = Coordinate(misjump_target[0] + self.parent.location.coordinate[0],
+                                        misjump_target[1] + self.parent.location.coordinate[1],
+                                        misjump_target[2] + self.parent.location.coordinate[2])
             print(f"{misjump_target} at distance {distance}")
 
             # misjump is the only scenario where EmptySpace is a possible
