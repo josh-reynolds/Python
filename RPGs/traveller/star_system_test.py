@@ -128,10 +128,17 @@ class StarSystemTestCase(unittest.TestCase):
                               True)
         self.assertEqual(actual, expected)
 
-        # basic import
+        string = "(-1, 1, 0) - Aramis - A865855-A Ri - G"
+        actual = star_system_from(string)
+        expected = StarSystem("Aramis",
+                              Coordinate(-1,1,0),
+                              UWP('A', 8, 6, 5, 8, 5, 5, 10),
+                              True)
+        self.assertEqual(actual, expected)
+
+        # missing gas giant
         # missing trade codes
         # multiple trade codes
-        # missing gas giant
         # invalid coordinates
         # invalid UWP
         # string too long

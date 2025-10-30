@@ -6,7 +6,7 @@ StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
 from typing import List, Any
-from coordinate import Coordinate
+from coordinate import Coordinate, coordinate_from
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -276,5 +276,8 @@ def star_system_from(string: str) -> StarSystem:
     Coordinate - Name - UWP / Trade - Gas Giant
     (d,d,d) - w* - wdddddd-d w?* - G?
     """
-    return StarSystem("Yorbund", Coordinate(0,0,0),
-                      UWP('A', 8, 7, 5, 9, 5, 5, 10), True)
+    tokens = string.split(' - ')
+    return StarSystem(tokens[1],
+                      coordinate_from(tokens[0]),
+                      uwp_from(tokens[2][:9]),
+                      True)
