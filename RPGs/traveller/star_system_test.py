@@ -151,8 +151,23 @@ class UWPTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "invalid literal for starport: 'M'")
 
-        # too-long input
-        # too-short input
+        string = "A7777777-7"
+        with self.assertRaises(ValueError) as context:
+            _ = uwp_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string length should be exactly 9 characters: 10")
+
+        string = "A77777-7"
+        with self.assertRaises(ValueError) as context:
+            _ = uwp_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string length should be exactly 9 characters: 8")
+
+        string = "A777777!7"
+        with self.assertRaises(ValueError) as context:
+            _ = uwp_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "tech level should be separated by a '-' character: '!'")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

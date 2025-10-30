@@ -107,8 +107,15 @@ def uwp_from(string: str) -> UWP:
     Digits are hexadecimal values.
     """
     args = list(string)
+
     if args[0] not in ['A', 'B', 'C', 'D', 'E', 'X']:
         raise ValueError(f"invalid literal for starport: '{args[0]}'")
+
+    if len(args) != 9:
+        raise ValueError(f"string length should be exactly 9 characters: {len(args)}")
+
+    if args[7] != '-':
+        raise ValueError(f"tech level should be separated by a '-' character: '{args[7]}'")
 
     # args[7] is a dash character and should be omitted
     return UWP(args[0], int(args[1], 16), int(args[2], 16), int(args[3], 16),
