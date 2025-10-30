@@ -1871,6 +1871,20 @@
 # coordinate in there. Cross that bridge when we come to it
 # I suppose...)
 #
+# Quick review, and should be OK. There's some legacy in
+# Coordinate.__str__ that we don't need anymore. Three places
+# display the coordinate right now (all in Menu commands):
+# view_world(), view_map() and save_game(). The first two
+# use the trav_coord field directly, not the string
+# representation. And the third is just printing 
+# StarSystem.__str__ at this time, which used to include
+# the coordinate string but doesn't anymore. I think we
+# can modify the dunder method and get this aligned. Then
+# save_game() _can_ output it just fine.
+#
+# Sorted. No impact from changing __str__, and I added a
+# test case to underscore the contract. On to StarSystem.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------

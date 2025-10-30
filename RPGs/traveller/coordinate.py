@@ -14,8 +14,8 @@ class Coordinate:
         return self.coords[index]
 
     def __str__(self) -> str:
-        """Return string representation of a Coordinate object."""
-        return f"{self.coords} | {self.trav_coord}"
+        """Return the string representation of a Coordinate object."""
+        return f"{self.coords}"
 
     def __repr__(self) -> str:
         """Return the developer string representation of a Coordinate object."""
@@ -42,7 +42,7 @@ class Coordinate:
         return iter(self.coords)
 
     def is_valid(self) -> bool:
-        """Test whether a self.coords tuple is a valid three-axis coordinate."""
+        """Test whether the self.coords tuple is a valid three-axis coordinate."""
         return sum(self.coords) == 0
 
 
@@ -86,7 +86,7 @@ def absolute(coord: Tuple[int, int, int]) -> Tuple[Tuple[int, int], Tuple[int, i
 def coordinate_from(string: str) -> Coordinate:
     """Create a Coordinate object from a string representation.
 
-    String format is (d,d,d)
+    String format matches Coordinate.__str__ : (d,d,d)
     Digits are positive or negative integers.
     """
     contents = string[1:-1]     # strip enclosing parens

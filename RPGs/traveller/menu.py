@@ -262,7 +262,8 @@ class Play(Screen):
         systems = self.parent.star_map.get_all_systems()
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
             for entry in systems:
-                out_file.write(str(entry) + "\n")
+                coord = entry.coordinate
+                out_file.write(f"{coord} - {entry}\n")
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""

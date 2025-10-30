@@ -165,6 +165,11 @@ class CoordinateTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "string is not a valid 3-axis coordinate - should sum to zero: '(1,0,0)'")
 
+        coord = Coordinate(-3,0,3)
+        coord_string = f"{coord}"
+        actual = coordinate_from(coord_string)
+        self.assertEqual(actual, coord)
+
     def test_valid_coordinate(self) -> None:
         """Test validation of potential three-axis coordinates."""
         actual = Coordinate(0,0,0)
