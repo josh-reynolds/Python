@@ -144,8 +144,22 @@ class StarSystemTestCase(unittest.TestCase):
                               False)
         self.assertEqual(actual, expected)
 
-        # missing trade codes
-        # multiple trade codes
+        string = "(-1, 31, -30) - Regina - C589A86-A - G"
+        actual = star_system_from(string)
+        expected = StarSystem("Regina",
+                              Coordinate(-1,31,-30),
+                              UWP('C', 5, 8, 9, 10, 8, 6, 10),
+                              True)
+        self.assertEqual(actual, expected)
+
+        string = "(-1, 32, -31) - Gibson Station - B000630-B Na Ni - G"
+        actual = star_system_from(string)
+        expected = StarSystem("Gibson Station",
+                              Coordinate(-1,32,-31),
+                              UWP('B', 0, 0, 0, 6, 3, 0, 11),
+                              True)
+        self.assertEqual(actual, expected)
+
         # invalid coordinates
         # invalid UWP
         # string too long
