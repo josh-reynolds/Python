@@ -119,8 +119,9 @@ def uwp_from(string: str) -> UWP:
 
     args = [chars[0]] + [int(a, 16) for a in chars[1:7]] + [int(chars[8], 16)]
 
-    return UWP(args[0], args[1], args[2], args[3],
-               args[4], args[5], args[6], args[7])
+    # we enforced types above, but mypy is unaware and needs silencing
+    return UWP(args[0], args[1], args[2], args[3],        # type: ignore[arg-type]
+               args[4], args[5], args[6], args[7])        # type: ignore[arg-type]
 
 
 # pylint: disable=R0902

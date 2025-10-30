@@ -2143,19 +2143,20 @@
 #  * [DONE] Subsector naming
 #  * [DONE] BUG: berthing fee is not being applied when landing on a world
 #  * [DONE] Encode/decode UWP as/from a string
-#  * [    ] Encode/decode Coordinate as/from a string
+#  * [....] Encode/decode Coordinate as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [    ] Load game state
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Save game should not overwrite previous saves
+#  * [    ] Export star map
+#  * [    ] Add a transaction ledger to Financial class
+#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -2178,7 +2179,6 @@
 #           skimming as jump point command if the system has a gas giant
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
-#  * [    ] Export star map
 #  * [    ] Expand options available in New Game - could expose all sorts of options
 #           here like adjusting world creation parameters, but initially just
 #           customizing ship and crew

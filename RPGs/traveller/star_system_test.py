@@ -170,8 +170,8 @@ class UWPTestCase(unittest.TestCase):
                          "tech level should be separated by a '-' character: '!'")
 
         uwp = UWP('A', 1, 2, 3, 4, 5, 6, 7)
-        expected = f"{uwp}"
-        actual = uwp_from(expected)
+        uwp_string = f"{uwp}"
+        actual = uwp_from(uwp_string)
         self.assertEqual(actual, uwp)
 
 # -------------------------------------------------------------------

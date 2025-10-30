@@ -1,6 +1,6 @@
 """Contains tests for the coordinate module."""
 import unittest
-from coordinate import convert_3_axis, absolute
+from coordinate import convert_3_axis, absolute, coordinate_from, Coordinate
 
 class CoordinateTestCase(unittest.TestCase):
     """Tests 3-axis Coordinate functions."""
@@ -106,6 +106,50 @@ class CoordinateTestCase(unittest.TestCase):
 
         coord = (-13,7,6)
         self.assertEqual(absolute(coord), ((8,10), (0,0)))
+
+    def test_from_string(self) -> None:
+        """Test importing a Coordinate from a string."""
+        string = "(0,0,0)"
+        actual = coordinate_from(string)
+        expected = Coordinate(0,0,0)
+        self.assertEqual(actual, expected)
+
+        string = "(1,0,0)"
+        actual = coordinate_from(string)
+        expected = Coordinate(1,0,0)
+        self.assertEqual(actual, expected)
+
+        string = "(0,1,0)"
+        actual = coordinate_from(string)
+        expected = Coordinate(0,1,0)
+        self.assertEqual(actual, expected)
+
+        string = "(0,0,1)"
+        actual = coordinate_from(string)
+        expected = Coordinate(0,0,1)
+        self.assertEqual(actual, expected)
+
+        string = "(1,1,1)"
+        actual = coordinate_from(string)
+        expected = Coordinate(1,1,1)
+        self.assertEqual(actual, expected)
+
+        string = "(-1,0,0)"
+        actual = coordinate_from(string)
+        expected = Coordinate(-1,0,0)
+        self.assertEqual(actual, expected)
+
+        string = "(-1,-1,-1)"
+        actual = coordinate_from(string)
+        expected = Coordinate(-1,-1,-1)
+        self.assertEqual(actual, expected)
+
+        # invalid digits
+        # floats or other numbers
+        # too many digits
+        # too few digits
+        # malformed string
+        # invalid 3-axis coordinate
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

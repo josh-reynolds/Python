@@ -17,6 +17,10 @@ class Coordinate:
         """Return string representation of a Coordinate object."""
         return f"{self.coords} | {self.trav_coord}"
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Coordinate object."""
+        return f"Coordinate({self[0]}, {self[1]}, {self[2]})"
+
     def __eq__(self, other: Any) -> bool:
         """Test if two Coordinates are equal."""
         if type(other) is type(self):
@@ -74,3 +78,15 @@ def absolute(coord: Tuple[int, int, int]) -> Tuple[Tuple[int, int], Tuple[int, i
     y_precision = two_axis[1] % 10 + 1
 
     return ((x_precision, y_precision), (x_offset, y_offset))
+
+def coordinate_from(string: str) -> Coordinate:
+    """Create a Coordinate object from a string representation.
+
+    String format is (d,d,d)
+    Digits are positive or negative integers.
+    """
+    contents = string[1:-1]     # strip enclosing parens
+    digits = contents.split(',')
+    return Coordinate(int(digits[0]),
+                      int(digits[1]),
+                      int(digits[2]))
