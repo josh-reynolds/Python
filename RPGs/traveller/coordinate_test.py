@@ -114,34 +114,19 @@ class CoordinateTestCase(unittest.TestCase):
         expected = Coordinate(0,0,0)
         self.assertEqual(actual, expected)
 
-        string = "(1,0,0)"
+        string = "(0,1,-1)"
         actual = coordinate_from(string)
-        expected = Coordinate(1,0,0)
+        expected = Coordinate(0,1,-1)
         self.assertEqual(actual, expected)
 
-        string = "(0,1,0)"
+        string = "(1,0,-1)"
         actual = coordinate_from(string)
-        expected = Coordinate(0,1,0)
+        expected = Coordinate(1,0,-1)
         self.assertEqual(actual, expected)
 
-        string = "(0,0,1)"
+        string = "(1,-1,0)"
         actual = coordinate_from(string)
-        expected = Coordinate(0,0,1)
-        self.assertEqual(actual, expected)
-
-        string = "(1,1,1)"
-        actual = coordinate_from(string)
-        expected = Coordinate(1,1,1)
-        self.assertEqual(actual, expected)
-
-        string = "(-1,0,0)"
-        actual = coordinate_from(string)
-        expected = Coordinate(-1,0,0)
-        self.assertEqual(actual, expected)
-
-        string = "(-1,-1,-1)"
-        actual = coordinate_from(string)
-        expected = Coordinate(-1,-1,-1)
+        expected = Coordinate(1,-1,0)
         self.assertEqual(actual, expected)
 
         string = "(m,0,0)"
@@ -174,9 +159,11 @@ class CoordinateTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "string should be surrounded by parentheses: '[0,0,0)'")
 
-        # note that we are not trapping invalid 3-axis coordinates in the
-        # constructor - the algorithm in StarMap._get_all_coords() relies
-        # on this to work
+        string = "(1,0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate - should sum to zero: '(1,0,0)'")
 
     def test_valid_coordinate(self) -> None:
         """Test validation of potential three-axis coordinates."""

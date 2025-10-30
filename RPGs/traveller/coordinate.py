@@ -98,6 +98,9 @@ def coordinate_from(string: str) -> Coordinate:
     if string[0] != '(' or string[-1] != ')':
         raise ValueError(f"string should be surrounded by parentheses: '{string}'")
 
-    return Coordinate(int(digits[0]),
-                      int(digits[1]),
-                      int(digits[2]))
+    result = Coordinate(int(digits[0]), int(digits[1]), int(digits[2]))
+    if not result.is_valid():
+        raise ValueError("string is not a valid 3-axis coordinate " +
+                         f"- should sum to zero: '{string}'")
+
+    return result

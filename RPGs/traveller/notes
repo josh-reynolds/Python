@@ -1859,6 +1859,18 @@
 # possible coordinates then prune invalid ones). What if
 # we call invalid_coords from the import function to test?
 #
+# That works. I wanted to move all the coordinate stuff from
+# StarMap over to Coordinate anyway, so this is a step along
+# that path. This one is good enough.
+#
+# So StarSystem ought to be simple from here, right? (Hrm, I 
+# spot one small gotcha with export at any rate. For UWP,
+# I enforced that export is the same as __str__. I didn't do
+# that for Coordinate. Right now we're including both
+# the 'real' 3-axis values and the derived 2-axis relative
+# coordinate in there. Cross that bridge when we come to it
+# I suppose...)
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2148,6 +2160,9 @@
 #  * [DONE] BUG: berthing fee is not being applied when landing on a world
 #  * [DONE] Encode/decode UWP as/from a string
 #  * [DONE] Encode/decode Coordinate as/from a string
+#  * [DONE] We allow invalid 3-axis data into the Coordinate ctor because
+#           StarMap._get_all_coords() needs that ability. But does this prevent
+#           us from trapping bad data in the save file?
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2157,9 +2172,6 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [....] We allow invalid 3-axis data into the Coordinate ctor because
-#           StarMap._get_all_coords() needs that ability. But does this prevent
-#           us from trapping bad data in the save file?
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Export star map
 #  * [    ] Add a transaction ledger to Financial class
