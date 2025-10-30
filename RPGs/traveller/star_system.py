@@ -263,3 +263,18 @@ class StarSystem(Hex):
     def on_surface(self) -> bool:
         """Test whether the player is currently on the world's surface."""
         return self.detail in ('starport', 'trade', 'terminal')
+
+# TO_DO: consolidate this with StarSystemFactory once we move
+#        that to a simple module (away from static class methods)
+def star_system_from(string: str) -> StarSystem:
+    """Create a StarSystem object from a string representations.
+
+    String format matches output of Play.save_game(), which itself
+    is comprised of Coordinate.__str__ and StarSystem.__str__, and
+    the latter incorporates UWP.__str__ :
+
+    Coordinate - Name - UWP / Trade - Gas Giant
+    (d,d,d) - w* - wdddddd-d w?* - G?
+    """
+    return StarSystem("Yorbund", Coordinate(0,0,0),
+                      UWP('A', 8, 7, 5, 9, 5, 5, 10), True)

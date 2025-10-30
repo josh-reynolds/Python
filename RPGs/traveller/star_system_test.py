@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from coordinate import Coordinate
-from star_system import StarSystem, UWP, uwp_from
+from star_system import StarSystem, UWP, uwp_from, star_system_from
 
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
@@ -117,6 +117,25 @@ class StarSystemTestCase(unittest.TestCase):
         plain_world = StarSystem("Plain", Coordinate(0,0,0), uwp, True)
         self.assertEqual(f"{plain_world}",
                          "Plain - A835755-9 - G")
+
+    def test_from_string(self) -> None:
+        """Test importing a StarSystem from a string."""
+        string = "(0, 0, 0) - Yorbund - A875955-A In - G"
+        actual = star_system_from(string)
+        expected = StarSystem("Yorbund",
+                              Coordinate(0,0,0),
+                              UWP('A', 8, 7, 5, 9, 5, 5, 10),
+                              True)
+        self.assertEqual(actual, expected)
+
+        # basic import
+        # missing trade codes
+        # multiple trade codes
+        # missing gas giant
+        # invalid coordinates
+        # invalid UWP
+        # string too long
+        # string too short
 
 
 class UWPTestCase(unittest.TestCase):

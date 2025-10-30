@@ -2177,6 +2177,7 @@
 #  * [DONE] We allow invalid 3-axis data into the Coordinate ctor because
 #           StarMap._get_all_coords() needs that ability. But does this prevent
 #           us from trapping bad data in the save file?
+#  * [....] Encode/decode StarSystem as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
