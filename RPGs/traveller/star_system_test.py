@@ -160,8 +160,19 @@ class StarSystemTestCase(unittest.TestCase):
                               True)
         self.assertEqual(actual, expected)
 
-        # invalid coordinates
-        # invalid UWP
+        string = "(1, 1, 0) - Yorbund - A875955-A In - G"
+        with self.assertRaises(ValueError) as context:
+            _ = star_system_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate -" +
+                         " should sum to zero: '(1, 1, 0)'")
+
+        string = "(0, 0, 0) - Yorbund - R875955-A In - G"
+        with self.assertRaises(ValueError) as context:
+            _ = star_system_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for starport: 'R'")
+
         # string too long
         # string too short
 
