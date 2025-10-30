@@ -136,7 +136,14 @@ class StarSystemTestCase(unittest.TestCase):
                               True)
         self.assertEqual(actual, expected)
 
-        # missing gas giant
+        string = "(-2, -1, 3) - Glisten Base - B8A5322-8 Ni"
+        actual = star_system_from(string)
+        expected = StarSystem("Glisten Base",
+                              Coordinate(-2,-1,3),
+                              UWP('B', 8, 10, 5, 3, 2, 2, 8),
+                              False)
+        self.assertEqual(actual, expected)
+
         # missing trade codes
         # multiple trade codes
         # invalid coordinates

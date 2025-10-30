@@ -173,7 +173,8 @@ class StarSystem(Hex):
     def __eq__(self, other: Any) -> bool:
         """Test whether two StarSystem objects are equal."""
         if type(other) is type(self):
-            return self.name == other.name and self.coordinate == other.coordinate
+            return self.name == other.name and self.coordinate == other.coordinate and \
+                    self.uwp == other.uwp and self.gas_giant == other.gas_giant
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -277,7 +278,12 @@ def star_system_from(string: str) -> StarSystem:
     (d,d,d) - w* - wdddddd-d w?* - G?
     """
     tokens = string.split(' - ')
+
+    gas_giant = False
+    if len(tokens) == 4 and tokens[3] == 'G':
+        gas_giant = True
+
     return StarSystem(tokens[1],
                       coordinate_from(tokens[0]),
                       uwp_from(tokens[2][:9]),
-                      True)
+                      gas_giant)
