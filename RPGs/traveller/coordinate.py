@@ -87,6 +87,13 @@ def coordinate_from(string: str) -> Coordinate:
     """
     contents = string[1:-1]     # strip enclosing parens
     digits = contents.split(',')
+
+    if len(digits) != 3:
+        raise ValueError(f"string should have exactly 3 values: '{len(digits)}'")
+
+    if string[0] != '(' or string[-1] != ')':
+        raise ValueError(f"string should be surrounded by parentheses: '{string}'")
+
     return Coordinate(int(digits[0]),
                       int(digits[1]),
                       int(digits[2]))

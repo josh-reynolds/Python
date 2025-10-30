@@ -144,12 +144,39 @@ class CoordinateTestCase(unittest.TestCase):
         expected = Coordinate(-1,-1,-1)
         self.assertEqual(actual, expected)
 
-        # invalid digits
-        # floats or other numbers
-        # too many digits
-        # too few digits
-        # malformed string
-        # invalid 3-axis coordinate
+        string = "(m,0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        string = "(1.1,0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: '1.1'")
+
+        string = "(0,0,0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string should have exactly 3 values: '4'")
+
+        string = "(0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string should have exactly 3 values: '2'")
+
+        string = "[0,0,0)"
+        with self.assertRaises(ValueError) as context:
+            _ = coordinate_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string should be surrounded by parentheses: '[0,0,0)'")
+
+        # note that we are not trapping invalid 3-axis coordinates in the
+        # constructor - the algorithm in StarMap._get_all_coords() relies
+        # on this to work
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

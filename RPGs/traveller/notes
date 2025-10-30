@@ -1852,8 +1852,12 @@
 # subsector back to 3-axis in order to import.
 #
 # Let's punt on that for now. A simple save/load can get away
-# with outputting 3-axis values.
-#
+# with outputting 3-axis values. OK, this is working. Secondary
+# concern is we're allowing invalid 3-axis coordinates to be
+# created, so if there's junk in the save data we can't catch
+# it here. Our StarMap algorithm relies on this (create all
+# possible coordinates then prune invalid ones). What if
+# we call invalid_coords from the import function to test?
 #
 # -------------------------------------------------------------
 
@@ -2143,7 +2147,7 @@
 #  * [DONE] Subsector naming
 #  * [DONE] BUG: berthing fee is not being applied when landing on a world
 #  * [DONE] Encode/decode UWP as/from a string
-#  * [....] Encode/decode Coordinate as/from a string
+#  * [DONE] Encode/decode Coordinate as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2153,6 +2157,9 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
+#  * [    ] We allow invalid 3-axis data into the Coordinate ctor because
+#           StarMap._get_all_coords() needs that ability. But does this prevent
+#           us from trapping bad data in the save file?
 #  * [    ] Save game should not overwrite previous saves
 #  * [    ] Export star map
 #  * [    ] Add a transaction ledger to Financial class
