@@ -279,6 +279,12 @@ def star_system_from(string: str) -> StarSystem:
     """
     tokens = string.split(' - ')
 
+    if len(tokens) < 3:
+        raise ValueError(f"input string is missing data: '{string}'")
+
+    if len(tokens) > 4:
+        raise ValueError(f"input string has extra data: '{string}'")
+
     gas_giant = False
     if len(tokens) == 4 and tokens[3] == 'G':
         gas_giant = True

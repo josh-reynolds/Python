@@ -1885,6 +1885,26 @@
 # Sorted. No impact from changing __str__, and I added a
 # test case to underscore the contract. On to StarSystem.
 #
+# That's done. Pretty easy once the underlying converters are
+# working. Almost everything we need to load a map now. Three
+# aspects left:
+#
+# 1) DeepSpace. We need to fill in known blanks in the map
+#    or the algorithm will randomly fill them once we start
+#    playing. Converter should be very simple, but the data
+#    entry will be very tedious and redundant. Solve that
+#    later. For now do the brain-dead simple thing.
+#
+# 2) How are StarSystem destinations going to be handled? Will
+#    the game just fix these up as we move across the map again?
+#    They _are_ just derived from a lookup of the map, so if
+#    the map data is the same, destinations should be too. Needs
+#    investigation.
+#
+# 3) Subsectors. I think under the current implementation, we'll
+#    just rename all of them on demand. Not breaking, but should
+#    get fixed after this.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2177,7 +2197,7 @@
 #  * [DONE] We allow invalid 3-axis data into the Coordinate ctor because
 #           StarMap._get_all_coords() needs that ability. But does this prevent
 #           us from trapping bad data in the save file?
-#  * [....] Encode/decode StarSystem as/from a string
+#  * [DONE] Encode/decode StarSystem as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)

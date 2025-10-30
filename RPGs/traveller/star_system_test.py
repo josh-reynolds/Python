@@ -173,8 +173,18 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "invalid literal for starport: 'R'")
 
-        # string too long
-        # string too short
+        string = "(0, 0, 0) - Yorbund"
+        with self.assertRaises(ValueError) as context:
+            _ = star_system_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string is missing data: '(0, 0, 0) - Yorbund'")
+
+        string = "(0, 0, 0) - Yorbund - A875955-A In - G - Extra - Stuff"
+        with self.assertRaises(ValueError) as context:
+            _ = star_system_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string has extra data: "+
+                         "'(0, 0, 0) - Yorbund - A875955-A In - G - Extra - Stuff'")
 
 
 class UWPTestCase(unittest.TestCase):
