@@ -41,6 +41,10 @@ class Coordinate:
         """Return an iterator over coordinate values."""
         return iter(self.coords)
 
+    def is_valid(self) -> bool:
+        """Test whether a self.coords tuple is a valid three-axis coordinate."""
+        return sum(self.coords) == 0
+
 
 def convert_3_axis(coord: Tuple[int, int, int], origin_column: str = "odd") -> Tuple[int, int]:
     """Convert a three-axis coordinate to Traveller grid coordinates."""

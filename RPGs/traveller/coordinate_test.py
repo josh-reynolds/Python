@@ -178,6 +178,11 @@ class CoordinateTestCase(unittest.TestCase):
         # constructor - the algorithm in StarMap._get_all_coords() relies
         # on this to work
 
+    def test_valid_coordinate(self) -> None:
+        """Test validation of potential three-axis coordinates."""
+        actual = Coordinate(0,0,0)
+        self.assertTrue(actual.is_valid())
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

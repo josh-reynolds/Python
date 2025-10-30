@@ -2157,7 +2157,7 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [    ] We allow invalid 3-axis data into the Coordinate ctor because
+#  * [....] We allow invalid 3-axis data into the Coordinate ctor because
 #           StarMap._get_all_coords() needs that ability. But does this prevent
 #           us from trapping bad data in the save file?
 #  * [    ] Save game should not overwrite previous saves

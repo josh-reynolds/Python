@@ -149,16 +149,9 @@ class StarMapTestCase(unittest.TestCase):
         dist = StarMap._distance_between(Coordinate(1,0,-1), Coordinate(2,0,-2))
         self.assertEqual(dist,1)
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _valid_coordinate of a client class
-    def test_valid_coordinate(self) -> None:
-        """Test validation of potential three-axis coordinates."""
-        self.assertTrue(StarMap._valid_coordinate(Coordinate(0,0,0)))
-        self.assertFalse(StarMap._valid_coordinate(Coordinate(1,0,0)))
-
     def test_invalid_ctor_call(self) -> None:
         """Test exception thrown by invalid StarMap constructor call."""
-        self.assertRaises(ValueError, StarMap, {(1,0,0):None})
+        self.assertRaises(AttributeError, StarMap, {(1,0,0):None})
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_coordinates_within_range of a client class

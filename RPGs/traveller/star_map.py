@@ -477,7 +477,7 @@ class StarMap:
         """Create an instance of a StarMap."""
         self.systems = systems
         for key in self.systems.keys():
-            if not StarMap._valid_coordinate(key):
+            if not key.is_valid():
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
         self.subsectors = {
                 (0,0) : Subsector("ORIGIN", (0,0)),
@@ -552,11 +552,6 @@ class StarMap:
         return max(abs(transformed[0]),
                    abs(transformed[1]),
                    abs(transformed[2]))
-
-    @classmethod
-    def _valid_coordinate(cls, coord: Coordinate) -> bool:
-        """Test whether a given tuple is a valid three-axis coordinate."""
-        return sum(coord) == 0
 
     # TO_DO: should we default origin param to (0,0,0)?
     @classmethod
