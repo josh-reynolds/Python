@@ -560,7 +560,7 @@ class StarMap:
         """Return a list of all three-axis coordinate within a given range of an origin."""
         full_list = StarMap._get_all_coords(radius)
 
-        filtered = [a for a in full_list if sum(a)==0]
+        filtered = [a for a in full_list if a.is_valid()]
         filtered.remove(Coordinate(0,0,0))
 
         translated = [Coordinate(f[0] + origin[0],
