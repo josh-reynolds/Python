@@ -169,6 +169,11 @@ class UWPTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "tech level should be separated by a '-' character: '!'")
 
+        uwp = UWP('A', 1, 2, 3, 4, 5, 6, 7)
+        expected = f"{uwp}"
+        actual = uwp_from(expected)
+        self.assertEqual(actual, uwp)
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

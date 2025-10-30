@@ -1821,12 +1821,39 @@
 # StarSystemFactory.create() is already close to an importer, will
 # probably get swept up in this effort.
 #
-# Classes marked 'immutable' above aren't truly - like many things in Python,
-# it's more a convention than enforced. But current design doesn't modify those
-# objects once created (and if it ever becomes a problem, I could add machinery
-# to enforce the immutability).
+# Classes marked 'immutable' above aren't truly - like many things 
+# in Python, it's more a convention than enforced. But current 
+# design doesn't modify those objects once created (and if it ever
+# becomes a problem, I could add machinery to enforce the immutability).
 #
-# Anyway. UWP and Coordinate look pretty straightforward, so let's start there.
+# Anyway. UWP and Coordinate look pretty straightforward, so let's 
+# start there.
+#
+# UWP wasn't too bad. Added a bunch of checks to catch invalid input,
+# but otherwise easy enough. We _will_ hit issues later when we
+# encounter eHex data. Right now UWP just uses strict hexadecimal
+# digits. I also had to make the encoder function standalone. Initially
+# I tried a classmethod, but mypy is finicky about how to annotate
+# that; this is easier.
+#
+# Coordinate is next. On the surface also should be easy. Maybe
+# moreso, since we only accept +/- integers. But the catch is
+# whether to write 3-axis or 2-axis data. The former is easier as
+# far as save/load goes, since it is the internal data format.
+# And for the latter, we will need subsectors too.
+#
+# However, data entry using 3-axis doesn't seem feasible. We're
+# going to need to be able to interpret 2-axis coordinates with
+# associated subsector information. Only thing I think we need
+# to insist on over and above published material is a simple
+# subsector coordinate so we know relative placement.
+#
+# That means we'll need to be able to convert from 2-axis w/
+# subsector back to 3-axis in order to import.
+#
+# Let's punt on that for now. A simple save/load can get away
+# with outputting 3-axis values.
+#
 #
 # -------------------------------------------------------------
 
@@ -2115,9 +2142,12 @@
 #           "New" or "Station"
 #  * [DONE] Subsector naming
 #  * [DONE] BUG: berthing fee is not being applied when landing on a world
+#  * [DONE] Encode/decode UWP as/from a string
+#  * [    ] Encode/decode Coordinate as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
+#  * [    ] Load game state
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] Trap out-of-range subsector coords - where/when?
@@ -2148,7 +2178,6 @@
 #           skimming as jump point command if the system has a gas giant
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
-#  * [    ] Load game state
 #  * [    ] Export star map
 #  * [    ] Expand options available in New Game - could expose all sorts of options
 #           here like adjusting world creation parameters, but initially just
