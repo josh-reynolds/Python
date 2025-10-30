@@ -106,20 +106,21 @@ def uwp_from(string: str) -> UWP:
     String format matches UWP.__str__ : wdddddd-d
     Digits are hexadecimal values.
     """
-    args = list(string)
+    chars = list(string)
 
-    if args[0] not in ['A', 'B', 'C', 'D', 'E', 'X']:
-        raise ValueError(f"invalid literal for starport: '{args[0]}'")
+    if chars[0] not in ['A', 'B', 'C', 'D', 'E', 'X']:
+        raise ValueError(f"invalid literal for starport: '{chars[0]}'")
 
-    if len(args) != 9:
-        raise ValueError(f"string length should be exactly 9 characters: {len(args)}")
+    if len(chars) != 9:
+        raise ValueError(f"string length should be exactly 9 characters: {len(chars)}")
 
-    if args[7] != '-':
-        raise ValueError(f"tech level should be separated by a '-' character: '{args[7]}'")
+    if chars[7] != '-':
+        raise ValueError(f"tech level should be separated by a '-' character: '{chars[7]}'")
 
-    # args[7] is a dash character and should be omitted
-    return UWP(args[0], int(args[1], 16), int(args[2], 16), int(args[3], 16),
-               int(args[4], 16), int(args[5], 16), int(args[6], 16), int(args[8], 16))
+    args = [chars[0]] + [int(a, 16) for a in chars[1:7]] + [int(chars[8], 16)]
+
+    return UWP(args[0], args[1], args[2], args[3],
+               args[4], args[5], args[6], args[7])
 
 
 # pylint: disable=R0902
