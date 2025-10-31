@@ -36,7 +36,7 @@ class DeepSpace(Hex):
 
     def __str__(self) -> str:
         """Return the string representation of a DeepSpace object."""
-        return f"{self.coordinate} - Deep Space"
+        return "Deep Space"
 
     def __repr__(self) -> str:
         """Return the developer string representation of a DeepSpace object."""

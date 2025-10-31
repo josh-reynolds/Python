@@ -11,7 +11,8 @@ from command import Command
 from coordinate import Coordinate
 from financials import Credits
 from ship import FuelQuality, RepairStatus
-from star_system import DeepSpace, StarSystem, Hex
+from star_map import StarMap
+from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 from utilities import int_input
@@ -108,9 +109,18 @@ class Menu(Screen):
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
-    def load_game(self) -> None:
+    def load_game(self: ScreenT) -> ScreenT:
         """Load a previous game."""
+        systems = {}
+        with open('save_game.txt', 'r', encoding='utf-8') as a_file:
+            for line in a_file:
+                line = line[:-1]    # strip newlines
+                map_hex = hex_from(line)
+                systems[map_hex.coordinate] = map_hex
+
+        self.parent.star_map = StarMap(systems)
         _ = input("Press ENTER key to continue.")
+        return cast(ScreenT, Orbit(self.parent))
 
 
 class Play(Screen):
@@ -259,11 +269,11 @@ class Play(Screen):
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
-        systems = self.parent.star_map.get_all_systems()
+        systems = self.parent.star_map.systems
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
-            for entry in systems:
-                coord = entry.coordinate
-                out_file.write(f"{coord} - {entry}\n")
+            for coord in systems:
+                map_hex = systems[coord]
+                out_file.write(f"{coord} - {map_hex}\n")
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
