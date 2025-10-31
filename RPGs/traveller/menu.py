@@ -2,6 +2,7 @@
 
 Menu - draws the screen and gathers input from the player.
 """
+import json
 from abc import ABC, abstractmethod
 from random import randint, choice
 from time import sleep
@@ -269,15 +270,21 @@ class Play(Screen):
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
-        systems = self.parent.star_map.systems
-        subsectors = self.parent.star_map.subsectors
+        systems = []
+        for coord in self.parent.star_map.systems:
+            map_hex = self.parent.star_map.systems[coord]
+            systems.append(f"{coord} - {map_hex}\n")
+
+        subsectors = []
+        for coord in self.parent.star_map.subsectors:
+            sub = self.parent.star_map.subsectors[coord]
+            subsectors.append(f"{coord} - {sub}\n")
+
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
-            for coord in systems:
-                map_hex = systems[coord]
-                out_file.write(f"{coord} - {map_hex}\n")
-            for coord in subsectors:
-                sub = subsectors[coord]
-                out_file.write(f"{coord} - {sub}\n")
+            for line in systems:
+                out_file.write(line)
+            for line in subsectors:
+                out_file.write(line)
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""

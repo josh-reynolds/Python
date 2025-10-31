@@ -2229,6 +2229,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] Handle save/load exceptions in app rather than crashing out
+#  * [    ] BUG: load game crashes if save_game file doesn't exist
 #  * [    ] BUG: load game doesn't allow naming of the ship
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
