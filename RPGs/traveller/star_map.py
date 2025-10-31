@@ -501,6 +501,9 @@ def subsector_from(string: str) -> Subsector:
     coord_str = coord_str[1:-1]     # remove surrounding parentheses
     coord = tuple(int(n) for n in coord_str.split(','))
 
+    if len(coord) != 2:
+        raise ValueError(f"coordinate should have exactly two integers: '{coord}'")
+
     # generator produces tuple[int, ...] but ctor expects tuple[int, int]
     # mypy doesn't know the string should have just two members
     return Subsector(tokens[1], coord)   # type: ignore[arg-type]

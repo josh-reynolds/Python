@@ -371,8 +371,23 @@ class SubsectorTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "subsector data should have exactly two fields: 4")
 
+        string = "(0) - Betelgeuse Marches"
+        with self.assertRaises(ValueError) as context:
+            _ = subsector_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate should have exactly two integers: '(0,)'")
 
-        # malformed coordinates
+        string = "(0,0,0) - Betelgeuse Marches"
+        with self.assertRaises(ValueError) as context:
+            _ = subsector_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate should have exactly two integers: '(0, 0, 0)'")
+
+        string = "(0,m) - Betelgeuse Marches"
+        with self.assertRaises(ValueError) as context:
+            _ = subsector_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

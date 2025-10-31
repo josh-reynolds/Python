@@ -2222,11 +2222,11 @@
 #           us from trapping bad data in the save file?
 #  * [DONE] Encode/decode StarSystem as/from a string
 #  * [DONE] Encode/decode DeepSpace as/from a string
+#  * [DONE] Save/load subsector data
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Load game state
-#  * [....] Save/load subsector data
 #  * [    ] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [....] Extract all the three-axis coordinate math to its own class
