@@ -466,6 +466,10 @@ class Subsector:
         self.name = name
         self.coordinate = coordinate
 
+    def __str__(self) -> str:
+        """Return the string representation of a Subsector object."""
+        return self.name
+
 
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""

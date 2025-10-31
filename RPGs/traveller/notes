@@ -1912,6 +1912,19 @@
 # won't know whether to call a star system factory or a deep
 # space factory. So let the factory figure it out.
 #
+# Basic save/load of a list of StarSystems is working. The file
+# is unstructured and does not contain any subsector data, so
+# they are being regenerated on load as hinted above. (And I
+# _think_ destinations do indeed get fixed up automatically, test
+# flight looks good. Want a more thorough white-box review to be
+# certain.)
+#
+# ...and just added dump of subsectors to save_game(). Very easy.
+# But problem is the file is still unstructured, so it crashes
+# when we try to load it, as it thinks the Subsectors are
+# StarSystems. Need to put this into a simple JSON structure,
+# and swap into both save & load.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2210,11 +2223,13 @@
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [....] Load game state
+#  * [....] Save/load subsector data
 #  * [    ] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] BUG: load game doesn't allow naming of the ship
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import

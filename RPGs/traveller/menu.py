@@ -270,10 +270,14 @@ class Play(Screen):
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = self.parent.star_map.systems
+        subsectors = self.parent.star_map.subsectors
         with open('save_game.txt', 'w', encoding='utf-8') as out_file:
             for coord in systems:
                 map_hex = systems[coord]
                 out_file.write(f"{coord} - {map_hex}\n")
+            for coord in subsectors:
+                sub = subsectors[coord]
+                out_file.write(f"{coord} - {sub}\n")
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
