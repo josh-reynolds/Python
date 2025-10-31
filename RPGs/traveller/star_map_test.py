@@ -359,8 +359,19 @@ class SubsectorTestCase(unittest.TestCase):
         expected = Subsector("Betelgeuse Marches", (-1,0))
         self.assertEqual(actual, expected)
 
-        # string too short
-        # string too long
+        string = "Betelgeuse Marches"
+        with self.assertRaises(ValueError) as context:
+            _ = subsector_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "subsector data should have exactly two fields: 1")
+
+        string = "(-1, 0) - Betelgeuse Marches - extra - stuff"
+        with self.assertRaises(ValueError) as context:
+            _ = subsector_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "subsector data should have exactly two fields: 4")
+
+
         # malformed coordinates
 
 # -------------------------------------------------------------------

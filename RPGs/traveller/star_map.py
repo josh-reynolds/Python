@@ -494,11 +494,16 @@ def subsector_from(string: str) -> Subsector:
     """
     tokens = string.split(' - ')
 
-    coord = tokens[0]
-    coord = coord[1:-1]     # remove surrounding parentheses
-    coord = tuple([int(n) for n in coord.split(',')])
+    if len(tokens) != 2:
+        raise ValueError(f"subsector data should have exactly two fields: {len(tokens)}")
 
-    return Subsector(tokens[1], coord)
+    coord_str = tokens[0]
+    coord_str = coord_str[1:-1]     # remove surrounding parentheses
+    coord = tuple(int(n) for n in coord_str.split(','))
+
+    # generator produces tuple[int, ...] but ctor expects tuple[int, int]
+    # mypy doesn't know the string should have just two members
+    return Subsector(tokens[1], coord)   # type: ignore[arg-type]
 
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""
