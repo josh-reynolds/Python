@@ -34,9 +34,20 @@ class DeepSpace(Hex):
         self.population = 0
         self.gas_giant = False
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of a DeepSpace object."""
-        return "Deep Space"
+        return f"{self.coordinate} - Deep Space"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a DeepSpace object."""
+        return f"DeepSpace({self.coordinate.__repr__()})"  # TO_DO: look up f-string hint
+                                                           #        to format as repr string
+
+    def __eq__(self, other: Any) -> bool:
+        """Test whether two DeepSpace objects are equal."""
+        if type(other) is type(self):
+            return self.coordinate == other.coordinate
+        return NotImplemented
 
     def description(self) -> str:
         """Return the descriptor for a DeepSpace hex."""
@@ -267,7 +278,7 @@ class StarSystem(Hex):
 
 # TO_DO: consolidate this with StarSystemFactory once we move
 #        that to a simple module (away from static class methods)
-def star_system_from(string: str) -> StarSystem:
+def hex_from(string: str) -> Hex:
     """Create a StarSystem object from a string representations.
 
     String format matches output of Play.save_game(), which itself
@@ -276,8 +287,12 @@ def star_system_from(string: str) -> StarSystem:
 
     Coordinate - Name - UWP / Trade - Gas Giant
     (d,d,d) - w* - wdddddd-d w?* - G?
+    Coodinate digits are +/- integers.
     """
     tokens = string.split(' - ')
+
+    if len(tokens) == 2 and tokens[1] == "Deep Space":
+        return DeepSpace(coordinate_from(tokens[0]))
 
     if len(tokens) < 3:
         raise ValueError(f"input string is missing data: '{string}'")

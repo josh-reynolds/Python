@@ -1904,6 +1904,13 @@
 # 3) Subsectors. I think under the current implementation, we'll
 #    just rename all of them on demand. Not breaking, but should
 #    get fixed after this.
+# 
+# Working on DeepSpace. Started with a naive solution, but as I
+# dig in it's obvious that this should be a sub-case of
+# star_system_from(). Assuming we just have a big list of
+# Hexes, whichever function (something like 'subsector_from()')
+# won't know whether to call a star system factory or a deep
+# space factory. So let the factory figure it out.
 #
 # -------------------------------------------------------------
 
@@ -2198,17 +2205,21 @@
 #           StarMap._get_all_coords() needs that ability. But does this prevent
 #           us from trapping bad data in the save file?
 #  * [DONE] Encode/decode StarSystem as/from a string
+#  * [DONE] Encode/decode DeepSpace as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
 #  * [    ] Load game state
+#  * [    ] Export star map (this is different from save game how, exactly?
+#           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [....] Extract all the three-axis coordinate math to its own class
+#  * [....] Properly separate __repr__ and __str__ for all classes
+#           Note that __repr__ should be recursive for arg objects
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
 #  * [    ] Save game should not overwrite previous saves
-#  * [    ] Export star map
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
@@ -2241,7 +2252,6 @@
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Properly separate __repr__ and __str__ for all classes
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one

@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from coordinate import Coordinate
-from star_system import StarSystem, UWP, uwp_from, star_system_from
+from star_system import StarSystem, UWP, uwp_from, hex_from, DeepSpace
 
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
@@ -121,7 +121,7 @@ class StarSystemTestCase(unittest.TestCase):
     def test_from_string(self) -> None:
         """Test importing a StarSystem from a string."""
         string = "(0, 0, 0) - Yorbund - A875955-A In - G"
-        actual = star_system_from(string)
+        actual = hex_from(string)
         expected = StarSystem("Yorbund",
                               Coordinate(0,0,0),
                               UWP('A', 8, 7, 5, 9, 5, 5, 10),
@@ -129,7 +129,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
 
         string = "(-1, 1, 0) - Aramis - A865855-A Ri - G"
-        actual = star_system_from(string)
+        actual = hex_from(string)
         expected = StarSystem("Aramis",
                               Coordinate(-1,1,0),
                               UWP('A', 8, 6, 5, 8, 5, 5, 10),
@@ -137,7 +137,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
 
         string = "(-2, -1, 3) - Glisten Base - B8A5322-8 Ni"
-        actual = star_system_from(string)
+        actual = hex_from(string)
         expected = StarSystem("Glisten Base",
                               Coordinate(-2,-1,3),
                               UWP('B', 8, 10, 5, 3, 2, 2, 8),
@@ -145,7 +145,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
 
         string = "(-1, 31, -30) - Regina - C589A86-A - G"
-        actual = star_system_from(string)
+        actual = hex_from(string)
         expected = StarSystem("Regina",
                               Coordinate(-1,31,-30),
                               UWP('C', 5, 8, 9, 10, 8, 6, 10),
@@ -153,7 +153,7 @@ class StarSystemTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
 
         string = "(-1, 32, -31) - Gibson Station - B000630-B Na Ni - G"
-        actual = star_system_from(string)
+        actual = hex_from(string)
         expected = StarSystem("Gibson Station",
                               Coordinate(-1,32,-31),
                               UWP('B', 0, 0, 0, 6, 3, 0, 11),
@@ -162,29 +162,34 @@ class StarSystemTestCase(unittest.TestCase):
 
         string = "(1, 1, 0) - Yorbund - A875955-A In - G"
         with self.assertRaises(ValueError) as context:
-            _ = star_system_from(string)
+            _ = hex_from(string)
         self.assertEqual(f"{context.exception}",
                          "string is not a valid 3-axis coordinate -" +
                          " should sum to zero: '(1, 1, 0)'")
 
         string = "(0, 0, 0) - Yorbund - R875955-A In - G"
         with self.assertRaises(ValueError) as context:
-            _ = star_system_from(string)
+            _ = hex_from(string)
         self.assertEqual(f"{context.exception}",
                          "invalid literal for starport: 'R'")
 
         string = "(0, 0, 0) - Yorbund"
         with self.assertRaises(ValueError) as context:
-            _ = star_system_from(string)
+            _ = hex_from(string)
         self.assertEqual(f"{context.exception}",
                          "input string is missing data: '(0, 0, 0) - Yorbund'")
 
         string = "(0, 0, 0) - Yorbund - A875955-A In - G - Extra - Stuff"
         with self.assertRaises(ValueError) as context:
-            _ = star_system_from(string)
+            _ = hex_from(string)
         self.assertEqual(f"{context.exception}",
                          "input string has extra data: "+
                          "'(0, 0, 0) - Yorbund - A875955-A In - G - Extra - Stuff'")
+
+        string = "(0, 0, 0) - Deep Space"
+        actual = hex_from(string)
+        expect = DeepSpace(Coordinate(0,0,0))
+        self.assertEqual(actual, expect)
 
 
 class UWPTestCase(unittest.TestCase):
