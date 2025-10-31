@@ -4,7 +4,7 @@ StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
 StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 """
 from random import randint
-from typing import Dict, List, cast, Tuple
+from typing import Dict, List, cast, Tuple, Any
 from coordinate import Coordinate
 from word_gen import get_world_name, get_subsector_name
 from star_system import StarSystem, DeepSpace, UWP, Hex
@@ -470,6 +470,35 @@ class Subsector:
         """Return the string representation of a Subsector object."""
         return self.name
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Subsector object."""
+        return f"Subsector({self.name}, {self.coordinate})"
+
+    def __eq__(self, other: Any) -> bool:
+        """Test whether two Subsector objects are equal."""
+        if type(other) is type(self):
+            return self.coordinate == other.coordinate and self.name == other.name
+        return NotImplemented
+
+
+def subsector_from(string: str) -> Subsector:
+    """Create a Subsector object from a string representation.
+
+    String format matches the 'subsectors' section of the output
+    of Play.save_game(), which is comprised of a coordinate tuple
+    and subsector name.
+
+    Coordinate - Subsector Name
+    (d,d) - w*
+    Coordinate digits are +/- integers.
+    """
+    tokens = string.split(' - ')
+
+    coord = tokens[0]
+    coord = coord[1:-1]     # remove surrounding parentheses
+    coord = tuple([int(n) for n in coord.split(',')])
+
+    return Subsector(tokens[1], coord)
 
 class StarMap:
     """Represents a map of StarSystems laid out on a hexagonal grid."""

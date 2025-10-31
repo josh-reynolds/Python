@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from coordinate import Coordinate
-from star_map import StarMap, StarSystemFactory, Subsector
+from star_map import StarMap, StarSystemFactory, Subsector, subsector_from
 from star_system import StarSystem, DeepSpace
 
 class StarMapTestCase(unittest.TestCase):
@@ -343,6 +343,25 @@ class StarSystemFactoryTestCase(unittest.TestCase):
         self.assertEqual(world.nonindustrial, False)
         self.assertEqual(world.rich, False)
         self.assertEqual(world.poor, False)
+
+class SubsectorTestCase(unittest.TestCase):
+    """Tests Subsector class."""
+
+    def test_from_string(self) -> None:
+        """Test importing a Subsector from a string."""
+        string = "(0, 0) - Regina"
+        actual = subsector_from(string)
+        expected = Subsector("Regina", (0,0))
+        self.assertEqual(actual, expected)
+
+        string = "(-1, 0) - Betelgeuse Marches"
+        actual = subsector_from(string)
+        expected = Subsector("Betelgeuse Marches", (-1,0))
+        self.assertEqual(actual, expected)
+
+        # string too short
+        # string too long
+        # malformed coordinates
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

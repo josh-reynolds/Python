@@ -12,7 +12,7 @@ from command import Command
 from coordinate import Coordinate
 from financials import Credits
 from ship import FuelQuality, RepairStatus
-from star_map import StarMap
+from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
@@ -116,12 +116,18 @@ class Menu(Screen):
         with open('save_game.json', 'r', encoding='utf-8') as a_file:
             data = json.load(a_file)
 
-            for line in data['systems']:
-                line = line[:-1]    # strip newlines
-                map_hex = hex_from(line)
-                systems[map_hex.coordinate] = map_hex
+        for line in data['systems']:
+            line = line[:-1]    # strip newlines
+            map_hex = hex_from(line)
+            systems[map_hex.coordinate] = map_hex
 
         self.parent.star_map = StarMap(systems)
+
+        for line in data['subsectors']:
+            line = line[:-1]    # strip newlines
+            subsector = subsector_from(line)
+            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 

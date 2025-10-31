@@ -279,15 +279,15 @@ class StarSystem(Hex):
 # TO_DO: consolidate this with StarSystemFactory once we move
 #        that to a simple module (away from static class methods)
 def hex_from(string: str) -> Hex:
-    """Create a StarSystem object from a string representations.
+    """Create a StarSystem object from a string representation.
 
-    String format matches output of Play.save_game(), which itself
-    is comprised of Coordinate.__str__ and StarSystem.__str__, and
-    the latter incorporates UWP.__str__ :
+    String format matches the 'systems' section of the output of 
+    Play.save_game(), which itself is comprised of Coordinate.__str__ 
+    and StarSystem.__str__, and the latter incorporates UWP.__str__ :
 
     Coordinate - Name - UWP / Trade - Gas Giant
     (d,d,d) - w* - wdddddd-d w?* - G?
-    Coodinate digits are +/- integers.
+    Coordinate digits are +/- integers.
     """
     tokens = string.split(' - ')
 
