@@ -1925,6 +1925,9 @@
 # StarSystems. Need to put this into a simple JSON structure,
 # and swap into both save & load.
 #
+# Switching to JSON easy enough. I'm not loading subsectors
+# yet, but can save/load without crashing. Progress.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2229,6 +2232,7 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] After switching to json.dump, terminal newline may not be necessary - review
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] BUG: load game crashes if save_game file doesn't exist
 #  * [    ] BUG: load game doesn't allow naming of the ship

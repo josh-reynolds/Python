@@ -113,8 +113,10 @@ class Menu(Screen):
     def load_game(self: ScreenT) -> ScreenT:
         """Load a previous game."""
         systems = {}
-        with open('save_game.txt', 'r', encoding='utf-8') as a_file:
-            for line in a_file:
+        with open('save_game.json', 'r', encoding='utf-8') as a_file:
+            data = json.load(a_file)
+
+            for line in data['systems']:
                 line = line[:-1]    # strip newlines
                 map_hex = hex_from(line)
                 systems[map_hex.coordinate] = map_hex
@@ -280,11 +282,10 @@ class Play(Screen):
             sub = self.parent.star_map.subsectors[coord]
             subsectors.append(f"{coord} - {sub}\n")
 
-        with open('save_game.txt', 'w', encoding='utf-8') as out_file:
-            for line in systems:
-                out_file.write(line)
-            for line in subsectors:
-                out_file.write(line)
+        star_map = {'systems' : systems, 'subsectors' : subsectors}
+
+        with open('save_game.json', 'w', encoding='utf-8') as a_file:
+            json.dump(star_map, a_file, indent=2)
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
