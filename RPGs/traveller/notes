@@ -2223,6 +2223,7 @@
 #  * [DONE] Encode/decode StarSystem as/from a string
 #  * [DONE] Encode/decode DeepSpace as/from a string
 #  * [DONE] Save/load subsector data
+#  * [DONE] After switching to json.dump, terminal newline may not be necessary - review
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2232,7 +2233,6 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] After switching to json.dump, terminal newline may not be necessary - review
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] BUG: load game crashes if save_game file doesn't exist
 #  * [    ] BUG: load game doesn't allow naming of the ship

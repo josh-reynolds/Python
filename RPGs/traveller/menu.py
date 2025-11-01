@@ -117,14 +117,12 @@ class Menu(Screen):
             data = json.load(a_file)
 
         for line in data['systems']:
-            line = line[:-1]    # strip newlines
             map_hex = hex_from(line)
             systems[map_hex.coordinate] = map_hex
 
         self.parent.star_map = StarMap(systems)
 
         for line in data['subsectors']:
-            line = line[:-1]    # strip newlines
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
@@ -281,12 +279,12 @@ class Play(Screen):
         systems = []
         for coord in self.parent.star_map.systems:
             map_hex = self.parent.star_map.systems[coord]
-            systems.append(f"{coord} - {map_hex}\n")
+            systems.append(f"{coord} - {map_hex}")
 
         subsectors = []
         for coord in self.parent.star_map.subsectors:
             sub = self.parent.star_map.subsectors[coord]
-            subsectors.append(f"{coord} - {sub}\n")
+            subsectors.append(f"{coord} - {sub}")
 
         star_map = {'systems' : systems, 'subsectors' : subsectors}
 
