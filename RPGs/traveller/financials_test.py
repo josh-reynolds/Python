@@ -97,9 +97,13 @@ class FinancialsTestCase(unittest.TestCase):
             """Test whether one DateMock is greater than another."""
             return self.value > other.value
 
-        def __repr__(self) -> str:
+        def __str__(self) -> str:
             """Return the string representation of a DateMock object."""
             return f"{self.value}"
+
+        def __repr__(self) -> str:
+            """Return the developer string representation of a DateMock object."""
+            return f"DateMock({self.value})"
 
     class ShipMock:
         """Mocks a ship interface for testing."""

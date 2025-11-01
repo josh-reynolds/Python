@@ -15,9 +15,13 @@ class Calendar:
         self.current_date = ImperialDate(1,1105)
         self.observers: List[Any] = []
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of the current date."""
         return f"{self.current_date}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of the current date."""
+        return "Calendar()"
 
     @property
     def day(self) -> int:
@@ -76,9 +80,13 @@ class ImperialDate:
             self.day += 365
             self.year -= 1
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of the date (DDD-YYYY)."""
         return f"{self.day:03.0f}-{self.year}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of the date."""
+        return f"ImperialDate({self.day}, {self.year})"
 
     def __eq__(self, other: Any) -> bool:
         """Test if two ImperialDates are equal."""

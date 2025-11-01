@@ -40,8 +40,7 @@ class DeepSpace(Hex):
 
     def __repr__(self) -> str:
         """Return the developer string representation of a DeepSpace object."""
-        return f"DeepSpace({self.coordinate.__repr__()})"  # TO_DO: look up f-string hint
-                                                           #        to format as repr string
+        return f"DeepSpace({repr(self.coordinate)})"
 
     def __eq__(self, other: Any) -> bool:
         """Test whether two DeepSpace objects are equal."""

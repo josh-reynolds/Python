@@ -110,7 +110,7 @@ class Menu(Screen):
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
-    def load_game(self: ScreenT) -> ScreenT:
+    def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         systems = {}
         try:
@@ -118,7 +118,7 @@ class Menu(Screen):
                 data = json.load(a_file)
         except FileNotFoundError:
             print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
-            return
+            return None
 
         for line in data['systems']:
             map_hex = hex_from(line)
