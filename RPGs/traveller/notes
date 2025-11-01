@@ -2225,6 +2225,7 @@
 #  * [DONE] Save/load subsector data
 #  * [DONE] After switching to json.dump, terminal newline may not be necessary - review
 #  * [DONE] BUG: load game doesn't allow naming of the ship
+#  * [DONE] BUG: load game crashes if save_game file doesn't exist
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2236,7 +2237,6 @@
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Save game should not overwrite previous saves
-#  * [    ] BUG: load game crashes if save_game file doesn't exist
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import

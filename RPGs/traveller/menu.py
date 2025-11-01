@@ -113,8 +113,12 @@ class Menu(Screen):
     def load_game(self: ScreenT) -> ScreenT:
         """Load a previous game."""
         systems = {}
-        with open('saves/save_game.json', 'r', encoding='utf-8') as a_file:
-            data = json.load(a_file)
+        try:
+            with open('saves/save_game.json', 'r', encoding='utf-8') as a_file:
+                data = json.load(a_file)
+        except FileNotFoundError:
+            print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
+            return
 
         for line in data['systems']:
             map_hex = hex_from(line)
