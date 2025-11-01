@@ -126,6 +126,8 @@ class Menu(Screen):
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
+        self.parent.ship.name = input("What is the name of your ship? ")
+
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 

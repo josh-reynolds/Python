@@ -2224,6 +2224,7 @@
 #  * [DONE] Encode/decode DeepSpace as/from a string
 #  * [DONE] Save/load subsector data
 #  * [DONE] After switching to json.dump, terminal newline may not be necessary - review
+#  * [DONE] BUG: load game doesn't allow naming of the ship
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2234,13 +2235,12 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] Handle save/load exceptions in app rather than crashing out
+#  * [    ] Save game should not overwrite previous saves
 #  * [    ] BUG: load game crashes if save_game file doesn't exist
-#  * [    ] BUG: load game doesn't allow naming of the ship
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [    ] Save game should not overwrite previous saves
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
