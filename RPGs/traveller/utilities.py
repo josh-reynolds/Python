@@ -1,6 +1,8 @@
 """Contains utility functions."""
+from os import listdir
+from os.path import isfile, join
 from random import randint
-from typing import Any
+from typing import Any, List
 
 def die_roll(count: int = 1) -> int:
     """Roll count six-sided dice and return the total."""
@@ -104,3 +106,9 @@ def dictionary_from(a_string: str) -> dict[str, int]:
         key, value = item.split(':')
         dictionary[key] = int(value)
     return dictionary
+
+def get_save_files() -> List[str]:
+    """Return a list of all files in the saves directory."""
+    path = "./saves/"
+    files = [f for f in listdir(path) if isfile(join(path, f))]
+    return files
