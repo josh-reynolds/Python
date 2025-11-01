@@ -113,7 +113,7 @@ class Menu(Screen):
     def load_game(self: ScreenT) -> ScreenT:
         """Load a previous game."""
         systems = {}
-        with open('save_game.json', 'r', encoding='utf-8') as a_file:
+        with open('saves/save_game.json', 'r', encoding='utf-8') as a_file:
             data = json.load(a_file)
 
         for line in data['systems']:
@@ -290,7 +290,7 @@ class Play(Screen):
 
         star_map = {'systems' : systems, 'subsectors' : subsectors}
 
-        with open('save_game.json', 'w', encoding='utf-8') as a_file:
+        with open('saves/save_game.json', 'w', encoding='utf-8') as a_file:
             json.dump(star_map, a_file, indent=2)
 
     def wait_week(self) -> None:
