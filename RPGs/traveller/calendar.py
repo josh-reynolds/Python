@@ -63,9 +63,10 @@ class Calendar:
         """Move the current day forward by seven days."""
         self.day += 7
 
-#def modify_calendar_from(calendar: Calendar, string: str) -> None:
-    #"""Modify a Calendar object using a
-
+def modify_calendar_from(calendar: Calendar, string: str) -> None:
+    """Modify a Calendar object using a string."""
+    new_date = imperial_date_from(string)
+    calendar.current_date = new_date
 
 
 class ImperialDate:

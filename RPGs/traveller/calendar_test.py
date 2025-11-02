@@ -1,7 +1,7 @@
 """Contains tests for the calendar module."""
 import unittest
 from typing import cast
-from calendar import Calendar, ImperialDate, imperial_date_from
+from calendar import Calendar, ImperialDate, imperial_date_from, modify_calendar_from
 
 class ImperialDateTestCase(unittest.TestCase):
     """Tests ImperialDate class."""
@@ -245,6 +245,20 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.year, 1105)
         self.assertEqual(mock.count, 1)
         self.assertEqual(calendar.observers[1].count, 1)
+
+    def test_modify_from_string(self) -> None:
+        """Test modifying a Calendar with a string."""
+        calendar = CalendarTestCase.a
+        mock = calendar.observers[0]
+        self.assertEqual(calendar.day, 1)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
+        self.assertEqual(len(calendar.observers), 1)
+
+        modify_calendar_from(calendar, "002-1105")
+        self.assertEqual(calendar.day, 2)
+        self.assertEqual(calendar.year, 1105)
+        self.assertEqual(mock.count, 0)
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
