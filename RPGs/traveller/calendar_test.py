@@ -105,8 +105,18 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "day value must be between 1 and 365: '366'")
 
-        # string too long
-        # string too short
+        string = "001"
+        with self.assertRaises(ValueError) as context:
+            _ = imperial_date_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string must have both day and year values: '001'")
+
+        string = "001-1111-22"
+        with self.assertRaises(ValueError) as context:
+            _ = imperial_date_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string must have only day and year values: '001-1111-22'")
+
         # invalid day digits
         # invalid year digits
 
