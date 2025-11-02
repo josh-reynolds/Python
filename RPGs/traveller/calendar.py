@@ -63,6 +63,10 @@ class Calendar:
         """Move the current day forward by seven days."""
         self.day += 7
 
+#def modify_calendar_from(calendar: Calendar, string: str) -> None:
+    #"""Modify a Calendar object using a
+
+
 
 class ImperialDate:
     """Represents a single date in Traveller format: DDD-YYYY."""
@@ -121,3 +125,10 @@ class ImperialDate:
 
     def _date_value(self) -> int:
         return self.day + (self.year * 365)
+
+def imperial_date_from(string: str) -> ImperialDate:
+    """Create an ImperialDate object from a string representation.
+
+    String format matches ImperialDate.__str__ : ddd-dddd
+    """
+    return ImperialDate(111, 1111)

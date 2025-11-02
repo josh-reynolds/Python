@@ -1928,6 +1928,47 @@
 # Switching to JSON easy enough. I'm not loading subsectors
 # yet, but can save/load without crashing. Progress.
 #
+# OK, now save & load are working correctly for StarSystems and
+# Subsectors. I also moved the save file into a dedicated subdirectory,
+# and added some functions/logic to the commands to support
+# multiple save files. Save auto-increments and creates the
+# 'next' file, no player choice involved. Load allows choice
+# from a list. I'm not capping the length, so this could become
+# a problem eventually, but good enough for now.
+#
+# I had another thought about the 'separate map & player' save idea.
+# The upcoming Financials ledger will break (or at least hold 
+# nonsensical data) if we allow that. It would refer to StarSystems
+# from the previous map, not necessarily same as current. So at
+# least for now we'll load the entire monolith.
+#
+# Probably time to get some more game state into the save file. 
+# We have Calendar, Ship, location, financials, as well as wiring
+# up destinations & observers/controllers if anything shifts
+# underneath. (The current implementation has the entire game
+# state created behind the scenes before we even enter the Menu,
+# then we swap out if loading.)
+#
+# Calendar next. It doesn't accept a date in the ctor, so simple
+# approach would be to allow the pre-existing one to stand, and
+# just set its date. But I think that's going to trigger observers.
+# So what if we modify the ctor with an optional start date
+# parameter? We'd need to re-attach observers with that approach.
+# A third cheater tack would be a new method that sets the date
+# without firing observers. Need to read through to assess.
+#
+# The current date is also fed to Financials & CargoDepot, so 
+# need to account for that piece too.
+#
+# OK, observers on Calendar only fire if we touch the day/year via
+# properties, but not if we swap the date entirely. Wouldn't even
+# need a method. That's the least code to pull this off... Let's
+# wrap it in a 'from_string' function like the other model classes
+# to make the usage clear, not randomly poking fingers into things.
+# (Though breaking convention, we won't create a new object, but
+# modify the existing one... We _will_ have another to create
+# an ImperialDate from a string though.)
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2242,6 +2283,7 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
+#  * [    ] Move hard-coded start conditions out of Game ctor into some sort of save file
 #  * [    ] Add a transaction ledger to Financial class
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()

@@ -1,7 +1,7 @@
 """Contains tests for the calendar module."""
 import unittest
 from typing import cast
-from calendar import Calendar, ImperialDate
+from calendar import Calendar, ImperialDate, imperial_date_from
 
 class ImperialDateTestCase(unittest.TestCase):
     """Tests ImperialDate class."""
@@ -80,6 +80,13 @@ class ImperialDateTestCase(unittest.TestCase):
         """Test the internal value of an ImperialDate."""
         date1 = ImperialDate(1, 10)
         self.assertEqual(date1._date_value(), 3651)
+
+    def test_from_string(self) -> None:
+        """Test importing an ImperialDate from a string."""
+        string = "111-1111"
+        actual = imperial_date_from(string)
+        expected = ImperialDate(111, 1111)
+        self.assertEqual(actual, expected)
 
 
 class CalendarTestCase(unittest.TestCase):
