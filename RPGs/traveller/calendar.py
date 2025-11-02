@@ -134,6 +134,9 @@ def imperial_date_from(string: str) -> ImperialDate:
     tokens = string.split('-')
 
     day = int(tokens[0])
+
+    if day < 1 or day > 365:
+        raise ValueError(f"day value must be between 1 and 365: '{tokens[0]}'")
     year = int(tokens[1])
 
     return ImperialDate(day, year)
