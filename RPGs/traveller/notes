@@ -2197,7 +2197,7 @@
 #           instead of choosing one at a time.
 #  * [DONE] BUG: single token input in _select_passengers() crashes game:w
 #  * [DONE] Timing of sleep() after each command doesn't feel right - either too long
-#           for immdiate commands, or too short for view commands. Change design.
+#           for immediate commands, or too short for view commands. Change design.
 #  * [DONE] New game
 #  * [DONE] Front end menu
 #  * [DONE] Implement coordinate conversion to Traveller subsector row/column
@@ -2227,6 +2227,7 @@
 #  * [DONE] BUG: load game doesn't allow naming of the ship
 #  * [DONE] BUG: load game crashes if save_game file doesn't exist
 #  * [DONE] Save game should not overwrite previous saves
+#  * [DONE] Load game should allow selection of save files
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2236,7 +2237,6 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Load game should allow selection of save files
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?

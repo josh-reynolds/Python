@@ -16,7 +16,7 @@ from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from utilities import int_input, get_next_save_file, BOLD_GREEN
+from utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
@@ -112,9 +112,17 @@ class Menu(Screen):
 
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
+        files = get_save_files()
+        pr_list(files)
+        file_number = int_input("Enter file to load: ")
+        if file_number >= len(files):
+            print("That is not a valid file number.")
+            return None
+        load_file = files[file_number]
+
         systems = {}
         try:
-            with open('saves/save_game.json', 'r', encoding='utf-8') as a_file:
+            with open(f"saves/{load_file}", 'r', encoding='utf-8') as a_file:
                 data = json.load(a_file)
         except FileNotFoundError:
             print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
