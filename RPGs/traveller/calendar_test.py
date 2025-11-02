@@ -88,6 +88,17 @@ class ImperialDateTestCase(unittest.TestCase):
         expected = ImperialDate(111, 1111)
         self.assertEqual(actual, expected)
 
+        string = "222-1111"
+        actual = imperial_date_from(string)
+        expected = ImperialDate(222, 1111)
+        self.assertEqual(actual, expected)
+
+        # day value < 1 or > 365
+        # string too long
+        # string too short
+        # invalid day digits
+        # invalid year digits
+
 
 class CalendarTestCase(unittest.TestCase):
     """Tests Calendar class."""

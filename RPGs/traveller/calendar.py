@@ -131,4 +131,9 @@ def imperial_date_from(string: str) -> ImperialDate:
 
     String format matches ImperialDate.__str__ : ddd-dddd
     """
-    return ImperialDate(111, 1111)
+    tokens = string.split('-')
+
+    day = int(tokens[0])
+    year = int(tokens[1])
+
+    return ImperialDate(day, year)

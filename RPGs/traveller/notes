@@ -1969,6 +1969,9 @@
 # modify the existing one... We _will_ have another to create
 # an ImperialDate from a string though.)
 #
+# I think longer term we'll pull the model classes out of Game
+# into another class, then we can adjust the awkward sequencing.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
