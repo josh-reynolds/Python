@@ -117,8 +117,17 @@ class ImperialDateTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "string must have only day and year values: '001-1111-22'")
 
-        # invalid day digits
-        # invalid year digits
+        string = "00m-1111"
+        with self.assertRaises(ValueError) as context:
+            _ = imperial_date_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: '00m'")
+
+        string = "001-111m"
+        with self.assertRaises(ValueError) as context:
+            _ = imperial_date_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: '111m'")
 
 
 class CalendarTestCase(unittest.TestCase):
