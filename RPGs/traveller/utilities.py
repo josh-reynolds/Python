@@ -1,4 +1,5 @@
 """Contains utility functions."""
+import re
 from os import listdir
 from os.path import isfile, join
 from random import randint
@@ -112,3 +113,16 @@ def get_save_files() -> List[str]:
     path = "./saves/"
     files = [f for f in listdir(path) if isfile(join(path, f))]
     return files
+
+def get_next_save_file() -> str:
+    """Return the next save file to be created."""
+    files = get_save_files()
+    pattern = re.compile(r"save_game_(\d+).json")
+    highest = 0
+    for file in files:
+        match = pattern.match(file)
+        if match:
+            index = int(match.group(1))
+            if index > highest:
+                highest = index
+    return f"save_game_{highest+1}.json"

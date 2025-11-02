@@ -16,7 +16,7 @@ from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from utilities import int_input
+from utilities import int_input, get_next_save_file, BOLD_GREEN
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
@@ -294,8 +294,10 @@ class Play(Screen):
 
         star_map = {'systems' : systems, 'subsectors' : subsectors}
 
-        with open('saves/save_game.json', 'w', encoding='utf-8') as a_file:
+        filename = get_next_save_file()
+        with open(f"saves/{filename}", 'w', encoding='utf-8') as a_file:
             json.dump(star_map, a_file, indent=2)
+        print(f"{BOLD_GREEN}Saved to {filename}.{END_FORMAT}")
 
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""

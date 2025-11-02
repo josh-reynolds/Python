@@ -2226,6 +2226,7 @@
 #  * [DONE] After switching to json.dump, terminal newline may not be necessary - review
 #  * [DONE] BUG: load game doesn't allow naming of the ship
 #  * [DONE] BUG: load game crashes if save_game file doesn't exist
+#  * [DONE] Save game should not overwrite previous saves
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2235,8 +2236,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] Load game should allow selection of save files
 #  * [    ] Handle save/load exceptions in app rather than crashing out
-#  * [    ] Save game should not overwrite previous saves
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
