@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
+from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from command import Command
 from coordinate import Coordinate
@@ -137,6 +138,9 @@ class Menu(Screen):
         for line in data['subsectors']:
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
+
+        date_string = data['date']
+        modify_calendar_from(self.parent.date, date_string)
 
         self.parent.ship.name = input("What is the name of your ship? ")
 
