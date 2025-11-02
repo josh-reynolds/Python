@@ -300,11 +300,13 @@ class Play(Screen):
             sub = self.parent.star_map.subsectors[coord]
             subsectors.append(f"{coord} - {sub}")
 
-        star_map = {'systems' : systems, 'subsectors' : subsectors}
+        date_string = f"{self.parent.date}"
+
+        save_data = {'date' : date_string, 'systems' : systems, 'subsectors' : subsectors}
 
         filename = get_next_save_file()
         with open(f"saves/{filename}", 'w', encoding='utf-8') as a_file:
-            json.dump(star_map, a_file, indent=2)
+            json.dump(save_data, a_file, indent=2)
         print(f"{BOLD_GREEN}Saved to {filename}.{END_FORMAT}")
 
     def wait_week(self) -> None:

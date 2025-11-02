@@ -1972,6 +1972,13 @@
 # I think longer term we'll pull the model classes out of Game
 # into another class, then we can adjust the awkward sequencing.
 #
+# Basic 'from_string' is done for ImperialDate & Calendar - 
+# wiring up through save/load should be trivial. I _do_ think 
+# there's some potential weirdness here. For instance, what if
+# we load a date a year from now, won't that put it immediately
+# into red maintenance state? Need to work through some scenarios
+# and ad hoc testing to find/fix the issues.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
