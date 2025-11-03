@@ -125,13 +125,17 @@ class FinancialsTestCase(unittest.TestCase):
     class SystemMock:
         """Mocks a system interface for testing."""
 
+        def __init__(self) -> None:
+            """Create an instance of a SystemMock object."""
+            self.name = "MOCK"
+
         def on_surface(self) -> bool:
             """Test whether the player is on the world's surface."""
             return True
 
         def __str__(self) -> str:
             """Return the string representation of a SystemMock object."""
-            return "MOCK"
+            return self.name
 
     def setUp(self) -> None:
         """Create a test fixture for validating the Financials class."""
@@ -433,19 +437,19 @@ class FinancialsTestCase(unittest.TestCase):
         financials.debit(Credits(10), "test")
         self.assertEqual(financials.balance, Credits(90))
         self.assertEqual(len(financials.ledger), 1)
-        self.assertEqual(financials.ledger[0], "1 - Debit 10 Cr - Balance 90 Cr - MOCK test")
+        self.assertEqual(financials.ledger[0], "1\t - 10 Cr\t - \t\t - 90 Cr\t - MOCK\t - test")
 
         financials.credit(Credits(100), "test")
         self.assertEqual(financials.balance, Credits(190))
         self.assertEqual(len(financials.ledger), 2)
-        self.assertEqual(financials.ledger[1], "1 - Credit 100 Cr - Balance 190 Cr - MOCK test")
+        self.assertEqual(financials.ledger[1], "1\t - \t\t - 100 Cr\t - 190 Cr\t - MOCK\t - test")
 
         date = FinancialsTestCase.DateMock(2)
         financials.on_notify(date)
         self.assertEqual(financials.balance, Credits(90))
         self.assertEqual(len(financials.ledger), 3)
-        self.assertEqual(financials.ledger[2], "2 - Debit 100 Cr - "
-                                               + "Balance 90 Cr - MOCK berth renewal")
+        self.assertEqual(financials.ledger[2], "2\t - 100 Cr\t - \t\t - "
+                                               + "90 Cr\t - MOCK\t - berth renewal")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
