@@ -220,6 +220,7 @@ class Play(Screen):
     def view_ledger(self) -> None:
         """View the bank transaction ledger."""
         print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
+        print(f"DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO")
         transactions = self.parent.financials.ledger
         for transaction in transactions:
             print(transaction)
