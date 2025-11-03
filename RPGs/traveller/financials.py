@@ -124,13 +124,13 @@ class Financials:
         """Deduct a specified amount from the Financials balance."""
         self.balance -= amount
         self.ledger.append(f"{self.current_date} - Debit {amount} - Balance "
-                           f"{self.balance} - {self.location} {memo}")
+                           f"{self.balance} - {self.location.name} - {memo}")
 
     def credit(self, amount: Credits, memo: str="") -> None:
         """Add the specified amount to the Financials balance."""
         self.balance += amount
         self.ledger.append(f"{self.current_date} - Credit {amount} - Balance "
-                           f"{self.balance} - {self.location} {memo}")
+                           f"{self.balance} - {self.location.name} - {memo}")
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, check recurring payments.""" 
