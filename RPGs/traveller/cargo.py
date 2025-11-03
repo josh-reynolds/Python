@@ -58,7 +58,7 @@ class Passenger:
         return f"{self.name} to {self.destination.name}"
 
     def __repr__(self) -> str:
-        """Return the string representation of a Passenger."""
+        """Return the developer string representation of a Passenger."""
         return f"Passenger({self.passage!r}, {self.destination!r})"
 
     # TO_DO: should be restricted to low passengers only
@@ -524,7 +524,7 @@ class CargoDepot:
         roll = first + die_roll()
 
         table = {}
-        lines = get_lines("./cargo.txt")
+        lines = get_lines("./data/cargo.txt")
         for line in lines:
             line = line[:-1] # strip final '\n'
 

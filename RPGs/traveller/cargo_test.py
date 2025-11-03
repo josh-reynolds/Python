@@ -666,7 +666,6 @@ class PassengerTestCase(unittest.TestCase):
             self.assertGreaterEqual(guess, 0)
             self.assertLessEqual(guess, 10)
 
-
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

@@ -59,7 +59,7 @@ class UtilitiesTestCase(unittest.TestCase):
 
     def test_get_lines(self) -> None:
         """Test retrieving all lines from a text file."""
-        lines = get_lines("./cargo.txt")
+        lines = get_lines("./data/cargo.txt")
         self.assertEqual(len(lines), 36)
         self.assertEqual(lines[0][:12],
                          "11, Textiles")

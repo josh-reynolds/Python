@@ -4,7 +4,7 @@ from io import TextIOWrapper
 
 def get_world_name() -> str:
     """Return a randomly-generated world name."""
-    with open("./words.txt", 'r', encoding='utf-8') as in_file:
+    with open("./data/words.txt", 'r', encoding='utf-8') as in_file:
         word = random_line(in_file)[:-1]   # strip trailing newline
     expand = random.randint(1,6)
     if expand == 1:
@@ -21,7 +21,7 @@ def get_world_name() -> str:
 
 def get_subsector_name() -> str:
     """Return a randomly-generated subsector name."""
-    with open("./words.txt", 'r', encoding='utf-8') as in_file:
+    with open("./data/words.txt", 'r', encoding='utf-8') as in_file:
         word = random_line(in_file)[:-1]   # strip trailing newline
     if random.randint(1,6) < 3:
         suffix = random.choice([" Marches", " Deep", " Span", " Zone", " Void", " Sector"])

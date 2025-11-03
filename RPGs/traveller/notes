@@ -1940,7 +1940,8 @@
 # The upcoming Financials ledger will break (or at least hold 
 # nonsensical data) if we allow that. It would refer to StarSystems
 # from the previous map, not necessarily same as current. So at
-# least for now we'll load the entire monolith.
+# least for now we'll load the entire monolith. Destinations in
+# Passenger/Freight are similarly a problem.
 #
 # Probably time to get some more game state into the save file. 
 # We have Calendar, Ship, location, financials, as well as wiring
@@ -1985,6 +1986,63 @@
 # true in a torn state, when we're just saving parts of the game.
 # So it ought to work out, right?)
 #
+# On to ship. Most of its attributes are hard-coded in the ctor.
+# We mutate the name, fuel, fuel quality, jump counter, repair 
+# status, life support, cargo and passengers. We also have
+# observers/controls to consider. Later features (custom/alternate
+# ship, custom crew, ship modification) will expand this list, but
+# for now we assume the hardcoded capabilities.
+#
+# The attributes are mostly primitives, so simple to encode:
+#
+# name - str
+# fuel - int
+# fuel_quality - int enum
+# jump_counter - int
+# repair_status - int enum
+# life_support - int
+#
+# Cargo and passengers are lists of Cargo/Freight/Baggage and
+# Passengers respectively. So we should start with encode/decode
+# of those classes.
+#
+# Just like the Calendar, we'll modify the existing Ship on load,
+# allowing the existing Observer/Controller hookups to remain in
+# place.
+#
+# Starting on Passenger, and there's a challenge - this will
+# apply to Freight as well. We pass in a StarSystem destination
+# to the ctor, and this coupling is going to be tricky to
+# manage. From the string we're just getting the system name.
+# Even if we search the systems list by name (haven't built
+# that functionality yet), no guarantee we'd get the same one,
+# since equality/identity for StarSystem includes coordinates.
+#
+# Coordinates are by definition unique, and can exist free of
+# the context of a given map. So maybe we should shift over to
+# that approach. Will need to refactor how destinations are
+# handled.
+#
+# Another observation: I don't think we actually use 
+# Passenger.__str__ anywhere in the app (need to confirm). So
+# there's freedom to alter it as necessary for data import/export.
+# Initially I think the passenger manifest was just going to
+# list them all out, like we do with cargo, but listing counts
+# turned out to be cleaner.
+#
+# But that also means we only need to store a single destination
+# in JSON, not one with each Passenger. The rule for Passengers
+# (and Freight) is they all must have the same destination, so the 
+# JSON blob could/should look more like the passenger manifest. 
+#
+# Going to pivot over to Cargo while I mull this over. Argh. It
+# has the same problem - source_world. Other than that, though,
+# if we assume all Cargo must have come from the cargo table,
+# many of the details can be looked up there. We just need to
+# store the name, quantity, and source_world. Remainder is looked
+# up by name in the cargo table (also don't have that functionality
+# just yet).
+# 
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2286,6 +2344,7 @@
 #  * [DONE] Save game should not overwrite previous saves
 #  * [DONE] Load game should allow selection of save files
 #  * [DONE] Save/load current date
+#  * [DONE] Move data files to a subdirectory
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2295,6 +2354,12 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] Encode/decode Passenger as/from a string
+#  * [    ] Encode/decode Freight/Baggage/Cargo as/from a string
+#  * [    ] Rework destinations to store just a Coordinate in Passenger/Freight/Baggage
+#  * [    ] Encode/decode Ship as/from a string
+#  * [    ] Capture current location in save file
+#  * [    ] Encode/decode Financials as/from a string
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?

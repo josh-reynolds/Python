@@ -392,7 +392,7 @@ class Ship:
         raise ValueError("No medic on board!")
 
     def engineering_skill(self) -> int:
-        """Return the best engneering skill from the Ship's crew."""
+        """Return the best engineering skill from the Ship's crew."""
         skills = [c.skill for c in self.crew if isinstance(c, Engineer)]
         if len(skills) > 0:
             return max(skills)
