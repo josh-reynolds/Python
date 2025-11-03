@@ -362,7 +362,7 @@ class Orbit(Play):
                 low_lottery_amount = Credits(10) * self.parent.ship.low_passenger_count
                 funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
-                self.parent.financials.credit(funds)
+                self.parent.financials.credit(funds, "passenger fare")
 
                 # annotations want ScreenT to have this method
                 self._low_lottery(low_lottery_amount)      #type: ignore[attr-defined]
@@ -396,7 +396,7 @@ class Orbit(Play):
             if not winner:
                 print(f"No surviving low lottery winner. "
                       f"The captain is awarded {low_lottery_amount}.")
-                self.parent.financials.credit(low_lottery_amount)
+                self.parent.financials.credit(low_lottery_amount, "low lottery")
 
     def outbound_to_jump(self: ScreenT) -> None | ScreenT:
         """Move from orbit to the jump point."""
@@ -482,7 +482,7 @@ class Starport(Play):
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.parent.ship.recharge()
-        self.parent.financials.debit(cost)
+        self.parent.financials.debit(cost, "life support")
 
     def refuel(self) -> None:
         """Refuel the Ship."""
@@ -492,7 +492,7 @@ class Starport(Play):
             return
 
         cost = self.parent.ship.refuel(self.parent.location.starport)
-        self.parent.financials.debit(cost)
+        self.parent.financials.debit(cost, "refuelling")
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
@@ -511,7 +511,7 @@ class Starport(Play):
         # TO_DO: should we warn or block if maintenance was performed recently?
         print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
         self.parent.financials.last_maintenance = self.parent.date.current_date
-        self.parent.financials.debit(cost)
+        self.parent.financials.debit(cost, "annual maintenance")
         self.parent.date.day += 14    # should we wrap this in a method call?
         self.parent.ship.repair_status = RepairStatus.REPAIRED
 
@@ -784,7 +784,7 @@ class Trade(Play):
                           cargo.purchase_dms, cargo.sale_dms, self.parent.location)
         self.parent.ship.load_cargo(purchased)
 
-        self.parent.financials.debit(cost)
+        self.parent.financials.debit(cost, "cargo purchase")
         self.parent.date.day += 1
 
     def sell_cargo(self) -> None:
@@ -813,14 +813,15 @@ class Trade(Play):
         sale_price = self.parent.depot.determine_price("sale", cargo, quantity,
                                                 broker_skill + self.parent.ship.trade_skill())
 
-        self.parent.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price))
+        self.parent.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price),
+                                     "broker fee")
 
         if not self.parent.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
         self.parent.depot.remove_cargo(self.parent.ship.hold, cargo, quantity)
 
-        self.parent.financials.credit(sale_price)
+        self.parent.financials.credit(sale_price, "cargo sale")
         self.parent.date.day += 1
 
     def load_freight(self) -> None:
@@ -950,7 +951,7 @@ class Trade(Play):
             self.parent.ship.hold = [c for c in self.parent.ship.hold if isinstance(c, Cargo)]
 
             payment = Credits(1000 * freight_tonnage)
-            self.parent.financials.credit(Credits(1000 * freight_tonnage))
+            self.parent.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
             self.parent.date.day += 1

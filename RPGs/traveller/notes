@@ -2351,6 +2351,7 @@
 #  * [DONE] Add a 'view ledger' command
 #  * [DONE] Ledger should just print world name, not full string
 #  * [DONE] Reformat ledger to align columns, and use two-column accounting
+#  * [DONE] Track down all credit/debit calls and add memo strings
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2360,7 +2361,13 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Track down all credit/debit calls and add memo strings
+#  * [    ] Should we track cargo details in ledger? Would be good to help the player
+#           analyze performance
+#  * [    ] The ledger could get very long. Will want to manage in the view. Simplest
+#           is to show just last n lines. Better still would be some kind of scrolling
+#           functionality.
+#  * [    ] Small amount transactions can lead to a long balance string in MCr,
+#           which throws off column alignment in ledger - restrict decimal places in Credits?
 #  * [    ] Encode/decode Passenger as/from a string
 #  * [    ] Encode/decode Freight/Baggage/Cargo as/from a string
 #  * [    ] Rework destinations to store just a Coordinate in Passenger/Freight/Baggage

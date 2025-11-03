@@ -198,13 +198,13 @@ class Financials:
         """Deduct ship salaries from Financials balance."""
         amount = self.ship.crew_salary()
         self.message_observers(f"Paying crew salaries on {self.salary_paid} for {amount}.")
-        self.debit(amount)
+        self.debit(amount, "crew salaries")
 
     def _pay_loan(self) -> None:
         """Deduct loan payment from Financials balance."""
         amount = self.ship.loan_payment()
         self.message_observers(f"Paying ship loan on {self.loan_paid} for {amount}.")
-        self.debit(amount)
+        self.debit(amount, "loan payment")
 
     # conceivably an enum or the like would be better, but
     # we'll stick to simple strings for now...
