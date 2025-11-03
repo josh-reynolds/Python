@@ -129,6 +129,10 @@ class FinancialsTestCase(unittest.TestCase):
             """Test whether the player is on the world's surface."""
             return True
 
+        def __str__(self) -> str:
+            """Return the string representation of a SystemMock object."""
+            return "MOCK"
+
     def setUp(self) -> None:
         """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
@@ -419,6 +423,29 @@ class FinancialsTestCase(unittest.TestCase):
                          FinancialsTestCase.DateMock(9))
         self.assertEqual(observer.message, "Renewing berth on 8 for 1 day (100 Cr).")
         self.assertEqual(observer.priority, "")
+
+    def test_ledger(self) -> None:
+        """Test recording of transactions in ledger."""
+        financials = FinancialsTestCase.financials
+        self.assertEqual(financials.balance, Credits(100))
+        self.assertEqual(len(financials.ledger), 0)
+
+        financials.debit(Credits(10), "test")
+        self.assertEqual(financials.balance, Credits(90))
+        self.assertEqual(len(financials.ledger), 1)
+        self.assertEqual(financials.ledger[0], "1 - Debit 10 Cr - Balance 90 Cr - MOCK test")
+
+        financials.credit(Credits(100), "test")
+        self.assertEqual(financials.balance, Credits(190))
+        self.assertEqual(len(financials.ledger), 2)
+        self.assertEqual(financials.ledger[1], "1 - Credit 100 Cr - Balance 190 Cr - MOCK test")
+
+        date = FinancialsTestCase.DateMock(2)
+        financials.on_notify(date)
+        self.assertEqual(financials.balance, Credits(90))
+        self.assertEqual(len(financials.ledger), 3)
+        self.assertEqual(financials.ledger[2], "2 - Debit 100 Cr - "
+                                               + "Balance 90 Cr - MOCK berth renewal")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

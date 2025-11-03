@@ -109,6 +109,8 @@ class Financials:
 
         self.observers: List[Any] = []
 
+        self.ledger: List[str] = []
+
     def add_observer(self, observer: Any) -> None:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)
@@ -118,13 +120,17 @@ class Financials:
         for observer in self.observers:
             observer.on_notify(message, priority)
 
-    def debit(self, amount: Credits) -> None:
+    def debit(self, amount: Credits, memo: str="") -> None:
         """Deduct a specified amount from the Financials balance."""
         self.balance -= amount
+        self.ledger.append(f"{self.current_date} - Debit {amount} - Balance "
+                           f"{self.balance} - {self.location} {memo}")
 
-    def credit(self, amount: Credits) -> None:
+    def credit(self, amount: Credits, memo: str="") -> None:
         """Add the specified amount to the Financials balance."""
         self.balance += amount
+        self.ledger.append(f"{self.current_date} - Credit {amount} - Balance "
+                           f"{self.balance} - {self.location} {memo}")
 
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, check recurring payments.""" 
@@ -171,7 +177,7 @@ class Financials:
         """Deduct fee for berth at a starport from Financials balance."""
         if on_surface:
             self.message_observers("Charging 100 Cr berthing fee.")
-            self.debit(Credits(100))
+            self.debit(Credits(100), "berthing fee")
             self.berth_recurrence = 1
             self.berth_expiry = self.current_date + 6
 
@@ -185,7 +191,7 @@ class Financials:
                 unit = "days"
             amount = Credits(days_extra * 100)
             self.message_observers(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
-            self.debit(amount)
+            self.debit(amount, "berth renewal")
             self.berth_expiry = date + self.berth_recurrence
 
     def _pay_salaries(self) -> None:

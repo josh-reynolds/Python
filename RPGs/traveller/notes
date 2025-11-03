@@ -2345,6 +2345,9 @@
 #  * [DONE] Load game should allow selection of save files
 #  * [DONE] Save/load current date
 #  * [DONE] Move data files to a subdirectory
+#  * [DONE] Add a transaction ledger to Financial class
+#           Will want to play around with it to determine format & functionality,
+#           for now just store a simple list of strings
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2354,6 +2357,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] Add a 'view ledger' command
+#  * [    ] Track down all credit/debit calls and add memo strings
 #  * [    ] Encode/decode Passenger as/from a string
 #  * [    ] Encode/decode Freight/Baggage/Cargo as/from a string
 #  * [    ] Rework destinations to store just a Coordinate in Passenger/Freight/Baggage
@@ -2366,7 +2371,6 @@
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
 #  * [    ] Move hard-coded start conditions out of Game ctor into some sort of save file
-#  * [    ] Add a transaction ledger to Financial class
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
