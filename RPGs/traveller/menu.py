@@ -23,7 +23,7 @@ from utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files
 # C0302: Too many lines in module (1078/1000)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ ~ ~ q ~ ~ ~ ~ v w ~ ~ z
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ o ~ q ~ ~ ~ ~ v w ~ ~ z
 # STARPORT:             f           l m n   p   r   t u
 # ORBIT:                  g         l
 # JUMP:                       i j                 s
@@ -169,6 +169,7 @@ class Play(Screen):
                 Command('v', 'View world characteristics', self.view_world),
                 Command('w', 'Wait a week', self.wait_week),
                 Command('z', 'Save Game', self.save_game),
+                Command('o', 'View ledger', self.view_ledger),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -214,6 +215,14 @@ class Play(Screen):
         coord = self.parent.location.coordinate.trav_coord
         sub_string = self.parent.star_map.pretty_coordinates(coord)
         print(f"{sub_string} : {self.parent.location}")
+        _ = input("\nPress ENTER key to continue.")
+
+    def view_ledger(self) -> None:
+        """View the bank transaction ledger."""
+        print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
+        transactions = self.parent.financials.ledger
+        for transaction in transactions:
+            print(transaction)
         _ = input("\nPress ENTER key to continue.")
 
     def cargo_hold(self) -> None:

@@ -2348,6 +2348,7 @@
 #  * [DONE] Add a transaction ledger to Financial class
 #           Will want to play around with it to determine format & functionality,
 #           for now just store a simple list of strings
+#  * [DONE] Add a 'view ledger' command
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2357,7 +2358,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Add a 'view ledger' command
+#  * [    ] Reformat ledger to align columns, and use two-column accounting
+#  * [    ] Ledger should just print world name, not full string
 #  * [    ] Track down all credit/debit calls and add memo strings
 #  * [    ] Encode/decode Passenger as/from a string
 #  * [    ] Encode/decode Freight/Baggage/Cargo as/from a string
