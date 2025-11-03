@@ -84,7 +84,7 @@ class Menu(Screen):
         """Draw the screen and present menu choices."""
         # ASCII art from https://patorjk.com/software
         # 'Grafitti' font
-        title_lines = get_lines("title.txt")
+        title_lines = get_lines("./data/title.txt")
         string = "Welcome to the Traveller Trading Game!"
 
         print(f"{HOME}{CLEAR}")
