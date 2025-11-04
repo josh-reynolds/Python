@@ -65,6 +65,8 @@ class SystemMock(StarSystem):
         self.name = name
         self.coordinate = Coordinate(1,1,1)
         self.destinations = []
+        self.uwp = 7777777
+        self.gas_giant = True
 
     @property
     def population(self) -> int:

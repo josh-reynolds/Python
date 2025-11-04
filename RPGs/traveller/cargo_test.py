@@ -1,7 +1,7 @@
 """Contains tests for the cargo module."""
 import unittest
 from typing import List, Any
-from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
+from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass, passenger_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
@@ -617,6 +617,25 @@ class PassengerTestCase(unittest.TestCase):
             guess = passenger.guess
             self.assertGreaterEqual(guess, 0)       #type: ignore[arg-type]
             self.assertLessEqual(guess, 10)         #type: ignore[arg-type]
+
+    def test_from_string(self) -> None:
+        """Test importing a Passenger from a string."""
+        string = "high - (0, 0, 0)"
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : destination}
+        actual = passenger_from(string, systems)
+        expected = Passenger(PassageClass.HIGH, destination)
+        self.assertEqual(actual, expected)
+
+        # basic import
+        # case differences in passage
+        # string too long
+        # string too short
+        # unrecognized passage class
+        # invalid coordinate
+        # coordinate not in system list
+
 
 
 # -------------------------------------------------------------------

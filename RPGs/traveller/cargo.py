@@ -12,7 +12,7 @@ from enum import Enum
 from random import randint
 from typing import Dict, List, Tuple, Any, cast
 from calendar import ImperialDate
-from coordinate import Coordinate
+from coordinate import Coordinate, coordinate_from
 from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
@@ -61,10 +61,29 @@ class Passenger:
         """Return the developer string representation of a Passenger."""
         return f"Passenger({self.passage!r}, {self.destination!r})"
 
+    def __eq__(self, other: Any) -> bool:
+        """Test if two Passengers are equal."""
+        if type(other) is type(self):
+            return self.passage == other.passage and self.destination == other.destination
+        return NotImplemented
+
     # TO_DO: should be restricted to low passengers only
     def guess_survivors(self, total: int) -> None:
         """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
+
+
+def passenger_from(string: str, systems: List[StarSystem]) -> Passenger:
+    """Create a Passenger object from a string representation.
+
+    String format is : passage - destination coordinate
+    Passage is either 'high,' 'middle,' or 'low.'
+    Destination coordinate is (d,d,d), all +/- integers.
+    """
+    tokens = string.split(' - ')
+    coordinate = coordinate_from(tokens[1])
+    destination = systems[coordinate]
+    return Passenger(PassageClass.HIGH, destination)
 
 
 class Freight:
