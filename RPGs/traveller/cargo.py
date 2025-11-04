@@ -82,7 +82,7 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
     """
     tokens = string.split(' - ')
 
-    passage_str = tokens[0]
+    passage_str = tokens[0].lower()
     if passage_str == "high":
         passage = PassageClass.HIGH
     elif passage_str == "middle":

@@ -647,7 +647,14 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "Low passage to Venus")
 
-        # case differences in passage
+        string = "HIgh - (0, 0, 0)"
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        actual = passenger_from(string, systems)
+        expected = Passenger(PassageClass.HIGH, destination)
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{actual}", "High passage to Jupiter")
+
         # string too long
         # string too short
         # unrecognized passage class
