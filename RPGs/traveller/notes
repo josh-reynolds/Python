@@ -2362,6 +2362,7 @@
 #  * [DONE] Ledger should just print world name, not full string
 #  * [DONE] Reformat ledger to align columns, and use two-column accounting
 #  * [DONE] Track down all credit/debit calls and add memo strings
+#  * [DONE] Encode/decode Passenger as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2369,7 +2370,6 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Encode/decode Passenger as/from a string
 #  * [    ] Review remaining Passenger data: endurance, guess, survived
 #           Need to save?
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player

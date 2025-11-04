@@ -688,7 +688,11 @@ class PassengerTestCase(unittest.TestCase):
                          "string is not a valid 3-axis coordinate "
                          + "- should sum to zero: '(1, 1, 1)'")
 
-        # coordinate not in system list
+        string = "High - (2, 0, -2)"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(2, 0, -2)'")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

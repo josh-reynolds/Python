@@ -99,7 +99,11 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
         raise ValueError(f"unrecognized passage class: '{passage_str}'")
 
     coordinate = coordinate_from(tokens[1])
-    destination = systems[coordinate]
+    if coordinate in systems:
+        destination = systems[coordinate]
+    else:
+        raise ValueError(f"coordinate not found in systems list: '{coordinate}'")
+
     return Passenger(passage, destination)
 
 
