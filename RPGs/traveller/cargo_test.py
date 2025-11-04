@@ -659,11 +659,20 @@ class PassengerTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             _ = passenger_from(string, systems)
         self.assertEqual(f"{context.exception}",
-                         "Unrecognized passage class: 'bollix'")
+                         "unrecognized passage class: 'bollix'")
 
+        string = "High - (0, 0, 0) - some - more"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "input string has extra data: 'High - (0, 0, 0) - some - more'")
 
-        # string too long
-        # string too short
+        string = "High (0, 0, 0)"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "input string is missing data: 'High (0, 0, 0)'")
+
         # invalid coordinate
         # coordinate not in system list
 

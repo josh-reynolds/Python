@@ -82,6 +82,12 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
     """
     tokens = string.split(' - ')
 
+    if len(tokens) > 2:
+        raise ValueError(f"input string has extra data: '{string}'")
+
+    if len(tokens) < 2:
+        raise ValueError(f"input string is missing data: '{string}'")
+
     passage_str = tokens[0].lower()
     if passage_str == "high":
         passage = PassageClass.HIGH
@@ -90,7 +96,7 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
     elif passage_str =="low":
         passage = PassageClass.LOW
     else:
-        raise ValueError(f"Unrecognized passage class: '{passage_str}'")
+        raise ValueError(f"unrecognized passage class: '{passage_str}'")
 
     coordinate = coordinate_from(tokens[1])
     destination = systems[coordinate]
