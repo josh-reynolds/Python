@@ -10,7 +10,7 @@ CargoDepot - represents a starport location for loading and
 """
 from enum import Enum
 from random import randint
-from typing import Dict, List, Tuple, Any, cast
+from typing import Dict, List, Tuple, Any, cast, Mapping, Sequence
 from calendar import ImperialDate
 from coordinate import Coordinate, coordinate_from
 from utilities import die_roll, constrain
@@ -73,7 +73,7 @@ class Passenger:
         self.guess = randint(0, total)
 
 
-def passenger_from(string: str, systems: List[StarSystem]) -> Passenger:
+def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Passenger:
     """Create a Passenger object from a string representation.
 
     String format is : passage - destination coordinate
@@ -81,9 +81,18 @@ def passenger_from(string: str, systems: List[StarSystem]) -> Passenger:
     Destination coordinate is (d,d,d), all +/- integers.
     """
     tokens = string.split(' - ')
+
+    passage_str = tokens[0]
+    if passage_str == "high":
+        passage = PassageClass.HIGH
+    elif passage_str == "middle":
+        passage = PassageClass.MIDDLE
+    else:
+        passage = PassageClass.LOW
+
     coordinate = coordinate_from(tokens[1])
     destination = systems[coordinate]
-    return Passenger(PassageClass.HIGH, destination)
+    return Passenger(passage, destination)
 
 
 class Freight:
@@ -251,7 +260,7 @@ class CargoDepot:
         """Request input from controls."""
         return self.controls.get_input(constraint, prompt)
 
-    def _refresh_freight(self, destinations: List[StarSystem]) -> None:
+    def _refresh_freight(self, destinations: Sequence[StarSystem]) -> None:
         """Refresh available Freight shipments."""
         self.freight = {}
         for world in destinations:
@@ -260,7 +269,7 @@ class CargoDepot:
                 self.freight[world].append(die_roll() * 5)
             self.freight[world] = sorted(self.freight[world])
 
-    def _refresh_passengers(self, destinations: List[StarSystem]) -> None:
+    def _refresh_passengers(self, destinations: Sequence[StarSystem]) -> None:
         """Refresh available passengers.
 
         Updates the object's passengers dictionary with a tuple of passenger 
@@ -347,7 +356,7 @@ class CargoDepot:
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
     def get_available_freight(self,
-                              destinations: List[StarSystem]
+                              destinations: Sequence[StarSystem]
                               ) -> tuple[Coordinate | None, list[Any] | None]:
         """Present a list of worlds and Freight shipments for the player to choose from."""
         if not self.freight:
@@ -366,7 +375,7 @@ class CargoDepot:
 
         return (world.coordinate, self.freight[world].copy())
 
-    def get_available_passengers(self, destinations: List[StarSystem]) -> tuple:
+    def get_available_passengers(self, destinations: Sequence[StarSystem]) -> tuple:
         """Present a list of worlds and Passengers for the player to choose from."""
         if not self.passengers:
             self._refresh_passengers(destinations)

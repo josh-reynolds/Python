@@ -2370,6 +2370,8 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] Encode/decode Passenger as/from a string
+#  * [    ] Review remaining Passenger data: endurance, guess, survived
+#           Need to save?
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
 #  * [    ] The ledger could get very long. Will want to manage in the view. Simplest
@@ -2407,6 +2409,7 @@
 #           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
 #           another that allows choosing a subsector by name and displaying its contents.
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
+#  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present

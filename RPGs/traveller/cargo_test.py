@@ -403,15 +403,15 @@ class CargoDepotTestCase(unittest.TestCase):
         world2.coordinate = Coordinate(1,1,1)
         destinations = [world1, world2]
 
-        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
+        coord, freight = depot.get_available_freight(destinations)
         self.assertEqual(coord, Coordinate(2,2,2))
         self.assertTrue(isinstance(freight, list))
 
-        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
+        coord, freight = depot.get_available_freight(destinations)
         self.assertEqual(coord, Coordinate(1,1,1))
         self.assertTrue(isinstance(freight, list))
 
-        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
+        coord, freight = depot.get_available_freight(destinations)
         self.assertEqual(coord, None)
         self.assertTrue(freight is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
@@ -546,15 +546,15 @@ class CargoDepotTestCase(unittest.TestCase):
         world2.coordinate = Coordinate(1,1,1)
         destinations = [world1, world2]
 
-        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
+        coord, passengers = depot.get_available_passengers(destinations)
         self.assertEqual(coord, Coordinate(2,2,2))
         self.assertTrue(isinstance(passengers, tuple))
 
-        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
+        coord, passengers = depot.get_available_passengers(destinations)
         self.assertEqual(coord, Coordinate(1,1,1))
         self.assertTrue(isinstance(passengers, tuple))
 
-        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
+        coord, passengers = depot.get_available_passengers(destinations)
         self.assertEqual(coord, None)
         self.assertTrue(passengers is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
@@ -627,8 +627,26 @@ class PassengerTestCase(unittest.TestCase):
         actual = passenger_from(string, systems)
         expected = Passenger(PassageClass.HIGH, destination)
         self.assertEqual(actual, expected)
+        self.assertEqual(f"{actual}", "High passage to Jupiter")
 
-        # basic import
+        string = "middle - (1, 0, -1)"
+        destination = SystemMock("Mars")
+        destination.coordinate = Coordinate(1,0,-1)
+        systems[Coordinate(1,0,-1)] = destination
+        actual = passenger_from(string, systems)
+        expected = Passenger(PassageClass.MIDDLE, destination)
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{actual}", "Middle passage to Mars")
+
+        string = "low - (-1, 0, 1)"
+        destination = SystemMock("Venus")
+        destination.coordinate = Coordinate(-1,0,1)
+        systems[Coordinate(-1,0,1)] = destination
+        actual = passenger_from(string, systems)
+        expected = Passenger(PassageClass.LOW, destination)
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{actual}", "Low passage to Venus")
+
         # case differences in passage
         # string too long
         # string too short
