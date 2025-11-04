@@ -618,6 +618,8 @@ class PassengerTestCase(unittest.TestCase):
             self.assertGreaterEqual(guess, 0)       #type: ignore[arg-type]
             self.assertLessEqual(guess, 10)         #type: ignore[arg-type]
 
+    # pylint: disable=R0915
+    # R0915: Too many statements (52/50)
     def test_from_string(self) -> None:
         """Test importing a Passenger from a string."""
         string = "high - (0, 0, 0)"
@@ -673,10 +675,20 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "input string is missing data: 'High (0, 0, 0)'")
 
-        # invalid coordinate
+        string = "High - (m, 0, 0)"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        string = "High - (1, 1, 1)"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate "
+                         + "- should sum to zero: '(1, 1, 1)'")
+
         # coordinate not in system list
-
-
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
