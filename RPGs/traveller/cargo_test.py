@@ -655,9 +655,15 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "High passage to Jupiter")
 
+        string = "bollix - (0, 0, 0)"
+        with self.assertRaises(ValueError) as context:
+            _ = passenger_from(string, systems)
+        self.assertEqual(f"{context.exception}",
+                         "Unrecognized passage class: 'bollix'")
+
+
         # string too long
         # string too short
-        # unrecognized passage class
         # invalid coordinate
         # coordinate not in system list
 

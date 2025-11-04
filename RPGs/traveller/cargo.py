@@ -87,8 +87,10 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
         passage = PassageClass.HIGH
     elif passage_str == "middle":
         passage = PassageClass.MIDDLE
-    else:
+    elif passage_str =="low":
         passage = PassageClass.LOW
+    else:
+        raise ValueError(f"Unrecognized passage class: '{passage_str}'")
 
     coordinate = coordinate_from(tokens[1])
     destination = systems[coordinate]
