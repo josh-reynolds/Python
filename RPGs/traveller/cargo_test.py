@@ -1,15 +1,18 @@
 """Contains tests for the cargo module."""
 import unittest
+from typing import List, Any
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
+from coordinate import Coordinate
 from financials import Credits
-from mock import ObserverMock
+from mock import ObserverMock, DateMock, SystemMock
+from star_system import StarSystem
 
 class CargoTestCase(unittest.TestCase):
     """Tests Cargo class."""
 
-    def test_cargo_quantity(self):
+    def test_cargo_quantity(self) -> None:
         """Test whether cargo quantity is determined correctly."""
-        cargo1 = Cargo("Foo", 10, Credits(10), 1, {}, {})
+        cargo1 = Cargo("Foo", '10', Credits(10), 1, {}, {})
         self.assertEqual(cargo1.quantity, 10)
 
         cargo2 = Cargo("Bar", "1Dx1", Credits(10), 1, {}, {})
@@ -21,106 +24,66 @@ class CargoTestCase(unittest.TestCase):
         self.assertGreater(cargo3.quantity, 9)
         self.assertLess(cargo3.quantity, 61)
 
-    def test_cargo_quantity_string(self):
+    def test_cargo_quantity_string(self) -> None:
         """Test the string representation of cargo quantity."""
-        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        cargo1 = Cargo("Foo", '1', Credits(10), 1, {}, {})
         self.assertEqual(cargo1.quantity_string(1), "1 ton")
         self.assertEqual(cargo1.quantity_string(5), "5 tons")
 
-        cargo2 = Cargo("Bar", 1, Credits(10), 5, {}, {})
+        cargo2 = Cargo("Bar", '1', Credits(10), 5, {}, {})
         self.assertEqual(cargo2.quantity_string(1), "1 (5 tons/item)")
 
-    def test_cargo_tonnage(self):
+    def test_cargo_tonnage(self) -> None:
         """Test whether cargo tonnage is calculated correctly."""
-        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        cargo1 = Cargo("Foo", '1', Credits(10), 1, {}, {})
         self.assertEqual(cargo1.tonnage, 1)
 
-        cargo2 = Cargo("Bar", 1, Credits(10), 5, {}, {})
+        cargo2 = Cargo("Bar", '1', Credits(10), 5, {}, {})
         self.assertEqual(cargo2.tonnage, 5)
 
-        cargo3 = Cargo("Baz", 20, Credits(10), 1, {}, {})
+        cargo3 = Cargo("Baz", '20', Credits(10), 1, {}, {})
         self.assertEqual(cargo3.tonnage, 20)
 
-        cargo4 = Cargo("Boo", 20, Credits(10), 10, {}, {})
+        cargo4 = Cargo("Boo", '20', Credits(10), 10, {}, {})
         self.assertEqual(cargo4.tonnage, 200)
 
-    def test_cargo_string(self):
+    def test_cargo_string(self) -> None:
         """Test a Cargo's string representation."""
-        cargo1 = Cargo("Foo", 1, Credits(10), 1, {}, {})
+        cargo1 = Cargo("Foo", '1', Credits(10), 1, {}, {})
         self.assertEqual(f"{cargo1}", "Foo - 1 ton - 10 Cr/ton")
 
-        cargo2 = Cargo("Bar", 5, Credits(10), 1, {}, {})
+        cargo2 = Cargo("Bar", '5', Credits(10), 1, {}, {})
         self.assertEqual(f"{cargo2}", "Bar - 5 tons - 10 Cr/ton")
 
-        cargo3 = Cargo("Baz", 5, Credits(10), 5, {}, {})
+        cargo3 = Cargo("Baz", '5', Credits(10), 5, {}, {})
         self.assertEqual(f"{cargo3}", "Baz - 5 (5 tons/item) - 10 Cr/item")
 
         # pylint: disable=R0903
         # R0903: Too few public methods (0/2)
-        class Location:
+        class Location(StarSystem):
             """Mocks a location interface for testing."""
 
-            def __init__(self, name):
+            # pylint: disable=W0231
+            # W0231: __init__ method from base class 'StarSystem' is not called
+            def __init__(self, name: str) -> None:
                 self.name = name
 
         location = Location("Uranus")
-        cargo4 = Cargo("Boo", 100, Credits(10), 1, {}, {}, location)
+        cargo4 = Cargo("Boo", '100', Credits(10), 1, {}, {}, location)
         self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
 
 class CargoDepotTestCase(unittest.TestCase):
     """Tests CargoDepot class."""
 
-    class DateMock:
-        """Mocks a date interface for testing."""
+    depot = CargoDepot(SystemMock(), DateMock(1))
 
-        def __init__(self, value):
-            """Create an instance of a DateMock object."""
-            self.value = value
-
-        def copy(self):
-            """Return a copy of a DateMock object."""
-            return CargoDepotTestCase.DateMock(self.value)
-
-        def __add__(self, rhs):
-            """Add a value to a DateMock object."""
-            return CargoDepotTestCase.DateMock(self.value + rhs)
-
-        def __sub__(self, rhs):
-            """Subtract a value from a DateMock object."""
-            return self.value - rhs.value
-
-        def __ge__(self, other):
-            """Test whether another object is greater than or equal to a DateMock."""
-            return self.value >= other.value
-
-    # pylint: disable=R0903, R0902
+    # pylint: disable=R0903
     # R0903: Too few public methods (1/2)
-    # R0902: Too many instance attributes (10/7)
-    class SystemMock:
-        """Mocks a system interface for testing."""
-
-        def __init__(self):
-            """Create an instance of a SystemMock object."""
-            self.population = 5
-            self.agricultural = True
-            self.nonagricultural = True
-            self.industrial = True
-            self.nonindustrial = True
-            self.rich = True
-            self.poor = True
-            self.name = "Uranus"
-            self.coordinate = 111
-            self.destinations = []
-
-        def __repr__(self):
-            """Return the string representation of a SystemMock object."""
-            return f"{self.coordinate} - {self.name}"
-
     class ControlsMock:
         """Mocks a controller for testing."""
 
-        def __init__(self, commands):
+        def __init__(self, commands: List[Any]) -> None:
             """Create an instance of a ControlsMock."""
             self.commands = commands
 
@@ -129,30 +92,29 @@ class CargoDepotTestCase(unittest.TestCase):
             # not safe if we call too many times...
             return self.commands.pop()
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Create a test fixture for testing CargoDepots."""
-        CargoDepotTestCase.depot = CargoDepot(CargoDepotTestCase.SystemMock(),
-                                              CargoDepotTestCase.DateMock(1))
+        CargoDepotTestCase.depot = CargoDepot(SystemMock(), DateMock(1))
 
-    def test_on_notify(self):
+    def test_on_notify(self) -> None:
         """Test notification behavior of a CargoDepot."""
         depot = CargoDepotTestCase.depot
         cargo = depot.cargo
-        self.assertEqual(depot.refresh_date.value, 1)
+        self.assertEqual(depot.refresh_date.value, 1)   #type: ignore[attr-defined]
 
-        date = CargoDepotTestCase.DateMock(7)
+        date = DateMock(7)
         depot.on_notify(date)
-        self.assertEqual(depot.refresh_date.value, 1)
+        self.assertEqual(depot.refresh_date.value, 1)   #type: ignore[attr-defined]
         self.assertEqual(cargo, depot.cargo)
 
-        date = CargoDepotTestCase.DateMock(8)
+        date = DateMock(8)
         depot.on_notify(date)
-        self.assertEqual(depot.refresh_date.value, 8)
+        self.assertEqual(depot.refresh_date.value, 8)   #type: ignore[attr-defined]
         self.assertNotEqual(cargo, depot.cargo)
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_price_modifiers of a client class
-    def test_get_price_modifiers(self):
+    def test_get_price_modifiers(self) -> None:
         """Test lookup of price modifiers."""
         depot = CargoDepotTestCase.depot
         cargo = Cargo("Test", "1", Credits(1), 1, {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1},
@@ -164,7 +126,7 @@ class CargoDepotTestCase(unittest.TestCase):
         modifier = depot._get_price_modifiers(cargo, "sale")
         self.assertEqual(modifier, 6)
 
-    def test_get_cargo_lot(self):
+    def test_get_cargo_lot(self) -> None:
         """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
         depot.controls = CargoDepotTestCase.ControlsMock([2, 1, 0, 7])
@@ -172,26 +134,26 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.add_observer(observer)
         cargo_list = ["a", "b", "c"]
 
-        item = depot.get_cargo_lot(cargo_list, "buy")
+        item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
         self.assertEqual(observer.message, "That is not a valid cargo ID.")
         self.assertEqual(observer.priority, "")
 
-        item = depot.get_cargo_lot(cargo_list, "buy")
+        item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
         self.assertEqual(item, "a")
 
-        item = depot.get_cargo_lot(cargo_list, "buy")
+        item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
         self.assertEqual(item, "b")
 
-        item = depot.get_cargo_lot(cargo_list, "buy")
+        item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
         self.assertEqual(item, "c")
 
-    def test_get_cargo_quantity(self):
+    def test_get_cargo_quantity(self) -> None:
         """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
         depot.controls = CargoDepotTestCase.ControlsMock([9, 1, 0, -1, 11])
         observer = ObserverMock()
         depot.add_observer(observer)
-        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
@@ -215,7 +177,7 @@ class CargoDepotTestCase(unittest.TestCase):
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, 9)
 
-    def test_invalid_cargo_origin(self):
+    def test_invalid_cargo_origin(self) -> None:
         """Test validation of cargo origin."""
         depot = CargoDepotTestCase.depot
         self.assertEqual(depot.system.name, "Uranus")
@@ -224,9 +186,11 @@ class CargoDepotTestCase(unittest.TestCase):
 
         # pylint: disable=R0903
         # R0903: Too few public methods (1/2)
-        class Location:
+        class Location(StarSystem):
             """Mocks a location interface for testing."""
 
+            # pylint: disable=W0231
+            # W0231: __init__ method from base class 'StarSystem' is not called
             def __init__(self, name):
                 self.name = name
 
@@ -234,24 +198,24 @@ class CargoDepotTestCase(unittest.TestCase):
                 return self.name == other.name
 
         location1 = Location("Jupiter")
-        cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {}, location1)
+        cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {}, location1)
         self.assertFalse(depot.invalid_cargo_origin(cargo1))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo2 = Cargo("Test", '10', Credits(1), 1, {}, {})
         self.assertFalse(depot.invalid_cargo_origin(cargo2))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
         location2 = Location("Uranus")
-        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {}, location2)
+        cargo3 = Cargo("Test", '10', Credits(1), 1, {}, {}, location2)
         self.assertTrue(depot.invalid_cargo_origin(cargo3))
         self.assertEqual(observer.message,
                          "You cannot resell cargo on the world where it was purchased.")
         self.assertEqual(observer.priority, "")
 
-    def test_get_broker(self):
+    def test_get_broker(self) -> None:
         """Test choosing a broker."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 4, 5, 'y', 'y', 4, 5, 'y', 'n', 1, 'y', 'y', 1, 0, 'y', 'n']
@@ -279,10 +243,10 @@ class CargoDepotTestCase(unittest.TestCase):
         result = depot.get_broker()
         self.assertEqual(result, 0)
 
-    def test_insufficient_hold_space(self):
+    def test_insufficient_hold_space(self) -> None:
         """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
-        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
         observer = ObserverMock()
         depot.add_observer(observer)
 
@@ -294,7 +258,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "You only have 0 tons free.")
         self.assertEqual(observer.priority, "")
 
-    def test_determine_price(self):
+    def test_determine_price(self) -> None:
         """Test calculation of sale & purchase prices.
 
         Since the prices are randomly determined, the tests below need
@@ -305,7 +269,7 @@ class CargoDepotTestCase(unittest.TestCase):
         # TO_DO: monkeypatch die_roll() so we can get deterministic
         #        results for testing
         depot = CargoDepotTestCase.depot
-        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
         observer = ObserverMock()
         depot.add_observer(observer)
 
@@ -330,7 +294,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
         #self.assertEqual(observer.priority, "")
 
-    def test_insufficient_funds(self):
+    def test_insufficient_funds(self) -> None:
         """Test validation of bank balance."""
         depot = CargoDepotTestCase.depot
         observer = ObserverMock()
@@ -351,7 +315,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Your available balance is 1 Cr.")
         self.assertEqual(observer.priority, "")
 
-    def test_broker_fee(self):
+    def test_broker_fee(self) -> None:
         """Test calculation of broker fees."""
         depot = CargoDepotTestCase.depot
         observer = ObserverMock()
@@ -372,14 +336,14 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Deducting 20 Cr broker fee for skill 4.")
         self.assertEqual(observer.priority, "")
 
-    def test_confirm_transaction(self):
+    def test_confirm_transaction(self) -> None:
         """Test transaction confirmation."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 'y']
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
-        cargo = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
 
         result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
         self.assertTrue(result)
@@ -389,12 +353,12 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Cancelling purchase.")
         self.assertEqual(observer.priority, "")
 
-    def test_remove_cargo(self):
+    def test_remove_cargo(self) -> None:
         """Test removal of cargo from the depot or cargo hold."""
         depot = CargoDepotTestCase.depot
-        cargo1 = Cargo("Test", 10, Credits(1), 1, {}, {})
-        cargo2 = Cargo("Test", 10, Credits(1), 1, {}, {})
-        cargo3 = Cargo("Test", 10, Credits(1), 1, {}, {})
+        cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo2 = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo3 = Cargo("Test", '10', Credits(1), 1, {}, {})
         source = [cargo1, cargo2]
 
         depot.remove_cargo(source, cargo3, 10)
@@ -416,7 +380,7 @@ class CargoDepotTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _determine_cargo of a client class
-    def test_determine_cargo(self):
+    def test_determine_cargo(self) -> None:
         """Test random determination of cargo lots."""
         depot = CargoDepotTestCase.depot
 
@@ -424,30 +388,30 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(len(cargo), 1)
         self.assertTrue(isinstance(cargo[0], Cargo))
 
-    def test_get_available_freight(self):
+    def test_get_available_freight(self) -> None:
         """Test listing of freight in the depot."""
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
-        world1 = CargoDepotTestCase.SystemMock()
+        world1 = SystemMock()
         world1.name = "Pluto"
-        world1.coordinate = 222
-        world2 = CargoDepotTestCase.SystemMock()
+        world1.coordinate = Coordinate(2,2,2)
+        world2 = SystemMock()
         world2.name = "Jupiter"
-        world2.coordinate = 111
+        world2.coordinate = Coordinate(1,1,1)
         destinations = [world1, world2]
 
-        coord, freight = depot.get_available_freight(destinations)
-        self.assertEqual(coord, 222)
+        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
+        self.assertEqual(coord, Coordinate(2,2,2))
         self.assertTrue(isinstance(freight, list))
 
-        coord, freight = depot.get_available_freight(destinations)
-        self.assertEqual(coord, 111)
+        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
+        self.assertEqual(coord, Coordinate(1,1,1))
         self.assertTrue(isinstance(freight, list))
 
-        coord, freight = depot.get_available_freight(destinations)
+        coord, freight = depot.get_available_freight(destinations)    #type: ignore[arg-type]
         self.assertEqual(coord, None)
         self.assertTrue(freight is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
@@ -455,7 +419,7 @@ class CargoDepotTestCase(unittest.TestCase):
     # pylint: disable=W0212, R0915
     # W0212: Access to a protected member _passenger_origin_table of a client class
     # R0915: Too many statements (58/50)
-    def test_passenger_origin_table(self):
+    def test_passenger_origin_table(self) -> None:
         """Test calculation of passengers by origin world."""
         depot = CargoDepotTestCase.depot
 
@@ -525,7 +489,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertGreater(depot._passenger_origin_table(10)[2], 3)
         self.assertLess(depot._passenger_origin_table(10)[2], 25)
 
-    def test_passenger_destination_table(self):
+    def test_passenger_destination_table(self) -> None:
         """Test determination of passenger count modifiers by destination world."""
         depot = CargoDepotTestCase.depot
 
@@ -551,69 +515,55 @@ class CargoDepotTestCase(unittest.TestCase):
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _refresh_freight of a client class
-    def test_refresh_freight(self):
+    def test_refresh_freight(self) -> None:
         """Test refreshing freight allotments."""
         depot = CargoDepotTestCase.depot
         freight = depot.freight
-        depot._refresh_freight([CargoDepotTestCase.SystemMock()])
+        depot._refresh_freight([SystemMock()])
         self.assertNotEqual(depot.freight, freight)
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _refresh_passengers of a client class
-    def test_refresh_passengers(self):
+    def test_refresh_passengers(self) -> None:
         """Test refreshing prospective passengers."""
         depot = CargoDepotTestCase.depot
         passengers = depot.passengers
-        depot._refresh_passengers([CargoDepotTestCase.SystemMock()])
+        depot._refresh_passengers([SystemMock()])
         self.assertNotEqual(depot.passengers, passengers)
 
-    def test_get_available_passengers(self):
+    def test_get_available_passengers(self) -> None:
         """Test listing of passengers in the terminal."""
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
-        world1 = CargoDepotTestCase.SystemMock()
+        world1 = SystemMock()
         world1.name = "Pluto"
-        world1.coordinate = 222
-        world2 = CargoDepotTestCase.SystemMock()
+        world1.coordinate = Coordinate(2,2,2)
+        world2 = SystemMock()
         world2.name = "Jupiter"
-        world2.coordinate = 111
+        world2.coordinate = Coordinate(1,1,1)
         destinations = [world1, world2]
 
-        coord, passengers = depot.get_available_passengers(destinations)
-        self.assertEqual(coord, 222)
+        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
+        self.assertEqual(coord, Coordinate(2,2,2))
         self.assertTrue(isinstance(passengers, tuple))
 
-        coord, passengers = depot.get_available_passengers(destinations)
-        self.assertEqual(coord, 111)
+        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
+        self.assertEqual(coord, Coordinate(1,1,1))
         self.assertTrue(isinstance(passengers, tuple))
 
-        coord, passengers = depot.get_available_passengers(destinations)
+        coord, passengers = depot.get_available_passengers(destinations)    #type: ignore[arg-type]
         self.assertEqual(coord, None)
         self.assertTrue(passengers is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
 
 
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
-class SystemMock:
-    """Mocks a system interface for testing."""
-
-    def __init__(self, name):
-        """Create an instance of a SystemMock."""
-        self.name = name
-
-    def __repr__(self):
-        """Return the string representation of a SystemMock object."""
-        return f"SystemMock('{self.name}')"
-
-
 class FreightTestCase(unittest.TestCase):
     """Tests Freight class."""
 
-    def test_freight_string(self):
+    def test_freight_string(self) -> None:
         """Test the string representation of a Freight object."""
         freight = Freight(10,
                           SystemMock("Pluto"),
@@ -621,7 +571,7 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{freight}",
                          "Freight : 10 tons : Pluto -> Uranus")
 
-    def test_freight_repr(self):
+    def test_freight_repr(self) -> None:
         """Test the repr string of a Freight object."""
         freight = Freight(10,
                           SystemMock("Pluto"),
@@ -629,42 +579,45 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{freight!r}",
                          "Freight(10, SystemMock('Pluto'), SystemMock('Uranus'))")
 
+
 class BaggageTestCase(unittest.TestCase):
     """Tests Baggage class."""
 
-    def test_baggage_string(self):
+    def test_baggage_string(self) -> None:
         """Test the string representation of a Baggage object."""
         baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
         self.assertEqual(f"{baggage}",
                          "Baggage : 1 ton : Pluto -> Uranus")
 
-    def test_baggage_repr(self):
+    def test_baggage_repr(self) -> None:
         """Test the repr string of a Baggage object."""
         baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
         self.assertEqual(f"{baggage!r}",
                          "Baggage(SystemMock('Pluto'), SystemMock('Uranus'))")
 
+
 class PassengerTestCase(unittest.TestCase):
     """Tests Passenger class."""
 
-    def test_passenger_str(self):
+    def test_passenger_str(self) -> None:
         """Test the string representation of a Passenger object."""
         passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
         self.assertEqual(f"{passenger}", "Low passage to Uranus")
 
-    def test_passenger_repr(self):
+    def test_passenger_repr(self) -> None:
         """Test the repr string of a Passenger object."""
         passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
         self.assertEqual(f"{passenger!r}", "Passenger(<PassageClass.LOW: 2>, SystemMock('Uranus'))")
 
-    def test_passenger_guess_survivors(self):
+    def test_passenger_guess_survivors(self) -> None:
         """Test Passenger guesses as to number of low lottery survivors."""
         passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
         for _ in range(1000):
             passenger.guess_survivors(10)
             guess = passenger.guess
-            self.assertGreaterEqual(guess, 0)
-            self.assertLessEqual(guess, 10)
+            self.assertGreaterEqual(guess, 0)       #type: ignore[arg-type]
+            self.assertLessEqual(guess, 10)         #type: ignore[arg-type]
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

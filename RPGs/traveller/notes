@@ -2042,6 +2042,16 @@
 # store the name, quantity, and source_world. Remainder is looked
 # up by name in the cargo table (also don't have that functionality
 # just yet).
+#
+# Thinking about it some more, we probably don't need to totally
+# overhaul how destinations work. Just a couple pieces:
+#
+# 1) Save the coordinate in the string save output. We already
+#    have a reference to the full StarSystem object, so easy enough.
+#
+# 2) Pass in the systems list to any of the 'from_string' functions
+#    that need it. Obviously they will need to be called at the 
+#    end of load_game().
 # 
 # -------------------------------------------------------------
 

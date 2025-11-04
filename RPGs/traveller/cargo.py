@@ -89,7 +89,7 @@ class Freight:
 
     def __repr__(self) -> str:
         """Return the string representation of a Freight shipment."""
-        return f"Freight({self.tonnage}, {self.source_world}, {self.destination_world})"
+        return f"Freight({self.tonnage}, {self.source_world!r}, {self.destination_world!r})"
 
 
 # pylint: disable=R0903
@@ -105,7 +105,7 @@ class Baggage(Freight):
 
     def __repr__(self) -> str:
         """Return the string representation of a piece of Baggage."""
-        return f"Baggage({self.source_world}, {self.destination_world})"
+        return f"Baggage({self.source_world!r}, {self.destination_world!r})"
 
 
 # pylint: disable=R0902
