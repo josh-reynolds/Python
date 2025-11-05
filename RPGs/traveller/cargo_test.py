@@ -627,6 +627,12 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: ' m'")
 
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(10, "(1, 1, 1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate "
+                         + "- should sum to zero: '(1, 1, 1)'")
+
 
 class BaggageTestCase(unittest.TestCase):
     """Tests Baggage class."""
@@ -660,9 +666,31 @@ class BaggageTestCase(unittest.TestCase):
         expected = Baggage(destination, source)
         self.assertEqual(actual, expected)
 
-        # coordinates not in systems
-        # invalid coordinate
-        # malformed coordinate
+        with self.assertRaises(ValueError) as context:
+            _ = baggage_from("(1, -1, 0)", "(1, 0, -1)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(1, -1, 0)'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = baggage_from("(0, 0, 0)", "(1, -1, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(1, -1, 0)'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = baggage_from("(m, 0, -1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = baggage_from("(1, 0, -1)", "(0, m, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: ' m'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = baggage_from("(1, 1, 1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate "
+                         + "- should sum to zero: '(1, 1, 1)'")
 
 
 class PassengerTestCase(unittest.TestCase):
