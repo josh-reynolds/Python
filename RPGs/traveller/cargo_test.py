@@ -1,7 +1,8 @@
 """Contains tests for the cargo module."""
 import unittest
 from typing import List, Any
-from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass, passenger_from
+from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
+from cargo import passenger_from, freight_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
@@ -579,6 +580,35 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{freight!r}",
                          "Freight(10, SystemMock('Pluto'), SystemMock('Uranus'))")
 
+    def test_freight_from(self) -> None:
+        """Test importing Freight from a parsed string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : destination,
+                   Coordinate(1,0,-1) : source}
+
+        actual = freight_from(10, "(1, 0, -1)", "(0, 0, 0)", systems)
+        expected = Freight(10, source, destination)
+        self.assertEqual(actual, expected)
+
+        actual = freight_from(100, "(0, 0, 0)", "(1, 0, -1)", systems)
+        expected = Freight(100, destination, source)
+        self.assertEqual(actual, expected)
+
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(100, "(1, -1, 0)", "(1, 0, -1)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(1, -1, 0)'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(100, "(0, 0, 0)", "(1, -1, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(1, -1, 0)'")
+
+        # tonnage negative or zero
+        # coordinates invalid chars
 
 class BaggageTestCase(unittest.TestCase):
     """Tests Baggage class."""

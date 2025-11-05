@@ -2100,6 +2100,42 @@
 # __str__). The latter provides a clear interface FWIW. We'll
 # leave it slightly messy for now and see which way things want
 # to move.
+#
+# All that is now working. (Observation, we only need to run
+# guess_survivors() if the ship is in space - will be rerun on
+# liftoff, so harmless. Fiddle with it later.)
+#
+# On to the cargo hold. Just like StarSystems, we don't want
+# to handle this at the individual class level. The container
+# type is List[Freight | Cargo] (and the former encompasses
+# both Freight and Baggage), so we want a composite function that
+# reads a single list and builds the appropriate type of 
+# entity as needed.
+#
+# Freight needs tonnage, source world, and destination world
+# Baggage needs just source_world ad destination (tonnage == 1)
+# Cargo needs name, quantity, and source_world as noted above.
+# The other fields can be looked up in the cargo table (consider
+# whether we should store a key to aid lookup, or is name enough?).
+#
+# We'll start with Freight & Baggage, since they are very similar
+# to Passengers and should be quick. And although the save/load
+# methods will want some sort of composite to interact with,
+# it will be cleaner (and easier to test) if we have individual
+# converters.
+#
+# The composite needs to know which variant to call. In the
+# StarSystem function we handle by tokens length. That's a bit
+# fragile, but still might be best approach here too. The lower-level
+# functions need to validate as well, obviously.
+#
+# Freight is length 3, Baggage length 2, and Cargo length 3. Seems
+# like we need to tag each line to help out - length is ambiguous. So
+# let's prefix with the class name. This is only needed in the 
+# composite. The sub-function only need the trailing data. But that
+# also means it doesn't need to parse a string. Assume it has been
+# tokenized in the composite, and we can get the individual pieces
+# (albeit maybe still strings).
 # 
 # -------------------------------------------------------------
 

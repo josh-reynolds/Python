@@ -136,8 +136,39 @@ class Freight:
                f"{self.source_world.name} -> {self.destination_world.name}"
 
     def __repr__(self) -> str:
-        """Return the string representation of a Freight shipment."""
+        """Return the developer string representation of a Freight shipment."""
         return f"Freight({self.tonnage}, {self.source_world!r}, {self.destination_world!r})"
+
+    def __eq__(self, other: Any) -> bool:
+        """Test if two Freight objects are equal."""
+        if type(other) is type(self):
+            return self.tonnage == other.tonnage and self.source_world == other.source_world \
+                    and self.destination_world == other.destination_world
+        return NotImplemented
+
+
+def freight_from(tonnage: int, source: str, destination: str,
+                 systems: Mapping[Coordinate, Hex]) -> Freight:
+    """Create a Freight object from a parsed source string.
+
+    Both coordinate argumensts are in the format : (d,d,d), all +/- integers.
+
+    The function also needs access to a dictionary of StarSystems, and
+    the coordinates must be keys in that dictionary.
+    """
+    source_coordinate = coordinate_from(source)
+    if source_coordinate in systems:
+        source_world = cast(StarSystem, systems[source_coordinate])
+    else:
+        raise ValueError(f"coordinate not found in systems list: '{source}'")
+
+    destination_coordinate = coordinate_from(destination)
+    if destination_coordinate in systems:
+        destination_world = cast(StarSystem, systems[destination_coordinate])
+    else:
+        raise ValueError(f"coordinate not found in systems list: '{destination}'")
+
+    return Freight(tonnage, source_world, destination_world)
 
 
 # pylint: disable=R0903
