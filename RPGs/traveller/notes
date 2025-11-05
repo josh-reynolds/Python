@@ -2447,6 +2447,10 @@
 #  * [DONE] Reformat ledger to align columns, and use two-column accounting
 #  * [DONE] Track down all credit/debit calls and add memo strings
 #  * [DONE] Encode/decode Passenger as/from a string
+#  * [CUT ] Rework destinations to store just a Coordinate in Passenger/Freight/Baggage
+#  * [DONE] Review remaining Passenger data: endurance, guess, survived
+#           Need to save?
+#  * [DONE] Encode/decode Freight as/from a (parsed) string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2454,8 +2458,13 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Review remaining Passenger data: endurance, guess, survived
-#           Need to save?
+#  * [    ] Encode/decode Baggage as/from a (parsed) string
+#  * [    ] Encode/decode Cargo as/from a (parsed) string
+#  * [    ] Composite from_string function to process cargo hold contents
+#  * [    ] Encode/decode Ship as/from a string
+#  * [    ] Capture current location in save file
+#  * [    ] Encode/decode Financials as/from a string
+#  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] BUG: load game file list is unordered
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
@@ -2464,19 +2473,14 @@
 #           functionality.
 #  * [    ] Small amount transactions can lead to a long balance string in MCr,
 #           which throws off column alignment in ledger - restrict decimal places in Credits?
-#  * [    ] Encode/decode Freight/Baggage/Cargo as/from a string
-#  * [    ] Rework destinations to store just a Coordinate in Passenger/Freight/Baggage
-#  * [    ] Encode/decode Ship as/from a string
-#  * [    ] Capture current location in save file
-#  * [    ] Encode/decode Financials as/from a string
-#  * [    ] Handle save/load exceptions in app rather than crashing out
+#  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
 #  * [    ] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
-#  * [    ] Move hard-coded start conditions out of Game ctor into some sort of save file
+#  * [    ] Move hard-coded start conditions out of Game ctor into some sort of default save file
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
@@ -2494,7 +2498,6 @@
 #           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
 #           another that allows choosing a subsector by name and displaying its contents.
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
-#  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Ships with better than jump-1 should be able to choose short jumps too.
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
@@ -2505,6 +2508,7 @@
 #           here like adjusting world creation parameters, but initially just
 #           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
+#  * [    ] 'Select ship' option in new game - could add the Type-S Scout
 #  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.

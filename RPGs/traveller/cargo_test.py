@@ -607,8 +607,26 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(1, -1, 0)'")
 
-        # tonnage negative or zero
-        # coordinates invalid chars
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(0, "(1, 0, -1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "tonnage must be a positive number: '0'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(-10, "(1, 0, -1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "tonnage must be a positive number: '-10'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(10, "(m, 0, -1)", "(0, 0, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = freight_from(10, "(1, 0, -1)", "(0, m, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: ' m'")
+
 
 class BaggageTestCase(unittest.TestCase):
     """Tests Baggage class."""

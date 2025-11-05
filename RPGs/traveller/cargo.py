@@ -156,6 +156,9 @@ def freight_from(tonnage: int, source: str, destination: str,
     The function also needs access to a dictionary of StarSystems, and
     the coordinates must be keys in that dictionary.
     """
+    if tonnage < 1:
+        raise ValueError(f"tonnage must be a positive number: '{tonnage}'")
+
     source_coordinate = coordinate_from(source)
     if source_coordinate in systems:
         source_world = cast(StarSystem, systems[source_coordinate])
