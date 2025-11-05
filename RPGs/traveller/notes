@@ -1832,7 +1832,7 @@
 # UWP wasn't too bad. Added a bunch of checks to catch invalid input,
 # but otherwise easy enough. We _will_ hit issues later when we
 # encounter eHex data. Right now UWP just uses strict hexadecimal
-# digits. I also had to make the encoder function standalone. Initially
+# digits. I also had to make the decoder function standalone. Initially
 # I tried a classmethod, but mypy is finicky about how to annotate
 # that; this is easier.
 #
@@ -2418,8 +2418,9 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Review remaining Passenger data: endurance, guess, survived
+#  * [....] Review remaining Passenger data: endurance, guess, survived
 #           Need to save?
+#  * [    ] BUG: load game file list is unordered
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
 #  * [    ] The ledger could get very long. Will want to manage in the view. Simplest

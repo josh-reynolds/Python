@@ -16,7 +16,7 @@ from coordinate import Coordinate, coordinate_from
 from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
-from star_system import StarSystem
+from star_system import StarSystem, Hex
 
 class PassageClass(Enum):
     """Denotes the class of a Passenger's ticket."""
@@ -78,7 +78,7 @@ class Passenger:
         return f"{self.name[:-8].lower()} - {self.destination.coordinate}"
 
 
-def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Passenger:
+def passenger_from(string: str, systems: Mapping[Coordinate, Hex]) -> Passenger:
     """Create a Passenger object from a string representation.
 
     String format is : passage - destination coordinate
@@ -112,7 +112,7 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
     else:
         raise ValueError(f"coordinate not found in systems list: '{coordinate}'")
 
-    return Passenger(passage, destination)
+    return Passenger(passage, cast(StarSystem, destination))
 
 
 class Freight:

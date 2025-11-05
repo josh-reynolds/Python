@@ -143,6 +143,32 @@ class Menu(Screen):
         date_string = data['date']
         modify_calendar_from(self.parent.date, date_string)
 
+        # all ship components need to be loaded after star systems
+        # since we need that list to build destinations
+
+        passengers = []
+        for line in data['passengers']:
+            passengers.append(passenger_from(line, systems))
+
+        # strictly speaking, this is only necessary if the ship is
+        # not on the surface, as it will be re-run on liftoff, and also:
+        # TO_DO: duplication of code in liftoff, refactor
+        low_passengers = [p for p in self.parent.ship.passengers if
+                          p.passage == PassageClass.LOW]
+        for passenger in low_passengers:
+            passenger.guess_survivors(self.parent.ship.low_passenger_count)
+        self.parent.ship.passengers = passengers
+
+        # cargo
+        # freight
+        # baggage
+        # ship
+
+        # finances
+
+        # location
+
+        # this will go away once we load the ship
         self.parent.ship.name = input("What is the name of your ship? ")
 
         _ = input("Press ENTER key to continue.")
@@ -319,7 +345,8 @@ class Play(Screen):
 
         passenger_list = [p.encode() for p in self.parent.ship.passengers]
 
-        save_data = {'date' : date_string, 'systems' : systems, 'subsectors' : subsectors}
+        save_data = {'date' : date_string, 'systems' : systems,
+                     'subsectors' : subsectors, 'passengers' : passenger_list}
 
         filename = get_next_save_file()
         with open(f"saves/{filename}", 'w', encoding='utf-8') as a_file:
