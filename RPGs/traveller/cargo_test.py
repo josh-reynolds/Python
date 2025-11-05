@@ -694,6 +694,35 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(2, 0, -2)'")
 
+    def test_encode(self) -> None:
+        """Test importing a Passenger from a string."""
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        passenger = Passenger(PassageClass.HIGH, destination)
+
+        actual = passenger.encode()
+        expected = "high - (0, 0, 0)"
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{passenger}", "High passage to Jupiter")
+
+        destination = SystemMock("Neptune")
+        destination.coordinate = Coordinate(0,0,0)
+        passenger = Passenger(PassageClass.MIDDLE, destination)
+
+        actual = passenger.encode()
+        expected = "middle - (0, 0, 0)"
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{passenger}", "Middle passage to Neptune")
+
+        destination = SystemMock("Uranus")
+        destination.coordinate = Coordinate(0,0,0)
+        passenger = Passenger(PassageClass.LOW, destination)
+
+        actual = passenger.encode()
+        expected = "low - (0, 0, 0)"
+        self.assertEqual(actual, expected)
+        self.assertEqual(f"{passenger}", "Low passage to Uranus")
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

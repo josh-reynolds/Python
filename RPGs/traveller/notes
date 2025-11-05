@@ -2052,6 +2052,54 @@
 # 2) Pass in the systems list to any of the 'from_string' functions
 #    that need it. Obviously they will need to be called at the 
 #    end of load_game().
+#
+# Hrm. So yesterday I worked up passenger_from() per those guidelines,
+# and it works fine. Had to do a bit of refactoring, especially
+# in the test module, but all good. However, I completely forgot
+# about the more streamlined approach. We shouldn't record a list
+# of passengers in the save file. It's sufficient to have just four
+# pieces of data: a destination, and counts for each passage class.
+#
+# One wrinkle, though: Passenger has a few 'hidden' attributes
+# that were added to support the low lottery: endurance, guess
+# and survived. The latter is only fiddled with upon landing
+# and disembarking, so almost certainly always True (don't think
+# we could possibly save the game in the middle of that - verify!).
+#
+# But the other two... check their lifespan. If it matters, we
+# should indeed have a list of Passengers, and capture those
+# attributes. Otherwise we can go with the simpler approach. 
+# (Looking ahead, I _do_ eventually want to give every passenger
+# some color, like a name, so...)
+#
+# Guess is set on liftoff, and checked on landing. So it is valid
+# during flight - and since it is set to None in the ctor, if
+# we don't set this value we'll crash when we land trying to
+# access fields on None. So we either need to rerun guess_survivors()
+# during load_game(), or save the value in save_game(). It's
+# an invisible random number, so probably no harm in just
+# re-creating it.
+#
+# Endurance is set in the ctor and only checked once during
+# the low lottery. Same deal here, it's an invisible random
+# value. Seems like allowing the loaded object ctor regenerate
+# is perfectly fine.
+#
+# OK, going to take the easy way out, change later if we need
+# to. Since passenger_from() is already written, let's stuff
+# that list into the save file. Then we'll call guess_survivors()
+# on all the low passengers after loading. We could easily change
+# to the streamlined version this way, if there's value.
+#
+# Another deviation in this one: Passenger.__str__ didn't quite
+# match what I needed (uses StarSystem.name instead of 
+# StarSystem.coordinate). So I'm cooking up Passenger.encode()
+# to handle the responsibility. Longer term will want to think
+# about standardizing on __str__ everywhere, or adding an
+# encode() (which admittedly could be just a thin wrapper over
+# __str__). The latter provides a clear interface FWIW. We'll
+# leave it slightly messy for now and see which way things want
+# to move.
 # 
 # -------------------------------------------------------------
 

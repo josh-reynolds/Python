@@ -72,6 +72,11 @@ class Passenger:
         """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
 
+    def encode(self) -> str:
+        """Return a string encoding the Passenger to save and load state."""
+        # strip " passage" from the name for encoding
+        return f"{self.name[:-8].lower()} - {self.destination.coordinate}"
+
 
 def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Passenger:
     """Create a Passenger object from a string representation.
@@ -79,6 +84,9 @@ def passenger_from(string: str, systems: Mapping[Coordinate, StarSystem]) -> Pas
     String format is : passage - destination coordinate
     Passage is either 'high,' 'middle,' or 'low.'
     Destination coordinate is (d,d,d), all +/- integers.
+
+    The function also needs access to a dictionary of StarSystems, and
+    the coordinate in the string must be a key in that dictionary.
     """
     tokens = string.split(' - ')
 

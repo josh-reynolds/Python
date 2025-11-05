@@ -9,6 +9,7 @@ from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
 from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
+from cargo import passenger_from
 from command import Command
 from coordinate import Coordinate
 from financials import Credits
@@ -315,6 +316,8 @@ class Play(Screen):
             subsectors.append(f"{coord} - {sub}")
 
         date_string = f"{self.parent.date}"
+
+        passenger_list = [p.encode() for p in self.parent.ship.passengers]
 
         save_data = {'date' : date_string, 'systems' : systems, 'subsectors' : subsectors}
 
