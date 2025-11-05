@@ -2,7 +2,7 @@
 import unittest
 from typing import List, Any
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
-from cargo import passenger_from, freight_from
+from cargo import passenger_from, freight_from, baggage_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
@@ -642,6 +642,27 @@ class BaggageTestCase(unittest.TestCase):
         baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
         self.assertEqual(f"{baggage!r}",
                          "Baggage(SystemMock('Pluto'), SystemMock('Uranus'))")
+
+    def test_baggage_from(self) -> None:
+        """Test importing Baggage from a parsed string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : destination,
+                   Coordinate(1,0,-1) : source}
+
+        actual = baggage_from("(1, 0, -1)", "(0, 0, 0)", systems)
+        expected = Baggage(source, destination)
+        self.assertEqual(actual, expected)
+
+        actual = baggage_from("(0, 0, 0)", "(1, 0, -1)", systems)
+        expected = Baggage(destination, source)
+        self.assertEqual(actual, expected)
+
+        # coordinates not in systems
+        # invalid coordinate
+        # malformed coordinate
 
 
 class PassengerTestCase(unittest.TestCase):
