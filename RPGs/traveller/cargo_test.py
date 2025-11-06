@@ -961,9 +961,13 @@ class CargoHoldTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                           "quantity must be a positive number: '-1'")
 
-        # unknown import type
+        data = ["Monkeys - Meat - 100 - None"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "unknown hold content type: 'Monkeys'")
+
         # multiple destinations (illegal)
-        # destination doesn't match Passengers?
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

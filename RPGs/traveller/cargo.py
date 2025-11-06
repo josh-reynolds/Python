@@ -711,14 +711,16 @@ def cargo_hold_from(strings: List[str],
         tokens = line.split(' - ')
         if tokens[0] == "Baggage":
             result.append(baggage_from(tokens[1], tokens[2], systems))
-        if tokens[0] == "Freight":
+        elif tokens[0] == "Freight":
             quantity = int(tokens[1])
             result.append(freight_from(quantity, tokens[2], tokens[3], systems))
-        if tokens[0] == "Cargo":
+        elif tokens[0] == "Cargo":
             quantity = int(tokens[2])
             if tokens[3] == "None":
                 source = None
             else:
                 source = tokens[3]
             result.append(cargo_from(tokens[1], quantity, source, systems))
+        else:
+            raise ValueError(f"unknown hold content type: '{tokens[0]}'")
     return result

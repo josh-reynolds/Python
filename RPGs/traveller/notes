@@ -2461,6 +2461,7 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] Composite from_string function to process cargo hold contents
+#  * [    ] Trap mixed destinations between Freight/Passengers in save & load
 #  * [    ] Encode/decode Ship as/from a string
 #  * [    ] Capture current location in save file
 #  * [    ] Encode/decode Financials as/from a string
