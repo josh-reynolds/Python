@@ -315,6 +315,12 @@ def cargo_from(name: str, quantity: int, source: None | str,
     The function also needs access to a dictionary of StarSystems, and
     the coordinate must be a key in that dictionary.
     """
+    if not isinstance(quantity, int):
+        raise ValueError(f"quantity must be an integer: '{quantity}'")
+
+    if quantity < 1:
+        raise ValueError(f"quantity must be a positive number: '{quantity}'")
+
     table = get_cargo_table()
 
     cargo: None | Cargo = None

@@ -117,11 +117,36 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "cargo not found in the cargo table: 'Monkeys'")
 
-        # quantity negative/zero
-        # invalid digits in quantity
-        # coordinates missing from systems
-        # malformed coordinates
-        # invalid coordinates
+        with self.assertRaises(ValueError) as context:
+            actual = cargo_from("Tools", 0, None, systems)
+        self.assertEqual(f"{context.exception}",
+                         "quantity must be a positive number: '0'")
+
+        with self.assertRaises(ValueError) as context:
+            actual = cargo_from("Tools", -1, None, systems)
+        self.assertEqual(f"{context.exception}",
+                         "quantity must be a positive number: '-1'")
+
+        with self.assertRaises(ValueError) as context:
+            actual = cargo_from("Tools", 'm', None, systems)    #type: ignore[arg-type]
+        self.assertEqual(f"{context.exception}",
+                         "quantity must be an integer: 'm'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_from("Tools", 1, "(1, -1, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(1, -1, 0)'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_from("Tools", 1, "(m, -1, 0)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_from("Tools", 1, "(1, 1, 1)", systems)
+        self.assertEqual(f"{context.exception}",
+                         "string is not a valid 3-axis coordinate "
+                         + "- should sum to zero: '(1, 1, 1)'")
 
 
 class CargoDepotTestCase(unittest.TestCase):
