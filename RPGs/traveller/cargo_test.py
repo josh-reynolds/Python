@@ -937,9 +937,30 @@ class CargoHoldTestCase(unittest.TestCase):
                           dictionary_from("{Ag:-2,In:2,Po:1}"))]
         self.assertEqual(actual, expected)
 
+        data = ["Freight - m - (1, 0, -1) - (0, 0, 0)"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "invalid literal for int() with base 10: 'm'")
 
+        data = ["Freight - 0 - (1, 0, -1) - (0, 0, 0)"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "tonnage must be a positive number: '0'")
 
-        # invalid quantities
+        data = ["Cargo - Meat - m - None"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "invalid literal for int() with base 10: 'm'")
+
+        data = ["Cargo - Meat - -1 - None"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "quantity must be a positive number: '-1'")
+
         # unknown import type
         # multiple destinations (illegal)
         # destination doesn't match Passengers?
