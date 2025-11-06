@@ -866,8 +866,6 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(2, 0, -2)'")
 
-        # TO_DO: multiple destinations (illegal)
-
     def test_encode(self) -> None:
         """Test importing a Passenger from a string."""
         destination = SystemMock("Jupiter")

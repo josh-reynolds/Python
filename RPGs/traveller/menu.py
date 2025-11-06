@@ -164,6 +164,14 @@ class Menu(Screen):
         # baggage
         # ship
 
+        # TO_DO: get freight/baggage in here too, once we are importing them
+        destinations = set()
+        for passenger in passengers:
+            destinations.add(passenger.destination)
+        if len(destinations) > 1:
+            print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
+            return None
+
         # finances
 
         # location
