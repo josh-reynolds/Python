@@ -1,6 +1,6 @@
 """Contains tests for the cargo module."""
 import unittest
-from typing import List, Any
+from typing import List, Any, Sequence
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
 from cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
 from coordinate import Coordinate
@@ -911,16 +911,35 @@ class CargoHoldTestCase(unittest.TestCase):
 
         data = ["Baggage - (1, 0, -1) - (0, 0, 0)"]
         actual = cargo_hold_from(data, systems)
-        expected = [Baggage(source, destination)]
+        expected: Sequence[Freight | Cargo] = [Baggage(source, destination)]
+        self.assertEqual(actual, expected)
+
+        data = ["Freight - 10 - (1, 0, -1) - (0, 0, 0)"]
+        actual = cargo_hold_from(data, systems)
+        expected = [Freight(10, source, destination)]
+        self.assertEqual(actual, expected)
+
+        data = ["Cargo - Meat - 10 - None"]
+        actual = cargo_hold_from(data, systems)
+        expected = [Cargo("Meat", "10", Credits(1500), 1,
+                          dictionary_from("{Ag:-2,Na:2,In:3}"),
+                          dictionary_from("{Ag:-2,In:2,Po:1}"))]
+        self.assertEqual(actual, expected)
+
+        data = ["Baggage - (1, 0, -1) - (0, 0, 0)",
+                "Freight - 10 - (1, 0, -1) - (0, 0, 0)",
+                "Cargo - Meat - 10 - None"]
+        actual = cargo_hold_from(data, systems)
+        expected = [Baggage(source, destination),
+                    Freight(10, source, destination),
+                    Cargo("Meat", "10", Credits(1500), 1,
+                          dictionary_from("{Ag:-2,Na:2,In:3}"),
+                          dictionary_from("{Ag:-2,In:2,Po:1}"))]
         self.assertEqual(actual, expected)
 
 
 
-
-        # basic import: Freight
-        # basic import: Cargo
-        # basic import: mixed contents
-
+        # invalid quantities
         # unknown import type
         # multiple destinations (illegal)
         # destination doesn't match Passengers?
