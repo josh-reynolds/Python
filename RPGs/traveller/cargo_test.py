@@ -83,11 +83,27 @@ class CargoTestCase(unittest.TestCase):
         systems = {Coordinate(0,0,0) : destination,
                    Coordinate(1,0,-1) : source}
 
-        actual = cargo_from("Meat", 10, "(0, 0, 0)", systems)
+        actual = cargo_from("Meat", 10, None, systems)
         expected = Cargo("Meat", "10", Credits(1500), 1,
                          dictionary_from("{Ag:-2,Na:2,In:3}"),
                          dictionary_from("{Ag:-2,In:2,Po:1}"))
         self.assertEqual(actual, expected)
+        self.assertEqual(actual.tonnage, expected.tonnage)
+
+        actual = cargo_from("Mechanical Parts", 15, None, systems)
+        expected = Cargo("Mechanical Parts", "15", Credits(75000), 1,
+                         dictionary_from("{In:-5,Ri:-3}"),
+                         dictionary_from("{Ag:2,Ni:3}"))
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual.tonnage, expected.tonnage)
+
+        # cargo with sourceworld assigned
+        # cargo not found in table
+        # quantity negative/zero
+        # invalid digits in quantity
+        # coordinates missing from systems
+        # malformed coordinates
+        # invalid coordinates
 
 
 class CargoDepotTestCase(unittest.TestCase):

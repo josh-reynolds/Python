@@ -256,14 +256,13 @@ class Cargo:
         return result
 
     def __eq__(self, other: Any) -> bool:
-        """Test if two Cargoes are equal."""
+        """Test if two Cargos are equal."""
         if type(other) is type(self):
             return self.name == other.name and \
                    self.quantity == other.quantity and \
                    self.source_world == other.source_world
 
         return NotImplemented
-
 
     @property
     def tonnage(self) -> int:
@@ -304,6 +303,27 @@ class Cargo:
             value *= multiplier
             return value
         return int(quantity)
+
+
+def cargo_from(name: str, quantity: int, source: None | str,
+                 systems: Mapping[Coordinate, Hex]) -> Cargo:
+    """Create a Cargo object from a parsed source string.
+
+    Name must match against the application cargo table. The
+    source coordinate string is in the format : (d,d,d), all +/- integers.
+
+    The function also needs access to a dictionary of StarSystems, and
+    the coordinates must be keys in that dictionary.
+    """
+    table = get_cargo_table()
+
+    for item in table.values():
+        if item.name == name:
+            cargo = item
+            break
+    cargo.quantity = quantity
+
+    return cargo
 
 
 class CargoDepot:
@@ -638,38 +658,28 @@ class CargoDepot:
             first += 1
         first = constrain(first, 1, 6)
         first *= 10
-
         roll = first + die_roll()
 
-        table = {}
-        lines = get_lines("./data/cargo.txt")
-        for line in lines:
-            line = line[:-1] # strip final '\n'
-
-            entry = line.split(', ')
-            table_key = int(entry[0])
-            name = entry[1]
-            quantity = entry[2]
-            price = Credits(int(entry[3]))
-            unit_size = int(entry[4])
-            purchase = dictionary_from(entry[5])
-            sale = dictionary_from(entry[6])
-
-            table[table_key] = Cargo(name, quantity, price, unit_size, purchase, sale)
-
+        table = get_cargo_table()
         cargo.append(table[roll])
+
         return cargo
 
-def cargo_from(name: str, quantity: int, source: str,
-                 systems: Mapping[Coordinate, Hex]) -> Cargo:
-    """Create a Cargo object from a parsed source string.
+def get_cargo_table() -> Dict[int, Cargo]:
+    """Retrieve data from the cargo table."""
+    table = {}
+    lines = get_lines("./data/cargo.txt")
+    for line in lines:
+        line = line[:-1] # strip final '\n'
 
-    Name must match against the application cargo table. The
-    source coordinate string is in the format : (d,d,d), all +/- integers.
+        entry = line.split(', ')
+        table_key = int(entry[0])
+        name = entry[1]
+        quantity = entry[2]
+        price = Credits(int(entry[3]))
+        unit_size = int(entry[4])
+        purchase = dictionary_from(entry[5])
+        sale = dictionary_from(entry[6])
 
-    The function also needs access to a dictionary of StarSystems, and
-    the coordinates must be keys in that dictionary.
-    """
-    return Cargo("Meat", "10", Credits(1500), 1,
-                 dictionary_from("{Ag:-2,Na:2,In:3}"),
-                 dictionary_from("{Ag:-2,In:2,Po:1}"))
+        table[table_key] = Cargo(name, quantity, price, unit_size, purchase, sale)
+    return table
