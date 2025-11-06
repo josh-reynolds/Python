@@ -313,14 +313,17 @@ def cargo_from(name: str, quantity: int, source: None | str,
     source coordinate string is in the format : (d,d,d), all +/- integers.
 
     The function also needs access to a dictionary of StarSystems, and
-    the coordinates must be keys in that dictionary.
+    the coordinate must be a key in that dictionary.
     """
     table = get_cargo_table()
 
+    cargo: None | Cargo = None
     for item in table.values():
         if item.name == name:
             cargo = item
             break
+    if not cargo:
+        raise ValueError(f"cargo not found in the cargo table: '{name}'")
     cargo.quantity = quantity
 
     if source:

@@ -112,7 +112,11 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(actual.tonnage, expected.tonnage)
 
-        # cargo not found in table
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_from("Monkeys", 100, None, systems)
+        self.assertEqual(f"{context.exception}",
+                         "cargo not found in the cargo table: 'Monkeys'")
+
         # quantity negative/zero
         # invalid digits in quantity
         # coordinates missing from systems
