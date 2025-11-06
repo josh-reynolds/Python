@@ -2,7 +2,7 @@
 import unittest
 from typing import List, Any
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
-from cargo import passenger_from, freight_from, baggage_from, cargo_from
+from cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
@@ -866,6 +866,8 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(2, 0, -2)'")
 
+        # TO_DO: multiple destinations (illegal)
+
     def test_encode(self) -> None:
         """Test importing a Passenger from a string."""
         destination = SystemMock("Jupiter")
@@ -894,6 +896,34 @@ class PassengerTestCase(unittest.TestCase):
         expected = "low - (0, 0, 0)"
         self.assertEqual(actual, expected)
         self.assertEqual(f"{passenger}", "Low passage to Uranus")
+
+class CargoHoldTestCase(unittest.TestCase):
+    """Tests populating a cargo hold from saved JSON data."""
+
+    def test_cargo_hold_from(self) -> None:
+        """Test importing a list of cargo hold items from JSON string data."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : destination,
+                   Coordinate(1,0,-1) : source}
+
+        data = ["Baggage - (1, 0, -1) - (0, 0, 0)"]
+        actual = cargo_hold_from(data, systems)
+        expected = [Baggage(source, destination)]
+        self.assertEqual(actual, expected)
+
+
+
+
+        # basic import: Freight
+        # basic import: Cargo
+        # basic import: mixed contents
+
+        # unknown import type
+        # multiple destinations (illegal)
+        # destination doesn't match Passengers?
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

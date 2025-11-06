@@ -700,3 +700,13 @@ def get_cargo_table() -> Dict[int, Cargo]:
 
         table[table_key] = Cargo(name, quantity, price, unit_size, purchase, sale)
     return table
+
+def cargo_hold_from(strings: List[str],
+                    systems: Mapping[Coordinate, Hex]) -> Sequence[Freight | Cargo]:
+    """Return the contents of the cargo hold from a list of strings."""
+    result = []
+    for line in strings:
+        tokens = line.split(' - ')
+        if tokens[0] == "Baggage":
+            result.append(baggage_from(tokens[1], tokens[2], systems))
+    return result

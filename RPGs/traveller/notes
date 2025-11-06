@@ -2460,7 +2460,7 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Composite from_string function to process cargo hold contents
+#  * [....] Composite from_string function to process cargo hold contents
 #  * [    ] Encode/decode Ship as/from a string
 #  * [    ] Capture current location in save file
 #  * [    ] Encode/decode Financials as/from a string
