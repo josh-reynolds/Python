@@ -2,11 +2,12 @@
 import unittest
 from typing import List, Any
 from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
-from cargo import passenger_from, freight_from, baggage_from
+from cargo import passenger_from, freight_from, baggage_from, cargo_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
 from star_system import StarSystem
+from utilities import dictionary_from
 
 class CargoTestCase(unittest.TestCase):
     """Tests Cargo class."""
@@ -72,6 +73,21 @@ class CargoTestCase(unittest.TestCase):
         location = Location("Uranus")
         cargo4 = Cargo("Boo", '100', Credits(10), 1, {}, {}, location)
         self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
+
+    def test_cargo_from(self) -> None:
+        """Test importing Cargo from a parsed string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : destination,
+                   Coordinate(1,0,-1) : source}
+
+        actual = cargo_from("Meat", 10, "(0, 0, 0)", systems)
+        expected = Cargo("Meat", "10", Credits(1500), 1,
+                         dictionary_from("{Ag:-2,Na:2,In:3}"),
+                         dictionary_from("{Ag:-2,In:2,Po:1}"))
+        self.assertEqual(actual, expected)
 
 
 class CargoDepotTestCase(unittest.TestCase):
@@ -358,22 +374,22 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test removal of cargo from the depot or cargo hold."""
         depot = CargoDepotTestCase.depot
         cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {})
-        cargo2 = Cargo("Test", '10', Credits(1), 1, {}, {})
-        cargo3 = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo2 = Cargo("Test", '20', Credits(1), 1, {}, {})
+        cargo3 = Cargo("Test", '30', Credits(1), 1, {}, {})
         source = [cargo1, cargo2]
 
         depot.remove_cargo(source, cargo3, 10)
         self.assertEqual(len(source), 2)
 
         depot.remove_cargo(source, cargo2, 0)
-        self.assertEqual(source[1].quantity, 10)
+        self.assertEqual(source[1].quantity, 20)
         self.assertEqual(len(source), 2)
 
         depot.remove_cargo(source, cargo2, 1)
-        self.assertEqual(source[1].quantity, 9)
+        self.assertEqual(source[1].quantity, 19)
         self.assertEqual(len(source), 2)
 
-        depot.remove_cargo(source, cargo2, 9)
+        depot.remove_cargo(source, cargo2, 19)
         self.assertEqual(len(source), 1)
 
         depot.remove_cargo(source, cargo1, 11)

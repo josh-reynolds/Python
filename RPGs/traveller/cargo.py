@@ -255,6 +255,16 @@ class Cargo:
 
         return result
 
+    def __eq__(self, other: Any) -> bool:
+        """Test if two Cargoes are equal."""
+        if type(other) is type(self):
+            return self.name == other.name and \
+                   self.quantity == other.quantity and \
+                   self.source_world == other.source_world
+
+        return NotImplemented
+
+
     @property
     def tonnage(self) -> int:
         """Return the total tonnage used by this Cargo."""
@@ -649,3 +659,17 @@ class CargoDepot:
 
         cargo.append(table[roll])
         return cargo
+
+def cargo_from(name: str, quantity: int, source: str,
+                 systems: Mapping[Coordinate, Hex]) -> Cargo:
+    """Create a Cargo object from a parsed source string.
+
+    Name must match against the application cargo table. The
+    source coordinate string is in the format : (d,d,d), all +/- integers.
+
+    The function also needs access to a dictionary of StarSystems, and
+    the coordinates must be keys in that dictionary.
+    """
+    return Cargo("Meat", "10", Credits(1500), 1,
+                 dictionary_from("{Ag:-2,Na:2,In:3}"),
+                 dictionary_from("{Ag:-2,In:2,Po:1}"))

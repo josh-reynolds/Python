@@ -2451,6 +2451,7 @@
 #  * [DONE] Review remaining Passenger data: endurance, guess, survived
 #           Need to save?
 #  * [DONE] Encode/decode Freight as/from a (parsed) string
+#  * [DONE] Encode/decode Baggage as/from a (parsed) string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map)
@@ -2458,8 +2459,7 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Encode/decode Baggage as/from a (parsed) string
-#  * [    ] Encode/decode Cargo as/from a (parsed) string
+#  * [....] Encode/decode Cargo as/from a (parsed) string
 #  * [    ] Composite from_string function to process cargo hold contents
 #  * [    ] Encode/decode Ship as/from a string
 #  * [    ] Capture current location in save file
