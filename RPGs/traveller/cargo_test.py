@@ -906,8 +906,11 @@ class CargoHoldTestCase(unittest.TestCase):
         source.coordinate = Coordinate(1,0,-1)
         destination = SystemMock("Jupiter")
         destination.coordinate = Coordinate(0,0,0)
+        alternate = SystemMock("Mars")
+        alternate.coordinate = Coordinate(-1,0,1)
         systems = {Coordinate(0,0,0) : destination,
-                   Coordinate(1,0,-1) : source}
+                   Coordinate(1,0,-1) : source,
+                   Coordinate(-1,0,1) : alternate}
 
         data = ["Baggage - (1, 0, -1) - (0, 0, 0)"]
         actual = cargo_hold_from(data, systems)
@@ -967,7 +970,17 @@ class CargoHoldTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                           "unknown hold content type: 'Monkeys'")
 
-        # multiple destinations (illegal)
+        data = ["Freight - 5 - (1, 0, -1) - (0, 0, 0)",
+                "Baggage - (1, 0, -1) - (0, 0, 0)",
+                "Freight - 10 - (1, 0, -1) - (-1, 0, 1)",
+                "Freight - 15 - (1, 0, -1) - (0, 0, 0)"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                          "more than one destination in saved "
+                          + "data: '{'(0, 0, 0)', '(-1, 0, 1)'}'")
+
+        # source/destination not in systems
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

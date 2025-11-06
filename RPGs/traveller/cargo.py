@@ -707,20 +707,35 @@ def cargo_hold_from(strings: List[str],
                     systems: Mapping[Coordinate, Hex]) -> Sequence[Freight | Cargo]:
     """Return the contents of the cargo hold from a list of strings."""
     result: List[Freight | Cargo] = []
+    destinations = set()
     for line in strings:
         tokens = line.split(' - ')
         if tokens[0] == "Baggage":
-            result.append(baggage_from(tokens[1], tokens[2], systems))
+            source = tokens[1]
+            destination = tokens[2]
+            result.append(baggage_from(source, destination, systems))
+            destinations.add(destination)
+
         elif tokens[0] == "Freight":
             quantity = int(tokens[1])
-            result.append(freight_from(quantity, tokens[2], tokens[3], systems))
+            source = tokens[2]
+            destination = tokens[3]
+            result.append(freight_from(quantity, source, destination, systems))
+            destinations.add(destination)
+
         elif tokens[0] == "Cargo":
+            name = tokens[1]
             quantity = int(tokens[2])
             if tokens[3] == "None":
                 source = None
             else:
                 source = tokens[3]
-            result.append(cargo_from(tokens[1], quantity, source, systems))
+            result.append(cargo_from(name, quantity, source, systems))
+
         else:
             raise ValueError(f"unknown hold content type: '{tokens[0]}'")
+
+        if len(destinations) > 1:
+            raise ValueError(f"more than one destination in saved data: '{destinations}'")
+
     return result
