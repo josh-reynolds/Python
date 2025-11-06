@@ -897,6 +897,8 @@ class PassengerTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(f"{passenger}", "Low passage to Uranus")
 
+# pylint: disable=R0915
+# R0915 Too many statements (52/50)
 class CargoHoldTestCase(unittest.TestCase):
     """Tests populating a cargo hold from saved JSON data."""
 
@@ -980,7 +982,11 @@ class CargoHoldTestCase(unittest.TestCase):
                           "more than one destination in saved "
                           + "data: '{'(0, 0, 0)', '(-1, 0, 1)'}'")
 
-        # source/destination not in systems
+        data = ["Freight - 5 - (1, 0, -1) - (2, 0, -2)"]
+        with self.assertRaises(ValueError) as context:
+            _ = cargo_hold_from(data, systems)
+        self.assertEqual(f"{context.exception}",
+                         "coordinate not found in systems list: '(2, 0, -2)'")
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
