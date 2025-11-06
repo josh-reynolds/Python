@@ -323,6 +323,14 @@ def cargo_from(name: str, quantity: int, source: None | str,
             break
     cargo.quantity = quantity
 
+    if source:
+        source_coordinate = coordinate_from(source)
+        if source_coordinate in systems:
+            source_world = cast(StarSystem, systems[source_coordinate])
+        else:
+            raise ValueError(f"coordinate not found in systems list: '{source}'")
+        cargo.source_world = source_world
+
     return cargo
 
 

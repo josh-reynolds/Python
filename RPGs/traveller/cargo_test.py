@@ -76,12 +76,12 @@ class CargoTestCase(unittest.TestCase):
 
     def test_cargo_from(self) -> None:
         """Test importing Cargo from a parsed string."""
-        source = SystemMock("Uranus")
-        source.coordinate = Coordinate(1,0,-1)
-        destination = SystemMock("Jupiter")
-        destination.coordinate = Coordinate(0,0,0)
-        systems = {Coordinate(0,0,0) : destination,
-                   Coordinate(1,0,-1) : source}
+        source_1 = SystemMock("Uranus")
+        source_1.coordinate = Coordinate(1,0,-1)
+        source_2 = SystemMock("Jupiter")
+        source_2 .coordinate = Coordinate(0,0,0)
+        systems = {Coordinate(0,0,0) : source_2 ,
+                   Coordinate(1,0,-1) : source_1}
 
         actual = cargo_from("Meat", 10, None, systems)
         expected = Cargo("Meat", "10", Credits(1500), 1,
@@ -97,7 +97,21 @@ class CargoTestCase(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(actual.tonnage, expected.tonnage)
 
-        # cargo with sourceworld assigned
+        actual = cargo_from("Computers", 3, None, systems)
+        expected = Cargo("Computers", "3", Credits(10000000), 2,
+                         dictionary_from("{In:-2,Ri:-2}"),
+                         dictionary_from("{Ag:-3,Ni:2,Po:1}"))
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual.tonnage, expected.tonnage)
+
+        actual = cargo_from("Tools", 7, "(1,0,-1)", systems)
+        expected = Cargo("Tools", "7", Credits(10000), 1,
+                         dictionary_from("{In:-3,Ri:-2,Po:3}"),
+                         dictionary_from("{In:-2,Ri:-1,Po:3}"),
+                         source_1)
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual.tonnage, expected.tonnage)
+
         # cargo not found in table
         # quantity negative/zero
         # invalid digits in quantity
