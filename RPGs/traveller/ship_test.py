@@ -323,6 +323,12 @@ class ShipTestCase(unittest.TestCase):
         expected = Ship()
         self.assertEqual(actual, expected)
 
+        string = "Funkstar - 0 - R - 0 - R - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.name = "Funkstar"
+        self.assertEqual(actual, expected)
+
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""
 

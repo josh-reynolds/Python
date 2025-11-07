@@ -491,4 +491,9 @@ def ship_from(string: str) -> Ship:
 
     Cargo hold contents and passenger manifest are handled separately.
     """
-    return Ship()
+    tokens = string.split(' - ')
+    ship = Ship()
+
+    ship.name = tokens[0]
+
+    return ship
