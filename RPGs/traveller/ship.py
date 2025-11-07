@@ -500,4 +500,13 @@ def ship_from(string: str) -> Ship:
     if tokens[2] == 'U':
         ship.fuel_quality = FuelQuality.UNREFINED
 
+    ship.unrefined_jump_counter = int(tokens[3])
+
+    if tokens[4] == 'P':
+        ship.repair_status = RepairStatus.PATCHED
+    elif tokens[4] == 'B':
+        ship.repair_status = RepairStatus.BROKEN
+
+    ship.life_support_level = int(tokens[5])
+
     return ship

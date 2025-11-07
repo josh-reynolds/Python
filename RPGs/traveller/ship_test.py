@@ -341,8 +341,29 @@ class ShipTestCase(unittest.TestCase):
         expected.fuel_quality = FuelQuality.UNREFINED
         self.assertEqual(actual, expected)
 
-        # set each value
+        string = "Weaselfish - 0 - R - 1 - R - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.unrefined_jump_counter = 1
+        self.assertEqual(actual, expected)
 
+        string = "Weaselfish - 0 - R - 0 - P - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.repair_status = RepairStatus.PATCHED
+        self.assertEqual(actual, expected)
+
+        string = "Weaselfish - 0 - R - 0 - B - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.repair_status = RepairStatus.BROKEN
+        self.assertEqual(actual, expected)
+
+        string = "Weaselfish - 0 - R - 0 - R - 100"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.life_support_level = 100
+        self.assertEqual(actual, expected)
 
         # too many tokens
         # not enough tokens
