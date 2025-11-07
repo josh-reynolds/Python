@@ -476,7 +476,20 @@ class Ship:
 
     def encode(self) -> str:
         """Return a string encoding the Ship to save and load state."""
-        return "foo"
+        if self.fuel_quality == FuelQuality.REFINED:
+            quality = "R"
+        elif self.fuel_quality == FuelQuality.REFINED:
+            quality = "U"
+
+        if self.repair_status == RepairStatus.REPAIRED:
+            repair = "R"
+        elif self.repair_status == RepairStatus.PATCHED:
+            repair = "P"
+        elif self.repair_status == RepairStatus.BROKEN:
+            repair = "B"
+
+        return f"{self.name} - {self.fuel} - {quality} - " +\
+                f"{self.unrefined_jump_counter} - {repair} - {self.life_support_level}"
 
 
 # TO_DO: this will need to expand once we allow different ship models

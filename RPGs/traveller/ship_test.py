@@ -441,6 +441,11 @@ class ShipTestCase(unittest.TestCase):
 
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""
+        ship = Ship()
+
+        actual = ship.encode()
+        expected = "Weaselfish - 0 - R - 0 - R - 0"
+        self.assertEqual(actual, expected)
 
 
 class PilotTestCase(unittest.TestCase):
