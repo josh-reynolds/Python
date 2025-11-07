@@ -1036,6 +1036,32 @@ class CargoHoldTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(2, 0, -2)'")
 
+    def test_cargo_hold_from_encode(self) -> None:
+        """Test compatibility of *.encode() and cargo_hold_from()."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        alternate = SystemMock("Mars")
+        alternate.coordinate = Coordinate(-1,0,1)
+        systems = {Coordinate(0,0,0) : destination,
+                   Coordinate(1,0,-1) : source,
+                   Coordinate(-1,0,1) : alternate}
+
+        data = [Baggage(source, destination).encode(),
+                Freight(10, source, destination).encode(),
+                Cargo("Meat", "10", Credits(1500), 1,
+                      dictionary_from("{Ag:-2,Na:2,In:3}"),
+                      dictionary_from("{Ag:-2,In:2,Po:1}")).encode()]
+        actual = cargo_hold_from(data, systems)
+        expected = [Baggage(source, destination),
+                    Freight(10, source, destination),
+                    Cargo("Meat", "10", Credits(1500), 1,
+                          dictionary_from("{Ag:-2,Na:2,In:3}"),
+                          dictionary_from("{Ag:-2,In:2,Po:1}"))]
+        self.assertEqual(actual, expected)
+
+
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

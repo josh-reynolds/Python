@@ -316,7 +316,7 @@ class Cargo:
     def encode(self) -> str:
         """Return a string encoding the Cargo object to save and load state."""
         if self.source_world:
-            coord = self.source_world.coordinate
+            coord = f"{self.source_world.coordinate}"
         else:
             coord = "None"
         return f"Cargo - {self.name} - {self.quantity} - {coord}"
