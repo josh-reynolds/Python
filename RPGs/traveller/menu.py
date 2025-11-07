@@ -357,6 +357,8 @@ class Play(Screen):
 
         date_string = f"{self.parent.date}"
 
+        ship_string = self.parent.ship.encode()
+
         passenger_list = [p.encode() for p in self.parent.ship.passengers]
 
         cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
@@ -365,6 +367,7 @@ class Play(Screen):
                      'date' : date_string,
                      'systems' : systems,
                      'subsectors' : subsectors,
+                     'ship' : ship_string,
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list
                      }
