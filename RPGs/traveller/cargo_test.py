@@ -782,6 +782,18 @@ class BaggageTestCase(unittest.TestCase):
                          "string is not a valid 3-axis coordinate "
                          + "- should sum to zero: '(1, 1, 1)'")
 
+    def test_encode(self) -> None:
+        """Test importing a Baggage object from a string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        baggage = Baggage(source, destination)
+
+        actual = baggage.encode()
+        expected = "Baggage - (1, 0, -1) - (0, 0, 0)"
+        self.assertEqual(actual, expected)
+
 
 class PassengerTestCase(unittest.TestCase):
     """Tests Passenger class."""

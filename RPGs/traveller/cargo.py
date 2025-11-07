@@ -194,6 +194,10 @@ class Baggage(Freight):
         """Return the string representation of a piece of Baggage."""
         return f"Baggage({self.source_world!r}, {self.destination_world!r})"
 
+    def encode(self) -> str:
+        """Return a string encoding the Baggage object to save and load state."""
+        return f"Baggage - {self.source_world.coordinate} - {self.destination_world.coordinate}"
+
 
 # TO_DO: duplicates code from freight_from, consider merging,
 #        or at least extracting the coordinate parsing bits
