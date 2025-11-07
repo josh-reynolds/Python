@@ -2468,7 +2468,7 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] Trap mixed destinations between Freight/Passengers in save & load
-#  * [    ] Encode/decode Ship as/from a string
+#  * [....] Encode/decode Ship as/from a string
 #  * [    ] Capture current location in save file
 #  * [    ] Encode/decode Financials as/from a string
 #  * [    ] Handle save/load exceptions in app rather than crashing out
@@ -2527,6 +2527,9 @@
 #  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
 #           maybe we should have either decode_foo() and Foo.encode() or
 #           foo_from() and Foo.to()...
+#  * [    ] Also standardize interface, some classes 'encode' with __str__. Possibly
+#           uniform encode() protocol everywhere, which can always just wrap __str__
+#           in the simple cases.
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Should get_input() live in screen/controller classes?
 #  * [    ] Should on_notify() live in screen/controller classes?

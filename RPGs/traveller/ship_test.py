@@ -1,46 +1,57 @@
 """Contains tests for the ship module."""
 import unittest
-from cargo import Freight
+from typing import Any
+from cargo import Freight, Cargo, Passenger
 from coordinate import Coordinate
 from financials import Credits
-from mock import ObserverMock
+from mock import ObserverMock, SystemMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
 from star_system import StarSystem, UWP
 
+# pylint: disable=R0904
+# R0904: Too many public methods
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
     ship: Ship = Ship()
 
-    # pylint: disable=R0903
+    # pylint: disable=R0903,W0231
     # R0903: Too few public methods (1/2)
-    class CargoMock:
+    # W0231: __init__ method from base class 'Cargo' is not called
+    class CargoMock(Cargo):
         """Mocks a cargo interface for testing."""
 
-        def __init__(self, quantity):
+        def __init__(self, quantity: int) -> None:
             """Create an instance of a CargoMock object."""
             self.quantity = quantity
 
         @property
-        def tonnage(self):
+        def tonnage(self) -> int:
             """Return the quantity of the CargoMock object."""
             return self.quantity
+
+        def __eq__(self, other: Any) -> bool:
+            """Test if two CargoMock objects are equal."""
+            if type(other) is type(self):
+                return self.quantity == other.quantity
+            return NotImplemented
 
     # pylint: disable=R0903
     # R0903: Too few public methods (0/2)
     class FreightMock:
         """Mocks a freight interface for testing."""
 
-        def __init__(self, destination):
+        def __init__(self, destination: Any) -> None:
             """Create an instance of a FreightMock object."""
             self.destination_world = destination
 
-    # pylint: disable=R0903
-    # R0903: Too few public methods (0/2)
-    class PassengerMock:
+    # pylint: disable=R0903,W0231
+    # R0903: Too few public methods (1/2)
+    # W0231: __init__ method from base class 'Passenger' is not called
+    class PassengerMock(Passenger):
         """Mocks a passenger interface for testing."""
 
-        def __init__(self, destination):
+        def __init__(self, destination: Any) -> None:
             """Create an instance of a PassengerMock object."""
             self.destination = destination
 
@@ -49,7 +60,7 @@ class ShipTestCase(unittest.TestCase):
     class SystemMock(StarSystem):
         """Mocks a StarSystem interface for testing."""
 
-        def __init__(self, name):
+        def __init__(self, name: str) -> None:
             """Create an instance of a SystemMock object."""
             super().__init__(name, Coordinate(1,1,1),
                              UWP("A",1,1,1,1,1,1,1), True)
@@ -59,7 +70,7 @@ class ShipTestCase(unittest.TestCase):
     class ControlsMock:
         """Mocks a controller for testing."""
 
-        def __init__(self, commands):
+        def __init__(self, commands: Any) -> None:
             """Create an instance of a ControlsMock."""
             self.commands = commands
             self.invocations = 0
@@ -71,11 +82,11 @@ class ShipTestCase(unittest.TestCase):
             self.invocations += 1
             return response
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Create a fixture for testing the Ship class."""
         ShipTestCase.ship = Ship()
 
-    def test_ship_string(self):
+    def test_ship_string(self) -> None:
         """Test the string representation of a Ship object."""
         self.assertEqual(f"{ShipTestCase.ship}",
                          "Weaselfish -- Type A Free Trader\n"
@@ -83,7 +94,7 @@ class ShipTestCase(unittest.TestCase):
                          "4 crew, 6 passenger staterooms, 20 low berths\n"
                          "Cargo hold 82 tons, fuel tank 30 tons")
 
-    def test_cargo_hold_reporting(self):
+    def test_cargo_hold_reporting(self) -> None:
         """Test reporting of cargo hold contents."""
         cargo1 = ShipTestCase.CargoMock(20)
         cargo2 = ShipTestCase.CargoMock(50)
@@ -95,7 +106,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 2)
         self.assertEqual(ShipTestCase.ship.cargo_hold()[1], cargo2)
 
-    def test_loading_cargo(self):
+    def test_loading_cargo(self) -> None:
         """Test loading cargo into the hold."""
         cargo1 = ShipTestCase.CargoMock(1)
         cargo2 = ShipTestCase.CargoMock(1)
@@ -106,7 +117,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 80)
         self.assertEqual(len(ShipTestCase.ship.hold), 2)
 
-    def test_unloading_cargo(self):
+    def test_unloading_cargo(self) -> None:
         """Test unloading cargo from the hold."""
         cargo = ShipTestCase.CargoMock(20)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
@@ -120,7 +131,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
 
-    def test_refuel(self):
+    def test_refuel(self) -> None:
         """Test refuelling the Ship."""
         ship = ShipTestCase.ship
         ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
@@ -138,7 +149,7 @@ class ShipTestCase(unittest.TestCase):
         cost = ship.refuel("A")
         self.assertEqual(cost, Credits(0))        # full tank case
 
-    def test_recharge(self):
+    def test_recharge(self) -> None:
         """Test recharging the Ship's life support."""
         ship = ShipTestCase.ship
         ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
@@ -155,23 +166,23 @@ class ShipTestCase(unittest.TestCase):
         cost = ShipTestCase.ship.recharge()
         self.assertEqual(cost, Credits(0))        # full life support case
 
-    def test_trade_skill(self):
+    def test_trade_skill(self) -> None:
         """Test retrieval of the Ship's trade skill value."""
         self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
 
-    def test_crew_salary(self):
+    def test_crew_salary(self) -> None:
         """Test paying the monthly crew salary."""
         self.assertEqual(ShipTestCase.ship.crew_salary(), Credits(15000))
 
-    def test_loan_payment(self):
+    def test_loan_payment(self) -> None:
         """Test paying the monthly loan."""
         self.assertEqual(ShipTestCase.ship.loan_payment(), Credits(154500))
 
-    def test_maintenance_cost(self):
+    def test_maintenance_cost(self) -> None:
         """Test paying the annual maintenance fee."""
         self.assertEqual(ShipTestCase.ship.maintenance_cost(), Credits(37080))
 
-    def test_destination(self):
+    def test_destination(self) -> None:
         """Test determination of contracted destination."""
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
@@ -179,22 +190,22 @@ class ShipTestCase(unittest.TestCase):
         ship.load_cargo(ShipTestCase.CargoMock(20))
         self.assertEqual(ship.destination, None)
 
-        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
-        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
-        self.assertEqual(ship.destination, "Uranus")
+        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
+        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
+        self.assertEqual(ship.destination, SystemMock("Uranus"))
 
         ship.load_cargo(ShipTestCase.CargoMock(20))
-        self.assertEqual(ship.destination, "Uranus")
+        self.assertEqual(ship.destination, SystemMock("Uranus"))
 
         self.assertEqual(len(ship.hold), 4)
 
-        ship.load_cargo(Freight(1, "Pluto", "Jupiter"))
+        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Jupiter")))
         with self.assertRaises(ValueError) as context:
             _ = ship.destination
         self.assertEqual(f"{context.exception}",
                          "More than one destination between Freight and Passengers!")
 
-    def test_sufficient_jump_fuel(self):
+    def test_sufficient_jump_fuel(self) -> None:
         """Test determination of sufficient fuel to execute a jump."""
         ship = ShipTestCase.ship
         ship.current_fuel = 30
@@ -209,7 +220,7 @@ class ShipTestCase(unittest.TestCase):
         ship.current_fuel = 20
         self.assertTrue(ship.sufficient_jump_fuel())
 
-    def test_sufficient_life_support(self):
+    def test_sufficient_life_support(self) -> None:
         """Test determination of sufficient life support to execute a jump."""
         ship = ShipTestCase.ship
         ship.life_support_level = 100
@@ -222,12 +233,12 @@ class ShipTestCase(unittest.TestCase):
                          "Insufficient life support to survive jump.\n" +
                          "Life support is at 99%.")
 
-    def test_invalid_freight_and_passengers(self):
+    def test_invalid_freight_and_passengers(self) -> None:
         """Test trapping of invalid Freight/Passenger combinations."""
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
 
-        ship.load_cargo(Freight(1, "Pluto", "Uranus"))
+        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
         ship.passengers += [ShipTestCase.PassengerMock("Jupiter")]
         with self.assertRaises(ValueError) as context:
             _ = ship.destination
@@ -278,7 +289,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Warning: drive failure! Unable to jump.")
         self.assertEqual(observer.priority, "red")
 
-    def test_add_observer(self):
+    def test_add_observer(self) -> None:
         """Test adding an observer to the Ship."""
         ship = ShipTestCase.ship
         observer = ObserverMock()
@@ -286,7 +297,7 @@ class ShipTestCase(unittest.TestCase):
         ship.add_observer(observer)
         self.assertEqual(ship.observers[0], observer)
 
-    def test_message_observers(self):
+    def test_message_observers(self) -> None:
         """Test sending messages to observers."""
         ship = ShipTestCase.ship
         observer = ObserverMock()
@@ -303,6 +314,12 @@ class ShipTestCase(unittest.TestCase):
         ship.message_observers("Yet another test", "red")
         self.assertEqual(observer.message, "Yet another test")
         self.assertEqual(observer.priority, "red")
+
+    def test_ship_from(self) -> None:
+        """Test importing a Ship from a string."""
+
+    def test_encode(self) -> None:
+        """Test exporting a Ship to a string."""
 
 
 class PilotTestCase(unittest.TestCase):

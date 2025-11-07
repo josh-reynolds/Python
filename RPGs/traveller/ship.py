@@ -458,3 +458,22 @@ class Ship:
             die_roll(2) + self.unrefined_jump_counter > 10):
             self.repair_status = RepairStatus.BROKEN
             self.message_observers("Warning: drive failure!", "red")
+
+    def encode(self) -> str:
+        """Return a string encoding the Ship to save and load state."""
+        return "foo"
+
+
+# TO_DO: this will need to expand once we allow different ship models
+#        but for now we just have the hard-coded Free Trader
+def ship_from(string: str) -> Ship:
+    """Create a Ship object from a string representation.
+
+    The string is in the following format:
+
+    name - fuel - fuel_quality - jump_counter - repair    - life_support
+    w*   - d*   - R | U        - d*           - R | P | B - d*
+
+    Cargo hold contents and passenger manifest are handled separately.
+    """
+    return None

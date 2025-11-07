@@ -171,8 +171,8 @@ class Menu(Screen):
             destinations.add(passenger.destination)
         for item in hold_contents:
             if type(item) in [Baggage, Freight]:
-                # mypy still checks against Cargo, since
-                # the list is type Sequence[Freight | Cargo]
+                # mypy still checks against Cargo despite the type check
+                # since the list is type Sequence[Freight | Cargo]
                 destinations.add(item.destination_world)    # type: ignore[union-attr]
         if len(destinations) > 1:
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
