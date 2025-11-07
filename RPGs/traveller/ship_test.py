@@ -462,6 +462,9 @@ class ShipTestCase(unittest.TestCase):
         expected = "Weaselfish - 0 - U - 0 - B - 0"
         self.assertEqual(actual, expected)
 
+        ship2 = ship_from(actual)
+        self.assertEqual(ship, ship2)
+
 
 class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""
