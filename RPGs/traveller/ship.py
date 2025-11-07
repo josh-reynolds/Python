@@ -492,10 +492,23 @@ def ship_from(string: str) -> Ship:
     Cargo hold contents and passenger manifest are handled separately.
     """
     tokens = string.split(' - ')
+
+    if len(tokens) > 6:
+        raise ValueError(f"input string has extra data: '{string}'")
+
+    if len(tokens) < 6:
+        raise ValueError(f"input string is missing data: '{string}'")
+
     ship = Ship()
 
     ship.name = tokens[0]
+
     ship.fuel = int(tokens[1])
+    if ship.fuel > ship.fuel_tank:
+        raise ValueError(f"fuel level in input string is larger than the fuel tank: '{ship.fuel}'")
+    if ship.fuel < 0:
+        raise ValueError(f"fuel level must be a positive integer: '{ship.fuel}'")
+
 
     if tokens[2] == 'U':
         ship.fuel_quality = FuelQuality.UNREFINED

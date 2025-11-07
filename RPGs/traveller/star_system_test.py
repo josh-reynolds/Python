@@ -183,7 +183,7 @@ class StarSystemTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             _ = hex_from(string)
         self.assertEqual(f"{context.exception}",
-                         "input string has extra data: "+
+                         "input string has extra data: " +
                          "'(0, 0, 0) - Yorbund - A875955-A In - G - Extra - Stuff'")
 
         string = "(0, 0, 0) - Deep Space"

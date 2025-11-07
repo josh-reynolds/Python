@@ -365,10 +365,36 @@ class ShipTestCase(unittest.TestCase):
         expected.life_support_level = 100
         self.assertEqual(actual, expected)
 
-        # too many tokens
-        # not enough tokens
-        # fuel level > tank size | < 0
-        # non-numeric fuel amount
+        string = "Weaselfish - 0 - R - 0 - R - 0 - extra"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string has extra data: 'Weaselfish - 0 - R - 0 - R - 0 - extra'")
+
+        string = "Weaselfish - 0 - R - 0 - R"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string is missing data: 'Weaselfish - 0 - R - 0 - R'")
+
+        string = "Weaselfish - 31 - R - 0 - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "fuel level in input string is larger than the fuel tank: '31'")
+
+        string = "Weaselfish - -1 - R - 0 - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "fuel level must be a positive integer: '-1'")
+
+        string = "Weaselfish - m - R - 0 - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
         # invalid fuel_quality
         # non-numeric jump_counter
         # negative jump_counter
