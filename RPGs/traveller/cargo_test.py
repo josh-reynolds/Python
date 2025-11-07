@@ -151,6 +151,29 @@ class CargoTestCase(unittest.TestCase):
                          "string is not a valid 3-axis coordinate "
                          + "- should sum to zero: '(1, 1, 1)'")
 
+    def test_encode(self) -> None:
+        """Test exporting a Cargo object to a string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        cargo = Cargo("Meat", "10", Credits(1500), 1,
+                         dictionary_from("{Ag:-2,Na:2,In:3}"),
+                         dictionary_from("{Ag:-2,In:2,Po:1}"),
+                         source
+                      )
+
+        actual = cargo.encode()
+        expected = "Cargo - Meat - 10 - (1, 0, -1)"
+        self.assertEqual(actual, expected)
+
+        cargo = Cargo("Meat", "10", Credits(1500), 1,
+                         dictionary_from("{Ag:-2,Na:2,In:3}"),
+                         dictionary_from("{Ag:-2,In:2,Po:1}")
+                      )
+
+        actual = cargo.encode()
+        expected = "Cargo - Meat - 10 - None"
+        self.assertEqual(actual, expected)
+
 
 class CargoDepotTestCase(unittest.TestCase):
     """Tests CargoDepot class."""
@@ -712,7 +735,7 @@ class FreightTestCase(unittest.TestCase):
                          + "- should sum to zero: '(1, 1, 1)'")
 
     def test_encode(self) -> None:
-        """Test importing a Freight object from a string."""
+        """Test exporting a Freight object to a string."""
         source = SystemMock("Uranus")
         source.coordinate = Coordinate(1,0,-1)
         destination = SystemMock("Jupiter")
@@ -783,7 +806,7 @@ class BaggageTestCase(unittest.TestCase):
                          + "- should sum to zero: '(1, 1, 1)'")
 
     def test_encode(self) -> None:
-        """Test importing a Baggage object from a string."""
+        """Test exporting a Baggage object to a string."""
         source = SystemMock("Uranus")
         source.coordinate = Coordinate(1,0,-1)
         destination = SystemMock("Jupiter")
@@ -894,7 +917,7 @@ class PassengerTestCase(unittest.TestCase):
                          "coordinate not found in systems list: '(2, 0, -2)'")
 
     def test_encode(self) -> None:
-        """Test importing a Passenger from a string."""
+        """Test exporting a Passenger to a string."""
         destination = SystemMock("Jupiter")
         destination.coordinate = Coordinate(0,0,0)
         passenger = Passenger(PassageClass.HIGH, destination)

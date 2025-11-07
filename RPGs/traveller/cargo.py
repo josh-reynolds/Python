@@ -313,6 +313,14 @@ class Cargo:
             return value
         return int(quantity)
 
+    def encode(self) -> str:
+        """Return a string encoding the Cargo object to save and load state."""
+        if self.source_world:
+            coord = self.source_world.coordinate
+        else:
+            coord = "None"
+        return f"Cargo - {self.name} - {self.quantity} - {coord}"
+
 
 def cargo_from(name: str, quantity: int, source: None | str,
                  systems: Mapping[Coordinate, Hex]) -> Cargo:
