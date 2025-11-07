@@ -9,7 +9,7 @@ from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
 from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
-from cargo import passenger_from
+from cargo import passenger_from, cargo_hold_from
 from command import Command
 from coordinate import Coordinate
 from financials import Credits
@@ -112,6 +112,8 @@ class Menu(Screen):
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
+    # pylint: disable=R0914
+    # R0914: Too many local variables (16/15)
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         files = get_save_files()
@@ -159,15 +161,19 @@ class Menu(Screen):
             passenger.guess_survivors(self.parent.ship.low_passenger_count)
         self.parent.ship.passengers = passengers
 
-        # cargo
-        # freight
-        # baggage
+        hold_contents = cargo_hold_from(data['cargo_hold'], systems)
+        self.parent.ship.hold = hold_contents
+
         # ship
 
-        # TO_DO: get freight/baggage in here too, once we are importing them
         destinations = set()
         for passenger in passengers:
             destinations.add(passenger.destination)
+        for item in hold_contents:
+            if type(item) in [Baggage, Freight]:
+                # mypy still checks against Cargo, since
+                # the list is type Sequence[Freight | Cargo]
+                destinations.add(item.destination_world)    # type: ignore[union-attr]
         if len(destinations) > 1:
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
             return None

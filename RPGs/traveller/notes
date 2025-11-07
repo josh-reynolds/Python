@@ -2136,6 +2136,12 @@
 # also means it doesn't need to parse a string. Assume it has been
 # tokenized in the composite, and we can get the individual pieces
 # (albeit maybe still strings).
+#
+# Alright, that took a while, but it was pretty mechanical once
+# the pattern was established. The contents of the cargo hold is
+# now written to and read from the save file. Wrapping up Ship
+# should be easy now. Then all that's left is location and 
+# Financials IIRC.
 # 
 # -------------------------------------------------------------
 
@@ -2518,6 +2524,9 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
+#  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
+#           maybe we should have either decode_foo() and Foo.encode() or
+#           foo_from() and Foo.to()...
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Should get_input() live in screen/controller classes?
 #  * [    ] Should on_notify() live in screen/controller classes?
