@@ -149,6 +149,21 @@ class Ship:
         self.observers: List[Any] = []     # we don't have a type representing Observers
         self.controls: Any | None = None   # same story for controls...
 
+    def __eq__(self, other:Any) -> bool:
+        """Test if two Ships are equal."""
+        if type(other) is type(self):
+            return self.name == other.name and\
+                    self.model == other.model and\
+                    self.fuel == other.fuel and\
+                    self.fuel_quality == other.fuel_quality and\
+                    self.unrefined_jump_counter == other.unrefined_jump_counter and\
+                    self.repair_status == other.repair_status and\
+                    self.life_support_level == other.life_support_level and\
+                    self.passengers == other.passengers and\
+                    self.hold == other.hold
+
+        return NotImplemented
+
     def __str__(self) -> str:
         """Return the string representation of a Ship."""
         result = f"{self.name} -- {self.model}\n" +\
@@ -476,4 +491,4 @@ def ship_from(string: str) -> Ship:
 
     Cargo hold contents and passenger manifest are handled separately.
     """
-    return None
+    return Ship()

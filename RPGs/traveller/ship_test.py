@@ -6,6 +6,7 @@ from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, SystemMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
+from ship import ship_from
 from star_system import StarSystem, UWP
 
 # pylint: disable=R0904
@@ -317,6 +318,10 @@ class ShipTestCase(unittest.TestCase):
 
     def test_ship_from(self) -> None:
         """Test importing a Ship from a string."""
+        string = "Weaselfish - 0 - R - 0 - R - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        self.assertEqual(actual, expected)
 
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""
