@@ -316,6 +316,8 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "Yet another test")
         self.assertEqual(observer.priority, "red")
 
+    # pylint: disable=R0915
+    # R0915: Too many statements (88/50)
     def test_ship_from(self) -> None:
         """Test importing a Ship from a string."""
         string = "Weaselfish - 0 - R - 0 - R - 0"
@@ -395,12 +397,47 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
 
-        # invalid fuel_quality
-        # non-numeric jump_counter
-        # negative jump_counter
-        # invalid repair_status
-        # non-numeric life_support
-        # life_support outside 0-100 range
+        string = "Weaselfish - 0 - X - 0 - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "unknown fuel quality in saved data: 'X'")
+
+        string = "Weaselfish - 0 - R - -1 - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "jump counter must be a positive integer: '-1'")
+
+        string = "Weaselfish - 0 - R - m - R - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+        string = "Weaselfish - 0 - R - 0 - X - 0"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "unknown repair status in saved data: 'X'")
+
+        string = "Weaselfish - 0 - R - 0 - R - -1"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "life support must be in the range 0-100: '-1'")
+
+        string = "Weaselfish - 0 - R - 0 - R - 101"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "life support must be in the range 0-100: '101'")
+
+        string = "Weaselfish - 0 - R - 0 - R - m"
+        with self.assertRaises(ValueError) as context:
+            _ = ship_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
 
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""

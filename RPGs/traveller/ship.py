@@ -509,17 +509,25 @@ def ship_from(string: str) -> Ship:
     if ship.fuel < 0:
         raise ValueError(f"fuel level must be a positive integer: '{ship.fuel}'")
 
-
+    if tokens[2] not in ['R', 'U']:
+        raise ValueError(f"unknown fuel quality in saved data: '{tokens[2]}'")
     if tokens[2] == 'U':
         ship.fuel_quality = FuelQuality.UNREFINED
 
     ship.unrefined_jump_counter = int(tokens[3])
+    if ship.unrefined_jump_counter < 0:
+        raise ValueError("jump counter must be a positive integer: " +
+                         f"'{ship.unrefined_jump_counter}'")
 
+    if tokens[4] not in ['R', 'P', 'B']:
+        raise ValueError(f"unknown repair status in saved data: '{tokens[4]}'")
     if tokens[4] == 'P':
         ship.repair_status = RepairStatus.PATCHED
     elif tokens[4] == 'B':
         ship.repair_status = RepairStatus.BROKEN
 
     ship.life_support_level = int(tokens[5])
+    if ship.life_support_level < 0 or ship.life_support_level > 100:
+        raise ValueError(f"life support must be in the range 0-100: '{ship.life_support_level}'")
 
     return ship
