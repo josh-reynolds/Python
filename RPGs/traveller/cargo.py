@@ -146,6 +146,11 @@ class Freight:
                     and self.destination_world == other.destination_world
         return NotImplemented
 
+    def encode(self) -> str:
+        """Return a string encoding the Freight object to save and load state."""
+        return f"Freight - {self.tonnage} - {self.source_world.coordinate} " +\
+               f"- {self.destination_world.coordinate}"
+
 
 def freight_from(tonnage: int, source: str, destination: str,
                  systems: Mapping[Coordinate, Hex]) -> Freight:

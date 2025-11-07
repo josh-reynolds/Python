@@ -9,6 +9,9 @@ from mock import ObserverMock, DateMock, SystemMock
 from star_system import StarSystem
 from utilities import dictionary_from
 
+# pylint: disable=C0302
+# C0302: Too many lines in module (1003/1000)
+
 class CargoTestCase(unittest.TestCase):
     """Tests Cargo class."""
 
@@ -707,6 +710,18 @@ class FreightTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "string is not a valid 3-axis coordinate "
                          + "- should sum to zero: '(1, 1, 1)'")
+
+    def test_encode(self) -> None:
+        """Test importing a Freight object from a string."""
+        source = SystemMock("Uranus")
+        source.coordinate = Coordinate(1,0,-1)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = Coordinate(0,0,0)
+        freight = Freight(10, source, destination)
+
+        actual = freight.encode()
+        expected = "Freight - 10 - (1, 0, -1) - (0, 0, 0)"
+        self.assertEqual(actual, expected)
 
 
 class BaggageTestCase(unittest.TestCase):
