@@ -478,7 +478,7 @@ class Ship:
         """Return a string encoding the Ship to save and load state."""
         if self.fuel_quality == FuelQuality.REFINED:
             quality = "R"
-        elif self.fuel_quality == FuelQuality.REFINED:
+        elif self.fuel_quality == FuelQuality.UNREFINED:
             quality = "U"
 
         if self.repair_status == RepairStatus.REPAIRED:

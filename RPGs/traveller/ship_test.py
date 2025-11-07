@@ -447,6 +447,21 @@ class ShipTestCase(unittest.TestCase):
         expected = "Weaselfish - 0 - R - 0 - R - 0"
         self.assertEqual(actual, expected)
 
+        ship.fuel_quality = FuelQuality.UNREFINED
+        actual = ship.encode()
+        expected = "Weaselfish - 0 - U - 0 - R - 0"
+        self.assertEqual(actual, expected)
+
+        ship.repair_status = RepairStatus.PATCHED
+        actual = ship.encode()
+        expected = "Weaselfish - 0 - U - 0 - P - 0"
+        self.assertEqual(actual, expected)
+
+        ship.repair_status = RepairStatus.BROKEN
+        actual = ship.encode()
+        expected = "Weaselfish - 0 - U - 0 - B - 0"
+        self.assertEqual(actual, expected)
+
 
 class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""

@@ -2611,6 +2611,7 @@
 #            until phase five...
 #  * [    ] Add extended StarSystem details
 #  * [    ] Controls now allows us to have an AI or kiosk mode...
+#  * [    ] Separate out static ship data into a 'ship model' class and compose
 #  * [    ] Add different ship types and ship design
 #  * [    ] Working passage?
 #  * [    ] Should we allow the option of 'close jump?'
