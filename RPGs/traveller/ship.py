@@ -495,5 +495,9 @@ def ship_from(string: str) -> Ship:
     ship = Ship()
 
     ship.name = tokens[0]
+    ship.fuel = int(tokens[1])
+
+    if tokens[2] == 'U':
+        ship.fuel_quality = FuelQuality.UNREFINED
 
     return ship

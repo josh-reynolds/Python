@@ -329,6 +329,32 @@ class ShipTestCase(unittest.TestCase):
         expected.name = "Funkstar"
         self.assertEqual(actual, expected)
 
+        string = "Weaselfish - 30 - R - 0 - R - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.fuel = 30
+        self.assertEqual(actual, expected)
+
+        string = "Weaselfish - 0 - U - 0 - R - 0"
+        actual = ship_from(string)
+        expected = Ship()
+        expected.fuel_quality = FuelQuality.UNREFINED
+        self.assertEqual(actual, expected)
+
+        # set each value
+
+
+        # too many tokens
+        # not enough tokens
+        # fuel level > tank size | < 0
+        # non-numeric fuel amount
+        # invalid fuel_quality
+        # non-numeric jump_counter
+        # negative jump_counter
+        # invalid repair_status
+        # non-numeric life_support
+        # life_support outside 0-100 range
+
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""
 
