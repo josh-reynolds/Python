@@ -353,8 +353,15 @@ class Play(Screen):
 
         passenger_list = [p.encode() for p in self.parent.ship.passengers]
 
-        save_data = {'date' : date_string, 'systems' : systems,
-                     'subsectors' : subsectors, 'passengers' : passenger_list}
+        cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
+
+        save_data = {
+                     'date' : date_string,
+                     'systems' : systems,
+                     'subsectors' : subsectors,
+                     'passengers' : passenger_list,
+                     'cargo_hold' : cargo_hold_list
+                     }
 
         filename = get_next_save_file()
         with open(f"saves/{filename}", 'w', encoding='utf-8') as a_file:
