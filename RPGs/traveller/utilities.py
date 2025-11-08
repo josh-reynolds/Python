@@ -127,6 +127,6 @@ def get_next_save_file() -> str:
             if index > highest:
                 highest = index
     # enforcing two-digits for ordering
-    # will still output three+ digit numbers, but 
+    # will still output three+ digit numbers, but
     # ordering will break
     return f"save_game_{highest+1:02}.json"

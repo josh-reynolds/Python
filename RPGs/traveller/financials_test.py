@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 from calendar import ImperialDate
-from financials import Credits, Financials
+from financials import Credits, Financials, financials_from
 from mock import ObserverMock
 
 class CreditsTestCase(unittest.TestCase):
@@ -450,6 +450,23 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(len(financials.ledger), 3)
         self.assertEqual(financials.ledger[2], "2\t - 100 Cr\t - \t\t - "
                                                + "90 Cr\t - MOCK\t - berth renewal")
+
+    def test_financials_from(self) -> None:
+        """Test importing a Financials object from a string."""
+        expected = Financials(100, ImperialDate(1,1105), None, None)
+
+        string = "100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        actual = financials_from(string)
+        self.assertEqual(actual, expected)
+
+    def test_encode(self) -> None:
+        """Test exporting a Financials object to a string."""
+        financials = Financials(100, ImperialDate(1,1105), None, None)
+
+        actual = financials.encode()
+        expected = "100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        self.assertEqual(actual, expected)
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

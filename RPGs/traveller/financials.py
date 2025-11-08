@@ -111,6 +111,16 @@ class Financials:
 
         self.ledger: List[str] = []
 
+    def __eq__(self, other: Any) -> bool:
+        """Test whether two Financials are equal."""
+        if type(other) is type(self):
+            return self.balance == other.balance and\
+                    self.current_date == other.current_date and\
+                    self.berth_expiry == other.berth_expiry and\
+                    self.loan_paid == other.loan_paid and\
+                    self.last_maintenance == other.last_maintenance
+        return NotImplemented
+
     def add_observer(self, observer: Any) -> None:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)
@@ -216,3 +226,20 @@ class Financials:
         if amount <= 365:              # 12 months
             return "yellow"
         return "red"
+
+    def encode(self) -> str:
+        """Return a string encoding the Financials object to save and load state."""
+        return f"{self.balance.amount} - {self.current_date} - {self.berth_expiry} - " +\
+                f"{self.salary_paid} - {self.loan_paid} - {self.last_maintenance}"
+
+def financials_from(string:str) -> Financials:
+    """Create a Financials object from a string representation.
+
+    String format is :
+    balance - current_date - berth_exp - salary_pd - loan_pd  - last_maint
+    d*      - ddd-dddd     - ddd-dddd  - ddd-dddd  - ddd-dddd - ddd-dddd
+
+    This matches the format output by Financials.encode(). Ledger is handled
+    separately.
+    """
+    return Financials(100, ImperialDate(1,1105), None, None)

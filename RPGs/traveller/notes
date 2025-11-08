@@ -2142,6 +2142,39 @@
 # now written to and read from the save file. Wrapping up Ship
 # should be easy now. Then all that's left is location and 
 # Financials IIRC.
+#
+# And Ship is done. Easy, as expected. Only small wrinkle is 
+# needing to hook up the observers afterward. And some thoughts
+# about the future of this area. First, we'll need to save some
+# additional data when we add more ship types. And second, 
+# the fields in the class are of two types: volatile, reflecting
+# current game state (and saved in the file), and static, which
+# come from the Ship type. We should separate the latter out,
+# possibly in a 'ship model' class. That would make it easy
+# to load different ship types down the road.
+#
+# Financials is next. That class has a balance, current date,
+# references to ship & location, loan & berth due dates,
+# observers, and a ledger.
+#
+# The various references should just be hooked up after
+# creating the new object. The others just get stored and 
+# loaded, and there are some data integrity contracts to
+# enforce w.r.t. dates. Also ledger could potentially get
+# very large. For now we'll just let that go, but it might
+# have to be dealt with later.
+#
+# That _does_ mean that this can't be just a simple string. Just
+# like the Ship, there's the basic entity data, and a separate
+# container, in this case the ledger. So financials_from()
+# takes two pieces minimum. Maybe we should separate the ledger,
+# build the Financials, then attach the ledger blob to it.
+#
+# (Something to come back to later: the import/export model has
+# evolved as I've worked through the classes, from very simple
+# string in/out to more elaborate schemes. Would be good to
+# put them all together and look for symmetries, smooth out
+# rough bits, or rework the earlier parts with later learnings.)
 # 
 # -------------------------------------------------------------
 
@@ -2471,7 +2504,11 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] Capture current location in save file
-#  * [    ] Encode/decode Financials as/from a string
+#  * [....] Encode/decode Financials as/from a string
+#  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
+#           and assuming they get attached later for the load_game() case. Should this
+#           always be assumed? If so should trap malformed - don't like ctor
+#           leaving object in a partially-contstructed state.
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Handling of load game list when there are no save files could be smoother
 #  * [    ] BUG: player can enter a blank ship name in new_game
@@ -2487,6 +2524,7 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
+#  * [    ] 'Dump ledger' command to export a readable version?
 #  * [    ] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [    ] Move hard-coded start conditions out of Game ctor into some sort of default save file

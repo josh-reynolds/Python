@@ -502,7 +502,8 @@ def ship_from(string: str) -> Ship:
     name - fuel - fuel_quality - jump_counter - repair    - life_support
     w*   - d*   - R | U        - d*           - R | P | B - d*
 
-    Cargo hold contents and passenger manifest are handled separately.
+    This matchs the format output by Ship.encode(). Cargo hold contents 
+    and passenger manifest are handled separately.
     """
     tokens = string.split(' - ')
 

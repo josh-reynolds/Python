@@ -182,8 +182,11 @@ class Menu(Screen):
             return None
 
         # finances
+        # hook up ship/location/observers
 
         # location
+
+        # review Game ctor and ensure all links are hooked up
 
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
