@@ -245,7 +245,16 @@ def financials_from(string:str) -> Financials:
     tokens = string.split(' - ')
 
     balance = int(tokens[0])
-
     current_date = imperial_date_from(tokens[1])
+    result = Financials(balance, current_date, None, None)
 
-    return Financials(balance, current_date, None, None)
+    berth_expiry = imperial_date_from(tokens[2])
+    result.berth_expiry = berth_expiry
+
+    #print(f"{result.balance}")
+    #print(f"{result.current_date}")
+    #print(f"{result.berth_expiry}")
+    #print(f"{result.salary_paid}")
+    #print(f"{result.loan_paid}")
+    #print(f"{result.last_maintenance}")
+    return result

@@ -462,20 +462,33 @@ class FinancialsTestCase(unittest.TestCase):
         actual = financials_from(string)
         expected = Financials(200, ImperialDate(1,1105), None, None)
         self.assertEqual(actual, expected)
-        
-        string = "100 - 001-1106 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+
+        string = "100 - 001-1106 - 001-1106 - 001-1106 - 001-1106 - 352-1105"
         actual = financials_from(string)
         expected = Financials(100, ImperialDate(1,1106), None, None)
         self.assertEqual(actual, expected)
 
+        string = "999 - 010-1105 - 004-1105 - 010-1105 - 010-1105 - 361-1104"
+        actual = financials_from(string)
+        expected = Financials(999, ImperialDate(10,1105), None, None)
+        expected.berth_expiry = ImperialDate(4,1105)
+        self.assertEqual(actual, expected)
+
         # basic import
         # string too long/short
-        # invalid balance
-        # invalid current_date
-        # invalid berth_expiry
-        # invalid salary_paid
-        # invalid loan_paid
-        # invalid last_maintenance
+        # invalid balance          - must be >= 0, numberic
+        # invalid current_date     - must be legal date input
+        # invalid berth_expiry     - must be legal date input
+        #                            can't be less than current_date - 6
+        #                            can't be more than current_date + 6
+        # invalid salary_paid      - must be legal date input
+        #                            can't be less than current_date - 28
+        #                            can't be more than current_date
+        # invalid loan_paid        - must be legal date input
+        #                            can't be less than current_date - 28
+        #                            can't be more than current_date
+        # invalid last_maintenance - must be legal date format
+        #                            can't be more than current_date
 
     def test_encode(self) -> None:
         """Test exporting a Financials object to a string."""
@@ -492,6 +505,12 @@ class FinancialsTestCase(unittest.TestCase):
         financials = Financials(300, ImperialDate(1,1106), None, None)
         actual = financials.encode()
         expected = "300 - 001-1106 - 001-1106 - 001-1106 - 001-1106 - 352-1105"
+        self.assertEqual(actual, expected)
+
+        financials = Financials(999, ImperialDate(10,1105), None, None)
+        financials.berth_expiry = ImperialDate(4,1105)
+        actual = financials.encode()
+        expected = "999 - 010-1105 - 004-1105 - 010-1105 - 010-1105 - 361-1104"
         self.assertEqual(actual, expected)
 
 
