@@ -453,18 +453,35 @@ class FinancialsTestCase(unittest.TestCase):
 
     def test_financials_from(self) -> None:
         """Test importing a Financials object from a string."""
-        expected = Financials(100, ImperialDate(1,1105), None, None)
-
         string = "100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         actual = financials_from(string)
+        expected = Financials(100, ImperialDate(1,1105), None, None)
         self.assertEqual(actual, expected)
+
+        string = "200 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        actual = financials_from(string)
+        expected = Financials(200, ImperialDate(1,1105), None, None)
+        self.assertEqual(actual, expected)
+        
+        # basic import
+        # string too long/short
+        # invalid balance
+        # invalid current_date
+        # invalid berth_expiry
+        # invalid salary_paid
+        # invalid loan_paid
+        # invalid last_maintenance
 
     def test_encode(self) -> None:
         """Test exporting a Financials object to a string."""
         financials = Financials(100, ImperialDate(1,1105), None, None)
-
         actual = financials.encode()
         expected = "100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        self.assertEqual(actual, expected)
+
+        financials = Financials(200, ImperialDate(1,1105), None, None)
+        actual = financials.encode()
+        expected = "200 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self.assertEqual(actual, expected)
 
 

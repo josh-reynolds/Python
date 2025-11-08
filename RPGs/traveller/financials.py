@@ -242,4 +242,8 @@ def financials_from(string:str) -> Financials:
     This matches the format output by Financials.encode(). Ledger is handled
     separately.
     """
-    return Financials(100, ImperialDate(1,1105), None, None)
+    tokens = string.split(' - ')
+
+    balance = int(tokens[0])
+
+    return Financials(balance, ImperialDate(1,1105), None, None)
