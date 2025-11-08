@@ -2460,19 +2460,21 @@
 #  * [DONE] Encode/decode Baggage as/from a (parsed) string
 #  * [DONE] Encode/decode Cargo as/from a (parsed) string
 #  * [DONE] Composite from_string function to process cargo hold contents
+#  * [DONE] Trap mixed destinations between Freight/Passengers in save & load
+#  * [DONE] Encode/decode Ship as/from a string
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
-#  * [....] Save game state (ship, finances, date, map)
-#  * [....] Load game state
+#  * [....] Save game state (ship, finances, date, map, location)
+#  * [....] Load game state (ship, finances, date, map, location)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Trap mixed destinations between Freight/Passengers in save & load
-#  * [....] Encode/decode Ship as/from a string
 #  * [    ] Capture current location in save file
 #  * [    ] Encode/decode Financials as/from a string
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] BUG: load game file list is unordered
+#  * [    ] Handling of load game list when there are no save files could be smoother
+#  * [    ] BUG: player can enter a blank ship name in new_game
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
 #  * [    ] The ledger could get very long. Will want to manage in the view. Simplest

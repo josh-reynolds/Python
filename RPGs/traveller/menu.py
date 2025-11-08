@@ -13,7 +13,7 @@ from cargo import passenger_from, cargo_hold_from
 from command import Command
 from coordinate import Coordinate
 from financials import Credits
-from ship import FuelQuality, RepairStatus
+from ship import FuelQuality, RepairStatus, ship_from
 from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
@@ -148,6 +148,11 @@ class Menu(Screen):
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
 
+        # TO_DO: check creation of location destinations - tied to jump range...
+        self.parent.ship = ship_from(data['ship'])
+        self.parent.ship.add_observer(self.parent)
+        self.parent.ship.controls = self.parent
+
         passengers = []
         for line in data['passengers']:
             passengers.append(passenger_from(line, systems))
@@ -161,10 +166,8 @@ class Menu(Screen):
             passenger.guess_survivors(self.parent.ship.low_passenger_count)
         self.parent.ship.passengers = passengers
 
-        hold_contents = cargo_hold_from(data['cargo_hold'], systems)
+        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'], systems))
         self.parent.ship.hold = hold_contents
-
-        # ship
 
         destinations = set()
         for passenger in passengers:
@@ -181,9 +184,6 @@ class Menu(Screen):
         # finances
 
         # location
-
-        # this will go away once we load the ship
-        self.parent.ship.name = input("What is the name of your ship? ")
 
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
