@@ -6,7 +6,7 @@ Financials - contains methods to handle financial
 """
 from __future__ import annotations
 from typing import Any, List, cast
-from calendar import ImperialDate
+from calendar import ImperialDate, imperial_date_from
 
 class Credits:
     """Represents units of money."""
@@ -246,4 +246,6 @@ def financials_from(string:str) -> Financials:
 
     balance = int(tokens[0])
 
-    return Financials(balance, ImperialDate(1,1105), None, None)
+    current_date = imperial_date_from(tokens[1])
+
+    return Financials(balance, current_date, None, None)
