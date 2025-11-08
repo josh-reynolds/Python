@@ -2462,6 +2462,7 @@
 #  * [DONE] Composite from_string function to process cargo hold contents
 #  * [DONE] Trap mixed destinations between Freight/Passengers in save & load
 #  * [DONE] Encode/decode Ship as/from a string
+#  * [DONE] BUG: load game file list is unordered
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map, location)
@@ -2472,7 +2473,6 @@
 #  * [    ] Capture current location in save file
 #  * [    ] Encode/decode Financials as/from a string
 #  * [    ] Handle save/load exceptions in app rather than crashing out
-#  * [    ] BUG: load game file list is unordered
 #  * [    ] Handling of load game list when there are no save files could be smoother
 #  * [    ] BUG: player can enter a blank ship name in new_game
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player

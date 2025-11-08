@@ -112,6 +112,7 @@ def get_save_files() -> List[str]:
     """Return a list of all files in the saves directory."""
     path = "./saves/"
     files = [f for f in listdir(path) if isfile(join(path, f))]
+    files.sort()
     return files
 
 def get_next_save_file() -> str:
@@ -125,4 +126,7 @@ def get_next_save_file() -> str:
             index = int(match.group(1))
             if index > highest:
                 highest = index
-    return f"save_game_{highest+1}.json"
+    # enforcing two-digits for ordering
+    # will still output three+ digit numbers, but 
+    # ordering will break
+    return f"save_game_{highest+1:02}.json"
