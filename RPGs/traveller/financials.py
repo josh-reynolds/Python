@@ -117,6 +117,7 @@ class Financials:
             return self.balance == other.balance and\
                     self.current_date == other.current_date and\
                     self.berth_expiry == other.berth_expiry and\
+                    self.salary_paid == other.salary_paid and\
                     self.loan_paid == other.loan_paid and\
                     self.last_maintenance == other.last_maintenance
         return NotImplemented
@@ -250,6 +251,9 @@ def financials_from(string:str) -> Financials:
 
     berth_expiry = imperial_date_from(tokens[2])
     result.berth_expiry = berth_expiry
+
+    salary_paid = imperial_date_from(tokens[3])
+    result.salary_paid = salary_paid
 
     #print(f"{result.balance}")
     #print(f"{result.current_date}")
