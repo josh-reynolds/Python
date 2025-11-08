@@ -480,6 +480,12 @@ class FinancialsTestCase(unittest.TestCase):
         expected.salary_paid = ImperialDate(4,1105)
         self.assertEqual(actual, expected)
 
+        string = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104"
+        actual = financials_from(string)
+        expected = Financials(1000, ImperialDate(10,1105), None, None)
+        expected.loan_paid = ImperialDate(4,1105)
+        self.assertEqual(actual, expected)
+
         # basic import
         # string too long/short
         # invalid balance          - must be >= 0, numberic
@@ -523,6 +529,12 @@ class FinancialsTestCase(unittest.TestCase):
         financials.salary_paid = ImperialDate(4,1105)
         actual = financials.encode()
         expected = "1 - 010-1105 - 010-1105 - 004-1105 - 010-1105 - 361-1104"
+        self.assertEqual(actual, expected)
+
+        financials = Financials(1000, ImperialDate(10,1105), None, None)
+        financials.loan_paid = ImperialDate(4,1105)
+        actual = financials.encode()
+        expected = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104"
         self.assertEqual(actual, expected)
 
 

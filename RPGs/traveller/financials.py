@@ -255,6 +255,9 @@ def financials_from(string:str) -> Financials:
     salary_paid = imperial_date_from(tokens[3])
     result.salary_paid = salary_paid
 
+    loan_paid = imperial_date_from(tokens[4])
+    result.loan_paid = loan_paid
+
     #print(f"{result.balance}")
     #print(f"{result.current_date}")
     #print(f"{result.berth_expiry}")
