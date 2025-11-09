@@ -254,6 +254,9 @@ def financials_from(string:str) -> Financials:
                          + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105'")
 
     balance = int(tokens[0])
+    if balance < 0:
+        raise ValueError(f"balance must be a positive integer: '{balance}'")
+
     current_date = imperial_date_from(tokens[1])
     result = Financials(balance, current_date, None, None)
 

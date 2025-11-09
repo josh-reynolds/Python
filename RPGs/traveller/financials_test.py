@@ -506,8 +506,19 @@ class FinancialsTestCase(unittest.TestCase):
                          "input string is missing data: "
                          + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105'")
 
+        string = "-100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "balance must be a positive integer: '-100'")
 
-        # invalid balance          - must be >= 0, numeric
+        string = "m - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "invalid literal for int() with base 10: 'm'")
+
+
         # invalid current_date     - must be legal date input
         # invalid berth_expiry     - must be legal date input
         #                            can't be less than current_date - 6
