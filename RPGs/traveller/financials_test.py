@@ -451,6 +451,8 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.ledger[2], "2\t - 100 Cr\t - \t\t - "
                                                + "90 Cr\t - MOCK\t - berth renewal")
 
+    # pylint: disable=R0915
+    # R0915: Too many statements (61/50)
     def test_financials_from(self) -> None:
         """Test importing a Financials object from a string."""
         string = "100 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
@@ -518,8 +520,28 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
 
+        string = "100 - 001 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string must have both day and year values: '001'")
 
-        # invalid current_date     - must be legal date input
+        string = "100 - 001-1105-1 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "string must have only day and year values: '001-1105-1'")
+
+        string = "100 - 366-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "day value must be between 1 and 365: '366'")
+
+        # no need to repeat date validation for all of them - this is covered
+        # in test cases for imperial_date_from(), which used across the board
+
+
         # invalid berth_expiry     - must be legal date input
         #                            can't be less than current_date - 6
         #                            can't be more than current_date + 6
