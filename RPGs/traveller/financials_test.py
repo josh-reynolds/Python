@@ -486,6 +486,12 @@ class FinancialsTestCase(unittest.TestCase):
         expected.loan_paid = ImperialDate(4,1105)
         self.assertEqual(actual, expected)
 
+        string = "1000000 - 010-1105 - 010-1105 - 010-1105 - 010-1105 - 100-1104"
+        actual = financials_from(string)
+        expected = Financials(1_000_000, ImperialDate(10,1105), None, None)
+        expected.last_maintenance = ImperialDate(100,1104)
+        self.assertEqual(actual, expected)
+
         string = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104 - 0000"
         with self.assertRaises(ValueError) as context:
             _ = financials_from(string)
