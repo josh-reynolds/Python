@@ -501,8 +501,6 @@ class FinancialsTestCase(unittest.TestCase):
                          + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105'")
 
 
-        # basic import
-        # string too long/short
         # invalid balance          - must be >= 0, numeric
         # invalid current_date     - must be legal date input
         # invalid berth_expiry     - must be legal date input
@@ -550,6 +548,12 @@ class FinancialsTestCase(unittest.TestCase):
         financials.loan_paid = ImperialDate(4,1105)
         actual = financials.encode()
         expected = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104"
+        self.assertEqual(actual, expected)
+
+        financials = Financials(1_000_000, ImperialDate(10,1105), None, None)
+        financials.last_maintenance = ImperialDate(100,1104)
+        actual = financials.encode()
+        expected = "1000000 - 010-1105 - 010-1105 - 010-1105 - 010-1105 - 100-1104"
         self.assertEqual(actual, expected)
 
 
