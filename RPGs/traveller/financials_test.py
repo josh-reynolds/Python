@@ -486,9 +486,24 @@ class FinancialsTestCase(unittest.TestCase):
         expected.loan_paid = ImperialDate(4,1105)
         self.assertEqual(actual, expected)
 
+        string = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104 - 0000"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string has extra data: "
+                         + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104 - 0000'")
+
+        string = "1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "input string is missing data: "
+                         + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105'")
+
+
         # basic import
         # string too long/short
-        # invalid balance          - must be >= 0, numberic
+        # invalid balance          - must be >= 0, numeric
         # invalid current_date     - must be legal date input
         # invalid berth_expiry     - must be legal date input
         #                            can't be less than current_date - 6
