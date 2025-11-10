@@ -542,9 +542,19 @@ class FinancialsTestCase(unittest.TestCase):
         # in test cases for imperial_date_from(), which used across the board
 
 
-        # invalid berth_expiry     - must be legal date input
-        #                            can't be less than current_date - 6
-        #                            can't be more than current_date + 6
+        string = "100 - 010-1105 - 001-1105 - 010-1105 - 010-1105 - 361-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "berth expiry value cannot be more than six days before current date: '001-1105'")
+
+        string = "100 - 010-1105 - 017-1105 - 010-1105 - 010-1105 - 361-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "berth expiry value cannot be more than six days from current date: '017-1105'")
+
+
         # invalid salary_paid      - must be legal date input
         #                            can't be less than current_date - 28
         #                            can't be more than current_date
