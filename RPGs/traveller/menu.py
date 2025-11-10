@@ -366,13 +366,17 @@ class Play(Screen):
 
         cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
 
+        financials_string = self.parent.financials.encode()
+        # ledger
+
         save_data = {
                      'date' : date_string,
                      'systems' : systems,
                      'subsectors' : subsectors,
                      'ship' : ship_string,
                      'passengers' : passenger_list,
-                     'cargo_hold' : cargo_hold_list
+                     'cargo_hold' : cargo_hold_list,
+                     'financials' : financials_string
                      }
 
         filename = get_next_save_file()
