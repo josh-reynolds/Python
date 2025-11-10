@@ -274,10 +274,16 @@ def financials_from(string:str) -> Financials:
         raise ValueError("salary paid value cannot be more than "
                          + f"twenty eight days before current date: '{salary_paid}'")
     if salary_paid > current_date:
-        raise ValueError(f"salary paid value cannot be later than the current date: '{salary_paid}'")
+        raise ValueError("salary paid value cannot be later than the " +
+                         f"current date: '{salary_paid}'")
     result.salary_paid = salary_paid
 
     loan_paid = imperial_date_from(tokens[4])
+    if current_date - loan_paid > 28:
+        raise ValueError("loan paid value cannot be more than "
+                         + f"twenty eight days before current date: '{loan_paid}'")
+    if loan_paid > current_date:
+        raise ValueError(f"loan paid value cannot be later than the current date: '{loan_paid}'")
     result.loan_paid = loan_paid
 
     last_maintenance = imperial_date_from(tokens[5])

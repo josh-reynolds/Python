@@ -546,13 +546,15 @@ class FinancialsTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             _ = financials_from(string)
         self.assertEqual(f"{context.exception}",
-                         "berth expiry value cannot be more than six days before current date: '001-1105'")
+                         "berth expiry value cannot be more than " +
+                         "six days before current date: '001-1105'")
 
         string = "100 - 010-1105 - 017-1105 - 010-1105 - 010-1105 - 361-1104"
         with self.assertRaises(ValueError) as context:
             _ = financials_from(string)
         self.assertEqual(f"{context.exception}",
-                         "berth expiry value cannot be more than six days from current date: '017-1105'")
+                         "berth expiry value cannot be more than " +
+                         "six days from current date: '017-1105'")
 
         string = "100 - 010-1105 - 010-1105 - 346-1104 - 010-1105 - 361-1104"
         with self.assertRaises(ValueError) as context:
@@ -567,10 +569,19 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "salary paid value cannot be later than the current date: '011-1105'")
 
+        string = "100 - 010-1105 - 010-1105 - 010-1105 - 346-1104 - 361-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "loan paid value cannot be more than twenty eight " +
+                         "days before current date: '346-1104'")
 
-        # invalid loan_paid        - must be legal date input
-        #                            can't be less than current_date - 28
-        #                            can't be more than current_date
+        string = "100 - 010-1105 - 010-1105 - 010-1105 - 011-1105 - 361-1104"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "loan paid value cannot be later than the current date: '011-1105'")
+
         # invalid last_maintenance - must be legal date format
         #                            can't be more than current_date
 
