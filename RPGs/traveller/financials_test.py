@@ -582,8 +582,11 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "loan paid value cannot be later than the current date: '011-1105'")
 
-        # invalid last_maintenance - must be legal date format
-        #                            can't be more than current_date
+        string = "100 - 010-1105 - 010-1105 - 010-1105 - 010-1105 - 011-1105"
+        with self.assertRaises(ValueError) as context:
+            _ = financials_from(string)
+        self.assertEqual(f"{context.exception}",
+                         "last maintenance value cannot be later than the current date: '011-1105'")
 
     def test_encode(self) -> None:
         """Test exporting a Financials object to a string."""

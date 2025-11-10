@@ -287,6 +287,9 @@ def financials_from(string:str) -> Financials:
     result.loan_paid = loan_paid
 
     last_maintenance = imperial_date_from(tokens[5])
+    if last_maintenance > current_date:
+        raise ValueError("last maintenance value cannot be later " +
+                         f"than the current date: '{last_maintenance}'")
     result.last_maintenance = last_maintenance
 
     #print(f"{result.balance}")
