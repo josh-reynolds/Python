@@ -2507,6 +2507,7 @@
 #  * [DONE] Capture current location in save file
 #  * [DONE] Save game state (ship, finances, date, map, location)
 #  * [DONE] Load game state (ship, finances, date, map, location)
+#  * [DONE] Separate out static ship data into a 'ship model' class and compose
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -2563,6 +2564,7 @@
 #           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  * [    ] 'Select ship' option in new game - could add the Type-S Scout
+#  * [    ] Add different ship types and ship design
 #  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
@@ -2574,6 +2576,7 @@
 #  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
 #           maybe we should have either decode_foo() and Foo.encode() or
 #           foo_from() and Foo.to()...
+#  * [    ] Similar symmetry concerns with menu/state and location.detail (see load_game())
 #  * [    ] Also standardize interface, some classes 'encode' with __str__. Possibly
 #           uniform encode() protocol everywhere, which can always just wrap __str__
 #           in the simple cases.
@@ -2658,8 +2661,6 @@
 #            until phase five...
 #  * [    ] Add extended StarSystem details
 #  * [    ] Controls now allows us to have an AI or kiosk mode...
-#  * [    ] Separate out static ship data into a 'ship model' class and compose
-#  * [    ] Add different ship types and ship design
 #  * [    ] Working passage?
 #  * [    ] Should we allow the option of 'close jump?'
 #  * [    ] A player _could_ purchase unrefined fuel at A/B starports to save money.

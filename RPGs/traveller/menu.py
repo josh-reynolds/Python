@@ -192,7 +192,7 @@ class Menu(Screen):
         location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
         self.parent.location = location
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
-                                                        coord, self.parent.ship.jump_range)
+                                                        coord, self.parent.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
         self.parent.depot.system = self.parent.location
 
@@ -259,7 +259,7 @@ class Play(Screen):
         elif self.parent.ship.repair_status == RepairStatus.PATCHED:
             repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-        fuel_amount = f"{self.parent.ship.current_fuel}/{self.parent.ship.fuel_tank}"
+        fuel_amount = f"{self.parent.ship.current_fuel}/{self.parent.ship.model.fuel_tank}"
 
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.parent.date} : You are " +
@@ -449,7 +449,7 @@ class Orbit(Play):
     def land(self: ScreenT) -> None | ScreenT:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing on {self.parent.location.name}.{END_FORMAT}")
-        if not self.parent.ship.streamlined:
+        if not self.parent.ship.model.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return None
 
@@ -509,7 +509,7 @@ class Orbit(Play):
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 
-        leg_fc = self.parent.ship.trip_fuel_cost // 2
+        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
         if self.parent.ship.current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel out to the jump point "
                   f"requires {leg_fc} tons, only "
@@ -690,7 +690,7 @@ class Jump(Play):
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return None
 
-        leg_fc = self.parent.ship.trip_fuel_cost // 2
+        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
         if self.parent.ship.current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel in from the jump point "
                   f"requires {leg_fc} tons, only "
@@ -721,7 +721,7 @@ class Jump(Play):
             print(self.parent.ship.insufficient_life_support_message())
             return
 
-        jump_range = self.parent.ship.jump_range
+        jump_range = self.parent.ship.model.jump_range
         print(f"Systems within jump-{jump_range}:")
         pr_list(self.parent.location.destinations)
         destination_number = int_input("Enter destination number: ")
@@ -759,7 +759,7 @@ class Jump(Play):
         self.parent.financials.location = destination
 
         self.parent.ship.life_support_level = 0
-        self.parent.ship.current_fuel -= self.parent.ship.jump_fuel_cost
+        self.parent.ship.current_fuel -= self.parent.ship.model.jump_fuel_cost
         self.parent.date.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:
@@ -815,7 +815,7 @@ class Jump(Play):
             print("There is no gas giant in this system. No fuel skimming possible.")
             return
 
-        if not self.parent.ship.streamlined:
+        if not self.parent.ship.model.streamlined:
             print("Your ship is not streamlined and cannot skim fuel.")
             return
 
@@ -823,11 +823,11 @@ class Jump(Play):
             print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
             return
 
-        if self.parent.ship.current_fuel == self.parent.ship.fuel_tank:
+        if self.parent.ship.current_fuel == self.parent.ship.model.fuel_tank:
             print("Fuel tank is already full.")
             return
 
-        self.parent.ship.current_fuel = self.parent.ship.fuel_tank
+        self.parent.ship.current_fuel = self.parent.ship.model.fuel_tank
         self.parent.ship.fuel_quality = FuelQuality.UNREFINED
         self.parent.date.day += 1
 
@@ -943,7 +943,7 @@ class Trade(Play):
         """Select and load Freight onto the Ship."""
         print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
 
-        jump_range = self.parent.ship.jump_range
+        jump_range = self.parent.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
         destinations = self._get_freight_destinations(potential_destinations, jump_range)
         if not destinations:
@@ -1107,7 +1107,7 @@ class Passengers(Play):
         """Book passengers for travel to a destination."""
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
-        jump_range = self.parent.ship.jump_range
+        jump_range = self.parent.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
         destinations = self._get_passenger_destinations(potential_destinations, jump_range)
         if not destinations:

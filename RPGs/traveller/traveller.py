@@ -52,7 +52,7 @@ class Game:
         self.location = cast(StarSystem, self.star_map.get_system_at_coordinate(Coordinate(0,0,0)))
         coord = self.location.coordinate
         self.location.destinations = self.star_map.get_systems_within_range(coord,
-                                                              self.ship.jump_range)
+                                                              self.ship.model.jump_range)
         self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
         self.depot = CargoDepot(self.location, self.date.current_date)
 

@@ -115,6 +115,27 @@ class RepairStatus(Enum):
     PATCHED = 1
     BROKEN = 2
 
+# pylint: disable=R0902
+# R0902: Too many instance attributes (12/7)
+class ShipModel:
+    """Represents a specific ship model."""
+
+    def __init__(self) -> None:
+        """Create an instance of a ShipModel."""
+        self.name = "Type A Free Trader"
+        self.hull = 200
+        self.passenger_berths = 6
+        self.low_berths = 20
+        self.acceleration = 1
+        self.streamlined = True
+        self.hold_size = 82
+        self.fuel_tank = 30
+        self.jump_range = 1
+        self.jump_fuel_cost = 20
+        self.trip_fuel_cost = 10
+        self.base_price = Credits(37080000)
+        # need to think about how to handle Crew
+
 
 # pylint: disable=R0902, R0904
 # R0902: Too many instance attributes (24/7)
@@ -126,34 +147,24 @@ class Ship:
     def __init__(self) -> None:
         """Create an instance of a Ship."""
         self.name = "Weaselfish"
-        self.model = "Type A Free Trader"
-        self.hull = 200
-        self.passenger_berths = 6
-        self.low_berths = 20
-        self.acceleration = 1
-        self.streamlined = True
         self.hold: List[Freight | Cargo] = []
-        self.hold_size = 82
-        self.fuel_tank = 30
         self.fuel = 0
-        self.jump_range = 1
-        self.jump_fuel_cost = 20
-        self.trip_fuel_cost = 10
         self.fuel_quality = FuelQuality.REFINED
         self.unrefined_jump_counter = 0
         self.repair_status = RepairStatus.REPAIRED
         self.life_support_level = 0
         self.passengers: List[Passenger] = []
         self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
-        self.base_price = Credits(37080000)
         self.observers: List[Any] = []     # we don't have a type representing Observers
         self.controls: Any | None = None   # same story for controls...
+
+        self.model = ShipModel()
 
     def __eq__(self, other:Any) -> bool:
         """Test if two Ships are equal."""
         if type(other) is type(self):
             return self.name == other.name and\
-                    self.model == other.model and\
+                    self.model.name == other.model.name and\
                     self.fuel == other.fuel and\
                     self.fuel_quality == other.fuel_quality and\
                     self.unrefined_jump_counter == other.unrefined_jump_counter and\
@@ -166,11 +177,12 @@ class Ship:
 
     def __str__(self) -> str:
         """Return the string representation of a Ship."""
-        result = f"{self.name} -- {self.model}\n" +\
-                 f"{self.hull} tons : {self.acceleration}G : jump-{self.jump_range}\n" +\
-                 f"{len(self.crew)} crew, {self.passenger_berths} passenger staterooms, " +\
-                 f"{self.low_berths} low berths\n" +\
-                 f"Cargo hold {self.hold_size} tons, fuel tank {self.fuel_tank} tons"
+        result = f"{self.name} -- {self.model.name}\n" +\
+                 f"{self.model.hull} tons : {self.model.acceleration}G " +\
+                 f": jump-{self.model.jump_range}\n" +\
+                 f"{len(self.crew)} crew, {self.model.passenger_berths} passenger staterooms, " +\
+                 f"{self.model.low_berths} low berths\n" +\
+                 f"Cargo hold {self.model.hold_size} tons, fuel tank {self.model.fuel_tank} tons"
         if self.fuel_quality == FuelQuality.UNREFINED:
             result += "\nUnrefined fuel in tanks."
 
@@ -247,12 +259,12 @@ class Ship:
     @property
     def empty_passenger_berths(self) -> int:
         """Return the number of unoccupied passenger staterooms."""
-        return self.passenger_berths - self.high_passenger_count - self.middle_passenger_count
+        return self.model.passenger_berths - self.high_passenger_count - self.middle_passenger_count
 
     @property
     def empty_low_berths(self) -> int:
         """Return the number of unoccupied low berths."""
-        return self.low_berths - self.low_passenger_count
+        return self.model.low_berths - self.low_passenger_count
 
     # TO_DO: we don't have a type to represent Observers
     def add_observer(self, observer: Any) -> None:
@@ -276,7 +288,7 @@ class Ship:
     def free_space(self) -> int:
         """Return the amount of free space in the cargo hold, in displacement tons."""
         taken = sum(cargo.tonnage for cargo in self.hold)
-        return self.hold_size - taken
+        return self.model.hold_size - taken
 
     # for now keep all cargo lots separate, since the may have had different
     # purchase prices, plus it is simpler
@@ -314,7 +326,7 @@ class Ship:
     # ship empties its tanks every trip.
     def refuel(self, starport: str) -> Credits:
         """Refuel the Ship, accounting for fuel type."""
-        if self.current_fuel == self.fuel_tank:
+        if self.current_fuel == self.model.fuel_tank:
             self.message_observers("Fuel tank is full.")
             return Credits(0)
 
@@ -324,7 +336,7 @@ class Ship:
         else:
             per_ton = 500
 
-        amount = self.fuel_tank - self.current_fuel
+        amount = self.model.fuel_tank - self.current_fuel
         price = Credits(amount * per_ton)
         confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")
         if confirm == 'n':
@@ -338,11 +350,11 @@ class Ship:
 
     def sufficient_jump_fuel(self) -> bool:
         """Test whether there is enough fuel to make a jump."""
-        return self.jump_fuel_cost <= self.current_fuel
+        return self.model.jump_fuel_cost <= self.current_fuel
 
     def insufficient_jump_fuel_message(self) -> str:
         """Return message for when there is not enough fuel for a jump."""
-        return f"Insufficient fuel. Jump requires {self.jump_fuel_cost} tons, only " +\
+        return f"Insufficient fuel. Jump requires {self.model.jump_fuel_cost} tons, only " +\
                f"{self.current_fuel} tons in tanks."
 
     def sufficient_life_support(self) -> bool:
@@ -377,8 +389,8 @@ class Ship:
             self.message_observers("Life support is fully charged.")
             return Credits(0)
 
-        price = Credits((len(self.crew) + self.passenger_berths) * 2000 +
-                         self.low_berths * 100)
+        price = Credits((len(self.crew) + self.model.passenger_berths) * 2000 +
+                         self.model.low_berths * 100)
         confirm = self.get_input('confirm', f"Recharge life support for {price}? ")
         if confirm == 'n':
             return Credits(0)
@@ -448,11 +460,11 @@ class Ship:
     #        Is this a simple game-over repossesion?
     def loan_payment(self) -> Credits:
         """Return the monthly loan payment amount for the Ship."""
-        return self.base_price / 240
+        return self.model.base_price / 240
 
     def maintenance_cost(self) -> Credits:
         """Return the annual maintenance cost for the Ship."""
-        return self.base_price * 0.001
+        return self.model.base_price * 0.001
 
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if they choose a different jump target while under contract."""
@@ -518,7 +530,7 @@ def ship_from(string: str) -> Ship:
     ship.name = tokens[0]
 
     ship.fuel = int(tokens[1])
-    if ship.fuel > ship.fuel_tank:
+    if ship.fuel > ship.model.fuel_tank:
         raise ValueError(f"fuel level in input string is larger than the fuel tank: '{ship.fuel}'")
     if ship.fuel < 0:
         raise ValueError(f"fuel level must be a positive integer: '{ship.fuel}'")
