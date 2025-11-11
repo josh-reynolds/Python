@@ -112,8 +112,9 @@ class Menu(Screen):
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
-    # pylint: disable=R0914
+    # pylint: disable=R0914, R0915
     # R0914: Too many local variables (16/15)
+    # R0915: Too many statements( 61/50)
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         files = get_save_files()
@@ -194,12 +195,31 @@ class Menu(Screen):
                                                         coord, self.parent.ship.jump_range)
         self.parent.financials.location = self.parent.location
         self.parent.depot.system = self.parent.location
-        # menu screen (orbit, starport, etc.)
+
+        screen: ScreenT
+        match data['menu']:
+            case "Orbit":
+                screen = cast(ScreenT, Orbit(self.parent))
+                self.parent.location.detail = "orbit"
+            case "Starport":
+                screen = cast(ScreenT, Starport(self.parent))
+                self.parent.location.detail = "starport"
+            case "Jump":
+                screen = cast(ScreenT, Jump(self.parent))
+                self.parent.location.detail = "jump"
+            case "Trade":
+                screen = cast(ScreenT, Trade(self.parent))
+                self.parent.location.detail = "trade"
+            case "Passengers":
+                screen = cast(ScreenT, Passengers(self.parent))
+                self.parent.location.detail = "terminal"
+            case _:
+                raise ValueError(f"unrecognized menu item: '{data['menu']}'")
 
         # review Game ctor and ensure all links are hooked up
 
         _ = input("Press ENTER key to continue.")
-        return cast(ScreenT, Orbit(self.parent))
+        return screen
 
 
 class Play(Screen):
@@ -355,6 +375,8 @@ class Play(Screen):
         else:
             print("No progress today. Drives are still out of commission.")
 
+    # pylint: disable=R0914
+    # R0914: Too many local variables(16/15)
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
@@ -379,13 +401,15 @@ class Play(Screen):
         financials_string = self.parent.financials.encode()
 
         location_string = f"{self.parent.location.coordinate}"
-        # menu screen (orbit, starport, etc.)
+
+        menu_string = f"{self.parent.screen}"
 
         save_data = {
                      'date' : date_string,
                      'systems' : systems,
                      'subsectors' : subsectors,
                      'location' : location_string,
+                     'menu' : menu_string,
                      'ship' : ship_string,
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
@@ -415,6 +439,10 @@ class Orbit(Play):
                 Command('g', 'Go to jump point', self.outbound_to_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Orbit"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
@@ -512,6 +540,10 @@ class Starport(Play):
                 Command('n', 'Repair ship', self.repair_ship),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Starport"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
@@ -638,6 +670,10 @@ class Jump(Play):
                 Command('s', 'Skim fuel from gas giant', self.skim),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Jump"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
@@ -811,6 +847,10 @@ class Trade(Play):
                 Command('u', 'Unload freight', self.unload_freight),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Trade"
 
     # VIEW COMMANDS ========================================================
     def goods(self) -> None:
@@ -1049,6 +1089,10 @@ class Passengers(Play):
                 Command('b', 'Book passengers', self.book_passengers),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
+
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Passengers"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================

@@ -2175,6 +2175,12 @@
 # string in/out to more elaborate schemes. Would be good to
 # put them all together and look for symmetries, smooth out
 # rough bits, or rework the earlier parts with later learnings.)
+#
+# OK. Save/load is complete. Just finished wiring up Financials
+# and location. Initial tests look good. Need to play around
+# a bit more to be sure. And there's plenty of duplication,
+# fat methods and other smells that will need attention after
+# this.
 # 
 # -------------------------------------------------------------
 
@@ -2498,14 +2504,14 @@
 #  * [DONE] BUG: load game file list is unordered
 #  * [DONE] Encode/decode Financials as/from a string
 #  * [DONE] Encode/decode financials ledger in save_file
+#  * [DONE] Capture current location in save file
+#  * [DONE] Save game state (ship, finances, date, map, location)
+#  * [DONE] Load game state (ship, finances, date, map, location)
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
-#  * [....] Save game state (ship, finances, date, map, location)
-#  * [....] Load game state (ship, finances, date, map, location)
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Capture current location in save file
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
