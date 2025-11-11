@@ -187,8 +187,7 @@ class Menu(Screen):
         self.parent.financials.location = self.parent.location
         self.parent.financials.add_observer(self.parent)
         self.parent.date.add_observer(self.parent.financials)
-
-        # ledger
+        self.parent.financials.ledger = data['ledger']
 
         # location
 
@@ -373,6 +372,7 @@ class Play(Screen):
         cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
 
         financials_string = self.parent.financials.encode()
+
         # ledger
 
         save_data = {
@@ -382,7 +382,8 @@ class Play(Screen):
                      'ship' : ship_string,
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
-                     'financials' : financials_string
+                     'financials' : financials_string,
+                     'ledger' : self.parent.financials.ledger
                      }
 
         filename = get_next_save_file()

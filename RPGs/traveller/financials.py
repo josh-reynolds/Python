@@ -292,10 +292,4 @@ def financials_from(string:str) -> Financials:
                          f"than the current date: '{last_maintenance}'")
     result.last_maintenance = last_maintenance
 
-    #print(f"{result.balance}")
-    #print(f"{result.current_date}")
-    #print(f"{result.berth_expiry}")
-    #print(f"{result.salary_paid}")
-    #print(f"{result.loan_paid}")
-    #print(f"{result.last_maintenance}")
     return result

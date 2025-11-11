@@ -2497,6 +2497,7 @@
 #  * [DONE] Encode/decode Ship as/from a string
 #  * [DONE] BUG: load game file list is unordered
 #  * [DONE] Encode/decode Financials as/from a string
+#  * [DONE] Encode/decode financials ledger in save_file
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Save game state (ship, finances, date, map, location)
@@ -2505,7 +2506,6 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] Capture current location in save file
-#  * [    ] Encode/decode financials ledger in save_file
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
