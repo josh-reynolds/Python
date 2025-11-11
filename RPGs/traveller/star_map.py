@@ -566,6 +566,7 @@ class StarMap:
         # mypy doesn't recognize that and we need to cast
         return cast(List[StarSystem], result)
 
+    # TO_DO: shouldn't we just implement get_items dunder method for this?
     def get_system_at_coordinate(self, coordinate: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.systems.get(coordinate, StarMap._generate_new_system(coordinate))

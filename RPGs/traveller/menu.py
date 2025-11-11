@@ -11,7 +11,7 @@ from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from cargo import passenger_from, cargo_hold_from
 from command import Command
-from coordinate import Coordinate
+from coordinate import Coordinate, coordinate_from
 from financials import Credits, financials_from
 from ship import FuelQuality, RepairStatus, ship_from
 from star_map import StarMap, subsector_from
@@ -183,13 +183,18 @@ class Menu(Screen):
 
         self.parent.financials = financials_from(data['financials'])
         self.parent.financials.ship = self.parent.ship
-        # TO_DO: need to adjust when location is loaded
-        self.parent.financials.location = self.parent.location
         self.parent.financials.add_observer(self.parent)
         self.parent.date.add_observer(self.parent.financials)
         self.parent.financials.ledger = data['ledger']
 
-        # location
+        coord = coordinate_from(data['location'])
+        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
+        self.parent.location = location
+        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
+                                                        coord, self.parent.ship.jump_range)
+        self.parent.financials.location = self.parent.location
+        self.parent.depot.system = self.parent.location
+        # menu screen (orbit, starport, etc.)
 
         # review Game ctor and ensure all links are hooked up
 
@@ -373,12 +378,14 @@ class Play(Screen):
 
         financials_string = self.parent.financials.encode()
 
-        # ledger
+        location_string = f"{self.parent.location.coordinate}"
+        # menu screen (orbit, starport, etc.)
 
         save_data = {
                      'date' : date_string,
                      'systems' : systems,
                      'subsectors' : subsectors,
+                     'location' : location_string,
                      'ship' : ship_string,
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
