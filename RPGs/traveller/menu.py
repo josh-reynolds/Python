@@ -12,7 +12,7 @@ from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from cargo import passenger_from, cargo_hold_from
 from command import Command
 from coordinate import Coordinate
-from financials import Credits
+from financials import Credits, financials_from
 from ship import FuelQuality, RepairStatus, ship_from
 from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
@@ -181,8 +181,14 @@ class Menu(Screen):
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
             return None
 
-        # finances
-        # hook up ship/location/observers
+        self.parent.financials = financials_from(data['financials'])
+        self.parent.financials.ship = self.parent.ship
+        # TO_DO: need to adjust when location is loaded
+        self.parent.financials.location = self.parent.location
+        self.parent.financials.add_observer(self.parent)
+        self.parent.date.add_observer(self.parent.financials)
+
+        # ledger
 
         # location
 
