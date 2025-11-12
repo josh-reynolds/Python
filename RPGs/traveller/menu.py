@@ -110,7 +110,7 @@ class Menu(Screen):
         """Start a new game."""
         ship_types = get_ship_models()
         pr_list(ship_types)
-        model_number = int_input("Choose a ship to start with. ")
+        model_number = int_input("\nChoose a ship to start with. ")
         if model_number >= len(ship_types):
             print("That is not a valid ship model.")
             return None

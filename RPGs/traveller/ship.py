@@ -134,7 +134,7 @@ class ShipModel:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.base_price = Credits(37_080_000)
-        # need to think about how to handle Crew
+        self.crew_requirements = [Pilot, Engineer, Medic, Steward]
 
     def __eq__(self, other: Any) -> bool:
         """Test if two ShipModels are equal."""
@@ -175,11 +175,13 @@ class Ship:
         self.repair_status = RepairStatus.REPAIRED
         self.life_support_level = 0
         self.passengers: List[Passenger] = []
-        self.crew = [Pilot(), Engineer(), Medic(), Steward(trade=1)]
+
         self.observers: List[Any] = []     # we don't have a type representing Observers
         self.controls: Any | None = None   # same story for controls...
 
         self.model = ship_model_from(model)
+
+        self.crew = [position() for position in self.model.crew_requirements]
 
     def __eq__(self, other:Any) -> bool:
         """Test if two Ships are equal."""
@@ -600,6 +602,7 @@ def ship_model_from(name: str) -> ShipModel:
             model.jump_fuel_cost = 20
             model.trip_fuel_cost = 10
             model.base_price = Credits(37_080_000)
+            model.crew_requirements = [Pilot, Engineer, Medic, Steward]
         case "Type S Scout/Courier":
             model.hull = 100
             model.passenger_berths = 3
@@ -612,6 +615,7 @@ def ship_model_from(name: str) -> ShipModel:
             model.jump_fuel_cost = 20
             model.trip_fuel_cost = 20
             model.base_price = Credits(29_430_000)
+            model.crew_requirements = [Pilot]
 
     return model
 

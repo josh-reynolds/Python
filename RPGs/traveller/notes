@@ -2510,13 +2510,13 @@
 #  * [DONE] Separate out static ship data into a 'ship model' class and compose
 #  * [DONE] 'Select ship' option in new game - could add the Type-S Scout
 #  * [DONE] Ships with better than jump-1 should be able to choose short jumps too.
+#  * [DONE] Handle varying Crew positions in different ShipModels
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] Add different ship types and ship design
-#  * [    ] Handle varying Crew positions in different ShipModels
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
