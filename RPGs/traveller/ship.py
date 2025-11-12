@@ -613,3 +613,8 @@ def ship_model_from(name: str) -> ShipModel:
             model.base_price = Credits(29_430_000)
 
     return model
+
+# as with the previous, this will rely on data from a file
+def get_ship_models() -> List[str]:
+    """Return a list of available ShipModels."""
+    return ["Type A Free Trader", "Type S Scout/Courier"]

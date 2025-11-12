@@ -6,7 +6,7 @@ from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, SystemMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
-from ship import ship_from, ship_model_from, ShipModel
+from ship import ship_from, ship_model_from, ShipModel, get_ship_models
 from star_system import StarSystem, UWP
 
 # pylint: disable=R0904
@@ -525,6 +525,12 @@ class ShipModelTestCase(unittest.TestCase):
         expected.jump_fuel_cost = 20
         expected.trip_fuel_cost = 20
         expected.base_price = Credits(29_430_000)
+        self.assertEqual(actual, expected)
+
+    def test_get_ship_models(self) -> None:
+        """Test retrieval of available ship models."""
+        actual = get_ship_models()
+        expected = ["Type A Free Trader", "Type S Scout/Courier"]
         self.assertEqual(actual, expected)
 
 
