@@ -181,7 +181,9 @@ class Ship:
 
         self.model = ship_model_from(model)
 
-        self.crew = [position() for position in self.model.crew_requirements]
+        # mypy complains about abstract attribute "salary"
+        self.crew = [position() for position in    # type: ignore[abstract]
+                     self.model.crew_requirements]
 
     def __eq__(self, other:Any) -> bool:
         """Test if two Ships are equal."""

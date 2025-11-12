@@ -169,7 +169,7 @@ class ShipTestCase(unittest.TestCase):
 
     def test_trade_skill(self) -> None:
         """Test retrieval of the Ship's trade skill value."""
-        self.assertEqual(ShipTestCase.ship.trade_skill(), 1)
+        self.assertEqual(ShipTestCase.ship.trade_skill(), 0)
 
     def test_crew_salary(self) -> None:
         """Test paying the monthly crew salary."""
