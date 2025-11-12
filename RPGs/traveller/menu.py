@@ -140,7 +140,6 @@ class Menu(Screen):
             return None
         load_file = files[file_number]
 
-        systems = {}
         try:
             with open(f"saves/{load_file}", 'r', encoding='utf-8') as a_file:
                 data = json.load(a_file)
@@ -148,6 +147,7 @@ class Menu(Screen):
             print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
             return None
 
+        systems = {}
         for line in data['systems']:
             map_hex = hex_from(line)
             systems[map_hex.coordinate] = map_hex

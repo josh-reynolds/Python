@@ -1,6 +1,5 @@
-[
-  [
-    "name": "Type A Free Trader",
+{
+  "Type A Free Trader": {
     "hull": 200,
     "passenger_berths": 6,
     "low_berths": 20,
@@ -18,10 +17,9 @@
 	    "Medic",
 	    "Steward"
     ]
-  ],
-  [
-    "name": "Type S Scout/Courier",
-    "hull": 200,
+  },
+  "Type S Scout/Courier": {
+    "hull": 100,
     "passenger_berths": 3,
     "low_berths": 0,
     "acceleration": 2,
@@ -35,5 +33,5 @@
     "crew_requirements": [
 	    "Pilot"
     ]
-  ]
-]
+  }
+}

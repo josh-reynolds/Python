@@ -9,9 +9,10 @@ FuelQuality - enem to represent whether fuel is contaminated or not.
 RepairStatus - enum to represent whether a ship needs repairs.
 Ship - represents a starship.
 """
+import json
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Any
+from typing import List, Any, cast
 from cargo import Freight, PassageClass, Cargo, Passenger
 from financials import Credits
 from star_system import StarSystem
@@ -134,7 +135,7 @@ class ShipModel:
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
         self.base_price = Credits(37_080_000)
-        self.crew_requirements = [Pilot, Engineer, Medic, Steward]
+        self.crew_requirements: List[Crew] = []
 
     def __eq__(self, other: Any) -> bool:
         """Test if two ShipModels are equal."""
@@ -181,8 +182,8 @@ class Ship:
 
         self.model = ship_model_from(model)
 
-        # mypy complains about abstract attribute "salary"
-        self.crew = [position() for position in    # type: ignore[abstract]
+        # mypy complains about calling abstract base class (list is List[Crew])
+        self.crew = [position() for position in    # type: ignore[operator]
                      self.model.crew_requirements]
 
     def __eq__(self, other:Any) -> bool:
@@ -584,40 +585,39 @@ def ship_from(string: str, model: str) -> Ship:
 
     return ship
 
-# TO_DO: hard-code initially, but this will migrate to a file
 def ship_model_from(name: str) -> ShipModel:
     """Return a ShipModel given a name."""
+    try:
+        with open("data/ship_models.json", 'r', encoding='utf-8') as a_file:
+            file_contents = json.load(a_file)
+    except FileNotFoundError as exc:
+        raise FileNotFoundError("Ship model file not found.") from exc
+
+    data = file_contents[name]
+
     model = ShipModel()
     model.name = name
-
-    # need to think about how to handle Crew
-    match name:
-        case "Type A Free Trader":
-            model.hull = 200
-            model.passenger_berths = 6
-            model.low_berths = 20
-            model.acceleration = 1
-            model.streamlined = True
-            model.hold_size = 82
-            model.fuel_tank = 30
-            model.jump_range = 1
-            model.jump_fuel_cost = 20
-            model.trip_fuel_cost = 10
-            model.base_price = Credits(37_080_000)
-            model.crew_requirements = [Pilot, Engineer, Medic, Steward]
-        case "Type S Scout/Courier":
-            model.hull = 100
-            model.passenger_berths = 3
-            model.low_berths = 0
-            model.acceleration = 2
-            model.streamlined = True
-            model.hold_size = 3
-            model.fuel_tank = 40
-            model.jump_range = 2
-            model.jump_fuel_cost = 20
-            model.trip_fuel_cost = 20
-            model.base_price = Credits(29_430_000)
-            model.crew_requirements = [Pilot]
+    model.hull = data["hull"]
+    model.passenger_berths = data["passenger_berths"]
+    model.low_berths = data["low_berths"]
+    model.acceleration = data["acceleration"]
+    model.streamlined = data["streamlined"]
+    model.hold_size = data["hold_size"]
+    model.fuel_tank = data["fuel_tank"]
+    model.jump_range = data["jump_range"]
+    model.jump_fuel_cost = data["jump_fuel_cost"]
+    model.trip_fuel_cost = data["trip_fuel_cost"]
+    model.base_price = Credits(data["base_price"])
+    for crewmember in data["crew_requirements"]:
+        match crewmember:
+            case "Pilot":
+                model.crew_requirements.append(cast(Crew, Pilot))
+            case "Engineer":
+                model.crew_requirements.append(cast(Crew, Engineer))
+            case "Medic":
+                model.crew_requirements.append(cast(Crew, Medic))
+            case "Steward":
+                model.crew_requirements.append(cast(Crew, Steward))
 
     return model
 
