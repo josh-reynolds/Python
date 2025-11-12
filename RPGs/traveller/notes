@@ -2513,6 +2513,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] 'Select ship' option in new game - could add the Type-S Scout
+#  * [....] Add different ship types and ship design
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
@@ -2563,8 +2565,6 @@
 #           here like adjusting world creation parameters, but initially just
 #           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
-#  * [    ] 'Select ship' option in new game - could add the Type-S Scout
-#  * [    ] Add different ship types and ship design
 #  PHASE SIX ======================================================
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.

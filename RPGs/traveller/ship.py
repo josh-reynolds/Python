@@ -133,8 +133,29 @@ class ShipModel:
         self.jump_range = 1
         self.jump_fuel_cost = 20
         self.trip_fuel_cost = 10
-        self.base_price = Credits(37080000)
+        self.base_price = Credits(37_080_000)
         # need to think about how to handle Crew
+
+    def __eq__(self, other: Any) -> bool:
+        """Test if two ShipModels are equal."""
+        if type(other) is type(self):
+            return self.name == other.name and\
+                    self.hull == other.hull and\
+                    self.passenger_berths == other.passenger_berths and\
+                    self.low_berths == other.low_berths and\
+                    self.acceleration == other.acceleration and\
+                    self.streamlined == other.streamlined and\
+                    self.hold_size == other.hold_size and\
+                    self.fuel_tank == other.fuel_tank and\
+                    self.jump_range == other.jump_range and\
+                    self.jump_fuel_cost == other.jump_fuel_cost and\
+                    self.trip_fuel_cost == other.trip_fuel_cost and\
+                    self.base_price == other.base_price
+        return NotImplemented
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a ShipModel."""
+        return f"ShipModel({self.name})"
 
 
 # pylint: disable=R0902, R0904
@@ -514,7 +535,7 @@ def ship_from(string: str) -> Ship:
     name - fuel - fuel_quality - jump_counter - repair    - life_support
     w*   - d*   - R | U        - d*           - R | P | B - d*
 
-    This matchs the format output by Ship.encode(). Cargo hold contents 
+    This matches the format output by Ship.encode(). Cargo hold contents 
     and passenger manifest are handled separately.
     """
     tokens = string.split(' - ')
@@ -557,3 +578,38 @@ def ship_from(string: str) -> Ship:
         raise ValueError(f"life support must be in the range 0-100: '{ship.life_support_level}'")
 
     return ship
+
+# TO_DO: hard-code initially, but this will migrate to a file
+def ship_model_from(name: str) -> ShipModel:
+    """Return a ShipModel given a name."""
+    model = ShipModel()
+    model.name = name
+
+    # need to think about how to handle Crew
+    match name:
+        case "Type A Free Trader":
+            model.hull = 200
+            model.passenger_berths = 6
+            model.low_berths = 20
+            model.acceleration = 1
+            model.streamlined = True
+            model.hold_size = 82
+            model.fuel_tank = 30
+            model.jump_range = 1
+            model.jump_fuel_cost = 20
+            model.trip_fuel_cost = 10
+            model.base_price = Credits(37_080_000)
+        case "Type S Scout/Courier":
+            model.hull = 100
+            model.passenger_berths = 3
+            model.low_berths = 0
+            model.acceleration = 2
+            model.streamlined = True
+            model.hold_size = 3
+            model.fuel_tank = 40
+            model.jump_range = 2
+            model.jump_fuel_cost = 20
+            model.trip_fuel_cost = 20
+            model.base_price = Credits(29_430_000)
+
+    return model

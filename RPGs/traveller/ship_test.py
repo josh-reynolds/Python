@@ -6,7 +6,7 @@ from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, SystemMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
-from ship import ship_from
+from ship import ship_from, ship_model_from, ShipModel
 from star_system import StarSystem, UWP
 
 # pylint: disable=R0904
@@ -469,7 +469,7 @@ class ShipTestCase(unittest.TestCase):
 class PilotTestCase(unittest.TestCase):
     """Tests Pilot class."""
 
-    def test_salary(self):
+    def test_salary(self) -> None:
         """Test retrieval of Pilot salary value."""
         self.assertEqual(Pilot(1).salary(), Credits(6000))
         self.assertEqual(Pilot(2).salary(), Credits(6600))
@@ -478,7 +478,7 @@ class PilotTestCase(unittest.TestCase):
 class EngineerTestCase(unittest.TestCase):
     """Tests Engineer class."""
 
-    def test_salary(self):
+    def test_salary(self) -> None:
         """Test retrieval of Engineer salary value."""
         self.assertEqual(Engineer(1).salary(), Credits(4000))
         self.assertEqual(Engineer(2).salary(), Credits(4400))
@@ -487,7 +487,7 @@ class EngineerTestCase(unittest.TestCase):
 class MedicTestCase(unittest.TestCase):
     """Tests Medic class."""
 
-    def test_salary(self):
+    def test_salary(self) -> None:
         """Test retrieval of Medic salary value."""
         self.assertEqual(Medic(1).salary(), Credits(2000))
         self.assertEqual(Medic(2).salary(), Credits(2200))
@@ -496,11 +496,37 @@ class MedicTestCase(unittest.TestCase):
 class StewardTestCase(unittest.TestCase):
     """Tests Steward class."""
 
-    def test_salary(self):
+    def test_salary(self) -> None:
         """Test retrieval of Steward salary value."""
         self.assertEqual(Steward(1).salary(), Credits(3000))
         self.assertEqual(Steward(2).salary(), Credits(3300))
         self.assertEqual(Steward(3).salary(), Credits(3600))
+
+class ShipModelTestCase(unittest.TestCase):
+    """Tests ShipModel class."""
+
+    def test_ship_model_from(self) -> None:
+        """Test creation of a ShipModel from a name string."""
+        actual = ship_model_from("Type A Free Trader")
+        expected = ShipModel()
+        self.assertEqual(actual, expected)
+
+        actual = ship_model_from("Type S Scout/Courier")
+        expected = ShipModel()
+        expected.name = "Type S Scout/Courier"
+        expected.hull = 100
+        expected.passenger_berths = 3
+        expected.low_berths = 0
+        expected.acceleration = 2
+        expected.streamlined = True
+        expected.hold_size = 3
+        expected.fuel_tank = 40
+        expected.jump_range = 2
+        expected.jump_fuel_cost = 20
+        expected.trip_fuel_cost = 20
+        expected.base_price = Credits(29_430_000)
+        self.assertEqual(actual, expected)
+
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
