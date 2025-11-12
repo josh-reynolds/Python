@@ -13,7 +13,7 @@ from cargo import passenger_from, cargo_hold_from
 from command import Command
 from coordinate import Coordinate, coordinate_from
 from financials import Credits, financials_from
-from ship import FuelQuality, RepairStatus, ship_from
+from ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from
 from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
@@ -106,9 +106,24 @@ class Menu(Screen):
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
-    def new_game(self: ScreenT) -> ScreenT:
+    def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
+        ship_types = get_ship_models()
+        pr_list(ship_types)
+        model_number = int_input("Choose a ship to start with. ")
+        if model_number >= len(ship_types):
+            print("That is not a valid ship model.")
+            return None
+
+        self.parent.ship = Ship(ship_types[model_number])
+        self.parent.ship.add_observer(self.parent)
+        self.parent.ship.controls = self.parent
+
         self.parent.ship.name = input("What is the name of your ship? ")
+
+        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
+                                                   self.parent.location.coordinate,
+                                                   self.parent.ship.model.jump_range)
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
