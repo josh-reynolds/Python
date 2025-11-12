@@ -165,7 +165,7 @@ class Ship:
     """Represents a starship."""
 
     # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
-    def __init__(self) -> None:
+    def __init__(self, model: str) -> None:
         """Create an instance of a Ship."""
         self.name = "Weaselfish"
         self.hold: List[Freight | Cargo] = []
@@ -179,7 +179,7 @@ class Ship:
         self.observers: List[Any] = []     # we don't have a type representing Observers
         self.controls: Any | None = None   # same story for controls...
 
-        self.model = ShipModel()
+        self.model = ship_model_from(model)
 
     def __eq__(self, other:Any) -> bool:
         """Test if two Ships are equal."""
@@ -211,7 +211,7 @@ class Ship:
 
     def __repr__(self) -> str:
         """Return the developer string representation of a Ship."""
-        return "Ship()"
+        return f"Ship({self.model.name})"
 
     @property
     def current_fuel(self) -> int:
@@ -546,7 +546,8 @@ def ship_from(string: str) -> Ship:
     if len(tokens) < 6:
         raise ValueError(f"input string is missing data: '{string}'")
 
-    ship = Ship()
+    #TO_DO: get ship model into encoding
+    ship = Ship("Type A Free Trader")
 
     ship.name = tokens[0]
 

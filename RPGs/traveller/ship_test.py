@@ -14,7 +14,7 @@ from star_system import StarSystem, UWP
 class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
-    ship: Ship = Ship()
+    ship: Ship = Ship("Type A Free Trader")
 
     # pylint: disable=R0903,W0231
     # R0903: Too few public methods (1/2)
@@ -85,7 +85,7 @@ class ShipTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         """Create a fixture for testing the Ship class."""
-        ShipTestCase.ship = Ship()
+        ShipTestCase.ship = Ship("Type A Free Trader")
 
     def test_ship_string(self) -> None:
         """Test the string representation of a Ship object."""
@@ -322,48 +322,48 @@ class ShipTestCase(unittest.TestCase):
         """Test importing a Ship from a string."""
         string = "Weaselfish - 0 - R - 0 - R - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         self.assertEqual(actual, expected)
 
         string = "Funkstar - 0 - R - 0 - R - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.name = "Funkstar"
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 30 - R - 0 - R - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.fuel = 30
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - U - 0 - R - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.fuel_quality = FuelQuality.UNREFINED
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 1 - R - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.unrefined_jump_counter = 1
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - P - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.repair_status = RepairStatus.PATCHED
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - B - 0"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.repair_status = RepairStatus.BROKEN
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - R - 100"
         actual = ship_from(string)
-        expected = Ship()
+        expected = Ship("Type A Free Trader")
         expected.life_support_level = 100
         self.assertEqual(actual, expected)
 
@@ -441,7 +441,7 @@ class ShipTestCase(unittest.TestCase):
 
     def test_encode(self) -> None:
         """Test exporting a Ship to a string."""
-        ship = Ship()
+        ship = Ship("Type A Free Trader")
 
         actual = ship.encode()
         expected = "Weaselfish - 0 - R - 0 - R - 0"

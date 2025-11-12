@@ -2515,6 +2515,7 @@
 #           Note that __repr__ should be recursive for arg objects
 #  * [    ] 'Select ship' option in new game - could add the Type-S Scout
 #  * [....] Add different ship types and ship design
+#  * [    ] Handle varying Crew positions in different ShipModels
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
