@@ -12,7 +12,7 @@ Ship - represents a starship.
 import json
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Any, cast
+from typing import List, Any, cast, Dict
 from cargo import Freight, PassageClass, Cargo, Passenger
 from financials import Credits
 from star_system import StarSystem
@@ -585,14 +585,18 @@ def ship_from(string: str, model: str) -> Ship:
 
     return ship
 
-def ship_model_from(name: str) -> ShipModel:
-    """Return a ShipModel given a name."""
+def load_ship_model_data() -> Dict[str, Any]:
+    """Load and return the ship model data from a file."""
     try:
         with open("data/ship_models.json", 'r', encoding='utf-8') as a_file:
             file_contents = json.load(a_file)
     except FileNotFoundError as exc:
         raise FileNotFoundError("Ship model file not found.") from exc
+    return file_contents
 
+def ship_model_from(name: str) -> ShipModel:
+    """Return a ShipModel given a name."""
+    file_contents = load_ship_model_data()
     data = file_contents[name]
 
     model = ShipModel()
