@@ -625,7 +625,7 @@ def ship_model_from(name: str) -> ShipModel:
 
     return model
 
-# as with the previous, this will rely on data from a file
 def get_ship_models() -> List[str]:
     """Return a list of available ShipModels."""
-    return ["Type A Free Trader", "Type S Scout/Courier"]
+    file_contents = load_ship_model_data()
+    return list(file_contents.keys())
