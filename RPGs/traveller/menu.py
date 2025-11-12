@@ -150,7 +150,7 @@ class Menu(Screen):
         # since we need that list to build destinations
 
         # TO_DO: check creation of location destinations - tied to jump range...
-        self.parent.ship = ship_from(data['ship'])
+        self.parent.ship = ship_from(data['ship details'])
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
 
@@ -392,6 +392,7 @@ class Play(Screen):
 
         date_string = f"{self.parent.date}"
 
+        ship_model_string = self.parent.ship.model.name
         ship_string = self.parent.ship.encode()
 
         passenger_list = [p.encode() for p in self.parent.ship.passengers]
@@ -410,7 +411,8 @@ class Play(Screen):
                      'subsectors' : subsectors,
                      'location' : location_string,
                      'menu' : menu_string,
-                     'ship' : ship_string,
+                     'ship model' : ship_model_string,
+                     'ship details' : ship_string,
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
                      'financials' : financials_string,
