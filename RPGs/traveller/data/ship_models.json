@@ -1,0 +1,39 @@
+[
+  [
+    "name": "Type A Free Trader",
+    "hull": 200,
+    "passenger_berths": 6,
+    "low_berths": 20,
+    "acceleration": 1,
+    "streamlined": true,
+    "hold_size": 82,
+    "fuel_tank": 30,
+    "jump_range": 1,
+    "jump_fuel_cost": 20,
+    "trip_fuel_cost": 10,
+    "base_price": 37080000,
+    "crew_requirements": [
+	    "Pilot",
+	    "Engineer",
+	    "Medic",
+	    "Steward"
+    ]
+  ],
+  [
+    "name": "Type S Scout/Courier",
+    "hull": 200,
+    "passenger_berths": 3,
+    "low_berths": 0,
+    "acceleration": 2,
+    "streamlined": true,
+    "hold_size": 3,
+    "fuel_tank": 40,
+    "jump_range": 2,
+    "jump_fuel_cost": 20,
+    "trip_fuel_cost": 20,
+    "base_price": 29430000,
+    "crew_requirements": [
+	    "Pilot"
+    ]
+  ]
+]
