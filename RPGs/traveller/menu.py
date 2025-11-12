@@ -150,7 +150,7 @@ class Menu(Screen):
         # since we need that list to build destinations
 
         # TO_DO: check creation of location destinations - tied to jump range...
-        self.parent.ship = ship_from(data['ship details'])
+        self.parent.ship = ship_from(data['ship details'], data['ship model'])
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
 

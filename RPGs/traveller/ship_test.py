@@ -321,121 +321,121 @@ class ShipTestCase(unittest.TestCase):
     def test_ship_from(self) -> None:
         """Test importing a Ship from a string."""
         string = "Weaselfish - 0 - R - 0 - R - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         self.assertEqual(actual, expected)
 
         string = "Funkstar - 0 - R - 0 - R - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.name = "Funkstar"
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 30 - R - 0 - R - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.fuel = 30
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - U - 0 - R - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.fuel_quality = FuelQuality.UNREFINED
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 1 - R - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.unrefined_jump_counter = 1
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - P - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.repair_status = RepairStatus.PATCHED
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - B - 0"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.repair_status = RepairStatus.BROKEN
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - R - 100"
-        actual = ship_from(string)
+        actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
         expected.life_support_level = 100
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - R - 0 - extra"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "input string has extra data: 'Weaselfish - 0 - R - 0 - R - 0 - extra'")
 
         string = "Weaselfish - 0 - R - 0 - R"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "input string is missing data: 'Weaselfish - 0 - R - 0 - R'")
 
         string = "Weaselfish - 31 - R - 0 - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "fuel level in input string is larger than the fuel tank: '31'")
 
         string = "Weaselfish - -1 - R - 0 - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "fuel level must be a positive integer: '-1'")
 
         string = "Weaselfish - m - R - 0 - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
 
         string = "Weaselfish - 0 - X - 0 - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "unknown fuel quality in saved data: 'X'")
 
         string = "Weaselfish - 0 - R - -1 - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "jump counter must be a positive integer: '-1'")
 
         string = "Weaselfish - 0 - R - m - R - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
 
         string = "Weaselfish - 0 - R - 0 - X - 0"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "unknown repair status in saved data: 'X'")
 
         string = "Weaselfish - 0 - R - 0 - R - -1"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "life support must be in the range 0-100: '-1'")
 
         string = "Weaselfish - 0 - R - 0 - R - 101"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "life support must be in the range 0-100: '101'")
 
         string = "Weaselfish - 0 - R - 0 - R - m"
         with self.assertRaises(ValueError) as context:
-            _ = ship_from(string)
+            _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
 
@@ -462,7 +462,7 @@ class ShipTestCase(unittest.TestCase):
         expected = "Weaselfish - 0 - U - 0 - B - 0"
         self.assertEqual(actual, expected)
 
-        ship2 = ship_from(actual)
+        ship2 = ship_from(actual, "Type A Free Trader")
         self.assertEqual(ship, ship2)
 
 

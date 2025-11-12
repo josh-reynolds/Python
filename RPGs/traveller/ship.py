@@ -525,9 +525,7 @@ class Ship:
                 f"{self.unrefined_jump_counter} - {repair} - {self.life_support_level}"
 
 
-# TO_DO: this will need to expand once we allow different ship models
-#        but for now we just have the hard-coded Free Trader
-def ship_from(string: str) -> Ship:
+def ship_from(string: str, model: str) -> Ship:
     """Create a Ship object from a string representation.
 
     The string is in the following format:
@@ -537,6 +535,9 @@ def ship_from(string: str) -> Ship:
 
     This matches the format output by Ship.encode(). Cargo hold contents 
     and passenger manifest are handled separately.
+
+    The function also needs the name of the ship model to pass on to
+    the constructor.
     """
     tokens = string.split(' - ')
 
@@ -546,8 +547,7 @@ def ship_from(string: str) -> Ship:
     if len(tokens) < 6:
         raise ValueError(f"input string is missing data: '{string}'")
 
-    #TO_DO: get ship model into encoding
-    ship = Ship("Type A Free Trader")
+    ship = Ship(model)
 
     ship.name = tokens[0]
 
