@@ -33,5 +33,24 @@
     "crew_requirements": [
 	    "Pilot"
     ]
+  },
+  "Type Y Yacht": {
+    "hull": 200,
+    "passenger_berths": 9,
+    "low_berths": 0,
+    "acceleration": 1,
+    "streamlined": false,
+    "hold_size": 11,
+    "fuel_tank": 50,
+    "jump_range": 1,
+    "jump_fuel_cost": 20,
+    "trip_fuel_cost": 10,
+    "base_price": 51057000,
+    "crew_requirements": [
+	    "Pilot",
+	    "Engineer",
+	    "Medic",
+	    "Steward"
+    ]
   }
 }
