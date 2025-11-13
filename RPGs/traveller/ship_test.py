@@ -3,7 +3,7 @@ import unittest
 from typing import Any
 from src.cargo import Freight, Cargo, Passenger
 from src.coordinate import Coordinate
-from financials import Credits
+from src.financials import Credits
 from mock import ObserverMock, SystemMock
 from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
 from ship import ship_from, ship_model_from, ShipModel, get_ship_models

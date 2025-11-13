@@ -12,7 +12,7 @@ from src.cargo import passenger_from, cargo_hold_from
 from src.calendar import modify_calendar_from
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from
-from financials import Credits, financials_from
+from src.financials import Credits, financials_from
 from ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from star_map import StarMap, subsector_from
 from star_system import DeepSpace, StarSystem, Hex, hex_from

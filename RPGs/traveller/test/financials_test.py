@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 from src.calendar import ImperialDate
-from financials import Credits, Financials, financials_from
+from src.financials import Credits, Financials, financials_from
 from mock import ObserverMock
 
 class CreditsTestCase(unittest.TestCase):
@@ -628,8 +628,3 @@ class FinancialsTestCase(unittest.TestCase):
         actual = financials.encode()
         expected = "1000000 - 010-1105 - 010-1105 - 010-1105 - 010-1105 - 100-1104"
         self.assertEqual(actual, expected)
-
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

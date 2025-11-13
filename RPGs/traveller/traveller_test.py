@@ -1,7 +1,7 @@
 """Contains tests for the traveller module."""
 import unittest
 from src.coordinate import Coordinate
-from financials import Credits
+from src.financials import Credits
 from star_map import StarSystemFactory
 from traveller import Game
 

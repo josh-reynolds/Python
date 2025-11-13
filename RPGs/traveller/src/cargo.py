@@ -13,10 +13,10 @@ from random import randint
 from typing import Dict, List, Tuple, Any, cast, Mapping, Sequence
 from src.calendar import ImperialDate
 from src.coordinate import Coordinate, coordinate_from
+from src.financials import Credits
+from star_system import StarSystem, Hex
 from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
-from financials import Credits
-from star_system import StarSystem, Hex
 
 class PassageClass(Enum):
     """Denotes the class of a Passenger's ticket."""
