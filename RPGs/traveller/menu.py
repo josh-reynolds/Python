@@ -11,7 +11,7 @@ from src.cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freig
 from src.cargo import passenger_from, cargo_hold_from
 from src.calendar import modify_calendar_from
 from src.command import Command
-from coordinate import Coordinate, coordinate_from
+from src.coordinate import Coordinate, coordinate_from
 from financials import Credits, financials_from
 from ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from star_map import StarMap, subsector_from

@@ -1,6 +1,6 @@
 """Contains tests for the coordinate module."""
 import unittest
-from coordinate import convert_3_axis, absolute, coordinate_from, Coordinate
+from src.coordinate import convert_3_axis, absolute, coordinate_from, Coordinate
 
 class CoordinateTestCase(unittest.TestCase):
     """Tests 3-axis Coordinate functions."""
@@ -174,7 +174,3 @@ class CoordinateTestCase(unittest.TestCase):
         """Test validation of potential three-axis coordinates."""
         actual = Coordinate(0,0,0)
         self.assertTrue(actual.is_valid())
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

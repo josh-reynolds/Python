@@ -1,6 +1,6 @@
 """Contains tests for the star_map module."""
 import unittest
-from coordinate import Coordinate
+from src.coordinate import Coordinate
 from star_system import StarSystem, UWP, uwp_from, hex_from, DeepSpace
 
 class StarSystemTestCase(unittest.TestCase):

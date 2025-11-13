@@ -3,7 +3,7 @@ import unittest
 from typing import List, Any, Sequence
 from src.cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
 from src.cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
-from coordinate import Coordinate
+from src.coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
 from star_system import StarSystem

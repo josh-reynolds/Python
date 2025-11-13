@@ -12,7 +12,7 @@ from enum import Enum
 from random import randint
 from typing import Dict, List, Tuple, Any, cast, Mapping, Sequence
 from src.calendar import ImperialDate
-from coordinate import Coordinate, coordinate_from
+from src.coordinate import Coordinate, coordinate_from
 from utilities import die_roll, constrain
 from utilities import actual_value, get_lines, dictionary_from
 from financials import Credits
