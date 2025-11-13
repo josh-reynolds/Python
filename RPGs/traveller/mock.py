@@ -1,6 +1,6 @@
 """Contains mock classes for testing."""
 from typing import Any, Self
-from calendar import ImperialDate
+from src.calendar import ImperialDate
 from coordinate import Coordinate
 from star_system import StarSystem
 

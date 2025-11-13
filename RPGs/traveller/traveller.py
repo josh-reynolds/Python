@@ -3,7 +3,7 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from typing import cast
-from calendar import Calendar
+from src.calendar import Calendar
 from coordinate import Coordinate
 from financials import Financials, Credits
 from menu import Menu

@@ -1,7 +1,7 @@
 """Contains tests for the calendar module."""
 import unittest
 from typing import cast
-from calendar import Calendar, ImperialDate, imperial_date_from, modify_calendar_from
+from src.calendar import Calendar, ImperialDate, imperial_date_from, modify_calendar_from
 
 class ImperialDateTestCase(unittest.TestCase):
     """Tests ImperialDate class."""

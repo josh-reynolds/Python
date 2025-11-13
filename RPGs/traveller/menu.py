@@ -7,9 +7,9 @@ from abc import ABC, abstractmethod
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
-from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from cargo import passenger_from, cargo_hold_from
+from src.calendar import modify_calendar_from
 from src.command import Command
 from coordinate import Coordinate, coordinate_from
 from financials import Credits, financials_from
