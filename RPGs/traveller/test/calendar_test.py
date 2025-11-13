@@ -259,7 +259,3 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.day, 2)
         self.assertEqual(calendar.year, 1105)
         self.assertEqual(mock.count, 0)
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

@@ -2523,6 +2523,9 @@
 #           always be assumed? If so should trap malformed - don't like ctor
 #           leaving object in a partially-contstructed state.
 #  * [    ] Handle save/load exceptions in app rather than crashing out
+#  * [    ] With new src & test packages, unable to directly run test files - need
+#           to run via unit_tests.py. Removing __main__ check consequently, research
+#           better alternatives.
 #  * [    ] Handling of load game list when there are no save files could be smoother
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
