@@ -1,8 +1,8 @@
 """Contains tests for the cargo module."""
 import unittest
 from typing import List, Any, Sequence
-from cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
-from cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
+from src.cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
+from src.cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, DateMock, SystemMock
@@ -1060,8 +1060,3 @@ class CargoHoldTestCase(unittest.TestCase):
                           dictionary_from("{Ag:-2,Na:2,In:3}"),
                           dictionary_from("{Ag:-2,In:2,Po:1}"))]
         self.assertEqual(actual, expected)
-
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

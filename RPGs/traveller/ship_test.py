@@ -1,7 +1,7 @@
 """Contains tests for the ship module."""
 import unittest
 from typing import Any
-from cargo import Freight, Cargo, Passenger
+from src.cargo import Freight, Cargo, Passenger
 from coordinate import Coordinate
 from financials import Credits
 from mock import ObserverMock, SystemMock

@@ -3,14 +3,14 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from typing import cast
-from src.calendar import Calendar
 from coordinate import Coordinate
 from financials import Financials, Credits
 from menu import Menu
 from utilities import int_input, confirm_input
 from utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 from ship import Ship
-from cargo import Cargo, CargoDepot
+from src.calendar import Calendar
+from src.cargo import Cargo, CargoDepot
 from star_system import DeepSpace, StarSystem
 from star_map import StarMap, StarSystemFactory, Subsector
 
