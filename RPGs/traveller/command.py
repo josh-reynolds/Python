@@ -1,6 +1,8 @@
 """Contains classes to manage game commands."""
 from typing import Callable
 
+# see recipe 9.1 in Python Cookbook
+
 # pylint: disable=R0903
 # R0903: Too few public methods (0/2)
 class Command:

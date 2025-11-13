@@ -119,7 +119,10 @@ class Menu(Screen):
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
 
-        self.parent.ship.name = input("What is the name of your ship? ")
+        ship_name = ""
+        while not ship_name:
+            ship_name = input("What is the name of your ship? ")
+        self.parent.ship.name = ship_name
 
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
                                                    self.parent.location.coordinate,
