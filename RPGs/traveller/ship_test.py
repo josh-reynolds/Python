@@ -530,7 +530,7 @@ class ShipModelTestCase(unittest.TestCase):
     def test_get_ship_models(self) -> None:
         """Test retrieval of available ship models."""
         actual = get_ship_models()
-        expected = ["Type A Free Trader", "Type S Scout/Courier"]
+        expected = ["Type A Free Trader", "Type S Scout/Courier", "Type Y Yacht"]
         self.assertEqual(actual, expected)
 
 
