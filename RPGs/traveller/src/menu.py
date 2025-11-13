@@ -13,12 +13,12 @@ from src.calendar import modify_calendar_from
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from
 from src.financials import Credits, financials_from
-from ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
-from star_map import StarMap, subsector_from
-from star_system import DeepSpace, StarSystem, Hex, hex_from
-from utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
-from utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files
+from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
+from src.star_map import StarMap, subsector_from
+from src.star_system import DeepSpace, StarSystem, Hex, hex_from
+from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
+from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
+from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)

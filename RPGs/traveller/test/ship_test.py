@@ -1,13 +1,13 @@
 """Contains tests for the ship module."""
 import unittest
 from typing import Any
+from test.mock import ObserverMock, SystemMock
 from src.cargo import Freight, Cargo, Passenger
 from src.coordinate import Coordinate
 from src.financials import Credits
-from mock import ObserverMock, SystemMock
-from ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
-from ship import ship_from, ship_model_from, ShipModel, get_ship_models
-from star_system import StarSystem, UWP
+from src.ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
+from src.ship import ship_from, ship_model_from, ShipModel, get_ship_models
+from src.star_system import StarSystem, UWP
 
 # pylint: disable=R0904
 # R0904: Too many public methods
@@ -532,8 +532,3 @@ class ShipModelTestCase(unittest.TestCase):
         actual = get_ship_models()
         expected = ["Type A Free Trader", "Type S Scout/Courier", "Type Y Yacht"]
         self.assertEqual(actual, expected)
-
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

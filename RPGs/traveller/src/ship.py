@@ -15,8 +15,8 @@ from enum import Enum
 from typing import List, Any, cast, Dict
 from src.cargo import Freight, PassageClass, Cargo, Passenger
 from src.financials import Credits
-from star_system import StarSystem
-from utilities import die_roll
+from src.star_system import StarSystem
+from src.utilities import die_roll
 
 # TO_DO: assess collapsing all crew positions into a single class
 class Crew(ABC):

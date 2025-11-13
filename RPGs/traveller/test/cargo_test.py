@@ -1,13 +1,13 @@
 """Contains tests for the cargo module."""
 import unittest
 from typing import List, Any, Sequence
+from test.mock import ObserverMock, DateMock, SystemMock
 from src.cargo import Cargo, CargoDepot, Freight, Baggage, Passenger, PassageClass
 from src.cargo import passenger_from, freight_from, baggage_from, cargo_from, cargo_hold_from
 from src.coordinate import Coordinate
 from src.financials import Credits
-from mock import ObserverMock, DateMock, SystemMock
-from star_system import StarSystem
-from utilities import dictionary_from
+from src.star_system import StarSystem
+from src.utilities import dictionary_from
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1003/1000)

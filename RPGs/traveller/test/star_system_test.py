@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from src.coordinate import Coordinate
-from star_system import StarSystem, UWP, uwp_from, hex_from, DeepSpace
+from src.star_system import StarSystem, UWP, uwp_from, hex_from, DeepSpace
 
 class StarSystemTestCase(unittest.TestCase):
     """Tests StarSystem class."""
@@ -246,7 +246,3 @@ class UWPTestCase(unittest.TestCase):
         uwp_string = f"{uwp}"
         actual = uwp_from(uwp_string)
         self.assertEqual(actual, uwp)
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

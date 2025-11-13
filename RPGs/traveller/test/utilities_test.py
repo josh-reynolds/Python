@@ -1,6 +1,6 @@
 """Contains tests for the utilities module."""
 import unittest
-from utilities import actual_value, die_roll, constrain, get_lines, dictionary_from
+from src.utilities import actual_value, die_roll, constrain, get_lines, dictionary_from
 
 class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
@@ -76,7 +76,3 @@ class UtilitiesTestCase(unittest.TestCase):
 
     # remaining functions are almost purely side-effect,
     # not terribly useful to have unit tests
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

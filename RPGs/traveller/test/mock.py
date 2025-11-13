@@ -2,7 +2,7 @@
 from typing import Any, Self
 from src.calendar import ImperialDate
 from src.coordinate import Coordinate
-from star_system import StarSystem
+from src.star_system import StarSystem
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)

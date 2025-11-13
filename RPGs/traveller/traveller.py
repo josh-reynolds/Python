@@ -3,16 +3,16 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from typing import cast
-from menu import Menu
 from src.calendar import Calendar
 from src.cargo import Cargo, CargoDepot
 from src.coordinate import Coordinate
 from src.financials import Financials, Credits
-from ship import Ship
-from star_system import DeepSpace, StarSystem
-from star_map import StarMap, StarSystemFactory, Subsector
-from utilities import int_input, confirm_input
-from utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
+from src.menu import Menu
+from src.ship import Ship
+from src.star_system import DeepSpace, StarSystem
+from src.star_map import StarMap, StarSystemFactory, Subsector
+from src.utilities import int_input, confirm_input
+from src.utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 
 # pylint: disable=R0902
 # R0902: Too many instance attributes (8/7)

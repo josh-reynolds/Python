@@ -6,9 +6,9 @@ StarMap - represents a map of StarSystems laid out on a hexagonal grid.
 from random import randint
 from typing import Dict, List, cast, Tuple, Any
 from src.coordinate import Coordinate
-from word_gen import get_world_name, get_subsector_name
-from star_system import StarSystem, DeepSpace, UWP, Hex
-from utilities import die_roll, constrain
+from src.star_system import StarSystem, DeepSpace, UWP, Hex
+from src.utilities import die_roll, constrain
+from src.word_gen import get_world_name, get_subsector_name
 
 # in the three-axis system:
 #  * the three coordinates sum to zero

@@ -2,7 +2,7 @@
 import unittest
 from src.coordinate import Coordinate
 from src.financials import Credits
-from star_map import StarSystemFactory
+from src.star_map import StarSystemFactory
 from traveller import Game
 
 # most of these methods necessarily have side effects,
@@ -35,7 +35,3 @@ class GameTestCase(unittest.TestCase):
     # side effects only ~ ~ ~ ~ ~ ~ ~
     # on_notify
     # run
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

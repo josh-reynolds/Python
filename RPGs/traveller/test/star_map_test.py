@@ -1,8 +1,8 @@
 """Contains tests for the star_map module."""
 import unittest
 from src.coordinate import Coordinate
-from star_map import StarMap, StarSystemFactory, Subsector, subsector_from
-from star_system import StarSystem, DeepSpace
+from src.star_map import StarMap, StarSystemFactory, Subsector, subsector_from
+from src.star_system import StarSystem, DeepSpace
 
 class StarMapTestCase(unittest.TestCase):
     """Tests StarMap class."""
@@ -388,7 +388,3 @@ class SubsectorTestCase(unittest.TestCase):
             _ = subsector_from(string)
         self.assertEqual(f"{context.exception}",
                          "invalid literal for int() with base 10: 'm'")
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()

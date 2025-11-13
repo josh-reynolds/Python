@@ -2,9 +2,9 @@
 from __future__ import annotations
 import unittest
 from typing import Any
+from test.mock import ObserverMock
 from src.calendar import ImperialDate
 from src.financials import Credits, Financials, financials_from
-from mock import ObserverMock
 
 class CreditsTestCase(unittest.TestCase):
     """Tests Credits class."""

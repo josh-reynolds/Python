@@ -1,9 +1,9 @@
 """Contains tests for the menu module."""
 import unittest
 from typing import cast, List
-from menu import Menu, Passengers, Trade
-from ship import Ship
-from star_system import StarSystem
+from src.menu import Menu, Passengers, Trade
+from src.ship import Ship
+from src.star_system import StarSystem
 from traveller import Game
 
 class MenuTestCase(unittest.TestCase):
@@ -105,8 +105,3 @@ class TradeTestCase(unittest.TestCase):
         # freight selection in list
         # freight selection not in list
         # not enough space in hold
-
-
-# -------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()
