@@ -10,7 +10,7 @@ from typing import Any, List, TypeVar, cast, Tuple
 from calendar import modify_calendar_from
 from cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from cargo import passenger_from, cargo_hold_from
-from command import Command
+from src.command import Command
 from coordinate import Coordinate, coordinate_from
 from financials import Credits, financials_from
 from ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship

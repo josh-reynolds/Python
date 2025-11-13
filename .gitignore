@@ -40,4 +40,6 @@
 /pygame/tutorials/__pycache__
 /pygame/tutorials/app/__pycache__
 /RPGs/traveller/__pycache__
+/RPGs/traveller/src/__pycache__
+/RPGs/traveller/test/__pycache__
 /RPGs/traveller/saves/save_game*.json

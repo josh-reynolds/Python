@@ -5,18 +5,7 @@ def suite():
     """Create a suite of test cases."""
     test_suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    test_suite.addTests(loader.loadTestsFromName('calendar_test'))
-    test_suite.addTests(loader.loadTestsFromName('cargo_test'))
-    test_suite.addTests(loader.loadTestsFromName('command_test'))
-    test_suite.addTests(loader.loadTestsFromName('coordinate_test'))
-    test_suite.addTests(loader.loadTestsFromName('financials_test'))
-    test_suite.addTests(loader.loadTestsFromName('menu_test'))
-    test_suite.addTests(loader.loadTestsFromName('ship_test'))
-    test_suite.addTests(loader.loadTestsFromName('star_map_test'))
-    test_suite.addTests(loader.loadTestsFromName('star_system_test'))
-    test_suite.addTests(loader.loadTestsFromName('traveller_test'))
-    test_suite.addTests(loader.loadTestsFromName('utilities_test'))
-    test_suite.addTests(loader.loadTestsFromName('word_gen_test'))
+    test_suite.addTests(loader.discover('.', '*_test.py'))
     return test_suite
 
 # ---------------------------------------------------------------------------
