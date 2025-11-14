@@ -465,11 +465,8 @@ class Play(Screen):
         system_list = []
         for system in star_map.systems.items():
             coord = absolute(system[0])
-            # following is needed to populate subsector list as side effect
-            _ = star_map.pretty_coordinates(coord)
-            map_hex = coord[0]
-            subsector = star_map.subsectors[coord[1]]
-            system_list.append(f"{subsector} : {map_hex} : {system[1]}\n")
+            coord_string = star_map.pretty_coordinates(coord)
+            system_list.append(f"{coord[1]} : {coord_string} : {system[1]}\n")
         system_list.sort()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
