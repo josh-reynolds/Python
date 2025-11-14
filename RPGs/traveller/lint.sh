@@ -1,15 +1,17 @@
 #! /bin/sh
 
 echo "RUNNING PYLINT ======================"
-pylint *.py
+pylint --recursive y *.py
 
 echo
 echo "RUNNING PYDOCSTYLE =================="
 pydocstyle *.py
+pydocstyle src/*.py
+pydocstyle test/*.py
 
 echo
 echo "RUNNING MYPY ========================"
-mypy *.py
+mypy .
 
 echo
 echo "RUNNING UNIT TESTS =================="

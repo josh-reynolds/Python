@@ -1,10 +1,10 @@
 """Contains tests for the menu module."""
 import unittest
 from typing import cast, List
+from main import Game
 from src.menu import Menu, Passengers, Trade
 from src.ship import Ship
 from src.star_system import StarSystem
-from traveller import Game
 
 class MenuTestCase(unittest.TestCase):
     """Test menu screen."""
