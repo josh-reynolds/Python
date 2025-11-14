@@ -13,7 +13,7 @@ from src.cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freig
 from src.cargo import passenger_from, cargo_hold_from
 from src.calendar import modify_calendar_from
 from src.command import Command
-from src.coordinate import Coordinate, coordinate_from
+from src.coordinate import Coordinate, coordinate_from, absolute
 from src.financials import Credits, financials_from
 from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from src.star_map import StarMap, subsector_from
@@ -453,14 +453,30 @@ class Play(Screen):
 
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""
-        # check if file already exists, prompt to continue
-        # grab map contents
-        # convert to pretty list
-        # write to file
+        print(f"{BOLD_BLUE}Dumping map data.{END_FORMAT}")
+        for file in listdir():
+            if fnmatch(file, "star_map.txt"):
+                confirmation = confirm_input("Star map file already exists. Continue (y/n)? ")
+                if confirmation == "n":
+                    return None
+
+        # working this out here, but should move to star_map and/or coordinate eventually
+        star_map = self.parent.star_map
+        with open("star_map.txt", "w", encoding="utf-8") as a_file:
+            for system in star_map.systems.items():
+                coord = absolute(system[0])
+                map_hex = coord[0]
+                subsector = coord[1]
+                a_file.write(f"{subsector} : {map_hex} : {system[1]}\n")
+
+        # TO_DO: group by subsector
+        #        add subsector names
+
 
 
     def dump_ledger(self) -> None:
         """Output the ledger data to a file in a human-readable format."""
+        print(f"{BOLD_BLUE}Dumping ledger data.{END_FORMAT}")
         for file in listdir():
             if fnmatch(file, "ledger.txt"):
                 confirmation = confirm_input("Ledger file already exists. Continue (y/n)? ")
