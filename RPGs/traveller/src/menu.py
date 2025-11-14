@@ -462,16 +462,19 @@ class Play(Screen):
 
         # working this out here, but should move to star_map and/or coordinate eventually
         star_map = self.parent.star_map
+        system_list = []
+        for system in star_map.systems.items():
+            coord = absolute(system[0])
+            # following is needed to populate subsector list as side effect
+            _ = star_map.pretty_coordinates(coord)
+            map_hex = coord[0]
+            subsector = star_map.subsectors[coord[1]]
+            system_list.append(f"{subsector} : {map_hex} : {system[1]}\n")
+        system_list.sort()
+
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
-            for system in star_map.systems.items():
-                coord = absolute(system[0])
-                map_hex = coord[0]
-                subsector = coord[1]
-                a_file.write(f"{subsector} : {map_hex} : {system[1]}\n")
-
-        # TO_DO: group by subsector
-        #        add subsector names
-
+            for line in system_list:
+                a_file.write(line)
 
 
     def dump_ledger(self) -> None:

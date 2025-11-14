@@ -2515,13 +2515,13 @@
 #  * [DONE] BUG: player can enter a blank ship name in new_game
 #  * [DONE] linter calls in lint.sh are not recursive and are not covering package sub-dirs
 #  * [DONE] 'Dump ledger' command to export a readable version?
+#  * [DONE] Export star map (this is different from save game how, exactly?
+#           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Export star map (this is different from save game how, exactly?
-#           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
@@ -2535,6 +2535,9 @@
 #  * [    ] With new src & test packages, unable to directly run test files - need
 #           to run via unit_tests.py. Removing __main__ check consequently, research
 #           better alternatives.
+#  * [    ] Review lifespan of Subsector. Currently we only create them when generating
+#           pretty_coordinates() for a StarSystem. Should probably do this earlier -
+#           when creating the StarSystem itself?
 #  * [    ] Handling of load game list when there are no save files could be smoother
 #  * [    ] Should we track cargo details in ledger? Would be good to help the player
 #           analyze performance
