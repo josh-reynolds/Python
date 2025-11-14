@@ -4,6 +4,8 @@ Menu - draws the screen and gathers input from the player.
 """
 import json
 from abc import ABC, abstractmethod
+from fnmatch import fnmatch
+from os import listdir
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
@@ -314,7 +316,7 @@ class Play(Screen):
     def view_ledger(self) -> None:
         """View the bank transaction ledger."""
         print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
-        print("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\tMEMO")
+        print("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO")
         transactions = self.parent.financials.ledger
         for transaction in transactions:
             print(transaction)
@@ -451,9 +453,29 @@ class Play(Screen):
 
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""
+        # check if file already exists, prompt to continue
+        # grab map contents
+        # convert to pretty list
+        # write to file
+
 
     def dump_ledger(self) -> None:
         """Output the ledger data to a file in a human-readable format."""
+        for file in listdir():
+            if fnmatch(file, "ledger.txt"):
+                confirmation = confirm_input("Ledger file already exists. Continue (y/n)? ")
+                if confirmation == "n":
+                    return None
+
+        ledger = self.parent.financials.ledger
+        if len(ledger) == 0:
+            print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
+            return None
+        text = "\n".join(ledger) + "\n"
+
+        with open("ledger.txt", "w", encoding="utf-8") as a_file:
+            a_file.write("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO\n")
+            a_file.write(text)
 
 
 class Orbit(Play):
