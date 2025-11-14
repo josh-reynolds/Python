@@ -24,7 +24,7 @@ from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_fi
 # C0302: Too many lines in module (1078/1000)
 
 # keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ o ~ q ~ ~ ~ ~ v w ~ ~ z
+# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ o ~ q ~ ~ ~ ~ v w x y z
 # STARPORT:             f           l m n   p   r   t u
 # ORBIT:                  g         l
 # JUMP:                       i j                 s
@@ -262,6 +262,8 @@ class Play(Screen):
                 Command('w', 'Wait a week', self.wait_week),
                 Command('z', 'Save Game', self.save_game),
                 Command('o', 'View ledger', self.view_ledger),
+                Command('x', 'Dump map', self.dump_map),
+                Command('y', 'Dump ledger', self.dump_ledger),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -446,6 +448,12 @@ class Play(Screen):
         """Advance the Calendar by seven days."""
         print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
         self.parent.date.plus_week()
+
+    def dump_map(self) -> None:
+        """Output the map data to a file in a human-readable format."""
+
+    def dump_ledger(self) -> None:
+        """Output the ledger data to a file in a human-readable format."""
 
 
 class Orbit(Play):
