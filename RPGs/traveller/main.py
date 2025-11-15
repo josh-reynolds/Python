@@ -26,9 +26,6 @@ class Game:
         self.date = Calendar()
 
         self.ship = Ship("Type A Free Trader")
-        self.ship.load_cargo(Cargo("Grain", '20', Credits(300), 1,
-                                   {"Ag":-2,"Na":1,"In":2},
-                                   {"Ag":-2}))
 
         self.star_map = StarMap({
             Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",

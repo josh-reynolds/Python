@@ -110,6 +110,13 @@ class Menu(Screen):
     # ACTIONS ==============================================================
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
+        try:
+            with open(f"data/new_game.json", 'r', encoding='utf-8') as a_file:
+                data = json.load(a_file)
+        except FileNotFoundError:
+            print(f"{BOLD_RED}New game file not found.{END_FORMAT}")
+            return None
+
         ship_types = get_ship_models()
         pr_list(ship_types)
         model_number = int_input("\nChoose a ship to start with. ")

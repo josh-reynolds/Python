@@ -1,0 +1,14 @@
+{
+  "systems": [
+    "(0, 0, 0) - Yorbund - A875955-A In - G",
+    "(0, 1, -1) - Deep Space",
+    "(0, -1, 1) - Mithril - A840755-A Po - G",
+    "(1, 0, -1) - Kinorb - A855755-A Ag - G",
+    "(-1, 0, 1) - Deep Space",
+    "(1, -1, 0) - Deep Space",
+    "(-1, 1, 0) - Aramis - A865855-A Ri - G"
+  ],
+  "subsectors": [
+    "(0, 0) - Regina"
+  ]
+}

@@ -2185,6 +2185,97 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Some more minor feature work: dumping out the map listing and
+# financial ledger. There's some oddities here to smooth out,
+# like the lifespan of Subsector - currently they are only
+# created when generating pretty_coordinates() for a StarSystem,
+# which we only do when viewing a world or the map. So if you
+# dump the list prior to that, you'll crash trying to look
+# up non-existent subsectors. As a quick hack, I adjusted
+# dump_map() to call pretty_coordinates(), so good for now,
+# but probably ought to re-work the sequencing here.
+#
+# I think dump_map() in particular is a short step away from a
+# couple other features. Toying with them now:
+#
+# * Importing published data. Would need to reverse the Traveller
+#   coordinate into the internal 3-axis format. And a bit of
+#   parsing goo. But otherwise, pretty straightforward, in all
+#   likelihood.
+#
+# * Bigger lift: exporting a bitmap of the map. Mostly have all
+#   the data needed for this, but I'll need to play with graphics
+#   capabilities. I've added the pillow module and am fiddling
+#   around. My older Jave project also worked out all the math
+#   for drawing a hex grid, and I recently did a Python project
+#   with pygame to do the same.
+#
+# I'm also accumulating a bunch of technical debt here. I 
+# reorganized the files a bit. Need to spend more time on
+# cleanup. This feature push ought to end soon and we'll
+# start shuffling code around.
+#
+# But first, let's take a look at Game ctor. I'd like to get
+# that hard-coded data out of there, and large portions
+# of it are re-run during new_game() and load_game(). Should
+# also verify all the bits have been wired up properly.
+#
+# We might want a 'new game' function or method to pull all
+# this together. One and only one proper way to set up the 
+# game state.
+#
+# Game().run()
+#   set self.screen to Menu                           OK
+#   create Calendar                                   .
+#   create Ship                                       ...
+#   create & populate StarMap                         ..
+#   create & populate Subsectors                      ..
+#   set Game location                                 ..
+#   create location destinations                      ...
+#   create Financials (needs date, ship, location)    ..
+#   create CargoDepot (needs date, location)          .
+#   attach observer/controls to Ship                  ...
+#   attach observer/controls to CargoDepot            .
+#   attach observer to Financials                     ..
+#   attach observers to Calendar                      .
+#
+# Menu.new_game()
+#   get player input for ship model                   OK
+#   create Ship                                       ...
+#   attach observer/controls to Ship                  ...
+#   name Ship                                         .
+#   create location destinations                      ...
+#
+# Menu.load_game()
+#   get player input for save file                    OK
+#   create & populate StarMap                         ..
+#   create & populate Subsectors                      ..
+#   modify Calendar                                   .
+#   create Ship                                       ...
+#   attach observer/controls to Ship                  ...
+#   add Passengers to Ship                            .
+#   add Cargo/Freight to Ship                         .
+#   create Financials (needs date, ship, location)    ..
+#   set Financials Ship reference                     .
+#   attach observer to Financials                     ..
+#   add Ledger entries to Financials                  .
+#   set Game location                                 ..
+#   create location destinations                      ...
+#   set Financials location reference                 .
+#   set CargoDepot location reference                 .
+#   return appropriate Screen                         OK
+#
+# I think we should move most of the Game ctor contents into 
+# new_game(), then refactor any duplication between it and 
+# load_game().
+#
+#
+#
+#
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
