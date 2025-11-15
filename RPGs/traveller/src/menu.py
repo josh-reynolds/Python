@@ -128,8 +128,7 @@ class Menu(Screen):
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
-        date_string = data['date']
-        modify_calendar_from(self.parent.date, date_string)
+        modify_calendar_from(self.parent.date, data['date'])
 
         ship_types = get_ship_models()
         pr_list(ship_types)
@@ -220,8 +219,7 @@ class Menu(Screen):
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
-        date_string = data['date']
-        modify_calendar_from(self.parent.date, date_string)
+        modify_calendar_from(self.parent.date, data['date'])
 
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
