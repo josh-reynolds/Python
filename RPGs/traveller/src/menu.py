@@ -108,6 +108,15 @@ class Menu(Screen):
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     # ACTIONS ==============================================================
+    def _load_systems(self, data: List[str]) -> None:
+        """Apply StarSystems from json data to Game star_map field."""
+        systems = {}
+        for line in data:
+            map_hex = hex_from(line)
+            systems[map_hex.coordinate] = map_hex
+
+        self.parent.star_map = StarMap(systems)
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         try:
@@ -117,12 +126,9 @@ class Menu(Screen):
             print(f"{BOLD_RED}New game file not found.{END_FORMAT}")
             return None
 
-        systems = {}
-        for line in data['systems']:
-            map_hex = hex_from(line)
-            systems[map_hex.coordinate] = map_hex
-
-        self.parent.star_map = StarMap(systems)
+        # we cast self as ScreenT to allow the polymorphic return
+        # value; consequently mypy doesn't recognize methods on self
+        self._load_systems(data['systems'])  # type: ignore[attr-defined]
 
         for line in data['subsectors']:
             subsector = subsector_from(line)
@@ -208,12 +214,9 @@ class Menu(Screen):
             print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
             return None
 
-        systems = {}
-        for line in data['systems']:
-            map_hex = hex_from(line)
-            systems[map_hex.coordinate] = map_hex
-
-        self.parent.star_map = StarMap(systems)
+        # we cast self as ScreenT to allow the polymorphic return
+        # value; consequently mypy doesn't recognize methods on self
+        self._load_systems(data['systems'])  # type: ignore[attr-defined]
 
         for line in data['subsectors']:
             subsector = subsector_from(line)
@@ -230,7 +233,7 @@ class Menu(Screen):
 
         passengers = []
         for line in data['passengers']:
-            passengers.append(passenger_from(line, systems))
+            passengers.append(passenger_from(line, self.parent.star_map.systems))
 
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
@@ -241,7 +244,8 @@ class Menu(Screen):
             passenger.guess_survivors(self.parent.ship.low_passenger_count)
         self.parent.ship.passengers = passengers
 
-        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'], systems))
+        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'], 
+                                                                    self.parent.star_map.systems))
         self.parent.ship.hold = hold_contents
 
         destinations = set()
