@@ -117,6 +117,17 @@ class Menu(Screen):
             print(f"{BOLD_RED}New game file not found.{END_FORMAT}")
             return None
 
+        systems = {}
+        for line in data['systems']:
+            map_hex = hex_from(line)
+            systems[map_hex.coordinate] = map_hex
+
+        self.parent.star_map = StarMap(systems)
+
+        for line in data['subsectors']:
+            subsector = subsector_from(line)
+            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+
         ship_types = get_ship_models()
         pr_list(ship_types)
         model_number = int_input("\nChoose a ship to start with. ")
@@ -133,9 +144,14 @@ class Menu(Screen):
             ship_name = input("What is the name of your ship? ")
         self.parent.ship.name = ship_name
 
+        coord = coordinate_from(data['location'])
+        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
+        self.parent.location = location
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
-                                                   self.parent.location.coordinate,
-                                                   self.parent.ship.model.jump_range)
+                                                        coord, self.parent.ship.model.jump_range)
+        self.parent.financials.location = self.parent.location
+        self.parent.depot.system = self.parent.location
+
         _ = input("Press ENTER key to continue.")
         return cast(ScreenT, Orbit(self.parent))
 
@@ -176,7 +192,6 @@ class Menu(Screen):
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
 
-        # TO_DO: check creation of location destinations - tied to jump range...
         self.parent.ship = ship_from(data['ship details'], data['ship model'])
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
