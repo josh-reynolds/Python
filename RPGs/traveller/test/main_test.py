@@ -3,6 +3,7 @@ import unittest
 from main import Game
 from src.coordinate import Coordinate
 from src.financials import Credits
+from src.menu import Menu
 from src.star_map import StarSystemFactory
 
 # most of these methods necessarily have side effects,
@@ -14,10 +15,8 @@ class GameTestCase(unittest.TestCase):
     def test_game_ctor(self) -> None:
         """Tests construction of a Game object."""
         game = Game()
-        self.assertEqual(game.location,
-                         StarSystemFactory.create("Yorbund", Coordinate(0,0,0),
-                                                  "A", 8, 7, 5, 9, 5, 5, 10))
-        self.assertEqual(game.financials.balance, Credits(10000000))
+        self.assertFalse(game.running)
+        self.assertTrue(isinstance(game.screen, Menu))
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_input(self) -> None:

@@ -2267,11 +2267,14 @@
 #
 # I think we should move most of the Game ctor contents into 
 # new_game(), then refactor any duplication between it and 
-# load_game().
+# load_game(). And honestly, new_game() is essentially
+# just load_game() from a static file, with some 
+# added player input/customization.
 #
-#
-#
-#
+# This will also lead into separation of all the model
+# classes from Game. I think we'll end up with a Model
+# class, and a factory function to build it, and both
+# new_game() and load_game() will call into that.
 #
 # -------------------------------------------------------------
 

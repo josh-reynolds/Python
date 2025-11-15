@@ -2,15 +2,13 @@
 
 Game - contains the game loop and basic controller/view logic.
 """
-from typing import cast
 from src.calendar import Calendar
 from src.cargo import CargoDepot
-from src.coordinate import Coordinate
 from src.financials import Financials
 from src.menu import Menu
 from src.ship import Ship
-from src.star_system import DeepSpace, StarSystem
-from src.star_map import StarMap, StarSystemFactory, Subsector
+from src.star_system import StarSystem
+from src.star_map import StarMap
 from src.utilities import int_input, confirm_input
 from src.utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 
@@ -25,42 +23,11 @@ class Game:
         self.screen = Menu(self)
         self.date = Calendar()
 
-        self.ship = Ship("Type A Free Trader")
-
-        self.star_map = StarMap({
-            Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",
-                                                          Coordinate(0,0,0),
-                                                          "A", 8, 7, 5, 9, 5, 5, 10),
-            Coordinate(0,1,-1) : DeepSpace(Coordinate(0,1,-1)),
-            Coordinate(0,-1,1) : StarSystemFactory.create("Mithril",
-                                                          Coordinate(0,-1,1),
-                                                          "A", 8, 4, 0, 7, 5, 5, 10),
-            Coordinate(1,0,-1) : StarSystemFactory.create("Kinorb",
-                                                          Coordinate(1,0,-1),
-                                                          "A", 8, 5, 5, 7, 5, 5, 10),
-            Coordinate(-1,0,1) : DeepSpace(Coordinate(-1,0,1)),
-            Coordinate(1,-1,0) : DeepSpace(Coordinate(1,-1,0)),
-            Coordinate(-1,1,0) : StarSystemFactory.create("Aramis",
-                                                          Coordinate(-1,1,0),
-                                                          "A", 8, 6, 5, 8, 5, 5, 10)
-            })
-        self.star_map.subsectors[(0,0)] = Subsector("Regina", (0,0))
-
-        self.location = cast(StarSystem, self.star_map.get_system_at_coordinate(Coordinate(0,0,0)))
-        coord = self.location.coordinate
-        self.location.destinations = self.star_map.get_systems_within_range(coord,
-                                                              self.ship.model.jump_range)
-        self.financials = Financials(10000000, self.date.current_date, self.ship, self.location)
-        self.depot = CargoDepot(self.location, self.date.current_date)
-
-        self.ship.add_observer(self)
-        self.ship.controls = self
-        self.depot.add_observer(self)
-        self.depot.controls = self
-        self.financials.add_observer(self)
-
-        self.date.add_observer(self.depot)
-        self.date.add_observer(self.financials)
+        self.ship: Ship
+        self.star_map: StarMap
+        self.location: StarSystem
+        self.financials: Financials
+        self.depot: CargoDepot
 
     def on_notify(self, message: str, priority: str = "") -> None:
         """Print messages received from model objects."""

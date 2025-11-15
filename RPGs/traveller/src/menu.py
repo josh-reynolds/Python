@@ -128,6 +128,9 @@ class Menu(Screen):
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
+        date_string = data['date']
+        modify_calendar_from(self.parent.date, date_string)
+
         ship_types = get_ship_models()
         pr_list(ship_types)
         model_number = int_input("\nChoose a ship to start with. ")
@@ -144,16 +147,47 @@ class Menu(Screen):
             ship_name = input("What is the name of your ship? ")
         self.parent.ship.name = ship_name
 
+        self.parent.financials = financials_from(data['financials'])
+        self.parent.financials.ship = self.parent.ship
+        self.parent.financials.add_observer(self.parent)
+        self.parent.date.add_observer(self.parent.financials)
+
         coord = coordinate_from(data['location'])
         location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
         self.parent.location = location
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
                                                         coord, self.parent.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
-        self.parent.depot.system = self.parent.location
+
+        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
+        self.parent.depot.add_observer(self.parent)
+        self.parent.depot.controls = self.parent
+
+        self.parent.date.add_observer(self.parent.depot)
+        self.parent.date.add_observer(self.parent.financials)
+
+        screen: ScreenT
+        match data['menu']:
+            case "Orbit":
+                screen = cast(ScreenT, Orbit(self.parent))
+                self.parent.location.detail = "orbit"
+            case "Starport":
+                screen = cast(ScreenT, Starport(self.parent))
+                self.parent.location.detail = "starport"
+            case "Jump":
+                screen = cast(ScreenT, Jump(self.parent))
+                self.parent.location.detail = "jump"
+            case "Trade":
+                screen = cast(ScreenT, Trade(self.parent))
+                self.parent.location.detail = "trade"
+            case "Passengers":
+                screen = cast(ScreenT, Passengers(self.parent))
+                self.parent.location.detail = "terminal"
+            case _:
+                raise ValueError(f"unrecognized menu item: '{data['menu']}'")
 
         _ = input("Press ENTER key to continue.")
-        return cast(ScreenT, Orbit(self.parent))
+        return screen
 
     # pylint: disable=R0914, R0915
     # R0914: Too many local variables (16/15)
@@ -236,7 +270,13 @@ class Menu(Screen):
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
                                                         coord, self.parent.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
-        self.parent.depot.system = self.parent.location
+
+        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
+        self.parent.depot.add_observer(self.parent)
+        self.parent.depot.controls = self.parent
+
+        self.parent.date.add_observer(self.parent.depot)
+        self.parent.date.add_observer(self.parent.financials)
 
         screen: ScreenT
         match data['menu']:
@@ -257,8 +297,6 @@ class Menu(Screen):
                 self.parent.location.detail = "terminal"
             case _:
                 raise ValueError(f"unrecognized menu item: '{data['menu']}'")
-
-        # review Game ctor and ensure all links are hooked up
 
         _ = input("Press ENTER key to continue.")
         return screen
