@@ -149,6 +149,11 @@ class Menu(Screen):
         self.parent.depot.add_observer(self.parent)
         self.parent.depot.controls = self.parent
 
+    def _attach_date_observers(self) -> None:
+        """Attach observers to Game date field."""
+        self.parent.date.add_observer(self.parent.depot)
+        self.parent.date.add_observer(self.parent.financials)
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -180,9 +185,7 @@ class Menu(Screen):
         self._load_financials(data['financials'])          # type: ignore[attr-defined]
         self._load_location(data['location'])              # type: ignore[attr-defined]
         self._create_depot()                               # type: ignore[attr-defined]
-
-        self.parent.date.add_observer(self.parent.depot)
-        self.parent.date.add_observer(self.parent.financials)
+        self._attach_date_observers()                      # type: ignore[attr-defined]
 
         screen: ScreenT
         match data['menu']:
@@ -270,9 +273,7 @@ class Menu(Screen):
         self.parent.financials.ledger = data['ledger']
         self._load_location(data['location'])              # type: ignore[attr-defined]
         self._create_depot()                               # type: ignore[attr-defined]
-
-        self.parent.date.add_observer(self.parent.depot)
-        self.parent.date.add_observer(self.parent.financials)
+        self._attach_date_observers()                      # type: ignore[attr-defined]
 
         screen: ScreenT
         match data['menu']:
