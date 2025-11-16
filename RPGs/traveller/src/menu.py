@@ -154,6 +154,27 @@ class Menu(Screen):
         self.parent.date.add_observer(self.parent.depot)
         self.parent.date.add_observer(self.parent.financials)
 
+    def _load_screen(self: ScreenT, data: str) -> ScreenT:
+        """Apply screen from json data to Game screen field."""
+        match data:
+            case "Orbit":
+                self.parent.location.detail = "orbit"
+                return cast(ScreenT, Orbit(self.parent))
+            case "Starport":
+                self.parent.location.detail = "starport"
+                return cast(ScreenT, Starport(self.parent))
+            case "Jump":
+                self.parent.location.detail = "jump"
+                return cast(ScreenT, Jump(self.parent))
+            case "Trade":
+                self.parent.location.detail = "trade"
+                return cast(ScreenT, Trade(self.parent))
+            case "Passengers":
+                self.parent.location.detail = "terminal"
+                return cast(ScreenT, Passengers(self.parent))
+            case _:
+                raise ValueError(f"unrecognized menu item: '{data}'")
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -187,28 +208,9 @@ class Menu(Screen):
         self._create_depot()                               # type: ignore[attr-defined]
         self._attach_date_observers()                      # type: ignore[attr-defined]
 
-        screen: ScreenT
-        match data['menu']:
-            case "Orbit":
-                screen = cast(ScreenT, Orbit(self.parent))
-                self.parent.location.detail = "orbit"
-            case "Starport":
-                screen = cast(ScreenT, Starport(self.parent))
-                self.parent.location.detail = "starport"
-            case "Jump":
-                screen = cast(ScreenT, Jump(self.parent))
-                self.parent.location.detail = "jump"
-            case "Trade":
-                screen = cast(ScreenT, Trade(self.parent))
-                self.parent.location.detail = "trade"
-            case "Passengers":
-                screen = cast(ScreenT, Passengers(self.parent))
-                self.parent.location.detail = "terminal"
-            case _:
-                raise ValueError(f"unrecognized menu item: '{data['menu']}'")
-
         _ = input("Press ENTER key to continue.")
-        return screen
+
+        return self._load_screen(data['menu'])             # type: ignore[attr-defined]
 
     # pylint: disable=R0914, R0915
     # R0914: Too many local variables (16/15)
@@ -275,28 +277,9 @@ class Menu(Screen):
         self._create_depot()                               # type: ignore[attr-defined]
         self._attach_date_observers()                      # type: ignore[attr-defined]
 
-        screen: ScreenT
-        match data['menu']:
-            case "Orbit":
-                screen = cast(ScreenT, Orbit(self.parent))
-                self.parent.location.detail = "orbit"
-            case "Starport":
-                screen = cast(ScreenT, Starport(self.parent))
-                self.parent.location.detail = "starport"
-            case "Jump":
-                screen = cast(ScreenT, Jump(self.parent))
-                self.parent.location.detail = "jump"
-            case "Trade":
-                screen = cast(ScreenT, Trade(self.parent))
-                self.parent.location.detail = "trade"
-            case "Passengers":
-                screen = cast(ScreenT, Passengers(self.parent))
-                self.parent.location.detail = "terminal"
-            case _:
-                raise ValueError(f"unrecognized menu item: '{data['menu']}'")
-
         _ = input("Press ENTER key to continue.")
-        return screen
+
+        return self._load_screen(data['menu'])             # type: ignore[attr-defined]
 
 
 class Play(Screen):
