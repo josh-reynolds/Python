@@ -134,6 +134,15 @@ class Menu(Screen):
         self.parent.financials.add_observer(self.parent)
         self.parent.date.add_observer(self.parent.financials)
 
+    def _load_location(self, data: str) -> None:
+        """Apply location from json data to Game location field."""
+        coord = coordinate_from(data)
+        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
+        self.parent.location = location
+        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
+                                                        coord, self.parent.ship.model.jump_range)
+        self.parent.financials.location = self.parent.location
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -163,13 +172,8 @@ class Menu(Screen):
         self.parent.ship.name = ship_name
 
         self._load_financials(data['financials'])          # type: ignore[attr-defined]
+        self._load_location(data['location'])              # type: ignore[attr-defined]
 
-        coord = coordinate_from(data['location'])
-        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
-        self.parent.location = location
-        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
-                                                        coord, self.parent.ship.model.jump_range)
-        self.parent.financials.location = self.parent.location
 
         self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
         self.parent.depot.add_observer(self.parent)
@@ -262,13 +266,7 @@ class Menu(Screen):
 
         self._load_financials(data['financials'])          # type: ignore[attr-defined]
         self.parent.financials.ledger = data['ledger']
-
-        coord = coordinate_from(data['location'])
-        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
-        self.parent.location = location
-        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
-                                                        coord, self.parent.ship.model.jump_range)
-        self.parent.financials.location = self.parent.location
+        self._load_location(data['location'])              # type: ignore[attr-defined]
 
         self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
         self.parent.depot.add_observer(self.parent)
