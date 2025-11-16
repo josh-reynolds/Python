@@ -127,6 +127,13 @@ class Menu(Screen):
         """Apply date from json data to Game calendar field."""
         modify_calendar_from(self.parent.date, data)
 
+    def _load_financials(self, data: str) -> None:
+        """Apply Financials from json data to Game financials field."""
+        self.parent.financials = financials_from(data)
+        self.parent.financials.ship = self.parent.ship
+        self.parent.financials.add_observer(self.parent)
+        self.parent.date.add_observer(self.parent.financials)
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -155,10 +162,7 @@ class Menu(Screen):
             ship_name = input("What is the name of your ship? ")
         self.parent.ship.name = ship_name
 
-        self.parent.financials = financials_from(data['financials'])
-        self.parent.financials.ship = self.parent.ship
-        self.parent.financials.add_observer(self.parent)
-        self.parent.date.add_observer(self.parent.financials)
+        self._load_financials(data['financials'])          # type: ignore[attr-defined]
 
         coord = coordinate_from(data['location'])
         location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
@@ -256,10 +260,7 @@ class Menu(Screen):
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
             return None
 
-        self.parent.financials = financials_from(data['financials'])
-        self.parent.financials.ship = self.parent.ship
-        self.parent.financials.add_observer(self.parent)
-        self.parent.date.add_observer(self.parent.financials)
+        self._load_financials(data['financials'])          # type: ignore[attr-defined]
         self.parent.financials.ledger = data['ledger']
 
         coord = coordinate_from(data['location'])
