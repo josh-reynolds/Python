@@ -20,7 +20,7 @@ from src.star_map import StarMap, subsector_from
 from src.star_system import DeepSpace, StarSystem, Hex, hex_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files
+from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files, get_json_data
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
@@ -119,11 +119,8 @@ class Menu(Screen):
 
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
-        try:
-            with open(f"data/new_game.json", 'r', encoding='utf-8') as a_file:
-                data = json.load(a_file)
-        except FileNotFoundError:
-            print(f"{BOLD_RED}New game file not found.{END_FORMAT}")
+        data = get_json_data("data/new_game.json")
+        if not data:
             return None
 
         # we cast self as ScreenT to allow the polymorphic return
@@ -207,11 +204,8 @@ class Menu(Screen):
             return None
         load_file = files[file_number]
 
-        try:
-            with open(f"saves/{load_file}", 'r', encoding='utf-8') as a_file:
-                data = json.load(a_file)
-        except FileNotFoundError:
-            print(f"{BOLD_RED}Save file not found.{END_FORMAT}")
+        data = get_json_data(f"saves/{load_file}")
+        if not data:
             return None
 
         # we cast self as ScreenT to allow the polymorphic return

@@ -1,9 +1,10 @@
 """Contains utility functions."""
+import json
 import re
 from os import listdir
 from os.path import isfile, join
 from random import randint
-from typing import Any, List
+from typing import Any, List, Dict
 
 def die_roll(count: int = 1) -> int:
     """Roll count six-sided dice and return the total."""
@@ -130,3 +131,16 @@ def get_next_save_file() -> str:
     # will still output three+ digit numbers, but
     # ordering will break
     return f"save_game_{highest+1:02}.json"
+
+def get_json_data(filename: str) -> Dict[str, Any] | None:
+    """Retrieve data from a JSON file.
+
+    Returns a dictionary containing the JSON data, or
+    None if the file does not exist.
+    """
+    try:
+        with open(filename, 'r', encoding='utf-8') as a_file:
+            return json.load(a_file)
+    except FileNotFoundError:
+        print(f"{BOLD_RED}File {filename} not found.{END_FORMAT}")
+        return None
