@@ -117,6 +117,12 @@ class Menu(Screen):
 
         self.parent.star_map = StarMap(systems)
 
+    def _load_subsectors(self, data: List[str]) -> None:
+        """Apply Subsectors from json data to Game star_map field."""
+        for line in data:
+            subsector = subsector_from(line)
+            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -125,11 +131,8 @@ class Menu(Screen):
 
         # we cast self as ScreenT to allow the polymorphic return
         # value; consequently mypy doesn't recognize methods on self
-        self._load_systems(data['systems'])  # type: ignore[attr-defined]
-
-        for line in data['subsectors']:
-            subsector = subsector_from(line)
-            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+        self._load_systems(data['systems'])        # type: ignore[attr-defined]
+        self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
 
         modify_calendar_from(self.parent.date, data['date'])
 
@@ -210,11 +213,8 @@ class Menu(Screen):
 
         # we cast self as ScreenT to allow the polymorphic return
         # value; consequently mypy doesn't recognize methods on self
-        self._load_systems(data['systems'])  # type: ignore[attr-defined]
-
-        for line in data['subsectors']:
-            subsector = subsector_from(line)
-            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+        self._load_systems(data['systems'])        # type: ignore[attr-defined]
+        self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
 
         modify_calendar_from(self.parent.date, data['date'])
 
