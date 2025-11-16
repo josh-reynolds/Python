@@ -123,6 +123,10 @@ class Menu(Screen):
             subsector = subsector_from(line)
             self.parent.star_map.subsectors[subsector.coordinate] = subsector
 
+    def _load_calendar(self, data: str) -> None:
+        """Apply date from json data to Game calendar field."""
+        modify_calendar_from(self.parent.date, data)
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -133,8 +137,7 @@ class Menu(Screen):
         # value; consequently mypy doesn't recognize methods on self
         self._load_systems(data['systems'])        # type: ignore[attr-defined]
         self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
-
-        modify_calendar_from(self.parent.date, data['date'])
+        self._load_calendar(data['date'])          # type: ignore[attr-defined]
 
         ship_types = get_ship_models()
         pr_list(ship_types)
@@ -215,8 +218,7 @@ class Menu(Screen):
         # value; consequently mypy doesn't recognize methods on self
         self._load_systems(data['systems'])        # type: ignore[attr-defined]
         self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
-
-        modify_calendar_from(self.parent.date, data['date'])
+        self._load_calendar(data['date'])          # type: ignore[attr-defined]
 
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
