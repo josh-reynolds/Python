@@ -143,6 +143,12 @@ class Menu(Screen):
                                                         coord, self.parent.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
 
+    def _create_depot(self) -> None:
+        """Create a CargoDepot and apply to Game depot field."""
+        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
+        self.parent.depot.add_observer(self.parent)
+        self.parent.depot.controls = self.parent
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         data = get_json_data("data/new_game.json")
@@ -173,11 +179,7 @@ class Menu(Screen):
 
         self._load_financials(data['financials'])          # type: ignore[attr-defined]
         self._load_location(data['location'])              # type: ignore[attr-defined]
-
-
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
-        self.parent.depot.add_observer(self.parent)
-        self.parent.depot.controls = self.parent
+        self._create_depot()                               # type: ignore[attr-defined]
 
         self.parent.date.add_observer(self.parent.depot)
         self.parent.date.add_observer(self.parent.financials)
@@ -267,10 +269,7 @@ class Menu(Screen):
         self._load_financials(data['financials'])          # type: ignore[attr-defined]
         self.parent.financials.ledger = data['ledger']
         self._load_location(data['location'])              # type: ignore[attr-defined]
-
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
-        self.parent.depot.add_observer(self.parent)
-        self.parent.depot.controls = self.parent
+        self._create_depot()                               # type: ignore[attr-defined]
 
         self.parent.date.add_observer(self.parent.depot)
         self.parent.date.add_observer(self.parent.financials)
