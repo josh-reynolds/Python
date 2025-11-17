@@ -11,7 +11,7 @@ from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple
 from src.cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from src.cargo import passenger_from, cargo_hold_from
-from src.calendar import modify_calendar_from
+from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, absolute
 from src.financials import Credits, financials_from
@@ -125,6 +125,7 @@ class Menu(Screen):
 
     def _load_calendar(self, data: str) -> None:
         """Apply date from json data to Game calendar field."""
+        self.parent.date = Calendar()
         modify_calendar_from(self.parent.date, data)
 
     def _load_financials(self, data: str) -> None:

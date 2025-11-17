@@ -2611,6 +2611,7 @@
 #  * [DONE] 'Dump ledger' command to export a readable version?
 #  * [DONE] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
+#  * [DONE] Move hard-coded start conditions out of Game ctor into some sort of default save file
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -2645,7 +2646,6 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [    ] Move hard-coded start conditions out of Game ctor into some sort of default save file
 #  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
@@ -2763,11 +2763,10 @@
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
-#            split out another surface location? Implication of current 'surface' location
-#            is it as the starport, which this is not. Scope creep, maybe hold this one
-#            until phase five...
+#           split out another surface location? Implication of current 'surface' location
+#           is it is the starport, which this is not. Scope creep, maybe hold this one
+#           until phase five...
 #  * [    ] Add extended StarSystem details
-#  * [    ] Add ship design mode
 #  * [    ] Controls now allows us to have an AI or kiosk mode...
 #  * [    ] Working passage?
 #  * [    ] Should we allow the option of 'close jump?'
@@ -2776,13 +2775,13 @@
 #  * [    ] Add mail? Usualy tied to Subsidised Merchants, which have a fixed route, so
 #           not sure about this one.
 #  * [    ] Review need for negative or zero credits (balances and debts?)
-#            Defer - currently all uses are positive, even debts, but haven't
-#            implemented a ledger or more accounting features yet
+#           Defer - currently all uses are positive, even debts, but haven't
+#           implemented a ledger or more accounting features yet
 #  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Distinguish between highport and downport
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
-#  * [    ] Ship customization and/or building from scratch
 #  * [    ] Need to handle passengers if ship is unstreamlined
+#  * [    ] Add ship design mode - ship customization and/or building from scratch
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Color: jump dimming
 #  * [    ] If we want to expand beyond just the trade model, add 

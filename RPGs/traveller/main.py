@@ -21,8 +21,8 @@ class Game:
         """Create an instance of Game."""
         self.running = False
         self.screen = Menu(self)
-        self.date = Calendar()
 
+        self.date: Calendar
         self.ship: Ship
         self.star_map: StarMap
         self.location: StarSystem
