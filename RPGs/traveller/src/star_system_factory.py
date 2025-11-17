@@ -1,6 +1,9 @@
 """Contains functions to construct a StarSystem.
 
-StarSystemFactory - builds StarSystem objects using the Traveller '77 rules.
+World generation rules are from Traveller '77 Book 3 pp. 4-12.
+Constraints in these functions are based on the tables, though 
+the dice throws in the text can produce values outside this 
+range in some cases.
 """
 from src.coordinate import Coordinate
 from src.star_system import StarSystem, UWP
@@ -126,44 +129,33 @@ def _government_tech_modifier(government: int) -> int:
         return -2
     return 0
 
-# World generation from Traveller '77 Book 3 pp. 4-12
-# constraints based on the tables, though the dice throws
-# in the text can produce values outside this range in
-# some cases
-class StarSystemFactory:
-    """Builds StarSystem objects using the Traveller '77 rules."""
+# pylint: disable=R0913
+# R0913: Too many arguments (12/5)
+def create(name: str, coordinate: Coordinate, starport: str,
+           size: int, atmosphere: int, hydrographics: int, population: int,
+           government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
+    """Create an instance of a StarSystem with pre-determined statistics."""
+    uwp = UWP(starport, size, atmosphere, hydrographics,
+              population, government, law, tech)
+    return StarSystem(name, coordinate, uwp, gas_giant)
 
-    # pylint: disable=R0913
-    # R0913: Too many arguments (12/5)
-    @classmethod
-    def create(cls, name: str, coordinate: Coordinate, starport: str,
-               size: int, atmosphere: int, hydrographics: int, population: int,
-               government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
-        """Create an instance of a StarSystem with pre-determined statistics."""
-        uwp = UWP(starport, size, atmosphere, hydrographics,
-                  population, government, law, tech)
-        return StarSystem(name, coordinate, uwp, gas_giant)
+def generate(coordinate: Coordinate) -> StarSystem:
+    """Randomly generate a StarSystem instance."""
+    name = get_world_name()
 
-    @classmethod
-    def generate(cls, coordinate: Coordinate) -> StarSystem:
-        """Randomly generate a StarSystem instance."""
-        name = get_world_name()
+    starport = _generate_starport()
+    size = _generate_size()
+    atmosphere = _generate_atmosphere(size)
+    hydrographics = _generate_hydrographics(size, atmosphere)
+    population = _generate_population()
+    government = _generate_government(population)
+    law = _generate_law(government)
+    tech = _generate_tech(starport, size, atmosphere,
+                                            hydrographics, population, government)
 
-        starport = _generate_starport()
-        size = _generate_size()
-        atmosphere = _generate_atmosphere(size)
-        hydrographics = _generate_hydrographics(size, atmosphere)
-        population = _generate_population()
-        government = _generate_government(population)
-        law = _generate_law(government)
-        tech = _generate_tech(starport, size, atmosphere,
-                                                hydrographics, population, government)
+    gas_giant = bool(die_roll(2) < 10)
 
-        gas_giant = bool(die_roll(2) < 10)
+    uwp = UWP(starport, size, atmosphere, hydrographics,
+              population, government, law, tech)
 
-        uwp = UWP(starport, size, atmosphere, hydrographics,
-                  population, government, law, tech)
-
-        return StarSystem(name, coordinate, uwp, gas_giant)
-
-
+    return StarSystem(name, coordinate, uwp, gas_giant)

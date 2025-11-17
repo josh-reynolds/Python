@@ -4,7 +4,6 @@ from main import Game
 from src.coordinate import Coordinate
 from src.financials import Credits
 from src.menu import Menu
-from src.star_map import StarSystemFactory
 
 # most of these methods necessarily have side effects,
 # so we're going to have to tease out the testable bits

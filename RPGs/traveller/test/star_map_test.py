@@ -3,7 +3,7 @@ import unittest
 from src.coordinate import Coordinate
 from src.star_map import StarMap, Subsector, subsector_from
 from src.star_system import StarSystem, DeepSpace
-from src.star_system_factory import StarSystemFactory
+import src.star_system_factory
 
 class StarMapTestCase(unittest.TestCase):
     """Tests StarMap class."""
@@ -14,25 +14,25 @@ class StarMapTestCase(unittest.TestCase):
     def setUp(self) -> None:
         """Create a fixture to test the StarMap class."""
         StarMapTestCase.star_map1 = StarMap({
-            Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",
+            Coordinate(0,0,0)  : src.star_system_factory.create("Yorbund",
                                                           Coordinate(0,0,0),
                                                           "A", 5, 5, 5, 5, 5, 5, 5),
             Coordinate(0,1,-1) : DeepSpace(Coordinate(0,1,-1)),
-            Coordinate(0,-1,1) : StarSystemFactory.create("Mithril",
+            Coordinate(0,-1,1) : src.star_system_factory.create("Mithril",
                                                           Coordinate(0,-1,1),
                                                           "A", 5, 5, 5, 5, 5, 5, 5),
-            Coordinate(1,0,-1) : StarSystemFactory.create("Kinorb",
+            Coordinate(1,0,-1) : src.star_system_factory.create("Kinorb",
                                                           Coordinate(1,0,-1),
                                                           "A", 5, 5, 5, 5, 5, 5, 5),
             Coordinate(-1,0,1) : DeepSpace(Coordinate(-1,0,1)),
             Coordinate(1,-1,0) : DeepSpace(Coordinate(1,-1,0)),
-            Coordinate(-1,1,0) : StarSystemFactory.create("Aramis",
+            Coordinate(-1,1,0) : src.star_system_factory.create("Aramis",
                                                           Coordinate(-1,1,0),
                                                           "A", 5, 5, 5, 5, 5, 5, 5)
             })
 
         StarMapTestCase.star_map2 = StarMap({
-            Coordinate(0,0,0)  : StarSystemFactory.create("Yorbund",
+            Coordinate(0,0,0)  : src.star_system_factory.create("Yorbund",
                                                           Coordinate(0,0,0),
                                                           "A", 5, 5, 5, 5, 5, 5, 5),
             Coordinate(0,1,-1) : DeepSpace(Coordinate(0,1,-1)),
@@ -245,16 +245,16 @@ class StarMapTestCase(unittest.TestCase):
         star_map1 = StarMapTestCase.star_map1
         systems = star_map1.get_all_systems()
         self.assertEqual(len(systems), 4)
-        self.assertEqual(systems[0], StarSystemFactory.create("Aramis",
+        self.assertEqual(systems[0], src.star_system_factory.create("Aramis",
                                                               Coordinate(-1,1,0),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[1], StarSystemFactory.create("Mithril",
+        self.assertEqual(systems[1], src.star_system_factory.create("Mithril",
                                                               Coordinate(0,-1,1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[2], StarSystemFactory.create("Yorbund",
+        self.assertEqual(systems[2], src.star_system_factory.create("Yorbund",
                                                               Coordinate(0,0,0),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
-        self.assertEqual(systems[3], StarSystemFactory.create("Kinorb",
+        self.assertEqual(systems[3], src.star_system_factory.create("Kinorb",
                                                               Coordinate(1,0,-1),
                                                               "A", 5, 5, 5, 5, 5, 5, 5))
 
@@ -292,11 +292,11 @@ class StarMapTestCase(unittest.TestCase):
 
 
 class StarSystemFactoryTestCase(unittest.TestCase):
-    """Tests StarSystemFactory class."""
+    """Tests StarSystemFactory module."""
 
     def test_generate(self) -> None:
         """Test random generation of StarSystems."""
-        system = StarSystemFactory.generate(Coordinate(0,0,0))
+        system = src.star_system_factory.generate(Coordinate(0,0,0))
         self.assertEqual(system.coordinate, Coordinate(0,0,0))
 
         self.assertTrue(system.starport in ('A', 'B', 'C', 'D', 'E', 'X'))
@@ -324,7 +324,7 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
     def test_create(self) -> None:
         """Test creation of StarSystems by explicit parameters."""
-        world = StarSystemFactory.create("Yorbund", Coordinate(0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
+        world = src.star_system_factory.create("Yorbund", Coordinate(0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
 
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Yorbund")

@@ -7,7 +7,7 @@ from random import randint
 from typing import Dict, List, cast, Tuple, Any
 from src.coordinate import Coordinate
 from src.star_system import StarSystem, DeepSpace, Hex
-from src.star_system_factory import StarSystemFactory
+import src.star_system_factory
 from src.word_gen import get_subsector_name
 
 # in the three-axis system:
@@ -407,7 +407,7 @@ class StarMap:
     def _generate_new_system(cls, coordinate: Coordinate) -> Hex:
         """Randomly create either a StarSystem or a DeepSpace instance."""
         if randint(1,6) >= 4:
-            return StarSystemFactory.generate(coordinate)
+            return src.star_system_factory.generate(coordinate)
         return DeepSpace(coordinate)
 
     @classmethod
