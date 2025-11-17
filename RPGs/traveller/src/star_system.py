@@ -274,36 +274,3 @@ class StarSystem(Hex):
     def on_surface(self) -> bool:
         """Test whether the player is currently on the world's surface."""
         return self.detail in ('starport', 'trade', 'terminal')
-
-# TO_DO: consolidate this with StarSystemFactory once we move
-#        that to a simple module (away from static class methods)
-def hex_from(string: str) -> Hex:
-    """Create a StarSystem object from a string representation.
-
-    String format matches the 'systems' section of the output of 
-    Play.save_game(), which itself is comprised of Coordinate.__str__ 
-    and StarSystem.__str__, and the latter incorporates UWP.__str__ :
-
-    Coordinate - Name - UWP / Trade - Gas Giant
-    (d,d,d) - w* - wdddddd-d w?* - G?
-    Coordinate digits are +/- integers.
-    """
-    tokens = string.split(' - ')
-
-    if len(tokens) == 2 and tokens[1] == "Deep Space":
-        return DeepSpace(coordinate_from(tokens[0]))
-
-    if len(tokens) < 3:
-        raise ValueError(f"input string is missing data: '{string}'")
-
-    if len(tokens) > 4:
-        raise ValueError(f"input string has extra data: '{string}'")
-
-    gas_giant = False
-    if len(tokens) == 4 and tokens[3] == 'G':
-        gas_giant = True
-
-    return StarSystem(tokens[1],
-                      coordinate_from(tokens[0]),
-                      uwp_from(tokens[2][:9]),
-                      gas_giant)

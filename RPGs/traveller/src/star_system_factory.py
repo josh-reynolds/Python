@@ -4,11 +4,79 @@ World generation rules are from Traveller '77 Book 3 pp. 4-12.
 Constraints in these functions are based on the tables, though 
 the dice throws in the text can produce values outside this 
 range in some cases.
+
+The externally-usable functions in this module are:
+
+create() - create an instance of a StarSystem with pre-determined statistics.
+generate() - randomly generate a StarSystem instance.
+hex_from() - create a StarSystem object from a string representation.
 """
-from src.coordinate import Coordinate
-from src.star_system import StarSystem, UWP
+from src.coordinate import Coordinate, coordinate_from
+from src.star_system import StarSystem, UWP, Hex, DeepSpace, uwp_from
 from src.utilities import die_roll, constrain
 from src.word_gen import get_world_name
+
+# pylint: disable=R0913
+# R0913: Too many arguments (12/5)
+def create(name: str, coordinate: Coordinate, starport: str,
+           size: int, atmosphere: int, hydrographics: int, population: int,
+           government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
+    """Create an instance of a StarSystem with pre-determined statistics."""
+    uwp = UWP(starport, size, atmosphere, hydrographics,
+              population, government, law, tech)
+    return StarSystem(name, coordinate, uwp, gas_giant)
+
+def generate(coordinate: Coordinate) -> StarSystem:
+    """Randomly generate a StarSystem instance."""
+    name = get_world_name()
+
+    starport = _generate_starport()
+    size = _generate_size()
+    atmosphere = _generate_atmosphere(size)
+    hydrographics = _generate_hydrographics(size, atmosphere)
+    population = _generate_population()
+    government = _generate_government(population)
+    law = _generate_law(government)
+    tech = _generate_tech(starport, size, atmosphere,
+                                            hydrographics, population, government)
+
+    gas_giant = bool(die_roll(2) < 10)
+
+    uwp = UWP(starport, size, atmosphere, hydrographics,
+              population, government, law, tech)
+
+    return StarSystem(name, coordinate, uwp, gas_giant)
+
+def hex_from(string: str) -> Hex:
+    """Create a StarSystem object from a string representation.
+
+    String format matches the 'systems' section of the output of 
+    Play.save_game(), which itself is comprised of Coordinate.__str__ 
+    and StarSystem.__str__, and the latter incorporates UWP.__str__ :
+
+    Coordinate - Name - UWP / Trade - Gas Giant
+    (d,d,d) - w* - wdddddd-d w?* - G?
+    Coordinate digits are +/- integers.
+    """
+    tokens = string.split(' - ')
+
+    if len(tokens) == 2 and tokens[1] == "Deep Space":
+        return DeepSpace(coordinate_from(tokens[0]))
+
+    if len(tokens) < 3:
+        raise ValueError(f"input string is missing data: '{string}'")
+
+    if len(tokens) > 4:
+        raise ValueError(f"input string has extra data: '{string}'")
+
+    gas_giant = False
+    if len(tokens) == 4 and tokens[3] == 'G':
+        gas_giant = True
+
+    return StarSystem(tokens[1],
+                      coordinate_from(tokens[0]),
+                      uwp_from(tokens[2][:9]),
+                      gas_giant)
 
 def _generate_starport() -> str:
     """Generate the starport classification for the UWP."""
@@ -128,34 +196,3 @@ def _government_tech_modifier(government: int) -> int:
     if government == 13:
         return -2
     return 0
-
-# pylint: disable=R0913
-# R0913: Too many arguments (12/5)
-def create(name: str, coordinate: Coordinate, starport: str,
-           size: int, atmosphere: int, hydrographics: int, population: int,
-           government: int, law: int, tech: int, gas_giant: bool = True) -> StarSystem:
-    """Create an instance of a StarSystem with pre-determined statistics."""
-    uwp = UWP(starport, size, atmosphere, hydrographics,
-              population, government, law, tech)
-    return StarSystem(name, coordinate, uwp, gas_giant)
-
-def generate(coordinate: Coordinate) -> StarSystem:
-    """Randomly generate a StarSystem instance."""
-    name = get_world_name()
-
-    starport = _generate_starport()
-    size = _generate_size()
-    atmosphere = _generate_atmosphere(size)
-    hydrographics = _generate_hydrographics(size, atmosphere)
-    population = _generate_population()
-    government = _generate_government(population)
-    law = _generate_law(government)
-    tech = _generate_tech(starport, size, atmosphere,
-                                            hydrographics, population, government)
-
-    gas_giant = bool(die_roll(2) < 10)
-
-    uwp = UWP(starport, size, atmosphere, hydrographics,
-              population, government, law, tech)
-
-    return StarSystem(name, coordinate, uwp, gas_giant)
