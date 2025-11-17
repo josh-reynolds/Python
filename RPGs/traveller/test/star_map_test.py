@@ -1,8 +1,9 @@
 """Contains tests for the star_map module."""
 import unittest
 from src.coordinate import Coordinate
-from src.star_map import StarMap, StarSystemFactory, Subsector, subsector_from
+from src.star_map import StarMap, Subsector, subsector_from
 from src.star_system import StarSystem, DeepSpace
+from src.star_system_factory import StarSystemFactory
 
 class StarMapTestCase(unittest.TestCase):
     """Tests StarMap class."""
