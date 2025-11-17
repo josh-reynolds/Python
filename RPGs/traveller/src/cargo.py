@@ -179,8 +179,6 @@ def freight_from(tonnage: int, source: str, destination: str,
     return Freight(tonnage, source_world, destination_world)
 
 
-# pylint: disable=R0903
-# R0903: Too few public methods (1/2)
 class Baggage(Freight):
     """Represents passenger baggage."""
 

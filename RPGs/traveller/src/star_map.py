@@ -278,8 +278,6 @@ from src.word_gen import get_subsector_name
 # Traveller coordinates, since we always need to consider
 # half of the origin. But no matter.
 
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
 class Subsector:
     """Represents a Traveller subsector."""
 

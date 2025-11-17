@@ -214,9 +214,6 @@ class Menu(Screen):
 
         return self._load_screen(data['menu'])             # type: ignore[attr-defined]
 
-    # pylint: disable=R0914, R0915
-    # R0914: Too many local variables (16/15)
-    # R0915: Too many statements( 61/50)
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         files = get_save_files()
@@ -257,7 +254,7 @@ class Menu(Screen):
             passenger.guess_survivors(self.parent.ship.low_passenger_count)
         self.parent.ship.passengers = passengers
 
-        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'], 
+        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
                                                                     self.parent.star_map.systems))
         self.parent.ship.hold = hold_contents
 
@@ -500,7 +497,7 @@ class Play(Screen):
             if fnmatch(file, "star_map.txt"):
                 confirmation = confirm_input("Star map file already exists. Continue (y/n)? ")
                 if confirmation == "n":
-                    return None
+                    return
 
         # working this out here, but should move to star_map and/or coordinate eventually
         star_map = self.parent.star_map
@@ -523,12 +520,12 @@ class Play(Screen):
             if fnmatch(file, "ledger.txt"):
                 confirmation = confirm_input("Ledger file already exists. Continue (y/n)? ")
                 if confirmation == "n":
-                    return None
+                    return
 
         ledger = self.parent.financials.ledger
         if len(ledger) == 0:
             print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
-            return None
+            return
         text = "\n".join(ledger) + "\n"
 
         with open("ledger.txt", "w", encoding="utf-8") as a_file:
