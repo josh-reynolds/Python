@@ -287,6 +287,29 @@ class Menu(Screen):
             return None
         load_file = files[file_number]
 
+        content = get_lines(f"./import/{load_file}")
+
+        section = ""
+        for line in content:
+            if line[0] == '#':
+                continue
+            line = line[:-1]    # strip newline char
+            print(line)
+
+        _ = input("\nPress ENTER key to continue.")
+
+        # implementing a simple custom file format:
+        #    ignore comment lines
+        #    two sections required, section headers in square brackets
+        #    no key-value, straight data in sections
+        #    subsector lines:
+        #       Name Coordinate - \w* (-?\d*,-?\d*)
+        #    star system lines:
+        #       Subsector Coordinate Name UWP Additional - \w* 0\d{0,1}\d \w* \x{7}-\x \w*
+        #
+        #    star system lines should align with published format
+        #    subsector _name_ is used for lookup, not subsector coordinate
+
 
 class Play(Screen):
     """Draws the play screen and gathers input from the player.

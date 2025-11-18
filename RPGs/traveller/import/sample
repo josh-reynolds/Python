@@ -1,0 +1,37 @@
+# Traveller map data
+#
+# This file must contain two sections: Subsectors, and Systems
+#
+# When transcribing from published data, subsectors must be assigned 
+# a cartesian coordinate. Designate one subsector as the origin (0,0),
+# then assign the remainder coordinates according to their relative 
+# position.
+#
+# Subsectors should be listed one per line, with the name followed
+# by the coordinate.
+#
+# Systems should also be listed one per line in the following 
+# layout:
+#
+# Subsector Coordinate Name UWP GasGiant
+#   
+# Bases, Travel Zones and Xboat Routes are not currently supported.
+# There is no need to specify Trade Classifications - they will be
+# calculated based on the UWP.
+#
+# Also note that the coordinate is the location within the 
+# Subsector (between 0101 and 0810), not the Sector (between 0101
+# and 3240).
+#
+# Lines starting with # are comments and ignored by the game.
+# 
+# Sample data below is from Supplement 3: The Spinward Marches
+
+[Subsectors]
+Lanth (0,0)
+
+[Systems]
+Lanth 0101 Extolay B45589A-A
+Lanth 0109 Lanth   A879533-B
+Lanth 0201 Dinom   D100535-A G
+
