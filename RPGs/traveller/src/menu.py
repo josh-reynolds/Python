@@ -21,7 +21,7 @@ from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_files, get_json_data
+from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_files, get_json_data
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
@@ -208,7 +208,7 @@ class Menu(Screen):
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         print(f"{BOLD_BLUE}Loading game.{END_FORMAT}")
-        files = get_save_files()
+        files = get_files("./saves/")
         pr_list(files)
         file_number = int_input("Enter file to load: ")
         if file_number >= len(files):
@@ -275,6 +275,17 @@ class Menu(Screen):
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
+        # enforce an 'import' directory so we don't need to browse entire filesystem
+        # we will need two lists: subsectors and star systems
+        # simple JSON format to keep straight, or even simpler ini style?
+        #   we want data entry to be extremely simple, not a lot of formatting to add
+        files = get_files("./import/")
+        pr_list(files)
+        file_number = int_input("Enter file to load: ")
+        if file_number >= len(files):
+            print("That is not a valid file number.")
+            return None
+        load_file = files[file_number]
 
 
 class Play(Screen):

@@ -109,16 +109,15 @@ def dictionary_from(a_string: str) -> dict[str, int]:
         dictionary[key] = int(value)
     return dictionary
 
-def get_save_files() -> List[str]:
-    """Return a list of all files in the saves directory."""
-    path = "./saves/"
+def get_files(path: str) -> List[str]:
+    """Return a list of all files in the specified directory."""
     files = [f for f in listdir(path) if isfile(join(path, f))]
     files.sort()
     return files
 
 def get_next_save_file() -> str:
     """Return the next save file to be created."""
-    files = get_save_files()
+    files = get_files("./saves/")
     pattern = re.compile(r"save_game_(\d+).json")
     highest = 0
     for file in files:
