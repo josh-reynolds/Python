@@ -275,10 +275,6 @@ class Menu(Screen):
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
-        # enforce an 'import' directory so we don't need to browse entire filesystem
-        # we will need two lists: subsectors and star systems
-        # simple JSON format to keep straight, or even simpler ini style?
-        #   we want data entry to be extremely simple, not a lot of formatting to add
         files = get_files("./import/")
         pr_list(files)
         file_number = int_input("Enter file to load: ")
@@ -301,15 +297,21 @@ class Menu(Screen):
             if line[0] == '[':
                 if line == '[Subsectors]':
                     section = 'subsectors'
+                    data[section] = {}
                 elif line == '[Systems]':
                     section = 'systems'
+                    data[section] = []
                 else:
                     print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
                     return None
-                data[section] = []
                 continue
 
-            data[section].append(line)
+            if section == 'subsectors':
+                tokens = line.split()
+                data[section][tokens[0]] = tokens[1]
+
+            if section == 'systems':
+                data[section].append(line)
 
         print(data)
         _ = input("\nPress ENTER key to continue.")
