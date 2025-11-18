@@ -2612,16 +2612,20 @@
 #  * [DONE] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [DONE] Move hard-coded start conditions out of Game ctor into some sort of default save file
+#  * [DONE] Scrub for static-only classes and convert to modules if necessary
 #  * [DONE] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [....] Add import of Traveller map data
+#  * [....] Conversion of Traveller coordinates to 3-axis, probably needed to import
+#           existing data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
-#           leaving object in a partially-contstructed state.
+#           leaving object in a partially-constructed state.
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Should the dump_*() methods allow player to name output file? Or have
 #           a auto-increment scheme like save files?
@@ -2645,8 +2649,6 @@
 #  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
-#  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
-#           existing data
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
@@ -2695,7 +2697,6 @@
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...
 #  * [    ] Review unittest.Mock/MagicMock - should replace homegrown?
-#  * [    ] Scrub for static-only classes and convert to modules if necessary
 #  * [    ] Learn how to use mock.patch to deal w/ side effect testing (stackoverflow 21046717)
 #  * [    ] Apply mock.patch or monkeypatch to die_roll() so we can have
 #           deterministic tests

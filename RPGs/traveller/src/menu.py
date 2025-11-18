@@ -70,6 +70,7 @@ class Menu(Screen):
         self.commands: List[Command] = [
                 Command('new', 'New Game', self.new_game),
                 Command('load', 'Load Game', self.load_game),
+                Command('import', 'Import Map Data', self.import_map),
                 Command('quit', 'Quit', self.quit),
                 ]
 
@@ -168,6 +169,7 @@ class Menu(Screen):
 
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
+        print(f"{BOLD_BLUE}New game.{END_FORMAT}")
         data = get_json_data("data/new_game.json")
         if not data:
             return None
@@ -205,6 +207,7 @@ class Menu(Screen):
 
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
+        print(f"{BOLD_BLUE}Loading game.{END_FORMAT}")
         files = get_save_files()
         pr_list(files)
         file_number = int_input("Enter file to load: ")
@@ -268,6 +271,10 @@ class Menu(Screen):
         _ = input("Press ENTER key to continue.")
 
         return self._load_screen(data['menu'])             # type: ignore[attr-defined]
+
+    def import_map(self: ScreenT) -> ScreenT | None:
+        """Import Traveller map data and start a new game."""
+        print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
 
 
 class Play(Screen):
