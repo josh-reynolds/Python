@@ -289,13 +289,29 @@ class Menu(Screen):
 
         content = get_lines(f"./import/{load_file}")
 
-        section = ""
+        section = ''
+        data = {}
         for line in content:
-            if line[0] == '#':
+            if len(line) < 2:   # skip blank lines
+                continue
+            if line[0] == '#':  # skip comments
                 continue
             line = line[:-1]    # strip newline char
-            print(line)
 
+            if line[0] == '[':
+                if line == '[Subsectors]':
+                    section = 'subsectors'
+                elif line == '[Systems]':
+                    section = 'systems'
+                else:
+                    print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
+                    return None
+                data[section] = []
+                continue
+
+            data[section].append(line)
+
+        print(data)
         _ = input("\nPress ENTER key to continue.")
 
         # implementing a simple custom file format:
@@ -309,6 +325,9 @@ class Menu(Screen):
         #
         #    star system lines should align with published format
         #    subsector _name_ is used for lookup, not subsector coordinate
+
+        # will need to pick a starting point too... should this be in
+        # the import file?
 
 
 class Play(Screen):
