@@ -2612,6 +2612,7 @@
 #  * [DONE] Export star map (this is different from save game how, exactly?
 #           Probably puts subsector names & 2-axis coords for one thing...)
 #  * [DONE] Move hard-coded start conditions out of Game ctor into some sort of default save file
+#  * [DONE] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -2646,7 +2647,6 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
-#  * [    ] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,

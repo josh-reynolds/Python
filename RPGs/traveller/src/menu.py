@@ -26,17 +26,6 @@ from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_save_fi
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
 
-# keeping command characters straight...
-# ALWAYS:   ? a ~ c d e ~ ~ h ~ ~ k ~ ~ ~ o ~ q ~ ~ ~ ~ v w x y z
-# STARPORT:             f           l m n   p   r   t u
-# ORBIT:                  g         l
-# JUMP:                       i j                 s
-# TRADE:        b       f g         l             s   u
-# PASSENGERS:   b                   l
-
-# TO_DO: might be helpful to have unit test to trap whether any keys
-#        have been duplicated and thus overwritten
-
 ScreenT = TypeVar("ScreenT", bound="Screen")
 
 class Screen(ABC):
@@ -79,9 +68,9 @@ class Menu(Screen):
         """Create a Menu object."""
         super().__init__(parent)
         self.commands: List[Command] = [
-                Command('n', 'New Game', self.new_game),
-                Command('l', 'Load Game', self.load_game),
-                Command('q', 'Quit', self.quit),
+                Command('new', 'New Game', self.new_game),
+                Command('load', 'Load Game', self.load_game),
+                Command('quit', 'Quit', self.quit),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -292,19 +281,19 @@ class Play(Screen):
         super().__init__(parent)
         self.commands: List[Command] = [
                 Command('?', 'List commands', self.list_commands),
-                Command('a', 'View star map', self.view_map),
-                Command('c', 'Cargo hold contents', self.cargo_hold),
-                Command('d', 'Passenger manifest', self.passenger_manifest),
-                Command('e', 'Crew roster', self.crew_roster),
-                Command('h', 'View ship details', self.view_ship),
-                Command('k', 'Engineering damage control', self.damage_control),
-                Command('q', 'Quit', self.quit),
-                Command('v', 'View world characteristics', self.view_world),
-                Command('w', 'Wait a week', self.wait_week),
-                Command('z', 'Save Game', self.save_game),
-                Command('o', 'View ledger', self.view_ledger),
-                Command('x', 'Dump map', self.dump_map),
-                Command('y', 'Dump ledger', self.dump_ledger),
+                Command('map', 'View star map', self.view_map),
+                Command('cargo', 'Cargo hold contents', self.cargo_hold),
+                Command('passengers', 'Passenger manifest', self.passenger_manifest),
+                Command('crew', 'Crew roster', self.crew_roster),
+                Command('ship', 'View ship details', self.view_ship),
+                Command('damage control', 'Engineering damage control', self.damage_control),
+                Command('quit', 'Quit', self.quit),
+                Command('world', 'View world characteristics', self.view_world),
+                Command('wait', 'Wait a week', self.wait_week),
+                Command('save', 'Save Game', self.save_game),
+                Command('ledger', 'View ledger', self.view_ledger),
+                Command('dump map', 'Dump map', self.dump_map),
+                Command('dump ledger', 'Dump ledger', self.dump_ledger),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -540,8 +529,8 @@ class Orbit(Play):
         """Create an Orbit object."""
         super().__init__(parent)
         self.commands += [
-                Command('l', 'Land at starport', self.land),
-                Command('g', 'Go to jump point', self.outbound_to_jump),
+                Command('land', 'Land at starport', self.land),
+                Command('outbound', 'Go to jump point', self.outbound_to_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -635,14 +624,14 @@ class Starport(Play):
         """Create a Starport object."""
         super().__init__(parent)
         self.commands += [
-                Command('f', 'Recharge life support', self.recharge),
-                Command('r', 'Refuel', self.refuel),
-                Command('l', 'Lift off to orbit', self.liftoff),
-                Command('t', 'Trade depot', self.to_depot),
-                Command('p', 'Passenger terminal', self.to_terminal),
-                Command('m', 'Annual maintenance', self.maintenance),
-                Command('u', 'Flush fuel tanks', self.flush),
-                Command('n', 'Repair ship', self.repair_ship),
+                Command('life support', 'Recharge life support', self.recharge),
+                Command('refuel', 'Refuel', self.refuel),
+                Command('liftoff', 'Lift off to orbit', self.liftoff),
+                Command('depot', 'Trade depot', self.to_depot),
+                Command('terminal', 'Passenger terminal', self.to_terminal),
+                Command('maintenance', 'Annual maintenance', self.maintenance),
+                Command('flush tanks', 'Flush fuel tanks', self.flush),
+                Command('repair', 'Repair ship', self.repair_ship),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -770,9 +759,9 @@ class Jump(Play):
         """Create a Jump object."""
         super().__init__(parent)
         self.commands += [
-                Command('i', 'Inbound to orbit', self.inbound_from_jump),
-                Command('j', 'Jump to new system', self.jump),
-                Command('s', 'Skim fuel from gas giant', self.skim),
+                Command('inbound', 'Inbound to orbit', self.inbound_from_jump),
+                Command('jump', 'Jump to new system', self.jump),
+                Command('skim', 'Skim fuel from gas giant', self.skim),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -944,12 +933,12 @@ class Trade(Play):
         """Create a Trade object."""
         super().__init__(parent)
         self.commands += [
-                Command('l', 'Leave trade depot', self.leave_depot),
-                Command('b', 'Buy cargo', self.buy_cargo),
-                Command('s', 'Sell cargo', self.sell_cargo),
-                Command('g', 'View trade goods', self.goods),
-                Command('f', 'Load freight', self.load_freight),
-                Command('u', 'Unload freight', self.unload_freight),
+                Command('leave', 'Leave trade depot', self.leave_depot),
+                Command('buy', 'Buy cargo', self.buy_cargo),
+                Command('sell', 'Sell cargo', self.sell_cargo),
+                Command('view goods', 'View trade goods', self.goods),
+                Command('load freight', 'Load freight', self.load_freight),
+                Command('unload freight', 'Unload freight', self.unload_freight),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -1190,8 +1179,8 @@ class Passengers(Play):
         """Create a Passengers object."""
         super().__init__(parent)
         self.commands += [
-                Command('l', 'Leave terminal', self.leave_terminal),
-                Command('b', 'Book passengers', self.book_passengers),
+                Command('leave', 'Leave terminal', self.leave_terminal),
+                Command('book', 'Book passengers', self.book_passengers),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
