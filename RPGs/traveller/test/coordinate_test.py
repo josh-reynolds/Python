@@ -295,5 +295,3 @@ class CoordinateTestCase(unittest.TestCase):
             _ = create_3_axis(column, row, sub_x, sub_y)
         self.assertEqual(f"{context.exception}",
                          "subsector y value must be an integer: 'm'")
-
-        # convert forward and back

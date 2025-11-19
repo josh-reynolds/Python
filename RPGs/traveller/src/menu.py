@@ -13,7 +13,7 @@ from src.cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freig
 from src.cargo import passenger_from, cargo_hold_from
 from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
-from src.coordinate import Coordinate, coordinate_from, absolute
+from src.coordinate import Coordinate, coordinate_from, absolute, create_3_axis
 from src.financials import Credits, financials_from
 from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from src.star_map import StarMap, subsector_from
@@ -315,13 +315,26 @@ class Menu(Screen):
             if section == 'systems':
                 data[section].append(line)            # type: ignore[union-attr]
 
-        print(data)
+        for entry in data['systems']:
+            tokens = entry.split()
+
+            # data is a string in the format: (-?\d*,-?\d*)
+            # we need to remove parens, split on the comma, and convert to int
+            subsector = tokens[0]
+            sub_x, sub_y = data['subsectors'][subsector][1:-1].split(',')  # type: ignore[call-overload]
+            sub_x = int(sub_x)
+            sub_y = int(sub_y)
+
+            column = int(tokens[1][:2])
+            row = int(tokens[1][2:])
+
+            three_axis_coord = create_3_axis(column, row, sub_x, sub_y)
+
         _ = input("\nPress ENTER key to continue.")
         return None
 
-        # load data
-        # convert coordinates
         # create systems & subsectors
+        # create empty space
         # remainder of new_game/load_game flow:
         #   calendar
         #   ship selection & naming
