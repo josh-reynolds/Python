@@ -177,31 +177,64 @@ class CoordinateTestCase(unittest.TestCase):
 
     def test_create_3_axis(self) -> None:
         """Test creation of a Coordinate given Traveller subsector coordinate values."""
-        # basic conversion
-        # all four quadrants of subsector coords
         # invalid column
         # invalid row
         # non-numeric data for any coord value
-        actual = create_3_axis(1, 1, 0, 0)
-        expected = Coordinate(0, 0, 0)
-        self.assertEqual(actual, expected)
+        # convert forward and back
 
+        # EXPECTED RESULTS BELOW VERIFIED ON A PHYSICAL MAP
         actual = create_3_axis(2, 1, 0, 0)
-        expected = Coordinate(-1, 1, 0)
+        expected = Coordinate(-1, 1, 0)         # CORRECT
         self.assertEqual(actual, expected)
 
         actual = create_3_axis(8, 8, -1, -1)
-        expected = Coordinate(3, -1, -2)
+        expected = Coordinate(3, -1, -2)        # CORRECT
         self.assertEqual(actual, expected)
 
         actual = create_3_axis(8, 9, -1, -1)
-        expected = Coordinate(2, -1, -1)
+        expected = Coordinate(2, -1, -1)        # CORRECT
         self.assertEqual(actual, expected)
 
         actual = create_3_axis(8, 1, -1, 0)
-        expected = Coordinate(0, -1, 1)
+        expected = Coordinate(0, -1, 1)         # CORRECT
         self.assertEqual(actual, expected)
 
         actual = create_3_axis(1, 10, 0, -1)
-        expected = Coordinate(1, 0, -1)
+        expected = Coordinate(1, 0, -1)         # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, -1, -1)
+        expected = Coordinate(14, -8, -6)       # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 0, -1)
+        expected = Coordinate(10, 0, -10)       # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 1, -1)
+        expected = Coordinate(6, 8, -14)        # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, -1, 0)
+        expected = Coordinate(4, -8, 4)         # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 0, 0)
+        expected = Coordinate(0, 0, 0)          # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 1, 0)
+        expected = Coordinate(-4, 8, -4)        # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, -1, 1)
+        expected = Coordinate(-6, -8, 14)       # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 0, 1)
+        expected = Coordinate(-10, 0, 10)       # CORRECT
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 1, 1, 1)
+        expected = Coordinate(-14, 8, 6)        # CORRECT
         self.assertEqual(actual, expected)

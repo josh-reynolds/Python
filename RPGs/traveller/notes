@@ -2338,6 +2338,13 @@
 #   this a try. If it's unpleasant to manage, we can pivot to one
 #   of the other solutions.
 #
+# Oh, something else to verify and document: I think I implemented
+# computer graphics style coordinates for the subsectors. In
+# Traveller terms, Coreward & Spinward are negative, Rimward &
+# Trailing are positive. This is probably surprising for 
+# anyone who doesn't work with screen coordinates regularly, and
+# should be documented.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
