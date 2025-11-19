@@ -104,3 +104,15 @@ def coordinate_from(string: str) -> Coordinate:
                          f"- should sum to zero: '{string}'")
 
     return result
+
+def create_3_axis(column: int, row: int, sub_x: int, sub_y: int) -> Coordinate:
+    """Create a Coordinate object from Traveller subsector coordinate values.
+
+    Column and row are the location within the subsector. Column ranges from 1
+    to 8, and row from 1 to 10.
+
+    Sub_x and sub_y are the relative coordinates of the subsector itself, in 
+    relation to some arbitrarily selected origin subsector. These are cartesian
+    coordinates and can theoretically range from -int to int.
+    """
+    return Coordinate(0,0,0)

@@ -15,9 +15,9 @@
 #
 # Subsector Coordinate Name UWP GasGiant
 #   
-# Bases, Travel Zones and Xboat Routes are not currently supported.
-# There is no need to specify Trade Classifications - they will be
-# calculated based on the UWP.
+# Bases, Travel Zones, Xboat Routes and Allegiance are not currently 
+# supported. There is no need to specify Trade Classifications - they 
+# will be calculated from the UWP.
 #
 # Also note that the coordinate is the location within the 
 # Subsector (between 0101 and 0810), not the Sector (between 0101

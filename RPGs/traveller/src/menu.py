@@ -8,7 +8,7 @@ from fnmatch import fnmatch
 from os import listdir
 from random import randint, choice
 from time import sleep
-from typing import Any, List, TypeVar, cast, Tuple
+from typing import Any, List, TypeVar, cast, Tuple, Dict
 from src.cargo import Baggage, PassageClass, Passenger, CargoDepot, Cargo, Freight
 from src.cargo import passenger_from, cargo_hold_from
 from src.calendar import modify_calendar_from, Calendar
@@ -286,7 +286,7 @@ class Menu(Screen):
         content = get_lines(f"./import/{load_file}")
 
         section = ''
-        data = {}
+        data: Dict[str, Dict | List] = {}
         for line in content:
             if len(line) < 2:   # skip blank lines
                 continue
@@ -306,30 +306,29 @@ class Menu(Screen):
                     return None
                 continue
 
+            # data is type Dict[str, Dict | List] and mypy
+            # can't distinguish the union in the assignments below
             if section == 'subsectors':
                 tokens = line.split()
-                data[section][tokens[0]] = tokens[1]
+                data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload]
 
             if section == 'systems':
-                data[section].append(line)
+                data[section].append(line)            # type: ignore[union-attr]
 
         print(data)
         _ = input("\nPress ENTER key to continue.")
+        return None
 
-        # implementing a simple custom file format:
-        #    ignore comment lines
-        #    two sections required, section headers in square brackets
-        #    no key-value, straight data in sections
-        #    subsector lines:
-        #       Name Coordinate - \w* (-?\d*,-?\d*)
-        #    star system lines:
-        #       Subsector Coordinate Name UWP Additional - \w* 0\d{0,1}\d \w* \x{7}-\x \w*
-        #
-        #    star system lines should align with published format
-        #    subsector _name_ is used for lookup, not subsector coordinate
-
-        # will need to pick a starting point too... should this be in
-        # the import file?
+        # load data
+        # convert coordinates
+        # create systems & subsectors
+        # remainder of new_game/load_game flow:
+        #   calendar
+        #   ship selection & naming
+        #   financials
+        #   location (should this be in import file?)
+        #   depot
+        #   observers
 
 
 class Play(Screen):
@@ -624,7 +623,7 @@ class Orbit(Play):
                 self.parent.financials.credit(funds, "passenger fare")
 
                 # annotations want ScreenT to have this method
-                self._low_lottery(low_lottery_amount)      #type: ignore[attr-defined]
+                self._low_lottery(low_lottery_amount)      # type: ignore[attr-defined]
 
                 self.parent.ship.passengers = []
                 self.parent.ship.hold = [item for item in self.parent.ship.hold

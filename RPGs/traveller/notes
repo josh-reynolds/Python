@@ -2276,6 +2276,47 @@
 # class, and a factory function to build it, and both
 # new_game() and load_game() will call into that.
 #
+# Initial cleanup of this area is done. Duplication between
+# the two methods has been factored out into helper methods, and
+# all dummy data and instantiation in Game ctor has been
+# eliminated.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# Next push: importing published data. I want to keep the data
+# entry as simple as possible, ideally matching the published
+# sources so this could be grabbed from a pdf or OCR.
+#
+# But we _do_ need at least two pieces of data to construct the
+# map: subsectors (and their relative placement) and star systems.
+# So the input file needs to differentiate, so we will need some
+# minimal structure. An ini file sort of format ought to meet
+# the need.
+#
+# I have this part working, and a sample file in place to test
+# it out.
+#
+# The next step is converting from Traveller coordinates to
+# our internal 3-axis format. Once that is done, the rest ought
+# to follow the same procedure as new_game() & load_game() (and
+# provide yet another refactoring opportunity).
+#
+# coordinate.convert_3_axis() & coordinate.absolute() are the 
+# existing reverse of what we need, especially the latter.
+#
+# absolute() returns a tuple of coordinate & subsector coordinate
+# given a 3-axis coordinate (and this is what we should be getting
+# in the imported data).
+#
+# Examples:
+# (1, 1), ( 0,  0) => ( 0,  0,  0)
+# (2, 1), ( 0,  0) => (-1,  1,  0)
+# (8, 8), (-1, -1) => ( 3, -1, -2)
+# (8, 9), (-1, -1) => ( 2, -1, -1)
+# (8, 1), (-1,  0) => ( 0, -1,  1)
+# (1,10), ( 0, -1) => ( 1,  0, -1)
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2622,6 +2663,7 @@
 #  * [....] Add import of Traveller map data
 #  * [....] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
+#  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor

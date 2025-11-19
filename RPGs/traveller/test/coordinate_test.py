@@ -1,6 +1,6 @@
 """Contains tests for the coordinate module."""
 import unittest
-from src.coordinate import convert_3_axis, absolute, coordinate_from, Coordinate
+from src.coordinate import convert_3_axis, absolute, coordinate_from, Coordinate, create_3_axis
 
 class CoordinateTestCase(unittest.TestCase):
     """Tests 3-axis Coordinate functions."""
@@ -174,3 +174,21 @@ class CoordinateTestCase(unittest.TestCase):
         """Test validation of potential three-axis coordinates."""
         actual = Coordinate(0,0,0)
         self.assertTrue(actual.is_valid())
+
+    def test_create_3_axis(self) -> None:
+        """Test creation of a Coordinate given Traveller subsector coordinate values."""
+        # basic conversion
+        # all four quadrants of subsector coords
+        # invalid column
+        # invalid row
+        # non-numeric data for any coord value
+        actual = create_3_axis(1, 1, 0, 0)
+        expected = Coordinate(0,0,0)
+        self.assertEqual(actual, expected)
+
+        # (1, 1), ( 0,  0) => ( 0,  0,  0)
+        # (2, 1), ( 0,  0) => (-1,  1,  0)
+        # (8, 8), (-1, -1) => ( 3, -1, -2)
+        # (8, 9), (-1, -1) => ( 2, -1, -1)
+        # (8, 1), (-1,  0) => ( 0, -1,  1)
+        # (1,10), ( 0, -1) => ( 1,  0, -1)
