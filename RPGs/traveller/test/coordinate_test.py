@@ -177,11 +177,6 @@ class CoordinateTestCase(unittest.TestCase):
 
     def test_create_3_axis(self) -> None:
         """Test creation of a Coordinate given Traveller subsector coordinate values."""
-        # invalid column
-        # invalid row
-        # non-numeric data for any coord value
-        # convert forward and back
-
         # EXPECTED RESULTS BELOW VERIFIED ON A PHYSICAL MAP
         actual = create_3_axis(2, 1, 0, 0)
         expected = Coordinate(-1, 1, 0)         # CORRECT
@@ -238,3 +233,42 @@ class CoordinateTestCase(unittest.TestCase):
         actual = create_3_axis(1, 1, 1, 1)
         expected = Coordinate(-14, 8, 6)        # CORRECT
         self.assertEqual(actual, expected)
+
+        column, row, sub_x, sub_y = 9, 1, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "column value must be between 1 and 8: '9'")
+
+        column, row, sub_x, sub_y = 0, 1, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "column value must be between 1 and 8: '0'")
+
+        column, row, sub_x, sub_y = 1.1, 1, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "column value must be an integer: '1.1'")
+
+        column, row, sub_x, sub_y = 1, 11, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "row value must be between 1 and 10: '11'")
+
+        column, row, sub_x, sub_y = 1, 0, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "row value must be between 1 and 10: '0'")
+
+        column, row, sub_x, sub_y = 1, 1.1, 0, 0
+        with self.assertRaises(ValueError) as context:
+            _ = create_3_axis(column, row, sub_x, sub_y)
+        self.assertEqual(f"{context.exception}",
+                         "row value must be an integer: '1.1'")
+
+        # non-numeric data for any coord value
+        # convert forward and back
