@@ -115,4 +115,18 @@ def create_3_axis(column: int, row: int, sub_x: int, sub_y: int) -> Coordinate:
     relation to some arbitrarily selected origin subsector. These are cartesian
     coordinates and can theoretically range from -int to int.
     """
-    return Coordinate(0,0,0)
+    coord_y = sub_x * 8 + column - 1
+
+    offset = int(coord_y/2)
+    adjust = 0
+    if coord_y % 2 == 1:
+        adjust = -1
+
+    if coord_y > 0:
+        coord_x = -((sub_y * 10 + row - 1) - adjust + offset)
+        coord_z = -coord_x - coord_y
+    else:
+        coord_z = (sub_y * 10 + row - 1) - adjust - offset
+        coord_x = -coord_y - coord_z
+
+    return Coordinate(coord_x, coord_y, coord_z)

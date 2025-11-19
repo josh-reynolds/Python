@@ -183,12 +183,25 @@ class CoordinateTestCase(unittest.TestCase):
         # invalid row
         # non-numeric data for any coord value
         actual = create_3_axis(1, 1, 0, 0)
-        expected = Coordinate(0,0,0)
+        expected = Coordinate(0, 0, 0)
         self.assertEqual(actual, expected)
 
-        # (1, 1), ( 0,  0) => ( 0,  0,  0)
-        # (2, 1), ( 0,  0) => (-1,  1,  0)
-        # (8, 8), (-1, -1) => ( 3, -1, -2)
-        # (8, 9), (-1, -1) => ( 2, -1, -1)
-        # (8, 1), (-1,  0) => ( 0, -1,  1)
-        # (1,10), ( 0, -1) => ( 1,  0, -1)
+        actual = create_3_axis(2, 1, 0, 0)
+        expected = Coordinate(-1, 1, 0)
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(8, 8, -1, -1)
+        expected = Coordinate(3, -1, -2)
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(8, 9, -1, -1)
+        expected = Coordinate(2, -1, -1)
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(8, 1, -1, 0)
+        expected = Coordinate(0, -1, 1)
+        self.assertEqual(actual, expected)
+
+        actual = create_3_axis(1, 10, 0, -1)
+        expected = Coordinate(1, 0, -1)
+        self.assertEqual(actual, expected)

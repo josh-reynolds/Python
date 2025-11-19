@@ -2317,6 +2317,27 @@
 # (8, 1), (-1,  0) => ( 0, -1,  1)
 # (1,10), ( 0, -1) => ( 1,  0, -1)
 #
+# I have an implementation, testing it out to make sure it is
+# solid. But another challenge occurred to me: EmptySpace. If we
+# don't fill in all the blanks, the game engine will potentially
+# generate new StarSystems. So we need to address this.
+#
+# Three solutions in mind:
+#
+# * Explicitly enter blanks in the import data. This would be the
+#   simplest to implement, but pushes the burden to data entry, going
+#   against the goals above. Not a fan.
+#
+# * Have a simplified section in the import data that just lists blank
+#   coordinates. This is a less burdensome form of the previous. Still
+#   not great.
+#
+# * Assume subsector data is complete, and fill in any not presented
+#   with EmptySpace, automatically. The importer needs to be aware, 
+#   however. They need to import entire subsectors. Going to give
+#   this a try. If it's unpleasant to manage, we can pivot to one
+#   of the other solutions.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
