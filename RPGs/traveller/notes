@@ -2683,14 +2683,14 @@
 #  * [DONE] Move hard-coded start conditions out of Game ctor into some sort of default save file
 #  * [DONE] Scrub for static-only classes and convert to modules if necessary
 #  * [DONE] DESIGN ISSUE: single-letter commands are becoming too restrictive    
+#  * [DONE] Conversion of Traveller coordinates to 3-axis, probably needed to import
+#           existing data
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] Add import of Traveller map data
-#  * [....] Conversion of Traveller coordinates to 3-axis, probably needed to import
-#           existing data
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this

@@ -315,6 +315,7 @@ class Menu(Screen):
             if section == 'systems':
                 data[section].append(line)            # type: ignore[union-attr]
 
+        system_list = []
         for entry in data['systems']:
             tokens = entry.split()
 
@@ -330,10 +331,21 @@ class Menu(Screen):
 
             three_axis_coord = create_3_axis(column, row, sub_x, sub_y)
 
+            world_string = f"{three_axis_coord} - {tokens[2]} - {tokens[3]}"
+            if len(tokens) == 5:
+                world_string += f" - {tokens[4]}"
+            system_list.append(world_string)
+
+        subsector_list = []
+        for key, value in data['subsectors'].items():   # type: ignore[union-attr]
+            subsector_list.append(f"{value} - {key}")
+
+        self._load_systems(system_list)        # type: ignore[attr-defined]
+        self._load_subsectors(subsector_list)  # type: ignore[attr-defined]
+
         _ = input("\nPress ENTER key to continue.")
         return None
 
-        # create systems & subsectors
         # create empty space
         # remainder of new_game/load_game flow:
         #   calendar
