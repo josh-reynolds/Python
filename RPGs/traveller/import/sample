@@ -8,7 +8,11 @@
 # position.
 #
 # Subsectors should be listed one per line, with the name followed
-# by the coordinate.
+# by the coordinate. Note that coordinate values increase down
+# and to the right, so Traveller 'spinward'/'coreward' directions 
+# are negative values from the origin, and 'trailing'/'rimward'
+# are positive values. The subsector at (-1,-1) is above and to
+# the left of the origin (0,0) subsector.
 #
 # Systems should also be listed one per line in the following 
 # layout:

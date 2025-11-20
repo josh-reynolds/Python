@@ -327,6 +327,11 @@ class Menu(Screen):
 
         return data
 
+    def _is_in_subsector(self, sub_coord: Tuple[int, int]) -> List[Tuple[int,int]]:
+        """Filter star systems list for all entries in the specified subsector."""
+        return [c.trav_coord[0] for c in self.parent.star_map.systems 
+                if c.trav_coord[1] == sub_coord]
+
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
@@ -369,8 +374,19 @@ class Menu(Screen):
         for key, value in data['subsectors'].items():   # type: ignore[union-attr]
             subsector_list.append(f"{value} - {key}")
 
-        self._load_systems(system_list)        # type: ignore[attr-defined]
-        self._load_subsectors(subsector_list)  # type: ignore[attr-defined]
+        self._load_systems(system_list)                 # type: ignore[attr-defined]
+        self._load_subsectors(subsector_list)           # type: ignore[attr-defined]
+
+        for sub_coord in self.parent.star_map.subsectors:
+            occupied = self._is_in_subsector(sub_coord) # type: ignore[attr-defined]
+            all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
+            for coord in all_coords:
+                if coord in occupied:
+                    continue
+                else:
+                    # we need to get the 3-axis coord back
+                    # to create & add EmptySpace objects...
+                    print(f"Adding EmptySpace({coord})")
 
         _ = input("\nPress ENTER key to continue.")
         return None

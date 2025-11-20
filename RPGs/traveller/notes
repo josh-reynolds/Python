@@ -2345,6 +2345,94 @@
 # anyone who doesn't work with screen coordinates regularly, and
 # should be documented.
 #
+# Basic import and creation of StarSystems and Subsectors is
+# working (though I haven't completed setting up the game, so
+# can't yet verify through play - looks good though). Now to 
+# figure out how to add EmptySpace.
+#
+# Neither Subsector nor StarSystem has a link to the other right
+# now. The former has no real functionality, either, and I've
+# contemplated killing it off. There's also some questions about
+# the lifespan of the class, because other than when loading or
+# importing a game, we only create subsectors when we're viewing
+# world or map data. They don't really do much of anything.
+#
+# But! In this case it sure would be handy to have something
+# we could query to tell us if every hex in the subsector has
+# been evaluated/assigned or not. And the obvious choice would
+# be methods on Subsector itself.
+#
+# I'm hesitating, though, because that would probably involve
+# Subsector holding a list of references to Hexes. And that
+# muddles our internal map model. I've intentionally built
+# around a flat map using 3-axis coordinates only. The other
+# map artifacts (2-axis coords, subsectors) are a view on
+# top of that.
+#
+# But if we _don't_ maintain lists of which hexes are occupied
+# per subsector, we either need to:
+#
+# * Repeatedly query the list of systems to see if a coordinate
+#   of interest is in it - which involves walking the entire
+#   list every time. Can't even be memoized, because the list
+#   changes as new systems are created.
+#
+# * Build temporary lists inside whichever function needs to
+#   know.
+#
+# At the scale of this app, may not even matter. A full Sector
+# (sixteen Subsectors) is 32 x 40 hexes, or 1,280. Even if 
+# every one is present in the systems list, that's really not
+# that big. So performance is not a primary driver of the
+# design here. Still don't like the ugliness of walking the
+# list over and over, though.
+#
+# Let's say we have a function called fill_with_empty_space().
+# It takes a subsector, then walks all 80 of its hexes to see
+# whether they should be filled with EmptySpace, or a StarSystem
+# already exists there. It would walk the systems list looking
+# for 0101, then 0102, etc. all the way up to 0810. If it
+# finds an entry, it skips to the next. If it does not, it 
+# creates an EmptySpace, adds it to systems, and moves on.
+#
+# Repeat the above for every subsector in the import list. Is
+# it really that bad? On average, we're going to have 40 entries
+# in the list for each subsector - even a full sector would
+# only be 640 entries (though admittedly the list grows as
+# we move through, until at the end all 1,280 are present).
+#
+# It _does_ have the advantage of being very simple to 
+# implement. The alternative would be adding references to
+# Subsector (I imagine a dictionary keyed by coordinates), and
+# we would need to plumb that through the rest of the game.
+#
+# We could optimize the 'growing list' problem by accumulating
+# EmptySpace items, and only adding them to the systems list
+# after we're done. But still, I image that would be in units
+# of a Subsector at a time, so later Subsectors still suffer.
+#
+# Other caching? The general idea of memoizing is what we
+# need to keep from looking at the same items over and over.
+#
+# So instead, what if we walk the list once, and capture all 
+# Systems that are present in the Subsector we're interested 
+# in. Then subtract that coordinate list from the full 80 and 
+# we have the EmptySpace locations. Open question whether 
+# Subsector keeps these lists for later, or if we throw away 
+# once the function exits.
+#
+# We'll try it with the temp var approach - can always move
+# this data into the class later, and work out how it meshes
+# with the rest of the game at that time. So...
+#
+# for sub in subsectors:
+#   occupied: List[Tuple[int,int]] = is_in_subsector(sub, systems)
+#   for coord in 0101 to 0810:
+#     if in occupied:
+#       next
+#     else:
+#       systems.append(new EmptySpace(coord))
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
