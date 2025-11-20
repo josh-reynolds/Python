@@ -272,6 +272,16 @@ class Menu(Screen):
 
         return self._load_screen(data['menu'])             # type: ignore[attr-defined]
 
+    def _parse_coordinates(self, coord: str) -> Tuple[int, int]:
+        r"""Parse a string and extract coordinates from it.
+
+        String is in the format:  (-?\d*,-?\d*)
+        This method removes the parentheses, splits on the comma,
+        and converts the remaining tokens to integers.
+        """
+        sub_x, sub_y = coord[1:-1].split(',')
+        return (int(sub_x), int(sub_y))
+
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
@@ -319,12 +329,9 @@ class Menu(Screen):
         for entry in data['systems']:
             tokens = entry.split()
 
-            # data is a string in the format: (-?\d*,-?\d*)
-            # we need to remove parens, split on the comma, and convert to int
-            subsector = tokens[0]
-            sub_x, sub_y = data['subsectors'][subsector][1:-1].split(',')  # type: ignore[call-overload]
-            sub_x = int(sub_x)
-            sub_y = int(sub_y)
+            subsector_name = tokens[0]
+            subsector_coord = data['subsectors'][subsector_name]    # type: ignore[call-overload]
+            sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
 
             column = int(tokens[1][:2])
             row = int(tokens[1][2:])
