@@ -167,6 +167,21 @@ class Menu(Screen):
             case _:
                 raise ValueError(f"unrecognized menu item: '{data}'")
 
+    def _create_empty_hexes(self) -> None:
+        """Fill unoccupied hexes in subsectors with DeepSpace."""
+        for sub_coord in self.parent.star_map.subsectors:
+            occupied = self._is_in_subsector(sub_coord) # type: ignore[attr-defined]
+            all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
+
+            for coord in all_coords:
+                converted = create_3_axis(coord[0], coord[1], sub_coord[0], sub_coord[1])
+
+                if converted in occupied:
+                    continue
+                else:
+                    self.parent.star_map.systems[converted] = DeepSpace(converted)
+
+
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         print(f"{BOLD_BLUE}New game.{END_FORMAT}")
@@ -375,18 +390,7 @@ class Menu(Screen):
 
         self._load_systems(system_list)                 # type: ignore[attr-defined]
         self._load_subsectors(subsector_list)           # type: ignore[attr-defined]
-
-        for sub_coord in self.parent.star_map.subsectors:
-            occupied = self._is_in_subsector(sub_coord) # type: ignore[attr-defined]
-            all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
-
-            for coord in all_coords:
-                converted = create_3_axis(coord[0], coord[1], sub_coord[0], sub_coord[1])
-
-                if converted in occupied:
-                    continue
-                else:
-                    self.parent.star_map.systems[converted] = DeepSpace(converted)
+        self._create_empty_hexes()                      # type: ignore[attr-defined]
 
         # TO_DO: should we interleave with new_game for the remainder? Just
         #        import the map, rest should be the same, right?

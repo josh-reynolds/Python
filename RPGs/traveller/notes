@@ -2446,6 +2446,26 @@
 # and import. They are all very similar, and should share functions
 # as much as possible.
 #
+# I've added two subsectors from the Spinward Marches to test
+# things out. Overall working as desired. There's a bug needs
+# fixing - spaces in world names break the parser. And plenty
+# of refactoring cleanup needed.
+#
+# Another observation: I'm using the original Supplement 3 from
+# 1979, and I'm spotting errors in the content. For example, they
+# marked Efate (Regina 0105) as non-industrial, but it is definitely
+# industrial (atmosphere 4, population 9). Bit outside the scope
+# of this game, but would be interesting to trace edits and see
+# if they fixed this in later publications. In any event, I am
+# calculating all trade classifications from UWP, not from the
+# import file, so mine ought to be correct. Discrepancies could
+# indicate bugs, or errors in the source publication, so I want 
+# to review.
+#
+# I'm also not supporting bases, travel zones, xboat routes,
+# allegiance or supplemental remarks (like way stations, capitals,
+# etc.). Yet.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
