@@ -388,20 +388,36 @@ class Menu(Screen):
                 else:
                     self.parent.star_map.systems[converted] = DeepSpace(converted)
 
-        print(len(self.parent.star_map.systems))
-        for coord,sys in self.parent.star_map.systems.items():
-            print(f"{coord.trav_coord[0]} - {sys}")
+        # TO_DO: should we interleave with new_game for the remainder? Just
+        #        import the map, rest should be the same, right?
+        #        or what if we convert the imported data into a new
+        #        json file and stash alongside new_game.json?
+        self._load_calendar("001-1105")                 # type: ignore[attr-defined]
+
+        ship_types = get_ship_models()
+        pr_list(ship_types)
+        model_number = int_input("\nChoose a ship to start with. ")
+        if model_number >= len(ship_types):
+            print("That is not a valid ship model.")
+            return None
+
+        self.parent.ship = Ship(ship_types[model_number])
+        self.parent.ship.add_observer(self.parent)
+        self.parent.ship.controls = self.parent
+
+        ship_name = ""
+        while not ship_name:
+            ship_name = input("What is the name of your ship? ")
+        self.parent.ship.name = ship_name
+
+        financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
+        self._load_financials(financials_string)           # type: ignore[attr-defined]
+        self._load_location("(0,0,0)")                     # type: ignore[attr-defined]
+        self._create_depot()                               # type: ignore[attr-defined]
+        self._attach_date_observers()                      # type: ignore[attr-defined]
 
         _ = input("\nPress ENTER key to continue.")
-        return None
-
-        # remainder of new_game/load_game flow:
-        #   calendar
-        #   ship selection & naming
-        #   financials
-        #   location (should this be in import file?)
-        #   depot
-        #   observers
+        return self._load_screen("Starport")               # type: ignore[attr-defined]
 
 
 class Play(Screen):

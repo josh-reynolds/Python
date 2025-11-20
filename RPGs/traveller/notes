@@ -2433,6 +2433,19 @@
 #     else:
 #       systems.append(new EmptySpace(coord))
 #
+# Needed to do some conversion so we can properly compare, and
+# have the right data on hand to create the EmptySpace, but this
+# is now working. Adding the rest was very simple. Heavy duplication
+# with new_game(), so we'll need some refactoring after this.
+#
+# Also, an alternate approach occurred to me. What if instead of
+# launching a new game on import, we create a json file, name it
+# so that it is preserved, and load into it?
+#
+# Think through the various ways to start the game between new, load
+# and import. They are all very similar, and should share functions
+# as much as possible.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2773,12 +2786,12 @@
 #  * [DONE] DESIGN ISSUE: single-letter commands are becoming too restrictive    
 #  * [DONE] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
+#  * [DONE] Add import of Traveller map data
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Add import of Traveller map data
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
