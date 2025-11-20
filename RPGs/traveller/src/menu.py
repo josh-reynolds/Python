@@ -329,8 +329,7 @@ class Menu(Screen):
 
     def _is_in_subsector(self, sub_coord: Tuple[int, int]) -> List[Tuple[int,int]]:
         """Filter star systems list for all entries in the specified subsector."""
-        return [c.trav_coord[0] for c in self.parent.star_map.systems 
-                if c.trav_coord[1] == sub_coord]
+        return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
 
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
@@ -380,18 +379,22 @@ class Menu(Screen):
         for sub_coord in self.parent.star_map.subsectors:
             occupied = self._is_in_subsector(sub_coord) # type: ignore[attr-defined]
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
+
             for coord in all_coords:
-                if coord in occupied:
+                converted = create_3_axis(coord[0], coord[1], sub_coord[0], sub_coord[1])
+
+                if converted in occupied:
                     continue
                 else:
-                    # we need to get the 3-axis coord back
-                    # to create & add EmptySpace objects...
-                    print(f"Adding EmptySpace({coord})")
+                    self.parent.star_map.systems[converted] = DeepSpace(converted)
+
+        print(len(self.parent.star_map.systems))
+        for coord,sys in self.parent.star_map.systems.items():
+            print(f"{coord.trav_coord[0]} - {sys}")
 
         _ = input("\nPress ENTER key to continue.")
         return None
 
-        # create empty space
         # remainder of new_game/load_game flow:
         #   calendar
         #   ship selection & naming
