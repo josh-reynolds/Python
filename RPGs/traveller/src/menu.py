@@ -282,19 +282,19 @@ class Menu(Screen):
         sub_x, sub_y = coord[1:-1].split(',')
         return (int(sub_x), int(sub_y))
 
-    def import_map(self: ScreenT) -> ScreenT | None:
-        """Import Traveller map data and start a new game."""
-        print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
-        files = get_files("./import/")
-        pr_list(files)
-        file_number = int_input("Enter file to load: ")
-        if file_number >= len(files):
-            print("That is not a valid file number.")
-            return None
-        load_file = files[file_number]
+    def _parse_import_file_contents(self, 
+                                    content: List[str]) -> Dict[str, Dict | List] | None:
+        """Convert lines from a Traveller map import file into a dictionary.
 
-        content = get_lines(f"./import/{load_file}")
+        The returned dictionary will have two keys: 'subsectors' and
+        'systems', corresponding to those sections in the file.
 
+        The 'subsectors' key points to a dictionary mapping subsector names
+        to their coordinates.
+
+        The 'systems' key points to a list of star system data in string
+        format, one system per line.
+        """
         section = ''
         data: Dict[str, Dict | List] = {}
         for line in content:
@@ -324,6 +324,22 @@ class Menu(Screen):
 
             if section == 'systems':
                 data[section].append(line)            # type: ignore[union-attr]
+
+        return data
+
+    def import_map(self: ScreenT) -> ScreenT | None:
+        """Import Traveller map data and start a new game."""
+        print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
+        files = get_files("./import/")
+        pr_list(files)
+        file_number = int_input("Enter file to load: ")
+        if file_number >= len(files):
+            print("That is not a valid file number.")
+            return None
+        load_file = files[file_number]
+
+        content = get_lines(f"./import/{load_file}")
+        data = self._parse_import_file_contents(content)            # type: ignore[attr-defined]
 
         system_list = []
         for entry in data['systems']:
