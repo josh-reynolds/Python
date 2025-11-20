@@ -354,9 +354,15 @@ class Menu(Screen):
 
             three_axis_coord = create_3_axis(column, row, sub_x, sub_y)
 
-            world_string = f"{three_axis_coord} - {tokens[2]} - {tokens[3]}"
+            world_name = tokens[2]
+            uwp = tokens[3]
+
+            gas_giant = ""
             if len(tokens) == 5:
-                world_string += f" - {tokens[4]}"
+                gas_giant = f" - {tokens[4]}"
+
+            world_string = f"{three_axis_coord} - {world_name} - {uwp}{gas_giant}"
+
             system_list.append(world_string)
 
         subsector_list = []

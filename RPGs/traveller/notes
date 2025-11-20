@@ -2858,6 +2858,8 @@
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
 #  BEYOND ==========================================================
+#  * [    ] Subsector summary data, like 'highest population is...'. See published
+#           map data for examples.
 #  * [    ] Alternate shells: GUI, 'Oregon Trail style', etc. Would be amusing to
 #            do ASCII graphics...
 #  * [    ] Non-canon variations and features - draw from other RPGs, board games,
