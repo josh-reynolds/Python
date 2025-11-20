@@ -35,6 +35,7 @@
 # Sample data below is from Supplement 3: The Spinward Marches
 
 [Subsectors]
+Regina (0,-1)
 Lanth (0,0)
 
 [Systems]
@@ -65,3 +66,37 @@ Lanth 0807 Equus      B55A858-B G
 Lanth 0808 Icetina    B5245A9-7 G
 Lanth 0809 Cogri      CA6A643-9 G
 Lanth 0810 Skull      C2237C7-9 G
+Regina 0105 Efate        A646930-D
+Regina 0106 Alell        B46789C-A
+Regina 0202 Yres         BAC6773-7 G
+Regina 0203 Menorb       C652998-7
+Regina 0205 Uakye        B439598-D
+Regina 0206 Whanga       E676126-7 G
+Regina 0207 Knorbes      E888787-2 G
+Regina 0208 Forboldn     E893614-4 G
+Regina 0209 Ruie         C776977-7 G
+Regina 0210 Jenghe       C799663-9 G
+Regina 0303 Pixie        A100103-D G
+Regina 0304 Boughene     A8B3531-D G
+Regina 0309 Hefry        C200423-7
+Regina 0310 Regina       A788899-A G
+Regina 0405 Feri         B384879-B
+Regina 0407 Roup         C77A9A9-6 G
+Regina 0506 Pscias       X355423-1 G
+Regina 0510 Yori         C360757-D G
+Regina 0601 Dentus       C979500-A
+Regina 0602 Kinorb       A663659-5 G
+# BUG: space in following world name breaks import
+# temporarily replacing with underscore
+Regina 0604 Beck's_World D88349D-4 G
+Regina 0605 Enope        C411988-6
+Regina 0607 Wochiers     EAC28CC-9 G
+Regina 0703 Yorbund      C7C6503-7
+Regina 0706 Shionthy     X000742-8 G
+Regina 0708 Algine       X766977-4 G
+Regina 0709 Yurst        E7B4643-5 G
+Regina 0802 Heya         B687745-5 G
+Regina 0805 Keng         E2718CA-3 G
+Regina 0806 Moughas      CA5A588-B G
+Regina 0808 Rethe        E230AA8-8 G
+Regina 0810 Inthe        B575776-9 G

@@ -2792,6 +2792,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
+#  * [    ] Add start location to import file
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
