@@ -2,30 +2,33 @@
 #
 # This file must contain two sections: Subsectors, and Systems
 #
-# When transcribing from published data, subsectors must be assigned 
+# When transcribing from published data, subsectors must be assigned
 # a cartesian coordinate. Designate one subsector as the origin (0,0),
-# then assign the remainder coordinates according to their relative 
+# then assign the remainder coordinates according to their relative
 # position.
 #
 # Subsectors should be listed one per line, with the name followed
 # by the coordinate. Note that coordinate values increase down
-# and to the right, so Traveller 'spinward'/'coreward' directions 
+# and to the right, so Traveller 'spinward'/'coreward' directions
 # are negative values from the origin, and 'trailing'/'rimward'
 # are positive values. The subsector at (-1,-1) is above and to
 # the left of the origin (0,0) subsector.
 #
-# Systems should also be listed one per line in the following 
+# Systems should also be listed one per line in the following
 # layout:
 #
 # Subsector Coordinate Name UWP GasGiant
-#   
-# Bases, Travel Zones, Xboat Routes and Allegiance are not currently 
-# supported. There is no need to specify Trade Classifications - they 
+#
+# Bases, Travel Zones, Xboat Routes and Allegiance are not currently
+# supported. There is no need to specify Trade Classifications - they
 # will be calculated from the UWP.
 #
-# Also note that the coordinate is the location within the 
+# Note that the coordinate is the location within the 
 # Subsector (between 0101 and 0810), not the Sector (between 0101
 # and 3240).
+#
+# Also, entire subsectors should be listed - any coordinates not
+# present below will be marked as empty space in the game.
 #
 # Lines starting with # are comments and ignored by the game.
 # 
@@ -35,6 +38,30 @@
 Lanth (0,0)
 
 [Systems]
-Lanth 0101 Extolay B45589A-A
-Lanth 0109 Lanth   A879533-B
-Lanth 0201 Dinom   D100535-A G
+Lanth 0101 Extolay    B45589A-A
+Lanth 0109 Lanth      A879533-B
+Lanth 0201 Dinom      D100535-A G
+Lanth 0205 Ghandi     B211455-A G
+Lanth 0207 Victoria   X697770-4 G
+Lanth 0302 Dinomn     B674632-3 G
+Lanth 0306 Ylaven     X587552-4 G
+Lanth 0308 Sonthert   X6266AB-3 G
+Lanth 0310 D'Ganzio   B121410-D G
+Lanth 0401 Wypoc      E9C4547-C G
+Lanth 0501 Djinni     E459000-0 G
+Lanth 0502 Rech       D9957AA-6 G
+Lanth 0602 KKirka     CAA5345-8 G
+Lanth 0605 Quopist    B151679-A G
+Lanth 0701 Treece     D232866-8
+Lanth 0703 Echiste    C53A313-A
+Lanth 0704 Pirema     D691142-5 G
+Lanth 0707 Rhise      C100576-A
+Lanth 0709 Ivendo     B324659-A G
+Lanth 0801 Keanou     C790348-7 G
+Lanth 0804 Tureded    C465540-9 G
+Lanth 0805 Vreibefger E481542-2 G
+Lanth 0806 La'Belle   C564112-3 G
+Lanth 0807 Equus      B55A858-B G
+Lanth 0808 Icetina    B5245A9-7 G
+Lanth 0809 Cogri      CA6A643-9 G
+Lanth 0810 Skull      C2237C7-9 G
