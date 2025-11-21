@@ -22,6 +22,7 @@ from src.star_system_factory import hex_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_files, get_json_data
+from src.utilities import choose_from
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
@@ -409,13 +410,9 @@ class Menu(Screen):
         self._load_calendar("001-1105")                              # type: ignore[attr-defined]
 
         ship_types = get_ship_models()
-        pr_list(ship_types)
-        model_number = int_input("\nChoose a ship to start with. ")
-        if model_number >= len(ship_types):
-            print("That is not a valid ship model.")
-            return None
+        ship_model = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.ship = Ship(ship_types[model_number])
+        self.parent.ship = Ship(ship_types[ship_model])
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
 

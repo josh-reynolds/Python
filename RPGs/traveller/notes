@@ -2812,6 +2812,7 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [....] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
 #  * [    ] Add start location to import file
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
@@ -2903,7 +2904,6 @@
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Now that we have file operations, need to properly trap errors (FileNotFound etc.)
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
-#  * [    ] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff
 #  * [    ] Review observer tests for boundary values and long intervals
 #  * [    ] Restrict Passenger.guess_survivors() to low passengers only

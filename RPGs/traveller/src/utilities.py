@@ -71,6 +71,18 @@ def confirm_input(prompt: str) -> str:
         confirmation = input(prompt)
     return confirmation
 
+def valid_index(value: int, a_list: List) -> bool:
+    """Confirm a value is a valid list index."""
+    return value >= 0 and value < len(a_list)
+
+def choose_from(a_list: List, prompt: str) -> int:
+    """Present a list to the user, and return their chosen index value."""
+    pr_list(a_list)
+    choice = -1
+    while not valid_index(choice, a_list):
+        choice = int_input(prompt)
+    return choice
+
 def pr_list(items: list) -> None:
     """Print out a list with its index values."""
     for i,item in enumerate(items):
