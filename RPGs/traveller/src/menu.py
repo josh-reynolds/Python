@@ -373,6 +373,13 @@ class Menu(Screen):
 
         return system_list
 
+    def _import_subsectors(self, subsector_data: Dict[str,str]) -> List[str]:
+        """Convert imported Subsector data into format used by _load_systems()."""
+        subsector_list = []
+        for key, value in subsector_data.items():   # type: ignore[union-attr]
+            subsector_list.append(f"{value} - {key}")
+        return subsector_list
+
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
@@ -385,24 +392,21 @@ class Menu(Screen):
         load_file = files[file_number]
 
         content = get_lines(f"./import/{load_file}")
-        data = self._parse_import_file_contents(content)            # type: ignore[attr-defined]
+        data = self._parse_import_file_contents(content)             # type: ignore[attr-defined]
 
-        system_list = self._import_systems(data['systems'],         # type: ignore[attr-defined]
+        system_list = self._import_systems(data['systems'],          # type: ignore[attr-defined]
                                            data['subsectors'])
+        self._load_systems(system_list)                              # type: ignore[attr-defined]
 
-        subsector_list = []
-        for key, value in data['subsectors'].items():   # type: ignore[union-attr]
-            subsector_list.append(f"{value} - {key}")
-
-        self._load_systems(system_list)                 # type: ignore[attr-defined]
-        self._load_subsectors(subsector_list)           # type: ignore[attr-defined]
-        self._create_empty_hexes()                      # type: ignore[attr-defined]
+        subsector_list = self._import_subsectors(data['subsectors']) # type: ignore[attr-defined]
+        self._load_subsectors(subsector_list)                        # type: ignore[attr-defined]
+        self._create_empty_hexes()                                   # type: ignore[attr-defined]
 
         # TO_DO: should we interleave with new_game for the remainder? Just
         #        import the map, rest should be the same, right?
         #        or what if we convert the imported data into a new
         #        json file and stash alongside new_game.json?
-        self._load_calendar("001-1105")                 # type: ignore[attr-defined]
+        self._load_calendar("001-1105")                              # type: ignore[attr-defined]
 
         ship_types = get_ship_models()
         pr_list(ship_types)
