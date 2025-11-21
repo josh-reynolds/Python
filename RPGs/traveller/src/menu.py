@@ -21,7 +21,7 @@ from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from src.utilities import int_input, get_next_save_file, BOLD_GREEN, get_files, get_json_data
+from src.utilities import get_next_save_file, BOLD_GREEN, get_files, get_json_data
 from src.utilities import choose_from
 
 # pylint: disable=C0302
@@ -179,8 +179,7 @@ class Menu(Screen):
 
                 if converted in occupied:
                     continue
-                else:
-                    self.parent.star_map.systems[converted] = DeepSpace(converted)
+                self.parent.star_map.systems[converted] = DeepSpace(converted)
 
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
@@ -196,11 +195,7 @@ class Menu(Screen):
         self._load_calendar(data['date'])          # type: ignore[attr-defined]
 
         ship_types = get_ship_models()
-        pr_list(ship_types)
-        model_number = int_input("\nChoose a ship to start with. ")
-        if model_number >= len(ship_types):
-            print("That is not a valid ship model.")
-            return None
+        model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
         self.parent.ship = Ship(ship_types[model_number])
         self.parent.ship.add_observer(self.parent)
@@ -224,11 +219,7 @@ class Menu(Screen):
         """Load a previous game."""
         print(f"{BOLD_BLUE}Loading game.{END_FORMAT}")
         files = get_files("./saves/")
-        pr_list(files)
-        file_number = int_input("Enter file to load: ")
-        if file_number >= len(files):
-            print("That is not a valid file number.")
-            return None
+        file_number = choose_from(files, "Enter file to load: ")
         load_file = files[file_number]
 
         data = get_json_data(f"saves/{load_file}")
@@ -297,7 +288,7 @@ class Menu(Screen):
         sub_x, sub_y = coord[1:-1].split(',')
         return (int(sub_x), int(sub_y))
 
-    def _parse_import_file_contents(self, 
+    def _parse_import_file_contents(self,
                                     content: List[str]) -> Dict[str, Dict | List] | None:
         """Convert lines from a Traveller map import file into a dictionary.
 
@@ -346,6 +337,8 @@ class Menu(Screen):
         """Filter star systems list for all entries in the specified subsector."""
         return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
 
+    # pylint: disable=R0914
+    # R0914: Too many local variables(17/15)
     def _import_systems(self, system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
         """Convert imported StarSystem data into format used by _load_systems()."""
         system_list = []
@@ -385,11 +378,7 @@ class Menu(Screen):
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
         files = get_files("./import/")
-        pr_list(files)
-        file_number = int_input("Enter file to load: ")
-        if file_number >= len(files):
-            print("That is not a valid file number.")
-            return None
+        file_number = choose_from(files, "Enter file to load: ")
         load_file = files[file_number]
 
         content = get_lines(f"./import/{load_file}")
@@ -410,9 +399,9 @@ class Menu(Screen):
         self._load_calendar("001-1105")                              # type: ignore[attr-defined]
 
         ship_types = get_ship_models()
-        ship_model = choose_from(ship_types, "\nChoose a ship to start with. ")
+        model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.ship = Ship(ship_types[ship_model])
+        self.parent.ship = Ship(ship_types[model_number])
         self.parent.ship.add_observer(self.parent)
         self.parent.ship.controls = self.parent
 
@@ -978,13 +967,10 @@ class Jump(Play):
 
         jump_range = self.parent.ship.model.jump_range
         print(f"Systems within jump-{jump_range}:")
-        pr_list(self.parent.location.destinations)
-        destination_number = int_input("Enter destination number: ")
-        if destination_number >= len(self.parent.location.destinations):
-            print("That is not a valid destination number.")
-            return
+        destinations = self.parent.location.destinations
+        destination_number = choose_from(destinations, "Enter destination number: ")
 
-        coordinate = self.parent.location.destinations[destination_number].coordinate
+        coordinate = destinations[destination_number].coordinate
         destination = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coordinate))
 
         self.parent.ship.warn_if_not_contracted(destination)
