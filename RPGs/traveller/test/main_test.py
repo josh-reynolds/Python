@@ -1,8 +1,6 @@
 """Contains tests for the traveller module."""
 import unittest
 from main import Game
-from src.coordinate import Coordinate
-from src.financials import Credits
 from src.menu import Menu
 
 # most of these methods necessarily have side effects,

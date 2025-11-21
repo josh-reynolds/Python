@@ -324,7 +324,8 @@ class StarSystemFactoryTestCase(unittest.TestCase):
 
     def test_create(self) -> None:
         """Test creation of StarSystems by explicit parameters."""
-        world = src.star_system_factory.create("Yorbund", Coordinate(0,0,0), "A", 8, 7, 5, 9, 5, 5, 10)
+        world = src.star_system_factory.create("Yorbund", Coordinate(0,0,0),
+                                               "A", 8, 7, 5, 9, 5, 5, 10)
 
         self.assertTrue(isinstance(world, StarSystem))
         self.assertEqual(world.name, "Yorbund")

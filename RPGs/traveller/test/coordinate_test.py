@@ -175,6 +175,8 @@ class CoordinateTestCase(unittest.TestCase):
         actual = Coordinate(0,0,0)
         self.assertTrue(actual.is_valid())
 
+    # pylint: disable=R0915
+    # R0915: Too many statements (83/50)
     def test_create_3_axis(self) -> None:
         """Test creation of a Coordinate given Traveller subsector coordinate values."""
         # EXPECTED RESULTS BELOW VERIFIED ON A PHYSICAL MAP

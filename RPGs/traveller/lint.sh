@@ -1,7 +1,7 @@
 #! /bin/sh
 
 echo "RUNNING PYLINT ======================"
-pylint --recursive y *.py
+pylint --recursive y .
 
 echo
 echo "RUNNING PYDOCSTYLE =================="

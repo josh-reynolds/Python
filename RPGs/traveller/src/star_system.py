@@ -6,7 +6,7 @@ StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
 from typing import List, Any
-from src.coordinate import Coordinate, coordinate_from
+from src.coordinate import Coordinate
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)

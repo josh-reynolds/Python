@@ -73,7 +73,7 @@ def confirm_input(prompt: str) -> str:
 
 def valid_index(value: int, a_list: List) -> bool:
     """Confirm a value is a valid list index."""
-    return value >= 0 and value < len(a_list)
+    return 0 <= value < len(a_list)
 
 def choose_from(a_list: List, prompt: str) -> int:
     """Present a list to the user, and return their chosen index value."""

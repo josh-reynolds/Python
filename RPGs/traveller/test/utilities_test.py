@@ -1,6 +1,7 @@
 """Contains tests for the utilities module."""
 import unittest
-from src.utilities import actual_value, die_roll, constrain, get_lines, dictionary_from
+from src.utilities import actual_value, die_roll, constrain, get_lines
+from src.utilities import dictionary_from, valid_index
 
 class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
@@ -73,6 +74,20 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertEqual(dictionary['foo'], 1)
         self.assertEqual(dictionary['bar'], 2)
         self.assertEqual(dictionary['baz'], 3)
+
+    def test_valid_index(self) -> None:
+        """Test validating a list index."""
+        a_list = [1,2,3,4,5]
+        self.assertTrue(valid_index(0, a_list))
+        self.assertTrue(valid_index(1, a_list))
+        self.assertTrue(valid_index(2, a_list))
+        self.assertTrue(valid_index(3, a_list))
+        self.assertTrue(valid_index(4, a_list))
+
+        self.assertFalse(valid_index(-100, a_list))
+        self.assertFalse(valid_index(-1, a_list))
+        self.assertFalse(valid_index(5, a_list))
+        self.assertFalse(valid_index(100, a_list))
 
     # remaining functions are almost purely side-effect,
     # not terribly useful to have unit tests

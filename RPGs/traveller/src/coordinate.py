@@ -115,22 +115,22 @@ def create_3_axis(column: int, row: int, sub_x: int, sub_y: int) -> Coordinate:
     relation to some arbitrarily selected origin subsector. These are cartesian
     coordinates and can theoretically range from -int to int.
     """
-    if type(column) is not int:
+    if not isinstance(column, int):
         raise ValueError(f"column value must be an integer: '{column}'")
 
     if column > 8 or column < 1:
         raise ValueError(f"column value must be between 1 and 8: '{column}'")
 
-    if type(row) is not int:
+    if not isinstance(row, int):
         raise ValueError(f"row value must be an integer: '{row}'")
 
     if row > 10 or row < 1:
         raise ValueError(f"row value must be between 1 and 10: '{row}'")
 
-    if type(sub_x) is not int:
+    if not isinstance(sub_x, int):
         raise ValueError(f"subsector x value must be an integer: '{sub_x}'")
 
-    if type(sub_y) is not int:
+    if not isinstance(sub_y, int):
         raise ValueError(f"subsector y value must be an integer: '{sub_y}'")
 
     coord_y = sub_x * 8 + column - 1
