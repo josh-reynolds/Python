@@ -2857,10 +2857,14 @@
 #           this will be unwieldy.
 #           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
 #           another that allows choosing a subsector by name and displaying its contents.
+#           Now that we support importing data, the list has has hit this limit - should
+#           rework.
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
 #           skimming as jump point command if the system has a gas giant
+#           Handle this in Play.update() - each state should have a method to
+#           add/remove commands dynamically, call it on transition
 #  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
 #           i.e. balance can't go negative?)
 #  * [    ] Expand options available in New Game - could expose all sorts of options

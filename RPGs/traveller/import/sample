@@ -1,5 +1,7 @@
 # Traveller map data
 #
+# Lines starting with # are comments and ignored by the game.
+#
 # This file must contain two sections: Subsectors, and Systems
 #
 # When transcribing from published data, subsectors must be assigned
@@ -17,22 +19,22 @@
 # Systems should also be listed one per line in the following
 # layout:
 #
-# Subsector Coordinate Name UWP GasGiant
+#     Subsector Coordinate Name UWP GasGiant
 #
 # Bases, Travel Zones, Xboat Routes and Allegiance are not currently
 # supported. There is no need to specify Trade Classifications - they
 # will be calculated from the UWP.
 #
-# Note that the coordinate is the location within the 
-# Subsector (between 0101 and 0810), not the Sector (between 0101
-# and 3240).
+# Note that the coordinate is the location within the Subsector 
+# (between 0101 and 0810), not the Sector (between 0101 and 3240).
 #
 # Also, entire subsectors should be listed - any coordinates not
 # present below will be marked as empty space in the game.
 #
-# Lines starting with # are comments and ignored by the game.
-# 
-# Sample data below is from Supplement 3: The Spinward Marches
+# In game, if the player goes outside the area covered in this
+# file, new systems will automatically be added to extend the map.
+#
+# Sample data below is from Supplement 3: The Spinward Marches (1979)
 
 [Subsectors]
 Regina (0,-1)

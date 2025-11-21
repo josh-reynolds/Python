@@ -181,7 +181,6 @@ class Menu(Screen):
                 else:
                     self.parent.star_map.systems[converted] = DeepSpace(converted)
 
-
     def new_game(self: ScreenT) -> ScreenT | None:
         """Start a new game."""
         print(f"{BOLD_BLUE}New game.{END_FORMAT}")
@@ -346,26 +345,14 @@ class Menu(Screen):
         """Filter star systems list for all entries in the specified subsector."""
         return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
 
-    def import_map(self: ScreenT) -> ScreenT | None:
-        """Import Traveller map data and start a new game."""
-        print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
-        files = get_files("./import/")
-        pr_list(files)
-        file_number = int_input("Enter file to load: ")
-        if file_number >= len(files):
-            print("That is not a valid file number.")
-            return None
-        load_file = files[file_number]
-
-        content = get_lines(f"./import/{load_file}")
-        data = self._parse_import_file_contents(content)            # type: ignore[attr-defined]
-
+    def _import_systems(self, system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
+        """Convert imported StarSystem data into format used by _load_systems()."""
         system_list = []
-        for entry in data['systems']:
+        for entry in system_data:
             tokens = entry.split()
 
             subsector_name = tokens[0]
-            subsector_coord = data['subsectors'][subsector_name]    # type: ignore[call-overload]
+            subsector_coord = subsector_data[subsector_name]
             sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
 
             column = int(tokens[1][:2])
@@ -383,6 +370,25 @@ class Menu(Screen):
             world_string = f"{three_axis_coord} - {world_name} - {uwp}{gas_giant}"
 
             system_list.append(world_string)
+
+        return system_list
+
+    def import_map(self: ScreenT) -> ScreenT | None:
+        """Import Traveller map data and start a new game."""
+        print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
+        files = get_files("./import/")
+        pr_list(files)
+        file_number = int_input("Enter file to load: ")
+        if file_number >= len(files):
+            print("That is not a valid file number.")
+            return None
+        load_file = files[file_number]
+
+        content = get_lines(f"./import/{load_file}")
+        data = self._parse_import_file_contents(content)            # type: ignore[attr-defined]
+
+        system_list = self._import_systems(data['systems'],         # type: ignore[attr-defined]
+                                           data['subsectors'])
 
         subsector_list = []
         for key, value in data['subsectors'].items():   # type: ignore[union-attr]
