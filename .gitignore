@@ -42,6 +42,7 @@
 /RPGs/traveller/__pycache__
 /RPGs/traveller/ledger.txt
 /RPGs/traveller/star_map.txt
+/RPGs/traveller/subsector_map.png
 /RPGs/traveller/src/__pycache__
 /RPGs/traveller/test/__pycache__
 /RPGs/traveller/saves/save_game*.json
