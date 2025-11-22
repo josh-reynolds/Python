@@ -50,7 +50,7 @@ WORLD_NAME = (200,200,200)
 STARPORT = (200,200,200)
 TITLE = (255,255,255)
 
-def draw_hexes_on(surface):
+def draw_hexes_on(surface) -> None:
     """Draw a grid of hexes on the supplied surface."""
     for j in range(COLUMNS):
         for i in range(ROWS):
@@ -64,7 +64,8 @@ def draw_hexes_on(surface):
 
             draw_hex(surface, center_x, center_y, j+1, i+1)
 
-def draw_hex(surface, center_x, center_y, column, row):
+def draw_hex(surface, center_x: int, center_y: int,
+             column: int, row: int) -> None:
     """Draw a Traveller map hex on the supplied surface."""
     surface.regular_polygon((center_x, center_y, SIZE),
                             6,

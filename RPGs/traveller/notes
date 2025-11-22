@@ -2184,6 +2184,7 @@
 # 
 # -------------------------------------------------------------
 
+
 # -------------------------------------------------------------
 # Some more minor feature work: dumping out the map listing and
 # financial ledger. There's some oddities here to smooth out,
@@ -2465,6 +2466,52 @@
 # I'm also not supporting bases, travel zones, xboat routes,
 # allegiance or supplemental remarks (like way stations, capitals,
 # etc.). Yet.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# On to map drawing. I wrote a standalone module using Pillow
+# that draws a subsector map. Right now it's completely dummy
+# data, just working on the visuals. From here we'll need:
+#
+# * choosing subsector to draw
+# * feeding in map data
+# * integrating into game code (or should this stay standalone?)
+# * drawing hexes according to data
+# * file output handling
+# * consider configurable color scheme - or at least support
+#   light & dark so we have a printable version. Current scheme
+#   is dark.
+#
+# A few other things:
+#
+# * I established the current layout by trial and error. Working
+#   out the math, the numbers I arrived at are close, but with
+#   integer rounding and so on, not sure how well this scales.
+#   May well break (visually) if we alter bitmap dimensions.
+#
+# * NixOS issue, not really a problem with this project. Mypy
+#   can't locate a library for Pillow, and throws an error.
+#   Python/mypy's suggestions (to use pip) don't apply here.
+#   Reading up on nix docs, and need to figure it out. It's not
+#   a simple one-step solution, or at least not until I understand
+#   nix a bit better. Going to live with the error for now, but
+#   this is going to be very annoying.
+#
+# * I hard-coded a font path from my system into the drawing
+#   script. Obviously this isn't portable. I haven't yet found 
+#   any programmatic way to list available fonts on nix or within 
+#   Pillow. Unless I do, should either use the default font
+#   (which was pretty ugly in my limited testing), or include
+#   a font in the application data. Obviously need to find
+#   something open source and free to copy around.
+#
+# Alright, working on the feature. I think integration into
+# the game should be first - otherwise we'd have to create
+# a bunch of code to parse save or import files to get the
+# star system data, and that would duplicate already-tested
+# code. First step is to create a menu action that will
+# invoke this module.
 #
 # -------------------------------------------------------------
 
@@ -2813,6 +2860,16 @@
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
+#  * [....] Generate a bitmap StarMap
+#  * [....] Integrate drawing module into game
+#  * [    ] Pipe selected map data into drawing module
+#           Alternatively, auto-generate multiple images, one per subsector in data?
+#  * [    ] Adjust map graphics per map data
+#  * [    ] Add alternate color schemes, like printable/light. Customizeable?
+#  * [    ] Handle map image file, overwrite, naming, etc.
+#  * [    ] Fix mypy errors with Pillow
+#  * [    ] Deal with non-portable font in drawing module
+#  * [    ] Experiment with layout values in drawing module, can we support resizing?
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
 #  * [    ] Add start location to import file
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
@@ -2922,7 +2979,6 @@
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  PHASE SEVEN ====================================================
-#  * [    ] Generate a bitmap StarMap
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has
 #           no fuelling options and is dangerous to travel to for normal 

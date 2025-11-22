@@ -444,6 +444,7 @@ class Play(Screen):
                 Command('ledger', 'View ledger', self.view_ledger),
                 Command('dump map', 'Dump map', self.dump_map),
                 Command('dump ledger', 'Dump ledger', self.dump_ledger),
+                Command('draw map', 'Create map image', self.draw_map),
                 ]
 
     def update(self: ScreenT) -> ScreenT:
@@ -670,6 +671,10 @@ class Play(Screen):
         with open("ledger.txt", "w", encoding="utf-8") as a_file:
             a_file.write("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO\n")
             a_file.write(text)
+
+    def draw_map(self) -> None:
+        """Create and save a bitmap file of the current map."""
+        print(f"{BOLD_BLUE}Creating map image.{END_FORMAT}")
 
 
 class Orbit(Play):
