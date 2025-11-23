@@ -691,7 +691,7 @@ class Play(Screen):
         for entry in system_coords:
             system_list.append(self.parent.star_map.systems[entry])
 
-        draw_map(system_list, sub_name)
+        draw_map(system_list, sub_name, True)
 
 
 class Orbit(Play):

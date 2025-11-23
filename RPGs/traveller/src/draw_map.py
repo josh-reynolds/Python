@@ -41,16 +41,17 @@ H_SEP = int(1.5 * SIZE)
 
 DOT_RADIUS = SIZE / 4.5
 
-# COLORS
-BACKGROUND = (0,0,0)
-HEX_LINES = (50,79,53)
-COORD = (100,100,100)
-WET_WORLD = (27,66,170)
-DRY_WORLD = (80,80,80)
-GAS_GIANT = (190,190,190)
-WORLD_NAME = (200,200,200)
-STARPORT = (200,200,200)
-TITLE = (255,255,255)
+COLORS = {
+    "BACKGROUND": (0,0,0),
+    "HEX_LINES": (50,79,53),
+    "COORD": (100,100,100),
+    "WET_WORLD": (27,66,170),
+    "DRY_WORLD": (80,80,80),
+    "GAS_GIANT": (190,190,190),
+    "WORLD_NAME": (200,200,200),
+    "STARPORT": (200,200,200),
+    "TITLE": (255,255,255)
+}
 
 # This is not portable. Either see what default font looks like,
 # or package a font with this application.
@@ -89,9 +90,9 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
     # WORLD
     if system.size > 0:
         if system.hydrographics > 0:
-            fill_color = WET_WORLD
+            fill_color = COLORS["WET_WORLD"]
         else:
-            fill_color = DRY_WORLD
+            fill_color = COLORS["DRY_WORLD"]
         surface.ellipse([center_x - DOT_RADIUS,
                          center_y - DOT_RADIUS,
                          center_x + DOT_RADIUS,
@@ -113,7 +114,7 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
                              center_y - y_offset - half_height,
                              center_x - x_offset + half_width,
                              center_y - y_offset + half_height],
-                            fill=DRY_WORLD)
+                            fill=COLORS["DRY_WORLD"])
 
     # GAS GIANT
     if system.gas_giant:
@@ -121,7 +122,7 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
                          center_y - DOT_RADIUS/3 - 12,
                          center_x + DOT_RADIUS/3 + 15,
                          center_y + DOT_RADIUS/3 - 12],
-                        fill=GAS_GIANT)
+                        fill=COLORS["GAS_GIANT"])
 
     # WORLD NAME
     if system.population > 8:
@@ -132,39 +133,50 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
                  name,
                  font=font_sm,
                  anchor="mm",
-                 fill=WORLD_NAME)
+                 fill=COLORS["WORLD_NAME"])
 
     # STARPORT
     surface.text((center_x, center_y - 12),
                  system.starport,
                  font=font_sm,
                  anchor="mb",
-                 fill=STARPORT)
+                 fill=COLORS["STARPORT"])
 
 def draw_hex(surface, center_x: int, center_y: int,
              column: int, row: int) -> None:
     """Draw an empty Traveller map hex on the supplied surface."""
     surface.regular_polygon((center_x, center_y, SIZE),
                             6,
-                            outline=HEX_LINES)
+                            outline=COLORS["HEX_LINES"])
 
     surface.text((center_x, center_y - 23),
                  f"{column:02d}{row:02d}",
                  font=font_sm,
                  anchor="mb",
-                 fill=COORD)
+                 fill=COLORS["COORD"])
 
-def draw_map(systems: List[Hex], subsector_name: str) -> None:
+def draw_map(systems: List[Hex], subsector_name: str, print_friendly: bool=False) -> None:
     """Create a map image and write to a file."""
+    if print_friendly:
+        COLORS["BACKGROUND"] = (225,225,225)
+        COLORS["HEX_LINES"] = (75,75,75)
+        COLORS["COORD"] = (75,75,75)
+        COLORS["WET_WORLD"] = (60,60,60)
+        COLORS["DRY_WORLD"] = (175,175,175)
+        COLORS["GAS_GIANT"] = (60,60,60)
+        COLORS["WORLD_NAME"] = (0,0,0)
+        COLORS["STARPORT"] = (0,0,0)
+        COLORS["TITLE"] = (0,0,0)
+
     sys_dict = {}
     # TO_DO: dict slice?
     for system in systems:
         sys_dict[system.coordinate.trav_coord[0]] = system
-    image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
+    image = Image.new(mode="RGB", size=(600,800), color=COLORS["BACKGROUND"])
 
     draw = ImageDraw.Draw(image)
     draw_hexes_on(draw, sys_dict)
-    draw.text((H_BORDER/2,10), f"{subsector_name} Subsector", font=font_reg, fill=TITLE)
+    draw.text((H_BORDER/2,10), f"{subsector_name} Subsector", font=font_reg, fill=COLORS["TITLE"])
 
     no_whitespace = "".join(subsector_name.lower().split())
     filename = get_next_file(no_whitespace, "png")
