@@ -2513,6 +2513,18 @@
 # code. First step is to create a menu action that will
 # invoke this module.
 #
+# That's working fine. Piping the data into the drawing module
+# uncovers some duplication and missing utility. Should take
+# a closer look at how the system list is utilized across the
+# entire app, and streamline usage.
+#
+# Also, it occurs to me that map hexes have three states, not
+# just two: StarSystem, EmptySpace, and unmapped. There's some
+# thoughts below about "Fog of War" that could use the last one.
+# For now, in drawing I am going to handle EmptySpace and
+# unmapped identically, but would be easy to draw them differently
+# down the road.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2854,6 +2866,7 @@
 #  * [DONE] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
 #  * [DONE] Add import of Traveller map data
+#  * [DONE] Integrate drawing module into game
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -2861,8 +2874,7 @@
 #           Note that __repr__ should be recursive for arg objects
 #  * [....] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [....] Generate a bitmap StarMap
-#  * [....] Integrate drawing module into game
-#  * [    ] Pipe selected map data into drawing module
+#  * [....] Pipe selected map data into drawing module
 #           Alternatively, auto-generate multiple images, one per subsector in data?
 #  * [    ] Adjust map graphics per map data
 #  * [    ] Add alternate color schemes, like printable/light. Customizeable?

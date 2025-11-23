@@ -1,7 +1,7 @@
 """Draw a Traveller-style star map."""
 
 from random import random
-from typing import List
+from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex
 
@@ -58,8 +58,17 @@ FONT_NAME = "/nix/store/q74idm55v5km2pp9yh5qhzc4cw639kp4-cantarell-fonts-0.303.1
 font_reg = ImageFont.truetype(FONT_NAME, 16)
 font_sm = ImageFont.truetype(FONT_NAME, 12)
 
-def draw_hexes_on(surface) -> None:
+def draw_hexes_on(surface, systems: Dict[Tuple, Hex]) -> None:
     """Draw a grid of hexes on the supplied surface."""
+    # we will need to have a lookup by coordinate, need
+    # a dictionary by trav_coord I think
+    #
+    # or we could convert coords here into Coordinate,
+    # and continue to use that as dict key
+    for key,entry in systems.items():
+        print(key, entry)
+
+    _ = input("Press ENTER key to continue.")
     for j in range(COLUMNS):
         for i in range(ROWS):
             if j % 2 == 0:
@@ -116,9 +125,13 @@ def draw_hex(surface, center_x: int, center_y: int,
 
 def draw_map(systems: List[Hex]) -> None:
     """Create a map image and write to a file."""
-    print(systems)
+    sys_dict = {}
+    for system in systems:
+        sys_dict[system.coordinate.trav_coord] = system
+    print(sys_dict)
+    _ = input("Press ENTER key to continue.")
     image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
     draw = ImageDraw.Draw(image)
-    draw_hexes_on(draw)
+    draw_hexes_on(draw, sys_dict)
     draw.text((H_BORDER/2,10), "Subsector Map", font=font_reg, fill=TITLE)
     image.save("subsector_map.png")
