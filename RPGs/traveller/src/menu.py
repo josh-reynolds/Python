@@ -685,13 +685,17 @@ class Play(Screen):
         sub_coord = sub_list[subsector][0]
         sub_name = sub_list[subsector][1].name
 
+        color_schemes = ["Light", "Dark"]
+        color_choice = choose_from(color_schemes, "Choose a color scheme: ")
+        print_friendly = color_choice == 0
+
         # TO_DO: extract a 'get all systems in subsector' method
         system_coords = self._is_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
             system_list.append(self.parent.star_map.systems[entry])
 
-        draw_map(system_list, sub_name, True)
+        draw_map(system_list, sub_name, print_friendly)
 
 
 class Orbit(Play):

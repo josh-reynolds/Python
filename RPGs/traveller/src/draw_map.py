@@ -41,17 +41,7 @@ H_SEP = int(1.5 * SIZE)
 
 DOT_RADIUS = SIZE / 4.5
 
-COLORS = {
-    "BACKGROUND": (0,0,0),
-    "HEX_LINES": (50,79,53),
-    "COORD": (100,100,100),
-    "WET_WORLD": (27,66,170),
-    "DRY_WORLD": (80,80,80),
-    "GAS_GIANT": (190,190,190),
-    "WORLD_NAME": (200,200,200),
-    "STARPORT": (200,200,200),
-    "TITLE": (255,255,255)
-}
+COLORS: Dict[str, Tuple[int,int,int]] = {}
 
 # This is not portable. Either see what default font looks like,
 # or package a font with this application.
@@ -167,6 +157,16 @@ def draw_map(systems: List[Hex], subsector_name: str, print_friendly: bool=False
         COLORS["WORLD_NAME"] = (0,0,0)
         COLORS["STARPORT"] = (0,0,0)
         COLORS["TITLE"] = (0,0,0)
+    else:
+        COLORS["BACKGROUND"] = (0,0,0)
+        COLORS["HEX_LINES"] = (50,79,53)
+        COLORS["COORD"] = (100,100,100)
+        COLORS["WET_WORLD"] = (27,66,170)
+        COLORS["DRY_WORLD"] = (80,80,80)
+        COLORS["GAS_GIANT"] = (190,190,190)
+        COLORS["WORLD_NAME"] = (200,200,200)
+        COLORS["STARPORT"] = (200,200,200)
+        COLORS["TITLE"] = (255,255,255)
 
     sys_dict = {}
     # TO_DO: dict slice?

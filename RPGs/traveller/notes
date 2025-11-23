@@ -2536,6 +2536,11 @@
 # Preventing file overwrite, and customizing colors (or at 
 # least providing a print-friendly version) is what's left.
 #
+# And those are done. That about wraps up major features for
+# the basic game. Lots of small tweaks to be done; I'm sure
+# playtesting will uncover a bunch of suggestions. Really
+# should push down the technical debt first though.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2886,18 +2891,25 @@
 #  * [DONE] Tweak asteroid belt graphic in draw_map module - fully random approach
 #           can generate some ugly icons
 #  * [DONE] Handle map image file, overwrite, naming, etc.
+#  * [DONE] Add alternate color schemes, like printable/light. Customizeable?
+#  * [    ] Add start location to import file
+#  PHASE SIX ======================================================
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] Add alternate color schemes, like printable/light. Customizeable?
-#  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
+#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
+#  * [....] Make type dunder methods more robust with NotImplemented etc.
+#  * [....] Extend payment flow model to reduce coupling between classes
+#  * [....] Review and mark or export private/public members
+#  * [....] Look for multiline message_observer() usage - may need to adjust
+#           ObserverMock to retain all messages in a queue, currently only holds last one
+#  * [....] Consolidate mock objects into mock module
 #  * [    ] Fix mypy errors with Pillow
 #  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
-#  * [    ] Add start location to import file
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
@@ -2906,9 +2918,6 @@
 #  * [    ] Handle save/load exceptions in app rather than crashing out
 #  * [    ] Should the dump_*() methods allow player to name output file? Or have
 #           a auto-increment scheme like save files?
-#  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
-#           as it can't land or skim, and can't recharge life support either. We need
-#           a highport location and/or shuttle refuelling to make this usable.
 #  * [    ] With new src & test packages, unable to directly run test files - need
 #           to run via unit_tests.py. Removing __main__ check consequently, research
 #           better alternatives.
@@ -2955,14 +2964,6 @@
 #           here like adjusting world creation parameters, but initially just
 #           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
-#  PHASE SIX ======================================================
-#  * [....] Refactor freight/passenger methods, push down pieces as appropriate
-#  * [....] Make type dunder methods more robust with NotImplemented etc.
-#  * [....] Extend payment flow model to reduce coupling between classes
-#  * [....] Review and mark or export private/public members
-#  * [....] Look for multiline message_observer() usage - may need to adjust
-#           ObserverMock to retain all messages in a queue, currently only holds last one
-#  * [....] Consolidate mock objects into mock module
 #  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
 #           maybe we should have either decode_foo() and Foo.encode() or
 #           foo_from() and Foo.to()...
@@ -3005,6 +3006,11 @@
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  PHASE SEVEN ====================================================
+#  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
+#  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
+#           as it can't land or skim, and can't recharge life support either. We need
+#           a highport location and/or shuttle refuelling to make this usable.
+#  * [    ] Add customization of crew members, names, etc.
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has
 #           no fuelling options and is dangerous to travel to for normal 
@@ -3066,9 +3072,9 @@
 #  * [    ] Color: jump dimming
 #  * [    ] If we want to expand beyond just the trade model, add 
 #            ship encounters (Book 2 p. 36), hijacking, piracy, etc.
-#  BEYOND ==========================================================
 #  * [    ] Subsector summary data, like 'highest population is...'. See published
 #           map data for examples.
+#  BEYOND ==========================================================
 #  * [    ] Alternate shells: GUI, 'Oregon Trail style', etc. Would be amusing to
 #            do ASCII graphics...
 #  * [    ] Non-canon variations and features - draw from other RPGs, board games,
