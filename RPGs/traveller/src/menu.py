@@ -22,7 +22,7 @@ from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
-from src.utilities import get_next_save_file, BOLD_GREEN, get_files, get_json_data
+from src.utilities import get_next_file, BOLD_GREEN, get_files, get_json_data
 from src.utilities import choose_from
 
 # pylint: disable=C0302
@@ -625,7 +625,7 @@ class Play(Screen):
                      'ledger' : self.parent.financials.ledger
                      }
 
-        filename = get_next_save_file()
+        filename = get_next_file("save_game", "json")
         with open(f"saves/{filename}", 'w', encoding='utf-8') as a_file:
             json.dump(save_data, a_file, indent=2)
         print(f"{BOLD_GREEN}Saved to {filename}.{END_FORMAT}")

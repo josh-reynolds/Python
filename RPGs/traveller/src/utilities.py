@@ -121,7 +121,7 @@ def dictionary_from(a_string: str) -> dict[str, int]:
         dictionary[key] = int(value)
     return dictionary
 
-def get_files(path: str, extension: str=None) -> List[str]:
+def get_files(path: str, extension: str | None=None) -> List[str]:
     """Return a list of all files in the specified directory.
 
     Also takes an optional extension argument that will filter
@@ -133,10 +133,10 @@ def get_files(path: str, extension: str=None) -> List[str]:
     files.sort()
     return files
 
-def get_next_save_file() -> str:
-    """Return the next save file to be created."""
-    files = get_files("./saves/")
-    pattern = re.compile(r"save_game_(\d+).json")
+def get_next_file(base_name: str, extension: str) -> str:
+    """Return the next file to be created in the 'saves' directory."""
+    files = get_files("./saves/", extension)
+    pattern = re.compile(base_name + r"_(\d+)." + extension)
     highest = 0
     for file in files:
         match = pattern.match(file)
@@ -147,7 +147,7 @@ def get_next_save_file() -> str:
     # enforcing two-digits for ordering
     # will still output three+ digit numbers, but
     # ordering will break
-    return f"save_game_{highest+1:02}.json"
+    return f"{base_name}_{highest+1:02}.{extension}"
 
 def get_json_data(filename: str) -> Dict[str, Any] | None:
     """Retrieve data from a JSON file.
