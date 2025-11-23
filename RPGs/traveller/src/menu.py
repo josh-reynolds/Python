@@ -683,7 +683,7 @@ class Play(Screen):
         sub_list = list(self.parent.star_map.subsectors.items())
         subsector = choose_from(sub_list, "Choose a subsector to draw: ")
         sub_coord = sub_list[subsector][0]
-        sub_name = sub_list[subsector][1]
+        sub_name = sub_list[subsector][1].name
 
         # TO_DO: extract a 'get all systems in subsector' method
         system_coords = self._is_in_subsector(sub_coord)

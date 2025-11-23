@@ -3,7 +3,7 @@
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex, StarSystem
-from src.utilities import BOLD_GREEN, END_FORMAT
+from src.utilities import BOLD_GREEN, END_FORMAT, get_next_file
 
 SIZE = 40
 COLUMNS = 8
@@ -166,6 +166,7 @@ def draw_map(systems: List[Hex], subsector_name: str) -> None:
     draw_hexes_on(draw, sys_dict)
     draw.text((H_BORDER/2,10), f"{subsector_name} Subsector", font=font_reg, fill=TITLE)
 
-    filename = "subsector_map.png"
+    no_whitespace = "".join(subsector_name.lower().split())
+    filename = get_next_file(no_whitespace, "png")
     image.save("./saves/" + filename)
     print(f"{BOLD_GREEN}Saved to {filename}.{END_FORMAT}")
