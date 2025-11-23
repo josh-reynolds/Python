@@ -3,7 +3,6 @@
 from random import random
 from PIL import Image, ImageDraw, ImageFont
 
-
 SIZE = 40
 COLUMNS = 8
 ROWS = 10
@@ -49,6 +48,13 @@ GAS_GIANT = (190,190,190)
 WORLD_NAME = (200,200,200)
 STARPORT = (200,200,200)
 TITLE = (255,255,255)
+
+# This is not portable. Either see what default font looks like,
+# or package a font with this application.
+FONT_NAME = "/nix/store/q74idm55v5km2pp9yh5qhzc4cw639kp4-cantarell-fonts-0.303.1" +\
+           "/share/fonts/cantarell/Cantarell-VF.otf"
+font_reg = ImageFont.truetype(FONT_NAME, 16)
+font_sm = ImageFont.truetype(FONT_NAME, 12)
 
 def draw_hexes_on(surface) -> None:
     """Draw a grid of hexes on the supplied surface."""
@@ -106,15 +112,10 @@ def draw_hex(surface, center_x: int, center_y: int,
                      anchor="mb",
                      fill=STARPORT)
 
-# This is not portable. Either see what default font looks like,
-# or package a font with this application.
-FONT_NAME = "/nix/store/q74idm55v5km2pp9yh5qhzc4cw639kp4-cantarell-fonts-0.303.1" +\
-           "/share/fonts/cantarell/Cantarell-VF.otf"
-font_reg = ImageFont.truetype(FONT_NAME, 16)
-font_sm = ImageFont.truetype(FONT_NAME, 12)
-
-image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
-draw = ImageDraw.Draw(image)
-draw_hexes_on(draw)
-draw.text((H_BORDER/2,10), "Subsector Map", font=font_reg, fill=TITLE)
-image.save("subsector_map.png")
+def draw_map() -> None:
+    """Create a map image and write to a file."""
+    image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
+    draw = ImageDraw.Draw(image)
+    draw_hexes_on(draw)
+    draw.text((H_BORDER/2,10), "Subsector Map", font=font_reg, fill=TITLE)
+    image.save("subsector_map.png")
