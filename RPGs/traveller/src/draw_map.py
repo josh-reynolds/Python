@@ -163,4 +163,4 @@ def draw_map(systems: List[Hex], subsector_name: str) -> None:
     draw = ImageDraw.Draw(image)
     draw_hexes_on(draw, sys_dict)
     draw.text((H_BORDER/2,10), f"{subsector_name} Subsector", font=font_reg, fill=TITLE)
-    image.save("subsector_map.png")
+    image.save("./saves/subsector_map.png")
