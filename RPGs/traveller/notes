@@ -2883,13 +2883,13 @@
 #  * [DONE] Pipe selected map data into drawing module
 #           Alternatively, auto-generate multiple images, one per subsector in data?
 #  * [DONE] Adjust map graphics per map data
+#  * [DONE] Tweak asteroid belt graphic in draw_map module - fully random approach
+#           can generate some ugly icons
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [    ] Tweak asteroid belt graphic in draw_map module - fully random approach
-#           can generate some ugly icons
 #  * [    ] Add alternate color schemes, like printable/light. Customizeable?
 #  * [    ] Handle map image file, overwrite, naming, etc.
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges

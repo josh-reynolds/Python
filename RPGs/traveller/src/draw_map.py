@@ -1,6 +1,5 @@
 """Draw a Traveller-style star map."""
 
-from random import choice
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex, StarSystem
@@ -98,11 +97,16 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
                          center_y + DOT_RADIUS],
                         fill=fill_color)
     else:
-        for _ in range(6):
-            x_offset = choice(range(-11,12))
-            y_offset = choice(range(-11,12))
-            half_width = choice([1,2,3])
-            half_height = choice([1,2,3])
+        x_offsets = [-7, 6, -3, 6, 0, -9]
+        y_offsets = [-7, 5, 2, -4, -8, 0]
+        half_widths = [1, 3, 2, 1, 1, 2]
+        half_heights = [1, 2, 2, 2, 3, 1]
+
+        for j in range(6):
+            x_offset = x_offsets[j]
+            y_offset = y_offsets[j]
+            half_width = half_widths[j]
+            half_height = half_heights[j]
 
             surface.ellipse([center_x - x_offset - half_width,
                              center_y - y_offset - half_height,
