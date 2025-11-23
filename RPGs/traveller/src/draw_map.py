@@ -45,7 +45,8 @@ DOT_RADIUS = SIZE / 4.5
 BACKGROUND = (0,0,0)
 HEX_LINES = (50,79,53)
 COORD = (100,100,100)
-WORLD = (27,66,170)
+WET_WORLD = (27,66,170)
+DRY_WORLD = (80,80,80)
 GAS_GIANT = (190,190,190)
 WORLD_NAME = (200,200,200)
 STARPORT = (200,200,200)
@@ -87,20 +88,27 @@ def draw_system(surface, center_x: int, center_y: int,
                 column: int, row: int, system: StarSystem) -> None:
     """Draw StarSystem graphics on the supplied surface."""
     # WORLD
+    # TO_DO: icon for asteroid belt systems
+    if system.hydrographics > 0:
+        fill_color = WET_WORLD
+    else:
+        fill_color = DRY_WORLD
     surface.ellipse([center_x - DOT_RADIUS,
                      center_y - DOT_RADIUS,
                      center_x + DOT_RADIUS,
                      center_y + DOT_RADIUS],
-                    fill=WORLD)
+                    fill=fill_color)
 
     # GAS GIANT
-    surface.ellipse([center_x - DOT_RADIUS/3 + 15,
-                     center_y - DOT_RADIUS/3 - 12,
-                     center_x + DOT_RADIUS/3 + 15,
-                     center_y + DOT_RADIUS/3 - 12],
-                    fill=GAS_GIANT)
+    if system.gas_giant:
+        surface.ellipse([center_x - DOT_RADIUS/3 + 15,
+                         center_y - DOT_RADIUS/3 - 12,
+                         center_x + DOT_RADIUS/3 + 15,
+                         center_y + DOT_RADIUS/3 - 12],
+                        fill=GAS_GIANT)
 
     # WORLD NAME
+    # TO_DO: capitalize for high-pop worlds
     surface.text((center_x, center_y + 23),
                  system.name,
                  font=font_sm,
@@ -127,15 +135,14 @@ def draw_hex(surface, center_x: int, center_y: int,
                  anchor="mb",
                  fill=COORD)
 
-def draw_map(systems: List[Hex]) -> None:
+def draw_map(systems: List[Hex], subsector_name: str) -> None:
     """Create a map image and write to a file."""
     sys_dict = {}
+    # TO_DO: dict slice?
     for system in systems:
         sys_dict[system.coordinate.trav_coord[0]] = system
-    print(sys_dict)
-    _ = input("Press ENTER key to continue.")
     image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
     draw = ImageDraw.Draw(image)
     draw_hexes_on(draw, sys_dict)
-    draw.text((H_BORDER/2,10), "Subsector Map", font=font_reg, fill=TITLE)
+    draw.text((H_BORDER/2,10), f"{subsector_name} Subsector", font=font_reg, fill=TITLE)
     image.save("subsector_map.png")
