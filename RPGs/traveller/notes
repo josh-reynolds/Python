@@ -2525,6 +2525,17 @@
 # unmapped identically, but would be easy to draw them differently
 # down the road.
 #
+# Basic features are working, and map resembles standard set
+# in later Traveller '81 publications, minus the missing
+# features like travel zones.
+#
+# Still not entirely happy with the randomized icon I'm 
+# generating for asteroid belts. Will keep fiddling with it.
+# But the core map drawing functionality is done.
+# 
+# Preventing file overwrite, and customizing colors (or at 
+# least providing a print-friendly version) is what's left.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
@@ -2866,17 +2877,19 @@
 #  * [DONE] Conversion of Traveller coordinates to 3-axis, probably needed to import
 #           existing data
 #  * [DONE] Add import of Traveller map data
+#  * [DONE] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
 #  * [DONE] Integrate drawing module into game
+#  * [DONE] Generate a bitmap StarMap
+#  * [DONE] Pipe selected map data into drawing module
+#           Alternatively, auto-generate multiple images, one per subsector in data?
+#  * [DONE] Adjust map graphics per map data
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
-#  * [....] UI Pattern: Choice. Have this in multiple places. Use as refactor target.
-#  * [....] Generate a bitmap StarMap
-#  * [....] Pipe selected map data into drawing module
-#           Alternatively, auto-generate multiple images, one per subsector in data?
-#  * [    ] Adjust map graphics per map data
+#  * [    ] Tweak asteroid belt graphic in draw_map module - fully random approach
+#           can generate some ugly icons
 #  * [    ] Add alternate color schemes, like printable/light. Customizeable?
 #  * [    ] Handle map image file, overwrite, naming, etc.
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges

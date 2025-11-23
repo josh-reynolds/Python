@@ -1,6 +1,6 @@
 """Draw a Traveller-style star map."""
 
-from random import random
+from random import choice
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex, StarSystem
@@ -59,7 +59,7 @@ FONT_NAME = "/nix/store/q74idm55v5km2pp9yh5qhzc4cw639kp4-cantarell-fonts-0.303.1
 font_reg = ImageFont.truetype(FONT_NAME, 16)
 font_sm = ImageFont.truetype(FONT_NAME, 12)
 
-def draw_hexes_on(surface, systems: Dict[Tuple, Hex]) -> None:
+def draw_hexes_on(surface, systems: Dict[Tuple[int,int], Hex]) -> None:
     """Draw a grid of hexes on the supplied surface."""
     # we will need to have a lookup by coordinate, need
     # a dictionary by trav_coord I think
@@ -82,22 +82,33 @@ def draw_hexes_on(surface, systems: Dict[Tuple, Hex]) -> None:
             draw_hex(surface, center_x, center_y, j+1, i+1)
 
             if isinstance(hex_content, StarSystem):
-                draw_system(surface, center_x, center_y, j+1, i+1, hex_content)
+                draw_system(surface, center_x, center_y, hex_content)
 
-def draw_system(surface, center_x: int, center_y: int,
-                column: int, row: int, system: StarSystem) -> None:
+def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> None:
     """Draw StarSystem graphics on the supplied surface."""
     # WORLD
-    # TO_DO: icon for asteroid belt systems
-    if system.hydrographics > 0:
-        fill_color = WET_WORLD
+    if system.size > 0:
+        if system.hydrographics > 0:
+            fill_color = WET_WORLD
+        else:
+            fill_color = DRY_WORLD
+        surface.ellipse([center_x - DOT_RADIUS,
+                         center_y - DOT_RADIUS,
+                         center_x + DOT_RADIUS,
+                         center_y + DOT_RADIUS],
+                        fill=fill_color)
     else:
-        fill_color = DRY_WORLD
-    surface.ellipse([center_x - DOT_RADIUS,
-                     center_y - DOT_RADIUS,
-                     center_x + DOT_RADIUS,
-                     center_y + DOT_RADIUS],
-                    fill=fill_color)
+        for _ in range(6):
+            x_offset = choice(range(-11,12))
+            y_offset = choice(range(-11,12))
+            half_width = choice([1,2,3])
+            half_height = choice([1,2,3])
+
+            surface.ellipse([center_x - x_offset - half_width,
+                             center_y - y_offset - half_height,
+                             center_x - x_offset + half_width,
+                             center_y - y_offset + half_height],
+                            fill=DRY_WORLD)
 
     # GAS GIANT
     if system.gas_giant:
