@@ -121,9 +121,15 @@ def dictionary_from(a_string: str) -> dict[str, int]:
         dictionary[key] = int(value)
     return dictionary
 
-def get_files(path: str) -> List[str]:
-    """Return a list of all files in the specified directory."""
+def get_files(path: str, extension: str=None) -> List[str]:
+    """Return a list of all files in the specified directory.
+
+    Also takes an optional extension argument that will filter
+    the list of files to just that type.
+    """
     files = [f for f in listdir(path) if isfile(join(path, f))]
+    if extension:
+        files = [f for f in files if f.endswith(extension)]
     files.sort()
     return files
 

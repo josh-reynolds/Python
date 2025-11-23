@@ -227,7 +227,7 @@ class Menu(Screen):
     def load_game(self: ScreenT) -> ScreenT | None:
         """Load a previous game."""
         print(f"{BOLD_BLUE}Loading game.{END_FORMAT}")
-        files = get_files("./saves/")
+        files = get_files("./saves/", "json")
         file_number = choose_from(files, "Enter file to load: ")
         load_file = files[file_number]
 

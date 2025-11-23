@@ -2890,8 +2890,8 @@
 #  * [....] Extract all the three-axis coordinate math to its own class
 #  * [....] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [....] Handle map image file, overwrite, naming, etc.
 #  * [    ] Add alternate color schemes, like printable/light. Customizeable?
-#  * [    ] Handle map image file, overwrite, naming, etc.
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] Fix mypy errors with Pillow
 #  * [    ] Deal with non-portable font in drawing module
