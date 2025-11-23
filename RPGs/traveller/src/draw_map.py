@@ -1,7 +1,9 @@
 """Draw a Traveller-style star map."""
 
 from random import random
+from typing import List
 from PIL import Image, ImageDraw, ImageFont
+from src.star_system import Hex
 
 SIZE = 40
 COLUMNS = 8
@@ -112,8 +114,9 @@ def draw_hex(surface, center_x: int, center_y: int,
                      anchor="mb",
                      fill=STARPORT)
 
-def draw_map() -> None:
+def draw_map(systems: List[Hex]) -> None:
     """Create a map image and write to a file."""
+    print(systems)
     image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
     draw = ImageDraw.Draw(image)
     draw_hexes_on(draw)

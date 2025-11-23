@@ -53,6 +53,14 @@ class Screen(ABC):
     def update(self: ScreenT) -> ScreenT:
         """Draw the screen and gather input."""
 
+    # TO_DO: find proper home for this - pulling up for now, multiple
+    #        branches of hierarchy need it - might be better as
+    #        a service on StarMap, or a standalone function
+    def _is_in_subsector(self, sub_coord: Tuple[int, int]) -> List[Tuple[int,int]]:
+        """Filter star systems list for all entries in the specified subsector."""
+        return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
+
+
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     def quit(self) -> None:
@@ -333,10 +341,6 @@ class Menu(Screen):
                 data[section].append(line)            # type: ignore[union-attr]
 
         return data
-
-    def _is_in_subsector(self, sub_coord: Tuple[int, int]) -> List[Tuple[int,int]]:
-        """Filter star systems list for all entries in the specified subsector."""
-        return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
 
     # pylint: disable=R0914
     # R0914: Too many local variables(17/15)
@@ -676,7 +680,17 @@ class Play(Screen):
     def draw_map(self) -> None:
         """Create and save a bitmap file of the current map."""
         print(f"{BOLD_BLUE}Creating map image.{END_FORMAT}")
-        draw_map()
+        sub_list = list(self.parent.star_map.subsectors.items())
+        subsector = choose_from(sub_list, "Choose a subsector to draw: ")
+        sub_coord = sub_list[subsector][0]
+
+        # TO_DO: extract a 'get all systems in subsector' method
+        system_coords = self._is_in_subsector(sub_coord)
+        system_list = []
+        for entry in system_coords:
+            system_list.append(self.parent.star_map.systems[entry])
+
+        draw_map(system_list)
 
 
 class Orbit(Play):
