@@ -108,9 +108,12 @@ def draw_system(surface, center_x: int, center_y: int,
                         fill=GAS_GIANT)
 
     # WORLD NAME
-    # TO_DO: capitalize for high-pop worlds
+    if system.population > 8:
+        name = system.name.upper()
+    else:
+        name = system.name
     surface.text((center_x, center_y + 23),
-                 system.name,
+                 name,
                  font=font_sm,
                  anchor="mm",
                  fill=WORLD_NAME)
