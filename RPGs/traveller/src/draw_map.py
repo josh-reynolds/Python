@@ -3,7 +3,7 @@
 from random import random
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
-from src.star_system import Hex
+from src.star_system import Hex, StarSystem
 
 SIZE = 40
 COLUMNS = 8
@@ -65,10 +65,7 @@ def draw_hexes_on(surface, systems: Dict[Tuple, Hex]) -> None:
     #
     # or we could convert coords here into Coordinate,
     # and continue to use that as dict key
-    for key,entry in systems.items():
-        print(key, entry)
 
-    _ = input("Press ENTER key to continue.")
     for j in range(COLUMNS):
         for i in range(ROWS):
             if j % 2 == 0:
@@ -79,11 +76,47 @@ def draw_hexes_on(surface, systems: Dict[Tuple, Hex]) -> None:
             center_x = H_BORDER + H_SEP * j
             center_y = v_bord + V_SEP * i
 
+            hex_content = systems.get((j+1,i+1), "empty")
+
             draw_hex(surface, center_x, center_y, j+1, i+1)
+
+            if isinstance(hex_content, StarSystem):
+                draw_system(surface, center_x, center_y, j+1, i+1, hex_content)
+
+def draw_system(surface, center_x: int, center_y: int,
+                column: int, row: int, system: StarSystem) -> None:
+    """Draw StarSystem graphics on the supplied surface."""
+    # WORLD
+    surface.ellipse([center_x - DOT_RADIUS,
+                     center_y - DOT_RADIUS,
+                     center_x + DOT_RADIUS,
+                     center_y + DOT_RADIUS],
+                    fill=WORLD)
+
+    # GAS GIANT
+    surface.ellipse([center_x - DOT_RADIUS/3 + 15,
+                     center_y - DOT_RADIUS/3 - 12,
+                     center_x + DOT_RADIUS/3 + 15,
+                     center_y + DOT_RADIUS/3 - 12],
+                    fill=GAS_GIANT)
+
+    # WORLD NAME
+    surface.text((center_x, center_y + 23),
+                 system.name,
+                 font=font_sm,
+                 anchor="mm",
+                 fill=WORLD_NAME)
+
+    # STARPORT
+    surface.text((center_x, center_y - 12),
+                 system.starport,
+                 font=font_sm,
+                 anchor="mb",
+                 fill=STARPORT)
 
 def draw_hex(surface, center_x: int, center_y: int,
              column: int, row: int) -> None:
-    """Draw a Traveller map hex on the supplied surface."""
+    """Draw an empty Traveller map hex on the supplied surface."""
     surface.regular_polygon((center_x, center_y, SIZE),
                             6,
                             outline=HEX_LINES)
@@ -94,40 +127,11 @@ def draw_hex(surface, center_x: int, center_y: int,
                  anchor="mb",
                  fill=COORD)
 
-    if random() < 0.5:
-        # WORLD
-        surface.ellipse([center_x - DOT_RADIUS,
-                         center_y - DOT_RADIUS,
-                         center_x + DOT_RADIUS,
-                         center_y + DOT_RADIUS],
-                        fill=WORLD)
-
-        # GAS GIANT
-        surface.ellipse([center_x - DOT_RADIUS/3 + 15,
-                         center_y - DOT_RADIUS/3 - 12,
-                         center_x + DOT_RADIUS/3 + 15,
-                         center_y + DOT_RADIUS/3 - 12],
-                        fill=GAS_GIANT)
-
-        # WORLD NAME
-        surface.text((center_x, center_y + 23),
-                     "World Name",
-                     font=font_sm,
-                     anchor="mm",
-                     fill=WORLD_NAME)
-
-        # STARPORT
-        surface.text((center_x, center_y - 12),
-                     "A",
-                     font=font_sm,
-                     anchor="mb",
-                     fill=STARPORT)
-
 def draw_map(systems: List[Hex]) -> None:
     """Create a map image and write to a file."""
     sys_dict = {}
     for system in systems:
-        sys_dict[system.coordinate.trav_coord] = system
+        sys_dict[system.coordinate.trav_coord[0]] = system
     print(sys_dict)
     _ = input("Press ENTER key to continue.")
     image = Image.new(mode="RGB", size=(600,800), color=BACKGROUND)
