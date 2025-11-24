@@ -2544,6 +2544,79 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Just watched an interesting YT video from 'runevision':
+# "Layer-Based Procedural Generation for Infinite Worlds."
+# He doesn't get into any implementation details, just the
+# overall strategy - but it perfectly captures the challenge
+# with the route mechanic in Traveller '77.
+#
+# This mechanic was removed from later editions, and replaced
+# with an ad hoc 'x-boat route' marking on the maps. In '77
+# there was a procedure for determining whether a route
+# exists between two worlds. The issue is worlds at the 
+# boundary. They could have routes connecting to worlds
+# outside the generated map. So how to handle?
+#
+# The strategy in the video is to define 'levels' or 
+# 'layers' of generation, from zero on up. Given a grid of cells
+# (which could be subsectors in our Traveller example),
+# you can only generate a grid at level N if all eight of its
+# neighbors are at level N-1
+#
+# His levels are:
+#
+# 0) Presence/rough position of locations within each cell
+#    (he randomly generates three points per cell)
+# 1) Precise position - not too close to any others,
+#    including in neighboring cells
+# 2) Radius - cannot overlap with any other points
+# 3) Connections - starts with Delanay Triangulation,
+#    but reduces so it's not overly connected. Also,
+#    every point must be reachable.
+# 4) Details
+#
+# For the Traveller '77 route procedure, the inputs are
+# world presence, starport (on both sides) and distance.
+# So the levels would be:
+#
+# 0) Presence (position is by hex, and already precise)
+#             (distance is also encompassed here)
+# 1) Starport
+# 2) Routes
+# 3) Full UWP and world details
+#
+# The procedure is limited to worlds within a 4-parsec distance,
+# so rather than full subsectors, this could be managed at the 
+# hex level. So to generate the details for one world, you need:
+#
+# 1) All routes connecting to it from 4 parsecs out
+# 2) All starports up to an additional 4 parsecs out
+# 3) All world locations up to an additional 4 parsecs out
+#
+# Maybe we could have a thinner shell on the outside. We need
+# to know at least the endpoints within 4 parsecs of all routes
+# to the world being generated, and any other worlds within that 
+# sphere (up to level 1). But we don't necessarily need to know
+# anything outside those boundaries until we move close to it.
+# (I think we'd probably want to name them at this time, too...)
+#
+# This is sort of how Traveller worked in the first place. You
+# fill in a map, then later go back and roll up all the UWPs.
+# For this game, we're not really saving much performance or
+# memory-wise - StarSystems are not terribly burdensome to
+# generate or store at this scale. But the two-stage process
+# does let us solve the route problem without a sort of 
+# runaway generation.
+#
+# And it also touches on the lifespan concerns I've had about
+# Subsectors in particular - but probably should involve
+# StarSystems too. If we pursue this, we ought to lay out
+# a sequence diagram or the equivalent to understand it
+# better.
+# 
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -2892,7 +2965,7 @@
 #           can generate some ugly icons
 #  * [DONE] Handle map image file, overwrite, naming, etc.
 #  * [DONE] Add alternate color schemes, like printable/light. Customizeable?
-#  * [    ] Add start location to import file
+#  * [....] Add start location to import file
 #  PHASE SIX ======================================================
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
@@ -3077,6 +3150,7 @@
 #  BEYOND ==========================================================
 #  * [    ] Alternate shells: GUI, 'Oregon Trail style', etc. Would be amusing to
 #            do ASCII graphics...
+#  * [    ] What about browser-based UI?
 #  * [    ] Non-canon variations and features - draw from other RPGs, board games,
 #           videogames, and brainstorming
 #  * [    ] Other game modes, like Scouts - take a longer-range ship and explore.

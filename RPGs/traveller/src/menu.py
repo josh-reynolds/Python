@@ -301,11 +301,14 @@ class Menu(Screen):
                                     content: List[str]) -> Dict[str, Dict | List] | None:
         """Convert lines from a Traveller map import file into a dictionary.
 
-        The returned dictionary will have two keys: 'subsectors' and
+        The returned dictionary will have three keys: 'subsectors,', 'location' and
         'systems', corresponding to those sections in the file.
 
         The 'subsectors' key points to a dictionary mapping subsector names
         to their coordinates.
+
+        The 'location' key points to a coordinate on the map (including both
+        system and subsector coordinate).
 
         The 'systems' key points to a list of star system data in string
         format, one system per line.
@@ -326,6 +329,9 @@ class Menu(Screen):
                 elif line == '[Systems]':
                     section = 'systems'
                     data[section] = []
+                elif line == '[Location]':
+                    section = 'location'
+                    data[section] = []
                 else:
                     print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
                     return None
@@ -338,6 +344,12 @@ class Menu(Screen):
                 data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload]
 
             if section == 'systems':
+                data[section].append(line)            # type: ignore[union-attr]
+
+            # TO_DO: should we trap if more than one location is listed?
+            #        or just allow the last to win?
+            # TO_DO: need to confirm the location is present in the systems list
+            if section == 'location':
                 data[section].append(line)            # type: ignore[union-attr]
 
         return data

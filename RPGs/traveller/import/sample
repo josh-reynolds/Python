@@ -2,7 +2,8 @@
 #
 # Lines starting with # are comments and ignored by the game.
 #
-# This file must contain two sections: Subsectors, and Systems
+# This file must contain three sections: Subsectors, Location,
+# and Systems
 #
 # When transcribing from published data, subsectors must be assigned
 # a cartesian coordinate. Designate one subsector as the origin (0,0),
@@ -15,6 +16,12 @@
 # are negative values from the origin, and 'trailing'/'rimward'
 # are positive values. The subsector at (-1,-1) is above and to
 # the left of the origin (0,0) subsector.
+#
+# Location is a coordinate in one of the listed subsectors, and
+# must be present in the following Systems list. It is a single
+# line in the same format as the beginning of a systems line:
+#
+#   Subsector Coordinate
 #
 # Systems should also be listed one per line in the following
 # layout:
@@ -39,6 +46,9 @@
 [Subsectors]
 Regina (0,-1)
 Lanth (0,0)
+
+[Location]
+Regina 0310
 
 [Systems]
 Lanth 0101 Extolay    B45589A-A
