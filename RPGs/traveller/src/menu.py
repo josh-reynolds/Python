@@ -53,14 +53,6 @@ class Screen(ABC):
     def update(self: ScreenT) -> ScreenT:
         """Draw the screen and gather input."""
 
-    # TO_DO: find proper home for this - pulling up for now, multiple
-    #        branches of hierarchy need it - might be better as
-    #        a service on StarMap, or a standalone function
-    def _is_in_subsector(self, sub_coord: Tuple[int, int]) -> List[Tuple[int,int]]:
-        """Filter star systems list for all entries in the specified subsector."""
-        return [c for c in self.parent.star_map.systems if c.trav_coord[1] == sub_coord]
-
-
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     def quit(self) -> None:
@@ -180,7 +172,7 @@ class Menu(Screen):
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
         for sub_coord in self.parent.star_map.subsectors:
-            occupied = self._is_in_subsector(sub_coord) # type: ignore[attr-defined]
+            occupied = self.parent.star_map.get_systems_in_subsector(sub_coord)
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
 
             for coord in all_coords:
@@ -721,8 +713,7 @@ class Play(Screen):
         color_choice = choose_from(color_schemes, "Choose a color scheme: ")
         print_friendly = color_choice == 0
 
-        # TO_DO: extract a 'get all systems in subsector' method
-        system_coords = self._is_in_subsector(sub_coord)
+        system_coords = self.parent.star_map.get_systems_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
             system_list.append(self.parent.star_map.systems[entry])
