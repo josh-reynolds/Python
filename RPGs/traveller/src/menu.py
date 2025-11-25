@@ -310,7 +310,7 @@ class Menu(Screen):
         to their coordinates.
 
         The 'location' key points to a coordinate on the map (including both
-        system and subsector coordinate).
+        system coordinate and subsector name).
 
         The 'systems' key points to a list of star system data in string
         format, one system per line.
@@ -393,7 +393,6 @@ class Menu(Screen):
             subsector_list.append(f"{value} - {key}")
         return subsector_list
 
-    # TO_DO: need to confirm the location is present in the systems list
     # TO_DO: most of this routine duplicates code in _import_systems - extract!
     def _import_location(self, subsector_data: Dict[str,str],
                          location_data: str) -> Coordinate:
@@ -406,6 +405,10 @@ class Menu(Screen):
         row = int(tokens[1][2:])
 
         return create_3_axis(column, row, sub_x, sub_y)
+
+    def _is_star_system(self, coord: Coordinate) -> bool:
+        """Test whether a given Coordinate contains a StarSystem or not."""
+        return isinstance(self.parent.star_map.systems[coord], StarSystem)
 
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
@@ -446,7 +449,11 @@ class Menu(Screen):
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self._load_financials(financials_string)              # type: ignore[attr-defined]
         location = self._import_location(data['subsectors'],  # type: ignore[attr-defined]
-                                        data['location'])
+                                         data['location'])
+        if not self._is_star_system(location):                # type: ignore[attr-defined]
+            print(f"{BOLD_RED}The start location in the import file is in Deep Space.{END_FORMAT}")
+            return None
+
         self._load_location(f"{location}")                    # type: ignore[attr-defined]
         self._create_depot()                                  # type: ignore[attr-defined]
         self._attach_date_observers()                         # type: ignore[attr-defined]

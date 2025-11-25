@@ -2642,13 +2642,13 @@
 #    * Test coverage
 #    * Refactoring
 #    * Best practices and 'pythonic' coding
-#  PHASE FIVE <== we are here
+#  PHASE FIVE
 #  * Polishing game mechanisms:
 #    * UI work
 #    * Front end and menu
 #    * Save/load if not done earlier
 #    * Player customization: ship name, captain, etc.
-#  PHASE SIX
+#  PHASE SIX <== we are here
 #  * Another refactoring push
 #  PHASE SEVEN
 #    * Expand scope with RPG-lite elements and events
@@ -2966,7 +2966,7 @@
 #  * [DONE] Handle map image file, overwrite, naming, etc.
 #  * [DONE] Add alternate color schemes, like printable/light. Customizeable?
 #  * [DONE] Add start location to import file
-#  * [    ] Trap invalid start location when importing
+#  * [DONE] Trap invalid start location when importing
 #  PHASE SIX ======================================================
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
