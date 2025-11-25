@@ -356,23 +356,14 @@ class Menu(Screen):
 
         return data
 
-    # pylint: disable=R0914
-    # R0914: Too many local variables(17/15)
     def _import_systems(self, system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
         """Convert imported StarSystem data into format used by _load_systems()."""
         system_list = []
         for entry in system_data:
             tokens = entry.split()
 
-            subsector_name = tokens[0]
-            subsector_coord = subsector_data[subsector_name]
-            sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
-
-            column = int(tokens[1][:2])
-            row = int(tokens[1][2:])
-
-            three_axis_coord = create_3_axis(column, row, sub_x, sub_y)
-
+            three_axis_coord = self._subsector_coord_to_3_axis(tokens[0], tokens[1],
+                                                               subsector_data)
             world_name = tokens[2]
             uwp = tokens[3]
 
@@ -393,18 +384,22 @@ class Menu(Screen):
             subsector_list.append(f"{value} - {key}")
         return subsector_list
 
-    # TO_DO: most of this routine duplicates code in _import_systems - extract!
+    def _subsector_coord_to_3_axis(self, subsector_name: str, coord: str,
+                                   subsector_data: Dict[str,str]) -> Coordinate:
+        """Convert imported Location data into a 3-axis Coordinate."""
+        subsector_coord = subsector_data[subsector_name]
+        sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
+
+        column = int(coord[:2])
+        row = int(coord[2:])
+
+        return create_3_axis(column, row, sub_x, sub_y)
+
     def _import_location(self, subsector_data: Dict[str,str],
                          location_data: str) -> Coordinate:
         """Convert imported Location data into a Coordinate used by _load_systems()."""
         tokens = location_data.split()
-        subsector_name = tokens[0]
-        subsector_coord = subsector_data[subsector_name]
-        sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
-        column = int(tokens[1][:2])
-        row = int(tokens[1][2:])
-
-        return create_3_axis(column, row, sub_x, sub_y)
+        return self._subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
 
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
