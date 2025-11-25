@@ -1,7 +1,7 @@
 """Contains mock classes for testing."""
 from typing import Any, Self
-from src.calendar import ImperialDate
 from src.coordinate import Coordinate
+from src.imperial_date import ImperialDate
 from src.star_system import StarSystem
 
 # pylint: disable=R0903

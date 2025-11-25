@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 from test.mock import ObserverMock
-from src.calendar import ImperialDate
+from src.imperial_date import ImperialDate
 from src.financials import Credits, Financials, financials_from
 
 class CreditsTestCase(unittest.TestCase):

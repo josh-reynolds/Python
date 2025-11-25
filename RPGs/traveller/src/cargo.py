@@ -11,9 +11,9 @@ CargoDepot - represents a starport location for loading and
 from enum import Enum
 from random import randint
 from typing import Dict, List, Tuple, Any, cast, Mapping, Sequence
-from src.calendar import ImperialDate
 from src.coordinate import Coordinate, coordinate_from
 from src.financials import Credits
+from src.imperial_date import ImperialDate
 from src.star_system import StarSystem, Hex
 from src.utilities import die_roll, constrain
 from src.utilities import actual_value, get_lines, dictionary_from
