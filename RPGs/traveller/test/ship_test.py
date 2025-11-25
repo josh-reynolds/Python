@@ -2,9 +2,10 @@
 import unittest
 from typing import Any
 from test.mock import ObserverMock, SystemMock
-from src.cargo import Freight, Cargo, Passenger
+from src.cargo import Freight, Cargo
 from src.coordinate import Coordinate
 from src.financials import Credits
+from src.passengers import Passenger
 from src.ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus
 from src.ship import ship_from, ship_model_from, ShipModel, get_ship_models
 from src.star_system import StarSystem, UWP
