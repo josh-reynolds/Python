@@ -297,8 +297,10 @@ class Menu(Screen):
         sub_x, sub_y = coord[1:-1].split(',')
         return (int(sub_x), int(sub_y))
 
+    # pylint: disable=R0912
+    # R0912: Too many branches (13/12)
     def _parse_import_file_contents(self,
-                                    content: List[str]) -> Dict[str, Dict | List] | None:
+                                    content: List[str]) -> Dict[str, Dict | List | str] | None:
         """Convert lines from a Traveller map import file into a dictionary.
 
         The returned dictionary will have three keys: 'subsectors,', 'location' and
@@ -314,7 +316,7 @@ class Menu(Screen):
         format, one system per line.
         """
         section = ''
-        data: Dict[str, Dict | List] = {}
+        data: Dict[str, Dict | List | str] = {}
         for line in content:
             if len(line) < 2:   # skip blank lines
                 continue
@@ -331,26 +333,26 @@ class Menu(Screen):
                     data[section] = []
                 elif line == '[Location]':
                     section = 'location'
-                    data[section] = []
+                    data[section] = ""
                 else:
                     print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
                     return None
                 continue
 
-            # data is type Dict[str, Dict | List] and mypy
+            # data is type Dict[str, Dict | List | str] and mypy
             # can't distinguish the union in the assignments below
             if section == 'subsectors':
                 tokens = line.split()
-                data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload]
+                data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload,index]
 
             if section == 'systems':
                 data[section].append(line)            # type: ignore[union-attr]
 
-            # TO_DO: should we trap if more than one location is listed?
-            #        or just allow the last to win?
-            # TO_DO: need to confirm the location is present in the systems list
             if section == 'location':
-                data[section].append(line)            # type: ignore[union-attr]
+                if not data[section]:
+                    data[section] = line              # type: ignore[union-attr]
+                else:
+                    raise ValueError(f"more than one location specified: '{line}'")
 
         return data
 
@@ -391,6 +393,20 @@ class Menu(Screen):
             subsector_list.append(f"{value} - {key}")
         return subsector_list
 
+    # TO_DO: need to confirm the location is present in the systems list
+    # TO_DO: most of this routine duplicates code in _import_systems - extract!
+    def _import_location(self, subsector_data: Dict[str,str],
+                         location_data: str) -> Coordinate:
+        """Convert imported Location data into a Coordinate used by _load_systems()."""
+        tokens = location_data.split()
+        subsector_name = tokens[0]
+        subsector_coord = subsector_data[subsector_name]
+        sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
+        column = int(tokens[1][:2])
+        row = int(tokens[1][2:])
+
+        return create_3_axis(column, row, sub_x, sub_y)
+
     def import_map(self: ScreenT) -> ScreenT | None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
@@ -428,13 +444,15 @@ class Menu(Screen):
         self.parent.ship.name = ship_name
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
-        self._load_financials(financials_string)           # type: ignore[attr-defined]
-        self._load_location("(0,0,0)")                     # type: ignore[attr-defined]
-        self._create_depot()                               # type: ignore[attr-defined]
-        self._attach_date_observers()                      # type: ignore[attr-defined]
+        self._load_financials(financials_string)              # type: ignore[attr-defined]
+        location = self._import_location(data['subsectors'],  # type: ignore[attr-defined]
+                                        data['location'])
+        self._load_location(f"{location}")                    # type: ignore[attr-defined]
+        self._create_depot()                                  # type: ignore[attr-defined]
+        self._attach_date_observers()                         # type: ignore[attr-defined]
 
         _ = input("\nPress ENTER key to continue.")
-        return self._load_screen("Starport")               # type: ignore[attr-defined]
+        return self._load_screen("Starport")                  # type: ignore[attr-defined]
 
 
 class Play(Screen):

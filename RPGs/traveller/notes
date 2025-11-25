@@ -2965,7 +2965,8 @@
 #           can generate some ugly icons
 #  * [DONE] Handle map image file, overwrite, naming, etc.
 #  * [DONE] Add alternate color schemes, like printable/light. Customizeable?
-#  * [....] Add start location to import file
+#  * [DONE] Add start location to import file
+#  * [    ] Trap invalid start location when importing
 #  PHASE SIX ======================================================
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
