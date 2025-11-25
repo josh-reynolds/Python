@@ -9,12 +9,13 @@ from os import listdir
 from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple, Dict
-from src.cargo import Baggage, CargoDepot, Cargo, Freight, cargo_hold_from
+from src.cargo import Baggage, CargoDepot, Cargo, cargo_hold_from
 from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, absolute, create_3_axis
 from src.draw_map import draw_map
 from src.financials import Credits, financials_from
+from src.freight import Freight
 from src.passengers import Passenger, PassageClass, passenger_from
 from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
 from src.star_map import StarMap, subsector_from

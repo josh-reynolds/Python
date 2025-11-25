@@ -2,10 +2,11 @@
 import unittest
 from typing import List, Any, Sequence
 from test.mock import ObserverMock, DateMock, SystemMock
-from src.cargo import Cargo, CargoDepot, Freight, Baggage
-from src.cargo import freight_from, baggage_from, cargo_from, cargo_hold_from
+from src.cargo import Cargo, CargoDepot, Baggage
+from src.cargo import baggage_from, cargo_from, cargo_hold_from
 from src.coordinate import Coordinate
 from src.financials import Credits
+from src.freight import Freight, freight_from
 from src.star_system import StarSystem
 from src.utilities import dictionary_from
 
