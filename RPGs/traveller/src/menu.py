@@ -10,7 +10,8 @@ from random import randint, choice
 from time import sleep
 from typing import Any, List, TypeVar, cast, Tuple, Dict
 from src.baggage import Baggage
-from src.cargo import CargoDepot, Cargo, cargo_hold_from
+from src.cargo import Cargo
+from src.cargo_depot import CargoDepot, cargo_hold_from
 from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, absolute, create_3_axis

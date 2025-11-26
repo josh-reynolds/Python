@@ -3,7 +3,7 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from src.calendar import Calendar
-from src.cargo import CargoDepot
+from src.cargo_depot import CargoDepot
 from src.financials import Financials
 from src.menu import Menu
 from src.ship import Ship
