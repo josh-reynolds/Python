@@ -2,8 +2,9 @@
 import unittest
 from typing import List, Any, Sequence
 from test.mock import ObserverMock, DateMock, SystemMock
-from src.cargo import Cargo, CargoDepot, Baggage
-from src.cargo import baggage_from, cargo_from, cargo_hold_from
+from src.baggage import Baggage
+from src.cargo import Cargo, CargoDepot
+from src.cargo import cargo_from, cargo_hold_from
 from src.coordinate import Coordinate
 from src.financials import Credits
 from src.freight import Freight, freight_from
@@ -745,77 +746,6 @@ class FreightTestCase(unittest.TestCase):
 
         actual = freight.encode()
         expected = "Freight - 10 - (1, 0, -1) - (0, 0, 0)"
-        self.assertEqual(actual, expected)
-
-
-class BaggageTestCase(unittest.TestCase):
-    """Tests Baggage class."""
-
-    def test_baggage_string(self) -> None:
-        """Test the string representation of a Baggage object."""
-        baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
-        self.assertEqual(f"{baggage}",
-                         "Baggage : 1 ton : Pluto -> Uranus")
-
-    def test_baggage_repr(self) -> None:
-        """Test the repr string of a Baggage object."""
-        baggage = Baggage( SystemMock("Pluto"), SystemMock("Uranus"))
-        self.assertEqual(f"{baggage!r}",
-                         "Baggage(SystemMock('Pluto'), SystemMock('Uranus'))")
-
-    def test_baggage_from(self) -> None:
-        """Test importing Baggage from a parsed string."""
-        source = SystemMock("Uranus")
-        source.coordinate = Coordinate(1,0,-1)
-        destination = SystemMock("Jupiter")
-        destination.coordinate = Coordinate(0,0,0)
-        systems = {Coordinate(0,0,0) : destination,
-                   Coordinate(1,0,-1) : source}
-
-        actual = baggage_from("(1, 0, -1)", "(0, 0, 0)", systems)
-        expected = Baggage(source, destination)
-        self.assertEqual(actual, expected)
-
-        actual = baggage_from("(0, 0, 0)", "(1, 0, -1)", systems)
-        expected = Baggage(destination, source)
-        self.assertEqual(actual, expected)
-
-        with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(1, -1, 0)", "(1, 0, -1)", systems)
-        self.assertEqual(f"{context.exception}",
-                         "coordinate not found in systems list: '(1, -1, 0)'")
-
-        with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(0, 0, 0)", "(1, -1, 0)", systems)
-        self.assertEqual(f"{context.exception}",
-                         "coordinate not found in systems list: '(1, -1, 0)'")
-
-        with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(m, 0, -1)", "(0, 0, 0)", systems)
-        self.assertEqual(f"{context.exception}",
-                         "invalid literal for int() with base 10: 'm'")
-
-        with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(1, 0, -1)", "(0, m, 0)", systems)
-        self.assertEqual(f"{context.exception}",
-                         "invalid literal for int() with base 10: ' m'")
-
-        with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(1, 1, 1)", "(0, 0, 0)", systems)
-        self.assertEqual(f"{context.exception}",
-                         "string is not a valid 3-axis coordinate "
-                         + "- should sum to zero: '(1, 1, 1)'")
-
-    def test_encode(self) -> None:
-        """Test exporting a Baggage object to a string."""
-        source = SystemMock("Uranus")
-        source.coordinate = Coordinate(1,0,-1)
-        destination = SystemMock("Jupiter")
-        destination.coordinate = Coordinate(0,0,0)
-        baggage = Baggage(source, destination)
-
-        actual = baggage.encode()
-        expected = "Baggage - (1, 0, -1) - (0, 0, 0)"
         self.assertEqual(actual, expected)
 
 

@@ -6,7 +6,6 @@ Calendar - keeps track of the current date, and notifies
 modify_calendar_from() - modify a Calendar object using 
                          string data.
 """
-from __future__ import annotations
 from typing import Any, List
 from src.imperial_date import ImperialDate, imperial_date_from
 
