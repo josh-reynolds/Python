@@ -3,10 +3,10 @@
 Baggage - represents passenger baggage.
 baggage_from() - creates a Baggage object from a parsed source string.
 """
-from typing import Mapping, cast
-from src.coordinate import Coordinate, coordinate_from
+from typing import Mapping
+from src.coordinate import Coordinate
 from src.freight import Freight
-from src.star_system import StarSystem, Hex
+from src.star_system import StarSystem, Hex, verify_world
 
 class Baggage(Freight):
     """Represents passenger baggage."""
@@ -37,16 +37,7 @@ def baggage_from(source: str, destination: str,
     The function also needs access to a dictionary of StarSystems, and
     the coordinates must be keys in that dictionary.
     """
-    source_coordinate = coordinate_from(source)
-    if source_coordinate in systems:
-        source_world = cast(StarSystem, systems[source_coordinate])
-    else:
-        raise ValueError(f"coordinate not found in systems list: '{source}'")
-
-    destination_coordinate = coordinate_from(destination)
-    if destination_coordinate in systems:
-        destination_world = cast(StarSystem, systems[destination_coordinate])
-    else:
-        raise ValueError(f"coordinate not found in systems list: '{destination}'")
+    source_world = verify_world(source, systems)
+    destination_world = verify_world(destination, systems)
 
     return Baggage(source_world, destination_world)

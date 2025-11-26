@@ -3,9 +3,9 @@
 Freight - represents bulk freight.
 freight_from() - creates a Freight object from a parsed source string.
 """
-from typing import Any, Mapping, cast
-from src.coordinate import Coordinate, coordinate_from
-from src.star_system import StarSystem, Hex
+from typing import Any, Mapping
+from src.coordinate import Coordinate
+from src.star_system import StarSystem, Hex, verify_world
 
 class Freight:
     """Represents bulk freight."""
@@ -56,16 +56,7 @@ def freight_from(tonnage: int, source: str, destination: str,
     if tonnage < 1:
         raise ValueError(f"tonnage must be a positive number: '{tonnage}'")
 
-    source_coordinate = coordinate_from(source)
-    if source_coordinate in systems:
-        source_world = cast(StarSystem, systems[source_coordinate])
-    else:
-        raise ValueError(f"coordinate not found in systems list: '{source}'")
-
-    destination_coordinate = coordinate_from(destination)
-    if destination_coordinate in systems:
-        destination_world = cast(StarSystem, systems[destination_coordinate])
-    else:
-        raise ValueError(f"coordinate not found in systems list: '{destination}'")
+    source_world = verify_world(source, systems)
+    destination_world = verify_world(destination, systems)
 
     return Freight(tonnage, source_world, destination_world)

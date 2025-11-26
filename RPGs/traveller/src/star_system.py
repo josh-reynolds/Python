@@ -5,8 +5,8 @@ DeepSpace - represents an empty map hex.
 StarSystem - represents a map hex containing a star system.
 """
 from abc import ABC, abstractmethod
-from typing import List, Any
-from src.coordinate import Coordinate
+from typing import List, Any, Mapping, cast
+from src.coordinate import Coordinate, coordinate_from
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
@@ -274,3 +274,13 @@ class StarSystem(Hex):
     def on_surface(self) -> bool:
         """Test whether the player is currently on the world's surface."""
         return self.detail in ('starport', 'trade', 'terminal')
+
+
+def verify_world(world: str, systems: Mapping[Coordinate, Hex]) -> StarSystem:
+    """Verify a coordinate refers to a StarSystem."""
+    coordinate = coordinate_from(world)
+    if coordinate in systems:
+        verified_world = cast(StarSystem, systems[coordinate])
+    else:
+        raise ValueError(f"coordinate not found in systems list: '{world}'")
+    return verified_world

@@ -1,12 +1,12 @@
 {
   "date": "001-1105",
   "systems": [
-    "(0, 0, 0) - Funkytown - A875955-A In - G"
+    "(-6, 3, 3) - Funkytown - A875955-A In - G"
   ],
   "subsectors": [
     "(0, 0) - Nozone"
   ],
-  "location": "(0, 0, 0)",
+  "location": "(-6, 3, 3)",
   "menu": "Starport",
   "financials": "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
 }

@@ -6,11 +6,11 @@ CargoDepot - represents a starport location for loading and
 """
 from typing import Dict, List, Tuple, Any, cast, Mapping, Sequence
 from src.baggage import baggage_from
-from src.coordinate import Coordinate, coordinate_from
+from src.coordinate import Coordinate
 from src.financials import Credits
 from src.freight import Freight, freight_from
 from src.imperial_date import ImperialDate
-from src.star_system import StarSystem, Hex
+from src.star_system import StarSystem, Hex, verify_world
 from src.utilities import die_roll, constrain
 from src.utilities import actual_value, get_lines, dictionary_from
 
@@ -139,18 +139,9 @@ def cargo_from(name: str, quantity: int, source: None | str,
     cargo.quantity = quantity
 
     if source:
-        cargo.source_world = verify_source_world(source, systems)
+        cargo.source_world = verify_world(source, systems)
 
     return cargo
-
-def verify_source_world(source: str, systems: Mapping[Coordinate, Hex]) -> StarSystem:
-    """Verify a coordinate refers to a StarSystem."""
-    source_coordinate = coordinate_from(source)
-    if source_coordinate in systems:
-        source_world = cast(StarSystem, systems[source_coordinate])
-    else:
-        raise ValueError(f"coordinate not found in systems list: '{source}'")
-    return source_world
 
 
 class CargoDepot:
