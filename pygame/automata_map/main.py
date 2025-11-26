@@ -13,7 +13,7 @@ by White Box Dev (YouTube).
 # repeat
 
 from random import randint
-from engine import screen, run
+from engine import screen, run, keyboard, keys
 
 WIDTH = 800
 HEIGHT = 600
@@ -26,10 +26,13 @@ ROWS = HEIGHT // CELL_SIZE
 grid = [[randint(0,1) for x in range(COLUMNS)] for y in range(ROWS)]
 
 def update():
-    global counter
-    if counter % 30 == 0:
+    #global counter
+    #if counter % 30 == 0:
+        #generate()
+    #counter += 1
+
+    if key_just_pressed(keys.H):
         generate()
-    counter += 1
 
 def draw():
     screen.fill((200,200,200))
@@ -78,6 +81,18 @@ def count_neighbors(row, column, temp_grid):
 def in_bounds(x,y):
     return x >= 0 and y >= 0 and x < COLUMNS and y < ROWS
 
-counter = 1
+#counter = 1
+
+key_status = {}
+def key_just_pressed(key):
+    result = False
+    prev_status = key_status.get(key, False)
+
+    if not prev_status and keyboard[key]:
+        result = True
+
+    key_status[key] = keyboard[key]
+
+    return result
 
 run()
