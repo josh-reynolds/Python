@@ -12,8 +12,9 @@ generate() - randomly generate a StarSystem instance.
 hex_from() - create a StarSystem object from a string representation.
 """
 from src.coordinate import Coordinate, coordinate_from
-from src.star_system import StarSystem, UWP, Hex, DeepSpace, uwp_from
+from src.star_system import StarSystem, Hex, DeepSpace
 from src.utilities import die_roll, constrain
+from src.uwp import UWP, uwp_from
 from src.word_gen import get_world_name
 
 # pylint: disable=R0913
