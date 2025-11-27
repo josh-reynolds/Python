@@ -21,9 +21,10 @@ from src.financials import financials_from
 from src.freight import Freight
 from src.passengers import Passenger, PassageClass, passenger_from
 from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
-from src.star_map import StarMap, subsector_from
+from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
+from src.subsector import subsector_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
 from src.utilities import YELLOW_ON_RED, BOLD_BLUE, pr_list, pr_highlight_list, die_roll
 from src.utilities import get_next_file, BOLD_GREEN, get_files, get_json_data
