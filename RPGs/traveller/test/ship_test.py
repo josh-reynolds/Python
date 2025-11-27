@@ -7,8 +7,7 @@ from src.coordinate import Coordinate
 from src.credits import Credits
 from src.freight import Freight
 from src.passengers import Passenger
-from src.ship import Ship, FuelQuality, RepairStatus
-from src.ship import ship_from, ship_model_from, ShipModel, get_ship_models
+from src.ship import Ship, FuelQuality, RepairStatus, ship_from
 from src.star_system import StarSystem, UWP
 
 # pylint: disable=R0904
@@ -466,35 +465,3 @@ class ShipTestCase(unittest.TestCase):
 
         ship2 = ship_from(actual, "Type A Free Trader")
         self.assertEqual(ship, ship2)
-
-
-class ShipModelTestCase(unittest.TestCase):
-    """Tests ShipModel class."""
-
-    def test_ship_model_from(self) -> None:
-        """Test creation of a ShipModel from a name string."""
-        actual = ship_model_from("Type A Free Trader")
-        expected = ShipModel()
-        self.assertEqual(actual, expected)
-
-        actual = ship_model_from("Type S Scout/Courier")
-        expected = ShipModel()
-        expected.name = "Type S Scout/Courier"
-        expected.hull = 100
-        expected.passenger_berths = 3
-        expected.low_berths = 0
-        expected.acceleration = 2
-        expected.streamlined = True
-        expected.hold_size = 3
-        expected.fuel_tank = 40
-        expected.jump_range = 2
-        expected.jump_fuel_cost = 20
-        expected.trip_fuel_cost = 20
-        expected.base_price = Credits(29_430_000)
-        self.assertEqual(actual, expected)
-
-    def test_get_ship_models(self) -> None:
-        """Test retrieval of available ship models."""
-        actual = get_ship_models()
-        expected = ["Type A Free Trader", "Type S Scout/Courier", "Type Y Yacht"]
-        self.assertEqual(actual, expected)

@@ -20,7 +20,8 @@ from src.draw_map import draw_map
 from src.financials import financials_from
 from src.freight import Freight
 from src.passengers import Passenger, PassageClass, passenger_from
-from src.ship import FuelQuality, RepairStatus, ship_from, get_ship_models, Ship
+from src.ship import FuelQuality, RepairStatus, ship_from, Ship
+from src.ship_model import get_ship_models
 from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
