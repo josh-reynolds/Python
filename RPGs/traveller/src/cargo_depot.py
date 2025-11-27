@@ -7,8 +7,8 @@ from typing import Dict, List, Tuple, cast, Sequence, Mapping, Any
 from src.baggage import baggage_from
 from src.cargo import Cargo, cargo_from, get_cargo_table
 from src.coordinate import Coordinate
+from src.credits import Credits
 from src.imperial_date import ImperialDate
-from src.financials import Credits
 from src.freight import Freight, freight_from
 from src.star_system import StarSystem, Hex
 from src.utilities import die_roll, constrain, actual_value

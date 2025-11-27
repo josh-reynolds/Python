@@ -4,7 +4,7 @@ from typing import Any
 from test.mock import ObserverMock, SystemMock
 from src.cargo import Cargo
 from src.coordinate import Coordinate
-from src.financials import Credits
+from src.credits import Credits
 from src.freight import Freight
 from src.passengers import Passenger
 from src.ship import Ship, Pilot, Engineer, Medic, Steward, FuelQuality, RepairStatus

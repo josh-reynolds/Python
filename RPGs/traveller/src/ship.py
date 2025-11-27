@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Any, cast, Dict
 from src.cargo import Cargo
-from src.financials import Credits
+from src.credits import Credits
 from src.freight import Freight
 from src.passengers import PassageClass, Passenger
 from src.star_system import StarSystem

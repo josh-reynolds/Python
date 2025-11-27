@@ -6,7 +6,7 @@ get_cargo_table() - retrieve data from the cargo table file.
 """
 from typing import Any, Mapping, Dict
 from src.coordinate import Coordinate
-from src.financials import Credits
+from src.credits import Credits
 from src.star_system import StarSystem, Hex, verify_world
 from src.utilities import die_roll, get_lines, dictionary_from
 

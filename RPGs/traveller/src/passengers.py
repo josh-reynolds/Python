@@ -8,7 +8,7 @@ from enum import Enum
 from random import randint
 from typing import Any, Mapping, cast
 from src.coordinate import Coordinate, coordinate_from
-from src.financials import Credits
+from src.credits import Credits
 from src.star_system import StarSystem, Hex
 from src.utilities import die_roll
 

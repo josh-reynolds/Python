@@ -1,5 +1,4 @@
 """Draw a Traveller-style star map."""
-
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex, StarSystem

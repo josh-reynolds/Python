@@ -6,7 +6,7 @@ from src.baggage import Baggage
 from src.cargo import Cargo
 from src.cargo_depot import cargo_hold_from
 from src.coordinate import Coordinate
-from src.financials import Credits
+from src.credits import Credits
 from src.freight import Freight
 from src.utilities import dictionary_from
 

@@ -5,7 +5,7 @@ from test.mock import ObserverMock, DateMock, SystemMock
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
-from src.financials import Credits
+from src.credits import Credits
 from src.star_system import StarSystem
 
 class CargoDepotTestCase(unittest.TestCase):
