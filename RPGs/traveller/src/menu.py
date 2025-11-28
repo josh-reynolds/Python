@@ -2,7 +2,6 @@
 
 Menu - draws the screen and gathers input from the player.
 """
-from random import randint, choice
 from typing import Any, List, cast, Tuple, Dict
 from src.baggage import Baggage
 from src.cargo import Cargo
@@ -13,20 +12,21 @@ from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.credits import Credits
 from src.financials import financials_from
 from src.freight import Freight
+from src.jump import Jump
 from src.orbit import Orbit
 from src.passengers import PassageClass, passenger_from
 from src.play import Play
 from src.starport import Starport
 from src.terminal import Passengers
 from src.screen import ScreenT, Screen
-from src.ship import FuelQuality, RepairStatus, ship_from, Ship
+from src.ship import ship_from, Ship
 from src.ship_model import get_ship_models
 from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem, Hex
 from src.star_system_factory import hex_from
 from src.subsector import subsector_from
 from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT, confirm_input
-from src.utilities import BOLD_BLUE, pr_list, die_roll
+from src.utilities import BOLD_BLUE, pr_list
 from src.utilities import get_files, get_json_data
 from src.utilities import choose_from
 
@@ -417,177 +417,6 @@ class Menu(Screen):
 
         _ = input("\nPress ENTER key to continue.")
         return self._load_screen("Starport")                  # type: ignore[attr-defined]
-
-
-class Jump(Play):
-    """Contains commands for the Jump state."""
-
-    def __init__(self, parent: Any) -> None:
-        """Create a Jump object."""
-        super().__init__(parent)
-        self.commands += [
-                Command('inbound', 'Inbound to orbit', self.inbound_from_jump),
-                Command('jump', 'Jump to new system', self.jump),
-                Command('skim', 'Skim fuel from gas giant', self.skim),
-                ]
-        self.commands = sorted(self.commands, key=lambda command: command.key)
-
-    def __str__(self) -> str:
-        """Return the string representation of the current screen."""
-        return "Jump"
-
-    # VIEW COMMANDS ========================================================
-    # STATE TRANSITIONS ====================================================
-    def inbound_from_jump(self: ScreenT) -> None | ScreenT:
-        """Move from the jump point to orbit."""
-        if isinstance(self.parent.location, DeepSpace):
-            print(f"{BOLD_RED}You are in deep space. "
-                  f"There is no inner system to travel to.{END_FORMAT}")
-            return None
-
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.parent.location.name}.{END_FORMAT}")
-
-        if self.parent.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
-            return None
-
-        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
-        if self.parent.ship.current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel in from the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{self.parent.ship.current_fuel} tons in tanks.")
-            return None
-
-        self.parent.ship.current_fuel -= leg_fc
-        self.parent.date.day += 1
-        self.parent.location.detail = "orbit"
-        return cast(ScreenT, Orbit(self.parent))
-
-    # ACTIONS ==============================================================
-    def jump(self) -> None:
-        """Perform a hyperspace jump to another StarSystem."""
-        print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
-
-        status = self.parent.financials.maintenance_status(self.parent.date.current_date)
-        self.parent.ship.check_failure_pre_jump(status)
-        if self.parent.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
-            print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
-            return
-
-        if not self.parent.ship.sufficient_jump_fuel():
-            print(self.parent.ship.insufficient_jump_fuel_message())
-            return
-
-        if not self.parent.ship.sufficient_life_support():
-            print(self.parent.ship.insufficient_life_support_message())
-            return
-
-        jump_range = self.parent.ship.model.jump_range
-        print(f"Systems within jump-{jump_range}:")
-        destinations = self.parent.location.destinations
-        destination_number = choose_from(destinations, "Enter destination number: ")
-
-        coordinate = destinations[destination_number].coordinate
-        destination = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coordinate))
-
-        self.parent.ship.warn_if_not_contracted(destination)
-
-        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling jump.")
-            return
-
-        if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
-            self.parent.ship.unrefined_jump_counter += 1
-
-        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
-
-        self._misjump_check(coordinate)
-        self.parent.location.detail = "jump"
-
-        self.parent.ship.check_failure_post_jump()
-
-        coord = self.parent.location.coordinate
-        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(coord,
-                                                   jump_range)
-
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
-        self.parent.depot.add_observer(self.parent)
-        self.parent.depot.controls = self.parent
-        self.parent.financials.location = destination
-
-        self.parent.ship.life_support_level = 0
-        self.parent.ship.current_fuel -= self.parent.ship.model.jump_fuel_cost
-        self.parent.date.plus_week()
-
-    def _misjump_check(self, destination: Coordinate) -> None:
-        """Test for misjump and report results."""
-        if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
-            modifier = 3
-        else:
-            modifier = -1
-        if self.parent.financials.maintenance_status(self.parent.date.current_date) == "red":
-            modifier += 2
-
-        misjump_check = die_roll(2) + modifier
-        if misjump_check > 11:
-            print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            # TO_DO: all this should move to live with the other
-            #        three-axis calculations
-            distance = randint(1,36)
-            hexes = [Coordinate(0,distance,-distance),
-                     Coordinate(0,-distance,distance),
-                     Coordinate(distance,0,-distance),
-                     Coordinate(-distance,0,distance),
-                     Coordinate(distance,-distance,0),
-                     Coordinate(-distance,distance,0)]
-            misjump_target = choice(hexes)
-            misjump_target = Coordinate(misjump_target[0] + self.parent.location.coordinate[0],
-                                        misjump_target[1] + self.parent.location.coordinate[1],
-                                        misjump_target[2] + self.parent.location.coordinate[2])
-            print(f"{misjump_target} at distance {distance}")
-
-            # misjump is the only scenario where EmptySpace is a possible
-            # location, so we need to leave this type as Hex
-            loc = self.parent.star_map.get_system_at_coordinate(misjump_target) # type: ignore
-            self.parent.location = loc
-            self.parent.star_map.systems[misjump_target] = self.parent.location
-        else:
-            self.parent.location = cast(StarSystem,
-                                        self.parent.star_map.get_system_at_coordinate(destination))
-
-    # Book 2 p. 35
-    # Unrefined fuel may be obtained by skimming the atmosphere of a
-    # gas giant if unavailable elsewhere. Most star systems have at
-    # least one...
-    #
-    # Traveller '77 does not restrict this to streamlined ships, and
-    # also does not include ocean refuelling, but I think I will be
-    # including both options. (In all likelihood this will lean heavily
-    # toward second edition...)
-    def skim(self) -> None:
-        """Refuel the Ship by skimming from a gas giant planet."""
-        print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.parent.location.gas_giant:
-            # TO_DO: may want to tweak this message in deep space.
-            print("There is no gas giant in this system. No fuel skimming possible.")
-            return
-
-        if not self.parent.ship.model.streamlined:
-            print("Your ship is not streamlined and cannot skim fuel.")
-            return
-
-        if self.parent.ship.repair_status == RepairStatus.BROKEN:
-            print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
-            return
-
-        if self.parent.ship.current_fuel == self.parent.ship.model.fuel_tank:
-            print("Fuel tank is already full.")
-            return
-
-        self.parent.ship.current_fuel = self.parent.ship.model.fuel_tank
-        self.parent.ship.fuel_quality = FuelQuality.UNREFINED
-        self.parent.date.day += 1
 
 
 class Trade(Play):

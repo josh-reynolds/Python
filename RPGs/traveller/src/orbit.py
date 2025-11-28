@@ -6,7 +6,7 @@ from typing import Any, cast
 from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
-from src.menu import Jump
+from src.jump import Jump
 from src.passengers import PassageClass
 from src.play import Play
 from src.screen import ScreenT
