@@ -3,12 +3,10 @@
 Menu - draws the screen and gathers input from the player.
 """
 import json
-from abc import ABC, abstractmethod
 from fnmatch import fnmatch
 from os import listdir
 from random import randint, choice
-from time import sleep
-from typing import Any, List, TypeVar, cast, Tuple, Dict
+from typing import Any, List, cast, Tuple, Dict
 from src.baggage import Baggage
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot, cargo_hold_from
@@ -21,6 +19,7 @@ from src.financials import financials_from
 from src.freight import Freight
 from src.passengers import PassageClass, passenger_from
 from src.terminal import Passengers
+from src.screen import ScreenT, Screen
 from src.ship import FuelQuality, RepairStatus, ship_from, Ship
 from src.ship_model import get_ship_models
 from src.star_map import StarMap
@@ -34,41 +33,6 @@ from src.utilities import choose_from
 
 # pylint: disable=C0302
 # C0302: Too many lines in module (1078/1000)
-
-ScreenT = TypeVar("ScreenT", bound="Screen")
-
-class Screen(ABC):
-    """Base class for game screens."""
-
-    def __init__(self, parent: Any) -> None:
-        """Create a Screen object."""
-        self.parent = parent
-        self.commands: List[Command] = []
-
-    def get_command(self, prompt: str) -> None | ScreenT:
-        """Get command input from player and execute it."""
-        while True:
-            command = input(prompt)
-            for cmd in self.commands:
-                if command.lower() == cmd.key:
-                    print()
-                    result = cmd.action()
-                    sleep(1)
-                    return result
-
-    @abstractmethod
-    def update(self: ScreenT) -> ScreenT:
-        """Draw the screen and gather input."""
-
-    # VIEW COMMANDS ========================================================
-    # STATE TRANSITIONS ====================================================
-    def quit(self) -> None:
-        """Quit the game."""
-        print(f"{BOLD_BLUE}Goodbye.{END_FORMAT}")
-        self.parent.running = False
-
-    # ACTIONS ==============================================================
-
 
 class Menu(Screen):
     """Draws the menu screen and gathers input from the player."""

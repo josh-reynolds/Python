@@ -5,8 +5,9 @@ Passengers - contains commands for the Passengers state.
 from typing import cast, List, Tuple, Any
 from src.baggage import Baggage
 from src.command import Command
-from src.menu import Play, ScreenT, Starport
+from src.menu import Play, Starport
 from src.passengers import Passenger, PassageClass
+from src.screen import ScreenT
 from src.star_system import Hex, StarSystem
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, confirm_input
 
