@@ -4,12 +4,12 @@ Starport - contains commands for the Starport state.
 """
 from typing import Any, cast
 from src.command import Command
-from src.menu import Trade
 from src.orbit import Orbit
 from src.passengers import PassageClass
 from src.play import Play
 from src.screen import ScreenT
 from src.terminal import Passengers
+from src.trade import Trade
 from src.ship import RepairStatus, FuelQuality
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED
 
