@@ -51,12 +51,6 @@ font_sm = ImageFont.truetype(FONT_NAME, 12)
 
 def draw_hexes_on(surface, systems: Dict[Tuple[int,int], Hex]) -> None:
     """Draw a grid of hexes on the supplied surface."""
-    # we will need to have a lookup by coordinate, need
-    # a dictionary by trav_coord I think
-    #
-    # or we could convert coords here into Coordinate,
-    # and continue to use that as dict key
-
     for j in range(COLUMNS):
         for i in range(ROWS):
             if j % 2 == 0:

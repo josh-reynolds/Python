@@ -37,7 +37,6 @@ class RepairStatus(Enum):
 class Ship:
     """Represents a starship."""
 
-    # For now we'll use the stats of a standard Free Trader (Book 2 p. 19) as necessary
     def __init__(self, model: str) -> None:
         """Create an instance of a Ship."""
         self.name = "Weaselfish"

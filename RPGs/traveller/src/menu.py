@@ -91,7 +91,7 @@ class Menu(Screen):
 
         print(f"{HOME}{CLEAR}")
         for line in title_lines:
-            line = line[:-1]    # strip newline char
+            line = line.rstrip()
             print(f"{BOLD_RED}{line}{END_FORMAT}")
         print(f"{BOLD}\n{string}{END_FORMAT}")
 
@@ -320,7 +320,7 @@ class Menu(Screen):
                 continue
             if line[0] == '#':  # skip comments
                 continue
-            line = line[:-1]    # strip newline char
+            line = line.rstrip()
 
             if line[0] == '[':
                 if line == '[Subsectors]':

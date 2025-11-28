@@ -5,7 +5,7 @@ Constraints in these functions are based on the tables, though
 the dice throws in the text can produce values outside this 
 range in some cases.
 
-The externally-usable functions in this module are:
+The public functions in this module are:
 
 create() - create an instance of a StarSystem with pre-determined statistics.
 generate() - randomly generate a StarSystem instance.
