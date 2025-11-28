@@ -6,11 +6,12 @@ from typing import Any, cast
 from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
-from src.menu import Jump, Starport
+from src.menu import Jump
 from src.passengers import PassageClass
 from src.play import Play
 from src.screen import ScreenT
 from src.ship import RepairStatus
+from src.starport import Starport
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, die_roll
 
 class Orbit(Play):
