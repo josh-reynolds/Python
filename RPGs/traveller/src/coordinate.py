@@ -1,4 +1,5 @@
 """Contains three-axis coordinate definition and methods to convert and manage them."""
+from random import randint, choice
 from typing import Tuple, Any, Iterator
 
 class Coordinate:
@@ -148,3 +149,18 @@ def create_3_axis(column: int, row: int, sub_x: int, sub_y: int) -> Coordinate:
         coord_x = -coord_y - coord_z
 
     return Coordinate(coord_x, coord_y, coord_z)
+
+def get_misjump_target(origin: Coordinate) -> Tuple[Coordinate, int]:
+    """Generate a random destination up to 36 hexes away."""
+    distance = randint(1,36)
+    hexes = [Coordinate(0,distance,-distance),
+             Coordinate(0,-distance,distance),
+             Coordinate(distance,0,-distance),
+             Coordinate(-distance,0,distance),
+             Coordinate(distance,-distance,0),
+             Coordinate(-distance,distance,0)]
+    misjump_target = choice(hexes)
+    misjump_target = Coordinate(misjump_target[0] + origin[0],
+                                misjump_target[1] + origin[1],
+                                misjump_target[2] + origin[2])
+    return (misjump_target, distance)

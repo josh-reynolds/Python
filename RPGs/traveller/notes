@@ -3031,6 +3031,8 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
+#  * [    ] BUG: Scout only has a Pilot on board, fails with "no Engineer" when
+#           attempting damage control
 #  * [    ] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [    ] Fix mypy errors with Pillow
 #  * [    ] Deal with non-portable font in drawing module

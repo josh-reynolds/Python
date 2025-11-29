@@ -2,11 +2,10 @@
 
 Jump - contains commands for the Jump state.
 """
-from random import randint, choice
 from typing import Any, cast
 from src.command import Command
 from src.cargo_depot import CargoDepot
-from src.coordinate import Coordinate
+from src.coordinate import Coordinate, get_misjump_target
 from src.play import Play
 from src.ship import RepairStatus, FuelQuality
 from src.star_system import DeepSpace, StarSystem
@@ -122,19 +121,7 @@ class Jump(Play):
         misjump_check = die_roll(2) + modifier
         if misjump_check > 11:
             print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            # TO_DO: all this should move to live with the other
-            #        three-axis calculations
-            distance = randint(1,36)
-            hexes = [Coordinate(0,distance,-distance),
-                     Coordinate(0,-distance,distance),
-                     Coordinate(distance,0,-distance),
-                     Coordinate(-distance,0,distance),
-                     Coordinate(distance,-distance,0),
-                     Coordinate(-distance,distance,0)]
-            misjump_target = choice(hexes)
-            misjump_target = Coordinate(misjump_target[0] + self.parent.location.coordinate[0],
-                                        misjump_target[1] + self.parent.location.coordinate[1],
-                                        misjump_target[2] + self.parent.location.coordinate[2])
+            misjump_target, distance = get_misjump_target(self.parent.location.coordinate)
             print(f"{misjump_target} at distance {distance}")
 
             # misjump is the only scenario where EmptySpace is a possible
