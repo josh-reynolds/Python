@@ -2617,6 +2617,55 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Starting on a big refactor cleanup and overhaul. First 
+# seemingly easy task - breaking up these big modules. I'm
+# going to go all the way to Java-style, and have one class
+# per module (or closely related functions). Some moderation - 
+# the very tiny classes like the Crew positions can stay
+# together for now (and I'm contemplating flattening that
+# hierarchy anyway).
+#
+# Mostly that has gone smoothly. Pylint even started showing
+# some duplicate code messages once things were split and I
+# was able to extract some methods. A few more of those left
+# in the test modules.
+#
+# But the dilemma now is the Screen hierarchy. That module
+# (Menu) is the biggest mess in the project - very large, with
+# multiple large classes inside.
+#
+# I pulled them all apart, and now have circular dependencies
+# biting me. The problem is each of the Play subclasses
+# have state transition methods that return a different subclass.
+# And the transitions are bidirectional, so the classes each
+# import the other. This worked fine when everything was in
+# one module, but now it is broken. Inserting a manager type
+# class in the middle didn't work.
+#
+# I'm now looking at pulling the instantiation up to either
+# the superclass or the context. What if we return a string
+# and let the 'parent' handle it? Menu._load_screen() works
+# like this, might extract and use in both places.
+#
+# OK. Took quite a bit of effort - many files touched, and
+# was in a broken state for a while - but this is done. All
+# the screen classes are in separate modules. Nice side effects:
+# I was able to kill the ScreenT typevar, and a ton of
+# typing ignore directives stemming from it.
+#
+# For now, the state change lives in Game. And since the
+# screens already have a back-reference to parent, they just
+# call the method with a string argument and it's done.
+#
+# Unit tests all passing, pydocstyle unaffected. Pylint still
+# has some duplicate code warnings coming from the test modules
+# that I'll probably deal with next. And mypy still has the
+# Pillow library error which needs sorting. Playtesting
+# also looks good.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -2968,6 +3017,7 @@
 #  * [DONE] Add start location to import file
 #  * [DONE] Trap invalid start location when importing
 #  PHASE SIX ======================================================
+#  * [DONE] Break up modules
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -2980,7 +3030,6 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
-#  * [....] Break up modules
 #  * [    ] Fix mypy errors with Pillow
 #  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?

@@ -2,14 +2,10 @@
 
 Starport - contains commands for the Starport state.
 """
-from typing import Any, cast
+from typing import Any
 from src.command import Command
-from src.orbit import Orbit
 from src.passengers import PassageClass
 from src.play import Play
-from src.screen import ScreenT
-from src.terminal import Passengers
-from src.trade import Trade
 from src.ship import RepairStatus, FuelQuality
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED
 
@@ -37,7 +33,7 @@ class Starport(Play):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def liftoff(self: ScreenT) -> None | ScreenT:
+    def liftoff(self) -> None:
         """Move from the starport to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.parent.location.name}.{END_FORMAT}")
 
@@ -58,20 +54,18 @@ class Starport(Play):
             for passenger in low_passengers:
                 passenger.guess_survivors(self.parent.ship.low_passenger_count)
 
-        self.parent.location.detail = "orbit"
-        return cast(ScreenT, Orbit(self.parent))
+        self.parent.change_state("Orbit")
+        return None
 
-    def to_depot(self: ScreenT) -> None | ScreenT:
+    def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
         print(f"{BOLD_BLUE}Entering {self.parent.location.name} trade depot.{END_FORMAT}")
-        self.parent.location.detail = "trade"
-        return cast(ScreenT, Trade(self.parent))
+        self.parent.change_state("Trade")
 
-    def to_terminal(self: ScreenT) -> None | ScreenT:
+    def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
         print(f"{BOLD_BLUE}Entering {self.parent.location.name} passenger terminal.{END_FORMAT}")
-        self.parent.location.detail = "terminal"
-        return cast(ScreenT, Passengers(self.parent))
+        self.parent.change_state("Terminal")
 
     # ACTIONS ==============================================================
     # TO_DO: should this be restricted at low-facility starports (E/X)?

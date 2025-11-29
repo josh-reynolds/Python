@@ -7,9 +7,7 @@ from typing import Any, cast
 from src.command import Command
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
-from src.orbit import Orbit
 from src.play import Play
-from src.screen import ScreenT
 from src.ship import RepairStatus, FuelQuality
 from src.star_system import DeepSpace, StarSystem
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, die_roll, choose_from, confirm_input
@@ -33,7 +31,7 @@ class Jump(Play):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def inbound_from_jump(self: ScreenT) -> None | ScreenT:
+    def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         if isinstance(self.parent.location, DeepSpace):
             print(f"{BOLD_RED}You are in deep space. "
@@ -55,8 +53,8 @@ class Jump(Play):
 
         self.parent.ship.current_fuel -= leg_fc
         self.parent.date.day += 1
-        self.parent.location.detail = "orbit"
-        return cast(ScreenT, Orbit(self.parent))
+        self.parent.change_state("Orbit")
+        return None
 
     # ACTIONS ==============================================================
     def jump(self) -> None:

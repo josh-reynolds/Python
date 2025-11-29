@@ -2,16 +2,14 @@
 
 Orbit - contains commands for the Orbit state.
 """
-from typing import Any, cast
+from typing import Any
 from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
-from src.jump import Jump
 from src.passengers import PassageClass
 from src.play import Play
-from src.screen import ScreenT
 from src.ship import RepairStatus
-from src.starport import Starport
+
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, die_roll
 
 class Orbit(Play):
@@ -32,7 +30,7 @@ class Orbit(Play):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def land(self: ScreenT) -> None | ScreenT:
+    def land(self) -> None:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing on {self.parent.location.name}.{END_FORMAT}")
         if not self.parent.ship.model.streamlined:
@@ -53,16 +51,15 @@ class Orbit(Play):
                 print(f"Receiving {funds} in passenger fares.")
                 self.parent.financials.credit(funds, "passenger fare")
 
-                # annotations want ScreenT to have this method
-                self._low_lottery(low_lottery_amount)      # type: ignore[attr-defined]
+                self._low_lottery(low_lottery_amount)
 
                 self.parent.ship.passengers = []
                 self.parent.ship.hold = [item for item in self.parent.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.parent.location.detail = "starport"
         self.parent.financials.berthing_fee(self.parent.location.on_surface())
-        return cast(ScreenT, Starport(self.parent))
+        self.parent.change_state("Starport")
+        return None
 
     def _low_lottery(self, low_lottery_amount) -> None:
         """Run the low passage lottery and apply results."""
@@ -87,7 +84,7 @@ class Orbit(Play):
                       f"The captain is awarded {low_lottery_amount}.")
                 self.parent.financials.credit(low_lottery_amount, "low lottery")
 
-    def outbound_to_jump(self: ScreenT) -> None | ScreenT:
+    def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
         print(f"{BOLD_BLUE}Travelling out to {self.parent.location.name} jump point.{END_FORMAT}")
 
@@ -104,7 +101,7 @@ class Orbit(Play):
 
         self.parent.ship.current_fuel -= leg_fc
         self.parent.date.day += 1
-        self.parent.location.detail = "jump"
-        return cast(ScreenT, Jump(self.parent))
+        self.parent.change_state("Jump")
+        return None
 
     # ACTIONS ==============================================================

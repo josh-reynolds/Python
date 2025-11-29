@@ -9,7 +9,7 @@ from typing import Any, List
 from src.command import Command
 from src.coordinate import absolute
 from src.draw_map import draw_map
-from src.screen import Screen, ScreenT
+from src.screen import Screen
 from src.ship import FuelQuality, RepairStatus
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN
 from src.utilities import CLEAR, YELLOW_ON_RED, choose_from, pr_list, pr_highlight_list
@@ -42,7 +42,7 @@ class Play(Screen):
                 Command('draw map', 'Create map image', self.draw_map),
                 ]
 
-    def update(self: ScreenT) -> ScreenT:
+    def update(self) -> None:
         """Draw the screen and present play choices."""
         if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
             fuel_quality = "(U)"
@@ -65,11 +65,7 @@ class Play(Screen):
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.parent.ship.life_support_level}%")
 
-        new_state = self.get_command("Enter a command (? to list):  ")
-
-        if new_state:
-            return new_state
-        return self
+        self.get_command("Enter a command (? to list):  ")
 
     # VIEW COMMANDS ========================================================
     def list_commands(self) -> None:

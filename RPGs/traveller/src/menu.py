@@ -11,13 +11,8 @@ from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.financials import financials_from
 from src.freight import Freight
-from src.jump import Jump
-from src.orbit import Orbit
 from src.passengers import PassageClass, passenger_from
-from src.starport import Starport
-from src.terminal import Passengers
-from src.trade import Trade
-from src.screen import ScreenT, Screen
+from src.screen import Screen
 from src.ship import ship_from, Ship
 from src.ship_model import get_ship_models
 from src.star_map import StarMap
@@ -40,7 +35,7 @@ class Menu(Screen):
                 Command('quit', 'Quit', self.quit),
                 ]
 
-    def update(self: ScreenT) -> ScreenT:
+    def update(self) -> None:
         """Draw the screen and present menu choices."""
         # ASCII art from https://patorjk.com/software
         # 'Grafitti' font
@@ -56,11 +51,7 @@ class Menu(Screen):
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
-        new_state = self.get_command("\nEnter a command:  ")
-
-        if new_state:
-            return new_state
-        return self
+        self.get_command("\nEnter a command:  ")
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
@@ -112,27 +103,6 @@ class Menu(Screen):
         self.parent.date.add_observer(self.parent.depot)
         self.parent.date.add_observer(self.parent.financials)
 
-    def _load_screen(self: ScreenT, data: str) -> ScreenT:
-        """Apply screen from json data to Game screen field."""
-        match data:
-            case "Orbit":
-                self.parent.location.detail = "orbit"
-                return cast(ScreenT, Orbit(self.parent))
-            case "Starport":
-                self.parent.location.detail = "starport"
-                return cast(ScreenT, Starport(self.parent))
-            case "Jump":
-                self.parent.location.detail = "jump"
-                return cast(ScreenT, Jump(self.parent))
-            case "Trade":
-                self.parent.location.detail = "trade"
-                return cast(ScreenT, Trade(self.parent))
-            case "Passengers":
-                self.parent.location.detail = "terminal"
-                return cast(ScreenT, Passengers(self.parent))
-            case _:
-                raise ValueError(f"unrecognized menu item: '{data}'")
-
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
         for sub_coord in self.parent.star_map.subsectors:
@@ -146,18 +116,16 @@ class Menu(Screen):
                     continue
                 self.parent.star_map.systems[converted] = DeepSpace(converted)
 
-    def new_game(self: ScreenT) -> ScreenT | None:
+    def new_game(self) -> None:
         """Start a new game."""
         print(f"{BOLD_BLUE}New game.{END_FORMAT}")
         data = get_json_data("data/new_game.json")
         if not data:
             return None
 
-        # we cast self as ScreenT to allow the polymorphic return
-        # value; consequently mypy doesn't recognize methods on self
-        self._load_systems(data['systems'])        # type: ignore[attr-defined]
-        self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
-        self._load_calendar(data['date'])          # type: ignore[attr-defined]
+        self._load_systems(data['systems'])
+        self._load_subsectors(data['subsectors'])
+        self._load_calendar(data['date'])
 
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
@@ -171,16 +139,17 @@ class Menu(Screen):
             ship_name = input("What is the name of your ship? ")
         self.parent.ship.name = ship_name
 
-        self._load_financials(data['financials'])          # type: ignore[attr-defined]
-        self._load_location(data['location'])              # type: ignore[attr-defined]
-        self._create_depot()                               # type: ignore[attr-defined]
-        self._attach_date_observers()                      # type: ignore[attr-defined]
+        self._load_financials(data['financials'])
+        self._load_location(data['location'])
+        self._create_depot()
+        self._attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
 
-        return self._load_screen(data['menu'])             # type: ignore[attr-defined]
+        self.parent.change_state(data['menu'])
+        return None
 
-    def load_game(self: ScreenT) -> ScreenT | None:
+    def load_game(self) -> None:
         """Load a previous game."""
         print(f"{BOLD_BLUE}Loading game.{END_FORMAT}")
         files = get_files("./saves/", "json")
@@ -191,11 +160,9 @@ class Menu(Screen):
         if not data:
             return None
 
-        # we cast self as ScreenT to allow the polymorphic return
-        # value; consequently mypy doesn't recognize methods on self
-        self._load_systems(data['systems'])        # type: ignore[attr-defined]
-        self._load_subsectors(data['subsectors'])  # type: ignore[attr-defined]
-        self._load_calendar(data['date'])          # type: ignore[attr-defined]
+        self._load_systems(data['systems'])
+        self._load_subsectors(data['subsectors'])
+        self._load_calendar(data['date'])
 
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
@@ -233,15 +200,15 @@ class Menu(Screen):
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
             return None
 
-        self._load_financials(data['financials'])          # type: ignore[attr-defined]
+        self._load_financials(data['financials'])
         self.parent.financials.ledger = data['ledger']
-        self._load_location(data['location'])              # type: ignore[attr-defined]
-        self._create_depot()                               # type: ignore[attr-defined]
-        self._attach_date_observers()                      # type: ignore[attr-defined]
+        self._load_location(data['location'])
+        self._create_depot()
+        self._attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
-
-        return self._load_screen(data['menu'])             # type: ignore[attr-defined]
+        self.parent.change_state(data['menu'])
+        return None
 
     def _parse_coordinates(self, coord: str) -> Tuple[int, int]:
         r"""Parse a string and extract coordinates from it.
@@ -344,7 +311,7 @@ class Menu(Screen):
                                    subsector_data: Dict[str,str]) -> Coordinate:
         """Convert imported Location data into a 3-axis Coordinate."""
         subsector_coord = subsector_data[subsector_name]
-        sub_x, sub_y = self._parse_coordinates(subsector_coord) # type: ignore[attr-defined]
+        sub_x, sub_y = self._parse_coordinates(subsector_coord)
 
         column = int(coord[:2])
         row = int(coord[2:])
@@ -361,7 +328,7 @@ class Menu(Screen):
         """Test whether a given Coordinate contains a StarSystem or not."""
         return isinstance(self.parent.star_map.systems[coord], StarSystem)
 
-    def import_map(self: ScreenT) -> ScreenT | None:
+    def import_map(self) -> None:
         """Import Traveller map data and start a new game."""
         print(f"{BOLD_BLUE}Importing data.{END_FORMAT}")
         files = get_files("./import/")
@@ -369,21 +336,21 @@ class Menu(Screen):
         load_file = files[file_number]
 
         content = get_lines(f"./import/{load_file}")
-        data = self._parse_import_file_contents(content)             # type: ignore[attr-defined]
+        data = self._parse_import_file_contents(content)
 
-        system_list = self._import_systems(data['systems'],          # type: ignore[attr-defined]
-                                           data['subsectors'])
-        self._load_systems(system_list)                              # type: ignore[attr-defined]
+        system_list = self._import_systems(data['systems'],          # type: ignore[index, arg-type]
+                                           data['subsectors'])       # type: ignore[index, arg-type]
+        self._load_systems(system_list)
 
-        subsector_list = self._import_subsectors(data['subsectors']) # type: ignore[attr-defined]
-        self._load_subsectors(subsector_list)                        # type: ignore[attr-defined]
-        self._create_empty_hexes()                                   # type: ignore[attr-defined]
+        subsector_list = self._import_subsectors(data['subsectors']) # type: ignore[index, arg-type]
+        self._load_subsectors(subsector_list)
+        self._create_empty_hexes()
 
         # TO_DO: should we interleave with new_game for the remainder? Just
         #        import the map, rest should be the same, right?
         #        or what if we convert the imported data into a new
         #        json file and stash alongside new_game.json?
-        self._load_calendar("001-1105")                              # type: ignore[attr-defined]
+        self._load_calendar("001-1105")
 
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
@@ -398,16 +365,17 @@ class Menu(Screen):
         self.parent.ship.name = ship_name
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
-        self._load_financials(financials_string)              # type: ignore[attr-defined]
-        location = self._import_location(data['subsectors'],  # type: ignore[attr-defined]
-                                         data['location'])
-        if not self._is_star_system(location):                # type: ignore[attr-defined]
+        self._load_financials(financials_string)
+        location = self._import_location(data['subsectors'],  # type: ignore[index, arg-type]
+                                         data['location'])    # type: ignore[index, arg-type]
+        if not self._is_star_system(location):
             print(f"{BOLD_RED}The start location in the import file is in Deep Space.{END_FORMAT}")
             return None
 
-        self._load_location(f"{location}")                    # type: ignore[attr-defined]
-        self._create_depot()                                  # type: ignore[attr-defined]
-        self._attach_date_observers()                         # type: ignore[attr-defined]
+        self._load_location(f"{location}")
+        self._create_depot()
+        self._attach_date_observers()
 
         _ = input("\nPress ENTER key to continue.")
-        return self._load_screen("Starport")                  # type: ignore[attr-defined]
+        self.parent.change_state("Starport")
+        return None

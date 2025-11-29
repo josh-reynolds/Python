@@ -4,11 +4,9 @@ Screen - draws the screen and gathers input from the player.
 """
 from abc import ABC, abstractmethod
 from time import sleep
-from typing import TypeVar, Any, List
+from typing import Any, List
 from src.command import Command
 from src.utilities import BOLD_BLUE, END_FORMAT
-
-ScreenT = TypeVar("ScreenT", bound="Screen")
 
 class Screen(ABC):
     """Base class for game screens."""
@@ -18,7 +16,7 @@ class Screen(ABC):
         self.parent = parent
         self.commands: List[Command] = []
 
-    def get_command(self, prompt: str) -> None | ScreenT:
+    def get_command(self, prompt: str) -> None:
         """Get command input from player and execute it."""
         while True:
             command = input(prompt)
@@ -30,7 +28,7 @@ class Screen(ABC):
                     return result
 
     @abstractmethod
-    def update(self: ScreenT) -> ScreenT:
+    def update(self) -> None:
         """Draw the screen and gather input."""
 
     # VIEW COMMANDS ========================================================

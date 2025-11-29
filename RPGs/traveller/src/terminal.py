@@ -7,9 +7,7 @@ from src.baggage import Baggage
 from src.command import Command
 from src.passengers import Passenger, PassageClass
 from src.play import Play
-from src.screen import ScreenT
 from src.star_system import Hex, StarSystem
-from src.starport import Starport
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, confirm_input
 
 # TO_DO: ambiguous class name - too close to Passenger - fix this
@@ -35,11 +33,10 @@ class Passengers(Play):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def leave_terminal(self: ScreenT) -> None | ScreenT:
+    def leave_terminal(self) -> None:
         """Move from the passenger terminal to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.parent.location.name} passenger terminal.{END_FORMAT}")
-        self.parent.location.detail = "starport"
-        return cast(ScreenT, Starport(self.parent))
+        self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
     def book_passengers(self) -> None:

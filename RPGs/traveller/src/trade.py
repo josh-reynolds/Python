@@ -9,9 +9,7 @@ from src.coordinate import Coordinate
 from src.credits import Credits
 from src.freight import Freight
 from src.play import Play
-from src.screen import ScreenT
 from src.star_system import Hex, StarSystem
-from src.starport import Starport
 from src.utilities import BOLD_BLUE, END_FORMAT, confirm_input, pr_list, BOLD_RED
 
 class Trade(Play):
@@ -42,11 +40,10 @@ class Trade(Play):
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
-    def leave_depot(self: ScreenT) -> None | ScreenT:
+    def leave_depot(self) -> None:
         """Move from the trade depot to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.parent.location.name} trade depot.{END_FORMAT}")
-        self.parent.location.detail = "starport"
-        return cast(ScreenT, Starport(self.parent))
+        self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
     def buy_cargo(self) -> None:
