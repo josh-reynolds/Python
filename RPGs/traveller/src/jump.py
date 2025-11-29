@@ -44,11 +44,8 @@ class Jump(Play):
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return None
 
-        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
-        if self.parent.ship.current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel in from the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{self.parent.ship.current_fuel} tons in tanks.")
+        leg_fc = self._check_fuel_level("in from")
+        if not leg_fc:
             return None
 
         self.parent.ship.current_fuel -= leg_fc

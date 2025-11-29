@@ -11,13 +11,14 @@ class TradeTestCase(unittest.TestCase):
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_freight_destinations of a client class
     @unittest.skip("test has side effects: printing")
-    def test_get_freight_destinations(self) -> None:
+    def test_get_destinations(self) -> None:
         """Test getting list of freight destinations."""
         game = Game()
         trade = Trade(game)
         potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
-        destinations = trade._get_freight_destinations(potential_destinations, 1)
+        destinations = trade._get_destinations(potential_destinations,
+                                               1, "freight shipments")
         print(destinations)
 
         # contracted destination:

@@ -21,18 +21,18 @@ class BaggageTestCase(unittest.TestCase):
 
     def test_baggage_from(self) -> None:
         """Test importing Baggage from a parsed string."""
-        source = SystemMock("Uranus")
+        source = SystemMock("Mars")
         source.coordinate = Coordinate(1,0,-1)
         destination = SystemMock("Jupiter")
-        destination.coordinate = Coordinate(0,0,0)
-        systems = {Coordinate(0,0,0) : destination,
+        destination.coordinate = Coordinate(-2,2,0)
+        systems = {Coordinate(-2,2,0) : destination,
                    Coordinate(1,0,-1) : source}
 
-        actual = baggage_from("(1, 0, -1)", "(0, 0, 0)", systems)
+        actual = baggage_from("(1, 0, -1)", "(-2, 2, 0)", systems)
         expected = Baggage(source, destination)
         self.assertEqual(actual, expected)
 
-        actual = baggage_from("(0, 0, 0)", "(1, 0, -1)", systems)
+        actual = baggage_from("(-2, 2, 0)", "(1, 0, -1)", systems)
         expected = Baggage(destination, source)
         self.assertEqual(actual, expected)
 
@@ -42,7 +42,7 @@ class BaggageTestCase(unittest.TestCase):
                          "coordinate not found in systems list: '(1, -1, 0)'")
 
         with self.assertRaises(ValueError) as context:
-            _ = baggage_from("(0, 0, 0)", "(1, -1, 0)", systems)
+            _ = baggage_from("(-2, 2, 0)", "(1, -1, 0)", systems)
         self.assertEqual(f"{context.exception}",
                          "coordinate not found in systems list: '(1, -1, 0)'")
 

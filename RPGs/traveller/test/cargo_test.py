@@ -141,15 +141,15 @@ class CargoTestCase(unittest.TestCase):
                          "invalid literal for int() with base 10: 'm'")
 
         with self.assertRaises(ValueError) as context:
-            _ = cargo_from("Tools", 1, "(1, 1, 1)", systems)
+            _ = cargo_from("Tools", 1, "(2, 1, 1)", systems)
         self.assertEqual(f"{context.exception}",
                          "string is not a valid 3-axis coordinate "
-                         + "- should sum to zero: '(1, 1, 1)'")
+                         + "- should sum to zero: '(2, 1, 1)'")
 
     def test_encode(self) -> None:
         """Test exporting a Cargo object to a string."""
-        source = SystemMock("Uranus")
-        source.coordinate = Coordinate(1,0,-1)
+        source = SystemMock("Mars")
+        source.coordinate = Coordinate(2,0,-2)
         cargo = Cargo("Meat", "10", Credits(1500), 1,
                          dictionary_from("{Ag:-2,Na:2,In:3}"),
                          dictionary_from("{Ag:-2,In:2,Po:1}"),
@@ -157,7 +157,7 @@ class CargoTestCase(unittest.TestCase):
                       )
 
         actual = cargo.encode()
-        expected = "Cargo - Meat - 10 - (1, 0, -1)"
+        expected = "Cargo - Meat - 10 - (2, 0, -2)"
         self.assertEqual(actual, expected)
 
         cargo = Cargo("Meat", "10", Credits(1500), 1,

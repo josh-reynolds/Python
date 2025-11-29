@@ -2,13 +2,13 @@
 
 Passengers - contains commands for the Passengers state.
 """
-from typing import cast, List, Tuple, Any
+from typing import cast, Tuple, Any
 from src.baggage import Baggage
 from src.command import Command
 from src.passengers import Passenger, PassageClass
 from src.play import Play
 from src.star_system import Hex, StarSystem
-from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, confirm_input
+from src.utilities import BOLD_BLUE, END_FORMAT, confirm_input
 
 # TO_DO: ambiguous class name - too close to Passenger - fix this
 class Passengers(Play):
@@ -45,7 +45,8 @@ class Passengers(Play):
 
         jump_range = self.parent.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
-        destinations = self._get_passenger_destinations(potential_destinations, jump_range)
+        destinations = self._get_destinations(potential_destinations,
+                                              jump_range, "passengers")
         if not destinations:
             return
 
@@ -89,29 +90,6 @@ class Passengers(Play):
         self.parent.depot.passengers[destination] = tuple(a-b for a,b in
                                                    zip(self.parent.depot.passengers[destination],
                                                        selection))
-
-    def _get_passenger_destinations(self, potential_destinations: List[StarSystem],
-                                    jump_range: int) -> List[StarSystem]:
-        """Return a list of all reachable destination with Passengers."""
-        result: List[StarSystem] = []
-        if self.parent.ship.destination is not None:
-            if self.parent.ship.destination == self.parent.location:
-                print(f"{BOLD_RED}There is still freight to be "
-                      f"unloaded on {self.parent.location.name}.{END_FORMAT}")
-                return result
-            if self.parent.ship.destination in potential_destinations:
-                print("You are under contract. Only showing passengers " +
-                      f"for {self.parent.ship.destination.name}:\n")
-                result = [self.parent.ship.destination]
-            else:
-                print(f"You are under contract to {self.parent.ship.destination.name} " +
-                      "but it is not within jump range of here.")
-
-        else:
-            print(f"Available passenger destinations within jump-{jump_range}:\n")
-            result = potential_destinations
-
-        return result
 
     # pylint: disable=R0912, R0915
     # R0912: Too many branches (13/12)

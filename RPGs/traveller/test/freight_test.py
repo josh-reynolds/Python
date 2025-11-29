@@ -71,10 +71,10 @@ class FreightTestCase(unittest.TestCase):
                          "invalid literal for int() with base 10: ' m'")
 
         with self.assertRaises(ValueError) as context:
-            _ = freight_from(10, "(1, 1, 1)", "(0, 0, 0)", systems)
+            _ = freight_from(10, "(2, 1, 1)", "(0, 0, 0)", systems)
         self.assertEqual(f"{context.exception}",
                          "string is not a valid 3-axis coordinate "
-                         + "- should sum to zero: '(1, 1, 1)'")
+                         + "- should sum to zero: '(2, 1, 1)'")
 
     def test_encode(self) -> None:
         """Test exporting a Freight object to a string."""

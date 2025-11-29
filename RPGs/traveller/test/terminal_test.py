@@ -11,13 +11,14 @@ class PassengersTestCase(unittest.TestCase):
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_passenger_destinations of a client class
     @unittest.skip("test has side effects: printing")
-    def test_get_passenger_destinations(self) -> None:
+    def test_get_destinations(self) -> None:
         """Test getting list of passenger destinations."""
         game = Game()
         passengers = Passengers(game)
         potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
-        destinations = passengers._get_passenger_destinations(potential_destinations, 1)
+        destinations = passengers._get_destinations(potential_destinations,
+                                                    1, "passengers")
         print(destinations)
 
         # contracted destination:

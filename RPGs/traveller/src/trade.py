@@ -124,7 +124,8 @@ class Trade(Play):
 
         jump_range = self.parent.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
-        destinations = self._get_freight_destinations(potential_destinations, jump_range)
+        destinations = self._get_destinations(potential_destinations,
+                                              jump_range, "freight shipments")
         if not destinations:
             return
 
@@ -156,29 +157,6 @@ class Trade(Play):
                                          self.parent.location,
                                          destination))
         self.parent.date.day += 1
-
-    def _get_freight_destinations(self, potential_destinations: List[StarSystem],
-                                  jump_range: int) -> List[StarSystem]:
-        """Return a list of all reachable destinations with Freight lots."""
-        result: List[StarSystem] = []
-        if self.parent.ship.destination is not None:
-            if self.parent.ship.destination == self.parent.location:
-                print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.parent.location.name}.{END_FORMAT}")
-                return result
-            if self.parent.ship.destination in potential_destinations:
-                print("You are under contract. Only showing freight " +
-                      f"for {self.parent.ship.destination.name}:\n")
-                result = [self.parent.ship.destination]
-            else:
-                print(f"You are under contract to {self.parent.ship.destination.name} " +
-                      "but it is not within jump range of here.")
-
-        else:
-            print(f"Available freight shipments within jump-{jump_range}:\n")
-            result = potential_destinations
-
-        return result
 
     def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:

@@ -11,6 +11,7 @@ from src.coordinate import absolute
 from src.draw_map import draw_map
 from src.screen import Screen
 from src.ship import FuelQuality, RepairStatus
+from src.star_system import StarSystem
 from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN
 from src.utilities import CLEAR, YELLOW_ON_RED, choose_from, pr_list, pr_highlight_list
 from src.utilities import get_next_file, die_roll, confirm_input, HOME
@@ -281,3 +282,36 @@ class Play(Screen):
             system_list.append(self.parent.star_map.systems[entry])
 
         draw_map(system_list, sub_name, print_friendly)
+
+    def _get_destinations(self, potential_destinations: List[StarSystem],
+                           jump_range: int, prompt: str) -> List[StarSystem]:
+        """Return a list of all reachable destinations with Freight or Passengers."""
+        result: List[StarSystem] = []
+        if self.parent.ship.destination is not None:
+            if self.parent.ship.destination == self.parent.location:
+                print(f"{BOLD_RED}There is still freight to be unloaded "
+                      f"on {self.parent.location.name}.{END_FORMAT}")
+                return result
+            if self.parent.ship.destination in potential_destinations:
+                print(f"You are under contract. Only showing {prompt} " +
+                      f"for {self.parent.ship.destination.name}:\n")
+                result = [self.parent.ship.destination]
+            else:
+                print(f"You are under contract to {self.parent.ship.destination.name} " +
+                      "but it is not within jump range of here.")
+
+        else:
+            print(f"Available {prompt} within jump-{jump_range}:\n")
+            result = potential_destinations
+
+        return result
+
+    def _check_fuel_level(self, prompt: str) -> int | None:
+        """Verify there is sufficient fuel in the tanks to make a trip."""
+        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
+        if self.parent.ship.current_fuel < leg_fc:
+            print(f"Insufficient fuel. Travel {prompt} the jump point "
+                  f"requires {leg_fc} tons, only "
+                  f"{self.parent.ship.current_fuel} tons in tanks.")
+            return None
+        return leg_fc

@@ -92,11 +92,8 @@ class Orbit(Play):
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 
-        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
-        if self.parent.ship.current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel out to the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{self.parent.ship.current_fuel} tons in tanks.")
+        leg_fc = self._check_fuel_level("out to")
+        if not leg_fc:
             return None
 
         self.parent.ship.current_fuel -= leg_fc
