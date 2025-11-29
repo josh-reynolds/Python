@@ -1,6 +1,6 @@
-"""Contains the Passengers screen class.
+"""Contains the Terminal screen class.
 
-Passengers - contains commands for the Passengers state.
+Terminal - contains commands for the Terminal state.
 """
 from typing import cast, Tuple, Any
 from src.baggage import Baggage
@@ -10,12 +10,11 @@ from src.play import Play
 from src.star_system import Hex, StarSystem
 from src.utilities import BOLD_BLUE, END_FORMAT, confirm_input
 
-# TO_DO: ambiguous class name - too close to Passenger - fix this
-class Passengers(Play):
-    """Contains commands for the Passengers state."""
+class Terminal(Play):
+    """Contains commands for the Terminal state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Passengers object."""
+        """Create a Terminal object."""
         super().__init__(parent)
 
         # this is declared as List[Command] in super(),
@@ -29,7 +28,7 @@ class Passengers(Play):
 
     def __str__(self) -> str:
         """Return the string representation of the current screen."""
-        return "Passengers"
+        return "Terminal"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================

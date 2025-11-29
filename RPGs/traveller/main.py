@@ -13,7 +13,7 @@ from src.ship import Ship
 from src.star_system import StarSystem
 from src.star_map import StarMap
 from src.starport import Starport
-from src.terminal import Passengers
+from src.terminal import Terminal
 from src.trade import Trade
 from src.utilities import int_input, confirm_input
 from src.utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
@@ -81,9 +81,9 @@ class Game:
             case "Trade":
                 self.location.detail = "trade"
                 self.screen = Trade(self)
-            case "Passengers":
+            case "Terminal":
                 self.location.detail = "terminal"
-                self.screen = Passengers(self)
+                self.screen = Terminal(self)
             case _:
                 raise ValueError(f"unrecognized menu item: '{new_state}'")
 

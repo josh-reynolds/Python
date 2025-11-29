@@ -3018,6 +3018,7 @@
 #  * [DONE] Trap invalid start location when importing
 #  PHASE SIX ======================================================
 #  * [DONE] Break up modules
+#  * [DONE] Rename Passengers screen class to Terminal
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3030,6 +3031,7 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Consolidate mock objects into mock module
+#  * [    ] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [    ] Fix mypy errors with Pillow
 #  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?

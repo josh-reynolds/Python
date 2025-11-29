@@ -2,11 +2,11 @@
 import unittest
 from typing import cast, List
 from main import Game
-from src.terminal import Passengers
+from src.terminal import Terminal
 from src.star_system import StarSystem
 
-class PassengersTestCase(unittest.TestCase):
-    """Test Passengers screen."""
+class TerminalTestCase(unittest.TestCase):
+    """Test Terminal screen."""
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_passenger_destinations of a client class
@@ -14,7 +14,7 @@ class PassengersTestCase(unittest.TestCase):
     def test_get_destinations(self) -> None:
         """Test getting list of passenger destinations."""
         game = Game()
-        passengers = Passengers(game)
+        passengers = Terminal(game)
         potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
         destinations = passengers._get_destinations(potential_destinations,
@@ -33,7 +33,7 @@ class PassengersTestCase(unittest.TestCase):
     def test_select_passengers(self) -> None:
         """Test selection of passengers from a list."""
         game = Game()
-        passengers = Passengers(game)
+        passengers = Terminal(game)
         available = (5,5,5)
         destination = game.location.destinations[0]
 
