@@ -146,8 +146,10 @@ class Jump(Play):
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
         if not self.parent.location.gas_giant:
-            # TO_DO: may want to tweak this message in deep space.
-            print("There is no gas giant in this system. No fuel skimming possible.")
+            if isinstance(self.parent.location, DeepSpace):
+                print("You are stranded in deep space. No fuel skimming possible.")
+            else:
+                print("There is no gas giant in this system. No fuel skimming possible.")
             return
 
         if not self.parent.ship.model.streamlined:
