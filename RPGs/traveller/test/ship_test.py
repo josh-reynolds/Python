@@ -1,7 +1,7 @@
 """Contains tests for the ship module."""
 import unittest
-from typing import Any
-from test.mock import ObserverMock, SystemMock, CargoMock, PassengerMock
+from test.mock import ObserverMock, SystemMock, CargoMock
+from test.mock import PassengerMock, ControlsMock
 from src.credits import Credits
 from src.freight import Freight
 from src.ship import Ship, FuelQuality, RepairStatus, ship_from
@@ -12,23 +12,6 @@ class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
     ship: Ship = Ship("Type A Free Trader")
-
-    # pylint: disable=R0903
-    # R0903: Too few public methods (1/2)
-    class ControlsMock:
-        """Mocks a controller for testing."""
-
-        def __init__(self, commands: Any) -> None:
-            """Create an instance of a ControlsMock."""
-            self.commands = commands
-            self.invocations = 0
-
-        def get_input(self, _constraint: str, _prompt: str) -> str:
-            """Return the next command in the list."""
-            # not safe if we call too many times...
-            response = self.commands[self.invocations]
-            self.invocations += 1
-            return response
 
     def setUp(self) -> None:
         """Create a fixture for testing the Ship class."""
@@ -82,7 +65,7 @@ class ShipTestCase(unittest.TestCase):
     def test_refuel(self) -> None:
         """Test refuelling the Ship."""
         ship = ShipTestCase.ship
-        ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
+        ship.controls = ControlsMock(['y', 'n'])
         self.assertEqual(ship.current_fuel, 0)
 
         cost = ship.refuel("A")
@@ -100,7 +83,7 @@ class ShipTestCase(unittest.TestCase):
     def test_recharge(self) -> None:
         """Test recharging the Ship's life support."""
         ship = ShipTestCase.ship
-        ship.controls = ShipTestCase.ControlsMock(['n', 'y'])
+        ship.controls = ControlsMock(['y', 'n'])
         self.assertEqual(ShipTestCase.ship.life_support_level, 0)
 
         cost = ShipTestCase.ship.recharge()

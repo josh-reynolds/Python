@@ -97,10 +97,12 @@ class ControlsMock:
     def __init__(self, commands: List[Any]) -> None:
         """Create an instance of a ControlsMock."""
         self.commands = commands
+        self.invocations = 0
 
     def get_input(self, _constraint: str, _prompt: str) -> str:
         """Return the next command in the list."""
         # not safe if we call too many times...
+        self.invocations += 1
         return self.commands.pop()
 
 
