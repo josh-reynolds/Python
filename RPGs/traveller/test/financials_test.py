@@ -2,10 +2,10 @@
 from __future__ import annotations
 import unittest
 from typing import Any
-from test.mock import ObserverMock
+from test.mock import ObserverMock, ShipMock
 from src.credits import Credits
-from src.financials import Financials, financials_from
 from src.imperial_date import ImperialDate
+from src.financials import Financials, financials_from
 
 class FinancialsTestCase(unittest.TestCase):
     """Tests Financials class."""
@@ -56,21 +56,6 @@ class FinancialsTestCase(unittest.TestCase):
             """Return the developer string representation of a DateMock object."""
             return f"DateMock({self.value})"
 
-    class ShipMock:
-        """Mocks a ship interface for testing."""
-
-        def __init__(self) -> None:
-            """Create an instance of a ShipMock object."""
-            self.last_maintenance = FinancialsTestCase.DateMock(1)
-
-        def crew_salary(self) -> Credits:
-            """Return the amount of monthly salary paid to the Ship's crew."""
-            return Credits(1)
-
-        def loan_payment(self) -> Credits:
-            """Return the amount paid monthly for the Ship's loan."""
-            return Credits(1)
-
     # pylint: disable=R0903
     # R0903: Too few public methods (1/2)
     class SystemMock:
@@ -92,7 +77,7 @@ class FinancialsTestCase(unittest.TestCase):
         """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
                                                    FinancialsTestCase.DateMock(1),
-                                                   FinancialsTestCase.ShipMock(),
+                                                   ShipMock( "Type A Free Trader"),
                                                    FinancialsTestCase.SystemMock())
 
     def test_on_notify(self) -> None:

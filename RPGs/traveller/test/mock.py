@@ -1,7 +1,9 @@
 """Contains mock classes for testing."""
 from typing import Any, Self, List
 from src.coordinate import Coordinate
+from src.credits import Credits
 from src.imperial_date import ImperialDate
+from src.ship import Ship
 from src.star_system import StarSystem
 
 # pylint: disable=R0903
@@ -94,3 +96,19 @@ class ControlsMock:
         """Return the next command in the list."""
         # not safe if we call too many times...
         return self.commands.pop()
+
+class ShipMock(Ship):
+    """Mocks a Ship for testing."""
+
+    def __init__(self, model: str) -> None:
+        """Create an instance of a ShipMock object."""
+        super().__init__(model)
+        self.last_maintenance = DateMock(1)
+
+    def crew_salary(self) -> Credits:
+        """Return the amount of monthly salary paid to the Ship's crew."""
+        return Credits(1)
+
+    def loan_payment(self) -> Credits:
+        """Return the amount paid monthly for the Ship's loan."""
+        return Credits(1)
