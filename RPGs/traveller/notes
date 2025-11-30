@@ -3019,6 +3019,7 @@
 #  PHASE SIX ======================================================
 #  * [DONE] Break up modules
 #  * [DONE] Rename Passengers screen class to Terminal
+#  * [DONE] Consolidate mock objects into mock module
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3030,7 +3031,6 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
-#  * [....] Consolidate mock objects into mock module
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] BUG: Scout only has a Pilot on board, fails with "no Engineer" when
 #           attempting damage control

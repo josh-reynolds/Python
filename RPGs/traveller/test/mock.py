@@ -1,5 +1,5 @@
 """Contains mock classes for testing."""
-from typing import Any, Self, List
+from typing import Any, Self, List, cast
 from src.cargo import Cargo
 from src.coordinate import Coordinate
 from src.credits import Credits
@@ -159,3 +159,23 @@ class PassengerMock(Passenger):
     def __init__(self, destination: Any) -> None:
         """Create an instance of a PassengerMock object."""
         super().__init__(PassageClass.MIDDLE, destination)
+
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
+class CalendarObserverMock:
+    """Mocks an observer interface for testing."""
+
+    def __init__(self) -> None:
+        """Create an instance of an CalendarObserverMock."""
+        self.paid_date = ImperialDate(365,1104)
+        self.count = 0
+        self.event_count = 0
+        self.recurrence = 1
+
+    def on_notify(self, date: ImperialDate) -> None:
+        """On notification from Calendar, track the event."""
+        self.count += 1
+        duration = cast(int, (date - self.paid_date)) // self.recurrence
+        for _ in range(duration):
+            self.event_count += 1
+            self.paid_date += self.recurrence

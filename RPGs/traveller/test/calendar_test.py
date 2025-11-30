@@ -1,6 +1,6 @@
 """Contains tests for the calendar module."""
 import unittest
-from typing import cast
+from test.mock import CalendarObserverMock
 from src.calendar import Calendar, modify_calendar_from
 from src.imperial_date import ImperialDate
 
@@ -9,30 +9,10 @@ class CalendarTestCase(unittest.TestCase):
 
     a: Calendar
 
-    # pylint: disable=R0903
-    # R0903: Too few public methods (1/2)
-    class ObserverMock:
-        """Mocks an observer interface for testing."""
-
-        def __init__(self) -> None:
-            """Create an instance of an ObserverMock."""
-            self.paid_date = ImperialDate(365,1104)
-            self.count = 0
-            self.event_count = 0
-            self.recurrence = 1
-
-        def on_notify(self, date: ImperialDate) -> None:
-            """On notification from Calendar, track the event."""
-            self.count += 1
-            duration = cast(int, (date - self.paid_date)) // self.recurrence
-            for _ in range(duration):
-                self.event_count += 1
-                self.paid_date += self.recurrence
-
     def setUp(self) -> None:
         """Create fixtures for testing."""
         CalendarTestCase.a = Calendar()
-        CalendarTestCase.a.add_observer(CalendarTestCase.ObserverMock())
+        CalendarTestCase.a.add_observer(CalendarObserverMock())
 
     def test_recurring_events_from_notification(self) -> None:
         """Test repeated Calendar notifications."""
@@ -111,7 +91,7 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(mock.count, 0)
         self.assertEqual(len(calendar.observers), 1)
 
-        calendar.add_observer(CalendarTestCase.ObserverMock())
+        calendar.add_observer(CalendarObserverMock())
         self.assertEqual(len(calendar.observers), 2)
 
         calendar.plus_week()
