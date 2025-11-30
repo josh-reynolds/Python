@@ -1,5 +1,5 @@
 """Contains mock classes for testing."""
-from typing import Any, Self
+from typing import Any, Self, List
 from src.coordinate import Coordinate
 from src.imperial_date import ImperialDate
 from src.star_system import StarSystem
@@ -80,3 +80,17 @@ class SystemMock(StarSystem):
     def __repr__(self) -> str:
         """Return the developer string representation of a SystemMock object."""
         return f"SystemMock('{self.name}')"
+
+# pylint: disable=R0903
+# R0903: Too few public methods (1/2)
+class ControlsMock:
+    """Mocks a controller for testing."""
+
+    def __init__(self, commands: List[Any]) -> None:
+        """Create an instance of a ControlsMock."""
+        self.commands = commands
+
+    def get_input(self, _constraint: str, _prompt: str) -> str:
+        """Return the next command in the list."""
+        # not safe if we call too many times...
+        return self.commands.pop()

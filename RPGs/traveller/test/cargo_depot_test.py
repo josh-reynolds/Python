@@ -1,7 +1,6 @@
 """Contains tests for the cargo_depot module."""
 import unittest
-from typing import List, Any
-from test.mock import ObserverMock, DateMock, SystemMock
+from test.mock import ObserverMock, DateMock, SystemMock, ControlsMock
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
@@ -13,19 +12,6 @@ class CargoDepotTestCase(unittest.TestCase):
 
     depot = CargoDepot(SystemMock(), DateMock(1))
 
-    # pylint: disable=R0903
-    # R0903: Too few public methods (1/2)
-    class ControlsMock:
-        """Mocks a controller for testing."""
-
-        def __init__(self, commands: List[Any]) -> None:
-            """Create an instance of a ControlsMock."""
-            self.commands = commands
-
-        def get_input(self, _constraint: str, _prompt: str) -> str:
-            """Return the next command in the list."""
-            # not safe if we call too many times...
-            return self.commands.pop()
 
     def setUp(self) -> None:
         """Create a test fixture for testing CargoDepots."""
@@ -64,7 +50,7 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_get_cargo_lot(self) -> None:
         """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
-        depot.controls = CargoDepotTestCase.ControlsMock([2, 1, 0, 7])
+        depot.controls = ControlsMock([2, 1, 0, 7])
         observer = ObserverMock()
         depot.add_observer(observer)
         cargo_list = ["a", "b", "c"]
@@ -85,7 +71,7 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_get_cargo_quantity(self) -> None:
         """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
-        depot.controls = CargoDepotTestCase.ControlsMock([9, 1, 0, -1, 11])
+        depot.controls = ControlsMock([9, 1, 0, -1, 11])
         observer = ObserverMock()
         depot.add_observer(observer)
         cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
@@ -154,7 +140,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test choosing a broker."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 4, 5, 'y', 'y', 4, 5, 'y', 'n', 1, 'y', 'y', 1, 0, 'y', 'n']
-        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        depot.controls = ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
 
@@ -275,7 +261,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test transaction confirmation."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 'y']
-        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        depot.controls = ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
         cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
@@ -327,7 +313,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test listing of freight in the depot."""
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
-        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        depot.controls = ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
         world1 = SystemMock()
@@ -470,7 +456,7 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test listing of passengers in the terminal."""
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
-        depot.controls = CargoDepotTestCase.ControlsMock(scenarios)
+        depot.controls = ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
         world1 = SystemMock()
