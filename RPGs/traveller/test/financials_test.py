@@ -1,8 +1,7 @@
 """Contains tests for the financials module."""
 from __future__ import annotations
 import unittest
-from typing import Any
-from test.mock import ObserverMock, ShipMock, SystemMock
+from test.mock import ObserverMock, ShipMock, SystemMock, DateMock
 from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.financials import Financials, financials_from
@@ -12,54 +11,10 @@ class FinancialsTestCase(unittest.TestCase):
 
     financials: Financials
 
-    class DateMock(ImperialDate):
-        """Mocks a date interface for testing."""
-
-        def __init__(self, value: int) -> None:
-            """Create an instance of a DateMock object."""
-            super().__init__(value, value)
-            self.value = value
-
-        def copy(self) -> FinancialsTestCase.DateMock:
-            """Return a copy of this DateMock object."""
-            return FinancialsTestCase.DateMock(self.value)
-
-        def __add__(self, rhs: int) -> FinancialsTestCase.DateMock:
-            """Add a value to a DateMock."""
-            return FinancialsTestCase.DateMock(self.value + rhs)
-
-        def __sub__(self, rhs: Any) -> FinancialsTestCase.DateMock | int:
-            """Subtract either a DateMock or an integer from a DateMock."""
-            if isinstance(rhs, FinancialsTestCase.DateMock):
-                return self.value - rhs.value
-            if isinstance(rhs, int):
-                return FinancialsTestCase.DateMock(self.value - rhs)
-            return NotImplemented
-
-        def __eq__(self, other: Any) -> bool:
-            """Test whether two DateMocks are equivalent."""
-            return self.value == other.value
-
-        def __ge__(self, other: Any) -> bool:
-            """Test whether one DateMock is greater than or equal to another."""
-            return self.value >= other.value
-
-        def __gt__(self, other: Any) -> bool:
-            """Test whether one DateMock is greater than another."""
-            return self.value > other.value
-
-        def __str__(self) -> str:
-            """Return the string representation of a DateMock object."""
-            return f"{self.value}"
-
-        def __repr__(self) -> str:
-            """Return the developer string representation of a DateMock object."""
-            return f"DateMock({self.value})"
-
     def setUp(self) -> None:
         """Create a test fixture for validating the Financials class."""
         FinancialsTestCase.financials = Financials(100,
-                                                   FinancialsTestCase.DateMock(1),
+                                                   DateMock(1),
                                                    ShipMock( "Type A Free Trader"),
                                                    SystemMock("MOCK"))
 
@@ -69,13 +24,13 @@ class FinancialsTestCase(unittest.TestCase):
         observer = ObserverMock()
         financials.add_observer(observer)
 
-        date = FinancialsTestCase.DateMock(8)
+        date = DateMock(8)
         financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
         self.assertEqual(observer.message, "Renewing berth on 8 for 7 days (700 Cr).")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(16)
+        date = DateMock(16)
         financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
         self.assertEqual(observer.message, "Renewing berth on 16 for 2 days (200 Cr).")
@@ -100,26 +55,26 @@ class FinancialsTestCase(unittest.TestCase):
         observer = ObserverMock()
         financials.add_observer(observer)
 
-        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(1))
+        self.assertEqual(financials.salary_paid, DateMock(1))
 
-        date = FinancialsTestCase.DateMock(30)
+        date = DateMock(30)
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(99))
-        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(29))
+        self.assertEqual(financials.salary_paid, DateMock(29))
         self.assertEqual(observer.message, "Paying crew salaries on 29 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(60)
+        date = DateMock(60)
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(98))
-        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(57))
+        self.assertEqual(financials.salary_paid, DateMock(57))
         self.assertEqual(observer.message, "Paying crew salaries on 57 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(120)
+        date = DateMock(120)
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(96))
-        self.assertEqual(financials.salary_paid, FinancialsTestCase.DateMock(113))
+        self.assertEqual(financials.salary_paid, DateMock(113))
         self.assertEqual(observer.message, "Paying crew salaries on 113 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
@@ -146,26 +101,26 @@ class FinancialsTestCase(unittest.TestCase):
         observer = ObserverMock()
         financials.add_observer(observer)
 
-        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(1))
+        self.assertEqual(financials.loan_paid, DateMock(1))
 
-        date = FinancialsTestCase.DateMock(30)
+        date = DateMock(30)
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(99))
-        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(29))
+        self.assertEqual(financials.loan_paid, DateMock(29))
         self.assertEqual(observer.message, "Paying ship loan on 29 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(60)
+        date = DateMock(60)
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(98))
-        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(57))
+        self.assertEqual(financials.loan_paid, DateMock(57))
         self.assertEqual(observer.message, "Paying ship loan on 57 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(120)
+        date = DateMock(120)
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(96))
-        self.assertEqual(financials.loan_paid, FinancialsTestCase.DateMock(113))
+        self.assertEqual(financials.loan_paid, DateMock(113))
         self.assertEqual(observer.message, "Paying ship loan on 113 for 1 Cr.")
         self.assertEqual(observer.priority, "")
 
@@ -192,29 +147,29 @@ class FinancialsTestCase(unittest.TestCase):
         observer = ObserverMock()
         financials.add_observer(observer)
 
-        self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
+        self.assertEqual(financials.last_maintenance, DateMock(-13))
 
-        date = FinancialsTestCase.DateMock(30)
+        date = DateMock(30)
         financials._maintenance_notification(date)
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(296)
+        date = DateMock(296)
         financials._maintenance_notification(date)
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(297)
+        date = DateMock(297)
         financials._maintenance_notification(date)
         self.assertEqual(observer.message, "Days since last maintenance = 310")
         self.assertEqual(observer.priority, "yellow")
 
-        date = FinancialsTestCase.DateMock(352)
+        date = DateMock(352)
         financials._maintenance_notification(date)
         self.assertEqual(observer.message, "Days since last maintenance = 365")
         self.assertEqual(observer.priority, "yellow")
 
-        date = FinancialsTestCase.DateMock(353)
+        date = DateMock(353)
         financials._maintenance_notification(date)
         self.assertEqual(observer.message, "Days since last maintenance = 366")
         self.assertEqual(observer.priority, "red")
@@ -222,25 +177,25 @@ class FinancialsTestCase(unittest.TestCase):
     def test_maintenance_status(self) -> None:
         """Test maintenance status notification."""
         financials = FinancialsTestCase.financials
-        self.assertEqual(financials.last_maintenance, FinancialsTestCase.DateMock(-13))
+        self.assertEqual(financials.last_maintenance, DateMock(-13))
 
-        date = FinancialsTestCase.DateMock(30)
+        date = DateMock(30)
         result = financials.maintenance_status(date)
         self.assertEqual(result, "green")
 
-        date = FinancialsTestCase.DateMock(296)
+        date = DateMock(296)
         result = financials.maintenance_status(date)
         self.assertEqual(result, "green")
 
-        date = FinancialsTestCase.DateMock(297)
+        date = DateMock(297)
         result = financials.maintenance_status(date)
         self.assertEqual(result, "yellow")
 
-        date = FinancialsTestCase.DateMock(352)
+        date = DateMock(352)
         result = financials.maintenance_status(date)
         self.assertEqual(result, "yellow")
 
-        date = FinancialsTestCase.DateMock(353)
+        date = DateMock(353)
         result = financials.maintenance_status(date)
         self.assertEqual(result, "red")
 
@@ -253,15 +208,15 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(financials.current_date,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
 
         financials.berthing_fee(False)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
@@ -269,7 +224,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(7))
+                         DateMock(7))
         self.assertEqual(observer.message, "Charging 100 Cr berthing fee.")
         self.assertEqual(observer.priority, "")
 
@@ -284,31 +239,31 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(financials.current_date,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
 
-        date = FinancialsTestCase.DateMock(7)
+        date = DateMock(7)
         financials.location.on_surface = lambda : False
         financials._berth_notification(date)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(financials.current_date,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
         financials.location.on_surface = lambda : True
         financials.berth_recurrence = 1
         financials.berth_expiry = financials.current_date + 6
-        date = FinancialsTestCase.DateMock(8)
+        date = DateMock(8)
         financials._berth_notification(date)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(9))
+                         DateMock(9))
         self.assertEqual(observer.message, "Renewing berth on 8 for 1 day (100 Cr).")
         self.assertEqual(observer.priority, "")
 
@@ -323,27 +278,27 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
         self.assertEqual(financials.current_date,
-                         FinancialsTestCase.DateMock(1))
+                         DateMock(1))
 
         financials.berth_recurrence = 1
         financials.berth_expiry = financials.current_date + 6
-        date = FinancialsTestCase.DateMock(7)
+        date = DateMock(7)
         financials._renew_berth(date)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(7))
+                         DateMock(7))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        date = FinancialsTestCase.DateMock(8)
+        date = DateMock(8)
         financials._renew_berth(date)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
-                         FinancialsTestCase.DateMock(9))
+                         DateMock(9))
         self.assertEqual(observer.message, "Renewing berth on 8 for 1 day (100 Cr).")
         self.assertEqual(observer.priority, "")
 
@@ -363,7 +318,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(len(financials.ledger), 2)
         self.assertEqual(financials.ledger[1], "1\t - \t\t - 100 Cr\t - 190 Cr\t - MOCK\t - test")
 
-        date = FinancialsTestCase.DateMock(2)
+        date = DateMock(2)
         financials.on_notify(date)
         self.assertEqual(financials.balance, Credits(90))
         self.assertEqual(len(financials.ledger), 3)

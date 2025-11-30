@@ -25,12 +25,11 @@ class ObserverMock:
 
 
 class DateMock(ImperialDate):
-    """Mocks a date interface for testing."""
+    """Mocks an ImperialDate for testing."""
 
-    # pylint: disable=W0231
-    # W0231: __init__ method from base class 'ImperialDate' is not called
     def __init__(self, value: int) -> None:
         """Create an instance of a DateMock object."""
+        super().__init__(value, value)
         self.value = value
 
     def copy(self) -> Self:
@@ -42,12 +41,20 @@ class DateMock(ImperialDate):
         return DateMock(self.value + rhs)      #type: ignore[return-value]
 
     def __sub__(self, rhs: Self) -> int:
-        """Subtract a value from a DateMock object."""
-        return self.value - rhs.value
+        """Subtract either a DateMock or an integer from a DateMock."""
+        if isinstance(rhs, DateMock):
+            return self.value - rhs.value
+        if isinstance(rhs, int):
+            return DateMock(self.value - rhs)
+        return NotImplemented
 
     def __ge__(self, other: Any) -> bool:
         """Test whether another object is greater than or equal to a DateMock."""
         return self.value >= other.value
+
+    def __str__(self) -> str:
+        """Return the string representation of a DateMock object."""
+        return f"{self.value}"
 
 
 # pylint: disable=R0903, R0902
