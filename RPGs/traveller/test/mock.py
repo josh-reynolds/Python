@@ -51,10 +51,9 @@ class DateMock(ImperialDate):
 
 
 # pylint: disable=R0903, R0902
-# R0903: Too few public methods (1/2)
 # R0902: Too many instance attributes (10/7)
 class SystemMock(StarSystem):
-    """Mocks a system interface for testing."""
+    """Mocks a StarSystem for testing."""
 
     # pylint: disable=W0231
     # W0231: __init__ method from base class 'StarSystem' is not called
@@ -84,6 +83,10 @@ class SystemMock(StarSystem):
     def __repr__(self) -> str:
         """Return the developer string representation of a SystemMock object."""
         return f"SystemMock('{self.name}')"
+
+    def on_surface(self) -> bool:
+        """Test whether the player is on the world's surface."""
+        return True
 
 
 # pylint: disable=R0903

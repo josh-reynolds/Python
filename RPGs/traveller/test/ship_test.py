@@ -2,11 +2,9 @@
 import unittest
 from typing import Any
 from test.mock import ObserverMock, SystemMock, CargoMock, PassengerMock
-from src.coordinate import Coordinate
 from src.credits import Credits
 from src.freight import Freight
 from src.ship import Ship, FuelQuality, RepairStatus, ship_from
-from src.star_system import StarSystem, UWP
 
 # pylint: disable=R0904
 # R0904: Too many public methods
@@ -14,16 +12,6 @@ class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
     ship: Ship = Ship("Type A Free Trader")
-
-    # pylint: disable=R0903
-    # R0903: Too few public methods (0/2)
-    class SystemMock(StarSystem):
-        """Mocks a StarSystem interface for testing."""
-
-        def __init__(self, name: str) -> None:
-            """Create an instance of a SystemMock object."""
-            super().__init__(name, Coordinate(1,1,1),
-                             UWP("A",1,1,1,1,1,1,1), True)
 
     # pylint: disable=R0903
     # R0903: Too few public methods (1/2)
@@ -212,9 +200,9 @@ class ShipTestCase(unittest.TestCase):
         observer = ObserverMock()
         ship.add_observer(observer)
 
-        source = ShipTestCase.SystemMock("Pluto")
-        contract = ShipTestCase.SystemMock("Uranus")
-        destination = ShipTestCase.SystemMock("Jupiter")
+        source = SystemMock("Pluto")
+        contract = SystemMock("Uranus")
+        destination = SystemMock("Jupiter")
 
         ship.load_cargo(Freight(1, source, contract))
         self.assertEqual(ship.destination, contract)
