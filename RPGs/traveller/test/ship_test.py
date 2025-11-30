@@ -1,8 +1,7 @@
 """Contains tests for the ship module."""
 import unittest
 from typing import Any
-from test.mock import ObserverMock, SystemMock
-from src.cargo import Cargo
+from test.mock import ObserverMock, SystemMock, CargoMock
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.freight import Freight
@@ -16,27 +15,6 @@ class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
     ship: Ship = Ship("Type A Free Trader")
-
-    # pylint: disable=R0903,W0231
-    # R0903: Too few public methods (1/2)
-    # W0231: __init__ method from base class 'Cargo' is not called
-    class CargoMock(Cargo):
-        """Mocks a cargo interface for testing."""
-
-        def __init__(self, quantity: int) -> None:
-            """Create an instance of a CargoMock object."""
-            self.quantity = quantity
-
-        @property
-        def tonnage(self) -> int:
-            """Return the quantity of the CargoMock object."""
-            return self.quantity
-
-        def __eq__(self, other: Any) -> bool:
-            """Test if two CargoMock objects are equal."""
-            if type(other) is type(self):
-                return self.quantity == other.quantity
-            return NotImplemented
 
     # pylint: disable=R0903,W0231
     # R0903: Too few public methods (1/2)
@@ -89,8 +67,8 @@ class ShipTestCase(unittest.TestCase):
 
     def test_cargo_hold_reporting(self) -> None:
         """Test reporting of cargo hold contents."""
-        cargo1 = ShipTestCase.CargoMock(20)
-        cargo2 = ShipTestCase.CargoMock(50)
+        cargo1 = CargoMock(20)
+        cargo2 = CargoMock(50)
         self.assertEqual(ShipTestCase.ship.cargo_hold(), [])
         ShipTestCase.ship.load_cargo(cargo1)
         self.assertEqual(len(ShipTestCase.ship.cargo_hold()), 1)
@@ -101,8 +79,8 @@ class ShipTestCase(unittest.TestCase):
 
     def test_loading_cargo(self) -> None:
         """Test loading cargo into the hold."""
-        cargo1 = ShipTestCase.CargoMock(1)
-        cargo2 = ShipTestCase.CargoMock(1)
+        cargo1 = CargoMock(1)
+        cargo2 = CargoMock(1)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         ShipTestCase.ship.load_cargo(cargo1)
         self.assertEqual(ShipTestCase.ship.free_space(), 81)
@@ -112,7 +90,7 @@ class ShipTestCase(unittest.TestCase):
 
     def test_unloading_cargo(self) -> None:
         """Test unloading cargo from the hold."""
-        cargo = ShipTestCase.CargoMock(20)
+        cargo = CargoMock(20)
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         ShipTestCase.ship.load_cargo(cargo)
         self.assertEqual(ShipTestCase.ship.free_space(), 62)
@@ -180,14 +158,14 @@ class ShipTestCase(unittest.TestCase):
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
 
-        ship.load_cargo(ShipTestCase.CargoMock(20))
+        ship.load_cargo(CargoMock(20))
         self.assertEqual(ship.destination, None)
 
         ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
         ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
         self.assertEqual(ship.destination, SystemMock("Uranus"))
 
-        ship.load_cargo(ShipTestCase.CargoMock(20))
+        ship.load_cargo(CargoMock(20))
         self.assertEqual(ship.destination, SystemMock("Uranus"))
 
         self.assertEqual(len(ship.hold), 4)

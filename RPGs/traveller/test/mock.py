@@ -1,5 +1,6 @@
 """Contains mock classes for testing."""
 from typing import Any, Self, List
+from src.cargo import Cargo
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.imperial_date import ImperialDate
@@ -83,6 +84,7 @@ class SystemMock(StarSystem):
         """Return the developer string representation of a SystemMock object."""
         return f"SystemMock('{self.name}')"
 
+
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
 class ControlsMock:
@@ -96,6 +98,7 @@ class ControlsMock:
         """Return the next command in the list."""
         # not safe if we call too many times...
         return self.commands.pop()
+
 
 class ShipMock(Ship):
     """Mocks a Ship for testing."""
@@ -113,6 +116,7 @@ class ShipMock(Ship):
         """Return the amount paid monthly for the Ship's loan."""
         return Credits(1)
 
+
 # TO_DO: is this class used anywhere?
 # pylint: disable=R0903
 # R0903: Too few public methods (0/2)
@@ -122,3 +126,13 @@ class FreightMock:
     def __init__(self, destination: Any) -> None:
         """Create an instance of a FreightMock object."""
         self.destination_world = destination
+
+
+# pylint: disable=R0903,W0231
+# R0903: Too few public methods (1/2)
+class CargoMock(Cargo):
+    """Mocks a cargo interface for testing."""
+
+    def __init__(self, quantity: int) -> None:
+        """Create an instance of a CargoMock object."""
+        super().__init__("Test", str(quantity), Credits(1), 1, {}, {})
