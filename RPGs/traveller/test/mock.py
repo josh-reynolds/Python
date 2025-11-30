@@ -112,3 +112,13 @@ class ShipMock(Ship):
     def loan_payment(self) -> Credits:
         """Return the amount paid monthly for the Ship's loan."""
         return Credits(1)
+
+# TO_DO: is this class used anywhere?
+# pylint: disable=R0903
+# R0903: Too few public methods (0/2)
+class FreightMock:
+    """Mocks a freight interface for testing."""
+
+    def __init__(self, destination: Any) -> None:
+        """Create an instance of a FreightMock object."""
+        self.destination_world = destination

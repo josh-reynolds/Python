@@ -38,15 +38,6 @@ class ShipTestCase(unittest.TestCase):
                 return self.quantity == other.quantity
             return NotImplemented
 
-    # pylint: disable=R0903
-    # R0903: Too few public methods (0/2)
-    class FreightMock:
-        """Mocks a freight interface for testing."""
-
-        def __init__(self, destination: Any) -> None:
-            """Create an instance of a FreightMock object."""
-            self.destination_world = destination
-
     # pylint: disable=R0903,W0231
     # R0903: Too few public methods (1/2)
     # W0231: __init__ method from base class 'Passenger' is not called
