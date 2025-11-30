@@ -1,11 +1,10 @@
 """Contains tests for the ship module."""
 import unittest
 from typing import Any
-from test.mock import ObserverMock, SystemMock, CargoMock
+from test.mock import ObserverMock, SystemMock, CargoMock, PassengerMock
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.freight import Freight
-from src.passengers import Passenger
 from src.ship import Ship, FuelQuality, RepairStatus, ship_from
 from src.star_system import StarSystem, UWP
 
@@ -15,16 +14,6 @@ class ShipTestCase(unittest.TestCase):
     """Tests Ship class."""
 
     ship: Ship = Ship("Type A Free Trader")
-
-    # pylint: disable=R0903,W0231
-    # R0903: Too few public methods (1/2)
-    # W0231: __init__ method from base class 'Passenger' is not called
-    class PassengerMock(Passenger):
-        """Mocks a passenger interface for testing."""
-
-        def __init__(self, destination: Any) -> None:
-            """Create an instance of a PassengerMock object."""
-            self.destination = destination
 
     # pylint: disable=R0903
     # R0903: Too few public methods (0/2)
@@ -210,7 +199,7 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.destination, None)
 
         ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
-        ship.passengers += [ShipTestCase.PassengerMock("Jupiter")]
+        ship.passengers += [PassengerMock("Jupiter")]
         with self.assertRaises(ValueError) as context:
             _ = ship.destination
         self.assertEqual(f"{context.exception}",

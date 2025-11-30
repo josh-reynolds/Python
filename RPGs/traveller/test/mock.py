@@ -4,6 +4,7 @@ from src.cargo import Cargo
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.imperial_date import ImperialDate
+from src.passengers import Passenger, PassageClass
 from src.ship import Ship
 from src.star_system import StarSystem
 
@@ -131,8 +132,18 @@ class FreightMock:
 # pylint: disable=R0903,W0231
 # R0903: Too few public methods (1/2)
 class CargoMock(Cargo):
-    """Mocks a cargo interface for testing."""
+    """Mocks a Cargo for testing."""
 
     def __init__(self, quantity: int) -> None:
         """Create an instance of a CargoMock object."""
         super().__init__("Test", str(quantity), Credits(1), 1, {}, {})
+
+
+# pylint: disable=R0903,W0231
+# R0903: Too few public methods (1/2)
+class PassengerMock(Passenger):
+    """Mocks a Passenger for testing."""
+
+    def __init__(self, destination: Any) -> None:
+        """Create an instance of a PassengerMock object."""
+        super().__init__(PassageClass.MIDDLE, destination)
