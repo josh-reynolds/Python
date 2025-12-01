@@ -7,7 +7,6 @@ from fnmatch import fnmatch
 from os import listdir
 from typing import Any, List
 from src.command import Command
-from src.coordinate import absolute
 from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
 from src.screen import Screen
@@ -240,9 +239,8 @@ class Play(Screen):
         star_map = self.parent.star_map
         system_list = []
         for system in star_map.systems.items():
-            coord = absolute(system[0])
-            coord_string = star_map.pretty_coordinates(coord)
-            system_list.append(f"{coord[1]} : {coord_string} : {system[1]}\n")
+            system_list.append(f"{system[0].trav_coord[1]} : " +
+                               f"{self._get_subsector_string(system[1])} : {system[1]}\n")
         system_list.sort()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
