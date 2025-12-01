@@ -5,10 +5,11 @@ Terminal - contains commands for the Terminal state.
 from typing import cast, Tuple, Any
 from src.baggage import Baggage
 from src.command import Command
+from src.format import BOLD_BLUE, END_FORMAT
 from src.passengers import Passenger, PassageClass
 from src.play import Play
 from src.star_system import Hex, StarSystem
-from src.utilities import BOLD_BLUE, END_FORMAT, confirm_input
+from src.utilities import confirm_input
 
 class Terminal(Play):
     """Contains commands for the Terminal state."""

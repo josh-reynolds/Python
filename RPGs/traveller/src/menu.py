@@ -10,6 +10,7 @@ from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.financials import financials_from
+from src.format import END_FORMAT, BOLD_BLUE, HOME, CLEAR, BOLD_RED, BOLD
 from src.freight import Freight
 from src.passengers import PassageClass, passenger_from
 from src.screen import Screen
@@ -19,8 +20,7 @@ from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem
 from src.star_system_factory import hex_from
 from src.subsector import subsector_from
-from src.utilities import get_lines, HOME, CLEAR, BOLD_RED, BOLD, END_FORMAT
-from src.utilities import BOLD_BLUE, get_files, get_json_data, choose_from
+from src.utilities import get_files, get_json_data, choose_from, get_lines
 
 class Menu(Screen):
     """Draws the menu screen and gathers input from the player."""

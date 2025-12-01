@@ -4,10 +4,10 @@ Starport - contains commands for the Starport state.
 """
 from typing import Any
 from src.command import Command
+from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.passengers import PassageClass
 from src.play import Play
 from src.ship import RepairStatus, FuelQuality
-from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED
 
 class Starport(Play):
     """Contains commands for the Starport state."""

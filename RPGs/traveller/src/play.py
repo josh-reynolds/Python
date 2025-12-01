@@ -9,12 +9,12 @@ from typing import Any, List
 from src.command import Command
 from src.coordinate import absolute
 from src.draw_map import draw_map
+from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
 from src.screen import Screen
 from src.ship import FuelQuality, RepairStatus
 from src.star_system import StarSystem
-from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN
-from src.utilities import CLEAR, YELLOW_ON_RED, choose_from, pr_list, pr_highlight_list
-from src.utilities import get_next_file, die_roll, confirm_input, HOME
+from src.utilities import choose_from, pr_list, pr_highlight_list
+from src.utilities import get_next_file, die_roll, confirm_input
 
 class Play(Screen):
     """Draws the play screen and gathers input from the player.

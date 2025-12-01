@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from time import sleep
 from typing import Any, List
 from src.command import Command
-from src.utilities import BOLD_BLUE, END_FORMAT
+from src.format import END_FORMAT, BOLD_BLUE
 
 class Screen(ABC):
     """Base class for game screens."""

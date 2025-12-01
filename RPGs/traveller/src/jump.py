@@ -6,10 +6,11 @@ from typing import Any, cast
 from src.command import Command
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate, get_misjump_target
+from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.play import Play
 from src.ship import RepairStatus, FuelQuality
 from src.star_system import DeepSpace, StarSystem
-from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, die_roll, choose_from, confirm_input
+from src.utilities import die_roll, choose_from, confirm_input
 
 class Jump(Play):
     """Contains commands for the Jump state."""

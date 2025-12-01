@@ -6,11 +6,11 @@ from typing import Any
 from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
+from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.passengers import PassageClass
 from src.play import Play
 from src.ship import RepairStatus
-
-from src.utilities import BOLD_BLUE, END_FORMAT, BOLD_RED, die_roll
+from src.utilities import die_roll
 
 class Orbit(Play):
     """Contains commands for the Orbit state."""

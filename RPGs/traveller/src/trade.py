@@ -7,10 +7,11 @@ from src.cargo import Cargo
 from src.command import Command
 from src.coordinate import Coordinate
 from src.credits import Credits
+from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.freight import Freight
 from src.play import Play
 from src.star_system import Hex, StarSystem
-from src.utilities import BOLD_BLUE, END_FORMAT, confirm_input, pr_list, BOLD_RED
+from src.utilities import confirm_input, pr_list
 
 class Trade(Play):
     """Contains commands for the Trade state."""

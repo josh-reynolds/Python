@@ -5,6 +5,7 @@ Game - contains the game loop and basic controller/view logic.
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
+from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 from src.jump import Jump
 from src.menu import Menu
 from src.orbit import Orbit
@@ -16,7 +17,6 @@ from src.starport import Starport
 from src.terminal import Terminal
 from src.trade import Trade
 from src.utilities import int_input, confirm_input
-from src.utilities import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 
 # pylint: disable=R0902
 # R0902: Too many instance attributes (8/7)
