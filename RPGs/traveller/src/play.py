@@ -43,6 +43,16 @@ class Play(Screen):
                 Command('draw map', 'Create map image', self.draw_map),
                 ]
 
+    def draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
+        """Draw the banner at the top of the screen."""
+        print(f"{HOME}{CLEAR}")
+        print(f"{YELLOW_ON_RED}\n{self.parent.date} : You are " +
+              f"{self.parent.location.description()}.{repair_state}{END_FORMAT}")
+        print(f"Credits: {self.parent.financials.balance}"
+              f"\tFree hold space: {self.parent.ship.free_space()} tons"
+              f"\tFuel: {fuel_amount} tons {fuel_quality}"
+              f"\tLife support: {self.parent.ship.life_support_level}%")
+
     def update(self) -> None:
         """Draw the screen and present play choices."""
         if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
@@ -58,13 +68,7 @@ class Play(Screen):
 
         fuel_amount = f"{self.parent.ship.current_fuel}/{self.parent.ship.model.fuel_tank}"
 
-        print(f"{HOME}{CLEAR}")
-        print(f"{YELLOW_ON_RED}\n{self.parent.date} : You are " +
-              f"{self.parent.location.description()}.{repair_state}{END_FORMAT}")
-        print(f"Credits: {self.parent.financials.balance}"
-              f"\tFree hold space: {self.parent.ship.free_space()} tons"
-              f"\tFuel: {fuel_amount} tons {fuel_quality}"
-              f"\tLife support: {self.parent.ship.life_support_level}%")
+        self.draw_banner(fuel_quality, fuel_amount, repair_state)
 
         self.get_command("Enter a command (? to list):  ")
 
