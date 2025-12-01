@@ -231,14 +231,7 @@ class Play(Screen):
                 if confirmation == "n":
                     return
 
-        # TO_DO: working this out here, but should move to star_map and/or coordinate eventually
-        star_map = self.parent.star_map
-        system_list = []
-        for system in star_map.systems.items():
-            system_list.append(f"{system[0].trav_coord[1]} : " +
-                               f"{self.parent.star_map.get_subsector_string(system[1])} : " + 
-                               f"{system[1]}\n")
-        system_list.sort()
+        system_list = self.parent.star_map.list_map()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
             for line in system_list:

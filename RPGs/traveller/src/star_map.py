@@ -294,7 +294,17 @@ class StarMap:
                 (0,0) : Subsector("ORIGIN", (0,0)),
                 }
 
-    def get_subsector_string(self, system: StarSystem) -> str:
+    def list_map(self) -> List[str]:
+        """Return a list of all Hexes in the map, as strings."""
+        system_list = []
+        for system in self.systems.items():
+            system_list.append(f"{system[0].trav_coord[1]} : " +
+                               f"{self.get_subsector_string(system[1])} : " + 
+                               f"{system[1]}\n")
+        system_list.sort()
+        return system_list
+
+    def get_subsector_string(self, system: Hex) -> str:
         """Return the subsector coordinates for a given StarSystem."""
         coord = system.coordinate.trav_coord
         return self.pretty_coordinates(coord)
