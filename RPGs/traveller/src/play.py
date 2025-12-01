@@ -83,9 +83,7 @@ class Play(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        coord = self.parent.location.coordinate.trav_coord
-        sub_string = self.parent.star_map.pretty_coordinates(coord)
-        print(f"{sub_string} : {self.parent.location}")
+        print(f"{self._get_subsector_string(self.parent.location)} : {self.parent.location}")
         _ = input("\nPress ENTER key to continue.")
 
     def view_ledger(self) -> None:
@@ -114,6 +112,7 @@ class Play(Screen):
             destination = "None"
         else:
             destination = self.parent.ship.destination.name
+
         print(f"High passengers: {self.parent.ship.high_passenger_count}\n"
               f"Middle passengers: {self.parent.ship.middle_passenger_count}\n"
               f"Low passengers: {self.parent.ship.low_passenger_count}\n"
@@ -134,7 +133,11 @@ class Play(Screen):
         print(self.parent.ship)
         _ = input("\nPress ENTER key to continue.")
 
-    # TO_DO: some duplication with view_world() - refactor
+    def _get_subsector_string(self, system: StarSystem) -> str:
+        """Return the subsector coordinates for a given StarSystem."""
+        coord = system.coordinate.trav_coord
+        return self.parent.star_map.pretty_coordinates(coord)
+
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
@@ -142,9 +145,7 @@ class Play(Screen):
         system_strings = []
         highlight = ""
         for sys in systems:
-            coord = sys.coordinate.trav_coord
-            sub_string = self.parent.star_map.pretty_coordinates(coord)
-            combined = f"{sub_string} : {sys}"
+            combined = f"{self._get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
             if sys == self.parent.location:
                 highlight = combined
