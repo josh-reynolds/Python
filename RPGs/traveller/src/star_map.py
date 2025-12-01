@@ -294,6 +294,11 @@ class StarMap:
                 (0,0) : Subsector("ORIGIN", (0,0)),
                 }
 
+    def get_subsector_string(self, system: StarSystem) -> str:
+        """Return the subsector coordinates for a given StarSystem."""
+        coord = system.coordinate.trav_coord
+        return self.pretty_coordinates(coord)
+
     def pretty_coordinates(self, coord: Tuple[Tuple[int, int], Tuple[int, int]]) -> str:
         """Return the string representation of an absolute Traveller coordinate.
 

@@ -82,7 +82,8 @@ class Play(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self._get_subsector_string(self.parent.location)} : {self.parent.location}")
+        print(f"{self.parent.star_map.get_subsector_string(self.parent.location)} : " +
+              f"{self.parent.location}")
         _ = input("\nPress ENTER key to continue.")
 
     def view_ledger(self) -> None:
@@ -132,11 +133,6 @@ class Play(Screen):
         print(self.parent.ship)
         _ = input("\nPress ENTER key to continue.")
 
-    def _get_subsector_string(self, system: StarSystem) -> str:
-        """Return the subsector coordinates for a given StarSystem."""
-        coord = system.coordinate.trav_coord
-        return self.parent.star_map.pretty_coordinates(coord)
-
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
@@ -144,7 +140,7 @@ class Play(Screen):
         system_strings = []
         highlight = ""
         for sys in systems:
-            combined = f"{self._get_subsector_string(sys)} : {sys}"
+            combined = f"{self.parent.star_map.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
             if sys == self.parent.location:
                 highlight = combined
@@ -235,18 +231,18 @@ class Play(Screen):
                 if confirmation == "n":
                     return
 
-        # working this out here, but should move to star_map and/or coordinate eventually
+        # TO_DO: working this out here, but should move to star_map and/or coordinate eventually
         star_map = self.parent.star_map
         system_list = []
         for system in star_map.systems.items():
             system_list.append(f"{system[0].trav_coord[1]} : " +
-                               f"{self._get_subsector_string(system[1])} : {system[1]}\n")
+                               f"{self.parent.star_map.get_subsector_string(system[1])} : " + 
+                               f"{system[1]}\n")
         system_list.sort()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
             for line in system_list:
                 a_file.write(line)
-
 
     def dump_ledger(self) -> None:
         """Output the ledger data to a file in a human-readable format."""
