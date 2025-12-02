@@ -35,8 +35,8 @@ class Menu(Screen):
                 Command('quit', 'Quit', self.quit),
                 ]
 
-    def update(self) -> None:
-        """Draw the screen and present menu choices."""
+    def _print_title(self) -> None:
+        """Draw the game title."""
         # ASCII art from https://patorjk.com/software
         # 'Grafitti' font
         title_lines = get_lines("./data/title.txt")
@@ -47,6 +47,10 @@ class Menu(Screen):
             line = line.rstrip()
             print(f"{BOLD_RED}{line}{END_FORMAT}")
         print(f"{BOLD}\n{string}{END_FORMAT}")
+
+    def update(self) -> None:
+        """Draw the screen and present menu choices."""
+        self._print_title()
 
         for command in self.commands:
             print(f"{command.key} - {command.description}")
