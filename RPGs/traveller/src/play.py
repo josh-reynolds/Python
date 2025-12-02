@@ -42,7 +42,7 @@ class Play(Screen):
                 Command('draw map', 'Create map image', self.draw_map),
                 ]
 
-    def draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
+    def _draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.parent.date} : You are " +
@@ -67,7 +67,7 @@ class Play(Screen):
 
         fuel_amount = f"{self.parent.ship.current_fuel}/{self.parent.ship.model.fuel_tank}"
 
-        self.draw_banner(fuel_quality, fuel_amount, repair_state)
+        self._draw_banner(fuel_quality, fuel_amount, repair_state)
 
         self.get_command("Enter a command (? to list):  ")
 
@@ -168,8 +168,6 @@ class Play(Screen):
         else:
             print("No progress today. Drives are still out of commission.")
 
-    # pylint: disable=R0914
-    # R0914: Too many local variables(16/15)
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
@@ -183,32 +181,21 @@ class Play(Screen):
             sub = self.parent.star_map.subsectors[coord]
             subsectors.append(f"{coord} - {sub}")
 
-        date_string = f"{self.parent.date}"
-
-        ship_model_string = self.parent.ship.model.name
-        ship_string = self.parent.ship.encode()
-
         passenger_list = [p.encode() for p in self.parent.ship.passengers]
 
         cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
 
-        financials_string = self.parent.financials.encode()
-
-        location_string = f"{self.parent.location.coordinate}"
-
-        menu_string = f"{self.parent.screen}"
-
         save_data = {
-                     'date' : date_string,
+                     'date' : f"{self.parent.date}",
                      'systems' : systems,
                      'subsectors' : subsectors,
-                     'location' : location_string,
-                     'menu' : menu_string,
-                     'ship model' : ship_model_string,
-                     'ship details' : ship_string,
+                     'location' : f"{self.parent.location.coordinate}",
+                     'menu' : f"{self.parent.screen}",
+                     'ship model' : self.parent.ship.model.name,
+                     'ship details' : self.parent.ship.encode(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
-                     'financials' : financials_string,
+                     'financials' : self.parent.financials.encode(),
                      'ledger' : self.parent.financials.ledger
                      }
 
