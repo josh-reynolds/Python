@@ -9,7 +9,6 @@ from enum import Enum
 from typing import List, Any
 from src.cargo import Cargo
 from src.credits import Credits
-from src.crew import Engineer, Medic
 from src.freight import Freight
 from src.passengers import PassageClass, Passenger
 from src.star_system import StarSystem
@@ -308,19 +307,11 @@ class Ship:
     #   attending medic of expertise 2 or better, +1
     def medic_skill(self) -> int:
         """Return the best medic skill from the Ship's crew."""
-        skills = [c.skill for c in self.crew if isinstance(c, Medic)]
-        if len(skills) > 0:
-            if max(skills) > 1:
-                return 1
-            return 0
-        raise ValueError("No medic on board!")
+        return max(c.medic_skill for c in self.crew)
 
     def engineering_skill(self) -> int:
         """Return the best engineering skill from the Ship's crew."""
-        skills = [c.skill for c in self.crew if isinstance(c, Engineer)]
-        if len(skills) > 0:
-            return max(skills)
-        raise ValueError("No engineer on board!")
+        return max(c.engineer_skill for c in self.crew)
 
     # Book 2 p. 19
     # ...four for the crew: pilot, engineer, medic and steward...
