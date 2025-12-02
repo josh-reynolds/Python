@@ -1,7 +1,7 @@
 #! /bin/sh
 
 echo "RUNNING PYLINT ======================"
-pylint --recursive y .
+pylint --load-plugins=pylint.extensions.mccabe --recursive y .
 
 echo
 echo "RUNNING PYDOCSTYLE =================="
