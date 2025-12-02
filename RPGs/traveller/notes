@@ -3037,6 +3037,8 @@
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [    ] Fix mypy errors with Pillow
+#  * [    ] Review confirm blocks, inconsistent usage throughout
+#  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)

@@ -384,7 +384,6 @@ class StarMap:
                    abs(transformed[1]),
                    abs(transformed[2]))
 
-    # TO_DO: should we default origin param to (0,0,0)?
     @classmethod
     def _get_coordinates_within_range(cls, origin: Coordinate,
                                       radius: int) -> List[Coordinate]:

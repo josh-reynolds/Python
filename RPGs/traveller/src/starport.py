@@ -8,6 +8,7 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.passengers import PassageClass
 from src.play import Play
 from src.ship import RepairStatus, FuelQuality
+from src.utilities import confirm_input
 
 class Starport(Play):
     """Contains commands for the Starport state."""
@@ -98,9 +99,13 @@ class Starport(Play):
                   f"It will cost {cost}. Your balance is {self.parent.financials.balance}.")
             return
 
-        # TO_DO: should we have a confirmation here?
+        confirmation = confirm_input(f"Maintenance will cost {cost} and take " +
+                                     "two weeks. Continue (y/n)? ")
+        if confirmation == "n":
+            return
+
         # TO_DO: should we warn or block if maintenance was performed recently?
-        print(f"Performing maintenance. This will take two weeks. Charging {cost}.")
+        print(f"Performing maintenance. Charging {cost}.")
         self.parent.financials.last_maintenance = self.parent.date.current_date
         self.parent.financials.debit(cost, "annual maintenance")
         self.parent.date.day += 14    # should we wrap this in a method call?
