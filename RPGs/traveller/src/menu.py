@@ -48,14 +48,17 @@ class Menu(Screen):
             print(f"{BOLD_RED}{line}{END_FORMAT}")
         print(f"{BOLD}\n{string}{END_FORMAT}")
 
-    def update(self) -> None:
-        """Draw the screen and present menu choices."""
-        self._print_title()
-
+    def _get_menu_choice(self):
+        """Take player's choice from the menu."""
         for command in self.commands:
             print(f"{command.key} - {command.description}")
 
         self.get_command("\nEnter a command:  ")
+
+    def update(self) -> None:
+        """Draw the screen and present menu choices."""
+        self._print_title()
+        self._get_menu_choice()
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
