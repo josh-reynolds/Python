@@ -99,12 +99,17 @@ class Starport(Play):
                   f"It will cost {cost}. Your balance is {self.parent.financials.balance}.")
             return
 
+        if self.parent.financials.maintenance_status(self.parent.date.current_date) == "green":
+            confirmation = confirm_input("Maintenance was performed less than 10 months " +
+                                         "ago. Continue (y/n)? ")
+            if confirmation == "n":
+                return
+
         confirmation = confirm_input(f"Maintenance will cost {cost} and take " +
                                      "two weeks. Continue (y/n)? ")
         if confirmation == "n":
             return
 
-        # TO_DO: should we warn or block if maintenance was performed recently?
         print(f"Performing maintenance. Charging {cost}.")
         self.parent.financials.last_maintenance = self.parent.date.current_date
         self.parent.financials.debit(cost, "annual maintenance")
