@@ -185,14 +185,7 @@ def financials_from(string:str) -> Financials:
     current_date = imperial_date_from(tokens[1])
     result = Financials(balance, current_date, None, None)
 
-    berth_expiry = imperial_date_from(tokens[2])
-    if current_date - berth_expiry > 6:
-        raise ValueError("berth expiry value cannot be more than "
-                         + f"six days before current date: '{berth_expiry}'")
-    if berth_expiry - current_date  > 6:
-        raise ValueError("berth expiry value cannot be more than "
-                         + f"six days from current date: '{berth_expiry}'")
-    result.berth_expiry = berth_expiry
+    result.berth_expiry = _get_berth_expiry(tokens[2], current_date)
 
     salary_paid = imperial_date_from(tokens[3])
     if current_date - salary_paid > 28:
@@ -218,3 +211,14 @@ def financials_from(string:str) -> Financials:
     result.last_maintenance = last_maintenance
 
     return result
+
+def _get_berth_expiry(token: str, current_date: ImperialDate) -> ImperialDate:
+    """Extract berth expiry date from string data."""
+    berth_expiry = imperial_date_from(token)
+    if current_date - berth_expiry > 6:
+        raise ValueError("berth expiry value cannot be more than "
+                         + f"six days before current date: '{berth_expiry}'")
+    if berth_expiry - current_date  > 6:
+        raise ValueError("berth expiry value cannot be more than "
+                         + f"six days from current date: '{berth_expiry}'")
+    return berth_expiry
