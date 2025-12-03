@@ -173,12 +173,10 @@ def financials_from(string:str) -> Financials:
     tokens = string.split(' - ')
 
     if len(tokens) > 6:
-        raise ValueError("input string has extra data: "
-                         + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105 - 361-1104 - 0000'")
+        raise ValueError(f"input string has extra data: '{string}'")
 
     if len(tokens) < 6:
-        raise ValueError("input string is missing data: "
-                         + "'1000 - 010-1105 - 010-1105 - 010-1105 - 004-1105'")
+        raise ValueError(f"input string is missing data: '{string}'")
 
     balance = int(tokens[0])
     if balance < 0:

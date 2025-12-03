@@ -3034,6 +3034,7 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
+#  * [....] Add cyclomatic complexity to lint criteria, and deal with warnings
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [    ] Fix mypy errors with Pillow

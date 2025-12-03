@@ -16,6 +16,3 @@ mypy .
 echo
 echo "RUNNING UNIT TESTS =================="
 python ./unit_tests.py
-
-# TO_DO: add check to validate all test files
-#        have been added to unit_tests.py
