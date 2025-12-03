@@ -186,15 +186,7 @@ def financials_from(string:str) -> Financials:
     result = Financials(balance, current_date, None, None)
 
     result.berth_expiry = _get_berth_expiry(tokens[2], current_date)
-
-    salary_paid = imperial_date_from(tokens[3])
-    if current_date - salary_paid > 28:
-        raise ValueError("salary paid value cannot be more than "
-                         + f"twenty eight days before current date: '{salary_paid}'")
-    if salary_paid > current_date:
-        raise ValueError("salary paid value cannot be later than the " +
-                         f"current date: '{salary_paid}'")
-    result.salary_paid = salary_paid
+    result.salary_paid = _get_salary_paid(tokens[3], current_date)
 
     loan_paid = imperial_date_from(tokens[4])
     if current_date - loan_paid > 28:
@@ -222,3 +214,14 @@ def _get_berth_expiry(token: str, current_date: ImperialDate) -> ImperialDate:
         raise ValueError("berth expiry value cannot be more than "
                          + f"six days from current date: '{berth_expiry}'")
     return berth_expiry
+
+def _get_salary_paid(token: str, current_date: ImperialDate) -> ImperialDate:
+    """Extract salary paid date from string data."""
+    salary_paid = imperial_date_from(token)
+    if current_date - salary_paid > 28:
+        raise ValueError("salary paid value cannot be more than "
+                         + f"twenty eight days before current date: '{salary_paid}'")
+    if salary_paid > current_date:
+        raise ValueError("salary paid value cannot be later than the " +
+                         f"current date: '{salary_paid}'")
+    return salary_paid
