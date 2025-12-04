@@ -3024,6 +3024,7 @@
 #  * [DONE] BUG: Scout only has a Pilot on board, fails with "no Engineer" when
 #           attempting damage control
 #  * [DONE] Fix mypy errors with Pillow (nix-shell -p python311Packages.types-pillow)
+#  * [DONE] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3068,7 +3069,6 @@
 #  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
-#  * [    ] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)

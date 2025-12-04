@@ -100,8 +100,8 @@ class Terminal(Play):
         selection: Tuple[int, ...] = (0,0,0)
         ship_capacity: Tuple[int, ...] = (self.parent.ship.empty_passenger_berths,
                                           self.parent.ship.empty_low_berths)
-
         ship_hold = self.parent.ship.free_space()
+        
         while True:
             if available == (0,0,0):
                 print(f"No more passengers available for {destination.name}.")
@@ -110,10 +110,6 @@ class Terminal(Play):
             response = input("Choose a passenger by type (h, m, l) and number, or q to exit): ")
             if response == 'q':
                 break
-
-            print(f"Remaining (H, M, L): {available}")
-            print(f"Selected (H, M, L): {selection}")
-            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
             tokens = response.split()
             if len(tokens) != 2:
@@ -174,6 +170,10 @@ class Terminal(Play):
                 selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
                 available = tuple(a+b for a,b in zip(available,(0,0,-count)))
                 ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
+
+            print(f"Remaining (H, M, L): {available}")
+            print(f"Selected (H, M, L): {selection}")
+            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
 
         print("Done selecting passengers.")
         return selection
