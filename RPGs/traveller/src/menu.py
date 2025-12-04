@@ -227,8 +227,6 @@ class Menu(Screen):
         sub_x, sub_y = coord[1:-1].split(',')
         return (int(sub_x), int(sub_y))
 
-    # pylint: disable=R0912
-    # R0912: Too many branches (13/12)
     def _parse_import_file_contents(self,
                                     content: List[str]) -> Dict[str, Dict | List | str] | None:
         """Convert lines from a Traveller map import file into a dictionary.
@@ -248,41 +246,39 @@ class Menu(Screen):
         section = ''
         data: Dict[str, Dict | List | str] = {}
         for line in content:
-            if len(line) < 2:   # skip blank lines
-                continue
-            if line[0] == '#':  # skip comments
+            if len(line) < 2 or line[0] == '#':   # skip blank lines & comments
                 continue
             line = line.rstrip()
 
             if line[0] == '[':
-                if line == '[Subsectors]':
-                    section = 'subsectors'
-                    data[section] = {}
-                elif line == '[Systems]':
-                    section = 'systems'
-                    data[section] = []
-                elif line == '[Location]':
-                    section = 'location'
-                    data[section] = ""
-                else:
-                    print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
-                    return None
+                match line:
+                    case '[Subsectors]':
+                        section = 'subsectors'
+                        data[section] = {}
+                    case '[Systems]':
+                        section = 'systems'
+                        data[section] = []
+                    case '[Location]':
+                        section = 'location'
+                        data[section] = ""
+                    case _:
+                        print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
+                        return None
                 continue
 
             # data is type Dict[str, Dict | List | str] and mypy
             # can't distinguish the union in the assignments below
-            if section == 'subsectors':
-                tokens = line.split()
-                data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload,index]
-
-            if section == 'systems':
-                data[section].append(line)            # type: ignore[union-attr]
-
-            if section == 'location':
-                if not data[section]:
-                    data[section] = line              # type: ignore[union-attr]
-                else:
-                    raise ValueError(f"more than one location specified: '{line}'")
+            match section:
+                case 'subsectors':
+                    tokens = line.split()
+                    data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload,index]
+                case 'systems':
+                    data[section].append(line)            # type: ignore[union-attr]
+                case 'location':
+                    if not data[section]:
+                        data[section] = line              # type: ignore[union-attr]
+                    else:
+                        raise ValueError(f"more than one location specified: '{line}'")
 
         return data
 
