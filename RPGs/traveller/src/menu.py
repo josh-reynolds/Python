@@ -1,6 +1,6 @@
 """Contains the front end menu screen printing and logic.
 
-Menu - draws the screen and gathers input from the player.
+MenuScreen - draws the screen and gathers input from the player.
 """
 from typing import Any, List, cast, Tuple, Dict
 from src.baggage import Baggage
@@ -22,11 +22,11 @@ from src.star_system_factory import hex_from
 from src.subsector import subsector_from
 from src.utilities import get_files, get_json_data, choose_from, get_lines
 
-class Menu(Screen):
+class MenuScreen(Screen):
     """Draws the menu screen and gathers input from the player."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Menu object."""
+        """Create a MenuScreen object."""
         super().__init__(parent)
         self.commands: List[Command] = [
                 Command('new', 'New Game', self.new_game),

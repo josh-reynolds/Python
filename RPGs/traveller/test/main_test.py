@@ -1,7 +1,7 @@
 """Contains tests for the traveller module."""
 import unittest
 from main import Game
-from src.menu import Menu
+from src.menu import MenuScreen
 
 # most of these methods necessarily have side effects,
 # so we're going to have to tease out the testable bits
@@ -13,7 +13,7 @@ class GameTestCase(unittest.TestCase):
         """Tests construction of a Game object."""
         game = Game()
         self.assertFalse(game.running)
-        self.assertTrue(isinstance(game.screen, Menu))
+        self.assertTrue(isinstance(game.screen, MenuScreen))
 
     @unittest.skip("test has side effects: input & printing")
     def test_get_input(self) -> None:

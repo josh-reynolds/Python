@@ -2,11 +2,11 @@
 import unittest
 from typing import List, cast
 from main import Game
-from src.trade import Trade
+from src.trade import TradeScreen
 from src.star_system import StarSystem
 
-class TradeTestCase(unittest.TestCase):
-    """Test Trade screen."""
+class TradeScreenTestCase(unittest.TestCase):
+    """Test TradeScreen class."""
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _get_freight_destinations of a client class
@@ -14,7 +14,7 @@ class TradeTestCase(unittest.TestCase):
     def test_get_destinations(self) -> None:
         """Test getting list of freight destinations."""
         game = Game()
-        trade = Trade(game)
+        trade = TradeScreen(game)
         potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
 
         destinations = trade._get_destinations(potential_destinations,
@@ -33,7 +33,7 @@ class TradeTestCase(unittest.TestCase):
     def test_select_freight_lots(self):
         """Test selection of freight from a list."""
         game = Game()
-        trade = Trade(game)
+        trade = TradeScreen(game)
         available = [5, 10, 15, 20]
         destination = game.location.destinations[0]
 

@@ -1,21 +1,21 @@
-"""Contains the Terminal screen class.
+"""Contains the TerminalScreen class.
 
-Terminal - contains commands for the Terminal state.
+TerminalScreen - contains commands for the terminal state.
 """
 from typing import cast, Tuple, Any
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
 from src.passengers import Passenger, PassageClass
-from src.play import Play
+from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
 from src.utilities import confirm_input
 
-class Terminal(Play):
-    """Contains commands for the Terminal state."""
+class TerminalScreen(PlayScreen):
+    """Contains commands for the terminal state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Terminal object."""
+        """Create a TerminalScreen object."""
         super().__init__(parent)
 
         # this is declared as List[Command] in super(),

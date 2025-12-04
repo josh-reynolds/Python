@@ -1,6 +1,6 @@
-"""Contains the Orbit screen class.
+"""Contains the OrbitScreen class.
 
-Orbit - contains commands for the Orbit state.
+OrbitScreen - contains commands for the orbit state.
 """
 from typing import Any
 from src.baggage import Baggage
@@ -8,15 +8,15 @@ from src.command import Command
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.passengers import PassageClass
-from src.play import Play
+from src.play import PlayScreen
 from src.ship import RepairStatus
 from src.utilities import die_roll
 
-class Orbit(Play):
-    """Contains commands for the Orbit state."""
+class OrbitScreen(PlayScreen):
+    """Contains commands for the orbit state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create an Orbit object."""
+        """Create an OrbitScreen object."""
         super().__init__(parent)
         self.commands += [
                 Command('land', 'Land at starport', self.land),

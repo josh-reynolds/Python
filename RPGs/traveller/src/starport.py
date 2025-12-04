@@ -1,20 +1,20 @@
-"""Contains the Starport screen class.
+"""Contains the StarportScreen class.
 
-Starport - contains commands for the Starport state.
+StarportScreen - contains commands for the starport state.
 """
 from typing import Any
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.passengers import PassageClass
-from src.play import Play
+from src.play import PlayScreen
 from src.ship import RepairStatus, FuelQuality
 from src.utilities import confirm_input
 
-class Starport(Play):
-    """Contains commands for the Starport state."""
+class StarportScreen(PlayScreen):
+    """Contains commands for the starport state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Starport object."""
+        """Create a StarportScreen object."""
         super().__init__(parent)
         self.commands += [
                 Command('life support', 'Recharge life support', self.recharge),

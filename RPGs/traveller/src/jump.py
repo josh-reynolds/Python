@@ -1,22 +1,22 @@
-"""Contains the Jump screen class.
+"""Contains the JumpScreen class.
 
-Jump - contains commands for the Jump state.
+JumpScreen - contains commands for the jump state.
 """
 from typing import Any, cast
 from src.command import Command
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.play import Play
+from src.play import PlayScreen
 from src.ship import RepairStatus, FuelQuality
 from src.star_system import DeepSpace, StarSystem
 from src.utilities import die_roll, choose_from, confirm_input
 
-class Jump(Play):
-    """Contains commands for the Jump state."""
+class JumpScreen(PlayScreen):
+    """Contains commands for the jump state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Jump object."""
+        """Create a JumpScreen object."""
         super().__init__(parent)
         self.commands += [
                 Command('inbound', 'Inbound to orbit', self.inbound_from_jump),

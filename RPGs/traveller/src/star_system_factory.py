@@ -52,7 +52,7 @@ def hex_from(string: str) -> Hex:
     """Create a StarSystem object from a string representation.
 
     String format matches the 'systems' section of the output of 
-    Play.save_game(), which itself is comprised of Coordinate.__str__ 
+    PlayScreen.save_game(), which itself is comprised of Coordinate.__str__ 
     and StarSystem.__str__, and the latter incorporates UWP.__str__ :
 
     Coordinate - Name - UWP / Trade - Gas Giant

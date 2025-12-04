@@ -36,7 +36,7 @@ def subsector_from(string: str) -> Subsector:
     """Create a Subsector object from a string representation.
 
     String format matches the 'subsectors' section of the output
-    of Play.save_game(), which is comprised of a coordinate tuple
+    of PlayScreen.save_game(), which is comprised of a coordinate tuple
     and subsector name.
 
     Coordinate - Subsector Name

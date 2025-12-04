@@ -1,6 +1,6 @@
-"""Contains the Trade screen class.
+"""Contains the TradeScreen class.
 
-Trade - contains commands for the Trade state.
+TradeScreen - contains commands for the trade state.
 """
 from typing import Any, cast, List, Tuple
 from src.cargo import Cargo
@@ -9,15 +9,15 @@ from src.coordinate import Coordinate
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.freight import Freight
-from src.play import Play
+from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
 from src.utilities import confirm_input, pr_list
 
-class Trade(Play):
-    """Contains commands for the Trade state."""
+class TradeScreen(PlayScreen):
+    """Contains commands for the trade state."""
 
     def __init__(self, parent: Any) -> None:
-        """Create a Trade object."""
+        """Create a TradeScreen object."""
         super().__init__(parent)
         self.commands += [
                 Command('leave', 'Leave trade depot', self.leave_depot),

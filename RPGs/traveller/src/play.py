@@ -1,6 +1,6 @@
 """Contains the base class for play screens.
 
-Screen - draws the play screen and gathers input from the player.
+PlayScreen - draws the play screen and gathers input from the player.
 """
 import json
 from fnmatch import fnmatch
@@ -15,14 +15,15 @@ from src.star_system import StarSystem
 from src.utilities import choose_from, pr_list, pr_highlight_list
 from src.utilities import get_next_file, confirm_input
 
-class Play(Screen):
+class PlayScreen(Screen):
     """Draws the play screen and gathers input from the player.
 
-    Base class for all Play screens.
+    Base class for all Play screens, and contains commands that are
+    available in every state.
     """
 
     def __init__(self, parent: Any) -> None:
-        """Create a Play Screen object."""
+        """Create a PlayScreen object."""
         super().__init__(parent)
         self.commands: List[Command] = [
                 Command('?', 'List commands', self.list_commands),

@@ -6,16 +6,16 @@ from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
 from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
-from src.jump import Jump
-from src.menu import Menu
-from src.orbit import Orbit
+from src.jump import JumpScreen
+from src.menu import MenuScreen
+from src.orbit import OrbitScreen
 from src.screen import Screen
 from src.ship import Ship
 from src.star_system import StarSystem
 from src.star_map import StarMap
-from src.starport import Starport
-from src.terminal import Terminal
-from src.trade import Trade
+from src.starport import StarportScreen
+from src.terminal import TerminalScreen
+from src.trade import TradeScreen
 from src.utilities import int_input, confirm_input
 
 # pylint: disable=R0902
@@ -26,7 +26,7 @@ class Game:
     def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
-        self.screen: Screen = Menu(self)
+        self.screen: Screen = MenuScreen(self)
 
         self.date: Calendar
         self.ship: Ship
@@ -71,19 +71,19 @@ class Game:
         match new_state:
             case "Orbit":
                 self.location.detail = "orbit"
-                self.screen = Orbit(self)
+                self.screen = OrbitScreen(self)
             case "Starport":
                 self.location.detail = "starport"
-                self.screen = Starport(self)
+                self.screen = StarportScreen(self)
             case "Jump":
                 self.location.detail = "jump"
-                self.screen = Jump(self)
+                self.screen = JumpScreen(self)
             case "Trade":
                 self.location.detail = "trade"
-                self.screen = Trade(self)
+                self.screen = TradeScreen(self)
             case "Terminal":
                 self.location.detail = "terminal"
-                self.screen = Terminal(self)
+                self.screen = TerminalScreen(self)
             case _:
                 raise ValueError(f"unrecognized menu item: '{new_state}'")
 
