@@ -129,26 +129,29 @@ class CargoDepot:
         but the world generation procedure only generates populations
         up to 10, so those entries are omitted here.
         """
-        if population < 2:
-            return (0,0,0)
-        if population == 2:
-            modifiers = (-1,-2,-4)
-        if population == 3:
-            modifiers = (-1,-1,-3)
-        if population == 4:
-            modifiers = (-1,-1,-2)
-        if population == 5:
-            modifiers = (0,-1,-1)
-        if population == 6:
-            modifiers = (0,0,-1)
-        if population == 7:
-            modifiers = (0,0,0)
-        if population == 8:
-            modifiers = (1,0,0)
-        if population == 9:
-            modifiers = (1,1,0)
-        if population == 10:
-            modifiers = (1,1,2)
+        match population:
+            case 0:
+                return (0,0,0)
+            case 1:
+                return (0,0,0)
+            case 2:
+                modifiers = (-1,-2,-4)
+            case 3:
+                modifiers = (-1,-1,-3)
+            case 4:
+                modifiers = (-1,-1,-2)
+            case 5:
+                modifiers = (0,-1,-1)
+            case 6:
+                modifiers = (0,0,-1)
+            case 7:
+                modifiers = (0,0,0)
+            case 8:
+                modifiers = (1,0,0)
+            case 9:
+                modifiers = (1,1,0)
+            case 10:
+                modifiers = (1,1,2)
 
         return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
