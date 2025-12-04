@@ -153,3 +153,13 @@ def get_tokens(string: str, min_tokens: int, max_tokens: int) -> List[str]:
         raise ValueError(f"input string is missing data: '{string}'")
 
     return tokens
+
+def is_good_deal(prompt: str, price_adjustment: float) -> bool:
+    """Assess whether a given adjustment is a good deal."""
+    return (prompt == "sale" and price_adjustment > 1) or \
+           (prompt == "purchase" and price_adjustment < 1)
+
+def is_bad_deal(prompt: str, price_adjustment: float) -> bool:
+    """Assess whether a given adjustment is a bad deal."""
+    return (prompt == "sale" and price_adjustment < 1) or \
+           (prompt == "purchase" and price_adjustment > 1)

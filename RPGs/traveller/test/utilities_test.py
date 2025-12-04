@@ -1,7 +1,7 @@
 """Contains tests for the utilities module."""
 import unittest
 from src.utilities import actual_value, die_roll, constrain, get_lines
-from src.utilities import dictionary_from, valid_index
+from src.utilities import dictionary_from, valid_index, is_good_deal, is_bad_deal
 
 class UtilitiesTestCase(unittest.TestCase):
     """Tests utility functions."""
@@ -88,6 +88,28 @@ class UtilitiesTestCase(unittest.TestCase):
         self.assertFalse(valid_index(-1, a_list))
         self.assertFalse(valid_index(5, a_list))
         self.assertFalse(valid_index(100, a_list))
+
+    def test_is_good_deal(self) -> None:
+        """Test assessing a price adjustment."""
+        self.assertTrue(is_good_deal("sale", 1.1))
+        self.assertTrue(is_good_deal("purchase", .9))
+
+        self.assertFalse(is_good_deal("sale", .9))
+        self.assertFalse(is_good_deal("purchase", 1.1))
+
+        self.assertFalse(is_good_deal("sale", 1))
+        self.assertFalse(is_good_deal("purchase", 1))
+
+    def test_is_bad_deal(self) -> None:
+        """Test assessing a price adjustment."""
+        self.assertTrue(is_bad_deal("sale", .9))
+        self.assertTrue(is_bad_deal("purchase", 1.1))
+
+        self.assertFalse(is_bad_deal("sale", 1.1))
+        self.assertFalse(is_bad_deal("purchase", .9))
+
+        self.assertFalse(is_bad_deal("sale", 1))
+        self.assertFalse(is_bad_deal("purchase", 1))
 
     # remaining functions are almost purely side-effect,
     # not terribly useful to have unit tests

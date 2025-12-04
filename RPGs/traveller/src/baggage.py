@@ -26,8 +26,6 @@ class Baggage(Freight):
         return f"Baggage - {self.source_world.coordinate} - {self.destination_world.coordinate}"
 
 
-# TO_DO: duplicates code from freight_from, consider merging,
-#        or at least extracting the coordinate parsing bits
 def baggage_from(source: str, destination: str,
                  systems: Mapping[Coordinate, Hex]) -> Baggage:
     """Create a Baggage object from a parsed source string.

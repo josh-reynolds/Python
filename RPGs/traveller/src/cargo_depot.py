@@ -11,7 +11,7 @@ from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.freight import Freight, freight_from
 from src.star_system import StarSystem, Hex
-from src.utilities import die_roll, constrain, actual_value
+from src.utilities import die_roll, constrain, actual_value, is_good_deal, is_bad_deal
 
 class CargoDepot:
     """Represents a starport cargo depot.
@@ -279,11 +279,10 @@ class CargoDepot:
                 cargo.price_adjustment = price_adjustment
 
         price = Credits(round(cargo.price.amount * price_adjustment * quantity))
-        if ((prompt == "sale" and price_adjustment > 1) or
-            (prompt == "purchase" and price_adjustment < 1)):
+
+        if is_good_deal(prompt, price_adjustment):
             pr_function = "green"
-        elif ((prompt == "sale" and price_adjustment < 1) or
-              (prompt == "purchase" and price_adjustment > 1)):
+        elif is_bad_deal(prompt, price_adjustment):
             pr_function = "red"
         else:
             pr_function = ""

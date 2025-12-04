@@ -101,7 +101,7 @@ class Terminal(Play):
         ship_capacity: Tuple[int, ...] = (self.parent.ship.empty_passenger_berths,
                                           self.parent.ship.empty_low_berths)
         ship_hold = self.parent.ship.free_space()
-        
+
         while True:
             if available == (0,0,0):
                 print(f"No more passengers available for {destination.name}.")
