@@ -22,6 +22,7 @@ class Jump(Play):
                 Command('inbound', 'Inbound to orbit', self.inbound_from_jump),
                 Command('jump', 'Jump to new system', self.jump),
                 Command('skim', 'Skim fuel from gas giant', self.skim),
+                Command('damage control', 'Engineering damage control', self.damage_control),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -168,3 +169,19 @@ class Jump(Play):
         self.parent.ship.current_fuel = self.parent.ship.model.fuel_tank
         self.parent.ship.fuel_quality = FuelQuality.UNREFINED
         self.parent.date.day += 1
+
+    def damage_control(self) -> None:
+        """Repair damage to the Ship (Engineer)."""
+        print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
+        if self.parent.ship.repair_status == RepairStatus.REPAIRED:
+            print("Your ship is not damaged.")
+            return
+        if self.parent.ship.repair_status == RepairStatus.PATCHED:
+            print("Further repairs require starport facilities.")
+            return
+        self.parent.date.day += 1
+        if die_roll(2) + self.parent.ship.engineering_skill() > 9:
+            self.parent.ship.repair_status = RepairStatus.PATCHED
+            print("Ship partially repaired. Visit a starport for further work.")
+        else:
+            print("No progress today. Drives are still out of commission.")
