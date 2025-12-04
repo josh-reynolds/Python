@@ -138,3 +138,18 @@ def get_json_data(filename: str) -> Dict[str, Any] | None:
     except FileNotFoundError:
         print(f"{BOLD_RED}File {filename} not found.{END_FORMAT}")
         return None
+
+def get_tokens(string: str, min_tokens: int, max_tokens: int) -> List[str]:
+    """Split a string into tokens, validating the expected number is received.
+
+    Tokens in the input string should be delimited by ' - '.
+    """
+    tokens = string.split(' - ')
+
+    if len(tokens) > max_tokens:
+        raise ValueError(f"input string has extra data: '{string}'")
+
+    if len(tokens) < min_tokens:
+        raise ValueError(f"input string is missing data: '{string}'")
+
+    return tokens

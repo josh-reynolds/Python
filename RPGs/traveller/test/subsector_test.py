@@ -21,13 +21,14 @@ class SubsectorTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             _ = subsector_from(string)
         self.assertEqual(f"{context.exception}",
-                         "subsector data should have exactly two fields: 1")
+                         "input string is missing data: 'Betelgeuse Marches'")
 
         string = "(-1, 0) - Betelgeuse Marches - extra - stuff"
         with self.assertRaises(ValueError) as context:
             _ = subsector_from(string)
         self.assertEqual(f"{context.exception}",
-                         "subsector data should have exactly two fields: 4")
+                         "input string has extra data: " +
+                         "'(-1, 0) - Betelgeuse Marches - extra - stuff'")
 
         string = "(0) - Betelgeuse Marches"
         with self.assertRaises(ValueError) as context:

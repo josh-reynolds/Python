@@ -13,7 +13,7 @@ hex_from() - create a StarSystem object from a string representation.
 """
 from src.coordinate import Coordinate, coordinate_from
 from src.star_system import StarSystem, Hex, DeepSpace
-from src.utilities import die_roll, constrain
+from src.utilities import die_roll, constrain, get_tokens
 from src.uwp import UWP, uwp_from
 from src.word_gen import get_world_name
 
@@ -59,16 +59,12 @@ def hex_from(string: str) -> Hex:
     (d,d,d) - w* - wdddddd-d w?* - G?
     Coordinate digits are +/- integers.
     """
-    tokens = string.split(' - ')
+    tokens = get_tokens(string, 2, 4)
 
-    if len(tokens) == 2 and tokens[1] == "Deep Space":
-        return DeepSpace(coordinate_from(tokens[0]))
-
-    if len(tokens) < 3:
+    if len(tokens) == 2:
+        if tokens[1] == "Deep Space":
+            return DeepSpace(coordinate_from(tokens[0]))
         raise ValueError(f"input string is missing data: '{string}'")
-
-    if len(tokens) > 4:
-        raise ValueError(f"input string has extra data: '{string}'")
 
     gas_giant = False
     if len(tokens) == 4 and tokens[3] == 'G':

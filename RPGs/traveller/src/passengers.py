@@ -10,7 +10,7 @@ from typing import Any, Mapping, cast
 from src.coordinate import Coordinate, coordinate_from
 from src.credits import Credits
 from src.star_system import StarSystem, Hex
-from src.utilities import die_roll
+from src.utilities import die_roll, get_tokens
 
 class PassageClass(Enum):
     """Denotes the class of a Passenger's ticket."""
@@ -82,13 +82,7 @@ def passenger_from(string: str, systems: Mapping[Coordinate, Hex]) -> Passenger:
     The function also needs access to a dictionary of StarSystems, and
     the coordinate in the string must be a key in that dictionary.
     """
-    tokens = string.split(' - ')
-
-    if len(tokens) > 2:
-        raise ValueError(f"input string has extra data: '{string}'")
-
-    if len(tokens) < 2:
-        raise ValueError(f"input string is missing data: '{string}'")
+    tokens = get_tokens(string, 2, 2)
 
     passage_str = tokens[0].lower()
     if passage_str == "high":

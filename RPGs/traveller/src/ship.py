@@ -13,7 +13,7 @@ from src.freight import Freight
 from src.passengers import PassageClass, Passenger
 from src.star_system import StarSystem
 from src.ship_model import ship_model_from
-from src.utilities import die_roll
+from src.utilities import die_roll, get_tokens
 
 class FuelQuality(Enum):
     """Represents whether fuel is contaminated or not."""
@@ -406,13 +406,7 @@ def ship_from(string: str, model: str) -> Ship:
     The function also needs the name of the ship model to pass on to
     the constructor.
     """
-    tokens = string.split(' - ')
-
-    if len(tokens) > 6:
-        raise ValueError(f"input string has extra data: '{string}'")
-
-    if len(tokens) < 6:
-        raise ValueError(f"input string is missing data: '{string}'")
+    tokens = get_tokens(string, 6, 6)
 
     ship = Ship(model)
 

@@ -4,6 +4,7 @@ Subsector - represents a Traveller subsector.
 subsector_from() - create a Subsector object from a string representation.
 """
 from typing import Tuple, Any
+from src.utilities import get_tokens
 
 class Subsector:
     """Represents a Traveller subsector."""
@@ -42,10 +43,7 @@ def subsector_from(string: str) -> Subsector:
     (d,d) - w*
     Coordinate digits are +/- integers.
     """
-    tokens = string.split(' - ')
-
-    if len(tokens) != 2:
-        raise ValueError(f"subsector data should have exactly two fields: {len(tokens)}")
+    tokens = get_tokens(string, 2, 2)
 
     coord_str = tokens[0]
     coord_str = coord_str[1:-1]     # remove surrounding parentheses

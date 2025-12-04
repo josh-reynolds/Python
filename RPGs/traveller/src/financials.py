@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any, List, cast
 from src.credits import Credits
 from src.imperial_date import ImperialDate, imperial_date_from
+from src.utilities import get_tokens
 
 # pylint: disable=R0902
 # R0902: Too many instance attributes (12/7)
@@ -160,7 +161,7 @@ class Financials:
         return f"{self.balance.amount} - {self.current_date} - {self.berth_expiry} - " +\
                 f"{self.salary_paid} - {self.loan_paid} - {self.last_maintenance}"
 
-def financials_from(string:str) -> Financials:
+def financials_from(string: str) -> Financials:
     """Create a Financials object from a string representation.
 
     String format is :
@@ -170,13 +171,7 @@ def financials_from(string:str) -> Financials:
     This matches the format output by Financials.encode(). Ledger is handled
     separately.
     """
-    tokens = string.split(' - ')
-
-    if len(tokens) > 6:
-        raise ValueError(f"input string has extra data: '{string}'")
-
-    if len(tokens) < 6:
-        raise ValueError(f"input string is missing data: '{string}'")
+    tokens = get_tokens(string, 6, 6)
 
     balance = int(tokens[0])
     if balance < 0:
