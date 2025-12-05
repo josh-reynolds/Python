@@ -131,45 +131,46 @@ class TerminalScreen(PlayScreen):
             if count > 1:
                 suffix = "s"
 
-            if passage == 'h':
-                if self._no_passengers_available("high", available, count):
-                    print("There are not enough high passengers available.")
-                    continue
-                if ship_capacity[0] - count < 0:
-                    print("There are not enough staterooms available.")
-                    continue
-                if ship_hold - count < 0:
-                    print("There is not enough cargo space available.")
-                    continue
-                print(f"Adding {count} high passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
-                available = tuple(a+b for a,b in zip(available,(-count,0,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
-                ship_hold -= count
+            match passage:
+                case 'h':
+                    if self._no_passengers_available("high", available, count):
+                        print("There are not enough high passengers available.")
+                        continue
+                    if ship_capacity[0] - count < 0:
+                        print("There are not enough staterooms available.")
+                        continue
+                    if ship_hold - count < 0:
+                        print("There is not enough cargo space available.")
+                        continue
+                    print(f"Adding {count} high passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
+                    available = tuple(a+b for a,b in zip(available,(-count,0,0)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+                    ship_hold -= count
 
-            if passage == 'm':
-                if self._no_passengers_available("middle", available, count):
-                    print("There are not enough middle passengers available.")
-                    continue
-                if ship_capacity[0] - count < 0:
-                    print("There are not enough staterooms available.")
-                    continue
-                print(f"Adding {count} middle passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
-                available = tuple(a+b for a,b in zip(available,(0,-count,0)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+                case 'm':
+                    if self._no_passengers_available("middle", available, count):
+                        print("There are not enough middle passengers available.")
+                        continue
+                    if ship_capacity[0] - count < 0:
+                        print("There are not enough staterooms available.")
+                        continue
+                    print(f"Adding {count} middle passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
+                    available = tuple(a+b for a,b in zip(available,(0,-count,0)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
 
-            if passage == 'l':
-                if self._no_passengers_available("low", available, count):
-                    print("There are not enough low passengers available.")
-                    continue
-                if ship_capacity[1] - count < 0:
-                    print("There are not enough low berths available.")
-                    continue
-                print(f"Adding {count} low passenger{suffix}.")
-                selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
-                available = tuple(a+b for a,b in zip(available,(0,0,-count)))
-                ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
+                case 'l':
+                    if self._no_passengers_available("low", available, count):
+                        print("There are not enough low passengers available.")
+                        continue
+                    if ship_capacity[1] - count < 0:
+                        print("There are not enough low berths available.")
+                        continue
+                    print(f"Adding {count} low passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
+                    available = tuple(a+b for a,b in zip(available,(0,0,-count)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
 
             print(f"Remaining (H, M, L): {available}")
             print(f"Selected (H, M, L): {selection}")
