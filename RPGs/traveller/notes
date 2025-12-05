@@ -3026,6 +3026,7 @@
 #  * [DONE] Fix mypy errors with Pillow (nix-shell -p python311Packages.types-pillow)
 #  * [DONE] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [DONE] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
+#  * [DONE] Add cyclomatic complexity to lint criteria, and deal with warnings
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3037,7 +3038,6 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
-#  * [....] Add cyclomatic complexity to lint criteria, and deal with warnings
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice

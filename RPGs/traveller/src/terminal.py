@@ -111,7 +111,7 @@ class TerminalScreen(PlayScreen):
                 break
 
             tokens = response.split()
-            count, passage = self._valid_input(tokens)
+            count, passage = _valid_input(tokens)
             if not count:
                 continue
 
@@ -121,14 +121,8 @@ class TerminalScreen(PlayScreen):
             # E1130: bad operand type for unary-: NoneType
             match passage:
                 case 'h':
-                    if self._no_passengers_available("high", available, count):
-                        print("There are not enough high passengers available.")
-                        continue
-                    if ship_capacity[0] - count < 0:
-                        print("There are not enough staterooms available.")
-                        continue
-                    if ship_hold - count < 0:
-                        print("There is not enough cargo space available.")
+                    if not _sufficient_quantity("high", available[0],
+                                                ship_capacity[0], count, ship_hold):
                         continue
                     print(f"Adding {count} high passenger{suffix}.")
                     selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
@@ -137,11 +131,8 @@ class TerminalScreen(PlayScreen):
                     ship_hold -= count
 
                 case 'm':
-                    if self._no_passengers_available("middle", available, count):
-                        print("There are not enough middle passengers available.")
-                        continue
-                    if ship_capacity[0] - count < 0:
-                        print("There are not enough staterooms available.")
+                    if not _sufficient_quantity("middle", available[1],
+                                                ship_capacity[0], count, ship_hold):
                         continue
                     print(f"Adding {count} middle passenger{suffix}.")
                     selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
@@ -149,11 +140,8 @@ class TerminalScreen(PlayScreen):
                     ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
 
                 case 'l':
-                    if self._no_passengers_available("low", available, count):
-                        print("There are not enough low passengers available.")
-                        continue
-                    if ship_capacity[1] - count < 0:
-                        print("There are not enough low berths available.")
+                    if not _sufficient_quantity("low", available[2],
+                                                ship_capacity[1], count, ship_hold):
                         continue
                     print(f"Adding {count} low passenger{suffix}.")
                     selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
@@ -167,31 +155,42 @@ class TerminalScreen(PlayScreen):
         print("Done selecting passengers.")
         return selection
 
-    def _valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
-        """Validate passenger selection input."""
-        if len(tokens) != 2:
-            print("Please enter in the format: passage number (example: h 5).")
-            return None, None
+def _sufficient_quantity(passage: str, available: int,
+                         capacity: int, count: int, hold: int) -> bool:
+    """Test whether there are enough berths/passengers to book."""
+    if available - count < 0:
+        print(f"There are not enough {passage} passengers available.")
+        return False
 
-        passage = tokens[0]
-        if passage not in ['h', 'm', 'l']:
-            print("Please enter 'h', 'm' or 'l' for passage class.")
-            return None, None
+    if capacity - count < 0:
+        berths = "staterooms"
+        if passage == "low":
+            berths = "low berths"
+        print(f"There are not enough {berths} available.")
+        return False
 
-        try:
-            count = int(tokens[1])
-        except ValueError:
-            print("Please input a number.")
-            return None, None
+    if passage == "high":
+        if hold - count < 0:
+            print("There is not enough cargo space available.")
+            return False
 
-        return count, passage
+    return True
 
-    def _no_passengers_available(self, passage: str, available: tuple, count: int) -> bool:
-        if passage == "high":
-            index = PassageClass.HIGH.value
-        elif passage == "middle":
-            index = PassageClass.MIDDLE.value
-        else:
-            index = PassageClass.LOW.value
+def _valid_input(tokens: List[str]) -> Tuple[int | None, str | None]:
+    """Validate passenger selection input."""
+    if len(tokens) != 2:
+        print("Please enter in the format: passage number (example: h 5).")
+        return None, None
 
-        return available[index] - count < 0
+    passage = tokens[0]
+    if passage not in ['h', 'm', 'l']:
+        print("Please enter 'h', 'm' or 'l' for passage class.")
+        return None, None
+
+    try:
+        count = int(tokens[1])
+    except ValueError:
+        print("Please input a number.")
+        return None, None
+
+    return count, passage
