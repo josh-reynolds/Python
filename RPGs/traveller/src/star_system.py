@@ -1,8 +1,11 @@
 """Contains classes to represent Traveller star map hexes.
 
 Hex - base class for map hexes.
+
 DeepSpace - represents an empty map hex.
+
 StarSystem - represents a map hex containing a star system.
+
 verify_world() - verify a coordinate refers to a StarSystem.
 """
 from abc import ABC, abstractmethod

@@ -1,9 +1,13 @@
 """Contains classes representing crew of a starship.
 
 Crew - base class for crewmembers.
+
 Pilot - represents a pilot on board a ship.
+
 Engineer - represents an engineer on board a ship.
+
 Medic - represents a medic on board a ship.
+
 Steward - represents a steward on board a ship.
 """
 from abc import ABC, abstractmethod

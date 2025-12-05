@@ -1,4 +1,39 @@
-"""Contains utility functions."""
+"""Contains utility functions.
+
+die_roll() - roll count six-sided dice and return the total.
+
+constrain() - constrain a value within a given range.
+
+actual_value() - return a value from the table on Book 2 page 42.
+
+int_input() - take input from the user, reprompt if not an integer.
+
+confirm_input() - take yes or no input from the user, reprompt until match.
+
+valid_index() - confirm a value is a valid list index.
+
+choose_from() - present a list to the user, and return their chosen index value.
+
+pr_list() - print out a list with its index values.
+
+pr_highlight_list() - print out a list with its index values, highlighting specific entries.
+
+get_lines() - read all lines from filename and return as a list.
+
+dictionary_from() - convert a specially-formatted string to a dictionary.
+
+get_files() - return a list of all files in the specified directory.
+
+get_next_file() - return the next file to be created in the 'saves' directory.
+
+get_json_data() - retrieve data from a JSON file.
+
+get_tokens() - split a string into tokens, validating the expected number is received.
+
+is_good_deal() - assess whether a given adjustment is a good deal.
+
+is_bad_deal() - assess whether a given adjustment is a bad deal.
+"""
 import json
 import re
 from os import listdir

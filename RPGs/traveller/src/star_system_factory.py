@@ -8,7 +8,9 @@ range in some cases.
 The public functions in this module are:
 
 create() - create an instance of a StarSystem with pre-determined statistics.
+
 generate() - randomly generate a StarSystem instance.
+
 hex_from() - create a StarSystem object from a string representation.
 """
 from src.coordinate import Coordinate, coordinate_from

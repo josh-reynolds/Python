@@ -1,4 +1,11 @@
-"""Contains functions to randomly generate words and names."""
+"""Contains functions to randomly generate words and names.
+
+get_world_name() - return a randomly-generated world name.
+
+get_subsector_name() - return a randomly-generated subsector name.
+
+random_line() - return a random line from a_file.
+"""
 import random
 from io import TextIOWrapper
 

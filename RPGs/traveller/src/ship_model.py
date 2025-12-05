@@ -1,9 +1,12 @@
 """Contains classes and factory/utility functions to manage standard starship designs.
 
 ShipModel - represents a specific ship model.
+
 load_ship_model_data() - load and return the ship model data from a file.
-get_ship_models() - return a list of available ShipModels.
+
 ship_model_from() - return a ShipModel given a name.
+
+get_ship_models() - return a list of available ShipModels.
 """
 import json
 from typing import List, Any, Dict, cast

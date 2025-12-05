@@ -1,6 +1,7 @@
 """Contains the Imperial Date class and a factory function.
 
 ImperialDate - represents a single date in Traveller format: DDD-YYYY.
+
 imperial_date_from() - creates an ImperialDate from a formatted string.
 """
 from __future__ import annotations

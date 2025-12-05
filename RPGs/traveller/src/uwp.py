@@ -1,6 +1,7 @@
 """Contains the UWP class and a factory function.
 
 UWP - represents a Traveller Universal World Profile.
+
 uwp_from() - create a UWP object from a string representation.
 """
 from typing import Any

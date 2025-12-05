@@ -1,7 +1,9 @@
 """Contains the Cargo class and a factory function.
 
 Cargo - represents speculative cargo.
+
 cargo_from() - creates a Cargo object from a parsed source string.
+
 get_cargo_table() - retrieve data from the cargo table file.
 """
 from typing import Any, Mapping, Dict

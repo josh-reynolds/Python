@@ -1,4 +1,13 @@
-"""Draw a Traveller-style star map."""
+"""Draw a Traveller-style star map.
+
+draw_hexes_on() - draw a grid of hexes on the supplied surface.
+
+draw_system() - draw StarSystem graphics on the supplied surface.
+
+draw_hex() - draw an empty Traveller map hex on the supplied surface.
+
+draw_map() - create a map image and write to a file.
+"""
 from typing import List, Dict, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from src.star_system import Hex, StarSystem

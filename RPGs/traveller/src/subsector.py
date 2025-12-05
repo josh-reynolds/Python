@@ -1,6 +1,7 @@
 """Contains the Subsector class and a factory function.
 
 Subsector - represents a Traveller subsector.
+
 subsector_from() - create a Subsector object from a string representation.
 """
 from typing import Tuple, Any

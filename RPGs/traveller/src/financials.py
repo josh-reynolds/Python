@@ -2,6 +2,7 @@
 
 Financials - contains methods to handle financial
              transactions and track a balance.
+
 financials_from() - create a Financials object from a 
                     string representation.
 """

@@ -1,6 +1,7 @@
 """Contains the Baggage class and a factory function.
 
 Baggage - represents passenger baggage.
+
 baggage_from() - creates a Baggage object from a parsed source string.
 """
 from typing import Mapping

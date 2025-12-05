@@ -1,6 +1,7 @@
 """Contains the CargoDepot class and utility/factory functions.
 
 CargoDepot - represents a starport cargo depot.
+
 cargo_hold_from() - return the contents of the cargo hold from a list of strings.
 """
 from typing import Dict, List, Tuple, cast, Sequence, Mapping, Any

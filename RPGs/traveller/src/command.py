@@ -1,4 +1,7 @@
-"""Contains classes to manage game commands."""
+"""Contains classes to manage game commands.
+
+Command - represents a command available to the player.
+"""
 from typing import Callable
 
 # see recipe 9.1 in Python Cookbook

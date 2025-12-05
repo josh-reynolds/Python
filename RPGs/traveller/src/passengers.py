@@ -1,7 +1,9 @@
 """Contains classes and a factory function to handle passengers on a ship.
 
 PassageClass - enum to denote passenger ticket class.
+
 Passenger - represents a passenger on a ship.
+
 passenger_from() - creates a Passenger object from a string representation.
 """
 from enum import Enum

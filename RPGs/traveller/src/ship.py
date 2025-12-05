@@ -1,8 +1,11 @@
 """Contains classes and factory/utility functions to manage a starship.
 
 FuelQuality - enem to represent whether fuel is contaminated or not.
+
 RepairStatus - enum to represent whether a ship needs repairs.
+
 Ship - represents a starship.
+
 ship_from() - create a Ship object from a string representation.
 """
 from enum import Enum

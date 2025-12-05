@@ -1,4 +1,17 @@
-"""Contains three-axis coordinate definition and methods to convert and manage them."""
+"""Contains three-axis coordinate definition and methods to convert and manage them.
+
+Coordinate - represents a 3-axis coordinate on a hex grid.
+
+convert_3_axis() - convert a three-axis coordinate to Traveller grid coordinates.
+
+absolute() - convert a three-axis coordinate to a position on a subsector map.
+
+coordinate_from() - create a Coordinate object from a string representation.
+
+create_3_axis() - create a Coordinate object from Traveller subsector coordinate values.
+
+get_misjump_target() - generate a random destination up to 36 hexes away.
+"""
 from random import randint, choice
 from typing import Tuple, Any, Iterator
 

@@ -1,6 +1,7 @@
 """Contains the Freight class and a factory function.
 
 Freight - represents bulk freight.
+
 freight_from() - creates a Freight object from a parsed source string.
 """
 from typing import Any, Mapping
