@@ -9,7 +9,7 @@ from src.format import BOLD_BLUE, END_FORMAT
 from src.passengers import Passenger, PassageClass
 from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
-from src.utilities import confirm_input
+from src.utilities import confirm_input, get_plural_suffix
 
 class TerminalScreen(PlayScreen):
     """Contains commands for the terminal state."""
@@ -91,9 +91,8 @@ class TerminalScreen(PlayScreen):
                                                    zip(self.parent.depot.passengers[destination],
                                                        selection))
 
-    # pylint: disable=R0912, R0915
-    # R0912: Too many branches (13/12)
-    # R0915: Too many statements (51/50)
+    # pylint: disable=R0915
+    # R0915: Too many statements (56/50)
     def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
@@ -116,9 +115,7 @@ class TerminalScreen(PlayScreen):
             if not count:
                 continue
 
-            suffix = ""
-            if count > 1:
-                suffix = "s"
+            suffix = get_plural_suffix(count)
 
             # pylint: disable=E1130
             # E1130: bad operand type for unary-: NoneType

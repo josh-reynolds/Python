@@ -33,6 +33,8 @@ get_tokens() - split a string into tokens, validating the expected number is rec
 is_good_deal() - assess whether a given adjustment is a good deal.
 
 is_bad_deal() - assess whether a given adjustment is a bad deal.
+
+get_plural_suffix() - return a suffix based on number of items.
 """
 import json
 import re
@@ -198,3 +200,9 @@ def is_bad_deal(prompt: str, price_adjustment: float) -> bool:
     """Assess whether a given adjustment is a bad deal."""
     return (prompt == "sale" and price_adjustment < 1) or \
            (prompt == "purchase" and price_adjustment > 1)
+
+def get_plural_suffix(count: int) -> str:
+    """Return a suffix based on number of items."""
+    if count > 1:
+        return "s"
+    return ""
