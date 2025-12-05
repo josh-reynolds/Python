@@ -2,7 +2,7 @@
 
 TerminalScreen - contains commands for the terminal state.
 """
-from typing import cast, Tuple, Any
+from typing import cast, Tuple, Any, List
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
@@ -112,25 +112,16 @@ class TerminalScreen(PlayScreen):
                 break
 
             tokens = response.split()
-            if len(tokens) != 2:
-                print("Please enter in the format: passage number (example: h 5).")
-                continue
-
-            passage = tokens[0]
-            if passage not in ['h', 'm', 'l']:
-                print("Please enter 'h', 'm' or 'l' for passage class.")
-                continue
-
-            try:
-                count = int(tokens[1])
-            except ValueError:
-                print("Please input a number.")
+            count, passage = self._valid_input(tokens)
+            if not count:
                 continue
 
             suffix = ""
             if count > 1:
                 suffix = "s"
 
+            # pylint: disable=E1130
+            # E1130: bad operand type for unary-: NoneType
             match passage:
                 case 'h':
                     if self._no_passengers_available("high", available, count):
@@ -178,6 +169,25 @@ class TerminalScreen(PlayScreen):
 
         print("Done selecting passengers.")
         return selection
+
+    def _valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
+        """Validate passenger selection input."""
+        if len(tokens) != 2:
+            print("Please enter in the format: passage number (example: h 5).")
+            return None, None
+
+        passage = tokens[0]
+        if passage not in ['h', 'm', 'l']:
+            print("Please enter 'h', 'm' or 'l' for passage class.")
+            return None, None
+
+        try:
+            count = int(tokens[1])
+        except ValueError:
+            print("Please input a number.")
+            return None, None
+
+        return count, passage
 
     def _no_passengers_available(self, passage: str, available: tuple, count: int) -> bool:
         if passage == "high":
