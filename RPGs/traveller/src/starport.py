@@ -5,7 +5,7 @@ StarportScreen - contains commands for the starport state.
 from typing import Any
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.passengers import PassageClass
+from src.passengers import Passage
 from src.play import PlayScreen
 from src.ship import RepairStatus, FuelQuality
 from src.utilities import confirm_input
@@ -51,7 +51,7 @@ class StarportScreen(PlayScreen):
 
         if self.parent.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.parent.ship.passengers if
-                              p.passage == PassageClass.LOW]
+                              p.passage == Passage.LOW]
             for passenger in low_passengers:
                 passenger.guess_survivors(self.parent.ship.low_passenger_count)
 

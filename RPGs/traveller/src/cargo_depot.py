@@ -71,7 +71,7 @@ class CargoDepot:
         """Refresh available passengers.
 
         Updates the object's passengers dictionary with a tuple of passenger 
-        counts, indexed by the PassageClass enumeration.
+        counts, indexed by the Passage enumeration.
         """
         self.passengers = {}
         for world in destinations:

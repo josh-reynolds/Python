@@ -6,7 +6,7 @@ from typing import cast, Tuple, Any, List
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
-from src.passengers import Passenger, PassageClass
+from src.passengers import Passenger, Passage
 from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
 from src.utilities import confirm_input, get_plural_suffix
@@ -74,14 +74,14 @@ class TerminalScreen(PlayScreen):
 
         # TO_DO: need to consider the case where we already have passengers
         #        Probably want to wrap passenger field access in a property...
-        high = [Passenger(PassageClass.HIGH, destination)
-                for _ in range(selection[PassageClass.HIGH.value])]
+        high = [Passenger(Passage.HIGH, destination)
+                for _ in range(selection[Passage.HIGH.value])]
         baggage = [Baggage(self.parent.location, destination)
-                   for _ in range(selection[PassageClass.HIGH.value])]
-        middle = [Passenger(PassageClass.MIDDLE, destination)
-                  for _ in range(selection[PassageClass.MIDDLE.value])]
-        low = [Passenger(PassageClass.LOW, destination)
-               for _ in range(selection[PassageClass.LOW.value])]
+                   for _ in range(selection[Passage.HIGH.value])]
+        middle = [Passenger(Passage.MIDDLE, destination)
+                  for _ in range(selection[Passage.MIDDLE.value])]
+        low = [Passenger(Passage.LOW, destination)
+               for _ in range(selection[Passage.LOW.value])]
 
         self.parent.ship.passengers += high
         self.parent.ship.hold += baggage
@@ -91,8 +91,6 @@ class TerminalScreen(PlayScreen):
                                                    zip(self.parent.depot.passengers[destination],
                                                        selection))
 
-    # pylint: disable=R0915
-    # R0915: Too many statements (56/50)
     def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
@@ -148,6 +146,7 @@ class TerminalScreen(PlayScreen):
                     available = tuple(a+b for a,b in zip(available,(0,0,-count)))
                     ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
 
+            print()
             print(f"Remaining (H, M, L): {available}")
             print(f"Selected (H, M, L): {selection}")
             print(f"Empty ship berths (H+M, L): {ship_capacity}\n")

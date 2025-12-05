@@ -7,7 +7,7 @@ from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.passengers import PassageClass
+from src.passengers import Passage
 from src.play import PlayScreen
 from src.ship import RepairStatus
 from src.utilities import die_roll
@@ -65,7 +65,7 @@ class OrbitScreen(PlayScreen):
         """Run the low passage lottery and apply results."""
         if self.parent.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.parent.ship.passengers if
-                                         p.passage == PassageClass.LOW]
+                                         p.passage == Passage.LOW]
             for passenger in low_passengers:
                 if die_roll(2) + passenger.endurance + self.parent.ship.medic_skill() < 5:
                     passenger.survived = False

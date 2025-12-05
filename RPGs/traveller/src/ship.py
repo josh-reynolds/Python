@@ -13,7 +13,7 @@ from typing import List, Any
 from src.cargo import Cargo
 from src.credits import Credits
 from src.freight import Freight
-from src.passengers import PassageClass, Passenger
+from src.passengers import Passage, Passenger
 from src.star_system import StarSystem
 from src.ship_model import ship_model_from
 from src.utilities import die_roll, get_tokens
@@ -141,19 +141,19 @@ class Ship:
     def high_passenger_count(self) -> int:
         """Return the number of high passengers on board."""
         return sum(1 for passenger in self.passengers if
-                   passenger.passage == PassageClass.HIGH)
+                   passenger.passage == Passage.HIGH)
 
     @property
     def middle_passenger_count(self) -> int:
         """Return the number of middle passengers on board."""
         return sum(1 for passenger in self.passengers if
-                    passenger.passage == PassageClass.MIDDLE)
+                    passenger.passage == Passage.MIDDLE)
 
     @property
     def low_passenger_count(self) -> int:
         """Return the number of low passengers on board."""
         return sum(1 for passenger in self.passengers if
-                    passenger.passage == PassageClass.LOW)
+                    passenger.passage == Passage.LOW)
 
     @property
     def empty_passenger_berths(self) -> int:

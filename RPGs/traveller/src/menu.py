@@ -12,7 +12,7 @@ from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.financials import financials_from
 from src.format import END_FORMAT, BOLD_BLUE, HOME, CLEAR, BOLD_RED, BOLD
 from src.freight import Freight
-from src.passengers import PassageClass, passenger_from
+from src.passengers import Passage, passenger_from
 from src.screen import Screen
 from src.ship import ship_from, Ship
 from src.ship_model import get_ship_models
@@ -186,7 +186,7 @@ class MenuScreen(Screen):
         # not on the surface, as it will be re-run on liftoff, and also:
         # TO_DO: duplication of code in liftoff, refactor
         low_passengers = [p for p in self.parent.ship.passengers if
-                          p.passage == PassageClass.LOW]
+                          p.passage == Passage.LOW]
         for passenger in low_passengers:
             passenger.guess_survivors(self.parent.ship.low_passenger_count)
         self.parent.ship.passengers = passengers

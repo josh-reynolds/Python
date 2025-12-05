@@ -2,24 +2,24 @@
 import unittest
 from test.mock import SystemMock
 from src.coordinate import Coordinate
-from src.passengers import Passenger, PassageClass, passenger_from
+from src.passengers import Passenger, Passage, passenger_from
 
 class PassengerTestCase(unittest.TestCase):
     """Tests Passenger class."""
 
     def test_passenger_str(self) -> None:
         """Test the string representation of a Passenger object."""
-        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
+        passenger = Passenger(Passage.LOW, SystemMock("Uranus"))
         self.assertEqual(f"{passenger}", "Low passage to Uranus")
 
     def test_passenger_repr(self) -> None:
         """Test the repr string of a Passenger object."""
-        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
-        self.assertEqual(f"{passenger!r}", "Passenger(<PassageClass.LOW: 2>, SystemMock('Uranus'))")
+        passenger = Passenger(Passage.LOW, SystemMock("Uranus"))
+        self.assertEqual(f"{passenger!r}", "Passenger(<Passage.LOW: 2>, SystemMock('Uranus'))")
 
     def test_passenger_guess_survivors(self) -> None:
         """Test Passenger guesses as to number of low lottery survivors."""
-        passenger = Passenger(PassageClass.LOW, SystemMock("Uranus"))
+        passenger = Passenger(Passage.LOW, SystemMock("Uranus"))
         for _ in range(1000):
             passenger.guess_survivors(10)
             guess = passenger.guess
@@ -35,7 +35,7 @@ class PassengerTestCase(unittest.TestCase):
         destination.coordinate = Coordinate(0,0,0)
         systems = {Coordinate(0,0,0) : destination}
         actual = passenger_from(string, systems)
-        expected = Passenger(PassageClass.HIGH, destination)
+        expected = Passenger(Passage.HIGH, destination)
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "High passage to Jupiter")
 
@@ -44,7 +44,7 @@ class PassengerTestCase(unittest.TestCase):
         destination.coordinate = Coordinate(1,0,-1)
         systems[Coordinate(1,0,-1)] = destination
         actual = passenger_from(string, systems)
-        expected = Passenger(PassageClass.MIDDLE, destination)
+        expected = Passenger(Passage.MIDDLE, destination)
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "Middle passage to Mars")
 
@@ -53,7 +53,7 @@ class PassengerTestCase(unittest.TestCase):
         destination.coordinate = Coordinate(-1,0,1)
         systems[Coordinate(-1,0,1)] = destination
         actual = passenger_from(string, systems)
-        expected = Passenger(PassageClass.LOW, destination)
+        expected = Passenger(Passage.LOW, destination)
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "Low passage to Venus")
 
@@ -61,7 +61,7 @@ class PassengerTestCase(unittest.TestCase):
         destination = SystemMock("Jupiter")
         destination.coordinate = Coordinate(0,0,0)
         actual = passenger_from(string, systems)
-        expected = Passenger(PassageClass.HIGH, destination)
+        expected = Passenger(Passage.HIGH, destination)
         self.assertEqual(actual, expected)
         self.assertEqual(f"{actual}", "High passage to Jupiter")
 
@@ -106,7 +106,7 @@ class PassengerTestCase(unittest.TestCase):
         """Test exporting a Passenger to a string."""
         destination = SystemMock("Jupiter")
         destination.coordinate = Coordinate(0,0,0)
-        passenger = Passenger(PassageClass.HIGH, destination)
+        passenger = Passenger(Passage.HIGH, destination)
 
         actual = passenger.encode()
         expected = "high - (0, 0, 0)"
@@ -115,7 +115,7 @@ class PassengerTestCase(unittest.TestCase):
 
         destination = SystemMock("Neptune")
         destination.coordinate = Coordinate(0,0,0)
-        passenger = Passenger(PassageClass.MIDDLE, destination)
+        passenger = Passenger(Passage.MIDDLE, destination)
 
         actual = passenger.encode()
         expected = "middle - (0, 0, 0)"
@@ -124,7 +124,7 @@ class PassengerTestCase(unittest.TestCase):
 
         destination = SystemMock("Uranus")
         destination.coordinate = Coordinate(0,0,0)
-        passenger = Passenger(PassageClass.LOW, destination)
+        passenger = Passenger(Passage.LOW, destination)
 
         actual = passenger.encode()
         expected = "low - (0, 0, 0)"

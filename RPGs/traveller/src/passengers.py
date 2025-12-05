@@ -1,6 +1,6 @@
 """Contains classes and a factory function to handle passengers on a ship.
 
-PassageClass - enum to denote passenger ticket class.
+Passage - enum to denote passenger ticket class.
 
 Passenger - represents a passenger on a ship.
 
@@ -14,7 +14,7 @@ from src.credits import Credits
 from src.star_system import StarSystem, Hex
 from src.utilities import die_roll, get_tokens
 
-class PassageClass(Enum):
+class Passage(Enum):
     """Denotes the class of a Passenger's ticket."""
 
     HIGH = 0
@@ -25,15 +25,15 @@ class PassageClass(Enum):
 class Passenger:
     """Represents a passenger on a ship."""
 
-    def __init__(self, passage: PassageClass, destination: StarSystem) -> None:
+    def __init__(self, passage: Passage, destination: StarSystem) -> None:
         """Create an instance of a Passenger."""
-        if passage == PassageClass.HIGH:
+        if passage == Passage.HIGH:
             self.name = "High passage"
             self.ticket_price = Credits(10000)
-        if passage == PassageClass.MIDDLE:
+        if passage == Passage.MIDDLE:
             self.name = "Middle passage"
             self.ticket_price = Credits(8000)
-        if passage == PassageClass.LOW:
+        if passage == Passage.LOW:
             self.name = "Low passage"
             self.ticket_price = Credits(1000)
         self.passage = passage
@@ -88,11 +88,11 @@ def passenger_from(string: str, systems: Mapping[Coordinate, Hex]) -> Passenger:
 
     passage_str = tokens[0].lower()
     if passage_str == "high":
-        passage = PassageClass.HIGH
+        passage = Passage.HIGH
     elif passage_str == "middle":
-        passage = PassageClass.MIDDLE
+        passage = Passage.MIDDLE
     elif passage_str =="low":
-        passage = PassageClass.LOW
+        passage = Passage.LOW
     else:
         raise ValueError(f"unrecognized passage class: '{passage_str}'")
 
