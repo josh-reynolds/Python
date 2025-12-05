@@ -12,9 +12,9 @@ from src.imperial_date import ImperialDate, imperial_date_from
 class Calendar:
     """Tracks the current date and notifies observers when it changes."""
 
-    def __init__(self) -> None:
+    def __init__(self, current_date: ImperialDate=ImperialDate(1,1105)) -> None:
         """Create an instance of a Calendar."""
-        self.current_date = ImperialDate(1,1105)
+        self.current_date = current_date.copy()
         self.observers: List[Any] = []
 
     def __str__(self) -> str:
@@ -23,7 +23,7 @@ class Calendar:
 
     def __repr__(self) -> str:
         """Return the developer string representation of the current date."""
-        return "Calendar()"
+        return f"Calendar({self.current_date!r})"
 
     @property
     def day(self) -> int:
