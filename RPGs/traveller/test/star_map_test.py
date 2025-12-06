@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from src.coordinate import Coordinate
-from src.star_map import StarMap
+from src.star_map import StarMap, _get_all_coords
 from src.star_system import StarSystem, DeepSpace
 import src.star_system_factory
 from src.subsector import Subsector
@@ -170,17 +170,15 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(Coordinate(2,-3,1) in coords)
         self.assertTrue(Coordinate(-3,2,1) in coords)
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _get_all_coords of a client class
     def test_get_all_coords(self) -> None:
         """Test getting all potential coordinates at a given range from (0,0,0)."""
-        coords = StarMap._get_all_coords(1)
+        coords = _get_all_coords(1)
         self.assertEqual(len(coords), 27)   # 3 cubed
 
-        coords = StarMap._get_all_coords(2)
+        coords = _get_all_coords(2)
         self.assertEqual(len(coords), 125)  # 5 cubed
 
-        coords = StarMap._get_all_coords(3)
+        coords = _get_all_coords(3)
         self.assertEqual(len(coords), 343)  # 7 cubed
 
     # pylint: disable=W0212

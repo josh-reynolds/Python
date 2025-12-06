@@ -107,7 +107,7 @@ class StarMap:
     def _get_coordinates_within_range(cls, origin: Coordinate,
                                       radius: int) -> List[Coordinate]:
         """Return a list of all three-axis coordinate within a given range of an origin."""
-        full_list = StarMap._get_all_coords(radius)
+        full_list = _get_all_coords(radius)
 
         filtered = [a for a in full_list if a.is_valid()]
         filtered.remove(Coordinate(0,0,0))
@@ -118,10 +118,9 @@ class StarMap:
 
         return translated
 
-    @classmethod
-    def _get_all_coords(cls, radius: int) -> List[Coordinate]:
-        """Return a list of tuples, including both valid and invalid coordinates."""
-        span = range(-radius, radius+1)
-        return [Coordinate(a,b,c) for a in span
-                                  for b in span
-                                  for c in span]
+def _get_all_coords(radius: int) -> List[Coordinate]:
+    """Return a list of tuples, including both valid and invalid coordinates."""
+    span = range(-radius, radius+1)
+    return [Coordinate(a,b,c) for a in span
+                              for b in span
+                              for c in span]
