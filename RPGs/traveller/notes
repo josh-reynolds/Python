@@ -3300,6 +3300,7 @@
 #  * [DONE] Timing of remaining passengers listing isn't quite right in _select_passengers()
 #  * [DONE] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [DONE] Add cyclomatic complexity to lint criteria, and deal with warnings
+#  * [DONE] Review all classmethods, replace with simple functions if applicable
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3311,7 +3312,6 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
-#  * [....] Review all classmethods, replace with simple functions if applicable
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
@@ -3407,7 +3407,7 @@
 #  * [    ] Review applicability of dataclasses/namedtuples (stackoverflow 47955263)
 #  * [    ] Collapse Crew hierarchy?
 #  * [    ] Sort out confusion in Hex hierarchy type annotation
-#  * [    ] Eliminate unnecessary pylint disable statements (currently 40 in test and
+#  * [    ] Eliminate unnecessary pylint disable statements (currently 35 in test and
 #           17 in src)
 #  * [    ] Assess whether rounding in Credits ctor can cause errors
 #  * [    ] Review redundancy between Calendar.day() and ImperialDate ctor

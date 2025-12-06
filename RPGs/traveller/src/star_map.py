@@ -51,17 +51,12 @@ class StarMap:
         if sub_coord in self.subsectors:
             sub = self.subsectors[sub_coord]
         else:
-            sub = StarMap._generate_new_subsector(sub_coord)
+            sub = _generate_new_subsector(sub_coord)
             self.subsectors[sub_coord] = sub
         sub_string = sub.name
 
         return f"{sub_string} {hex_string}"
 
-    @classmethod
-    def _generate_new_subsector(cls, coordinate: Tuple[int, int]) -> Subsector:
-        """Return a new subsector."""
-        name = get_subsector_name()
-        return Subsector(name, coordinate)
 
     def get_systems_in_subsector(self, sub_coord: Tuple[int,int]) -> List[Coordinate]:
         """Return list of all StarSystems in the given Subsector."""
@@ -96,6 +91,11 @@ class StarMap:
         systems = sorted(systems, key=lambda system: system.coordinate)
         return systems
 
+
+def _generate_new_subsector(coordinate: Tuple[int, int]) -> Subsector:
+    """Return a new subsector."""
+    name = get_subsector_name()
+    return Subsector(name, coordinate)
 
 def _generate_new_system(coordinate: Coordinate) -> Hex:
     """Randomly create either a StarSystem or a DeepSpace instance."""
