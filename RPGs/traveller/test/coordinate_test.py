@@ -297,3 +297,23 @@ class CoordinateTestCase(unittest.TestCase):
             _ = create_3_axis(column, row, sub_x, sub_y)
         self.assertEqual(f"{context.exception}",
                          "subsector y value must be an integer: 'm'")
+
+    def test_distance_to(self) -> None:
+        """Test calculation of distance between two three-axis coordinates."""
+        dist = Coordinate(0,0,0).distance_to(Coordinate(1,0,-1))
+        self.assertEqual(dist,1)
+
+        dist = Coordinate(0,0,0).distance_to(Coordinate(0,2,-2))
+        self.assertEqual(dist,2)
+
+        dist = Coordinate(0,0,0).distance_to(Coordinate(2,0,-2))
+        self.assertEqual(dist,2)
+
+        dist = Coordinate(0,0,0).distance_to(Coordinate(-2,0,2))
+        self.assertEqual(dist,2)
+
+        dist = Coordinate(0,0,0).distance_to(Coordinate(1,-2,1))
+        self.assertEqual(dist,2)
+
+        dist = Coordinate(1,0,-1).distance_to(Coordinate(2,0,-2))
+        self.assertEqual(dist,1)

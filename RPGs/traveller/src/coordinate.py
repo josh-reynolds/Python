@@ -13,7 +13,7 @@ create_3_axis() - create a Coordinate object from Traveller subsector coordinate
 get_misjump_target() - generate a random destination up to 36 hexes away.
 """
 from random import randint, choice
-from typing import Tuple, Any, Iterator
+from typing import Tuple, Any, Iterator, Self
 
 class Coordinate:
     """Represents a 3-axis coordinate on a hex grid."""
@@ -58,6 +58,15 @@ class Coordinate:
     def is_valid(self) -> bool:
         """Test whether the self.coords tuple is a valid three-axis coordinate."""
         return sum(self.coords) == 0
+
+    def distance_to(self, coord: Self) -> int:
+        """Calculate the distance between two three-axis coordinates."""
+        transformed = (coord[0] - self[0],
+                       coord[1] - self[1],
+                       coord[2] - self[2])
+        return max(abs(transformed[0]),
+                   abs(transformed[1]),
+                   abs(transformed[2]))
 
 
 def convert_3_axis(coord: Tuple[int, int, int], origin_column: str = "odd") -> Tuple[int, int]:
