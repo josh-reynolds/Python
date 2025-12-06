@@ -129,28 +129,6 @@ class StarMapTestCase(unittest.TestCase):
         world = star_map2.get_system_at_coordinate(Coordinate(-1,1,0))
         self.assertTrue(isinstance(world, DeepSpace))
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _distance_between of a client class
-    def test_distance_between(self) -> None:
-        """Test calculation of distance between two three-axis coordinates."""
-        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(1,0,-1))
-        self.assertEqual(dist,1)
-
-        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(0,2,-2))
-        self.assertEqual(dist,2)
-
-        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(2,0,-2))
-        self.assertEqual(dist,2)
-
-        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(-2,0,2))
-        self.assertEqual(dist,2)
-
-        dist = StarMap._distance_between(Coordinate(0,0,0), Coordinate(1,-2,1))
-        self.assertEqual(dist,2)
-
-        dist = StarMap._distance_between(Coordinate(1,0,-1), Coordinate(2,0,-2))
-        self.assertEqual(dist,1)
-
     def test_invalid_ctor_call(self) -> None:
         """Test exception thrown by invalid StarMap constructor call."""
         self.assertRaises(AttributeError, StarMap, {(1,0,0):None})

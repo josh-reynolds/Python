@@ -104,16 +104,6 @@ class StarMap:
         return DeepSpace(coordinate)
 
     @classmethod
-    def _distance_between(cls, first: Coordinate, second: Coordinate) -> int:
-        """Calculate the distance between two three-axis coordinates."""
-        transformed = (second[0]-first[0],
-                       second[1]-first[1],
-                       second[2]-first[2])
-        return max(abs(transformed[0]),
-                   abs(transformed[1]),
-                   abs(transformed[2]))
-
-    @classmethod
     def _get_coordinates_within_range(cls, origin: Coordinate,
                                       radius: int) -> List[Coordinate]:
         """Return a list of all three-axis coordinate within a given range of an origin."""
