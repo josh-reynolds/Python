@@ -2,6 +2,7 @@
 import unittest
 from src.coordinate import Coordinate
 from src.star_map import StarMap, _get_all_coords, _get_coordinates_within_range
+from src.star_map import _generate_new_system
 from src.star_system import StarSystem, DeepSpace
 import src.star_system_factory
 from src.subsector import Subsector
@@ -190,8 +191,6 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(Coordinate(-1,-2,3) in coords)
         self.assertTrue(Coordinate(0,-2,2) in coords) # no edge hexes
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _generate_new_system of a client class
     def test_generate_new_system(self) -> None:
         """Test generation of new hexes, either StarSystems or DeepSpace.
 
@@ -201,7 +200,7 @@ class StarMapTestCase(unittest.TestCase):
         """
         worlds = []
         for _ in range(100):
-            world = StarMap._generate_new_system(Coordinate(0,0,0))
+            world = _generate_new_system(Coordinate(0,0,0))
             if world is not None:
                 worlds.append(world)
         self.assertEqual(len(worlds), 100)

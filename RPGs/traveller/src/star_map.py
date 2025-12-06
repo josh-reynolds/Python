@@ -75,7 +75,7 @@ class StarMap:
                 if isinstance(self.systems[coord], StarSystem):
                     result.append(self.systems[coord])
             else:
-                system = StarMap._generate_new_system(coord)
+                system = _generate_new_system(coord)
                 self.systems[coord] = system
                 if isinstance(system, StarSystem):
                     result.append(system)
@@ -87,7 +87,7 @@ class StarMap:
     # TO_DO: shouldn't we just implement get_items dunder method for this?
     def get_system_at_coordinate(self, coordinate: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
-        return self.systems.get(coordinate, StarMap._generate_new_system(coordinate))
+        return self.systems.get(coordinate, _generate_new_system(coordinate))
 
     def get_all_systems(self) -> List[StarSystem]:
         """Return all known StarSystems contained in the StarMap."""
@@ -96,13 +96,12 @@ class StarMap:
         systems = sorted(systems, key=lambda system: system.coordinate)
         return systems
 
-    @classmethod
-    def _generate_new_system(cls, coordinate: Coordinate) -> Hex:
-        """Randomly create either a StarSystem or a DeepSpace instance."""
-        if randint(1,6) >= 4:
-            return src.star_system_factory.generate(coordinate)
-        return DeepSpace(coordinate)
 
+def _generate_new_system(coordinate: Coordinate) -> Hex:
+    """Randomly create either a StarSystem or a DeepSpace instance."""
+    if randint(1,6) >= 4:
+        return src.star_system_factory.generate(coordinate)
+    return DeepSpace(coordinate)
 
 def _get_coordinates_within_range(origin: Coordinate, radius: int) -> List[Coordinate]:
     """Return a list of all three-axis coordinate within a given range of an origin."""
