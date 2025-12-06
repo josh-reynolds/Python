@@ -1,7 +1,7 @@
 """Contains tests for the star_map module."""
 import unittest
 from src.coordinate import Coordinate
-from src.star_map import StarMap, _get_all_coords
+from src.star_map import StarMap, _get_all_coords, _get_coordinates_within_range
 from src.star_system import StarSystem, DeepSpace
 import src.star_system_factory
 from src.subsector import Subsector
@@ -133,11 +133,9 @@ class StarMapTestCase(unittest.TestCase):
         """Test exception thrown by invalid StarMap constructor call."""
         self.assertRaises(AttributeError, StarMap, {(1,0,0):None})
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _get_coordinates_within_range of a client class
     def test_get_coordinates_within_range(self) -> None:
         """Test retrieval of all valid three-axis coordinates within range of an origin hex."""
-        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 1)
+        coords = _get_coordinates_within_range(Coordinate(0,0,0), 1)
         self.assertEqual(len(coords), 6)
         self.assertTrue(Coordinate(0,1,-1) in coords) # axial hexes
         self.assertTrue(Coordinate(0,-1,1) in coords)
@@ -146,7 +144,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(Coordinate(1,-1,0) in coords)
         self.assertTrue(Coordinate(-1,1,0) in coords) # no edge hexes
 
-        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 2)
+        coords = _get_coordinates_within_range(Coordinate(0,0,0), 2)
         self.assertEqual(len(coords), 18)
         self.assertTrue(Coordinate(0,2,-2) in coords) # axial hexes
         self.assertTrue(Coordinate(0,-2,2) in coords)
@@ -158,7 +156,7 @@ class StarMapTestCase(unittest.TestCase):
         self.assertTrue(Coordinate(-1,-1,2) in coords)
         self.assertTrue(Coordinate(2,-1,-1) in coords)
 
-        coords = StarMap._get_coordinates_within_range(Coordinate(0,0,0), 3)
+        coords = _get_coordinates_within_range(Coordinate(0,0,0), 3)
         self.assertEqual(len(coords), 36)
         self.assertTrue(Coordinate(0,3,-3) in coords) # axial hexes
         self.assertTrue(Coordinate(0,-3,3) in coords)
@@ -181,11 +179,9 @@ class StarMapTestCase(unittest.TestCase):
         coords = _get_all_coords(3)
         self.assertEqual(len(coords), 343)  # 7 cubed
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _get_coordinates_within_range of a client class
     def test_translated_coords(self) -> None:
         """Test getting all coordinates at a given range from a translated hex."""
-        coords = StarMap._get_coordinates_within_range(Coordinate(-1,-1,2), 1)
+        coords = _get_coordinates_within_range(Coordinate(-1,-1,2), 1)
         self.assertEqual(len(coords), 6)
         self.assertTrue(Coordinate(0,-1,1) in coords) # axial hexes
         self.assertTrue(Coordinate(-1,0,1) in coords)

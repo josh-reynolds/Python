@@ -3311,6 +3311,7 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
+#  * [....] Review all classmethods, replace with simple functions if applicable
 #  * [    ] Review test fixtures for mock opportunities
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice

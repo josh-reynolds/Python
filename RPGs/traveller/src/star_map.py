@@ -70,7 +70,7 @@ class StarMap:
     def get_systems_within_range(self, origin: Coordinate, distance: int) -> List[StarSystem]:
         """Return a list of all StarSystems within the specified range in hexes."""
         result = []
-        for coord in StarMap._get_coordinates_within_range(origin, distance):
+        for coord in _get_coordinates_within_range(origin, distance):
             if coord in self.systems:
                 if isinstance(self.systems[coord], StarSystem):
                     result.append(self.systems[coord])
@@ -103,20 +103,18 @@ class StarMap:
             return src.star_system_factory.generate(coordinate)
         return DeepSpace(coordinate)
 
-    @classmethod
-    def _get_coordinates_within_range(cls, origin: Coordinate,
-                                      radius: int) -> List[Coordinate]:
-        """Return a list of all three-axis coordinate within a given range of an origin."""
-        full_list = _get_all_coords(radius)
 
-        filtered = [a for a in full_list if a.is_valid()]
-        filtered.remove(Coordinate(0,0,0))
+def _get_coordinates_within_range(origin: Coordinate, radius: int) -> List[Coordinate]:
+    """Return a list of all three-axis coordinate within a given range of an origin."""
+    full_list = _get_all_coords(radius)
 
-        translated = [Coordinate(f[0] + origin[0],
-                                 f[1] + origin[1],
-                                 f[2] + origin[2]) for f in filtered]
+    filtered = [a for a in full_list if a.is_valid()]
+    filtered.remove(Coordinate(0,0,0))
 
-        return translated
+    translated = [Coordinate(f[0] + origin[0],
+                             f[1] + origin[1],
+                             f[2] + origin[2]) for f in filtered]
+    return translated
 
 def _get_all_coords(radius: int) -> List[Coordinate]:
     """Return a list of tuples, including both valid and invalid coordinates."""
