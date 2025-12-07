@@ -28,6 +28,10 @@ class OrbitScreen(PlayScreen):
         """Return the string representation of the current screen."""
         return "Orbit"
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of the current screen."""
+        return f"Orbit({self.parent!r})"
+
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     def land(self) -> None:

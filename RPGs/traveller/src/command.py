@@ -16,3 +16,11 @@ class Command:
         self.key = key
         self.description = description
         self.action = action
+
+    def __str__(self) -> str:
+        """Return the string representation of a Command object."""
+        return f"Command - {self.description}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Command object."""
+        return f"Command({self.key}, {self.description}, {self.action!r})"

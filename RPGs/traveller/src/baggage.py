@@ -19,7 +19,7 @@ class Baggage(Freight):
         self.name = "Baggage"
 
     def __repr__(self) -> str:
-        """Return the string representation of a piece of Baggage."""
+        """Return the developer string representation of a piece of Baggage."""
         return f"Baggage({self.source_world!r}, {self.destination_world!r})"
 
     def encode(self) -> str:

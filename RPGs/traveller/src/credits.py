@@ -15,7 +15,7 @@ class Credits:
         # balance or a debt, not just a pile of cash?
         self.amount = amount
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of a Credits object."""
         val: int | float = round(self.amount)
         suffix = "Cr"
@@ -23,6 +23,10 @@ class Credits:
             suffix = "MCr"
             val = val/1000000
         return f"{val:,} {suffix}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Credits object."""
+        return f"Credits({self.amount})"
 
     def __eq__(self, other: Any) -> bool:
         """Test whether two Credits are equal."""

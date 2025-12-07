@@ -35,6 +35,14 @@ class Game:
         self.financials: Financials
         self.depot: CargoDepot
 
+    def __str__(self) -> str:
+        """Return the string representation of the Game object."""
+        return "Game"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of the Game object."""
+        return "Game()"
+
     def on_notify(self, message: str, priority: str = "") -> None:
         """Print messages received from model objects."""
         fmt = ""

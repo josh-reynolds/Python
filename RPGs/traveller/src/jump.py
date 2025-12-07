@@ -30,6 +30,10 @@ class JumpScreen(PlayScreen):
         """Return the string representation of the current screen."""
         return "Jump"
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of the current screen."""
+        return f"Jump({self.parent!r})"
+
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
     def inbound_from_jump(self) -> None:

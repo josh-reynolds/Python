@@ -33,6 +33,14 @@ class CargoDepot:
         self.observers: List[Any] = []
         self.controls: Any = None
 
+    def __str__(self) -> str:
+        """Return the string representation of a CargoDepot object."""
+        return f"CargoDepot for {self.system.name}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a CargoDepot object."""
+        return f"CargoDepot({self.system!r}, {self.refresh_date!r})"
+
     def on_notify(self, date: ImperialDate) -> None:
         """On notification from Calendar, refresh available lots."""
         duration = cast(int, (date - self.refresh_date)) // CargoDepot.RECURRENCE

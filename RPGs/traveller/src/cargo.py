@@ -38,7 +38,7 @@ class Cargo:
         self.price_adjustment = 0.0    # purchase price adjustment
                                        # '0.0' indicates not determined yet
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of a Cargo."""
         if self.unit_size == 1:
             unit = "ton"
@@ -50,6 +50,12 @@ class Cargo:
             result += f" ({self.source_world.name})"
 
         return result
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Cargo."""
+        return f"Cargo(\"{self.name}\", \"{self.quantity}\", {self.price!r}, " +\
+               f"{self.unit_size}, {self.purchase_dms!r}, {self.sale_dms!r}, " +\
+               f"{self.source_world!r})"
 
     def __eq__(self, other: Any) -> bool:
         """Test if two Cargos are equal."""

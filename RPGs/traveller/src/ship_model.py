@@ -18,6 +18,15 @@ from src.crew import Crew, Pilot, Engineer, Medic, Steward
 class ShipModel:
     """Represents a specific ship model."""
 
+    # TO_DO: ctor is a little weird here... this class holds
+    #        data loaded from a file. We are hardcoding one
+    #        instance in the ctor.
+    #        I think we should either:
+    #          * have None values in ctor and trap an incomplete
+    #            instance where appropriate
+    #          * invoke the factory function from the ctor
+    #          * hide the ctor so that the factory function is
+    #            the only way to get an instance
     def __init__(self) -> None:
         """Create an instance of a ShipModel."""
         self.name = "Type A Free Trader"
