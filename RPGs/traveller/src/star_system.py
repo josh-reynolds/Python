@@ -119,7 +119,7 @@ class StarSystem(Hex):
         """Calculate the hash value for a StarSystem object."""
         return hash((self.coordinate, self.name))
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of a StarSystem object."""
         uwp_string = f"{self.uwp}"
         if self.agricultural:
@@ -137,6 +137,10 @@ class StarSystem(Hex):
         if self.gas_giant:
             uwp_string += " - G"
         return f"{self.name} - {uwp_string}"
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a StarSystem object."""
+        return f"StarSystem(\"{self.name}\", {self.coordinate!r}, {self.uwp!r}, {self.gas_giant})"
 
     @property
     def starport(self) -> str:
