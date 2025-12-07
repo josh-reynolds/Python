@@ -53,7 +53,7 @@ class Pilot(Crew):
 
     def __repr__(self) -> str:
         """Return the developer string representation of a Pilot object."""
-        return f"Pilot({self.skill}, {self.trade})"
+        return f"Pilot({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for a Pilot based on expertise."""
@@ -74,7 +74,7 @@ class Engineer(Crew):
 
     def __repr__(self) -> str:
         """Return the developer string representation of an Engineer object."""
-        return f"Engineer({self.skill}, {self.trade})"
+        return f"Engineer({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for an Engineer based on expertise."""
@@ -95,7 +95,7 @@ class Medic(Crew):
 
     def __repr__(self) -> str:
         """Return the developer string representation of a Medic object."""
-        return f"Medic({self.skill}, {self.trade})"
+        return f"Medic({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for a Medic based on expertise."""
@@ -116,7 +116,7 @@ class Steward(Crew):
 
     def __repr__(self) -> str:
         """Return the developer string representation of a Steward object."""
-        return f"Steward({self.skill}, {self.trade})"
+        return f"Steward({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for a Steward based on expertise."""

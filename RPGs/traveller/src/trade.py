@@ -35,7 +35,7 @@ class TradeScreen(PlayScreen):
 
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
-        return f"Trade({self.parent!r)"
+        return f"Trade({self.parent!r})"
 
     # VIEW COMMANDS ========================================================
     def goods(self) -> None:

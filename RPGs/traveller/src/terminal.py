@@ -33,7 +33,7 @@ class TerminalScreen(PlayScreen):
 
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
-        return f"Terminal({self.parent!r)"
+        return f"Terminal({self.parent!r})"
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
