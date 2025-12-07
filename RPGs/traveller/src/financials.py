@@ -146,8 +146,6 @@ class Financials:
         self.message_observers(f"Paying ship loan on {self.loan_paid} for {amount}.")
         self.debit(amount, "loan payment")
 
-    # conceivably an enum or the like would be better, but
-    # we'll stick to simple strings for now...
     def maintenance_status(self, date: ImperialDate) -> str:
         """Calculate maintenance green/yellow/red status based on days elapsed."""
         amount = cast(int, date - self.last_maintenance)

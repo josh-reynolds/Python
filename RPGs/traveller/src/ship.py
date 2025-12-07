@@ -189,7 +189,7 @@ class Ship:
         taken = sum(cargo.tonnage for cargo in self.hold)
         return self.model.hold_size - taken
 
-    # for now keep all cargo lots separate, since the may have had different
+    # for now keep all cargo lots separate, since they may have had different
     # purchase prices, plus it is simpler
     # if this turns out not to matter, or we can handle via a transaction log
     # instead, then we could merge identical cargo types together

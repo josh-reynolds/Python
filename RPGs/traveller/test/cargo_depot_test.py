@@ -12,7 +12,6 @@ class CargoDepotTestCase(unittest.TestCase):
 
     depot = CargoDepot(SystemMock(), DateMock(1))
 
-
     def setUp(self) -> None:
         """Create a test fixture for testing CargoDepots."""
         CargoDepotTestCase.depot = CargoDepot(SystemMock(), DateMock(1))

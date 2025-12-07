@@ -4,7 +4,6 @@ from test.mock import SystemMock
 from src.cargo import Cargo, cargo_from
 from src.coordinate import Coordinate
 from src.credits import Credits
-from src.star_system import StarSystem
 from src.utilities import dictionary_from
 
 class CargoTestCase(unittest.TestCase):
@@ -58,17 +57,7 @@ class CargoTestCase(unittest.TestCase):
         cargo3 = Cargo("Baz", '5', Credits(10), 5, {}, {})
         self.assertEqual(f"{cargo3}", "Baz - 5 (5 tons/item) - 10 Cr/item")
 
-        # pylint: disable=R0903
-        # R0903: Too few public methods (0/2)
-        class Location(StarSystem):
-            """Mocks a location interface for testing."""
-
-            # pylint: disable=W0231
-            # W0231: __init__ method from base class 'StarSystem' is not called
-            def __init__(self, name: str) -> None:
-                self.name = name
-
-        location = Location("Uranus")
+        location = SystemMock("Uranus")
         cargo4 = Cargo("Boo", '100', Credits(10), 1, {}, {}, location)
         self.assertEqual(f"{cargo4}", "Boo - 100 tons - 10 Cr/ton (Uranus)")
 
