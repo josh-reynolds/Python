@@ -72,37 +72,41 @@ class StarSystem(Hex):
         self.gas_giant = gas_giant
         self.detail = "orbit"
 
-        self.agricultural = False
-        if (self.atmosphere in (4, 5, 6, 7, 8, 9) and
-            self.hydrographics in (4, 5, 6, 7, 8) and
-            self.population in (5, 6, 7)):
-            self.agricultural = True
+    @property
+    def agricultural(self) -> bool:
+        """Test StarSystem for Agricultural trade classification."""
+        return self.atmosphere in (4, 5, 6, 7, 8, 9) and\
+               self.hydrographics in (4, 5, 6, 7, 8) and\
+               self.population in (5, 6, 7)
 
-        self.nonagricultural = False
-        if (self.atmosphere in (0, 1, 2, 3) and
-            self.hydrographics in (0, 1, 2, 3) and
-            self.population in (6, 7, 8, 9, 10)):
-            self.nonagricultural = True
+    @property
+    def nonagricultural(self) -> bool:
+        """Test StarSystem for Nonagricultural trade classification."""
+        return self.atmosphere in (0, 1, 2, 3) and\
+               self.hydrographics in (0, 1, 2, 3) and\
+               self.population in (6, 7, 8, 9, 10)
 
-        self.industrial = False
-        if (self.atmosphere in (0, 1, 2, 4, 7, 9) and
-            self.population in (9, 10)):
-            self.industrial = True
+    @property
+    def industrial(self) -> bool:
+        """Test StarSystem for Industrial trade classification."""
+        return self.atmosphere in (0, 1, 2, 4, 7, 9) and self.population in (9, 10)
 
-        self.nonindustrial = False
-        if self.population in (0, 1, 2, 3, 4, 5, 6):
-            self.nonindustrial = True
+    @property
+    def nonindustrial(self) -> bool:
+        """Test StarSystem for Nonindustrial trade classification."""
+        return self.population in (0, 1, 2, 3, 4, 5, 6)
 
-        self.rich = False
-        if (self.government in (4, 5, 6, 7, 8, 9) and
-            self.atmosphere in (6, 8) and
-            self.population in (6, 7, 8)):
-            self.rich = True
+    @property
+    def rich(self) -> bool:
+        """Test StarSystem for Rich trade classification."""
+        return self.government in (4, 5, 6, 7, 8, 9) and\
+               self.atmosphere in (6, 8) and\
+               self.population in (6, 7, 8)
 
-        self.poor = False
-        if (self.atmosphere in (2, 3, 4, 5) and
-            self.hydrographics in (0, 1, 2, 3)):
-            self.poor = True
+    @property
+    def poor(self) -> bool:
+        """Test StarSystem for Poor trade classification."""
+        return self.atmosphere in (2, 3, 4, 5) and self.hydrographics in (0, 1, 2, 3)
 
     def __eq__(self, other: Any) -> bool:
         """Test whether two StarSystem objects are equal."""

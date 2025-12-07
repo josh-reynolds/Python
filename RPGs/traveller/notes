@@ -2939,6 +2939,40 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Reviewing the unit tests for mock opportunities, and I had
+# some thoughts.
+#
+# First, you can tell a lot about the class under test by the
+# imports in the test module.
+#
+# The very simplest classes only need themselves imported (plus
+# whatever goo the unittest framework itself needs). These are
+# all datatypes, and possible candidates for replacement by
+# Python's data class mechanism.
+#
+# The more complicated classes need one or more others imported
+# alongside. Ideally, any such should be either simple datatypes,
+# or a mock.
+#
+# The ideal test import for me would be something like:
+#
+#   import unittest
+#   import BunchOfMocks
+#   import SomDataTypes
+#   import ClassUnderTest
+#
+# So anywhere we see non-datatype classes being imported into
+# a test module (that is not targeting them), we should consider
+# replacing with a mock.
+#
+# Not a hard and fast rule, but seems like a reasonable guideline.
+#
+# This may also provide hints for moving functions around to
+# their proper home.
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -3312,13 +3346,12 @@
 #  * [....] Review and mark or export private/public members
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
-#  * [    ] Review test fixtures for mock opportunities
+#  * [....] Review test fixtures for mock opportunities
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
-#  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
 #           and assuming they get attached later for the load_game() case. Should this
 #           always be assumed? If so should trap malformed - don't like ctor
@@ -3333,44 +3366,17 @@
 #           pretty_coordinates() for a StarSystem. Should probably do this earlier -
 #           when creating the StarSystem itself?
 #  * [    ] Handling of load game list when there are no save files could be smoother
-#  * [    ] Should we track cargo details in ledger? Would be good to help the player
-#           analyze performance
-#  * [    ] The ledger could get very long. Will want to manage in the view. Simplest
-#           is to show just last n lines. Better still would be some kind of scrolling
-#           functionality.
 #  * [    ] Small amount transactions can lead to a long balance string in MCr,
 #           which throws off column alignment in ledger - restrict decimal places in Credits?
-#  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] Trap out-of-range subsector coords - where/when?
 #  * [    ] Is Subsector class redundant? Should kill?
-#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
-#           (should be able to view in hold and while trading,
-#            possibly also while choosing a destination world)
-#  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
-#  * [    ] Need to be able to see maintenance date
-#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
-#  * [    ] List star map to take a range parameter? What's the use case?
-#           Might be necessary if the list gets very large. Tests so far haven't had
-#           more than a dozen or so worlds, but especially if we allow imported maps
-#           this will be unwieldy.
-#           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
-#           another that allows choosing a subsector by name and displaying its contents.
-#           Now that we support importing data, the list has has hit this limit - should
-#           rework.
-#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] Rather than having up-front tests, make some commands dynamically
 #           available in command lists when conditions merit - e.g. only present
 #           skimming as jump point command if the system has a gas giant
 #           Handle this in Play.update() - each state should have a method to
 #           add/remove commands dynamically, call it on transition
-#  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
-#           i.e. balance can't go negative?)
-#  * [    ] Expand options available in New Game - could expose all sorts of options
-#           here like adjusting world creation parameters, but initially just
-#           customizing ship and crew
-#  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
 #           maybe we should have either decode_foo() and Foo.encode() or
 #           foo_from() and Foo.to()...
@@ -3419,10 +3425,18 @@
 #           as it can't land or skim, and can't recharge life support either. We need
 #           a highport location and/or shuttle refuelling to make this usable.
 #  * [    ] Add customization of crew members, names, etc.
+#  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
+#  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
 #  * [    ] 'Plot a route' functionality? Plan out a sequence of jumps?
 #  * [    ] A world with: no gas giants, no hydrosphere, and starport E/X has
 #           no fuelling options and is dangerous to travel to for normal 
 #           commercial ships. Should flag this somehow. Mark red in listing?
+#  * [    ] Should we track cargo details in ledger? Would be good to help the player
+#           analyze performance
+#  * [    ] The ledger could get very long. Will want to manage in the view. Simplest
+#           is to show just last n lines. Better still would be some kind of scrolling
+#           functionality.
+#  * [    ] Investigate __format__ for ImperialDate so we can tab-align ledger columns
 #  * [    ] End game condition? In my recent test run, I arrived at an E-starport
 #           world with no gas giant. It has a hydrosphere, but I haven't 
 #           implemented wilderness refuelling yet. So my ship is stuck. Game Over?
@@ -3437,6 +3451,9 @@
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic. This may be as
 #           simple as whether StarSystem.destinations is populated or not.
+#  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
+#           (should be able to view in hold and while trading,
+#            possibly also while choosing a destination world)
 #  * [    ] Traveller '77 had route determination. Add this?
 #  * [    ] Should freight expire or be assessed a penalty fee for late delivery?
 #           Similar question for passengers. Particularly meaningful in the case
@@ -3456,6 +3473,12 @@
 #           penalties that let them keep going?
 #  * [    ] Maintenance assists, plotting routes to service centers
 #  * [    ] Should we allow partial fuel fillup?
+#  * [    ] Add out-of-funds condition (game over?) (Block in Financials?
+#           i.e. balance can't go negative?)
+#  * [    ] Expand options available in New Game - could expose all sorts of options
+#           here like adjusting world creation parameters, but initially just
+#           customizing ship and crew
+#  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
 #  * [    ] Ocean refuelling option if hydrographics permit it (should we then
 #           split out another surface location? Implication of current 'surface' location
 #           is it is the starport, which this is not. Scope creep, maybe hold this one
@@ -3473,6 +3496,17 @@
 #           implemented a ledger or more accounting features yet
 #  * [    ] Add loan history and statement (amortization schedule too?)
 #  * [    ] Distinguish between highport and downport
+#  * [    ] Replace dummy/test data with 'real' values
+#  * [    ] Need to be able to see maintenance date
+#  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
+#  * [    ] List star map to take a range parameter? What's the use case?
+#           Might be necessary if the list gets very large. Tests so far haven't had
+#           more than a dozen or so worlds, but especially if we allow imported maps
+#           this will be unwieldy.
+#           Could have a couple modes: a basic 'view all systems within 6 parsecs' and
+#           another that allows choosing a subsector by name and displaying its contents.
+#           Now that we support importing data, the list has has hit this limit - should
+#           rework.
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Add ship design mode - ship customization and/or building from scratch

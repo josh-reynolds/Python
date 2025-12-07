@@ -63,6 +63,7 @@ class UWP:
                     self.tech == other.tech
         return NotImplemented
 
+
 def uwp_from(string: str) -> UWP:
     """Create a UWP object from a string representation.
 

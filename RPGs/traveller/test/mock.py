@@ -66,12 +66,6 @@ class SystemMock(StarSystem):
     # W0231: __init__ method from base class 'StarSystem' is not called
     def __init__(self, name: str="Uranus") -> None:
         """Create an instance of a SystemMock object."""
-        self.agricultural = True
-        self.nonagricultural = True
-        self.industrial = True
-        self.nonindustrial = True
-        self.rich = True
-        self.poor = True
         self.name = name
         self.coordinate = Coordinate(1,1,1)
         self.destinations = []
@@ -82,6 +76,36 @@ class SystemMock(StarSystem):
     def population(self) -> int:
         """Return an overriden UWP population value."""
         return 5
+
+    @property
+    def poor(self) -> bool:
+        """Return an overriden Poor trade classification."""
+        return True
+
+    @property
+    def rich(self) -> bool:
+        """Return an overriden Rich trade classification."""
+        return True
+
+    @property
+    def nonindustrial(self) -> bool:
+        """Return an overriden Nonindustrial trade classification."""
+        return True
+
+    @property
+    def industrial(self) -> bool:
+        """Return an overriden Industrial trade classification."""
+        return True
+
+    @property
+    def nonagricultural(self) -> bool:
+        """Return an overriden Nonagricultural trade classification."""
+        return True
+
+    @property
+    def agricultural(self) -> bool:
+        """Return an overriden Agricultural trade classification."""
+        return True
 
     def __str__(self) -> str:
         """Return the string representation of a SystemMock object."""

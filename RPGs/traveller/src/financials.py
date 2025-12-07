@@ -160,6 +160,7 @@ class Financials:
         return f"{self.balance.amount} - {self.current_date} - {self.berth_expiry} - " +\
                 f"{self.salary_paid} - {self.loan_paid} - {self.last_maintenance}"
 
+
 def financials_from(string: str) -> Financials:
     """Create a Financials object from a string representation.
 

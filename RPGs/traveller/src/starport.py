@@ -122,6 +122,7 @@ class StarportScreen(PlayScreen):
         if self.parent.ship.fuel_quality == FuelQuality.REFINED:
             print("Ship fuel tanks are clean. No need to flush.")
             return
+
         if self.parent.location.starport in ('E', 'X'):
             print(f"There are no facilities to flush tanks "
                   f"at starport {self.parent.location.starport}.")
@@ -141,6 +142,7 @@ class StarportScreen(PlayScreen):
         if self.parent.location.starport in ["D", "E", "X"]:
             print(f"No repair facilities available at starport {self.parent.location.starport}")
             return
+
         if self.parent.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
