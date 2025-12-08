@@ -47,7 +47,7 @@ class PlayScreen(Screen):
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.parent.model.date} : You are " +
               f"{self.parent.model.location.description()}.{repair_state}{END_FORMAT}")
-        print(f"Credits: {self.parent.financials.balance}"
+        print(f"Credits: {self.parent.model.financials.balance}"
               f"\tFree hold space: {self.parent.model.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.parent.model.ship.life_support_level}%")
@@ -91,7 +91,7 @@ class PlayScreen(Screen):
         """View the bank transaction ledger."""
         print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
         print("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO")
-        transactions = self.parent.financials.ledger
+        transactions = self.parent.model.financials.ledger
         for transaction in transactions:
             print(transaction)
         _ = input("\nPress ENTER key to continue.")
@@ -177,8 +177,8 @@ class PlayScreen(Screen):
                      'ship details' : self.parent.model.ship.encode(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
-                     'financials' : self.parent.financials.encode(),
-                     'ledger' : self.parent.financials.ledger
+                     'financials' : self.parent.model.financials.encode(),
+                     'ledger' : self.parent.model.financials.ledger
                      }
 
         filename = get_next_file("save_game", "json")
@@ -215,7 +215,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        ledger = self.parent.financials.ledger
+        ledger = self.parent.model.financials.ledger
         if len(ledger) == 0:
             print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
             return

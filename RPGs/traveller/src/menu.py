@@ -89,10 +89,10 @@ class MenuScreen(Screen):
 
     def _load_financials(self, data: str) -> None:
         """Apply Financials from json data to Game financials field."""
-        self.parent.financials = financials_from(data)
-        self.parent.financials.ship = self.parent.model.ship
-        self.parent.financials.add_observer(self.parent)
-        self.parent.model.date.add_observer(self.parent.financials)
+        self.parent.model.financials = financials_from(data)
+        self.parent.model.financials.ship = self.parent.model.ship
+        self.parent.model.financials.add_observer(self.parent)
+        self.parent.model.date.add_observer(self.parent.model.financials)
 
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
@@ -102,7 +102,7 @@ class MenuScreen(Screen):
         self.parent.model.location.destinations = \
                 self.parent.model.star_map.get_systems_within_range(coord,
                                                         self.parent.model.ship.model.jump_range)
-        self.parent.financials.location = self.parent.model.location
+        self.parent.model.financials.location = self.parent.model.location
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
@@ -114,7 +114,7 @@ class MenuScreen(Screen):
     def _attach_date_observers(self) -> None:
         """Attach observers to Game date field."""
         self.parent.model.date.add_observer(self.parent.depot)
-        self.parent.model.date.add_observer(self.parent.financials)
+        self.parent.model.date.add_observer(self.parent.model.financials)
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
@@ -214,7 +214,7 @@ class MenuScreen(Screen):
             return None
 
         self._load_financials(data['financials'])
-        self.parent.financials.ledger = data['ledger']
+        self.parent.model.financials.ledger = data['ledger']
         self._load_location(data['location'])
         self._create_depot()
         self._attach_date_observers()

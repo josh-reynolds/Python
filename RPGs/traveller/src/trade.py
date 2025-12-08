@@ -67,7 +67,7 @@ class TradeScreen(PlayScreen):
         cost = self.parent.depot.determine_price("purchase", cargo, quantity,
                                           self.parent.model.ship.trade_skill())
 
-        if self.parent.depot.insufficient_funds(cost, self.parent.financials.balance):
+        if self.parent.depot.insufficient_funds(cost, self.parent.model.financials.balance):
             return
 
         if not self.parent.depot.confirm_transaction("purchase", cargo, quantity, cost):
@@ -79,7 +79,7 @@ class TradeScreen(PlayScreen):
                           cargo.purchase_dms, cargo.sale_dms, self.parent.model.location)
         self.parent.model.ship.load_cargo(purchased)
 
-        self.parent.financials.debit(cost, "cargo purchase")
+        self.parent.model.financials.debit(cost, "cargo purchase")
         self.parent.model.date.day += 1
 
     def sell_cargo(self) -> None:
@@ -108,7 +108,7 @@ class TradeScreen(PlayScreen):
         sale_price = self.parent.depot.determine_price("sale", cargo, quantity,
                                                 broker_skill + self.parent.model.ship.trade_skill())
 
-        self.parent.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price),
+        self.parent.model.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price),
                                      "broker fee")
 
         if not self.parent.depot.confirm_transaction("sale", cargo, quantity, sale_price):
@@ -116,7 +116,7 @@ class TradeScreen(PlayScreen):
 
         self.parent.depot.remove_cargo(self.parent.model.ship.hold, cargo, quantity)
 
-        self.parent.financials.credit(sale_price, "cargo sale")
+        self.parent.model.financials.credit(sale_price, "cargo sale")
         self.parent.model.date.day += 1
 
     def load_freight(self) -> None:
@@ -225,7 +225,7 @@ class TradeScreen(PlayScreen):
                                            if isinstance(c, Cargo)]
 
             payment = Credits(1000 * freight_tonnage)
-            self.parent.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
+            self.parent.model.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
             self.parent.model.date.day += 1

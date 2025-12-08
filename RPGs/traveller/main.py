@@ -3,7 +3,6 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from src.cargo_depot import CargoDepot
-from src.financials import Financials
 from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 from src.jump import JumpScreen
 from src.menu import MenuScreen
@@ -27,7 +26,6 @@ class Game:
 
         self.model = Model()
 
-        self.financials: Financials
         self.depot: CargoDepot
 
     def __repr__(self) -> str:

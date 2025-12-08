@@ -59,7 +59,8 @@ class JumpScreen(PlayScreen):
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
-        status = self.parent.financials.maintenance_status(self.parent.model.date.current_date)
+        status = self.parent.model.financials.maintenance_status(
+                                     self.parent.model.date.current_date)
         self.parent.model.ship.check_failure_pre_jump(status)
         if self.parent.model.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
@@ -107,7 +108,7 @@ class JumpScreen(PlayScreen):
                                        self.parent.model.date.current_date)
         self.parent.depot.add_observer(self.parent)
         self.parent.depot.controls = self.parent
-        self.parent.financials.location = destination
+        self.parent.model.financials.location = destination
 
         self.parent.model.ship.life_support_level = 0
         self.parent.model.ship.current_fuel -= self.parent.model.ship.model.jump_fuel_cost
@@ -119,7 +120,8 @@ class JumpScreen(PlayScreen):
             modifier = 3
         else:
             modifier = -1
-        if self.parent.financials.maintenance_status(self.parent.model.date.current_date) == "red":
+        if self.parent.model.financials.maintenance_status(
+                                self.parent.model.date.current_date) == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier

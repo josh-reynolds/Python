@@ -75,7 +75,7 @@ class StarportScreen(PlayScreen):
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.parent.model.ship.recharge()
-        self.parent.financials.debit(cost, "life support")
+        self.parent.model.financials.debit(cost, "life support")
 
     def refuel(self) -> None:
         """Refuel the Ship."""
@@ -85,7 +85,7 @@ class StarportScreen(PlayScreen):
             return
 
         cost = self.parent.model.ship.refuel(self.parent.model.location.starport)
-        self.parent.financials.debit(cost, "refuelling")
+        self.parent.model.financials.debit(cost, "refuelling")
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
@@ -95,12 +95,12 @@ class StarportScreen(PlayScreen):
             return
 
         cost = self.parent.model.ship.maintenance_cost()
-        if self.parent.financials.balance < cost:
+        if self.parent.model.financials.balance < cost:
             print("You do not have enough funds to pay for maintenance.\n"
-                  f"It will cost {cost}. Your balance is {self.parent.financials.balance}.")
+                  f"It will cost {cost}. Your balance is {self.parent.model.financials.balance}.")
             return
 
-        if self.parent.financials.maintenance_status(self.parent.model.date.current_date) == \
+        if self.parent.model.financials.maintenance_status(self.parent.model.date.current_date) == \
                 "green":
             confirmation = confirm_input("Maintenance was performed less than 10 months " +
                                          "ago. Continue (y/n)? ")
@@ -113,8 +113,8 @@ class StarportScreen(PlayScreen):
             return
 
         print(f"Performing maintenance. Charging {cost}.")
-        self.parent.financials.last_maintenance = self.parent.model.date.current_date
-        self.parent.financials.debit(cost, "annual maintenance")
+        self.parent.model.financials.last_maintenance = self.parent.model.date.current_date
+        self.parent.model.financials.debit(cost, "annual maintenance")
         self.parent.model.date.day += 14    # should we wrap this in a method call?
         self.parent.model.ship.repair_status = RepairStatus.REPAIRED
 
