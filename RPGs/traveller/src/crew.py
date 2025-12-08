@@ -34,6 +34,10 @@ class Crew(ABC):
         """Return the string representation of a Crew object."""
         return f"{self.name} - {self.job} {self.skill}"
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Crew object."""
+        return f"{self.job}({self.skill}, {self.trade_skill})"
+
     @abstractmethod
     def salary(self) -> Credits:
         """Return the monthly salary for the crewmember."""
@@ -50,10 +54,6 @@ class Pilot(Crew):
         self.name = "Captain Grungebottom"
         self.job = "Pilot"
         self.pilot_skill = skill
-
-    def __repr__(self) -> str:
-        """Return the developer string representation of a Pilot object."""
-        return f"Pilot({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for a Pilot based on expertise."""
@@ -72,10 +72,6 @@ class Engineer(Crew):
         self.job = "Engineer"
         self.engineer_skill = skill
 
-    def __repr__(self) -> str:
-        """Return the developer string representation of an Engineer object."""
-        return f"Engineer({self.skill}, {self.trade_skill})"
-
     def salary(self) -> Credits:
         """Return the monthly salary for an Engineer based on expertise."""
         return Credits(4000) * (1 + .1 * (self.engineer_skill - 1))
@@ -93,10 +89,6 @@ class Medic(Crew):
         self.job = "Medic"
         self.medic_skill = skill
 
-    def __repr__(self) -> str:
-        """Return the developer string representation of a Medic object."""
-        return f"Medic({self.skill}, {self.trade_skill})"
-
     def salary(self) -> Credits:
         """Return the monthly salary for a Medic based on expertise."""
         return Credits(2000) * (1 + .1 * (self.medic_skill - 1))
@@ -113,10 +105,6 @@ class Steward(Crew):
         self.name = "Laszlo the Third"
         self.job = "Steward"
         self.steward_skill = skill
-
-    def __repr__(self) -> str:
-        """Return the developer string representation of a Steward object."""
-        return f"Steward({self.skill}, {self.trade_skill})"
 
     def salary(self) -> Credits:
         """Return the monthly salary for a Steward based on expertise."""
