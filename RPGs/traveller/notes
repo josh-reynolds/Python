@@ -3347,6 +3347,7 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
+#  * [....] Add a 'Model' class and move references from Game to it
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module
@@ -3387,7 +3388,6 @@
 #  * [    ] Should we formalize message priority as an enum or something?
 #  * [    ] Should get_input() live in screen/controller classes?
 #  * [    ] Should on_notify() live in screen/controller classes?
-#  * [    ] Add a 'Model' class and move references from Game to it
 #  * [    ] Could a decorator handle the little pause at the end of view commands?
 #  * [    ] Add a mixin Observer class to manage the interface? Or at the 'observed'
 #           end? We may be specializing/overriding on_notify()...

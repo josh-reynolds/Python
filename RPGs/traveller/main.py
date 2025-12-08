@@ -8,6 +8,7 @@ from src.financials import Financials
 from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
 from src.jump import JumpScreen
 from src.menu import MenuScreen
+from src.model import Model
 from src.orbit import OrbitScreen
 from src.screen import Screen
 from src.ship import Ship
@@ -28,16 +29,14 @@ class Game:
         self.running = False
         self.screen: Screen = MenuScreen(self)
 
+        self.model = Model
+
         self.date: Calendar
         self.ship: Ship
         self.star_map: StarMap
         self.location: StarSystem
         self.financials: Financials
         self.depot: CargoDepot
-
-    def __str__(self) -> str:
-        """Return the string representation of the Game object."""
-        return "Game"
 
     def __repr__(self) -> str:
         """Return the developer string representation of the Game object."""
