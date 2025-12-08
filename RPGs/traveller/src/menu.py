@@ -84,15 +84,15 @@ class MenuScreen(Screen):
 
     def _load_calendar(self, data: str) -> None:
         """Apply date from json data to Game calendar field."""
-        self.parent.date = Calendar()
-        modify_calendar_from(self.parent.date, data)
+        self.parent.model.date = Calendar()
+        modify_calendar_from(self.parent.model.date, data)
 
     def _load_financials(self, data: str) -> None:
         """Apply Financials from json data to Game financials field."""
         self.parent.financials = financials_from(data)
         self.parent.financials.ship = self.parent.ship
         self.parent.financials.add_observer(self.parent)
-        self.parent.date.add_observer(self.parent.financials)
+        self.parent.model.date.add_observer(self.parent.financials)
 
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
@@ -105,14 +105,14 @@ class MenuScreen(Screen):
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
+        self.parent.depot = CargoDepot(self.parent.location, self.parent.model.date.current_date)
         self.parent.depot.add_observer(self.parent)
         self.parent.depot.controls = self.parent
 
     def _attach_date_observers(self) -> None:
         """Attach observers to Game date field."""
-        self.parent.date.add_observer(self.parent.depot)
-        self.parent.date.add_observer(self.parent.financials)
+        self.parent.model.date.add_observer(self.parent.depot)
+        self.parent.model.date.add_observer(self.parent.financials)
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""

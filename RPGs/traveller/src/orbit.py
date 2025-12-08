@@ -97,7 +97,7 @@ class OrbitScreen(PlayScreen):
             return None
 
         self.parent.ship.current_fuel -= leg_fc
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
         self.parent.change_state("Jump")
         return None
 

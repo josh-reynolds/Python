@@ -50,7 +50,7 @@ class JumpScreen(PlayScreen):
             return None
 
         self.parent.ship.current_fuel -= leg_fc
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
         self.parent.change_state("Orbit")
         return None
 
@@ -59,7 +59,7 @@ class JumpScreen(PlayScreen):
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
-        status = self.parent.financials.maintenance_status(self.parent.date.current_date)
+        status = self.parent.financials.maintenance_status(self.parent.model.date.current_date)
         self.parent.ship.check_failure_pre_jump(status)
         if self.parent.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
@@ -102,14 +102,14 @@ class JumpScreen(PlayScreen):
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(coord,
                                                    jump_range)
 
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.date.current_date)
+        self.parent.depot = CargoDepot(self.parent.location, self.parent.model.date.current_date)
         self.parent.depot.add_observer(self.parent)
         self.parent.depot.controls = self.parent
         self.parent.financials.location = destination
 
         self.parent.ship.life_support_level = 0
         self.parent.ship.current_fuel -= self.parent.ship.model.jump_fuel_cost
-        self.parent.date.plus_week()
+        self.parent.model.date.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
@@ -117,7 +117,7 @@ class JumpScreen(PlayScreen):
             modifier = 3
         else:
             modifier = -1
-        if self.parent.financials.maintenance_status(self.parent.date.current_date) == "red":
+        if self.parent.financials.maintenance_status(self.parent.model.date.current_date) == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier
@@ -168,7 +168,7 @@ class JumpScreen(PlayScreen):
 
         self.parent.ship.current_fuel = self.parent.ship.model.fuel_tank
         self.parent.ship.fuel_quality = FuelQuality.UNREFINED
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
 
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""
@@ -179,7 +179,7 @@ class JumpScreen(PlayScreen):
         if self.parent.ship.repair_status == RepairStatus.PATCHED:
             print("Further repairs require starport facilities.")
             return
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
         if die_roll(2) + self.parent.ship.engineering_skill() > 9:
             self.parent.ship.repair_status = RepairStatus.PATCHED
             print("Ship partially repaired. Visit a starport for further work.")

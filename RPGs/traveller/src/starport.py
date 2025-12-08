@@ -99,7 +99,8 @@ class StarportScreen(PlayScreen):
                   f"It will cost {cost}. Your balance is {self.parent.financials.balance}.")
             return
 
-        if self.parent.financials.maintenance_status(self.parent.date.current_date) == "green":
+        if self.parent.financials.maintenance_status(self.parent.model.date.current_date) == \
+                "green":
             confirmation = confirm_input("Maintenance was performed less than 10 months " +
                                          "ago. Continue (y/n)? ")
             if confirmation == "n":
@@ -111,9 +112,9 @@ class StarportScreen(PlayScreen):
             return
 
         print(f"Performing maintenance. Charging {cost}.")
-        self.parent.financials.last_maintenance = self.parent.date.current_date
+        self.parent.financials.last_maintenance = self.parent.model.date.current_date
         self.parent.financials.debit(cost, "annual maintenance")
-        self.parent.date.day += 14    # should we wrap this in a method call?
+        self.parent.model.date.day += 14    # should we wrap this in a method call?
         self.parent.ship.repair_status = RepairStatus.REPAIRED
 
     def flush(self) -> None:
@@ -131,7 +132,7 @@ class StarportScreen(PlayScreen):
         print("Fuel tanks have been decontaminated.")
         self.parent.ship.fuel_quality = FuelQuality.REFINED
         self.parent.ship.unrefined_jump_counter = 0
-        self.parent.date.plus_week()
+        self.parent.model.date.plus_week()
 
     # TO_DO: the rules do not cover this procedure. No time or credits
     #        expenditure, etc. For now I'll just make this one week and free,
@@ -151,4 +152,4 @@ class StarportScreen(PlayScreen):
         self.parent.ship.repair_status = RepairStatus.REPAIRED
         self.parent.ship.fuel_quality = FuelQuality.REFINED
         self.parent.ship.unrefined_jump_counter = 0
-        self.parent.date.plus_week()
+        self.parent.model.date.plus_week()

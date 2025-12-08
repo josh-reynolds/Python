@@ -80,7 +80,7 @@ class TradeScreen(PlayScreen):
         self.parent.ship.load_cargo(purchased)
 
         self.parent.financials.debit(cost, "cargo purchase")
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
 
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
@@ -117,7 +117,7 @@ class TradeScreen(PlayScreen):
         self.parent.depot.remove_cargo(self.parent.ship.hold, cargo, quantity)
 
         self.parent.financials.credit(sale_price, "cargo sale")
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
 
     def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""
@@ -157,7 +157,7 @@ class TradeScreen(PlayScreen):
             self.parent.ship.load_cargo(Freight(entry,
                                          self.parent.location,
                                          destination))
-        self.parent.date.day += 1
+        self.parent.model.date.day += 1
 
     def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
@@ -227,7 +227,7 @@ class TradeScreen(PlayScreen):
             self.parent.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
-            self.parent.date.day += 1
+            self.parent.model.date.day += 1
 
         else:
             print(f"{BOLD_RED}You are not at the contracted "

@@ -45,7 +45,7 @@ class PlayScreen(Screen):
     def _draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
-        print(f"{YELLOW_ON_RED}\n{self.parent.date} : You are " +
+        print(f"{YELLOW_ON_RED}\n{self.parent.model.date} : You are " +
               f"{self.parent.location.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.parent.financials.balance}"
               f"\tFree hold space: {self.parent.ship.free_space()} tons"
@@ -167,7 +167,7 @@ class PlayScreen(Screen):
         cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
 
         save_data = {
-                     'date' : f"{self.parent.date}",
+                     'date' : f"{self.parent.model.date}",
                      'systems' : systems,
                      'subsectors' : subsectors,
                      'location' : f"{self.parent.location.coordinate}",
@@ -188,7 +188,7 @@ class PlayScreen(Screen):
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
         print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
-        self.parent.date.plus_week()
+        self.parent.model.date.plus_week()
 
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""

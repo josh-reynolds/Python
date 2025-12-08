@@ -2,7 +2,6 @@
 
 Game - contains the game loop and basic controller/view logic.
 """
-from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
 from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
@@ -31,7 +30,7 @@ class Game:
 
         self.model = Model
 
-        self.date: Calendar
+        #self.date: Calendar
         self.ship: Ship
         self.star_map: StarMap
         self.location: StarSystem
