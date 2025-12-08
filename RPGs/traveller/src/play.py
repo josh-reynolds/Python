@@ -48,24 +48,25 @@ class PlayScreen(Screen):
         print(f"{YELLOW_ON_RED}\n{self.parent.model.date} : You are " +
               f"{self.parent.location.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.parent.financials.balance}"
-              f"\tFree hold space: {self.parent.ship.free_space()} tons"
+              f"\tFree hold space: {self.parent.model.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
-              f"\tLife support: {self.parent.ship.life_support_level}%")
+              f"\tLife support: {self.parent.model.ship.life_support_level}%")
 
     def update(self) -> None:
         """Draw the screen and present play choices."""
-        if self.parent.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.parent.model.ship.fuel_quality == FuelQuality.UNREFINED:
             fuel_quality = "(U)"
         else:
             fuel_quality = ""
 
         repair_state = ""
-        if self.parent.ship.repair_status == RepairStatus.BROKEN:
+        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
             repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-        elif self.parent.ship.repair_status == RepairStatus.PATCHED:
+        elif self.parent.model.ship.repair_status == RepairStatus.PATCHED:
             repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-        fuel_amount = f"{self.parent.ship.current_fuel}/{self.parent.ship.model.fuel_tank}"
+        fuel_amount = f"{self.parent.model.ship.current_fuel}/" +\
+                      f"{self.parent.model.ship.model.fuel_tank}"
 
         self._draw_banner(fuel_quality, fuel_amount, repair_state)
 
@@ -98,7 +99,7 @@ class PlayScreen(Screen):
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
         print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
-        contents = self.parent.ship.cargo_hold()
+        contents = self.parent.model.ship.cargo_hold()
         if len(contents) == 0:
             print("Empty.")
         else:
@@ -108,29 +109,29 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        if self.parent.ship.destination is None:
+        if self.parent.model.ship.destination is None:
             destination = "None"
         else:
-            destination = self.parent.ship.destination.name
+            destination = self.parent.model.ship.destination.name
 
-        print(f"High passengers: {self.parent.ship.high_passenger_count}\n"
-              f"Middle passengers: {self.parent.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.parent.ship.low_passenger_count}\n"
+        print(f"High passengers: {self.parent.model.ship.high_passenger_count}\n"
+              f"Middle passengers: {self.parent.model.ship.middle_passenger_count}\n"
+              f"Low passengers: {self.parent.model.ship.low_passenger_count}\n"
               f"DESTINATION: {destination}\n\n"
-              f"Empty berths: {self.parent.ship.empty_passenger_berths}\n"
-              f"Empty low berths: {self.parent.ship.empty_low_berths}")
+              f"Empty berths: {self.parent.model.ship.empty_passenger_berths}\n"
+              f"Empty low berths: {self.parent.model.ship.empty_low_berths}")
         _ = input("\nPress ENTER key to continue.")
 
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
         print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
-        pr_list(self.parent.ship.crew)
+        pr_list(self.parent.model.ship.crew)
         _ = input("\nPress ENTER key to continue.")
 
     def view_ship(self) -> None:
         """View the details of the Ship."""
         print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
-        print(self.parent.ship)
+        print(self.parent.model.ship)
         _ = input("\nPress ENTER key to continue.")
 
     def view_map(self) -> None:
@@ -162,9 +163,9 @@ class PlayScreen(Screen):
             sub = self.parent.star_map.subsectors[coord]
             subsectors.append(f"{coord} - {sub}")
 
-        passenger_list = [p.encode() for p in self.parent.ship.passengers]
+        passenger_list = [p.encode() for p in self.parent.model.ship.passengers]
 
-        cargo_hold_list = [p.encode() for p in self.parent.ship.hold]
+        cargo_hold_list = [p.encode() for p in self.parent.model.ship.hold]
 
         save_data = {
                      'date' : f"{self.parent.model.date}",
@@ -172,8 +173,8 @@ class PlayScreen(Screen):
                      'subsectors' : subsectors,
                      'location' : f"{self.parent.location.coordinate}",
                      'menu' : f"{self.parent.screen}",
-                     'ship model' : self.parent.ship.model.name,
-                     'ship details' : self.parent.ship.encode(),
+                     'ship model' : self.parent.model.ship.model.name,
+                     'ship details' : self.parent.model.ship.encode(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
                      'financials' : self.parent.financials.encode(),
@@ -247,17 +248,17 @@ class PlayScreen(Screen):
                            jump_range: int, prompt: str) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
-        if self.parent.ship.destination is not None:
-            if self.parent.ship.destination == self.parent.location:
+        if self.parent.model.ship.destination is not None:
+            if self.parent.model.ship.destination == self.parent.location:
                 print(f"{BOLD_RED}There is still freight to be unloaded "
                       f"on {self.parent.location.name}.{END_FORMAT}")
                 return result
-            if self.parent.ship.destination in potential_destinations:
+            if self.parent.model.ship.destination in potential_destinations:
                 print(f"You are under contract. Only showing {prompt} " +
-                      f"for {self.parent.ship.destination.name}:\n")
-                result = [self.parent.ship.destination]
+                      f"for {self.parent.model.ship.destination.name}:\n")
+                result = [self.parent.model.ship.destination]
             else:
-                print(f"You are under contract to {self.parent.ship.destination.name} " +
+                print(f"You are under contract to {self.parent.model.ship.destination.name} " +
                       "but it is not within jump range of here.")
 
         else:
@@ -268,10 +269,10 @@ class PlayScreen(Screen):
 
     def _check_fuel_level(self, prompt: str) -> int | None:
         """Verify there is sufficient fuel in the tanks to make a trip."""
-        leg_fc = self.parent.ship.model.trip_fuel_cost // 2
-        if self.parent.ship.current_fuel < leg_fc:
+        leg_fc = self.parent.model.ship.model.trip_fuel_cost // 2
+        if self.parent.model.ship.current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel {prompt} the jump point "
                   f"requires {leg_fc} tons, only "
-                  f"{self.parent.ship.current_fuel} tons in tanks.")
+                  f"{self.parent.model.ship.current_fuel} tons in tanks.")
             return None
         return leg_fc

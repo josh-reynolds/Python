@@ -61,11 +61,11 @@ class TradeScreen(PlayScreen):
 
         if self.parent.depot.insufficient_hold_space(cargo,
                                                      quantity,
-                                                     self.parent.ship.free_space()):
+                                                     self.parent.model.ship.free_space()):
             return
 
         cost = self.parent.depot.determine_price("purchase", cargo, quantity,
-                                          self.parent.ship.trade_skill())
+                                          self.parent.model.ship.trade_skill())
 
         if self.parent.depot.insufficient_funds(cost, self.parent.financials.balance):
             return
@@ -77,7 +77,7 @@ class TradeScreen(PlayScreen):
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.parent.location)
-        self.parent.ship.load_cargo(purchased)
+        self.parent.model.ship.load_cargo(purchased)
 
         self.parent.financials.debit(cost, "cargo purchase")
         self.parent.model.date.day += 1
@@ -85,7 +85,7 @@ class TradeScreen(PlayScreen):
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
         print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
-        cargoes = [c for c in self.parent.ship.hold if isinstance(c, Cargo)]
+        cargoes = [c for c in self.parent.model.ship.hold if isinstance(c, Cargo)]
 
         if len(cargoes) == 0:
             print("You have no cargo on board.")
@@ -106,7 +106,7 @@ class TradeScreen(PlayScreen):
             return
 
         sale_price = self.parent.depot.determine_price("sale", cargo, quantity,
-                                                broker_skill + self.parent.ship.trade_skill())
+                                                broker_skill + self.parent.model.ship.trade_skill())
 
         self.parent.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price),
                                      "broker fee")
@@ -114,7 +114,7 @@ class TradeScreen(PlayScreen):
         if not self.parent.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        self.parent.depot.remove_cargo(self.parent.ship.hold, cargo, quantity)
+        self.parent.depot.remove_cargo(self.parent.model.ship.hold, cargo, quantity)
 
         self.parent.financials.credit(sale_price, "cargo sale")
         self.parent.model.date.day += 1
@@ -123,7 +123,7 @@ class TradeScreen(PlayScreen):
         """Select and load Freight onto the Ship."""
         print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
 
-        jump_range = self.parent.ship.model.jump_range
+        jump_range = self.parent.model.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "freight shipments")
@@ -154,7 +154,7 @@ class TradeScreen(PlayScreen):
 
         for entry in selection:
             self.parent.depot.freight[destination].remove(entry)
-            self.parent.ship.load_cargo(Freight(entry,
+            self.parent.model.ship.load_cargo(Freight(entry,
                                          self.parent.location,
                                          destination))
         self.parent.model.date.day += 1
@@ -164,7 +164,7 @@ class TradeScreen(PlayScreen):
         """Select Freight lots from a list of available shipments."""
         selection: List[int] = []
         total_tonnage = 0
-        hold_tonnage = self.parent.ship.free_space()
+        hold_tonnage = self.parent.model.ship.free_space()
         while True:
             if len(available) == 0:
                 print(f"No more freight available for {destination.name}.")
@@ -210,18 +210,19 @@ class TradeScreen(PlayScreen):
         # It should not be possible for there to be freight in the hold,
         # and a destination flag set to None. Should we assert just
         # in case, so we could track down any such bug:
-        if self.parent.ship.destination is None:
+        if self.parent.model.ship.destination is None:
             print("You have no contracted destination.")
             return
 
-        freight = [f for f in self.parent.ship.hold if isinstance(f, Freight)]
+        freight = [f for f in self.parent.model.ship.hold if isinstance(f, Freight)]
         if len(freight) == 0:
             print("You have no freight on board.")
             return
 
-        if self.parent.ship.destination == self.parent.location:
+        if self.parent.model.ship.destination == self.parent.location:
             freight_tonnage = sum(f.tonnage for f in freight)
-            self.parent.ship.hold = [c for c in self.parent.ship.hold if isinstance(c, Cargo)]
+            self.parent.model.ship.hold = [c for c in self.parent.model.ship.hold
+                                           if isinstance(c, Cargo)]
 
             payment = Credits(1000 * freight_tonnage)
             self.parent.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
@@ -233,4 +234,4 @@ class TradeScreen(PlayScreen):
             print(f"{BOLD_RED}You are not at the contracted "
                   f"destination for this freight.{END_FORMAT}")
             print(f"{BOLD_RED}It should be unloaded at "
-                  f"{self.parent.ship.destination.name}.{END_FORMAT}")
+                  f"{self.parent.model.ship.destination.name}.{END_FORMAT}")

@@ -10,7 +10,6 @@ from src.menu import MenuScreen
 from src.model import Model
 from src.orbit import OrbitScreen
 from src.screen import Screen
-from src.ship import Ship
 from src.star_system import StarSystem
 from src.star_map import StarMap
 from src.starport import StarportScreen
@@ -30,8 +29,6 @@ class Game:
 
         self.model = Model
 
-        #self.date: Calendar
-        self.ship: Ship
         self.star_map: StarMap
         self.location: StarSystem
         self.financials: Financials

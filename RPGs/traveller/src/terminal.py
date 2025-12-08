@@ -43,7 +43,7 @@ class TerminalScreen(PlayScreen):
         """Book passengers for travel to a destination."""
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
-        jump_range = self.parent.ship.model.jump_range
+        jump_range = self.parent.model.ship.model.jump_range
         potential_destinations = self.parent.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")
@@ -83,10 +83,10 @@ class TerminalScreen(PlayScreen):
         low = [Passenger(Passage.LOW, destination)
                for _ in range(selection[Passage.LOW.value])]
 
-        self.parent.ship.passengers += high
-        self.parent.ship.hold += baggage
-        self.parent.ship.passengers += middle
-        self.parent.ship.passengers += low
+        self.parent.model.ship.passengers += high
+        self.parent.model.ship.hold += baggage
+        self.parent.model.ship.passengers += middle
+        self.parent.model.ship.passengers += low
         self.parent.depot.passengers[destination] = tuple(a-b for a,b in
                                                    zip(self.parent.depot.passengers[destination],
                                                        selection))
@@ -95,9 +95,9 @@ class TerminalScreen(PlayScreen):
                            destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.parent.ship.empty_passenger_berths,
-                                          self.parent.ship.empty_low_berths)
-        ship_hold = self.parent.ship.free_space()
+        ship_capacity: Tuple[int, ...] = (self.parent.model.ship.empty_passenger_berths,
+                                          self.parent.model.ship.empty_low_berths)
+        ship_hold = self.parent.model.ship.free_space()
 
         while True:
             if available == (0,0,0):

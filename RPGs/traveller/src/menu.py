@@ -90,7 +90,7 @@ class MenuScreen(Screen):
     def _load_financials(self, data: str) -> None:
         """Apply Financials from json data to Game financials field."""
         self.parent.financials = financials_from(data)
-        self.parent.financials.ship = self.parent.ship
+        self.parent.financials.ship = self.parent.model.ship
         self.parent.financials.add_observer(self.parent)
         self.parent.model.date.add_observer(self.parent.financials)
 
@@ -100,7 +100,8 @@ class MenuScreen(Screen):
         location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
         self.parent.location = location
         self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
-                                                        coord, self.parent.ship.model.jump_range)
+                                                        coord,
+                                                        self.parent.model.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
 
     def _create_depot(self) -> None:
@@ -141,14 +142,14 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.ship = Ship(ship_types[model_number])
-        self.parent.ship.add_observer(self.parent)
-        self.parent.ship.controls = self.parent
+        self.parent.model.ship = Ship(ship_types[model_number])
+        self.parent.model.ship.add_observer(self.parent)
+        self.parent.model.ship.controls = self.parent
 
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.parent.ship.name = ship_name
+        self.parent.model.ship.name = ship_name
 
         self._load_financials(data['financials'])
         self._load_location(data['location'])
@@ -178,9 +179,9 @@ class MenuScreen(Screen):
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
 
-        self.parent.ship = ship_from(data['ship details'], data['ship model'])
-        self.parent.ship.add_observer(self.parent)
-        self.parent.ship.controls = self.parent
+        self.parent.model.ship = ship_from(data['ship details'], data['ship model'])
+        self.parent.model.ship.add_observer(self.parent)
+        self.parent.model.ship.controls = self.parent
 
         passengers = []
         for line in data['passengers']:
@@ -189,15 +190,15 @@ class MenuScreen(Screen):
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
         # TO_DO: duplication of code in liftoff, refactor
-        low_passengers = [p for p in self.parent.ship.passengers if
+        low_passengers = [p for p in self.parent.model.ship.passengers if
                           p.passage == Passage.LOW]
         for passenger in low_passengers:
-            passenger.guess_survivors(self.parent.ship.low_passenger_count)
-        self.parent.ship.passengers = passengers
+            passenger.guess_survivors(self.parent.model.ship.low_passenger_count)
+        self.parent.model.ship.passengers = passengers
 
         hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
                                                                     self.parent.star_map.systems))
-        self.parent.ship.hold = hold_contents
+        self.parent.model.ship.hold = hold_contents
 
         destinations = set()
         for passenger in passengers:
@@ -362,14 +363,14 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.ship = Ship(ship_types[model_number])
-        self.parent.ship.add_observer(self.parent)
-        self.parent.ship.controls = self.parent
+        self.parent.model.ship = Ship(ship_types[model_number])
+        self.parent.model.ship.add_observer(self.parent)
+        self.parent.model.ship.controls = self.parent
 
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.parent.ship.name = ship_name
+        self.parent.model.ship.name = ship_name
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self._load_financials(financials_string)
