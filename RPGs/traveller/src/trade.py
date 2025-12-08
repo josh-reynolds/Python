@@ -135,7 +135,7 @@ class TradeScreen(PlayScreen):
             return
 
         destination = cast(StarSystem,
-                           self.parent.star_map.get_system_at_coordinate(
+                           self.parent.model.star_map.get_system_at_coordinate(
                                cast(Coordinate, coordinate)))
         print(f"Freight shipments for {destination.name}")
         print(available)

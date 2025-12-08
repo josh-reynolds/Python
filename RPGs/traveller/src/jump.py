@@ -79,7 +79,8 @@ class JumpScreen(PlayScreen):
         destination_number = choose_from(destinations, "Enter destination number: ")
 
         coordinate = destinations[destination_number].coordinate
-        destination = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coordinate))
+        destination = cast(StarSystem,
+                           self.parent.model.star_map.get_system_at_coordinate(coordinate))
 
         self.parent.model.ship.warn_if_not_contracted(destination)
 
@@ -99,8 +100,8 @@ class JumpScreen(PlayScreen):
         self.parent.model.ship.check_failure_post_jump()
 
         coord = self.parent.location.coordinate
-        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(coord,
-                                                   jump_range)
+        self.parent.location.destinations = \
+              self.parent.model.star_map.get_systems_within_range(coord, jump_range)
 
         self.parent.depot = CargoDepot(self.parent.location, self.parent.model.date.current_date)
         self.parent.depot.add_observer(self.parent)
@@ -128,12 +129,12 @@ class JumpScreen(PlayScreen):
 
             # misjump is the only scenario where EmptySpace is a possible
             # location, so we need to leave this type as Hex
-            loc = self.parent.star_map.get_system_at_coordinate(misjump_target) # type: ignore
+            loc = self.parent.model.star_map.get_system_at_coordinate(misjump_target) # type: ignore
             self.parent.location = loc
-            self.parent.star_map.systems[misjump_target] = self.parent.location
+            self.parent.model.star_map.systems[misjump_target] = self.parent.location
         else:
             self.parent.location = cast(StarSystem,
-                                        self.parent.star_map.get_system_at_coordinate(destination))
+                    self.parent.model.star_map.get_system_at_coordinate(destination))
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a

@@ -83,7 +83,7 @@ class PlayScreen(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self.parent.star_map.get_subsector_string(self.parent.location)} : " +
+        print(f"{self.parent.model.star_map.get_subsector_string(self.parent.location)} : " +
               f"{self.parent.location}")
         _ = input("\nPress ENTER key to continue.")
 
@@ -137,11 +137,11 @@ class PlayScreen(Screen):
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
-        systems = self.parent.star_map.get_all_systems()
+        systems = self.parent.model.star_map.get_all_systems()
         system_strings = []
         highlight = ""
         for sys in systems:
-            combined = f"{self.parent.star_map.get_subsector_string(sys)} : {sys}"
+            combined = f"{self.parent.model.star_map.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
             if sys == self.parent.location:
                 highlight = combined
@@ -154,13 +154,13 @@ class PlayScreen(Screen):
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = []
-        for coord in self.parent.star_map.systems:
-            map_hex = self.parent.star_map.systems[coord]
+        for coord in self.parent.model.star_map.systems:
+            map_hex = self.parent.model.star_map.systems[coord]
             systems.append(f"{coord} - {map_hex}")
 
         subsectors = []
-        for coord in self.parent.star_map.subsectors:
-            sub = self.parent.star_map.subsectors[coord]
+        for coord in self.parent.model.star_map.subsectors:
+            sub = self.parent.model.star_map.subsectors[coord]
             subsectors.append(f"{coord} - {sub}")
 
         passenger_list = [p.encode() for p in self.parent.model.ship.passengers]
@@ -200,7 +200,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        system_list = self.parent.star_map.list_map()
+        system_list = self.parent.model.star_map.list_map()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
             for line in system_list:
@@ -228,7 +228,7 @@ class PlayScreen(Screen):
     def draw_map(self) -> None:
         """Create and save a bitmap file of the current map."""
         print(f"{BOLD_BLUE}Creating map image.{END_FORMAT}")
-        sub_list = list(self.parent.star_map.subsectors.items())
+        sub_list = list(self.parent.model.star_map.subsectors.items())
         subsector = choose_from(sub_list, "Choose a subsector to draw: ")
         sub_coord = sub_list[subsector][0]
         sub_name = sub_list[subsector][1].name
@@ -237,10 +237,10 @@ class PlayScreen(Screen):
         color_choice = choose_from(color_schemes, "Choose a color scheme: ")
         print_friendly = color_choice == 0
 
-        system_coords = self.parent.star_map.get_systems_in_subsector(sub_coord)
+        system_coords = self.parent.model.star_map.get_systems_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
-            system_list.append(self.parent.star_map.systems[entry])
+            system_list.append(self.parent.model.star_map.systems[entry])
 
         draw_map(system_list, sub_name, print_friendly)
 

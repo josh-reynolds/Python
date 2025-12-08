@@ -74,13 +74,13 @@ class MenuScreen(Screen):
             map_hex = hex_from(line)
             systems[map_hex.coordinate] = map_hex
 
-        self.parent.star_map = StarMap(systems)
+        self.parent.model.star_map = StarMap(systems)
 
     def _load_subsectors(self, data: List[str]) -> None:
         """Apply Subsectors from json data to Game star_map field."""
         for line in data:
             subsector = subsector_from(line)
-            self.parent.star_map.subsectors[subsector.coordinate] = subsector
+            self.parent.model.star_map.subsectors[subsector.coordinate] = subsector
 
     def _load_calendar(self, data: str) -> None:
         """Apply date from json data to Game calendar field."""
@@ -97,9 +97,9 @@ class MenuScreen(Screen):
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
-        location = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coord))
+        location = cast(StarSystem, self.parent.model.star_map.get_system_at_coordinate(coord))
         self.parent.location = location
-        self.parent.location.destinations = self.parent.star_map.get_systems_within_range(
+        self.parent.location.destinations = self.parent.model.star_map.get_systems_within_range(
                                                         coord,
                                                         self.parent.model.ship.model.jump_range)
         self.parent.financials.location = self.parent.location
@@ -117,8 +117,8 @@ class MenuScreen(Screen):
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
-        for sub_coord in self.parent.star_map.subsectors:
-            occupied = self.parent.star_map.get_systems_in_subsector(sub_coord)
+        for sub_coord in self.parent.model.star_map.subsectors:
+            occupied = self.parent.model.star_map.get_systems_in_subsector(sub_coord)
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
 
             for coord in all_coords:
@@ -126,7 +126,7 @@ class MenuScreen(Screen):
 
                 if converted in occupied:
                     continue
-                self.parent.star_map.systems[converted] = DeepSpace(converted)
+                self.parent.model.star_map.systems[converted] = DeepSpace(converted)
 
     def new_game(self) -> None:
         """Start a new game."""
@@ -185,7 +185,7 @@ class MenuScreen(Screen):
 
         passengers = []
         for line in data['passengers']:
-            passengers.append(passenger_from(line, self.parent.star_map.systems))
+            passengers.append(passenger_from(line, self.parent.model.star_map.systems))
 
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
@@ -197,7 +197,7 @@ class MenuScreen(Screen):
         self.parent.model.ship.passengers = passengers
 
         hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
-                                                                    self.parent.star_map.systems))
+                                                      self.parent.model.star_map.systems))
         self.parent.model.ship.hold = hold_contents
 
         destinations = set()
@@ -334,7 +334,7 @@ class MenuScreen(Screen):
 
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
-        return isinstance(self.parent.star_map.systems[coord], StarSystem)
+        return isinstance(self.parent.model.star_map.systems[coord], StarSystem)
 
     def import_map(self) -> None:
         """Import Traveller map data and start a new game."""

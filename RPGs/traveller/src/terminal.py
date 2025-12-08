@@ -57,7 +57,8 @@ class TerminalScreen(PlayScreen):
         if available is None:
             return
 
-        destination = cast(StarSystem, self.parent.star_map.get_system_at_coordinate(coordinate))
+        destination = cast(StarSystem,
+                           self.parent.model.star_map.get_system_at_coordinate(coordinate))
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = self._select_passengers(available, destination)

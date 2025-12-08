@@ -11,7 +11,6 @@ from src.model import Model
 from src.orbit import OrbitScreen
 from src.screen import Screen
 from src.star_system import StarSystem
-from src.star_map import StarMap
 from src.starport import StarportScreen
 from src.terminal import TerminalScreen
 from src.trade import TradeScreen
@@ -29,7 +28,6 @@ class Game:
 
         self.model = Model
 
-        self.star_map: StarMap
         self.location: StarSystem
         self.financials: Financials
         self.depot: CargoDepot
