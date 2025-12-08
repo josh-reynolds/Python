@@ -51,6 +51,11 @@ class Financials:
                     self.last_maintenance == other.last_maintenance
         return NotImplemented
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Financials object."""
+        return f"Financials({self.balance}, {self.current_date!r}, " +\
+               f"{self.ship!r}, {self.location!r}"
+
     def add_observer(self, observer: Any) -> None:
         """Add an observer to respond to UI messages."""
         self.observers.append(observer)

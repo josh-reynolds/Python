@@ -35,6 +35,10 @@ class MenuScreen(Screen):
                 Command('quit', 'Quit', self.quit),
                 ]
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a Menu object."""
+        return f"Menu({self.parent!r})"
+
     def _print_title(self) -> None:
         """Draw the game title."""
         # ASCII art from https://patorjk.com/software

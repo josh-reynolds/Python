@@ -28,10 +28,6 @@ class StarportScreen(PlayScreen):
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
-    def __str__(self) -> str:
-        """Return the string representation of the current screen."""
-        return "Starport"
-
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Starport({self.parent!r})"

@@ -29,10 +29,6 @@ class TradeScreen(PlayScreen):
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
-    def __str__(self) -> str:
-        """Return the string representation of the current screen."""
-        return "Trade"
-
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Trade({self.parent!r})"

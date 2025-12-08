@@ -23,6 +23,10 @@ class StarMap:
                 (0,0) : Subsector("ORIGIN", (0,0)),
                 }
 
+    def __repr__(self) -> str:
+        """Return the developer string representation of a StarMap object."""
+        return f"StarMap({self.systems!r})"
+
     def list_map(self) -> List[str]:
         """Return a list of all Hexes in the map, as strings."""
         system_list = []

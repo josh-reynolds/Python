@@ -3335,11 +3335,11 @@
 #  * [DONE] Should screen classes carry that suffix for clarity? (i.e. TerminalScreen)
 #  * [DONE] Add cyclomatic complexity to lint criteria, and deal with warnings
 #  * [DONE] Review all classmethods, replace with simple functions if applicable
+#  * [DONE] Properly separate __repr__ and __str__ for all classes
+#           Note that __repr__ should be recursive for arg objects
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
-#  * [....] Properly separate __repr__ and __str__ for all classes
-#           Note that __repr__ should be recursive for arg objects
 #  * [....] Refactor freight/passenger methods, push down pieces as appropriate
 #  * [....] Make type dunder methods more robust with NotImplemented etc.
 #  * [....] Extend payment flow model to reduce coupling between classes
