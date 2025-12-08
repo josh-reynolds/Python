@@ -37,7 +37,7 @@ class TradeScreen(PlayScreen):
     def goods(self) -> None:
         """Show goods available for purchase."""
         print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
-        pr_list(self.parent.depot.cargo)
+        pr_list(self.parent.model.depot.cargo)
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
@@ -50,30 +50,30 @@ class TradeScreen(PlayScreen):
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
-        pr_list(self.parent.depot.cargo)
-        cargo = self.parent.depot.get_cargo_lot(self.parent.depot.cargo, "buy")
+        pr_list(self.parent.model.depot.cargo)
+        cargo = self.parent.model.depot.get_cargo_lot(self.parent.model.depot.cargo, "buy")
         if cargo is None:
             return
 
-        quantity = self.parent.depot.get_cargo_quantity("buy", cargo)
+        quantity = self.parent.model.depot.get_cargo_quantity("buy", cargo)
         if quantity is None:
             return
 
-        if self.parent.depot.insufficient_hold_space(cargo,
+        if self.parent.model.depot.insufficient_hold_space(cargo,
                                                      quantity,
                                                      self.parent.model.ship.free_space()):
             return
 
-        cost = self.parent.depot.determine_price("purchase", cargo, quantity,
+        cost = self.parent.model.depot.determine_price("purchase", cargo, quantity,
                                           self.parent.model.ship.trade_skill())
 
-        if self.parent.depot.insufficient_funds(cost, self.parent.model.financials.balance):
+        if self.parent.model.depot.insufficient_funds(cost, self.parent.model.financials.balance):
             return
 
-        if not self.parent.depot.confirm_transaction("purchase", cargo, quantity, cost):
+        if not self.parent.model.depot.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
-        self.parent.depot.remove_cargo(self.parent.depot.cargo, cargo, quantity)
+        self.parent.model.depot.remove_cargo(self.parent.model.depot.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.parent.model.location)
@@ -92,29 +92,29 @@ class TradeScreen(PlayScreen):
             return
 
         pr_list(cargoes)
-        cargo = self.parent.depot.get_cargo_lot(cargoes, "sell")
+        cargo = self.parent.model.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             return
 
-        if self.parent.depot.invalid_cargo_origin(cargo):
+        if self.parent.model.depot.invalid_cargo_origin(cargo):
             return
 
-        broker_skill = self.parent.depot.get_broker()
+        broker_skill = self.parent.model.depot.get_broker()
 
-        quantity = self.parent.depot.get_cargo_quantity("sell", cargo)
+        quantity = self.parent.model.depot.get_cargo_quantity("sell", cargo)
         if quantity is None:
             return
 
-        sale_price = self.parent.depot.determine_price("sale", cargo, quantity,
+        sale_price = self.parent.model.depot.determine_price("sale", cargo, quantity,
                                                 broker_skill + self.parent.model.ship.trade_skill())
 
-        self.parent.model.financials.debit(self.parent.depot.broker_fee(broker_skill, sale_price),
-                                     "broker fee")
+        self.parent.model.financials.debit(self.parent.model.depot.broker_fee(
+                                            broker_skill, sale_price), "broker fee")
 
-        if not self.parent.depot.confirm_transaction("sale", cargo, quantity, sale_price):
+        if not self.parent.model.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        self.parent.depot.remove_cargo(self.parent.model.ship.hold, cargo, quantity)
+        self.parent.model.depot.remove_cargo(self.parent.model.ship.hold, cargo, quantity)
 
         self.parent.model.financials.credit(sale_price, "cargo sale")
         self.parent.model.date.day += 1
@@ -130,7 +130,7 @@ class TradeScreen(PlayScreen):
         if not destinations:
             return
 
-        coordinate, available = self.parent.depot.get_available_freight(destinations)
+        coordinate, available = self.parent.model.depot.get_available_freight(destinations)
         if available is None:
             return
 
@@ -153,7 +153,7 @@ class TradeScreen(PlayScreen):
             return
 
         for entry in selection:
-            self.parent.depot.freight[destination].remove(entry)
+            self.parent.model.depot.freight[destination].remove(entry)
             self.parent.model.ship.load_cargo(Freight(entry,
                                          self.parent.model.location,
                                          destination))

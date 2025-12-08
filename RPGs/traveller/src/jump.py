@@ -104,10 +104,10 @@ class JumpScreen(PlayScreen):
         self.parent.model.location.destinations = \
               self.parent.model.star_map.get_systems_within_range(coord, jump_range)
 
-        self.parent.depot = CargoDepot(self.parent.model.location,
+        self.parent.model.depot = CargoDepot(self.parent.model.location,
                                        self.parent.model.date.current_date)
-        self.parent.depot.add_observer(self.parent)
-        self.parent.depot.controls = self.parent
+        self.parent.model.depot.add_observer(self.parent)
+        self.parent.model.depot.controls = self.parent
         self.parent.model.financials.location = destination
 
         self.parent.model.ship.life_support_level = 0

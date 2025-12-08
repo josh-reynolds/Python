@@ -54,7 +54,7 @@ class TerminalScreen(PlayScreen):
         # for now we will stuff this in cargo depot, though it may better
         # be served by a separate class. If it _does_ stay in the depot, we
         # may want to adjust the nomenclature to make this more clear.
-        coordinate, available = self.parent.depot.get_available_passengers(destinations)
+        coordinate, available = self.parent.model.depot.get_available_passengers(destinations)
         if available is None:
             return
 
@@ -89,9 +89,8 @@ class TerminalScreen(PlayScreen):
         self.parent.model.ship.hold += baggage
         self.parent.model.ship.passengers += middle
         self.parent.model.ship.passengers += low
-        self.parent.depot.passengers[destination] = tuple(a-b for a,b in
-                                                   zip(self.parent.depot.passengers[destination],
-                                                       selection))
+        self.parent.model.depot.passengers[destination] = tuple(a-b for a,b in
+                        zip(self.parent.model.depot.passengers[destination], selection))
 
     def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, ...]:

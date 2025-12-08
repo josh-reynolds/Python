@@ -106,14 +106,14 @@ class MenuScreen(Screen):
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.parent.depot = CargoDepot(self.parent.model.location,
+        self.parent.model.depot = CargoDepot(self.parent.model.location,
                                        self.parent.model.date.current_date)
-        self.parent.depot.add_observer(self.parent)
-        self.parent.depot.controls = self.parent
+        self.parent.model.depot.add_observer(self.parent)
+        self.parent.model.depot.controls = self.parent
 
     def _attach_date_observers(self) -> None:
         """Attach observers to Game date field."""
-        self.parent.model.date.add_observer(self.parent.depot)
+        self.parent.model.date.add_observer(self.parent.model.depot)
         self.parent.model.date.add_observer(self.parent.model.financials)
 
     def _create_empty_hexes(self) -> None:
