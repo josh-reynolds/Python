@@ -10,7 +10,6 @@ from src.menu import MenuScreen
 from src.model import Model
 from src.orbit import OrbitScreen
 from src.screen import Screen
-from src.star_system import StarSystem
 from src.starport import StarportScreen
 from src.terminal import TerminalScreen
 from src.trade import TradeScreen
@@ -26,9 +25,8 @@ class Game:
         self.running = False
         self.screen: Screen = MenuScreen(self)
 
-        self.model = Model
+        self.model = Model()
 
-        self.location: StarSystem
         self.financials: Financials
         self.depot: CargoDepot
 
@@ -71,19 +69,19 @@ class Game:
         """Change game screens."""
         match new_state:
             case "Orbit":
-                self.location.detail = "orbit"
+                self.model.location.detail = "orbit"
                 self.screen = OrbitScreen(self)
             case "Starport":
-                self.location.detail = "starport"
+                self.model.location.detail = "starport"
                 self.screen = StarportScreen(self)
             case "Jump":
-                self.location.detail = "jump"
+                self.model.location.detail = "jump"
                 self.screen = JumpScreen(self)
             case "Trade":
-                self.location.detail = "trade"
+                self.model.location.detail = "trade"
                 self.screen = TradeScreen(self)
             case "Terminal":
-                self.location.detail = "terminal"
+                self.model.location.detail = "terminal"
                 self.screen = TerminalScreen(self)
             case _:
                 raise ValueError(f"unrecognized menu item: '{new_state}'")

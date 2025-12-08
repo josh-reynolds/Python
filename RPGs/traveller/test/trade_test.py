@@ -15,7 +15,8 @@ class TradeScreenTestCase(unittest.TestCase):
         """Test getting list of freight destinations."""
         game = Game()
         trade = TradeScreen(game)
-        potential_destinations = cast(List[StarSystem], game.location.destinations.copy())
+        potential_destinations = cast(List[StarSystem],
+                                      game.model.location.destinations.copy())
 
         destinations = trade._get_destinations(potential_destinations,
                                                1, "freight shipments")
@@ -35,7 +36,7 @@ class TradeScreenTestCase(unittest.TestCase):
         game = Game()
         trade = TradeScreen(game)
         available = [5, 10, 15, 20]
-        destination = game.location.destinations[0]
+        destination = game.model.location.destinations[0]
 
         tonnage, selection = trade._select_freight_lots(available, destination)
         print(tonnage, selection)

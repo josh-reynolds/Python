@@ -35,7 +35,8 @@ class TerminalScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def leave_terminal(self) -> None:
         """Move from the passenger terminal to the starport."""
-        print(f"{BOLD_BLUE}Leaving {self.parent.location.name} passenger terminal.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Leaving {self.parent.model.location.name} " +
+              f"passenger terminal.{END_FORMAT}")
         self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
@@ -44,7 +45,7 @@ class TerminalScreen(PlayScreen):
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
         jump_range = self.parent.model.ship.model.jump_range
-        potential_destinations = self.parent.location.destinations.copy()
+        potential_destinations = self.parent.model.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:
@@ -77,7 +78,7 @@ class TerminalScreen(PlayScreen):
         #        Probably want to wrap passenger field access in a property...
         high = [Passenger(Passage.HIGH, destination)
                 for _ in range(selection[Passage.HIGH.value])]
-        baggage = [Baggage(self.parent.location, destination)
+        baggage = [Baggage(self.parent.model.location, destination)
                    for _ in range(selection[Passage.HIGH.value])]
         middle = [Passenger(Passage.MIDDLE, destination)
                   for _ in range(selection[Passage.MIDDLE.value])]

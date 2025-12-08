@@ -32,7 +32,7 @@ class OrbitScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def land(self) -> None:
         """Move from orbit to the starport."""
-        print(f"{BOLD_BLUE}Landing on {self.parent.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Landing on {self.parent.model.location.name}.{END_FORMAT}")
         if not self.parent.model.ship.model.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return None
@@ -41,9 +41,9 @@ class OrbitScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
-        if self.parent.model.ship.destination == self.parent.location:
+        if self.parent.model.ship.destination == self.parent.model.location:
             if self.parent.model.ship.total_passenger_count > 0:
-                print(f"Passengers disembarking on {self.parent.location.name}.")
+                print(f"Passengers disembarking on {self.parent.model.location.name}.")
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
                         self.parent.model.ship.passengers))
@@ -58,7 +58,7 @@ class OrbitScreen(PlayScreen):
                 self.parent.model.ship.hold = [item for item in self.parent.model.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.parent.financials.berthing_fee(self.parent.location.on_surface())
+        self.parent.financials.berthing_fee(self.parent.model.location.on_surface())
         self.parent.change_state("Starport")
         return None
 
@@ -87,7 +87,8 @@ class OrbitScreen(PlayScreen):
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
-        print(f"{BOLD_BLUE}Travelling out to {self.parent.location.name} jump point.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Travelling out to {self.parent.model.location.name} " +
+              f"jump point.{END_FORMAT}")
 
         if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")

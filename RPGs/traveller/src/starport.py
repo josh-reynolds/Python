@@ -36,7 +36,7 @@ class StarportScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
-        print(f"{BOLD_BLUE}Lifting off to orbit {self.parent.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Lifting off to orbit {self.parent.model.location.name}.{END_FORMAT}")
 
         if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
@@ -60,12 +60,13 @@ class StarportScreen(PlayScreen):
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
-        print(f"{BOLD_BLUE}Entering {self.parent.location.name} trade depot.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Entering {self.parent.model.location.name} trade depot.{END_FORMAT}")
         self.parent.change_state("Trade")
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
-        print(f"{BOLD_BLUE}Entering {self.parent.location.name} passenger terminal.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Entering {self.parent.model.location.name} " +
+              f"passenger terminal.{END_FORMAT}")
         self.parent.change_state("Terminal")
 
     # ACTIONS ==============================================================
@@ -79,17 +80,17 @@ class StarportScreen(PlayScreen):
     def refuel(self) -> None:
         """Refuel the Ship."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        if self.parent.location.starport in ('E', 'X'):
-            print(f"No fuel is available at starport {self.parent.location.starport}.")
+        if self.parent.model.location.starport in ('E', 'X'):
+            print(f"No fuel is available at starport {self.parent.model.location.starport}.")
             return
 
-        cost = self.parent.model.ship.refuel(self.parent.location.starport)
+        cost = self.parent.model.ship.refuel(self.parent.model.location.starport)
         self.parent.financials.debit(cost, "refuelling")
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
         print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
-        if self.parent.location.starport not in ('A', 'B'):
+        if self.parent.model.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
 
@@ -124,9 +125,9 @@ class StarportScreen(PlayScreen):
             print("Ship fuel tanks are clean. No need to flush.")
             return
 
-        if self.parent.location.starport in ('E', 'X'):
+        if self.parent.model.location.starport in ('E', 'X'):
             print(f"There are no facilities to flush tanks "
-                  f"at starport {self.parent.location.starport}.")
+                  f"at starport {self.parent.model.location.starport}.")
             return
 
         print("Fuel tanks have been decontaminated.")
@@ -140,8 +141,9 @@ class StarportScreen(PlayScreen):
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
         print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
-        if self.parent.location.starport in ["D", "E", "X"]:
-            print(f"No repair facilities available at starport {self.parent.location.starport}")
+        if self.parent.model.location.starport in ["D", "E", "X"]:
+            print("No repair facilities available at starport " +
+                  f"{self.parent.model.location.starport}")
             return
 
         if self.parent.model.ship.repair_status == RepairStatus.REPAIRED:

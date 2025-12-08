@@ -43,7 +43,7 @@ class TradeScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def leave_depot(self) -> None:
         """Move from the trade depot to the starport."""
-        print(f"{BOLD_BLUE}Leaving {self.parent.location.name} trade depot.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Leaving {self.parent.model.location.name} trade depot.{END_FORMAT}")
         self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
@@ -76,7 +76,7 @@ class TradeScreen(PlayScreen):
         self.parent.depot.remove_cargo(self.parent.depot.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
-                          cargo.purchase_dms, cargo.sale_dms, self.parent.location)
+                          cargo.purchase_dms, cargo.sale_dms, self.parent.model.location)
         self.parent.model.ship.load_cargo(purchased)
 
         self.parent.financials.debit(cost, "cargo purchase")
@@ -124,7 +124,7 @@ class TradeScreen(PlayScreen):
         print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
 
         jump_range = self.parent.model.ship.model.jump_range
-        potential_destinations = self.parent.location.destinations.copy()
+        potential_destinations = self.parent.model.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "freight shipments")
         if not destinations:
@@ -155,7 +155,7 @@ class TradeScreen(PlayScreen):
         for entry in selection:
             self.parent.depot.freight[destination].remove(entry)
             self.parent.model.ship.load_cargo(Freight(entry,
-                                         self.parent.location,
+                                         self.parent.model.location,
                                          destination))
         self.parent.model.date.day += 1
 
@@ -219,7 +219,7 @@ class TradeScreen(PlayScreen):
             print("You have no freight on board.")
             return
 
-        if self.parent.model.ship.destination == self.parent.location:
+        if self.parent.model.ship.destination == self.parent.model.location:
             freight_tonnage = sum(f.tonnage for f in freight)
             self.parent.model.ship.hold = [c for c in self.parent.model.ship.hold
                                            if isinstance(c, Cargo)]

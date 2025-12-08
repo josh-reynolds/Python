@@ -34,12 +34,12 @@ class JumpScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
-        if isinstance(self.parent.location, DeepSpace):
+        if isinstance(self.parent.model.location, DeepSpace):
             print(f"{BOLD_RED}You are in deep space. "
                   f"There is no inner system to travel to.{END_FORMAT}")
             return None
 
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.parent.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.parent.model.location.name}.{END_FORMAT}")
 
         if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
@@ -75,7 +75,7 @@ class JumpScreen(PlayScreen):
 
         jump_range = self.parent.model.ship.model.jump_range
         print(f"Systems within jump-{jump_range}:")
-        destinations = self.parent.location.destinations
+        destinations = self.parent.model.location.destinations
         destination_number = choose_from(destinations, "Enter destination number: ")
 
         coordinate = destinations[destination_number].coordinate
@@ -95,15 +95,16 @@ class JumpScreen(PlayScreen):
         print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
         self._misjump_check(coordinate)
-        self.parent.location.detail = "jump"
+        self.parent.model.location.detail = "jump"
 
         self.parent.model.ship.check_failure_post_jump()
 
-        coord = self.parent.location.coordinate
-        self.parent.location.destinations = \
+        coord = self.parent.model.location.coordinate
+        self.parent.model.location.destinations = \
               self.parent.model.star_map.get_systems_within_range(coord, jump_range)
 
-        self.parent.depot = CargoDepot(self.parent.location, self.parent.model.date.current_date)
+        self.parent.depot = CargoDepot(self.parent.model.location,
+                                       self.parent.model.date.current_date)
         self.parent.depot.add_observer(self.parent)
         self.parent.depot.controls = self.parent
         self.parent.financials.location = destination
@@ -124,16 +125,16 @@ class JumpScreen(PlayScreen):
         misjump_check = die_roll(2) + modifier
         if misjump_check > 11:
             print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            misjump_target, distance = get_misjump_target(self.parent.location.coordinate)
+            misjump_target, distance = get_misjump_target(self.parent.model.location.coordinate)
             print(f"{misjump_target} at distance {distance}")
 
             # misjump is the only scenario where EmptySpace is a possible
             # location, so we need to leave this type as Hex
             loc = self.parent.model.star_map.get_system_at_coordinate(misjump_target) # type: ignore
-            self.parent.location = loc
-            self.parent.model.star_map.systems[misjump_target] = self.parent.location
+            self.parent.model.location = loc
+            self.parent.model.star_map.systems[misjump_target] = self.parent.model.location
         else:
-            self.parent.location = cast(StarSystem,
+            self.parent.model.location = cast(StarSystem,
                     self.parent.model.star_map.get_system_at_coordinate(destination))
 
     # Book 2 p. 35
@@ -148,8 +149,8 @@ class JumpScreen(PlayScreen):
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.parent.location.gas_giant:
-            if isinstance(self.parent.location, DeepSpace):
+        if not self.parent.model.location.gas_giant:
+            if isinstance(self.parent.model.location, DeepSpace):
                 print("You are stranded in deep space. No fuel skimming possible.")
             else:
                 print("There is no gas giant in this system. No fuel skimming possible.")

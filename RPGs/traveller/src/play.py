@@ -46,7 +46,7 @@ class PlayScreen(Screen):
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.parent.model.date} : You are " +
-              f"{self.parent.location.description()}.{repair_state}{END_FORMAT}")
+              f"{self.parent.model.location.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.parent.financials.balance}"
               f"\tFree hold space: {self.parent.model.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
@@ -83,8 +83,8 @@ class PlayScreen(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self.parent.model.star_map.get_subsector_string(self.parent.location)} : " +
-              f"{self.parent.location}")
+        print(f"{self.parent.model.star_map.get_subsector_string(self.parent.model.location)} : " +
+              f"{self.parent.model.location}")
         _ = input("\nPress ENTER key to continue.")
 
     def view_ledger(self) -> None:
@@ -143,7 +143,7 @@ class PlayScreen(Screen):
         for sys in systems:
             combined = f"{self.parent.model.star_map.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
-            if sys == self.parent.location:
+            if sys == self.parent.model.location:
                 highlight = combined
         pr_highlight_list(system_strings, highlight, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
@@ -171,7 +171,7 @@ class PlayScreen(Screen):
                      'date' : f"{self.parent.model.date}",
                      'systems' : systems,
                      'subsectors' : subsectors,
-                     'location' : f"{self.parent.location.coordinate}",
+                     'location' : f"{self.parent.model.location.coordinate}",
                      'menu' : f"{self.parent.screen}",
                      'ship model' : self.parent.model.ship.model.name,
                      'ship details' : self.parent.model.ship.encode(),
@@ -249,9 +249,9 @@ class PlayScreen(Screen):
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
         if self.parent.model.ship.destination is not None:
-            if self.parent.model.ship.destination == self.parent.location:
+            if self.parent.model.ship.destination == self.parent.model.location:
                 print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.parent.location.name}.{END_FORMAT}")
+                      f"on {self.parent.model.location.name}.{END_FORMAT}")
                 return result
             if self.parent.model.ship.destination in potential_destinations:
                 print(f"You are under contract. Only showing {prompt} " +
