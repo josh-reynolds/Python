@@ -2973,6 +2973,218 @@
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
+# Model class has been added, and has taken over all the object
+# references previously held by Game. That latter class is 
+# becoming quite simple. Potential to move the controller
+# methods out of it, but otherwise it's about where it should 
+# be.
+#
+# Model as it stands right now doesn't do much. It just 
+# aggregates references to the various model classes, and the
+# Screen classes reach in to do whatever they need to.
+#
+# They probably shouldn't have that kind of knowledge of the
+# interior of the model. Instead, we should expose services
+# on the Model class itself to expose anything needed.
+#
+# A quick grep shows 300 references to "self.model" (about 20
+# of those are in Ship, and actually refer to ShipModel).
+#
+# Analyzing these references is a good place to start. Also, as
+# noted above, there ought to be some kind of factory to build
+# the Model, that would absorb code from load_game and 
+# import_game.
+#
+# Hopefully these can move in clumps and get wrapped up
+# inside larger methods, like "jump_procedure()" and so on. I
+# don't want to have dozens of public methods on Model. But
+# the goal is to break the import link between the Screen classes
+# and all the model classes - ideally they just know about
+# the Model parent class.
+#
+#  self.model.date                                             1+ src/menu.py
+#  self.model.date.__str__()                                   2  src/play.py
+#  self.model.date.add_observer()                              3  src/menu.py
+#  self.model.date.current_date                                1  src/menu.py
+#  self.model.date.current_date                                2  src/starport.py
+#  self.model.date.current_date                                3  src/jump.py
+#  self.model.date.day                                         1  src/orbit.py
+#  self.model.date.day                                         1  src/starport.py
+#  self.model.date.day                                         3  src/jump.py
+#  self.model.date.day                                         4  src/trade.py
+#  self.model.date.plus_week()                                 1  src/jump.py
+#  self.model.date.plus_week()                                 1  src/play.py
+#  self.model.date.plus_week()                                 2  src/starport.py
+#
+#  self.model.depot                                            1+ src/jump.py
+#  self.model.depot                                            1+ src/menu.py
+#  self.model.depot.add_observer                               1  src/jump.py
+#  self.model.depot.add_observer()                             1  src/menu.py
+#  self.model.depot.broker_fee()                               1  src/trade.py
+#  self.model.depot.cargo                                      4  src/trade.py
+#  self.model.depot.confirm_transaction()                      2  src/trade.py
+#  self.model.depot.controls                                   1  src/jump.py
+#  self.model.depot.controls                                   1  src/menu.py
+#  self.model.depot.determine_price()                          2  src/trade.py
+#  self.model.depot.freight.remove()                           1  src/trade.py
+#  self.model.depot.get_available_freight()                    1  src/trade.py
+#  self.model.depot.get_available_passengers()                 1  src/terminal.py
+#  self.model.depot.get_broker()                               1  src/trade.py
+#  self.model.depot.get_cargo_lot()                            2  src/trade.py
+#  self.model.depot.get_cargo_quantity()                       2  src/trade.py
+#  self.model.depot.insufficient_funds()                       1  src/trade.py
+#  self.model.depot.insufficient_hold_space()                  1  src/trade.py
+#  self.model.depot.invalid_cargo_origin()                     1  src/trade.py
+#  self.model.depot.passengers                                 2  src/terminal.py
+#  self.model.depot.remove_cargo()                             2  src/trade.py
+#
+#  self.model.financials                                       1+ src/menu.py
+#  self.model.financials.add_observer()                        1  src/menu.py
+#  self.model.financials.balance                               1  src/play.py
+#  self.model.financials.balance                               1  src/trade.py
+#  self.model.financials.balance                               2  src/starport.py
+#  self.model.financials.berthing_fee                          1  src/orbit.py
+#  self.model.financials.credit()                              2  src/orbit.py
+#  self.model.financials.credit()                              2  src/trade.py
+#  self.model.financials.debit()                               2  src/trade.py
+#  self.model.financials.debit()                               3  src/starport.py
+#  self.model.financials.encode()                              1  src/play.py
+#  self.model.financials.last_maintenance                      1  src/starport.py
+#  self.model.financials.ledger                                1  src/menu.py
+#  self.model.financials.ledger                                3  src/play.py
+#  self.model.financials.location                              1  src/jump.py
+#  self.model.financials.location                              1  src/menu.py
+#  self.model.financials.maintenance_status()                  1  src/starport.py
+#  self.model.financials.maintenance_status()                  2  src/jump.py
+#  self.model.financials.ship                                  1  src/menu.py
+#
+#  self.model.location                                         1  src/terminal.py
+#  self.model.location                                         1+ src/menu.py
+#  self.model.location                                         2+ src/jump.py
+#  self.model.location                                         3+ src/trade.py
+#  self.model.location.__str__()                               1  src/play.py
+#  self.model.location.coordinate                              1  src/play.py
+#  self.model.location.coordinate                              2  src/jump.py
+#  self.model.location.description()                           1  src/play.py
+#  self.model.location.destinations                            1  src/menu.py
+#  self.model.location.destinations                            2  src/jump.py
+#  self.model.location.destinations.copy()                     1  src/terminal.py
+#  self.model.location.destinations.copy()                     1  src/trade.py
+#  self.model.location.detail                                  1  src/terminal.py
+#  self.model.location.detail                                  1  src/trade.py
+#  self.model.location.detail                                  2  src/jump.py
+#  self.model.location.detail                                  2  src/orbit.py
+#  self.model.location.detail                                  3  src/menu.py
+#  self.model.location.detail                                  3  src/starport.py
+#  self.model.location.gas_giant                               1  src/jump.py
+#  self.model.location.name                                    1  src/jump.py
+#  self.model.location.name                                    1  src/play.py
+#  self.model.location.name                                    1  src/terminal.py
+#  self.model.location.name                                    1  src/trade.py
+#  self.model.location.name                                    3  src/orbit.py
+#  self.model.location.name                                    3  src/starport.py
+#  self.model.location.on_surface()                            1  src/orbit.py
+#  self.model.location.starport                                8  src/starport.py
+#
+#  self.model.ship                                             3+ src/menu.py
+#  self.model.ship.__str__()                                   1+ src/play.py
+#  self.model.ship.add_observer()                              3  src/menu.py
+#  self.model.ship.cargo_hold()                                1  src/play.py
+#  self.model.ship.check_failure_post_jump()                   1  src/jump.py
+#  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
+#  self.model.ship.controls                                    3  src/menu.py
+#  self.model.ship.crew                                        1  src/play.py
+#  self.model.ship.current_fuel                                1  src/orbit.py
+#  self.model.ship.current_fuel                                3  src/play.py
+#  self.model.ship.current_fuel                                4  src/jump.py
+#  self.model.ship.destination                                 1  src/orbit.py
+#  self.model.ship.destination                                 2  src/trade.py
+#  self.model.ship.destination                                 5  src/play.py
+#  self.model.ship.destination.name                            1  src/starport.py
+#  self.model.ship.destination.name                            1  src/trade.py
+#  self.model.ship.destination.name                            3  src/play.py
+#  self.model.ship.empty_low_berths                            1  src/play.py
+#  self.model.ship.empty_low_berths                            1  src/terminal.py
+#  self.model.ship.empty_passenger_berths                      1  src/play.py
+#  self.model.ship.empty_passenger_berths                      1  src/terminal.py
+#  self.model.ship.encode()                                    1  src/play.py
+#  self.model.ship.engineering_skill()                         1  src/jump.py
+#  self.model.ship.free_space()                                1  src/play.py
+#  self.model.ship.free_space()                                1  src/terminal.py
+#  self.model.ship.free_space()                                2  src/trade.py
+#  self.model.ship.fuel_quality                                1  src/play.py
+#  self.model.ship.fuel_quality                                3  src/jump.py
+#  self.model.ship.fuel_quality                                3  src/starport.py
+#  self.model.ship.high_passenger_count                        1  src/play.py
+#  self.model.ship.hold                                        1  src/menu.py
+#  self.model.ship.hold                                        1  src/orbit.py
+#  self.model.ship.hold                                        1  src/play.py
+#  self.model.ship.hold                                        1  src/terminal.py
+#  self.model.ship.hold                                        4  src/trade.py
+#  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
+#  self.model.ship.insufficient_life_support_message()         1  src/jump.py
+#  self.model.ship.life_support_level                          1  src/jump.py
+#  self.model.ship.life_support_level                          1  src/play.py
+#  self.model.ship.load_cargo()                                2  src/trade.py
+#  self.model.ship.low_passenger_count                         1  src/menu.py
+#  self.model.ship.low_passenger_count                         1  src/play.py
+#  self.model.ship.low_passenger_count                         2  src/orbit.py
+#  self.model.ship.low_passenger_count                         2  src/starport.py
+#  self.model.ship.maintenance_cost()                          1  src/starport.py
+#  self.model.ship.medic_skill()                               1  src/orbit.py
+#  self.model.ship.middle_passenger_count                      1  src/play.py
+#  self.model.ship.model.fuel_tank                             1  src/jump.py
+#  self.model.ship.model.fuel_tank                             1  src/play.py
+#  self.model.ship.model.jump_range                            1  src/jump.py
+#  self.model.ship.model.jump_range                            1  src/menu.py
+#  self.model.ship.model.jump_range                            1  src/terminal.py
+#  self.model.ship.model.jump_range                            1  src/trade.py
+#  self.model.ship.model.name                                  1  src/play.py
+#  self.model.ship.model.streamlined                           1  src/jump.py
+#  self.model.ship.model.streamlined                           1  src/orbit.py
+#  self.model.ship.model.trip_fuel_cost                        1  src/play.py
+#  self.model.ship.name                                        2  src/menu.py
+#  self.model.ship.passengers                                  1  src/play.py
+#  self.model.ship.passengers                                  1  src/starport.py
+#  self.model.ship.passengers                                  2  src/menu.py
+#  self.model.ship.passengers                                  3  src/orbit.py
+#  self.model.ship.passengers                                  3  src/terminal.py
+#  self.model.ship.recharge()                                  1  src/starport.py
+#  self.model.ship.refuel()                                    1  src/starport.py
+#  self.model.ship.repair_status                               2  src/orbit.py
+#  self.model.ship.repair_status                               2  src/play.py
+#  self.model.ship.repair_status                               4  src/starport.py
+#  self.model.ship.repair_status                               6  src/jump.py
+#  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
+#  self.model.ship.sufficient_life_support()                   1  src/jump.py
+#  self.model.ship.total_passenger_count                       1  src/orbit.py
+#  self.model.ship.total_passenger_count                       2  src/starport.py
+#  self.model.ship.trade_skill()                               2  src/trade.py
+#  self.model.ship.unrefined_jump_counter                      1  src/jump.py
+#  self.model.ship.unrefined_jump_counter                      2  src/starport.py
+#  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
+#
+#  self.model.star_map                                         1+ src/menu.py
+#  self.model.star_map.get_all_systems()                       1  src/play.py
+#  self.model.star_map.get_subsector_string()                  2  src/play.py
+#  self.model.star_map.get_system_at_coordinate()              1  src/menu.py
+#  self.model.star_map.get_system_at_coordinate()              1  src/trade.py
+#  self.model.star_map.get_system_at_coordinate()              3  src/jump.py
+#  self.model.star_map.get_system_at_coordinates()             1  src/terminal.py
+#  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
+#  self.model.star_map.get_systems_in_subsector()              1  src/play.py
+#  self.model.star_map.get_systems_within_range()              1  src/jump.py
+#  self.model.star_map.get_systems_within_range()              1  src/menu.py
+#  self.model.star_map.list_map()                              1  src/play.py
+#  self.model.star_map.subsectors                              2  src/menu.py
+#  self.model.star_map.subsectors                              3  src/play.py
+#  self.model.star_map.systems                                 1  src/jump.py
+#  self.model.star_map.systems                                 3  src/play.py
+#  self.model.star_map.systems                                 4  src/menu.py
+#
+# -------------------------------------------------------------
+
+# -------------------------------------------------------------
 # ROADMAP
 # Mulling over how to tackle ever-increasing TO_DO list.
 # I think we can chunk the work into a few phases:
@@ -3337,6 +3549,7 @@
 #  * [DONE] Review all classmethods, replace with simple functions if applicable
 #  * [DONE] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
+#  * [DONE] Add a 'Model' class and move references from Game to it
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3347,7 +3560,6 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
-#  * [....] Add a 'Model' class and move references from Game to it
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module
