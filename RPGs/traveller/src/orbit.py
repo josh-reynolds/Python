@@ -33,43 +33,43 @@ class OrbitScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def land(self) -> None:
         """Move from orbit to the starport."""
-        print(f"{BOLD_BLUE}Landing on {self.parent.model.location.name}.{END_FORMAT}")
-        if not self.parent.model.ship.model.streamlined:
+        print(f"{BOLD_BLUE}Landing on {self.model.location.name}.{END_FORMAT}")
+        if not self.model.ship.model.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return None
 
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
-        if self.parent.model.ship.destination == self.parent.model.location:
-            if self.parent.model.ship.total_passenger_count > 0:
-                print(f"Passengers disembarking on {self.parent.model.location.name}.")
+        if self.model.ship.destination == self.model.location:
+            if self.model.ship.total_passenger_count > 0:
+                print(f"Passengers disembarking on {self.model.location.name}.")
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
-                        self.parent.model.ship.passengers))
-                low_lottery_amount = Credits(10) * self.parent.model.ship.low_passenger_count
+                        self.model.ship.passengers))
+                low_lottery_amount = Credits(10) * self.model.ship.low_passenger_count
                 funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
-                self.parent.model.financials.credit(funds, "passenger fare")
+                self.model.financials.credit(funds, "passenger fare")
 
                 self._low_lottery(low_lottery_amount)
 
-                self.parent.model.ship.passengers = []
-                self.parent.model.ship.hold = [item for item in self.parent.model.ship.hold
+                self.model.ship.passengers = []
+                self.model.ship.hold = [item for item in self.model.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.parent.model.financials.berthing_fee(self.parent.model.location.on_surface())
+        self.model.financials.berthing_fee(self.model.location.on_surface())
         self.parent.change_state("Starport")
         return None
 
     def _low_lottery(self, low_lottery_amount) -> None:
         """Run the low passage lottery and apply results."""
-        if self.parent.model.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.parent.model.ship.passengers if
+        if self.model.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.model.ship.passengers if
                                          p.passage == Passage.LOW]
             for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.parent.model.ship.medic_skill() < 5:
+                if die_roll(2) + passenger.endurance + self.model.ship.medic_skill() < 5:
                     passenger.survived = False
 
             survivors = [p for p in low_passengers if p.survived]
@@ -84,14 +84,14 @@ class OrbitScreen(PlayScreen):
             if not winner:
                 print(f"No surviving low lottery winner. "
                       f"The captain is awarded {low_lottery_amount}.")
-                self.parent.model.financials.credit(low_lottery_amount, "low lottery")
+                self.model.financials.credit(low_lottery_amount, "low lottery")
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
-        print(f"{BOLD_BLUE}Travelling out to {self.parent.model.location.name} " +
+        print(f"{BOLD_BLUE}Travelling out to {self.model.location.name} " +
               f"jump point.{END_FORMAT}")
 
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 
@@ -99,8 +99,8 @@ class OrbitScreen(PlayScreen):
         if not leg_fc:
             return None
 
-        self.parent.model.ship.current_fuel -= leg_fc
-        self.parent.model.date.day += 1
+        self.model.ship.current_fuel -= leg_fc
+        self.model.date.day += 1
         self.parent.change_state("Jump")
         return None
 

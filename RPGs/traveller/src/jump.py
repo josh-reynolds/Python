@@ -35,14 +35,14 @@ class JumpScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
-        if isinstance(self.parent.model.location, DeepSpace):
+        if isinstance(self.model.location, DeepSpace):
             print(f"{BOLD_RED}You are in deep space. "
                   f"There is no inner system to travel to.{END_FORMAT}")
             return None
 
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.parent.model.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.model.location.name}.{END_FORMAT}")
 
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return None
 
@@ -50,8 +50,8 @@ class JumpScreen(PlayScreen):
         if not leg_fc:
             return None
 
-        self.parent.model.ship.current_fuel -= leg_fc
-        self.parent.model.date.day += 1
+        self.model.ship.current_fuel -= leg_fc
+        self.model.date.day += 1
         self.parent.change_state("Orbit")
         return None
 
@@ -60,85 +60,85 @@ class JumpScreen(PlayScreen):
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
-        status = self.parent.model.financials.maintenance_status(
-                                     self.parent.model.date.current_date)
-        self.parent.model.ship.check_failure_pre_jump(status)
-        if self.parent.model.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
+        status = self.model.financials.maintenance_status(
+                                     self.model.date.current_date)
+        self.model.ship.check_failure_pre_jump(status)
+        if self.model.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
             return
 
-        if not self.parent.model.ship.sufficient_jump_fuel():
-            print(self.parent.model.ship.insufficient_jump_fuel_message())
+        if not self.model.ship.sufficient_jump_fuel():
+            print(self.model.ship.insufficient_jump_fuel_message())
             return
 
-        if not self.parent.model.ship.sufficient_life_support():
-            print(self.parent.model.ship.insufficient_life_support_message())
+        if not self.model.ship.sufficient_life_support():
+            print(self.model.ship.insufficient_life_support_message())
             return
 
-        jump_range = self.parent.model.ship.model.jump_range
+        jump_range = self.model.ship.model.jump_range
         print(f"Systems within jump-{jump_range}:")
-        destinations = self.parent.model.location.destinations
+        destinations = self.model.location.destinations
         destination_number = choose_from(destinations, "Enter destination number: ")
 
         coordinate = destinations[destination_number].coordinate
         destination = cast(StarSystem,
-                           self.parent.model.star_map.get_system_at_coordinate(coordinate))
+                           self.model.star_map.get_system_at_coordinate(coordinate))
 
-        self.parent.model.ship.warn_if_not_contracted(destination)
+        self.model.ship.warn_if_not_contracted(destination)
 
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
             print("Cancelling jump.")
             return
 
-        if self.parent.model.ship.fuel_quality == FuelQuality.UNREFINED:
-            self.parent.model.ship.unrefined_jump_counter += 1
+        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
+            self.model.ship.unrefined_jump_counter += 1
 
         print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
         self._misjump_check(coordinate)
-        self.parent.model.location.detail = "jump"
+        self.model.location.detail = "jump"
 
-        self.parent.model.ship.check_failure_post_jump()
+        self.model.ship.check_failure_post_jump()
 
-        coord = self.parent.model.location.coordinate
-        self.parent.model.location.destinations = \
-              self.parent.model.star_map.get_systems_within_range(coord, jump_range)
+        coord = self.model.location.coordinate
+        self.model.location.destinations = \
+              self.model.star_map.get_systems_within_range(coord, jump_range)
 
-        self.parent.model.depot = CargoDepot(self.parent.model.location,
-                                       self.parent.model.date.current_date)
-        self.parent.model.depot.add_observer(self.parent)
-        self.parent.model.depot.controls = self.parent
-        self.parent.model.financials.location = destination
+        self.model.depot = CargoDepot(self.model.location,
+                                       self.model.date.current_date)
+        self.model.depot.add_observer(self.parent)
+        self.model.depot.controls = self.parent
+        self.model.financials.location = destination
 
-        self.parent.model.ship.life_support_level = 0
-        self.parent.model.ship.current_fuel -= self.parent.model.ship.model.jump_fuel_cost
-        self.parent.model.date.plus_week()
+        self.model.ship.life_support_level = 0
+        self.model.ship.current_fuel -= self.model.ship.model.jump_fuel_cost
+        self.model.date.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
-        if self.parent.model.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
             modifier = 3
         else:
             modifier = -1
-        if self.parent.model.financials.maintenance_status(
-                                self.parent.model.date.current_date) == "red":
+        if self.model.financials.maintenance_status(
+                                self.model.date.current_date) == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier
         if misjump_check > 11:
             print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            misjump_target, distance = get_misjump_target(self.parent.model.location.coordinate)
+            misjump_target, distance = get_misjump_target(self.model.location.coordinate)
             print(f"{misjump_target} at distance {distance}")
 
             # misjump is the only scenario where EmptySpace is a possible
             # location, so we need to leave this type as Hex
-            loc = self.parent.model.star_map.get_system_at_coordinate(misjump_target) # type: ignore
-            self.parent.model.location = loc
-            self.parent.model.star_map.systems[misjump_target] = self.parent.model.location
+            loc = self.model.star_map.get_system_at_coordinate(misjump_target) # type: ignore
+            self.model.location = loc                                          # type: ignore
+            self.model.star_map.systems[misjump_target] = self.model.location
         else:
-            self.parent.model.location = cast(StarSystem,
-                    self.parent.model.star_map.get_system_at_coordinate(destination))
+            self.model.location = cast(StarSystem,
+                    self.model.star_map.get_system_at_coordinate(destination))
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
@@ -152,41 +152,41 @@ class JumpScreen(PlayScreen):
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.parent.model.location.gas_giant:
-            if isinstance(self.parent.model.location, DeepSpace):
+        if not self.model.location.gas_giant:
+            if isinstance(self.model.location, DeepSpace):
                 print("You are stranded in deep space. No fuel skimming possible.")
             else:
                 print("There is no gas giant in this system. No fuel skimming possible.")
             return
 
-        if not self.parent.model.ship.model.streamlined:
+        if not self.model.ship.model.streamlined:
             print("Your ship is not streamlined and cannot skim fuel.")
             return
 
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
             return
 
-        if self.parent.model.ship.current_fuel == self.parent.model.ship.model.fuel_tank:
+        if self.model.ship.current_fuel == self.model.ship.model.fuel_tank:
             print("Fuel tank is already full.")
             return
 
-        self.parent.model.ship.current_fuel = self.parent.model.ship.model.fuel_tank
-        self.parent.model.ship.fuel_quality = FuelQuality.UNREFINED
-        self.parent.model.date.day += 1
+        self.model.ship.current_fuel = self.model.ship.model.fuel_tank
+        self.model.ship.fuel_quality = FuelQuality.UNREFINED
+        self.model.date.day += 1
 
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""
         print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
-        if self.parent.model.ship.repair_status == RepairStatus.REPAIRED:
+        if self.model.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
-        if self.parent.model.ship.repair_status == RepairStatus.PATCHED:
+        if self.model.ship.repair_status == RepairStatus.PATCHED:
             print("Further repairs require starport facilities.")
             return
-        self.parent.model.date.day += 1
-        if die_roll(2) + self.parent.model.ship.engineering_skill() > 9:
-            self.parent.model.ship.repair_status = RepairStatus.PATCHED
+        self.model.date.day += 1
+        if die_roll(2) + self.model.ship.engineering_skill() > 9:
+            self.model.ship.repair_status = RepairStatus.PATCHED
             print("Ship partially repaired. Visit a starport for further work.")
         else:
             print("No progress today. Drives are still out of commission.")

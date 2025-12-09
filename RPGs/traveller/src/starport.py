@@ -37,36 +37,36 @@ class StarportScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
-        print(f"{BOLD_BLUE}Lifting off to orbit {self.parent.model.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Lifting off to orbit {self.model.location.name}.{END_FORMAT}")
 
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
             return None
 
         # corner case - these messages assume passengers are coming
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
-        if self.parent.model.ship.total_passenger_count > 0:
-            print(f"Boarding {self.parent.model.ship.total_passenger_count} passengers "
-                  f"for {self.parent.model.ship.destination.name}.")
+        if self.model.ship.total_passenger_count > 0:
+            print(f"Boarding {self.model.ship.total_passenger_count} "   # type: ignore[union-attr]
+                  f"passengers for {self.model.ship.destination.name}.")
 
-        if self.parent.model.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.parent.model.ship.passengers if
+        if self.model.ship.low_passenger_count > 0:
+            low_passengers = [p for p in self.model.ship.passengers if
                               p.passage == Passage.LOW]
             for passenger in low_passengers:
-                passenger.guess_survivors(self.parent.model.ship.low_passenger_count)
+                passenger.guess_survivors(self.model.ship.low_passenger_count)
 
         self.parent.change_state("Orbit")
         return None
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
-        print(f"{BOLD_BLUE}Entering {self.parent.model.location.name} trade depot.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Entering {self.model.location.name} trade depot.{END_FORMAT}")
         self.parent.change_state("Trade")
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
-        print(f"{BOLD_BLUE}Entering {self.parent.model.location.name} " +
+        print(f"{BOLD_BLUE}Entering {self.model.location.name} " +
               f"passenger terminal.{END_FORMAT}")
         self.parent.change_state("Terminal")
 
@@ -75,33 +75,33 @@ class StarportScreen(PlayScreen):
     def recharge(self) -> None:
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
-        cost = self.parent.model.ship.recharge()
-        self.parent.model.financials.debit(cost, "life support")
+        cost = self.model.ship.recharge()
+        self.model.financials.debit(cost, "life support")
 
     def refuel(self) -> None:
         """Refuel the Ship."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        if self.parent.model.location.starport in ('E', 'X'):
-            print(f"No fuel is available at starport {self.parent.model.location.starport}.")
+        if self.model.location.starport in ('E', 'X'):
+            print(f"No fuel is available at starport {self.model.location.starport}.")
             return
 
-        cost = self.parent.model.ship.refuel(self.parent.model.location.starport)
-        self.parent.model.financials.debit(cost, "refuelling")
+        cost = self.model.ship.refuel(self.model.location.starport)
+        self.model.financials.debit(cost, "refuelling")
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
         print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
-        if self.parent.model.location.starport not in ('A', 'B'):
+        if self.model.location.starport not in ('A', 'B'):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
 
-        cost = self.parent.model.ship.maintenance_cost()
-        if self.parent.model.financials.balance < cost:
+        cost = self.model.ship.maintenance_cost()
+        if self.model.financials.balance < cost:
             print("You do not have enough funds to pay for maintenance.\n"
-                  f"It will cost {cost}. Your balance is {self.parent.model.financials.balance}.")
+                  f"It will cost {cost}. Your balance is {self.model.financials.balance}.")
             return
 
-        if self.parent.model.financials.maintenance_status(self.parent.model.date.current_date) == \
+        if self.model.financials.maintenance_status(self.model.date.current_date) == \
                 "green":
             confirmation = confirm_input("Maintenance was performed less than 10 months " +
                                          "ago. Continue (y/n)? ")
@@ -114,27 +114,27 @@ class StarportScreen(PlayScreen):
             return
 
         print(f"Performing maintenance. Charging {cost}.")
-        self.parent.model.financials.last_maintenance = self.parent.model.date.current_date
-        self.parent.model.financials.debit(cost, "annual maintenance")
-        self.parent.model.date.day += 14    # should we wrap this in a method call?
-        self.parent.model.ship.repair_status = RepairStatus.REPAIRED
+        self.model.financials.last_maintenance = self.model.date.current_date
+        self.model.financials.debit(cost, "annual maintenance")
+        self.model.date.day += 14    # should we wrap this in a method call?
+        self.model.ship.repair_status = RepairStatus.REPAIRED
 
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
         print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
-        if self.parent.model.ship.fuel_quality == FuelQuality.REFINED:
+        if self.model.ship.fuel_quality == FuelQuality.REFINED:
             print("Ship fuel tanks are clean. No need to flush.")
             return
 
-        if self.parent.model.location.starport in ('E', 'X'):
+        if self.model.location.starport in ('E', 'X'):
             print(f"There are no facilities to flush tanks "
-                  f"at starport {self.parent.model.location.starport}.")
+                  f"at starport {self.model.location.starport}.")
             return
 
         print("Fuel tanks have been decontaminated.")
-        self.parent.model.ship.fuel_quality = FuelQuality.REFINED
-        self.parent.model.ship.unrefined_jump_counter = 0
-        self.parent.model.date.plus_week()
+        self.model.ship.fuel_quality = FuelQuality.REFINED
+        self.model.ship.unrefined_jump_counter = 0
+        self.model.date.plus_week()
 
     # TO_DO: the rules do not cover this procedure. No time or credits
     #        expenditure, etc. For now I'll just make this one week and free,
@@ -142,17 +142,17 @@ class StarportScreen(PlayScreen):
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
         print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
-        if self.parent.model.location.starport in ["D", "E", "X"]:
+        if self.model.location.starport in ["D", "E", "X"]:
             print("No repair facilities available at starport " +
-                  f"{self.parent.model.location.starport}")
+                  f"{self.model.location.starport}")
             return
 
-        if self.parent.model.ship.repair_status == RepairStatus.REPAIRED:
+        if self.model.ship.repair_status == RepairStatus.REPAIRED:
             print("Your ship is not damaged.")
             return
 
         print("Your ship is fully repaired and decontaminated.")
-        self.parent.model.ship.repair_status = RepairStatus.REPAIRED
-        self.parent.model.ship.fuel_quality = FuelQuality.REFINED
-        self.parent.model.ship.unrefined_jump_counter = 0
-        self.parent.model.date.plus_week()
+        self.model.ship.repair_status = RepairStatus.REPAIRED
+        self.model.ship.fuel_quality = FuelQuality.REFINED
+        self.model.ship.unrefined_jump_counter = 0
+        self.model.date.plus_week()

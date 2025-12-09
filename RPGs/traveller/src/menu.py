@@ -75,52 +75,52 @@ class MenuScreen(Screen):
             map_hex = hex_from(line)
             systems[map_hex.coordinate] = map_hex
 
-        self.parent.model.star_map = StarMap(systems)
+        self.model.star_map = StarMap(systems)
 
     def _load_subsectors(self, data: List[str]) -> None:
         """Apply Subsectors from json data to Game star_map field."""
         for line in data:
             subsector = subsector_from(line)
-            self.parent.model.star_map.subsectors[subsector.coordinate] = subsector
+            self.model.star_map.subsectors[subsector.coordinate] = subsector
 
     def _load_calendar(self, data: str) -> None:
         """Apply date from json data to Game calendar field."""
-        self.parent.model.date = Calendar()
-        modify_calendar_from(self.parent.model.date, data)
+        self.model.date = Calendar()
+        modify_calendar_from(self.model.date, data)
 
     def _load_financials(self, data: str) -> None:
         """Apply Financials from json data to Game financials field."""
-        self.parent.model.financials = financials_from(data)
-        self.parent.model.financials.ship = self.parent.model.ship
-        self.parent.model.financials.add_observer(self.parent)
-        self.parent.model.date.add_observer(self.parent.model.financials)
+        self.model.financials = financials_from(data)
+        self.model.financials.ship = self.model.ship
+        self.model.financials.add_observer(self.parent)
+        self.model.date.add_observer(self.model.financials)
 
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
-        location = cast(StarSystem, self.parent.model.star_map.get_system_at_coordinate(coord))
-        self.parent.model.location = location
-        self.parent.model.location.destinations = \
-                self.parent.model.star_map.get_systems_within_range(coord,
-                                                        self.parent.model.ship.model.jump_range)
-        self.parent.model.financials.location = self.parent.model.location
+        location = cast(StarSystem, self.model.star_map.get_system_at_coordinate(coord))
+        self.model.location = location
+        self.model.location.destinations = \
+                self.model.star_map.get_systems_within_range(coord,
+                                                        self.model.ship.model.jump_range)
+        self.model.financials.location = self.model.location
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.parent.model.depot = CargoDepot(self.parent.model.location,
-                                       self.parent.model.date.current_date)
-        self.parent.model.depot.add_observer(self.parent)
-        self.parent.model.depot.controls = self.parent
+        self.model.depot = CargoDepot(self.model.location,
+                                       self.model.date.current_date)
+        self.model.depot.add_observer(self.parent)
+        self.model.depot.controls = self.parent
 
     def _attach_date_observers(self) -> None:
         """Attach observers to Game date field."""
-        self.parent.model.date.add_observer(self.parent.model.depot)
-        self.parent.model.date.add_observer(self.parent.model.financials)
+        self.model.date.add_observer(self.model.depot)
+        self.model.date.add_observer(self.model.financials)
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
-        for sub_coord in self.parent.model.star_map.subsectors:
-            occupied = self.parent.model.star_map.get_systems_in_subsector(sub_coord)
+        for sub_coord in self.model.star_map.subsectors:
+            occupied = self.model.star_map.get_systems_in_subsector(sub_coord)
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
 
             for coord in all_coords:
@@ -128,7 +128,7 @@ class MenuScreen(Screen):
 
                 if converted in occupied:
                     continue
-                self.parent.model.star_map.systems[converted] = DeepSpace(converted)
+                self.model.star_map.systems[converted] = DeepSpace(converted)
 
     def new_game(self) -> None:
         """Start a new game."""
@@ -144,14 +144,14 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.model.ship = Ship(ship_types[model_number])
-        self.parent.model.ship.add_observer(self.parent)
-        self.parent.model.ship.controls = self.parent
+        self.model.ship = Ship(ship_types[model_number])
+        self.model.ship.add_observer(self.parent)
+        self.model.ship.controls = self.parent
 
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.parent.model.ship.name = ship_name
+        self.model.ship.name = ship_name
 
         self._load_financials(data['financials'])
         self._load_location(data['location'])
@@ -181,26 +181,26 @@ class MenuScreen(Screen):
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
 
-        self.parent.model.ship = ship_from(data['ship details'], data['ship model'])
-        self.parent.model.ship.add_observer(self.parent)
-        self.parent.model.ship.controls = self.parent
+        self.model.ship = ship_from(data['ship details'], data['ship model'])
+        self.model.ship.add_observer(self.parent)
+        self.model.ship.controls = self.parent
 
         passengers = []
         for line in data['passengers']:
-            passengers.append(passenger_from(line, self.parent.model.star_map.systems))
+            passengers.append(passenger_from(line, self.model.star_map.systems))
 
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
         # TO_DO: duplication of code in liftoff, refactor
-        low_passengers = [p for p in self.parent.model.ship.passengers if
+        low_passengers = [p for p in self.model.ship.passengers if
                           p.passage == Passage.LOW]
         for passenger in low_passengers:
-            passenger.guess_survivors(self.parent.model.ship.low_passenger_count)
-        self.parent.model.ship.passengers = passengers
+            passenger.guess_survivors(self.model.ship.low_passenger_count)
+        self.model.ship.passengers = passengers
 
         hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
-                                                      self.parent.model.star_map.systems))
-        self.parent.model.ship.hold = hold_contents
+                                                      self.model.star_map.systems))
+        self.model.ship.hold = hold_contents
 
         destinations = set()
         for passenger in passengers:
@@ -215,7 +215,7 @@ class MenuScreen(Screen):
             return None
 
         self._load_financials(data['financials'])
-        self.parent.model.financials.ledger = data['ledger']
+        self.model.financials.ledger = data['ledger']
         self._load_location(data['location'])
         self._create_depot()
         self._attach_date_observers()
@@ -336,7 +336,7 @@ class MenuScreen(Screen):
 
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
-        return isinstance(self.parent.model.star_map.systems[coord], StarSystem)
+        return isinstance(self.model.star_map.systems[coord], StarSystem)
 
     def import_map(self) -> None:
         """Import Traveller map data and start a new game."""
@@ -365,14 +365,14 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.parent.model.ship = Ship(ship_types[model_number])
-        self.parent.model.ship.add_observer(self.parent)
-        self.parent.model.ship.controls = self.parent
+        self.model.ship = Ship(ship_types[model_number])
+        self.model.ship.add_observer(self.parent)
+        self.model.ship.controls = self.parent
 
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.parent.model.ship.name = ship_name
+        self.model.ship.name = ship_name
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self._load_financials(financials_string)

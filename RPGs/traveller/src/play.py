@@ -46,28 +46,28 @@ class PlayScreen(Screen):
     def _draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
-        print(f"{YELLOW_ON_RED}\n{self.parent.model.date} : You are " +
-              f"{self.parent.model.location.description()}.{repair_state}{END_FORMAT}")
-        print(f"Credits: {self.parent.model.financials.balance}"
-              f"\tFree hold space: {self.parent.model.ship.free_space()} tons"
+        print(f"{YELLOW_ON_RED}\n{self.model.date} : You are " +
+              f"{self.model.location.description()}.{repair_state}{END_FORMAT}")
+        print(f"Credits: {self.model.financials.balance}"
+              f"\tFree hold space: {self.model.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
-              f"\tLife support: {self.parent.model.ship.life_support_level}%")
+              f"\tLife support: {self.model.ship.life_support_level}%")
 
     def update(self) -> None:
         """Draw the screen and present play choices."""
-        if self.parent.model.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
             fuel_quality = "(U)"
         else:
             fuel_quality = ""
 
         repair_state = ""
-        if self.parent.model.ship.repair_status == RepairStatus.BROKEN:
+        if self.model.ship.repair_status == RepairStatus.BROKEN:
             repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-        elif self.parent.model.ship.repair_status == RepairStatus.PATCHED:
+        elif self.model.ship.repair_status == RepairStatus.PATCHED:
             repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
 
-        fuel_amount = f"{self.parent.model.ship.current_fuel}/" +\
-                      f"{self.parent.model.ship.model.fuel_tank}"
+        fuel_amount = f"{self.model.ship.current_fuel}/" +\
+                      f"{self.model.ship.model.fuel_tank}"
 
         self._draw_banner(fuel_quality, fuel_amount, repair_state)
 
@@ -84,15 +84,15 @@ class PlayScreen(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self.parent.model.star_map.get_subsector_string(self.parent.model.location)} : " +
-              f"{self.parent.model.location}")
+        print(f"{self.model.star_map.get_subsector_string(self.model.location)} : " +
+              f"{self.model.location}")
         _ = input("\nPress ENTER key to continue.")
 
     def view_ledger(self) -> None:
         """View the bank transaction ledger."""
         print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
         print("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO")
-        transactions = self.parent.model.financials.ledger
+        transactions = self.model.financials.ledger
         for transaction in transactions:
             print(transaction)
         _ = input("\nPress ENTER key to continue.")
@@ -100,7 +100,7 @@ class PlayScreen(Screen):
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
         print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
-        contents = self.parent.model.ship.cargo_hold()
+        contents = self.model.ship.cargo_hold()
         if len(contents) == 0:
             print("Empty.")
         else:
@@ -110,41 +110,41 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        if self.parent.model.ship.destination is None:
+        if self.model.ship.destination is None:
             destination = "None"
         else:
-            destination = self.parent.model.ship.destination.name
+            destination = self.model.ship.destination.name
 
-        print(f"High passengers: {self.parent.model.ship.high_passenger_count}\n"
-              f"Middle passengers: {self.parent.model.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.parent.model.ship.low_passenger_count}\n"
+        print(f"High passengers: {self.model.ship.high_passenger_count}\n"
+              f"Middle passengers: {self.model.ship.middle_passenger_count}\n"
+              f"Low passengers: {self.model.ship.low_passenger_count}\n"
               f"DESTINATION: {destination}\n\n"
-              f"Empty berths: {self.parent.model.ship.empty_passenger_berths}\n"
-              f"Empty low berths: {self.parent.model.ship.empty_low_berths}")
+              f"Empty berths: {self.model.ship.empty_passenger_berths}\n"
+              f"Empty low berths: {self.model.ship.empty_low_berths}")
         _ = input("\nPress ENTER key to continue.")
 
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
         print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
-        pr_list(self.parent.model.ship.crew)
+        pr_list(self.model.ship.crew)
         _ = input("\nPress ENTER key to continue.")
 
     def view_ship(self) -> None:
         """View the details of the Ship."""
         print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
-        print(self.parent.model.ship)
+        print(self.model.ship)
         _ = input("\nPress ENTER key to continue.")
 
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
-        systems = self.parent.model.star_map.get_all_systems()
+        systems = self.model.star_map.get_all_systems()
         system_strings = []
         highlight = ""
         for sys in systems:
-            combined = f"{self.parent.model.star_map.get_subsector_string(sys)} : {sys}"
+            combined = f"{self.model.star_map.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
-            if sys == self.parent.model.location:
+            if sys == self.model.location:
                 highlight = combined
         pr_highlight_list(system_strings, highlight, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
@@ -155,31 +155,31 @@ class PlayScreen(Screen):
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = []
-        for coord in self.parent.model.star_map.systems:
-            map_hex = self.parent.model.star_map.systems[coord]
+        for coord in self.model.star_map.systems:
+            map_hex = self.model.star_map.systems[coord]
             systems.append(f"{coord} - {map_hex}")
 
         subsectors = []
-        for coord in self.parent.model.star_map.subsectors:
-            sub = self.parent.model.star_map.subsectors[coord]
-            subsectors.append(f"{coord} - {sub}")
+        for sub_coord in self.model.star_map.subsectors:
+            sub = self.model.star_map.subsectors[sub_coord]
+            subsectors.append(f"{sub_coord} - {sub}")
 
-        passenger_list = [p.encode() for p in self.parent.model.ship.passengers]
+        passenger_list = [p.encode() for p in self.model.ship.passengers]
 
-        cargo_hold_list = [p.encode() for p in self.parent.model.ship.hold]
+        cargo_hold_list = [p.encode() for p in self.model.ship.hold]
 
         save_data = {
-                     'date' : f"{self.parent.model.date}",
+                     'date' : f"{self.model.date}",
                      'systems' : systems,
                      'subsectors' : subsectors,
-                     'location' : f"{self.parent.model.location.coordinate}",
+                     'location' : f"{self.model.location.coordinate}",
                      'menu' : f"{self.parent.screen}",
-                     'ship model' : self.parent.model.ship.model.name,
-                     'ship details' : self.parent.model.ship.encode(),
+                     'ship model' : self.model.ship.model.name,
+                     'ship details' : self.model.ship.encode(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
-                     'financials' : self.parent.model.financials.encode(),
-                     'ledger' : self.parent.model.financials.ledger
+                     'financials' : self.model.financials.encode(),
+                     'ledger' : self.model.financials.ledger
                      }
 
         filename = get_next_file("save_game", "json")
@@ -190,7 +190,7 @@ class PlayScreen(Screen):
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
         print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
-        self.parent.model.date.plus_week()
+        self.model.date.plus_week()
 
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""
@@ -201,7 +201,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        system_list = self.parent.model.star_map.list_map()
+        system_list = self.model.star_map.list_map()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
             for line in system_list:
@@ -216,7 +216,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        ledger = self.parent.model.financials.ledger
+        ledger = self.model.financials.ledger
         if len(ledger) == 0:
             print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
             return
@@ -229,7 +229,7 @@ class PlayScreen(Screen):
     def draw_map(self) -> None:
         """Create and save a bitmap file of the current map."""
         print(f"{BOLD_BLUE}Creating map image.{END_FORMAT}")
-        sub_list = list(self.parent.model.star_map.subsectors.items())
+        sub_list = list(self.model.star_map.subsectors.items())
         subsector = choose_from(sub_list, "Choose a subsector to draw: ")
         sub_coord = sub_list[subsector][0]
         sub_name = sub_list[subsector][1].name
@@ -238,10 +238,10 @@ class PlayScreen(Screen):
         color_choice = choose_from(color_schemes, "Choose a color scheme: ")
         print_friendly = color_choice == 0
 
-        system_coords = self.parent.model.star_map.get_systems_in_subsector(sub_coord)
+        system_coords = self.model.star_map.get_systems_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
-            system_list.append(self.parent.model.star_map.systems[entry])
+            system_list.append(self.model.star_map.systems[entry])
 
         draw_map(system_list, sub_name, print_friendly)
 
@@ -249,17 +249,17 @@ class PlayScreen(Screen):
                            jump_range: int, prompt: str) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
-        if self.parent.model.ship.destination is not None:
-            if self.parent.model.ship.destination == self.parent.model.location:
+        if self.model.ship.destination is not None:
+            if self.model.ship.destination == self.model.location:
                 print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.parent.model.location.name}.{END_FORMAT}")
+                      f"on {self.model.location.name}.{END_FORMAT}")
                 return result
-            if self.parent.model.ship.destination in potential_destinations:
+            if self.model.ship.destination in potential_destinations:
                 print(f"You are under contract. Only showing {prompt} " +
-                      f"for {self.parent.model.ship.destination.name}:\n")
-                result = [self.parent.model.ship.destination]
+                      f"for {self.model.ship.destination.name}:\n")
+                result = [self.model.ship.destination]
             else:
-                print(f"You are under contract to {self.parent.model.ship.destination.name} " +
+                print(f"You are under contract to {self.model.ship.destination.name} " +
                       "but it is not within jump range of here.")
 
         else:
@@ -270,10 +270,10 @@ class PlayScreen(Screen):
 
     def _check_fuel_level(self, prompt: str) -> int | None:
         """Verify there is sufficient fuel in the tanks to make a trip."""
-        leg_fc = self.parent.model.ship.model.trip_fuel_cost // 2
-        if self.parent.model.ship.current_fuel < leg_fc:
+        leg_fc = self.model.ship.model.trip_fuel_cost // 2
+        if self.model.ship.current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel {prompt} the jump point "
                   f"requires {leg_fc} tons, only "
-                  f"{self.parent.model.ship.current_fuel} tons in tanks.")
+                  f"{self.model.ship.current_fuel} tons in tanks.")
             return None
         return leg_fc

@@ -36,7 +36,7 @@ class TerminalScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def leave_terminal(self) -> None:
         """Move from the passenger terminal to the starport."""
-        print(f"{BOLD_BLUE}Leaving {self.parent.model.location.name} " +
+        print(f"{BOLD_BLUE}Leaving {self.model.location.name} " +
               f"passenger terminal.{END_FORMAT}")
         self.parent.change_state("Starport")
 
@@ -45,8 +45,8 @@ class TerminalScreen(PlayScreen):
         """Book passengers for travel to a destination."""
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
-        jump_range = self.parent.model.ship.model.jump_range
-        potential_destinations = self.parent.model.location.destinations.copy()
+        jump_range = self.model.ship.model.jump_range
+        potential_destinations = self.model.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:
@@ -55,12 +55,12 @@ class TerminalScreen(PlayScreen):
         # for now we will stuff this in cargo depot, though it may better
         # be served by a separate class. If it _does_ stay in the depot, we
         # may want to adjust the nomenclature to make this more clear.
-        coordinate, available = self.parent.model.depot.get_available_passengers(destinations)
+        coordinate, available = self.model.depot.get_available_passengers(destinations)
         if available is None:
             return
 
         destination = cast(StarSystem,
-                           self.parent.model.star_map.get_system_at_coordinate(coordinate))
+                           self.model.star_map.get_system_at_coordinate(coordinate))
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = self._select_passengers(available, destination)
@@ -79,27 +79,27 @@ class TerminalScreen(PlayScreen):
         #        Probably want to wrap passenger field access in a property...
         high = [Passenger(Passage.HIGH, destination)
                 for _ in range(selection[Passage.HIGH.value])]
-        baggage = [Baggage(self.parent.model.location, destination)
+        baggage = [Baggage(self.model.location, destination)
                    for _ in range(selection[Passage.HIGH.value])]
         middle = [Passenger(Passage.MIDDLE, destination)
                   for _ in range(selection[Passage.MIDDLE.value])]
         low = [Passenger(Passage.LOW, destination)
                for _ in range(selection[Passage.LOW.value])]
 
-        self.parent.model.ship.passengers += high
-        self.parent.model.ship.hold += baggage
-        self.parent.model.ship.passengers += middle
-        self.parent.model.ship.passengers += low
-        self.parent.model.depot.passengers[destination] = tuple(a-b for a,b in
-                        zip(self.parent.model.depot.passengers[destination], selection))
+        self.model.ship.passengers += high
+        self.model.ship.hold += baggage
+        self.model.ship.passengers += middle
+        self.model.ship.passengers += low
+        self.model.depot.passengers[destination] = tuple(a-b for a,b in
+                        zip(self.model.depot.passengers[destination], selection))
 
     def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.parent.model.ship.empty_passenger_berths,
-                                          self.parent.model.ship.empty_low_berths)
-        ship_hold = self.parent.model.ship.free_space()
+        ship_capacity: Tuple[int, ...] = (self.model.ship.empty_passenger_berths,
+                                          self.model.ship.empty_low_berths)
+        ship_hold = self.model.ship.free_space()
 
         while True:
             if available == (0,0,0):
