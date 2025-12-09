@@ -19,8 +19,7 @@ class Game:
     def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
-        self.model = Model()
-        self.screen: Screen = MenuScreen(self, self.model)
+        self.screen: Screen = MenuScreen(self, Model())
 
     def __repr__(self) -> str:
         """Return the developer string representation of the Game object."""
@@ -61,19 +60,14 @@ class Game:
         """Change game screens."""
         match new_state:
             case "Orbit":
-                self.model.location.detail = "orbit"
                 self.screen = OrbitScreen(self, self.screen.model)
             case "Starport":
-                self.model.location.detail = "starport"
                 self.screen = StarportScreen(self, self.screen.model)
             case "Jump":
-                self.model.location.detail = "jump"
                 self.screen = JumpScreen(self, self.screen.model)
             case "Trade":
-                self.model.location.detail = "trade"
                 self.screen = TradeScreen(self, self.screen.model)
             case "Terminal":
-                self.model.location.detail = "terminal"
                 self.screen = TerminalScreen(self, self.screen.model)
             case _:
                 raise ValueError(f"unrecognized menu item: '{new_state}'")

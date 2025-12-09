@@ -17,7 +17,8 @@ class TerminalScreenTestCase(unittest.TestCase):
         game = Game()
         model = Model()
         passengers = TerminalScreen(game, model)
-        potential_destinations = cast(List[StarSystem], game.model.location.destinations.copy())
+        potential_destinations = cast(List[StarSystem],
+                                      passengers.model.location.destinations.copy())
 
         destinations = passengers._get_destinations(potential_destinations,
                                                     1, "passengers")
@@ -38,7 +39,7 @@ class TerminalScreenTestCase(unittest.TestCase):
         model = Model()
         passengers = TerminalScreen(game, model)
         available = (5,5,5)
-        destination = game.model.location.destinations[0]
+        destination = passengers.model.location.destinations[0]
 
         selection = passengers._select_passengers(available, destination)
         print(selection)

@@ -160,6 +160,7 @@ class MenuScreen(Screen):
 
         _ = input("Press ENTER key to continue.")
 
+        self.model.location.detail = data['menu'].lower()
         self.parent.change_state(data['menu'])
         return None
 
@@ -221,6 +222,7 @@ class MenuScreen(Screen):
         self._attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
+        self.model.location.detail = data['menu'].lower()
         self.parent.change_state(data['menu'])
         return None
 
@@ -387,5 +389,6 @@ class MenuScreen(Screen):
         self._attach_date_observers()
 
         _ = input("\nPress ENTER key to continue.")
+        self.model.location.detail = "starport"
         self.parent.change_state("Starport")
         return None

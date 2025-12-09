@@ -52,6 +52,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.current_fuel -= leg_fc
         self.model.date.day += 1
+        self.model.location.detail = "orbit"
         self.parent.change_state("Orbit")
         return None
 

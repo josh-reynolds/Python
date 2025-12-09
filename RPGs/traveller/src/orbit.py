@@ -60,6 +60,7 @@ class OrbitScreen(PlayScreen):
                                   if not isinstance(item, Baggage)]
 
         self.model.financials.berthing_fee(self.model.location.on_surface())
+        self.model.location.detail = "starport"
         self.parent.change_state("Starport")
         return None
 
@@ -101,6 +102,7 @@ class OrbitScreen(PlayScreen):
 
         self.model.ship.current_fuel -= leg_fc
         self.model.date.day += 1
+        self.model.location.detail = "jump"
         self.parent.change_state("Jump")
         return None
 

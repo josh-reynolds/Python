@@ -56,18 +56,21 @@ class StarportScreen(PlayScreen):
             for passenger in low_passengers:
                 passenger.guess_survivors(self.model.ship.low_passenger_count)
 
+        self.model.location.detail = "orbit"
         self.parent.change_state("Orbit")
         return None
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
         print(f"{BOLD_BLUE}Entering {self.model.location.name} trade depot.{END_FORMAT}")
+        self.model.location.detail = "trade"
         self.parent.change_state("Trade")
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
         print(f"{BOLD_BLUE}Entering {self.model.location.name} " +
               f"passenger terminal.{END_FORMAT}")
+        self.model.location.detail = "terminal"
         self.parent.change_state("Terminal")
 
     # ACTIONS ==============================================================
