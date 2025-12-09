@@ -12,6 +12,7 @@ from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.financials import financials_from
 from src.format import END_FORMAT, BOLD_BLUE, HOME, CLEAR, BOLD_RED, BOLD
 from src.freight import Freight
+from src.model import Model
 from src.passengers import Passage, passenger_from
 from src.screen import Screen
 from src.ship import ship_from, Ship
@@ -25,9 +26,9 @@ from src.utilities import get_files, get_json_data, choose_from, get_lines
 class MenuScreen(Screen):
     """Draws the menu screen and gathers input from the player."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a MenuScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
         self.commands: List[Command] = [
                 Command('new', 'New Game', self.new_game),
                 Command('load', 'Load Game', self.load_game),

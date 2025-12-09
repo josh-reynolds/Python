@@ -2,6 +2,7 @@
 import unittest
 from typing import List, cast
 from main import Game
+from src.model import Model
 from src.trade import TradeScreen
 from src.star_system import StarSystem
 
@@ -14,7 +15,8 @@ class TradeScreenTestCase(unittest.TestCase):
     def test_get_destinations(self) -> None:
         """Test getting list of freight destinations."""
         game = Game()
-        trade = TradeScreen(game)
+        model = Model()
+        trade = TradeScreen(game, model)
         potential_destinations = cast(List[StarSystem],
                                       game.model.location.destinations.copy())
 
@@ -34,7 +36,8 @@ class TradeScreenTestCase(unittest.TestCase):
     def test_select_freight_lots(self):
         """Test selection of freight from a list."""
         game = Game()
-        trade = TradeScreen(game)
+        model = Model()
+        trade = TradeScreen(game, model)
         available = [5, 10, 15, 20]
         destination = game.model.location.destinations[0]
 

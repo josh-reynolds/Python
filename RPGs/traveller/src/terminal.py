@@ -6,6 +6,7 @@ from typing import cast, Tuple, Any, List
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
+from src.model import Model
 from src.passengers import Passenger, Passage
 from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
@@ -14,9 +15,9 @@ from src.utilities import confirm_input, get_plural_suffix
 class TerminalScreen(PlayScreen):
     """Contains commands for the terminal state."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a TerminalScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
 
         # this is declared as List[Command] in super(),
         # but mypy still cannot determine type

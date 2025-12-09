@@ -2,6 +2,7 @@
 import unittest
 from typing import cast, List
 from main import Game
+from src.model import Model
 from src.terminal import TerminalScreen
 from src.star_system import StarSystem
 
@@ -14,7 +15,8 @@ class TerminalScreenTestCase(unittest.TestCase):
     def test_get_destinations(self) -> None:
         """Test getting list of passenger destinations."""
         game = Game()
-        passengers = TerminalScreen(game)
+        model = Model()
+        passengers = TerminalScreen(game, model)
         potential_destinations = cast(List[StarSystem], game.model.location.destinations.copy())
 
         destinations = passengers._get_destinations(potential_destinations,
@@ -33,7 +35,8 @@ class TerminalScreenTestCase(unittest.TestCase):
     def test_select_passengers(self) -> None:
         """Test selection of passengers from a list."""
         game = Game()
-        passengers = TerminalScreen(game)
+        model = Model()
+        passengers = TerminalScreen(game, model)
         available = (5,5,5)
         destination = game.model.location.destinations[0]
 

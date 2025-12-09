@@ -9,6 +9,7 @@ from typing import Any, List
 from src.command import Command
 from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
+from src.model import Model
 from src.screen import Screen
 from src.ship import FuelQuality, RepairStatus
 from src.star_system import StarSystem
@@ -22,9 +23,9 @@ class PlayScreen(Screen):
     available in every state.
     """
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a PlayScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
         self.commands: List[Command] = [
                 Command('?', 'List commands', self.list_commands),
                 Command('map', 'View star map', self.view_map),

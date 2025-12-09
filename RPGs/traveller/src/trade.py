@@ -8,6 +8,7 @@ from src.command import Command
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
+from src.model import Model
 from src.freight import Freight
 from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
@@ -16,9 +17,9 @@ from src.utilities import confirm_input, pr_list
 class TradeScreen(PlayScreen):
     """Contains commands for the trade state."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a TradeScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
         self.commands += [
                 Command('leave', 'Leave trade depot', self.leave_depot),
                 Command('buy', 'Buy cargo', self.buy_cargo),

@@ -7,6 +7,7 @@ from src.command import Command
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
+from src.model import Model
 from src.play import PlayScreen
 from src.ship import RepairStatus, FuelQuality
 from src.star_system import DeepSpace, StarSystem
@@ -15,9 +16,9 @@ from src.utilities import die_roll, choose_from, confirm_input
 class JumpScreen(PlayScreen):
     """Contains commands for the jump state."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a JumpScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
         self.commands += [
                 Command('inbound', 'Inbound to orbit', self.inbound_from_jump),
                 Command('jump', 'Jump to new system', self.jump),

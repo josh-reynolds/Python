@@ -7,6 +7,7 @@ from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
+from src.model import Model
 from src.passengers import Passage
 from src.play import PlayScreen
 from src.ship import RepairStatus
@@ -15,9 +16,9 @@ from src.utilities import die_roll
 class OrbitScreen(PlayScreen):
     """Contains commands for the orbit state."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create an OrbitScreen object."""
-        super().__init__(parent)
+        super().__init__(parent, model)
         self.commands += [
                 Command('land', 'Land at starport', self.land),
                 Command('outbound', 'Go to jump point', self.outbound_to_jump),

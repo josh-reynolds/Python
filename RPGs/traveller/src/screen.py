@@ -7,13 +7,15 @@ from time import sleep
 from typing import Any, List
 from src.command import Command
 from src.format import END_FORMAT, BOLD_BLUE
+from src.model import Model
 
 class Screen(ABC):
     """Base class for game screens."""
 
-    def __init__(self, parent: Any) -> None:
+    def __init__(self, parent: Any, model: Model) -> None:
         """Create a Screen object."""
         self.parent = parent
+        self.model = model
         self.commands: List[Command] = []
 
     def get_command(self, prompt: str) -> None:
