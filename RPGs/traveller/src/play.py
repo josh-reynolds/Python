@@ -11,7 +11,7 @@ from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
 from src.model import Model
 from src.screen import Screen
-from src.ship import FuelQuality, RepairStatus
+from src.ship import FuelQuality
 from src.star_system import StarSystem
 from src.utilities import choose_from, pr_list, pr_highlight_list
 from src.utilities import get_next_file, confirm_input
@@ -60,11 +60,7 @@ class PlayScreen(Screen):
         else:
             fuel_quality = ""
 
-        repair_state = ""
-        if self.model.ship.repair_status == RepairStatus.BROKEN:
-            repair_state = "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-        elif self.model.ship.repair_status == RepairStatus.PATCHED:
-            repair_state = "\tSEEK REPAIRS - UNABLE TO JUMP"
+        repair_state = self.model.get_repair_string()
 
         fuel_amount = f"{self.model.ship.current_fuel}/" +\
                       f"{self.model.ship.model.fuel_tank}"

@@ -64,3 +64,13 @@ class Model:
         self.ship.unrefined_jump_counter = 0
         self.date.plus_week()
         return "Your ship is fully repaired and decontaminated."
+
+    def get_repair_string(self) -> str:
+        """Return a string representing current repair state of the Ship."""
+        match self.ship.repair_status:
+            case RepairStatus.BROKEN:
+                return "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
+            case RepairStatus.PATCHED:
+                return "\tSEEK REPAIRS - UNABLE TO JUMP"
+            case RepairStatus.REPAIRED:
+                return ""
