@@ -74,3 +74,7 @@ class Model:
                 return "\tSEEK REPAIRS - UNABLE TO JUMP"
             case RepairStatus.REPAIRED:
                 return ""
+
+    def set_location(self, location: str) -> None:
+        """Set the Model to the specified location."""
+        self.location.detail = location

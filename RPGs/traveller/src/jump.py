@@ -52,7 +52,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.current_fuel -= leg_fc
         self.model.date.day += 1
-        self.model.location.detail = "orbit"
+        self.model.set_location("orbit")
         self.parent.change_state("Orbit")
         return None
 
@@ -99,7 +99,7 @@ class JumpScreen(PlayScreen):
         print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
         self._misjump_check(coordinate)
-        self.model.location.detail = "jump"
+        self.model.set_location("jump")
 
         self.model.ship.check_failure_post_jump()
 
