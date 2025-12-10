@@ -248,7 +248,7 @@ class PlayScreen(Screen):
         if self.model.ship.destination is not None:
             if self.model.ship.destination == self.model.location:
                 print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.model.location.name}.{END_FORMAT}")
+                      f"on {self.model.system_name()}.{END_FORMAT}")
                 return result
             if self.model.ship.destination in potential_destinations:
                 print(f"You are under contract. Only showing {prompt} " +

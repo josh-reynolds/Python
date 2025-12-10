@@ -3070,19 +3070,7 @@
 #  self.model.location.destinations                            2  src/jump.py
 #  self.model.location.destinations.copy()                     1  src/terminal.py
 #  self.model.location.destinations.copy()                     1  src/trade.py
-#  12    self.model.location.detail                                  1  src/terminal.py
-#  self.model.location.detail                                  1  src/trade.py
-#  self.model.location.detail                                  2  src/jump.py
-#  self.model.location.detail                                  2  src/orbit.py
-#  self.model.location.detail                                  3  src/menu.py
-#  self.model.location.detail                                  3  src/starport.py
 #  self.model.location.gas_giant                               1  src/jump.py
-#  10    self.model.location.name                                    1  src/jump.py
-#  self.model.location.name                                    1  src/play.py
-#  self.model.location.name                                    1  src/terminal.py
-#  self.model.location.name                                    1  src/trade.py
-#  self.model.location.name                                    3  src/orbit.py
-#  self.model.location.name                                    3  src/starport.py
 #  self.model.location.on_surface()                            1  src/orbit.py
 #  self.model.location.starport                                8  src/starport.py
 #
@@ -3151,10 +3139,6 @@
 #  self.model.ship.passengers                                  3  src/terminal.py
 #  self.model.ship.recharge()                                  1  src/starport.py
 #  self.model.ship.refuel()                                    1  src/starport.py
-#  14     self.model.ship.repair_status                               2  src/orbit.py
-#  self.model.ship.repair_status                               2  src/play.py
-#  self.model.ship.repair_status                               4  src/starport.py
-#  self.model.ship.repair_status                               6  src/jump.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
 #  self.model.ship.total_passenger_count                       1  src/orbit.py
@@ -3186,7 +3170,28 @@
 #  They have different messages, and the Model shouldn't handle any
 #  display or printing. Maybe inserting an observer here would help.
 #
+#  Handled:
+#
+#  self.model.ship.repair_status                               2  src/orbit.py
+#  self.model.ship.repair_status                               2  src/play.py
+#  self.model.ship.repair_status                               4  src/starport.py
+#  self.model.ship.repair_status                               6  src/jump.py
+#  self.model.location.detail                                  1  src/terminal.py
+#  self.model.location.detail                                  1  src/trade.py
+#  self.model.location.detail                                  2  src/jump.py
+#  self.model.location.detail                                  2  src/orbit.py
+#  self.model.location.detail                                  3  src/menu.py
+#  self.model.location.detail                                  3  src/starport.py
+#  self.model.location.name                                    1  src/jump.py
+#  self.model.location.name                                    1  src/play.py
+#  self.model.location.name                                    1  src/terminal.py
+#  self.model.location.name                                    1  src/trade.py
+#  self.model.location.name                                    3  src/orbit.py
+#  self.model.location.name                                    3  src/starport.py
+#
 # -------------------------------------------------------------
+
+~HERE~
 
 # -------------------------------------------------------------
 # ROADMAP

@@ -32,7 +32,7 @@ class OrbitScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def land(self) -> None:
         """Move from orbit to the starport."""
-        print(f"{BOLD_BLUE}Landing on {self.model.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
         if not self.model.ship.model.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return None
@@ -43,7 +43,7 @@ class OrbitScreen(PlayScreen):
 
         if self.model.ship.destination == self.model.location:
             if self.model.ship.total_passenger_count > 0:
-                print(f"Passengers disembarking on {self.model.location.name}.")
+                print(f"Passengers disembarking on {self.model.system_name()}.")
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
                         self.model.ship.passengers))
@@ -88,7 +88,7 @@ class OrbitScreen(PlayScreen):
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
-        print(f"{BOLD_BLUE}Travelling out to {self.model.location.name} " +
+        print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} " +
               f"jump point.{END_FORMAT}")
 
         if not self.model.can_travel():

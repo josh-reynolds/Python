@@ -78,3 +78,7 @@ class Model:
     def set_location(self, location: str) -> None:
         """Set the Model to the specified location."""
         self.location.detail = location
+
+    def system_name(self) -> str:
+        """Return the name of the current StarSystem."""
+        return self.location.name

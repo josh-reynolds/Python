@@ -37,7 +37,7 @@ class StarportScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
-        print(f"{BOLD_BLUE}Lifting off to orbit {self.model.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
 
         if not self.model.can_travel():
             print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
@@ -62,13 +62,13 @@ class StarportScreen(PlayScreen):
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
-        print(f"{BOLD_BLUE}Entering {self.model.location.name} trade depot.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Entering {self.model.system_name()} trade depot.{END_FORMAT}")
         self.model.set_location("trade")
         self.parent.change_state("Trade")
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
-        print(f"{BOLD_BLUE}Entering {self.model.location.name} " +
+        print(f"{BOLD_BLUE}Entering {self.model.system_name()} " +
               f"passenger terminal.{END_FORMAT}")
         self.model.set_location("terminal")
         self.parent.change_state("Terminal")
