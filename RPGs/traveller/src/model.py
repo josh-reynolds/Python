@@ -5,7 +5,7 @@ Model - contains references to all game model objects.
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
-from src.ship import Ship
+from src.ship import Ship, RepairStatus
 from src.star_system import StarSystem
 from src.star_map import StarMap
 
@@ -26,3 +26,7 @@ class Model:
     def __repr__(self) -> str:
         """Return the developer string representation of the Model object."""
         return "Model()"
+
+    def can_travel(self) -> bool:
+        """Test whether the Ship can travel to a destination."""
+        return self.ship.repair_status != RepairStatus.BROKEN

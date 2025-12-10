@@ -10,7 +10,6 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.passengers import Passage
 from src.play import PlayScreen
-from src.ship import RepairStatus
 from src.utilities import die_roll
 
 class OrbitScreen(PlayScreen):
@@ -38,7 +37,7 @@ class OrbitScreen(PlayScreen):
             print("Your ship is not streamlined and cannot land.")
             return None
 
-        if self.model.ship.repair_status == RepairStatus.BROKEN:
+        if not self.model.can_travel():
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
@@ -92,7 +91,7 @@ class OrbitScreen(PlayScreen):
         print(f"{BOLD_BLUE}Travelling out to {self.model.location.name} " +
               f"jump point.{END_FORMAT}")
 
-        if self.model.ship.repair_status == RepairStatus.BROKEN:
+        if not self.model.can_travel():
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 
