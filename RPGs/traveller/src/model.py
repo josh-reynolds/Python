@@ -2,9 +2,11 @@
 
 Model - contains references to all game model objects.
 """
+from typing import List
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
+from src.passengers import Passenger
 from src.ship import Ship, RepairStatus, FuelQuality
 from src.star_system import StarSystem
 from src.star_map import StarMap
@@ -82,3 +84,7 @@ class Model:
     def system_name(self) -> str:
         """Return the name of the current StarSystem."""
         return self.location.name
+
+    def get_passengers(self) -> List[Passenger]:
+        """Return a list of Passengers on board the Ship."""
+        return self.ship.passengers

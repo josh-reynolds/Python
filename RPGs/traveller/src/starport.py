@@ -51,7 +51,7 @@ class StarportScreen(PlayScreen):
                   f"passengers for {self.model.ship.destination.name}.")
 
         if self.model.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.model.ship.passengers if
+            low_passengers = [p for p in self.model.get_passengers() if
                               p.passage == Passage.LOW]
             for passenger in low_passengers:
                 passenger.guess_survivors(self.model.ship.low_passenger_count)

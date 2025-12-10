@@ -46,7 +46,7 @@ class OrbitScreen(PlayScreen):
                 print(f"Passengers disembarking on {self.model.system_name()}.")
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
-                        self.model.ship.passengers))
+                        self.model.get_passengers()))
                 low_lottery_amount = Credits(10) * self.model.ship.low_passenger_count
                 funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
@@ -66,7 +66,7 @@ class OrbitScreen(PlayScreen):
     def _low_lottery(self, low_lottery_amount) -> None:
         """Run the low passage lottery and apply results."""
         if self.model.ship.low_passenger_count > 0:
-            low_passengers = [p for p in self.model.ship.passengers if
+            low_passengers = [p for p in self.model.get_passengers() if
                                          p.passage == Passage.LOW]
             for passenger in low_passengers:
                 if die_roll(2) + passenger.endurance + self.model.ship.medic_skill() < 5:

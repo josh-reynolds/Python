@@ -160,7 +160,7 @@ class PlayScreen(Screen):
             sub = self.model.star_map.subsectors[sub_coord]
             subsectors.append(f"{sub_coord} - {sub}")
 
-        passenger_list = [p.encode() for p in self.model.ship.passengers]
+        passenger_list = [p.encode() for p in self.model.get_passengers()]
 
         cargo_hold_list = [p.encode() for p in self.model.ship.hold]
 
