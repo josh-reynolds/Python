@@ -5,13 +5,11 @@ Model - contains references to all game model objects.
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.financials import Financials
-from src.ship import Ship, RepairStatus
+from src.ship import Ship, RepairStatus, FuelQuality
 from src.star_system import StarSystem
 from src.star_map import StarMap
 from src.utilities import die_roll
 
-# pylint: disable=R0903
-# R0903: Too few public methods (0/2)
 class Model:
     """Contains references to all game model objects."""
 
@@ -49,3 +47,20 @@ class Model:
             self.ship.repair_status = RepairStatus.PATCHED
             return "Ship partially repaired. Visit a starport for further work."
         return "No progress today. Drives are still out of commission."
+
+    # TO_DO: the rules do not cover this procedure. No time or credits
+    #        expenditure, etc. For now I'll just make this one week and free,
+    #        but that probably ought to change.
+    def repair_ship(self) -> str:
+        """Fully repair damage to the Ship (Starport)."""
+        if self.location.starport in ["D", "E", "X"]:
+            return f"No repair facilities available at starport {self.location.starport}"
+
+        if self.ship.repair_status == RepairStatus.REPAIRED:
+            return "Your ship is not damaged."
+
+        self.ship.repair_status = RepairStatus.REPAIRED
+        self.ship.fuel_quality = FuelQuality.REFINED
+        self.ship.unrefined_jump_counter = 0
+        self.date.plus_week()
+        return "Your ship is fully repaired and decontaminated."

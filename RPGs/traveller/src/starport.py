@@ -145,17 +145,4 @@ class StarportScreen(PlayScreen):
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
         print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
-        if self.model.location.starport in ["D", "E", "X"]:
-            print("No repair facilities available at starport " +
-                  f"{self.model.location.starport}")
-            return
-
-        if self.model.ship.repair_status == RepairStatus.REPAIRED:
-            print("Your ship is not damaged.")
-            return
-
-        print("Your ship is fully repaired and decontaminated.")
-        self.model.ship.repair_status = RepairStatus.REPAIRED
-        self.model.ship.fuel_quality = FuelQuality.REFINED
-        self.model.ship.unrefined_jump_counter = 0
-        self.model.date.plus_week()
+        print(self.model.repair_ship())
