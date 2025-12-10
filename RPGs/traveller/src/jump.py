@@ -180,4 +180,4 @@ class JumpScreen(PlayScreen):
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""
         print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
-        print(self.model.damage_control)
+        print(self.model.damage_control())

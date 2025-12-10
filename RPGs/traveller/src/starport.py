@@ -8,7 +8,7 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.passengers import Passage
 from src.play import PlayScreen
-from src.ship import RepairStatus, FuelQuality
+from src.ship import FuelQuality
 from src.utilities import confirm_input
 
 class StarportScreen(PlayScreen):
@@ -119,8 +119,8 @@ class StarportScreen(PlayScreen):
         print(f"Performing maintenance. Charging {cost}.")
         self.model.financials.last_maintenance = self.model.date.current_date
         self.model.financials.debit(cost, "annual maintenance")
-        self.model.date.day += 14    # should we wrap this in a method call?
-        self.model.ship.repair_status = RepairStatus.REPAIRED
+        self.model.date.plus_week()
+        print(self.model.repair_ship())
 
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
@@ -139,9 +139,6 @@ class StarportScreen(PlayScreen):
         self.model.ship.unrefined_jump_counter = 0
         self.model.date.plus_week()
 
-    # TO_DO: the rules do not cover this procedure. No time or credits
-    #        expenditure, etc. For now I'll just make this one week and free,
-    #        but that probably ought to change.
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
         print(f"{BOLD_BLUE}Starport repairs.{END_FORMAT}")
