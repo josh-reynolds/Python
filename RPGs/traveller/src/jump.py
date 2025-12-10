@@ -9,7 +9,7 @@ from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.play import PlayScreen
-from src.ship import RepairStatus, FuelQuality
+from src.ship import FuelQuality
 from src.star_system import DeepSpace, StarSystem
 from src.utilities import die_roll, choose_from, confirm_input
 
@@ -180,15 +180,4 @@ class JumpScreen(PlayScreen):
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""
         print(f"{BOLD_BLUE}Ship's engineer repairing damage.{END_FORMAT}")
-        if self.model.ship.repair_status == RepairStatus.REPAIRED:
-            print("Your ship is not damaged.")
-            return
-        if self.model.ship.repair_status == RepairStatus.PATCHED:
-            print("Further repairs require starport facilities.")
-            return
-        self.model.date.day += 1
-        if die_roll(2) + self.model.ship.engineering_skill() > 9:
-            self.model.ship.repair_status = RepairStatus.PATCHED
-            print("Ship partially repaired. Visit a starport for further work.")
-        else:
-            print("No progress today. Drives are still out of commission.")
+        print(self.model.damage_control)

@@ -3182,6 +3182,10 @@
 #  self.model.star_map.systems                                 3  src/play.py
 #  self.model.star_map.systems                                 4  src/menu.py
 #
+#  The guard clauses in the command procedures seem like natural clumps.
+#  They have different messages, and the Model shouldn't handle any
+#  display or printing. Maybe inserting an observer here would help.
+#
 # -------------------------------------------------------------
 
 # -------------------------------------------------------------
