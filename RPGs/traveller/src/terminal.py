@@ -87,10 +87,10 @@ class TerminalScreen(PlayScreen):
         low = [Passenger(Passage.LOW, destination)
                for _ in range(selection[Passage.LOW.value])]
 
-        self.model.ship.passengers += high
+        self.model.add_passengers(high)
         self.model.ship.hold += baggage
-        self.model.ship.passengers += middle
-        self.model.ship.passengers += low
+        self.model.add_passengers(middle)
+        self.model.add_passengers(low)
         self.model.depot.passengers[destination] = tuple(a-b for a,b in
                         zip(self.model.depot.passengers[destination], selection))
 

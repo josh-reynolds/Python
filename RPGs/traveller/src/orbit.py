@@ -54,7 +54,7 @@ class OrbitScreen(PlayScreen):
 
                 self._low_lottery(low_lottery_amount)
 
-                self.model.ship.passengers = []
+                self.model.set_passengers([])
                 self.model.ship.hold = [item for item in self.model.ship.hold
                                   if not isinstance(item, Baggage)]
 

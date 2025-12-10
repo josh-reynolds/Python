@@ -88,3 +88,11 @@ class Model:
     def get_passengers(self) -> List[Passenger]:
         """Return a list of Passengers on board the Ship."""
         return self.ship.passengers
+
+    def set_passengers(self, passengers: List[Passenger]) -> None:
+        """Set the list of Passengers on board the Ship."""
+        self.ship.passengers = passengers
+
+    def add_passengers(self, passengers: List[Passenger]) -> None:
+        """Add a list of Passengers to those present on board the Ship."""
+        self.ship.passengers += passengers

@@ -193,11 +193,11 @@ class MenuScreen(Screen):
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
         # TO_DO: duplication of code in liftoff, refactor
-        low_passengers = [p for p in self.model.get_passengers() if
+        low_passengers = [p for p in passengers if
                           p.passage == Passage.LOW]
         for passenger in low_passengers:
             passenger.guess_survivors(self.model.ship.low_passenger_count)
-        self.model.ship.passengers = passengers
+        self.model.set_passengers(passengers)
 
         hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
                                                       self.model.star_map.systems))
