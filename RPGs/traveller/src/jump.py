@@ -64,7 +64,8 @@ class JumpScreen(PlayScreen):
         status = self.model.financials.maintenance_status(
                                      self.model.date.current_date)
         self.model.ship.check_failure_pre_jump(status)
-        if self.model.ship.repair_status in (RepairStatus.BROKEN, RepairStatus.PATCHED):
+
+        if not self.model.can_jump():
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
             return
 

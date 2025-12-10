@@ -30,3 +30,7 @@ class Model:
     def can_travel(self) -> bool:
         """Test whether the Ship can travel to a destination."""
         return self.ship.repair_status != RepairStatus.BROKEN
+
+    def can_jump(self) -> bool:
+        """Test whether the Ship can perform a hyperspace jump."""
+        return self.ship.repair_status not in (RepairStatus.BROKEN, RepairStatus.PATCHED)
