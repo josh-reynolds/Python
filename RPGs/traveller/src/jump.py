@@ -40,7 +40,7 @@ class JumpScreen(PlayScreen):
                   f"There is no inner system to travel to.{END_FORMAT}")
             return None
 
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.model.location.name}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
 
         if not self.model.can_travel():
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
@@ -51,7 +51,7 @@ class JumpScreen(PlayScreen):
             return None
 
         self.model.ship.current_fuel -= leg_fc
-        self.model.date.day += 1
+        self.model.add_day()
         self.model.set_location("orbit")
         self.parent.change_state("Orbit")
         return None
@@ -175,7 +175,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.current_fuel = self.model.ship.model.fuel_tank
         self.model.ship.fuel_quality = FuelQuality.UNREFINED
-        self.model.date.day += 1
+        self.model.add_day()
 
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""

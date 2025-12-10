@@ -96,3 +96,7 @@ class Model:
     def add_passengers(self, passengers: List[Passenger]) -> None:
         """Add a list of Passengers to those present on board the Ship."""
         self.ship.passengers += passengers
+
+    def add_day(self) -> None:
+        """Advance the Calendar by a day."""
+        self.date.day += 1
