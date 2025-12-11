@@ -42,7 +42,7 @@ class JumpScreen(PlayScreen):
 
         print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
 
-        if not self.model.can_travel():
+        if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return None
 
@@ -165,7 +165,7 @@ class JumpScreen(PlayScreen):
             print("Your ship is not streamlined and cannot skim fuel.")
             return
 
-        if not self.model.can_travel():
+        if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
             return
 

@@ -37,7 +37,7 @@ class OrbitScreen(PlayScreen):
             print("Your ship is not streamlined and cannot land.")
             return None
 
-        if not self.model.can_travel():
+        if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
@@ -91,7 +91,7 @@ class OrbitScreen(PlayScreen):
         print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} " +
               f"jump point.{END_FORMAT}")
 
-        if not self.model.can_travel():
+        if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 

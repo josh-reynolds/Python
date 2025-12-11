@@ -28,7 +28,7 @@ class Model:
         """Return the developer string representation of the Model object."""
         return "Model()"
 
-    def can_travel(self) -> bool:
+    def can_maneuver(self) -> bool:
         """Test whether the Ship can travel to a destination."""
         return self.ship.repair_status != RepairStatus.BROKEN
 

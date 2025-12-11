@@ -39,7 +39,7 @@ class StarportScreen(PlayScreen):
         """Move from the starport to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
 
-        if not self.model.can_travel():
+        if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
             return None
 
