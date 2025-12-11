@@ -3068,7 +3068,6 @@
 #  self.model.location.destinations.copy()                     1  src/trade.py
 #  self.model.location.gas_giant                               1  src/jump.py
 #  self.model.location.on_surface()                            1  src/orbit.py
-#  8  self.model.location.starport                                8  src/starport.py
 #
 #  self.model.ship                                             3+ src/menu.py
 #  self.model.ship.__str__()                                   1+ src/play.py
@@ -3209,6 +3208,7 @@
 #  self.model.date.day                                         1  src/starport.py
 #  self.model.date.day                                         3  src/jump.py
 #  self.model.date.day                                         4  src/trade.py
+#  self.model.location.starport                                8  src/starport.py
 #
 # -------------------------------------------------------------
 

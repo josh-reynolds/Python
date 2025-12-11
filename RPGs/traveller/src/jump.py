@@ -50,7 +50,7 @@ class JumpScreen(PlayScreen):
         if not leg_fc:
             return None
 
-        self.model.ship.current_fuel -= leg_fc
+        self.model.burn_fuel(leg_fc)
         self.model.add_day()
         self.model.set_location("orbit")
         self.parent.change_state("Orbit")
@@ -114,7 +114,7 @@ class JumpScreen(PlayScreen):
         self.model.financials.location = destination
 
         self.model.ship.life_support_level = 0
-        self.model.ship.current_fuel -= self.model.ship.model.jump_fuel_cost
+        self.model.burn_fuel(self.model.ship.model.jump_fuel_cost)
         self.model.date.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:

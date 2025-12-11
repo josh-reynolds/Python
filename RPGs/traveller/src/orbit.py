@@ -99,7 +99,7 @@ class OrbitScreen(PlayScreen):
         if not leg_fc:
             return None
 
-        self.model.ship.current_fuel -= leg_fc
+        self.model.burn_fuel(leg_fc)
         self.model.add_day()
         self.model.set_location("jump")
         self.parent.change_state("Jump")

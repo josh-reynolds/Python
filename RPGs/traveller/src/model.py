@@ -118,6 +118,10 @@ class Model:
         """Advance the Calendar by a day."""
         self.date.day += 1
 
+    def burn_fuel(self, amount: int) -> None:
+        """Reduce the fuel in the Ship's tanks by the specified amount."""
+        self.ship.current_fuel -= amount
+
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport
