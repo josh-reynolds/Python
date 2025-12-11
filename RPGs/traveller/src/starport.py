@@ -84,12 +84,7 @@ class StarportScreen(PlayScreen):
     def refuel(self) -> None:
         """Refuel the Ship."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        if self.model.location.starport in ('E', 'X'):
-            print(f"No fuel is available at starport {self.model.location.starport}.")
-            return
-
-        cost = self.model.ship.refuel(self.model.location.starport)
-        self.model.financials.debit(cost, "refuelling")
+        print(self.model.refuel())
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""

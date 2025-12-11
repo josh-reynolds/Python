@@ -67,6 +67,15 @@ class Model:
         self.date.plus_week()
         return "Your ship is fully repaired and decontaminated."
 
+    def refuel(self) -> str:
+        """Refuel the Ship."""
+        if self.location.starport in ('E', 'X'):
+            return f"No fuel is available at starport {self.location.starport}."
+
+        cost = self.ship.refuel(self.location.starport)
+        self.financials.debit(cost, "refuelling")
+        return "Your ship is fully refuelled."
+
     def get_repair_string(self) -> str:
         """Return a string representing current repair state of the Ship."""
         match self.ship.repair_status:

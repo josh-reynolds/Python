@@ -3161,6 +3161,27 @@
 #  They have different messages, and the Model shouldn't handle any
 #  display or printing. Maybe inserting an observer here would help.
 #
+#  Another observation: the contents of the commands in the Screen classes
+#  can probably be lifted directly over to Model, but there's both good
+#  and bad there.
+#
+#  On the plus side, we can convert them to just return a string back to
+#  the Screen, which makes these procedures testable finally. That's a big
+#  win.
+#
+#  On the negative side, though, a few of these procedures are quite large
+#  and ought to be broken down further. Arguably I could do that _after_
+#  the move, but now is a good time to peel out at least a few pieces.
+#
+#  The other problem is the interface to Model is going to get very large.
+#  Not sure yet where we'll go with that particular issue. Probably shift
+#  a bunch of things to internals and/or private methods, and spin up
+#  manager classes as needed. But the externally facing interface still
+#  needs a lot of stuff, and I _do_ want to keep it within a single class
+#  to minimize coupling from Screen. It's also possible I'll spot some
+#  visible seams that provide a natural place to break Model into a small
+#  (two or three) number of classes. We'll see.
+#
 #  Handled:
 #
 #  self.model.ship.repair_status                               2  src/orbit.py

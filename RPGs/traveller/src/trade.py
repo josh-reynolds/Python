@@ -119,7 +119,7 @@ class TradeScreen(PlayScreen):
         self.model.depot.remove_cargo(self.model.ship.hold, cargo, quantity)
 
         self.model.financials.credit(sale_price, "cargo sale")
-        self.model.add_date()
+        self.model.add_day()
 
     def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""
