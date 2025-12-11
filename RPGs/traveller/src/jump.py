@@ -169,7 +169,7 @@ class JumpScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
             return
 
-        if self.model.ship.current_fuel == self.model.ship.model.fuel_tank:
+        if self.model.tanks_are_full():
             print("Fuel tank is already full.")
             return
 

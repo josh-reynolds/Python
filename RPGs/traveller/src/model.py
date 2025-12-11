@@ -122,6 +122,10 @@ class Model:
         """Reduce the fuel in the Ship's tanks by the specified amount."""
         self.ship.current_fuel -= amount
 
+    def tanks_are_full(self) -> bool:
+        """Test whether the Ship's fuel tanks are full or not."""
+        return self.ship.current_fuel == self.ship.model.fuel_tank
+
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport
