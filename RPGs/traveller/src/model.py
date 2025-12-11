@@ -126,6 +126,10 @@ class Model:
         """Test whether the Ship's fuel tanks are full or not."""
         return self.ship.current_fuel == self.ship.model.fuel_tank
 
+    def fuel_level(self) -> int:
+        """Return the current amount of fuel in the Ship's tanks."""
+        return self.ship.current_fuel
+
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport

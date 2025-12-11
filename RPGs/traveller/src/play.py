@@ -62,7 +62,7 @@ class PlayScreen(Screen):
 
         repair_state = self.model.get_repair_string()
 
-        fuel_amount = f"{self.model.ship.current_fuel}/" +\
+        fuel_amount = f"{self.model.fuel_level()}/" +\
                       f"{self.model.ship.model.fuel_tank}"
 
         self._draw_banner(fuel_quality, fuel_amount, repair_state)
@@ -267,9 +267,9 @@ class PlayScreen(Screen):
     def _check_fuel_level(self, prompt: str) -> int | None:
         """Verify there is sufficient fuel in the tanks to make a trip."""
         leg_fc = self.model.ship.model.trip_fuel_cost // 2
-        if self.model.ship.current_fuel < leg_fc:
+        if self.model.fuel_level() < leg_fc:
             print(f"Insufficient fuel. Travel {prompt} the jump point "
                   f"requires {leg_fc} tons, only "
-                  f"{self.model.ship.current_fuel} tons in tanks.")
+                  f"{self.model.fuel_level()} tons in tanks.")
             return None
         return leg_fc

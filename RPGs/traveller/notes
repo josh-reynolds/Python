@@ -3590,6 +3590,8 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
+#  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
+#           and Ship classes
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module
