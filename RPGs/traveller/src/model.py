@@ -36,6 +36,14 @@ class Model:
         """Test whether the Ship can perform a hyperspace jump."""
         return self.ship.repair_status not in (RepairStatus.BROKEN, RepairStatus.PATCHED)
 
+    def can_flush(self) -> bool:
+        """Test whether facilities to flush fuel tanks are present at the current location."""
+        return self.location.starport in ('A', 'B', 'C', 'D')
+
+    def no_shipyard(self) -> bool:
+        """Test whether maintenance can be performed at the current location."""
+        return self.location.starport not in ('A', 'B')
+
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""
         if self.ship.repair_status == RepairStatus.REPAIRED:
@@ -109,3 +117,7 @@ class Model:
     def add_day(self) -> None:
         """Advance the Calendar by a day."""
         self.date.day += 1
+
+    def starport(self) -> str:
+        """Return the classification of the current location's starport."""
+        return self.location.starport

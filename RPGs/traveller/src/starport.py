@@ -89,7 +89,7 @@ class StarportScreen(PlayScreen):
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
         print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
-        if self.model.location.starport not in ('A', 'B'):
+        if self.model.no_shipyard():
             print("Annual maintenance can only be performed at class A or B starports.")
             return
 
@@ -124,9 +124,9 @@ class StarportScreen(PlayScreen):
             print("Ship fuel tanks are clean. No need to flush.")
             return
 
-        if self.model.location.starport in ('E', 'X'):
+        if not self.model.can_flush():
             print(f"There are no facilities to flush tanks "
-                  f"at starport {self.model.location.starport}.")
+                  f"at starport {self.model.starport}.")
             return
 
         print("Fuel tanks have been decontaminated.")
