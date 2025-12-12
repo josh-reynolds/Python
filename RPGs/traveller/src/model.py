@@ -160,3 +160,8 @@ class Model:
     def get_current_date(self) -> ImperialDate:
         """Return the Calendar's current date."""
         return self.date.current_date
+
+    def check_unrefined_jump(self) -> None:
+        """Track hyperspace jumps performed with unrefined fuel."""
+        if self.ship.fuel_quality == FuelQuality.UNREFINED:
+            self.ship.unrefined_jump_counter += 1

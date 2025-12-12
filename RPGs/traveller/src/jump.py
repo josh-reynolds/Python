@@ -93,8 +93,7 @@ class JumpScreen(PlayScreen):
             print("Cancelling jump.")
             return
 
-        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
-            self.model.ship.unrefined_jump_counter += 1
+        self.model.check_unrefined_jump()
 
         print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
