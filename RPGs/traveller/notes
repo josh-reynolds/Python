@@ -3005,9 +3005,6 @@
 #  self.model.date                                             1+ src/menu.py
 #  self.model.date.__str__()                                   2  src/play.py
 #  self.model.date.add_observer()                              3  src/menu.py
-#  6  self.model.date.current_date                                1  src/menu.py
-#  self.model.date.current_date                                2  src/starport.py
-#  self.model.date.current_date                                3  src/jump.py
 #  self.model.date.plus_week()                                 1  src/jump.py
 #  self.model.date.plus_week()                                 1  src/play.py
 #  self.model.date.plus_week()                                 2  src/starport.py
@@ -3164,6 +3161,12 @@
 #  visible seams that provide a natural place to break Model into a small
 #  (two or three) number of classes. We'll see.
 #
+#  Hrm. Collections are tricky. Need to consider whether they appear on
+#  LHS or RHS of any statements they are used in, and what sort of action
+#  is being performed - append, deletion, query, etc. Really ought to
+#  encapsulate them first. To a lesser extent this applies to direct field
+#  access as well. LHS vs. RHS matters.
+#
 #  Handled:
 #
 #  self.model.ship.repair_status                               2  src/orbit.py
@@ -3209,6 +3212,9 @@
 #  self.model.ship.low_passenger_count                         1  src/play.py
 #  self.model.ship.low_passenger_count                         2  src/orbit.py
 #  self.model.ship.low_passenger_count                         2  src/starport.py
+#  self.model.date.current_date                                1  src/menu.py
+#  self.model.date.current_date                                2  src/starport.py
+#  self.model.date.current_date                                3  src/jump.py
 #
 # -------------------------------------------------------------
 

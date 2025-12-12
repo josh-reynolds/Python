@@ -62,7 +62,7 @@ class JumpScreen(PlayScreen):
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
         status = self.model.financials.maintenance_status(
-                                     self.model.date.current_date)
+                                     self.model.get_current_date())
         self.model.ship.check_failure_pre_jump(status)
 
         if not self.model.can_jump():
@@ -108,7 +108,7 @@ class JumpScreen(PlayScreen):
               self.model.star_map.get_systems_within_range(coord, jump_range)
 
         self.model.depot = CargoDepot(self.model.location,
-                                       self.model.date.current_date)
+                                       self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
         self.model.financials.location = destination
@@ -124,7 +124,7 @@ class JumpScreen(PlayScreen):
         else:
             modifier = -1
         if self.model.financials.maintenance_status(
-                                self.model.date.current_date) == "red":
+                                self.model.get_current_date()) == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier

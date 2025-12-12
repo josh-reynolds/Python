@@ -108,7 +108,7 @@ class MenuScreen(Screen):
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
         self.model.depot = CargoDepot(self.model.location,
-                                       self.model.date.current_date)
+                                       self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
 

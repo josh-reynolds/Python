@@ -99,7 +99,7 @@ class StarportScreen(PlayScreen):
                   f"It will cost {cost}. Your balance is {self.model.financials.balance}.")
             return
 
-        if self.model.financials.maintenance_status(self.model.date.current_date) == \
+        if self.model.financials.maintenance_status(self.model.get_current_date()) == \
                 "green":
             confirmation = confirm_input("Maintenance was performed less than 10 months " +
                                          "ago. Continue (y/n)? ")
@@ -112,7 +112,7 @@ class StarportScreen(PlayScreen):
             return
 
         print(f"Performing maintenance. Charging {cost}.")
-        self.model.financials.last_maintenance = self.model.date.current_date
+        self.model.financials.last_maintenance = self.model.get_current_date()
         self.model.financials.debit(cost, "annual maintenance")
         self.model.date.plus_week()
         print(self.model.repair_ship())

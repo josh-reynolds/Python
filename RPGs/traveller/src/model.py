@@ -7,6 +7,7 @@ from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.financials import Financials
+from src.imperial_date import ImperialDate
 from src.passengers import Passenger
 from src.ship import Ship, RepairStatus, FuelQuality
 from src.star_system import StarSystem, Hex
@@ -155,3 +156,7 @@ class Model:
     def low_passenger_count(self) -> int:
         """Return the number of low passengers on board."""
         return self.ship.low_passenger_count
+
+    def get_current_date(self) -> ImperialDate:
+        """Return the Calendar's current date."""
+        return self.date.current_date
