@@ -163,5 +163,9 @@ class Model:
 
     def check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
-        if self.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.tanks_are_polluted():
             self.ship.unrefined_jump_counter += 1
+
+    def tanks_are_polluted(self) -> bool:
+        """Test whether the Ship's fuel tanks have been polluted by unrefined fuel."""
+        return self.ship.fuel_quality == FuelQuality.UNREFINED

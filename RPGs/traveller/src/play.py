@@ -11,7 +11,6 @@ from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
 from src.model import Model
 from src.screen import Screen
-from src.ship import FuelQuality
 from src.star_system import StarSystem
 from src.utilities import choose_from, pr_list, pr_highlight_list
 from src.utilities import get_next_file, confirm_input
@@ -55,7 +54,7 @@ class PlayScreen(Screen):
 
     def update(self) -> None:
         """Draw the screen and present play choices."""
-        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.model.tanks_are_polluted():
             fuel_quality = "(U)"
         else:
             fuel_quality = ""

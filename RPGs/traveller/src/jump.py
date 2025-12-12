@@ -9,7 +9,6 @@ from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.play import PlayScreen
-from src.ship import FuelQuality
 from src.star_system import DeepSpace, StarSystem
 from src.utilities import die_roll, choose_from, confirm_input
 
@@ -118,7 +117,7 @@ class JumpScreen(PlayScreen):
 
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""
-        if self.model.ship.fuel_quality == FuelQuality.UNREFINED:
+        if self.model.tanks_are_polluted():
             modifier = 3
         else:
             modifier = -1

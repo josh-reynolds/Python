@@ -120,7 +120,7 @@ class StarportScreen(PlayScreen):
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
         print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
-        if self.model.ship.fuel_quality == FuelQuality.REFINED:
+        if not self.model.tanks_are_polluted():
             print("Ship fuel tanks are clean. No need to flush.")
             return
 
