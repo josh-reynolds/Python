@@ -74,8 +74,7 @@ class Model:
             return "Your ship is not damaged."
 
         self.ship.repair_status = RepairStatus.REPAIRED
-        self.ship.fuel_quality = FuelQuality.REFINED
-        self.ship.unrefined_jump_counter = 0
+        self.clean_fuel_tanks()
         self.date.plus_week()
         return "Your ship is fully repaired and decontaminated."
 
@@ -169,3 +168,8 @@ class Model:
     def tanks_are_polluted(self) -> bool:
         """Test whether the Ship's fuel tanks have been polluted by unrefined fuel."""
         return self.ship.fuel_quality == FuelQuality.UNREFINED
+
+    def clean_fuel_tanks(self) -> None:
+        """Decontaminate the Ship's fuel tanks."""
+        self.ship.fuel_quality = FuelQuality.REFINED
+        self.ship.unrefined_jump_counter = 0

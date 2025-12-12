@@ -8,7 +8,6 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.passengers import Passage
 from src.play import PlayScreen
-from src.ship import FuelQuality
 from src.utilities import confirm_input
 
 class StarportScreen(PlayScreen):
@@ -130,8 +129,7 @@ class StarportScreen(PlayScreen):
             return
 
         print("Fuel tanks have been decontaminated.")
-        self.model.ship.fuel_quality = FuelQuality.REFINED
-        self.model.ship.unrefined_jump_counter = 0
+        self.model.clean_fuel_tanks()
         self.model.date.plus_week()
 
     def repair_ship(self) -> None:

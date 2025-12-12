@@ -3083,9 +3083,6 @@
 #  self.model.ship.free_space()                                1  src/play.py
 #  self.model.ship.free_space()                                1  src/terminal.py
 #  self.model.ship.free_space()                                2  src/trade.py
-#  7  self.model.ship.fuel_quality                                1  src/play.py
-#  self.model.ship.fuel_quality                                3  src/jump.py
-#  self.model.ship.fuel_quality                                3  src/starport.py
 #  self.model.ship.high_passenger_count                        1  src/play.py
 #  8  self.model.ship.hold                                        1  src/menu.py
 #  self.model.ship.hold                                        1  src/orbit.py
@@ -3215,6 +3212,9 @@
 #  self.model.date.current_date                                1  src/menu.py
 #  self.model.date.current_date                                2  src/starport.py
 #  self.model.date.current_date                                3  src/jump.py
+#  self.model.ship.fuel_quality                                1  src/play.py
+#  self.model.ship.fuel_quality                                3  src/jump.py
+#  self.model.ship.fuel_quality                                3  src/starport.py
 #
 # -------------------------------------------------------------
 
