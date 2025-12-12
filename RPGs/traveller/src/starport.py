@@ -50,11 +50,11 @@ class StarportScreen(PlayScreen):
             print(f"Boarding {self.model.ship.total_passenger_count} "   # type: ignore[union-attr]
                   f"passengers for {self.model.destination().name}.")
 
-        if self.model.ship.low_passenger_count > 0:
+        if self.model.low_passenger_count > 0:
             low_passengers = [p for p in self.model.get_passengers() if
                               p.passage == Passage.LOW]
             for passenger in low_passengers:
-                passenger.guess_survivors(self.model.ship.low_passenger_count)
+                passenger.guess_survivors(self.model.low_passenger_count)
 
         self.model.set_location("orbit")
         self.parent.change_state("Orbit")

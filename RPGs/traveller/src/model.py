@@ -150,3 +150,8 @@ class Model:
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)
+
+    @property
+    def low_passenger_count(self) -> int:
+        """Return the number of low passengers on board."""
+        return self.ship.low_passenger_count

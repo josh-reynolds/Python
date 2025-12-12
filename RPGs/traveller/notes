@@ -3100,10 +3100,6 @@
 #  self.model.ship.life_support_level                          1  src/jump.py
 #  self.model.ship.life_support_level                          1  src/play.py
 #  self.model.ship.load_cargo()                                2  src/trade.py
-#  6  self.model.ship.low_passenger_count                         1  src/menu.py
-#  self.model.ship.low_passenger_count                         1  src/play.py
-#  self.model.ship.low_passenger_count                         2  src/orbit.py
-#  self.model.ship.low_passenger_count                         2  src/starport.py
 #  self.model.ship.maintenance_cost()                          1  src/starport.py
 #  self.model.ship.medic_skill()                               1  src/orbit.py
 #  self.model.ship.middle_passenger_count                      1  src/play.py
@@ -3209,6 +3205,10 @@
 #  self.model.star_map.get_system_at_coordinate()              1  src/trade.py
 #  self.model.star_map.get_system_at_coordinate()              3  src/jump.py
 #  self.model.star_map.get_system_at_coordinate()              1  src/terminal.py
+#  self.model.ship.low_passenger_count                         1  src/menu.py
+#  self.model.ship.low_passenger_count                         1  src/play.py
+#  self.model.ship.low_passenger_count                         2  src/orbit.py
+#  self.model.ship.low_passenger_count                         2  src/starport.py
 #
 # -------------------------------------------------------------
 

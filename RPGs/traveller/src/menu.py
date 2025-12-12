@@ -196,7 +196,7 @@ class MenuScreen(Screen):
         low_passengers = [p for p in passengers if
                           p.passage == Passage.LOW]
         for passenger in low_passengers:
-            passenger.guess_survivors(self.model.ship.low_passenger_count)
+            passenger.guess_survivors(self.model.low_passenger_count)
         self.model.set_passengers(passengers)
 
         hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],

@@ -113,7 +113,7 @@ class PlayScreen(Screen):
 
         print(f"High passengers: {self.model.ship.high_passenger_count}\n"
               f"Middle passengers: {self.model.ship.middle_passenger_count}\n"
-              f"Low passengers: {self.model.ship.low_passenger_count}\n"
+              f"Low passengers: {self.model.low_passenger_count}\n"
               f"DESTINATION: {destination}\n\n"
               f"Empty berths: {self.model.ship.empty_passenger_berths}\n"
               f"Empty low berths: {self.model.ship.empty_low_berths}")
