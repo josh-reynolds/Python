@@ -5,7 +5,7 @@ PlayScreen - draws the play screen and gathers input from the player.
 import json
 from fnmatch import fnmatch
 from os import listdir
-from typing import Any, List
+from typing import Any, List, cast
 from src.command import Command
 from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
@@ -106,10 +106,10 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        if self.model.ship.destination is None:
+        if self.model.destination() is None:
             destination = "None"
         else:
-            destination = self.model.ship.destination.name
+            destination = self.model.destination().name        #type: ignore[union-attr]
 
         print(f"High passengers: {self.model.ship.high_passenger_count}\n"
               f"Middle passengers: {self.model.ship.middle_passenger_count}\n"
@@ -245,17 +245,18 @@ class PlayScreen(Screen):
                            jump_range: int, prompt: str) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
-        if self.model.ship.destination is not None:
-            if self.model.ship.destination == self.model.location:
+        if self.model.destination() is not None:
+            if self.model.destination() == self.model.location:
                 print(f"{BOLD_RED}There is still freight to be unloaded "
                       f"on {self.model.system_name()}.{END_FORMAT}")
                 return result
-            if self.model.ship.destination in potential_destinations:
-                print(f"You are under contract. Only showing {prompt} " +
-                      f"for {self.model.ship.destination.name}:\n")
-                result = [self.model.ship.destination]
+            if self.model.destination() in potential_destinations:
+                print(f"You are under contract. Only showing {prompt} for " +
+                      f"{self.model.destination().name}:\n")          # type: ignore[union-attr]
+                result = [cast(StarSystem, self.model.destination())]
             else:
-                print(f"You are under contract to {self.model.ship.destination.name} " +
+                print("You are under contract to " +
+                      f"{self.model.destination().name} " +            # type: ignore[union-attr]
                       "but it is not within jump range of here.")
 
         else:

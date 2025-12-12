@@ -139,3 +139,7 @@ class Model:
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport
+
+    def destination(self) -> StarSystem | None:
+        """Return the Ship's contracted destination, if any."""
+        return self.ship.destination

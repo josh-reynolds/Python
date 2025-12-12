@@ -212,7 +212,7 @@ class TradeScreen(PlayScreen):
         # It should not be possible for there to be freight in the hold,
         # and a destination flag set to None. Should we assert just
         # in case, so we could track down any such bug:
-        if self.model.ship.destination is None:
+        if self.model.destination() is None:
             print("You have no contracted destination.")
             return
 
@@ -221,7 +221,7 @@ class TradeScreen(PlayScreen):
             print("You have no freight on board.")
             return
 
-        if self.model.ship.destination == self.model.location:
+        if self.model.destination() == self.model.location:
             freight_tonnage = sum(f.tonnage for f in freight)
             self.model.ship.hold = [c for c in self.model.ship.hold
                                            if isinstance(c, Cargo)]
@@ -235,5 +235,5 @@ class TradeScreen(PlayScreen):
         else:
             print(f"{BOLD_RED}You are not at the contracted "
                   f"destination for this freight.{END_FORMAT}")
-            print(f"{BOLD_RED}It should be unloaded at "
-                  f"{self.model.ship.destination.name}.{END_FORMAT}")
+            print(f"{BOLD_RED}It should be unloaded at "               # type: ignore[union-attr]
+                  f"{self.model.destination().name}.{END_FORMAT}")

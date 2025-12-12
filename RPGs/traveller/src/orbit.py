@@ -41,7 +41,7 @@ class OrbitScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
-        if self.model.ship.destination == self.model.location:
+        if self.model.destination() == self.model.location:
             if self.model.ship.total_passenger_count > 0:
                 print(f"Passengers disembarking on {self.model.system_name()}.")
 

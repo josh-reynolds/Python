@@ -48,7 +48,7 @@ class StarportScreen(PlayScreen):
         # of the time, but not necessarily all the time
         if self.model.ship.total_passenger_count > 0:
             print(f"Boarding {self.model.ship.total_passenger_count} "   # type: ignore[union-attr]
-                  f"passengers for {self.model.ship.destination.name}.")
+                  f"passengers for {self.model.destination().name}.")
 
         if self.model.ship.low_passenger_count > 0:
             low_passengers = [p for p in self.model.get_passengers() if
@@ -126,7 +126,7 @@ class StarportScreen(PlayScreen):
 
         if not self.model.can_flush():
             print(f"There are no facilities to flush tanks "
-                  f"at starport {self.model.starport}.")
+                  f"at starport {self.model.starport()}.")
             return
 
         print("Fuel tanks have been decontaminated.")

@@ -3077,12 +3077,6 @@
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.controls                                    3  src/menu.py
 #  self.model.ship.crew                                        1  src/play.py
-#  8  self.model.ship.destination                                 1  src/orbit.py
-#  self.model.ship.destination                                 2  src/trade.py
-#  self.model.ship.destination                                 5  src/play.py
-#  self.model.ship.destination.name                            1  src/starport.py
-#  self.model.ship.destination.name                            1  src/trade.py
-#  self.model.ship.destination.name                            3  src/play.py
 #  self.model.ship.empty_low_berths                            1  src/play.py
 #  self.model.ship.empty_low_berths                            1  src/terminal.py
 #  self.model.ship.empty_passenger_berths                      1  src/play.py
@@ -3209,6 +3203,12 @@
 #  self.model.ship.current_fuel                                1  src/orbit.py
 #  self.model.ship.current_fuel                                3  src/play.py
 #  self.model.ship.current_fuel                                4  src/jump.py
+#  self.model.ship.destination                                 1  src/orbit.py
+#  self.model.ship.destination                                 2  src/trade.py
+#  self.model.ship.destination                                 5  src/play.py
+#  self.model.ship.destination.name                            1  src/starport.py
+#  self.model.ship.destination.name                            1  src/trade.py
+#  self.model.ship.destination.name                            3  src/play.py
 #
 # -------------------------------------------------------------
 
