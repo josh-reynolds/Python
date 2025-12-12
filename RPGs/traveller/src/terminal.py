@@ -61,7 +61,7 @@ class TerminalScreen(PlayScreen):
             return
 
         destination = cast(StarSystem,
-                           self.model.star_map.get_system_at_coordinate(coordinate))
+                           self.model.get_system_at_coordinate(coordinate))
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
         selection = self._select_passengers(available, destination)

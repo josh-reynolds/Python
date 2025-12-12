@@ -3132,10 +3132,6 @@
 #  self.model.star_map                                         1+ src/menu.py
 #  self.model.star_map.get_all_systems()                       1  src/play.py
 #  self.model.star_map.get_subsector_string()                  2  src/play.py
-#  6  self.model.star_map.get_system_at_coordinate()              1  src/menu.py
-#  self.model.star_map.get_system_at_coordinate()              1  src/trade.py
-#  self.model.star_map.get_system_at_coordinate()              3  src/jump.py
-#  self.model.star_map.get_system_at_coordinate()              1  src/terminal.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/play.py
 #  self.model.star_map.get_systems_within_range()              1  src/jump.py
@@ -3209,6 +3205,10 @@
 #  self.model.ship.destination.name                            1  src/starport.py
 #  self.model.ship.destination.name                            1  src/trade.py
 #  self.model.ship.destination.name                            3  src/play.py
+#  self.model.star_map.get_system_at_coordinate()              1  src/menu.py
+#  self.model.star_map.get_system_at_coordinate()              1  src/trade.py
+#  self.model.star_map.get_system_at_coordinate()              3  src/jump.py
+#  self.model.star_map.get_system_at_coordinate()              1  src/terminal.py
 #
 # -------------------------------------------------------------
 

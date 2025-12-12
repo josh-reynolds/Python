@@ -98,7 +98,7 @@ class MenuScreen(Screen):
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
-        location = cast(StarSystem, self.model.star_map.get_system_at_coordinate(coord))
+        location = cast(StarSystem, self.model.get_system_at_coordinate(coord))
         self.model.location = location
         self.model.location.destinations = \
                 self.model.star_map.get_systems_within_range(coord,

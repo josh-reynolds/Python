@@ -5,13 +5,16 @@ Model - contains references to all game model objects.
 from typing import List
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
+from src.coordinate import Coordinate
 from src.financials import Financials
 from src.passengers import Passenger
 from src.ship import Ship, RepairStatus, FuelQuality
-from src.star_system import StarSystem
+from src.star_system import StarSystem, Hex
 from src.star_map import StarMap
 from src.utilities import die_roll
 
+# pylint: disable=R0904
+# R0904: too many public methods (21/20)
 class Model:
     """Contains references to all game model objects."""
 
@@ -143,3 +146,7 @@ class Model:
     def destination(self) -> StarSystem | None:
         """Return the Ship's contracted destination, if any."""
         return self.ship.destination
+
+    def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
+        """Return the contents of the specified coordinate, or create it."""
+        return self.star_map.get_system_at_coordinate(coord)

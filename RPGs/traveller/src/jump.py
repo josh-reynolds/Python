@@ -84,7 +84,7 @@ class JumpScreen(PlayScreen):
 
         coordinate = destinations[destination_number].coordinate
         destination = cast(StarSystem,
-                           self.model.star_map.get_system_at_coordinate(coordinate))
+                           self.model.get_system_at_coordinate(coordinate))
 
         self.model.ship.warn_if_not_contracted(destination)
 
@@ -135,12 +135,12 @@ class JumpScreen(PlayScreen):
 
             # misjump is the only scenario where EmptySpace is a possible
             # location, so we need to leave this type as Hex
-            loc = self.model.star_map.get_system_at_coordinate(misjump_target) # type: ignore
+            loc = self.model.get_system_at_coordinate(misjump_target) # type: ignore
             self.model.location = loc                                          # type: ignore
             self.model.star_map.systems[misjump_target] = self.model.location
         else:
             self.model.location = cast(StarSystem,
-                    self.model.star_map.get_system_at_coordinate(destination))
+                    self.model.get_system_at_coordinate(destination))
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
