@@ -130,6 +130,12 @@ class Model:
         """Return the current amount of fuel in the Ship's tanks."""
         return self.ship.current_fuel
 
+    def fill_tanks(self, quality: str="refined") -> None:
+        """Fill the Ship's fuel tanks to their full capacity."""
+        self.ship.current_fuel = self.ship.model.fuel_tank
+        if quality == "unrefined":
+            self.ship.fuel_quality = FuelQuality.UNREFINED
+
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport

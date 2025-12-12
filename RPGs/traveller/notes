@@ -3077,9 +3077,6 @@
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.controls                                    3  src/menu.py
 #  self.model.ship.crew                                        1  src/play.py
-#  8  self.model.ship.current_fuel                                1  src/orbit.py
-#  self.model.ship.current_fuel                                3  src/play.py
-#  self.model.ship.current_fuel                                4  src/jump.py
 #  8  self.model.ship.destination                                 1  src/orbit.py
 #  self.model.ship.destination                                 2  src/trade.py
 #  self.model.ship.destination                                 5  src/play.py
@@ -3209,6 +3206,9 @@
 #  self.model.date.day                                         3  src/jump.py
 #  self.model.date.day                                         4  src/trade.py
 #  self.model.location.starport                                8  src/starport.py
+#  self.model.ship.current_fuel                                1  src/orbit.py
+#  self.model.ship.current_fuel                                3  src/play.py
+#  self.model.ship.current_fuel                                4  src/jump.py
 #
 # -------------------------------------------------------------
 
@@ -3590,6 +3590,9 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
+
+~HERE~
+
 #  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
 #  * [    ] Review confirm blocks, inconsistent usage throughout

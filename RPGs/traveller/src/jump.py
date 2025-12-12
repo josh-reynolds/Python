@@ -173,8 +173,7 @@ class JumpScreen(PlayScreen):
             print("Fuel tank is already full.")
             return
 
-        self.model.ship.current_fuel = self.model.ship.model.fuel_tank
-        self.model.ship.fuel_quality = FuelQuality.UNREFINED
+        self.model.fill_tanks("unrefined")
         self.model.add_day()
 
     def damage_control(self) -> None:
