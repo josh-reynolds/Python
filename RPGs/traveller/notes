@@ -3002,7 +3002,6 @@
 # and all the model classes - ideally they just know about
 # the Model parent class.
 #
-#  self.model.date                                             1+ src/menu.py
 #  self.model.date.add_observer()                              3  src/menu.py
 #
 #  self.model.depot                                            1+ src/jump.py
@@ -3223,6 +3222,7 @@
 #  self.model.date.plus_week()                                 1  src/play.py
 #  self.model.date.plus_week()                                 2  src/starport.py
 #  self.model.date.__str__()                                   2  src/play.py
+#  self.model.date                                             1+ src/menu.py
 #
 # -------------------------------------------------------------
 

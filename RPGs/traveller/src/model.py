@@ -208,3 +208,8 @@ class Model:
         """Apply date from json data to Game calendar field."""
         self.date = Calendar()
         modify_calendar_from(self.date, data)
+
+    def attach_date_observers(self) -> None:
+        """Attach observers to Calendar field."""
+        self.date.add_observer(self.depot)
+        self.date.add_observer(self.financials)

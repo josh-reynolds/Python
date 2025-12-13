@@ -106,11 +106,6 @@ class MenuScreen(Screen):
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
 
-    def _attach_date_observers(self) -> None:
-        """Attach observers to Game date field."""
-        self.model.date.add_observer(self.model.depot)
-        self.model.date.add_observer(self.model.financials)
-
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
         for sub_coord in self.model.star_map.subsectors:
@@ -150,7 +145,7 @@ class MenuScreen(Screen):
         self._load_financials(data['financials'])
         self._load_location(data['location'])
         self._create_depot()
-        self._attach_date_observers()
+        self.model.attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
 
@@ -213,7 +208,7 @@ class MenuScreen(Screen):
         self.model.financials.ledger = data['ledger']
         self._load_location(data['location'])
         self._create_depot()
-        self._attach_date_observers()
+        self.model.attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
         self.model.set_location(data['menu'].lower())
@@ -380,7 +375,7 @@ class MenuScreen(Screen):
 
         self._load_location(f"{location}")
         self._create_depot()
-        self._attach_date_observers()
+        self.model.attach_date_observers()
 
         _ = input("\nPress ENTER key to continue.")
         self.model.set_location("starport")
