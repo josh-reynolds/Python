@@ -32,22 +32,7 @@ class Model:
         """Return the developer string representation of the Model object."""
         return "Model()"
 
-    def can_maneuver(self) -> bool:
-        """Test whether the Ship can travel to a destination."""
-        return self.ship.repair_status != RepairStatus.BROKEN
-
-    def can_jump(self) -> bool:
-        """Test whether the Ship can perform a hyperspace jump."""
-        return self.ship.repair_status not in (RepairStatus.BROKEN, RepairStatus.PATCHED)
-
-    def can_flush(self) -> bool:
-        """Test whether facilities to flush fuel tanks are present at the current location."""
-        return self.starport in ('A', 'B', 'C', 'D')
-
-    def no_shipyard(self) -> bool:
-        """Test whether maintenance can be performed at the current location."""
-        return self.starport not in ('A', 'B')
-
+    # PROCEDURES ========================================
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""
         if self.ship.repair_status == RepairStatus.REPAIRED:
@@ -75,7 +60,7 @@ class Model:
 
         self.ship.repair_status = RepairStatus.REPAIRED
         self.clean_fuel_tanks()
-        self.date.plus_week()
+        self.plus_week()
         return "Your ship is fully repaired and decontaminated."
 
     def refuel(self) -> str:
@@ -87,63 +72,42 @@ class Model:
         self.financials.debit(cost, "refuelling")
         return "Your ship is fully refuelled."
 
-    def get_repair_string(self) -> str:
-        """Return a string representing current repair state of the Ship."""
-        match self.ship.repair_status:
-            case RepairStatus.BROKEN:
-                return "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
-            case RepairStatus.PATCHED:
-                return "\tSEEK REPAIRS - UNABLE TO JUMP"
-            case RepairStatus.REPAIRED:
-                return ""
+    # DEPOT =============================================
 
-    def set_location(self, location: str) -> None:
-        """Set the Model to the specified location."""
-        self.location.detail = location
+    # FINANCIALS ========================================
 
+    # LOCATION ==========================================
     def system_name(self) -> str:
         """Return the name of the current StarSystem."""
         return self.location.name
-
-    def get_passengers(self) -> List[Passenger]:
-        """Return a list of Passengers on board the Ship."""
-        return self.ship.passengers
-
-    def set_passengers(self, passengers: List[Passenger]) -> None:
-        """Set the list of Passengers on board the Ship."""
-        self.ship.passengers = passengers
-
-    def add_passengers(self, passengers: List[Passenger]) -> None:
-        """Add a list of Passengers to those present on board the Ship."""
-        self.ship.passengers += passengers
-
-    def add_day(self) -> None:
-        """Advance the Calendar by a day."""
-        self.date.day += 1
-
-    def burn_fuel(self, amount: int) -> None:
-        """Reduce the fuel in the Ship's tanks by the specified amount."""
-        self.ship.current_fuel -= amount
-
-    def tanks_are_full(self) -> bool:
-        """Test whether the Ship's fuel tanks are full or not."""
-        return self.ship.current_fuel == self.ship.model.fuel_tank
-
-    def fuel_level(self) -> int:
-        """Return the current amount of fuel in the Ship's tanks."""
-        return self.ship.current_fuel
-
-    def fill_tanks(self, quality: str="refined") -> None:
-        """Fill the Ship's fuel tanks to their full capacity."""
-        self.ship.current_fuel = self.ship.model.fuel_tank
-        if quality == "unrefined":
-            self.ship.fuel_quality = FuelQuality.UNREFINED
 
     @property
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport
 
+    def set_location(self, location: str) -> None:
+        """Set the Model to the specified location."""
+        self.location.detail = location
+
+    def can_flush(self) -> bool:
+        """Test whether facilities to flush fuel tanks are present at the current location."""
+        return self.starport in ('A', 'B', 'C', 'D')
+
+    def no_shipyard(self) -> bool:
+        """Test whether maintenance can be performed at the current location."""
+        return self.starport not in ('A', 'B')
+
+    def in_deep_space(self) -> bool:
+        """Test whether the Ship is currently in a DeepSpace Hex."""
+        return isinstance(self.location, DeepSpace)
+
+    # STAR MAP ==========================================
+    def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
+        """Return the contents of the specified coordinate, or create it."""
+        return self.star_map.get_system_at_coordinate(coord)
+
+    # SHIP ==============================================
     def destination(self) -> StarSystem | None:
         """Return the Ship's contracted destination, if any."""
         return self.ship.destination
@@ -154,19 +118,6 @@ class Model:
         if self.ship.destination:
             return self.ship.destination.name
         return "None"
-
-    def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
-        """Return the contents of the specified coordinate, or create it."""
-        return self.star_map.get_system_at_coordinate(coord)
-
-    @property
-    def low_passenger_count(self) -> int:
-        """Return the number of low passengers on board."""
-        return self.ship.low_passenger_count
-
-    def get_current_date(self) -> ImperialDate:
-        """Return the Calendar's current date."""
-        return self.date.current_date
 
     def check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
@@ -182,9 +133,72 @@ class Model:
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
 
-    def in_deep_space(self) -> bool:
-        """Test whether the Ship is currently in a DeepSpace Hex."""
-        return isinstance(self.location, DeepSpace)
+    def burn_fuel(self, amount: int) -> None:
+        """Reduce the fuel in the Ship's tanks by the specified amount."""
+        self.ship.current_fuel -= amount
+
+    def tanks_are_full(self) -> bool:
+        """Test whether the Ship's fuel tanks are full or not."""
+        return self.fuel_level() == self.ship.model.fuel_tank
+
+    def fuel_level(self) -> int:
+        """Return the current amount of fuel in the Ship's tanks."""
+        return self.ship.current_fuel
+
+    def fill_tanks(self, quality: str="refined") -> None:
+        """Fill the Ship's fuel tanks to their full capacity."""
+        self.ship.current_fuel = self.ship.model.fuel_tank
+        if quality == "unrefined":
+            self.ship.fuel_quality = FuelQuality.UNREFINED
+
+    def can_maneuver(self) -> bool:
+        """Test whether the Ship can travel to a destination."""
+        return self.ship.repair_status != RepairStatus.BROKEN
+
+    def can_jump(self) -> bool:
+        """Test whether the Ship can perform a hyperspace jump."""
+        return self.ship.repair_status not in (RepairStatus.BROKEN, RepairStatus.PATCHED)
+
+    def get_repair_string(self) -> str:
+        """Return a string representing current repair state of the Ship."""
+        match self.ship.repair_status:
+            case RepairStatus.BROKEN:
+                return "\tDRIVE FAILURE - UNABLE TO JUMP OR MANEUVER"
+            case RepairStatus.PATCHED:
+                return "\tSEEK REPAIRS - UNABLE TO JUMP"
+            case RepairStatus.REPAIRED:
+                return ""
+
+    def get_passengers(self) -> List[Passenger]:
+        """Return a list of Passengers on board the Ship."""
+        return self.ship.passengers
+
+    def set_passengers(self, passengers: List[Passenger]) -> None:
+        """Set the list of Passengers on board the Ship."""
+        self.ship.passengers = passengers
+
+    def add_passengers(self, passengers: List[Passenger]) -> None:
+        """Add a list of Passengers to those present on board the Ship."""
+        self.ship.passengers += passengers
+
+    @property
+    def low_passenger_count(self) -> int:
+        """Return the number of low passengers on board."""
+        return self.ship.low_passenger_count
+
+    # DATE ==============================================
+    def get_current_date(self) -> ImperialDate:
+        """Return the Calendar's current date."""
+        return self.date.current_date
+
+    @property
+    def date_string(self) -> str:
+        """Return the current date as a string."""
+        return f"{self.date}"
+
+    def add_day(self) -> None:
+        """Advance the Calendar by a day."""
+        self.date.day += 1
 
     def plus_week(self) -> None:
         """Move the current day forward by seven days."""

@@ -45,7 +45,7 @@ class PlayScreen(Screen):
     def _draw_banner(self, fuel_quality: str, fuel_amount: str, repair_state: str) -> None:
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
-        print(f"{YELLOW_ON_RED}\n{self.model.date} : You are " +
+        print(f"{YELLOW_ON_RED}\n{self.model.date_string} : You are " +
               f"{self.model.location.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.model.financials.balance}"
               f"\tFree hold space: {self.model.ship.free_space()} tons"
@@ -161,7 +161,7 @@ class PlayScreen(Screen):
         cargo_hold_list = [p.encode() for p in self.model.ship.hold]
 
         save_data = {
-                     'date' : f"{self.model.date}",
+                     'date' : f"{self.model.date_string}",
                      'systems' : systems,
                      'subsectors' : subsectors,
                      'location' : f"{self.model.location.coordinate}",
