@@ -125,7 +125,7 @@ class StarportScreen(PlayScreen):
 
         if not self.model.can_flush():
             print(f"There are no facilities to flush tanks "
-                  f"at starport {self.model.starport()}.")
+                  f"at starport {self.model.starport}.")
             return
 
         print("Fuel tanks have been decontaminated.")

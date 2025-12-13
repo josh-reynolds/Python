@@ -42,11 +42,11 @@ class Model:
 
     def can_flush(self) -> bool:
         """Test whether facilities to flush fuel tanks are present at the current location."""
-        return self.location.starport in ('A', 'B', 'C', 'D')
+        return self.starport in ('A', 'B', 'C', 'D')
 
     def no_shipyard(self) -> bool:
         """Test whether maintenance can be performed at the current location."""
-        return self.location.starport not in ('A', 'B')
+        return self.starport not in ('A', 'B')
 
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""
@@ -67,8 +67,8 @@ class Model:
     #        but that probably ought to change.
     def repair_ship(self) -> str:
         """Fully repair damage to the Ship (Starport)."""
-        if self.location.starport in ["D", "E", "X"]:
-            return f"No repair facilities available at starport {self.location.starport}"
+        if self.starport in ["D", "E", "X"]:
+            return f"No repair facilities available at starport {self.starport}"
 
         if self.ship.repair_status == RepairStatus.REPAIRED:
             return "Your ship is not damaged."
@@ -80,10 +80,10 @@ class Model:
 
     def refuel(self) -> str:
         """Refuel the Ship."""
-        if self.location.starport in ('E', 'X'):
-            return f"No fuel is available at starport {self.location.starport}."
+        if self.starport in ('E', 'X'):
+            return f"No fuel is available at starport {self.starport}."
 
-        cost = self.ship.refuel(self.location.starport)
+        cost = self.ship.refuel(self.starport)
         self.financials.debit(cost, "refuelling")
         return "Your ship is fully refuelled."
 
@@ -139,6 +139,7 @@ class Model:
         if quality == "unrefined":
             self.ship.fuel_quality = FuelQuality.UNREFINED
 
+    @property
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return self.location.starport
