@@ -10,7 +10,7 @@ from src.financials import Financials
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger
 from src.ship import Ship, RepairStatus, FuelQuality
-from src.star_system import StarSystem, Hex
+from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
 from src.utilities import die_roll
 
@@ -180,3 +180,7 @@ class Model:
         """Decontaminate the Ship's fuel tanks."""
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
+
+    def in_deep_space(self) -> bool:
+        """Test whether the Ship is currently in a DeepSpace Hex."""
+        return isinstance(self.location, DeepSpace)

@@ -9,7 +9,7 @@ from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.play import PlayScreen
-from src.star_system import DeepSpace, StarSystem
+from src.star_system import StarSystem
 from src.utilities import die_roll, choose_from, confirm_input
 
 class JumpScreen(PlayScreen):
@@ -34,7 +34,7 @@ class JumpScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
-        if isinstance(self.model.location, DeepSpace):
+        if self.model.in_deep_space():
             print(f"{BOLD_RED}You are in deep space. "
                   f"There is no inner system to travel to.{END_FORMAT}")
             return None
@@ -153,7 +153,7 @@ class JumpScreen(PlayScreen):
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
         if not self.model.location.gas_giant:
-            if isinstance(self.model.location, DeepSpace):
+            if self.model.in_deep_space():
                 print("You are stranded in deep space. No fuel skimming possible.")
             else:
                 print("There is no gas giant in this system. No fuel skimming possible.")

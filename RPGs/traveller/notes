@@ -3164,6 +3164,14 @@
 #  encapsulate them first. To a lesser extent this applies to direct field
 #  access as well. LHS vs. RHS matters.
 #
+#  I think too that once everything has been moved onto Model we'll be
+#  able to shuffle things around underneath - and the classes that 
+#  appear to map directly to concepts in the domain may become limiting.
+#  That is, instead of a "Ship" class, maybe the ship is actually
+#  a whole bunch of smaller, more abstract classes. Obvious things
+#  like a fuel system, maybe, but also classes that aren't apparent
+#  or don't map. Code clusters should guide this reformulation.
+#
 #  Handled:
 #
 #  self.model.ship.repair_status                               2  src/orbit.py
@@ -3599,6 +3607,8 @@
 
 ~HERE~
 
+#  * [    ] Some ambiguity with usage of 'destination' and 'location' in different
+#           context, should probably give separate uses separate names
 #  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
 #  * [    ] Review confirm blocks, inconsistent usage throughout
