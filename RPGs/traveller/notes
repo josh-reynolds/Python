@@ -3002,7 +3002,6 @@
 # and all the model classes - ideally they just know about
 # the Model parent class.
 #
-#  self.model.date.add_observer()                              3  src/menu.py
 #
 #  self.model.depot                                            1+ src/jump.py
 #  self.model.depot                                            1+ src/menu.py
@@ -3027,7 +3026,6 @@
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
 #  self.model.financials                                       1+ src/menu.py
-#  self.model.financials.add_observer()                        1  src/menu.py
 #  self.model.financials.balance                               1  src/play.py
 #  self.model.financials.balance                               1  src/trade.py
 #  self.model.financials.balance                               2  src/starport.py
@@ -3044,7 +3042,6 @@
 #  self.model.financials.location                              1  src/menu.py
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
-#  self.model.financials.ship                                  1  src/menu.py
 #
 #  7  self.model.location                                         1  src/terminal.py
 #  self.model.location                                         1+ src/menu.py
@@ -3223,6 +3220,9 @@
 #  self.model.date.plus_week()                                 2  src/starport.py
 #  self.model.date.__str__()                                   2  src/play.py
 #  self.model.date                                             1+ src/menu.py
+#  self.model.date.add_observer()                              3  src/menu.py
+#  self.model.financials.ship                                  1  src/menu.py
+#  self.model.financials.add_observer()                        1  src/menu.py
 #
 # -------------------------------------------------------------
 

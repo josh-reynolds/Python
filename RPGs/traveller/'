@@ -8,6 +8,7 @@ from src.cargo import Cargo
 from src.cargo_depot import CargoDepot, cargo_hold_from
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, create_3_axis
+from src.financials import financials_from
 from src.format import END_FORMAT, BOLD_BLUE, HOME, CLEAR, BOLD_RED, BOLD
 from src.freight import Freight
 from src.model import Model
@@ -81,6 +82,13 @@ class MenuScreen(Screen):
             subsector = subsector_from(line)
             self.model.star_map.subsectors[subsector.coordinate] = subsector
 
+    def _load_financials(self, data: str) -> None:
+        """Apply Financials from json data to Game financials field."""
+        self.model.financials = financials_from(data)
+        self.model.financials.ship = self.model.ship
+        self.model.financials.add_observer(self.parent)
+        self.model.date.add_observer(self.model.financials)
+
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
@@ -134,7 +142,7 @@ class MenuScreen(Screen):
             ship_name = input("What is the name of your ship? ")
         self.model.ship.name = ship_name
 
-        self.model.load_financials(data['financials'], self.parent)
+        self.model.load_financials(data['financials'])
         self._load_location(data['location'])
         self._create_depot()
         self.model.attach_date_observers()
@@ -196,7 +204,7 @@ class MenuScreen(Screen):
             print(f"{BOLD_RED}Multiple destinations in save file.{END_FORMAT}")
             return None
 
-        self.model.load_financials(data['financials'], self.parent)
+        self.model.load_financials(data['financials'])
         self.model.financials.ledger = data['ledger']
         self._load_location(data['location'])
         self._create_depot()
@@ -358,7 +366,7 @@ class MenuScreen(Screen):
         self.model.ship.name = ship_name
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
-        self.model.load_financials(financials_string, self.parent)
+        self._load_financials(financials_string)
         location = self._import_location(data['subsectors'],  # type: ignore[index, arg-type]
                                          data['location'])    # type: ignore[index, arg-type]
         if not self._is_star_system(location):

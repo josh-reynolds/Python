@@ -2,11 +2,11 @@
 
 Model - contains references to all game model objects.
 """
-from typing import List
+from typing import List, Any
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
-from src.financials import Financials
+from src.financials import Financials, financials_from
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger
 from src.ship import Ship, RepairStatus, FuelQuality
@@ -75,6 +75,12 @@ class Model:
     # DEPOT =============================================
 
     # FINANCIALS ========================================
+    def load_financials(self, data: str, observer: Any) -> None:
+        """Apply Financials from json data to Financials field."""
+        self.financials = financials_from(data)
+        self.financials.ship = self.ship
+        self.financials.add_observer(observer)
+        self.date.add_observer(self.financials)
 
     # LOCATION ==========================================
     def system_name(self) -> str:
