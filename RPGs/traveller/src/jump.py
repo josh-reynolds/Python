@@ -113,7 +113,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.life_support_level = 0
         self.model.burn_fuel(self.model.ship.model.jump_fuel_cost)
-        self.model.date.plus_week()
+        self.model.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:
         """Test for misjump and report results."""

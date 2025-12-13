@@ -182,7 +182,7 @@ class PlayScreen(Screen):
     def wait_week(self) -> None:
         """Advance the Calendar by seven days."""
         print(f"{BOLD_BLUE}Waiting.{END_FORMAT}")
-        self.model.date.plus_week()
+        self.model.plus_week()
 
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""

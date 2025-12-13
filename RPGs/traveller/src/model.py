@@ -185,3 +185,7 @@ class Model:
     def in_deep_space(self) -> bool:
         """Test whether the Ship is currently in a DeepSpace Hex."""
         return isinstance(self.location, DeepSpace)
+
+    def plus_week(self) -> None:
+        """Move the current day forward by seven days."""
+        self.date.plus_week()

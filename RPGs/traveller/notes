@@ -3005,9 +3005,6 @@
 #  self.model.date                                             1+ src/menu.py
 #  self.model.date.__str__()                                   2  src/play.py
 #  self.model.date.add_observer()                              3  src/menu.py
-#  self.model.date.plus_week()                                 1  src/jump.py
-#  self.model.date.plus_week()                                 1  src/play.py
-#  self.model.date.plus_week()                                 2  src/starport.py
 #
 #  self.model.depot                                            1+ src/jump.py
 #  self.model.depot                                            1+ src/menu.py
@@ -3223,10 +3220,33 @@
 #  self.model.ship.fuel_quality                                1  src/play.py
 #  self.model.ship.fuel_quality                                3  src/jump.py
 #  self.model.ship.fuel_quality                                3  src/starport.py
+#  self.model.date.plus_week()                                 1  src/jump.py
+#  self.model.date.plus_week()                                 1  src/play.py
+#  self.model.date.plus_week()                                 2  src/starport.py
 #
 # -------------------------------------------------------------
 
 ~HERE~
+
+# -------------------------------------------------------------
+# Watched some videos on Clean Code yesterday, and they make some good points.
+# Deep chains of tiny methods, each with just one line, are very 
+# annoying to deal with, and harder to understand than the 'dirty' code
+# they're meant to replace.
+#
+# I think the real point of SOLID and DRY and all the rest of that shit
+# is decoupling, not slavish adherence to clean code rules. And pushing
+# hard on the clean code principles gets you there - but afterwards, maybe
+# reassembling things into some fat methods would be a good idea.
+#
+# The exercise above, pushing everything to the surface of the model is 
+# informative. I don't really like the Model class in its current incarnation -
+# a huge interface with a bazillion tiny methods, almost all of which just
+# delegate to 'interior' classes. But this is an intermediary state. What I 
+# _am_ getting is separation of View and Model, and the ability to test all
+# the logic previously obscured by all the side-effect laden Screen methods.
+#
+# -------------------------------------------------------------
 
 # -------------------------------------------------------------
 # ROADMAP

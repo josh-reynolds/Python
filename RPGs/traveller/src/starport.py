@@ -113,7 +113,7 @@ class StarportScreen(PlayScreen):
         print(f"Performing maintenance. Charging {cost}.")
         self.model.financials.last_maintenance = self.model.get_current_date()
         self.model.financials.debit(cost, "annual maintenance")
-        self.model.date.plus_week()
+        self.model.plus_week()
         print(self.model.repair_ship())
 
     def flush(self) -> None:
@@ -130,7 +130,7 @@ class StarportScreen(PlayScreen):
 
         print("Fuel tanks have been decontaminated.")
         self.model.clean_fuel_tanks()
-        self.model.date.plus_week()
+        self.model.plus_week()
 
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
