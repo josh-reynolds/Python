@@ -3,7 +3,7 @@
 Model - contains references to all game model objects.
 """
 from typing import List
-from src.calendar import Calendar
+from src.calendar import Calendar, modify_calendar_from
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.financials import Financials
@@ -203,3 +203,8 @@ class Model:
     def plus_week(self) -> None:
         """Move the current day forward by seven days."""
         self.date.plus_week()
+
+    def load_calendar(self, data: str) -> None:
+        """Apply date from json data to Game calendar field."""
+        self.date = Calendar()
+        modify_calendar_from(self.date, data)

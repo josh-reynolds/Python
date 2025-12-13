@@ -6,7 +6,6 @@ from typing import Any, List, cast, Tuple, Dict
 from src.baggage import Baggage
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot, cargo_hold_from
-from src.calendar import modify_calendar_from, Calendar
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.financials import financials_from
@@ -83,11 +82,6 @@ class MenuScreen(Screen):
             subsector = subsector_from(line)
             self.model.star_map.subsectors[subsector.coordinate] = subsector
 
-    def _load_calendar(self, data: str) -> None:
-        """Apply date from json data to Game calendar field."""
-        self.model.date = Calendar()
-        modify_calendar_from(self.model.date, data)
-
     def _load_financials(self, data: str) -> None:
         """Apply Financials from json data to Game financials field."""
         self.model.financials = financials_from(data)
@@ -139,7 +133,7 @@ class MenuScreen(Screen):
 
         self._load_systems(data['systems'])
         self._load_subsectors(data['subsectors'])
-        self._load_calendar(data['date'])
+        self.model.load_calendar(data['date'])
 
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
@@ -177,7 +171,7 @@ class MenuScreen(Screen):
 
         self._load_systems(data['systems'])
         self._load_subsectors(data['subsectors'])
-        self._load_calendar(data['date'])
+        self.model.load_calendar(data['date'])
 
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
@@ -362,7 +356,7 @@ class MenuScreen(Screen):
         #        import the map, rest should be the same, right?
         #        or what if we convert the imported data into a new
         #        json file and stash alongside new_game.json?
-        self._load_calendar("001-1105")
+        self.model.load_calendar("001-1105")
 
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
