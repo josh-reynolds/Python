@@ -47,7 +47,7 @@ class StarportScreen(PlayScreen):
         # of the time, but not necessarily all the time
         if self.model.ship.total_passenger_count > 0:
             print(f"Boarding {self.model.ship.total_passenger_count} "   # type: ignore[union-attr]
-                  f"passengers for {self.model.destination().name}.")
+                  f"passengers for {self.model.destination_name}.")
 
         if self.model.low_passenger_count > 0:
             low_passengers = [p for p in self.model.get_passengers() if

@@ -105,10 +105,7 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        if self.model.destination() is None:
-            destination = "None"
-        else:
-            destination = self.model.destination().name        #type: ignore[union-attr]
+        destination = self.model.destination_name
 
         print(f"High passengers: {self.model.ship.high_passenger_count}\n"
               f"Middle passengers: {self.model.ship.middle_passenger_count}\n"
@@ -251,11 +248,10 @@ class PlayScreen(Screen):
                 return result
             if self.model.destination() in potential_destinations:
                 print(f"You are under contract. Only showing {prompt} for " +
-                      f"{self.model.destination().name}:\n")          # type: ignore[union-attr]
+                      f"{self.model.destination_name}:\n")
                 result = [cast(StarSystem, self.model.destination())]
             else:
-                print("You are under contract to " +
-                      f"{self.model.destination().name} " +            # type: ignore[union-attr]
+                print(f"You are under contract to {self.model.destination_name} " +
                       "but it is not within jump range of here.")
 
         else:

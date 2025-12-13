@@ -235,5 +235,5 @@ class TradeScreen(PlayScreen):
         else:
             print(f"{BOLD_RED}You are not at the contracted "
                   f"destination for this freight.{END_FORMAT}")
-            print(f"{BOLD_RED}It should be unloaded at "               # type: ignore[union-attr]
-                  f"{self.model.destination().name}.{END_FORMAT}")
+            print(f"{BOLD_RED}It should be unloaded at "
+                  f"{self.model.destination_name}.{END_FORMAT}")

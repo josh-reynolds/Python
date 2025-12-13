@@ -147,6 +147,13 @@ class Model:
         """Return the Ship's contracted destination, if any."""
         return self.ship.destination
 
+    @property
+    def destination_name(self) -> str:
+        """Return the name of the Ship's destination."""
+        if self.ship.destination:
+            return self.ship.destination.name
+        return "None"
+
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)
