@@ -69,7 +69,7 @@ class TradeScreen(PlayScreen):
         cost = self.model.depot.determine_price("purchase", cargo, quantity,
                                           self.model.ship.trade_skill())
 
-        if self.model.depot.insufficient_funds(cost, self.model.financials.balance):
+        if self.model.depot.insufficient_funds(cost, self.model.balance):
             return
 
         if not self.model.depot.confirm_transaction("purchase", cargo, quantity, cost):

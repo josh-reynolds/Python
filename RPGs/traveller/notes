@@ -3026,9 +3026,6 @@
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
 #  self.model.financials                                       1+ src/menu.py
-#  self.model.financials.balance                               1  src/play.py
-#  self.model.financials.balance                               1  src/trade.py
-#  self.model.financials.balance                               2  src/starport.py
 #  self.model.financials.berthing_fee                          1  src/orbit.py
 #  self.model.financials.credit()                              2  src/orbit.py
 #  self.model.financials.credit()                              2  src/trade.py
@@ -3223,6 +3220,9 @@
 #  self.model.date.add_observer()                              3  src/menu.py
 #  self.model.financials.ship                                  1  src/menu.py
 #  self.model.financials.add_observer()                        1  src/menu.py
+#  self.model.financials.balance                               1  src/play.py
+#  self.model.financials.balance                               1  src/trade.py
+#  self.model.financials.balance                               2  src/starport.py
 #
 # -------------------------------------------------------------
 

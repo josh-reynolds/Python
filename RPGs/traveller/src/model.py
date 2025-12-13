@@ -6,6 +6,7 @@ from typing import List, Any
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
+from src.credits import Credits
 from src.financials import Financials, financials_from
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger
@@ -75,6 +76,11 @@ class Model:
     # DEPOT =============================================
 
     # FINANCIALS ========================================
+    @property
+    def balance(self) -> Credits:
+        """Return current account balance."""
+        return self.financials.balance
+
     def load_financials(self, data: str, observer: Any) -> None:
         """Apply Financials from json data to Financials field."""
         self.financials = financials_from(data)

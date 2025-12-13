@@ -93,9 +93,9 @@ class StarportScreen(PlayScreen):
             return
 
         cost = self.model.ship.maintenance_cost()
-        if self.model.financials.balance < cost:
+        if self.model.balance < cost:
             print("You do not have enough funds to pay for maintenance.\n"
-                  f"It will cost {cost}. Your balance is {self.model.financials.balance}.")
+                  f"It will cost {cost}. Your balance is {self.model.balance}.")
             return
 
         if self.model.financials.maintenance_status(self.model.get_current_date()) == \
