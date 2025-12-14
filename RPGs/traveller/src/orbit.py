@@ -58,7 +58,7 @@ class OrbitScreen(PlayScreen):
                 self.model.ship.hold = [item for item in self.model.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.model.financials.berthing_fee(self.model.get_star_system().on_surface())
+        self.model.financials.berthing_fee(self.model.on_surface)
         self.model.set_location("starport")
         self.parent.change_state("Starport")
         return None

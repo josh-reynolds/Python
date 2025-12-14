@@ -3044,8 +3044,6 @@
 #  self.model.location.destinations                            2  src/jump.py
 #  self.model.location.destinations.copy()                     1  src/terminal.py
 #  self.model.location.destinations.copy()                     1  src/trade.py
-#  self.model.location.gas_giant                               1  src/jump.py
-#  self.model.location.on_surface()                            1  src/orbit.py
 #
 #  self.model.ship                                             3+ src/menu.py
 #  self.model.ship.__str__()                                   1+ src/play.py
@@ -3223,6 +3221,8 @@
 #  self.model.ship.empty_low_berths                            1  src/terminal.py
 #  self.model.ship.empty_passenger_berths                      1  src/play.py
 #  self.model.ship.empty_passenger_berths                      1  src/terminal.py
+#  self.model.location.gas_giant                               1  src/jump.py
+#  self.model.location.on_surface()                            1  src/orbit.py
 # -------------------------------------------------------------
 
 ~HERE~

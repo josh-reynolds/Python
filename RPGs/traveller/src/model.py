@@ -114,6 +114,16 @@ class Model:
         """Return the classification of the current location's starport."""
         return cast(StarSystem, self.location).starport
 
+    @property
+    def gas_giant(self) -> bool:
+        """Return whether the StarSystem contains a gas giant planet or not."""
+        return cast(StarSystem, self.location).gas_giant
+
+    @property
+    def on_surface(self) -> bool:
+        """Return whether the Ship is currently on the surface of the mainworld."""
+        return cast(StarSystem, self.location).on_surface()
+
     def set_location(self, location: str) -> None:
         """Change the location within the current map hex."""
         cast(StarSystem, self.location).detail = location
