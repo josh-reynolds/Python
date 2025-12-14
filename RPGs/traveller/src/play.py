@@ -107,8 +107,8 @@ class PlayScreen(Screen):
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
         destination = self.model.destination_name
 
-        print(f"High passengers: {self.model.ship.high_passenger_count}\n"
-              f"Middle passengers: {self.model.ship.middle_passenger_count}\n"
+        print(f"High passengers: {self.model.high_passenger_count}\n"
+              f"Middle passengers: {self.model.middle_passenger_count}\n"
               f"Low passengers: {self.model.low_passenger_count}\n"
               f"DESTINATION: {destination}\n\n"
               f"Empty berths: {self.model.ship.empty_passenger_berths}\n"

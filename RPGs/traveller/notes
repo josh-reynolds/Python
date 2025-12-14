@@ -3068,7 +3068,6 @@
 #  self.model.ship.free_space()                                1  src/play.py
 #  self.model.ship.free_space()                                1  src/terminal.py
 #  self.model.ship.free_space()                                2  src/trade.py
-#  self.model.ship.high_passenger_count                        1  src/play.py
 #  8  self.model.ship.hold                                        1  src/menu.py
 #  self.model.ship.hold                                        1  src/orbit.py
 #  self.model.ship.hold                                        1  src/play.py
@@ -3081,7 +3080,6 @@
 #  self.model.ship.load_cargo()                                2  src/trade.py
 #  self.model.ship.maintenance_cost()                          1  src/starport.py
 #  self.model.ship.medic_skill()                               1  src/orbit.py
-#  self.model.ship.middle_passenger_count                      1  src/play.py
 #  self.model.ship.model.fuel_tank                             1  src/jump.py
 #  self.model.ship.model.fuel_tank                             1  src/play.py
 #  self.model.ship.model.jump_range                            1  src/jump.py
@@ -3096,8 +3094,6 @@
 #  self.model.ship.recharge()                                  1  src/starport.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
-#  self.model.ship.total_passenger_count                       1  src/orbit.py
-#  self.model.ship.total_passenger_count                       2  src/starport.py
 #  self.model.ship.trade_skill()                               2  src/trade.py
 #  self.model.ship.unrefined_jump_counter                      1  src/jump.py
 #  self.model.ship.unrefined_jump_counter                      2  src/starport.py
@@ -3223,6 +3219,10 @@
 #  self.model.location                                         1+ src/menu.py
 #  self.model.location                                         2+ src/jump.py
 #  self.model.location                                         3+ src/trade.py
+#  self.model.ship.total_passenger_count                       1  src/orbit.py
+#  self.model.ship.total_passenger_count                       2  src/starport.py
+#  self.model.ship.middle_passenger_count                      1  src/play.py
+#  self.model.ship.high_passenger_count                        1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

@@ -202,8 +202,18 @@ class Model:
         self.ship.passengers += passengers
 
     @property
+    def high_passenger_count(self) -> int:
+        """Return the number of high passengers on board the Ship."""
+        return self.ship.high_passenger_count
+
+    @property
+    def middle_passenger_count(self) -> int:
+        """Return the number of middle passengers on board the Ship."""
+        return self.ship.middle_passenger_count
+
+    @property
     def low_passenger_count(self) -> int:
-        """Return the number of low passengers on board."""
+        """Return the number of low passengers on board the Ship."""
         return self.ship.low_passenger_count
 
     @property
