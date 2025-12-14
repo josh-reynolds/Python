@@ -33,7 +33,7 @@ class OrbitScreen(PlayScreen):
     def land(self) -> None:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
-        if not self.model.ship.model.streamlined:
+        if not self.model.streamlined:
             print("Your ship is not streamlined and cannot land.")
             return None
 

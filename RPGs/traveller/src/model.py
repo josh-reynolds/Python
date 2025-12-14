@@ -141,6 +141,11 @@ class Model:
         """Return the jump range of the Ship (in parsecs)."""
         return self.ship.model.jump_range
 
+    @property
+    def streamlined(self) -> bool:
+        """Return whether the Ship is streamlined or not."""
+        return self.ship.model.streamlined
+
     def destination(self) -> StarSystem | None:
         """Return the Ship's contracted destination, if any."""
         return self.ship.destination

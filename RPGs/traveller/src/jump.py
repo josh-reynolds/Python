@@ -155,7 +155,7 @@ class JumpScreen(PlayScreen):
                 print("There is no gas giant in this system. No fuel skimming possible.")
             return
 
-        if not self.model.ship.model.streamlined:
+        if not self.model.streamlined:
             print("Your ship is not streamlined and cannot skim fuel.")
             return
 

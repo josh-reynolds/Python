@@ -3027,10 +3027,6 @@
 #
 #  self.model.financials                                       1+ src/menu.py
 #  self.model.financials.berthing_fee                          1  src/orbit.py
-#  self.model.financials.credit()                              2  src/orbit.py
-#  self.model.financials.credit()                              2  src/trade.py
-#  self.model.financials.debit()                               2  src/trade.py
-#  self.model.financials.debit()                               3  src/starport.py
 #  self.model.financials.encode()                              1  src/play.py
 #  self.model.financials.last_maintenance                      1  src/starport.py
 #  self.model.financials.ledger                                1  src/menu.py
@@ -3083,8 +3079,6 @@
 #  self.model.ship.model.fuel_tank                             1  src/jump.py
 #  self.model.ship.model.fuel_tank                             1  src/play.py
 #  self.model.ship.model.name                                  1  src/play.py
-#  self.model.ship.model.streamlined                           1  src/jump.py
-#  self.model.ship.model.streamlined                           1  src/orbit.py
 #  self.model.ship.model.trip_fuel_cost                        1  src/play.py
 #  self.model.ship.name                                        2  src/menu.py
 #  self.model.ship.recharge()                                  1  src/starport.py
@@ -3223,6 +3217,12 @@
 #  self.model.ship.model.jump_range                            1  src/menu.py
 #  self.model.ship.model.jump_range                            1  src/terminal.py
 #  self.model.ship.model.jump_range                            1  src/trade.py
+#  self.model.financials.credit()                              2  src/orbit.py
+#  self.model.financials.credit()                              2  src/trade.py
+#  self.model.financials.debit()                               2  src/trade.py
+#  self.model.financials.debit()                               3  src/starport.py
+#  self.model.ship.model.streamlined                           1  src/jump.py
+#  self.model.ship.model.streamlined                           1  src/orbit.py
 # -------------------------------------------------------------
 
 ~HERE~
