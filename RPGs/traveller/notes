@@ -3040,10 +3040,6 @@
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
 #
-#  7  self.model.location                                         1  src/terminal.py
-#  self.model.location                                         1+ src/menu.py
-#  self.model.location                                         2+ src/jump.py
-#  self.model.location                                         3+ src/trade.py
 #  self.model.location.__str__()                               1  src/play.py
 #  self.model.location.coordinate                              1  src/play.py
 #  self.model.location.coordinate                              2  src/jump.py
@@ -3098,7 +3094,6 @@
 #  self.model.ship.model.trip_fuel_cost                        1  src/play.py
 #  self.model.ship.name                                        2  src/menu.py
 #  self.model.ship.recharge()                                  1  src/starport.py
-#  self.model.ship.refuel()                                    1  src/starport.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
 #  self.model.ship.total_passenger_count                       1  src/orbit.py
@@ -3212,6 +3207,7 @@
 #  self.model.ship.fuel_quality                                1  src/play.py
 #  self.model.ship.fuel_quality                                3  src/jump.py
 #  self.model.ship.fuel_quality                                3  src/starport.py
+#  self.model.ship.refuel()                                    1  src/starport.py
 #  self.model.date.plus_week()                                 1  src/jump.py
 #  self.model.date.plus_week()                                 1  src/play.py
 #  self.model.date.plus_week()                                 2  src/starport.py
@@ -3224,6 +3220,10 @@
 #  self.model.financials.balance                               1  src/trade.py
 #  self.model.financials.balance                               2  src/starport.py
 #
+#  7  self.model.location                                         1  src/terminal.py
+#  self.model.location                                         1+ src/menu.py
+#  self.model.location                                         2+ src/jump.py
+#  self.model.location                                         3+ src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~
@@ -3237,7 +3237,8 @@
 # I think the real point of SOLID and DRY and all the rest of that shit
 # is decoupling, not slavish adherence to clean code rules. And pushing
 # hard on the clean code principles gets you there - but afterwards, maybe
-# reassembling things into some fat methods would be a good idea.
+# reassembling things into some fat methods would be a good idea. Inline
+# those middle-men back into the other methods.
 #
 # The exercise above, pushing everything to the surface of the model is 
 # informative. I don't really like the Model class in its current incarnation -

@@ -105,7 +105,7 @@ class JumpScreen(PlayScreen):
         self.model.location.destinations = \
               self.model.star_map.get_systems_within_range(coord, jump_range)
 
-        self.model.depot = CargoDepot(self.model.location,
+        self.model.depot = CargoDepot(cast(StarSystem, self.model.location),
                                        self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
@@ -131,14 +131,10 @@ class JumpScreen(PlayScreen):
             misjump_target, distance = get_misjump_target(self.model.location.coordinate)
             print(f"{misjump_target} at distance {distance}")
 
-            # misjump is the only scenario where EmptySpace is a possible
-            # location, so we need to leave this type as Hex
-            loc = self.model.get_system_at_coordinate(misjump_target) # type: ignore
-            self.model.location = loc                                          # type: ignore
+            self.model.set_hex(self.model.get_system_at_coordinate(misjump_target))
             self.model.star_map.systems[misjump_target] = self.model.location
         else:
-            self.model.location = cast(StarSystem,
-                    self.model.get_system_at_coordinate(destination))
+            self.model.set_hex(self.model.get_system_at_coordinate(destination))
 
     # Book 2 p. 35
     # Unrefined fuel may be obtained by skimming the atmosphere of a
@@ -152,7 +148,7 @@ class JumpScreen(PlayScreen):
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.model.location.gas_giant:
+        if not cast(StarSystem, self.model.location).gas_giant:
             if self.model.in_deep_space():
                 print("You are stranded in deep space. No fuel skimming possible.")
             else:

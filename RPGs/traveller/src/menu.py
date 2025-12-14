@@ -84,8 +84,7 @@ class MenuScreen(Screen):
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
-        location = cast(StarSystem, self.model.get_system_at_coordinate(coord))
-        self.model.location = location
+        self.model.set_hex(self.model.get_system_at_coordinate(coord))
         self.model.location.destinations = \
                 self.model.star_map.get_systems_within_range(coord,
                                                         self.model.ship.model.jump_range)
@@ -93,7 +92,7 @@ class MenuScreen(Screen):
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.model.depot = CargoDepot(self.model.location,
+        self.model.depot = CargoDepot(cast(StarSystem, self.model.location),
                                        self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent

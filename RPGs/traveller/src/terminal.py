@@ -80,7 +80,7 @@ class TerminalScreen(PlayScreen):
         #        Probably want to wrap passenger field access in a property...
         high = [Passenger(Passage.HIGH, destination)
                 for _ in range(selection[Passage.HIGH.value])]
-        baggage = [Baggage(self.model.location, destination)
+        baggage = [Baggage(cast(StarSystem, self.model.location), destination)
                    for _ in range(selection[Passage.HIGH.value])]
         middle = [Passenger(Passage.MIDDLE, destination)
                   for _ in range(selection[Passage.MIDDLE.value])]

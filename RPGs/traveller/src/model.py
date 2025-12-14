@@ -2,7 +2,7 @@
 
 Model - contains references to all game model objects.
 """
-from typing import List, Any
+from typing import List, Any, cast
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
@@ -25,7 +25,7 @@ class Model:
         self.date: Calendar
         self.ship: Ship
         self.star_map: StarMap
-        self.location: StarSystem
+        self.location: Hex
         self.financials: Financials
         self.depot: CargoDepot
 
@@ -89,6 +89,10 @@ class Model:
         self.date.add_observer(self.financials)
 
     # LOCATION ==========================================
+    def set_hex(self, map_hex: Hex) -> None:
+        """Change the current map hex."""
+        self.location = map_hex
+
     def system_name(self) -> str:
         """Return the name of the current StarSystem."""
         return self.location.name
@@ -96,11 +100,11 @@ class Model:
     @property
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
-        return self.location.starport
+        return cast(StarSystem, self.location).starport
 
     def set_location(self, location: str) -> None:
-        """Set the Model to the specified location."""
-        self.location.detail = location
+        """Change the location within the current map hex."""
+        cast(StarSystem, self.location).detail = location
 
     def can_flush(self) -> bool:
         """Test whether facilities to flush fuel tanks are present at the current location."""
