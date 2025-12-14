@@ -111,8 +111,8 @@ class PlayScreen(Screen):
               f"Middle passengers: {self.model.middle_passenger_count}\n"
               f"Low passengers: {self.model.low_passenger_count}\n"
               f"DESTINATION: {destination}\n\n"
-              f"Empty berths: {self.model.ship.empty_passenger_berths}\n"
-              f"Empty low berths: {self.model.ship.empty_low_berths}")
+              f"Empty berths: {self.model.empty_passenger_berths}\n"
+              f"Empty low berths: {self.model.empty_low_berths}")
         _ = input("\nPress ENTER key to continue.")
 
     def crew_roster(self) -> None:

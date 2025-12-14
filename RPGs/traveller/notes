@@ -3055,10 +3055,6 @@
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.controls                                    3  src/menu.py
 #  self.model.ship.crew                                        1  src/play.py
-#  self.model.ship.empty_low_berths                            1  src/play.py
-#  self.model.ship.empty_low_berths                            1  src/terminal.py
-#  self.model.ship.empty_passenger_berths                      1  src/play.py
-#  self.model.ship.empty_passenger_berths                      1  src/terminal.py
 #  self.model.ship.encode()                                    1  src/play.py
 #  self.model.ship.engineering_skill()                         1  src/jump.py
 #  self.model.ship.free_space()                                1  src/play.py
@@ -3223,6 +3219,10 @@
 #  self.model.ship.model.streamlined                           1  src/orbit.py
 #  self.model.ship.life_support_level                          1  src/jump.py
 #  self.model.ship.life_support_level                          1  src/play.py
+#  self.model.ship.empty_low_berths                            1  src/play.py
+#  self.model.ship.empty_low_berths                            1  src/terminal.py
+#  self.model.ship.empty_passenger_berths                      1  src/play.py
+#  self.model.ship.empty_passenger_berths                      1  src/terminal.py
 # -------------------------------------------------------------
 
 ~HERE~

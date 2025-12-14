@@ -98,8 +98,8 @@ class TerminalScreen(PlayScreen):
                            destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.model.ship.empty_passenger_berths,
-                                          self.model.ship.empty_low_berths)
+        ship_capacity: Tuple[int, ...] = (self.model.empty_passenger_berths,
+                                          self.model.empty_low_berths)
         ship_hold = self.model.ship.free_space()
 
         while True:
