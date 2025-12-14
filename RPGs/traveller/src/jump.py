@@ -76,7 +76,7 @@ class JumpScreen(PlayScreen):
             print(self.model.ship.insufficient_life_support_message())
             return
 
-        jump_range = self.model.ship.model.jump_range
+        jump_range = self.model.jump_range
         print(f"Systems within jump-{jump_range}:")
         destinations = self.model.location.destinations
         destination_number = choose_from(destinations, "Enter destination number: ")

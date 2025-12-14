@@ -125,7 +125,7 @@ class TradeScreen(PlayScreen):
         """Select and load Freight onto the Ship."""
         print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
 
-        jump_range = self.model.ship.model.jump_range
+        jump_range = self.model.jump_range
         potential_destinations = self.model.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "freight shipments")

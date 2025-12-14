@@ -128,6 +128,11 @@ class Model:
         return self.star_map.get_system_at_coordinate(coord)
 
     # SHIP ==============================================
+    @property
+    def jump_range(self) -> int:
+        """Return the jump range of the Ship (in parsecs)."""
+        return self.ship.model.jump_range
+
     def destination(self) -> StarSystem | None:
         """Return the Ship's contracted destination, if any."""
         return self.ship.destination

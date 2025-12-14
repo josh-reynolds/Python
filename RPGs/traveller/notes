@@ -3082,10 +3082,6 @@
 #  self.model.ship.medic_skill()                               1  src/orbit.py
 #  self.model.ship.model.fuel_tank                             1  src/jump.py
 #  self.model.ship.model.fuel_tank                             1  src/play.py
-#  self.model.ship.model.jump_range                            1  src/jump.py
-#  self.model.ship.model.jump_range                            1  src/menu.py
-#  self.model.ship.model.jump_range                            1  src/terminal.py
-#  self.model.ship.model.jump_range                            1  src/trade.py
 #  self.model.ship.model.name                                  1  src/play.py
 #  self.model.ship.model.streamlined                           1  src/jump.py
 #  self.model.ship.model.streamlined                           1  src/orbit.py
@@ -3223,6 +3219,10 @@
 #  self.model.ship.total_passenger_count                       2  src/starport.py
 #  self.model.ship.middle_passenger_count                      1  src/play.py
 #  self.model.ship.high_passenger_count                        1  src/play.py
+#  self.model.ship.model.jump_range                            1  src/jump.py
+#  self.model.ship.model.jump_range                            1  src/menu.py
+#  self.model.ship.model.jump_range                            1  src/terminal.py
+#  self.model.ship.model.jump_range                            1  src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~

@@ -46,7 +46,7 @@ class TerminalScreen(PlayScreen):
         """Book passengers for travel to a destination."""
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
-        jump_range = self.model.ship.model.jump_range
+        jump_range = self.model.jump_range
         potential_destinations = self.model.location.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")

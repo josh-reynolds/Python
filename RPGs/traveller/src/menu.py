@@ -87,7 +87,7 @@ class MenuScreen(Screen):
         self.model.set_hex(self.model.get_system_at_coordinate(coord))
         self.model.location.destinations = \
                 self.model.star_map.get_systems_within_range(coord,
-                                                        self.model.ship.model.jump_range)
+                                                        self.model.jump_range)
         self.model.financials.location = self.model.get_star_system()
 
     def _create_depot(self) -> None:
