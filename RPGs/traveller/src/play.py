@@ -164,7 +164,7 @@ class PlayScreen(Screen):
                      'date' : f"{self.model.date_string}",
                      'systems' : systems,
                      'subsectors' : subsectors,
-                     'location' : f"{self.model.map_hex.coordinate}",
+                     'location' : f"{self.model.coordinate}",
                      'menu' : f"{self.parent.screen}",
                      'ship model' : self.model.ship.model.name,
                      'ship details' : self.model.ship.encode(),

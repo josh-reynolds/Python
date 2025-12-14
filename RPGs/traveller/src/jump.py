@@ -101,7 +101,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.check_failure_post_jump()
 
-        coord = self.model.map_hex.coordinate
+        coord = self.model.coordinate
         self.model.map_hex.destinations = \
               self.model.star_map.get_systems_within_range(coord, jump_range)
 
@@ -128,7 +128,7 @@ class JumpScreen(PlayScreen):
         misjump_check = die_roll(2) + modifier
         if misjump_check > 11:
             print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            misjump_target, distance = get_misjump_target(self.model.map_hex.coordinate)
+            misjump_target, distance = get_misjump_target(self.model.coordinate)
             print(f"{misjump_target} at distance {distance}")
 
             self.model.set_hex(self.model.get_system_at_coordinate(misjump_target))
