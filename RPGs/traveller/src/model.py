@@ -150,6 +150,16 @@ class Model:
         """Test whether the Ship is currently in a DeepSpace Hex."""
         return isinstance(self.map_hex, DeepSpace)
 
+    @property
+    def destinations(self) -> List[StarSystem]:
+        """Return a list of StarSystems reachable from the current MapHex."""
+        return self.map_hex.destinations.copy()
+
+    def set_destinations(self) -> None:
+        """Determine and save the StarSystems within jump range of the current MapHex."""
+        self.map_hex.destinations = self.star_map.get_systems_within_range(self.coordinate,
+                                                                           self.jump_range)
+
     # STAR MAP ==========================================
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""

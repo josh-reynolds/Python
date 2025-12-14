@@ -78,7 +78,7 @@ class JumpScreen(PlayScreen):
 
         jump_range = self.model.jump_range
         print(f"Systems within jump-{jump_range}:")
-        destinations = self.model.map_hex.destinations
+        destinations = self.model.destinations
         destination_number = choose_from(destinations, "Enter destination number: ")
 
         coordinate = destinations[destination_number].coordinate
@@ -101,9 +101,7 @@ class JumpScreen(PlayScreen):
 
         self.model.ship.check_failure_post_jump()
 
-        coord = self.model.coordinate
-        self.model.map_hex.destinations = \
-              self.model.star_map.get_systems_within_range(coord, jump_range)
+        self.model.set_destinations()
 
         self.model.depot = CargoDepot(self.model.get_star_system(),
                                       self.model.get_current_date())
