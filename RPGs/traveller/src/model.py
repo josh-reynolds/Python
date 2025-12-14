@@ -206,6 +206,11 @@ class Model:
         """Return the number of low passengers on board."""
         return self.ship.low_passenger_count
 
+    @property
+    def total_passenger_count(self) -> int:
+        """Return the total number of passengers on board the Ship."""
+        return self.ship.total_passenger_count
+
     # DATE ==============================================
     def get_current_date(self) -> ImperialDate:
         """Return the Calendar's current date."""

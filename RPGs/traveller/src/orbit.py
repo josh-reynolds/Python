@@ -42,7 +42,7 @@ class OrbitScreen(PlayScreen):
             return None
 
         if self.model.destination() == self.model.get_star_system():
-            if self.model.ship.total_passenger_count > 0:
+            if self.model.total_passenger_count > 0:
                 print(f"Passengers disembarking on {self.model.system_name()}.")
 
                 funds = Credits(sum(p.ticket_price.amount for p in \

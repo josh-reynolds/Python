@@ -45,8 +45,8 @@ class StarportScreen(PlayScreen):
         # corner case - these messages assume passengers are coming
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
-        if self.model.ship.total_passenger_count > 0:
-            print(f"Boarding {self.model.ship.total_passenger_count} "   # type: ignore[union-attr]
+        if self.model.total_passenger_count > 0:
+            print(f"Boarding {self.model.total_passenger_count} "
                   f"passengers for {self.model.destination_name}.")
 
         if self.model.low_passenger_count > 0:
