@@ -46,7 +46,7 @@ class PlayScreen(Screen):
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.model.date_string} : You are " +
-              f"{self.model.map_hex.description()}.{repair_state}{END_FORMAT}")
+              f"{self.model.description}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.model.balance}"
               f"\tFree hold space: {self.model.free_cargo_space} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"

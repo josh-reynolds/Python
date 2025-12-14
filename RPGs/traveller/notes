@@ -3036,10 +3036,6 @@
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
 #
-#  self.model.location.__str__()                               1  src/play.py
-#  self.model.location.coordinate                              1  src/play.py
-#  self.model.location.coordinate                              2  src/jump.py
-#  self.model.location.description()                           1  src/play.py
 #  self.model.location.destinations                            1  src/menu.py
 #  self.model.location.destinations                            2  src/jump.py
 #  self.model.location.destinations.copy()                     1  src/terminal.py
@@ -3201,6 +3197,7 @@
 #  self.model.location                                         1+ src/menu.py
 #  self.model.location                                         2+ src/jump.py
 #  self.model.location                                         3+ src/trade.py
+#  self.model.location.__str__()                               1  src/play.py
 #  self.model.ship.total_passenger_count                       1  src/orbit.py
 #  self.model.ship.total_passenger_count                       2  src/starport.py
 #  self.model.ship.middle_passenger_count                      1  src/play.py
@@ -3223,6 +3220,9 @@
 #  self.model.ship.empty_passenger_berths                      1  src/terminal.py
 #  self.model.location.gas_giant                               1  src/jump.py
 #  self.model.location.on_surface()                            1  src/orbit.py
+#  self.model.location.coordinate                              1  src/play.py
+#  self.model.location.coordinate                              2  src/jump.py
+#  self.model.location.description()                           1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

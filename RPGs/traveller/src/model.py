@@ -115,6 +115,11 @@ class Model:
         return self.map_hex.coordinate
 
     @property
+    def description(self) -> str:
+        """Return the descriptor for the current location within the MapHex."""
+        return self.map_hex.description()
+
+    @property
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
         return cast(StarSystem, self.map_hex).starport
