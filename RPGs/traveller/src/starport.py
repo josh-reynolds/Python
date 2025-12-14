@@ -78,7 +78,7 @@ class StarportScreen(PlayScreen):
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
         cost = self.model.ship.recharge()
-        self.model.financials.debit(cost, "life support")
+        self.model.debit(cost, "life support")
 
     def refuel(self) -> None:
         """Refuel the Ship."""
@@ -112,7 +112,7 @@ class StarportScreen(PlayScreen):
 
         print(f"Performing maintenance. Charging {cost}.")
         self.model.financials.last_maintenance = self.model.get_current_date()
-        self.model.financials.debit(cost, "annual maintenance")
+        self.model.debit(cost, "annual maintenance")
         self.model.plus_week()
         print(self.model.repair_ship())
 

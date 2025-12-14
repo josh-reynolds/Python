@@ -50,7 +50,7 @@ class OrbitScreen(PlayScreen):
                 low_lottery_amount = Credits(10) * self.model.low_passenger_count
                 funds -= low_lottery_amount
                 print(f"Receiving {funds} in passenger fares.")
-                self.model.financials.credit(funds, "passenger fare")
+                self.model.credit(funds, "passenger fare")
 
                 self._low_lottery(low_lottery_amount)
 
@@ -84,7 +84,7 @@ class OrbitScreen(PlayScreen):
             if not winner:
                 print(f"No surviving low lottery winner. "
                       f"The captain is awarded {low_lottery_amount}.")
-                self.model.financials.credit(low_lottery_amount, "low lottery")
+                self.model.credit(low_lottery_amount, "low lottery")
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""

@@ -81,7 +81,7 @@ class TradeScreen(PlayScreen):
                           cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
         self.model.ship.load_cargo(purchased)
 
-        self.model.financials.debit(cost, "cargo purchase")
+        self.model.debit(cost, "cargo purchase")
         self.model.add_day()
 
     def sell_cargo(self) -> None:
@@ -110,7 +110,7 @@ class TradeScreen(PlayScreen):
         sale_price = self.model.depot.determine_price("sale", cargo, quantity,
                                                 broker_skill + self.model.ship.trade_skill())
 
-        self.model.financials.debit(self.model.depot.broker_fee(
+        self.model.debit(self.model.depot.broker_fee(
                                             broker_skill, sale_price), "broker fee")
 
         if not self.model.depot.confirm_transaction("sale", cargo, quantity, sale_price):
@@ -118,7 +118,7 @@ class TradeScreen(PlayScreen):
 
         self.model.depot.remove_cargo(self.model.ship.hold, cargo, quantity)
 
-        self.model.financials.credit(sale_price, "cargo sale")
+        self.model.credit(sale_price, "cargo sale")
         self.model.add_day()
 
     def load_freight(self) -> None:
@@ -227,7 +227,7 @@ class TradeScreen(PlayScreen):
                                            if isinstance(c, Cargo)]
 
             payment = Credits(1000 * freight_tonnage)
-            self.model.financials.credit(Credits(1000 * freight_tonnage), "freight shipment")
+            self.model.credit(Credits(1000 * freight_tonnage), "freight shipment")
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
             self.model.add_day()

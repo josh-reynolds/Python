@@ -88,6 +88,14 @@ class Model:
         self.financials.add_observer(observer)
         self.date.add_observer(self.financials)
 
+    def credit(self, amount: Credits, memo: str="") -> None:
+        """Add the specified amount to the current account balance."""
+        self.financials.credit(amount, memo)
+
+    def debit(self, amount: Credits, memo: str="") -> None:
+        """Deduct the specified amount from the current account balance."""
+        self.financials.debit(amount, memo)
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
