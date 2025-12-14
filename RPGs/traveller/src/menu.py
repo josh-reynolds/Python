@@ -5,7 +5,7 @@ MenuScreen - draws the screen and gathers input from the player.
 from typing import Any, List, cast, Tuple, Dict
 from src.baggage import Baggage
 from src.cargo import Cargo
-from src.cargo_depot import CargoDepot, cargo_hold_from
+from src.cargo_depot import cargo_hold_from
 from src.command import Command
 from src.coordinate import Coordinate, coordinate_from, create_3_axis
 from src.format import END_FORMAT, BOLD_BLUE, HOME, CLEAR, BOLD_RED, BOLD
@@ -90,10 +90,7 @@ class MenuScreen(Screen):
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.model.depot = CargoDepot(self.model.get_star_system(),
-                                      self.model.get_current_date())
-        self.model.depot.add_observer(self.parent)
-        self.model.depot.controls = self.parent
+        self.model.new_depot(self.parent)
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""

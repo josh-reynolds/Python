@@ -4,7 +4,6 @@ JumpScreen - contains commands for the jump state.
 """
 from typing import Any, cast
 from src.command import Command
-from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
@@ -103,10 +102,8 @@ class JumpScreen(PlayScreen):
 
         self.model.set_destinations()
 
-        self.model.depot = CargoDepot(self.model.get_star_system(),
-                                      self.model.get_current_date())
-        self.model.depot.add_observer(self.parent)
-        self.model.depot.controls = self.parent
+        self.model.new_depot(self.parent)
+
         self.model.financials.location = destination
 
         self.model.consume_life_support()

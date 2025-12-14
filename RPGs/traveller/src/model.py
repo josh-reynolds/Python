@@ -74,6 +74,11 @@ class Model:
         return "Your ship is fully refuelled."
 
     # DEPOT =============================================
+    def new_depot(self, observer: Any) -> None:
+        """Create a new CargoDepot attached to the current game state."""
+        self.depot = CargoDepot(self.get_star_system(), self.get_current_date())
+        self.depot.add_observer(observer)
+        self.depot.controls = observer
 
     # FINANCIALS ========================================
     @property
