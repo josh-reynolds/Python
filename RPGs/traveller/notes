@@ -3071,8 +3071,6 @@
 #  self.model.ship.hold                                        4  src/trade.py
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
-#  self.model.ship.life_support_level                          1  src/jump.py
-#  self.model.ship.life_support_level                          1  src/play.py
 #  self.model.ship.load_cargo()                                2  src/trade.py
 #  self.model.ship.maintenance_cost()                          1  src/starport.py
 #  self.model.ship.medic_skill()                               1  src/orbit.py
@@ -3223,6 +3221,8 @@
 #  self.model.financials.debit()                               3  src/starport.py
 #  self.model.ship.model.streamlined                           1  src/jump.py
 #  self.model.ship.model.streamlined                           1  src/orbit.py
+#  self.model.ship.life_support_level                          1  src/jump.py
+#  self.model.ship.life_support_level                          1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

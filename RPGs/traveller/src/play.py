@@ -50,7 +50,7 @@ class PlayScreen(Screen):
         print(f"Credits: {self.model.balance}"
               f"\tFree hold space: {self.model.ship.free_space()} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
-              f"\tLife support: {self.model.ship.life_support_level}%")
+              f"\tLife support: {self.model.life_support_level}%")
 
     def update(self) -> None:
         """Draw the screen and present play choices."""

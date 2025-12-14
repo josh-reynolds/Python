@@ -137,11 +137,6 @@ class Model:
 
     # SHIP ==============================================
     @property
-    def jump_range(self) -> int:
-        """Return the jump range of the Ship (in parsecs)."""
-        return self.ship.model.jump_range
-
-    @property
     def streamlined(self) -> bool:
         """Return whether the Ship is streamlined or not."""
         return self.ship.model.streamlined
@@ -156,6 +151,20 @@ class Model:
         if self.ship.destination:
             return self.ship.destination.name
         return "None"
+
+    @property
+    def life_support_level(self) -> int:
+        """Return the current life support level of the Ship."""
+        return self.ship.life_support_level
+
+    def consume_life_support(self) -> None:
+        """Reduce life support supplies consumed during travel."""
+        self.ship.life_support_level = 0
+
+    @property
+    def jump_range(self) -> int:
+        """Return the jump range of the Ship (in parsecs)."""
+        return self.ship.model.jump_range
 
     def check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
