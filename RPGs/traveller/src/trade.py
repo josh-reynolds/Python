@@ -63,7 +63,7 @@ class TradeScreen(PlayScreen):
 
         if self.model.depot.insufficient_hold_space(cargo,
                                                      quantity,
-                                                     self.model.ship.free_space()):
+                                                     self.model.free_cargo_space):
             return
 
         cost = self.model.depot.determine_price("purchase", cargo, quantity,
@@ -166,7 +166,7 @@ class TradeScreen(PlayScreen):
         """Select Freight lots from a list of available shipments."""
         selection: List[int] = []
         total_tonnage = 0
-        hold_tonnage = self.model.ship.free_space()
+        hold_tonnage = self.model.free_cargo_space
         while True:
             if len(available) == 0:
                 print(f"No more freight available for {destination.name}.")

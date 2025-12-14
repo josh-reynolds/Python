@@ -100,7 +100,7 @@ class TerminalScreen(PlayScreen):
         selection: Tuple[int, ...] = (0,0,0)
         ship_capacity: Tuple[int, ...] = (self.model.empty_passenger_berths,
                                           self.model.empty_low_berths)
-        ship_hold = self.model.ship.free_space()
+        ship_hold = self.model.free_cargo_space
 
         while True:
             if available == (0,0,0):

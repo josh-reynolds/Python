@@ -268,6 +268,11 @@ class Model:
         """Return the number of unoccupied passenger staterooms on the Ship."""
         return self.ship.empty_passenger_berths
 
+    @property
+    def free_cargo_space(self) -> int:
+        """Return the amount of free space in the Ship's cargo hold, in displacent tons."""
+        return self.ship.free_space()
+
     # DATE ==============================================
     def get_current_date(self) -> ImperialDate:
         """Return the Calendar's current date."""

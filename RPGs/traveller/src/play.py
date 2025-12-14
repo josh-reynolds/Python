@@ -48,7 +48,7 @@ class PlayScreen(Screen):
         print(f"{YELLOW_ON_RED}\n{self.model.date_string} : You are " +
               f"{self.model.location.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.model.balance}"
-              f"\tFree hold space: {self.model.ship.free_space()} tons"
+              f"\tFree hold space: {self.model.free_cargo_space} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
               f"\tLife support: {self.model.life_support_level}%")
 
