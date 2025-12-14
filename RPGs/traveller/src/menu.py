@@ -85,7 +85,7 @@ class MenuScreen(Screen):
         """Apply location from json data to Game location field."""
         coord = coordinate_from(data)
         self.model.set_hex(self.model.get_system_at_coordinate(coord))
-        self.model.location.destinations = \
+        self.model.map_hex.destinations = \
                 self.model.star_map.get_systems_within_range(coord,
                                                         self.model.jump_range)
         self.model.financials.location = self.model.get_star_system()

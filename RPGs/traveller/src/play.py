@@ -46,7 +46,7 @@ class PlayScreen(Screen):
         """Draw the banner at the top of the screen."""
         print(f"{HOME}{CLEAR}")
         print(f"{YELLOW_ON_RED}\n{self.model.date_string} : You are " +
-              f"{self.model.location.description()}.{repair_state}{END_FORMAT}")
+              f"{self.model.map_hex.description()}.{repair_state}{END_FORMAT}")
         print(f"Credits: {self.model.balance}"
               f"\tFree hold space: {self.model.free_cargo_space} tons"
               f"\tFuel: {fuel_amount} tons {fuel_quality}"
@@ -80,7 +80,7 @@ class PlayScreen(Screen):
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
         print(f"{self.model.star_map.get_subsector_string(self.model.get_star_system())} : " +
-              f"{self.model.location}")
+              f"{self.model.map_hex}")
         _ = input("\nPress ENTER key to continue.")
 
     def view_ledger(self) -> None:
@@ -164,7 +164,7 @@ class PlayScreen(Screen):
                      'date' : f"{self.model.date_string}",
                      'systems' : systems,
                      'subsectors' : subsectors,
-                     'location' : f"{self.model.location.coordinate}",
+                     'location' : f"{self.model.map_hex.coordinate}",
                      'menu' : f"{self.parent.screen}",
                      'ship model' : self.model.ship.model.name,
                      'ship details' : self.model.ship.encode(),

@@ -47,7 +47,7 @@ class TerminalScreen(PlayScreen):
         print(f"{BOLD_BLUE}Booking passengers.{END_FORMAT}")
 
         jump_range = self.model.jump_range
-        potential_destinations = self.model.location.destinations.copy()
+        potential_destinations = self.model.map_hex.destinations.copy()
         destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:

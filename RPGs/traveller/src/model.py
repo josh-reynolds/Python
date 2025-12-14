@@ -25,7 +25,7 @@ class Model:
         self.date: Calendar
         self.ship: Ship
         self.star_map: StarMap
-        self.location: Hex
+        self.map_hex: Hex
         self.financials: Financials
         self.depot: CargoDepot
 
@@ -99,34 +99,34 @@ class Model:
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
-        self.location = map_hex
+        self.map_hex = map_hex
 
     def get_star_system(self) -> StarSystem:
         """Return the current StarSystem."""
-        return cast(StarSystem, self.location)
+        return cast(StarSystem, self.map_hex)
 
     def system_name(self) -> str:
         """Return the name of the current StarSystem."""
-        return self.location.name
+        return self.map_hex.name
 
     @property
     def starport(self) -> str:
         """Return the classification of the current location's starport."""
-        return cast(StarSystem, self.location).starport
+        return cast(StarSystem, self.map_hex).starport
 
     @property
     def gas_giant(self) -> bool:
         """Return whether the StarSystem contains a gas giant planet or not."""
-        return cast(StarSystem, self.location).gas_giant
+        return cast(StarSystem, self.map_hex).gas_giant
 
     @property
     def on_surface(self) -> bool:
         """Return whether the Ship is currently on the surface of the mainworld."""
-        return cast(StarSystem, self.location).on_surface()
+        return cast(StarSystem, self.map_hex).on_surface()
 
     def set_location(self, location: str) -> None:
         """Change the location within the current map hex."""
-        cast(StarSystem, self.location).detail = location
+        cast(StarSystem, self.map_hex).detail = location
 
     def can_flush(self) -> bool:
         """Test whether facilities to flush fuel tanks are present at the current location."""
@@ -138,7 +138,7 @@ class Model:
 
     def in_deep_space(self) -> bool:
         """Test whether the Ship is currently in a DeepSpace Hex."""
-        return isinstance(self.location, DeepSpace)
+        return isinstance(self.map_hex, DeepSpace)
 
     # STAR MAP ==========================================
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
