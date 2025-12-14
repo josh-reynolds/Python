@@ -78,8 +78,7 @@ class TradeScreen(PlayScreen):
         self.model.depot.remove_cargo(self.model.depot.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
-                          cargo.purchase_dms, cargo.sale_dms,
-                          cast(StarSystem, self.model.location))
+                          cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
         self.model.ship.load_cargo(purchased)
 
         self.model.financials.debit(cost, "cargo purchase")
@@ -158,8 +157,8 @@ class TradeScreen(PlayScreen):
         for entry in selection:
             self.model.depot.freight[destination].remove(entry)
             self.model.ship.load_cargo(Freight(entry,
-                                         cast(StarSystem, self.model.location),
-                                         destination))
+                                               self.model.get_star_system(),
+                                               destination))
         self.model.add_day()
 
     def _select_freight_lots(self, available: List[int],
@@ -222,7 +221,7 @@ class TradeScreen(PlayScreen):
             print("You have no freight on board.")
             return
 
-        if self.model.destination() == self.model.location:
+        if self.model.destination() == self.model.get_star_system():
             freight_tonnage = sum(f.tonnage for f in freight)
             self.model.ship.hold = [c for c in self.model.ship.hold
                                            if isinstance(c, Cargo)]

@@ -93,6 +93,10 @@ class Model:
         """Change the current map hex."""
         self.location = map_hex
 
+    def get_star_system(self) -> StarSystem:
+        """Return the current StarSystem."""
+        return cast(StarSystem, self.location)
+
     def system_name(self) -> str:
         """Return the name of the current StarSystem."""
         return self.location.name

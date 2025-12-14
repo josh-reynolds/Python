@@ -79,7 +79,7 @@ class PlayScreen(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self.model.star_map.get_subsector_string(self.model.location)} : " +
+        print(f"{self.model.star_map.get_subsector_string(self.model.get_star_system())} : " +
               f"{self.model.location}")
         _ = input("\nPress ENTER key to continue.")
 
@@ -136,7 +136,7 @@ class PlayScreen(Screen):
         for sys in systems:
             combined = f"{self.model.star_map.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
-            if sys == self.model.location:
+            if sys == self.model.get_star_system():
                 highlight = combined
         pr_highlight_list(system_strings, highlight, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
@@ -242,7 +242,7 @@ class PlayScreen(Screen):
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
         if self.model.destination() is not None:
-            if self.model.destination() == self.model.location:
+            if self.model.destination() == self.model.get_star_system():
                 print(f"{BOLD_RED}There is still freight to be unloaded "
                       f"on {self.model.system_name()}.{END_FORMAT}")
                 return result

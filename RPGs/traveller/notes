@@ -3219,8 +3219,7 @@
 #  self.model.financials.balance                               1  src/play.py
 #  self.model.financials.balance                               1  src/trade.py
 #  self.model.financials.balance                               2  src/starport.py
-#
-#  7  self.model.location                                         1  src/terminal.py
+#  self.model.location                                         1  src/terminal.py
 #  self.model.location                                         1+ src/menu.py
 #  self.model.location                                         2+ src/jump.py
 #  self.model.location                                         3+ src/trade.py

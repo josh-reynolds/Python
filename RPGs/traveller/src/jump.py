@@ -105,8 +105,8 @@ class JumpScreen(PlayScreen):
         self.model.location.destinations = \
               self.model.star_map.get_systems_within_range(coord, jump_range)
 
-        self.model.depot = CargoDepot(cast(StarSystem, self.model.location),
-                                       self.model.get_current_date())
+        self.model.depot = CargoDepot(self.model.get_star_system(),
+                                      self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
         self.model.financials.location = destination
@@ -132,7 +132,7 @@ class JumpScreen(PlayScreen):
             print(f"{misjump_target} at distance {distance}")
 
             self.model.set_hex(self.model.get_system_at_coordinate(misjump_target))
-            self.model.star_map.systems[misjump_target] = self.model.location
+            self.model.star_map.systems[misjump_target] = self.model.get_star_system()
         else:
             self.model.set_hex(self.model.get_system_at_coordinate(destination))
 
@@ -148,7 +148,7 @@ class JumpScreen(PlayScreen):
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not cast(StarSystem, self.model.location).gas_giant:
+        if not self.model.get_star_system().gas_giant:
             if self.model.in_deep_space():
                 print("You are stranded in deep space. No fuel skimming possible.")
             else:

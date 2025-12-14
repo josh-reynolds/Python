@@ -88,12 +88,12 @@ class MenuScreen(Screen):
         self.model.location.destinations = \
                 self.model.star_map.get_systems_within_range(coord,
                                                         self.model.ship.model.jump_range)
-        self.model.financials.location = self.model.location
+        self.model.financials.location = self.model.get_star_system()
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""
-        self.model.depot = CargoDepot(cast(StarSystem, self.model.location),
-                                       self.model.get_current_date())
+        self.model.depot = CargoDepot(self.model.get_star_system(),
+                                      self.model.get_current_date())
         self.model.depot.add_observer(self.parent)
         self.model.depot.controls = self.parent
 

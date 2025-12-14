@@ -2,7 +2,7 @@
 
 OrbitScreen - contains commands for the orbit state.
 """
-from typing import Any, cast
+from typing import Any
 from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
@@ -10,7 +10,6 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.passengers import Passage
 from src.play import PlayScreen
-from src.star_system import StarSystem
 from src.utilities import die_roll
 
 class OrbitScreen(PlayScreen):
@@ -42,7 +41,7 @@ class OrbitScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
             return None
 
-        if self.model.destination() == self.model.location:
+        if self.model.destination() == self.model.get_star_system():
             if self.model.ship.total_passenger_count > 0:
                 print(f"Passengers disembarking on {self.model.system_name()}.")
 
@@ -59,7 +58,7 @@ class OrbitScreen(PlayScreen):
                 self.model.ship.hold = [item for item in self.model.ship.hold
                                   if not isinstance(item, Baggage)]
 
-        self.model.financials.berthing_fee(cast(StarSystem, self.model.location).on_surface())
+        self.model.financials.berthing_fee(self.model.get_star_system().on_surface())
         self.model.set_location("starport")
         self.parent.change_state("Starport")
         return None
