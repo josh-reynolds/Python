@@ -12,7 +12,7 @@ from src.credits import Credits
 from src.financials import Financials, financials_from
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
-from src.ship import Ship, RepairStatus, FuelQuality
+from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
 from src.utilities import die_roll
@@ -203,9 +203,9 @@ class Model:
         return self.star_map.get_system_at_coordinate(coord)
 
     # SHIP ==============================================
-    # TO_DO: unify Ship ctor and ship_from
-    def new_ship(self, observer: Any) -> None:
+    def new_ship(self, ship_details: str, ship_model: str, observer: Any) -> None:
         """Create a new Ship."""
+        self.ship = ship_from(ship_details, ship_model)
         self.ship.add_observer(observer)
         self.ship.controls = observer
 

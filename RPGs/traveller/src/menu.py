@@ -13,7 +13,6 @@ from src.freight import Freight
 from src.model import Model
 from src.passengers import Passage, passenger_from
 from src.screen import Screen
-from src.ship import ship_from, Ship
 from src.ship_model import get_ship_models
 from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem
@@ -119,13 +118,12 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.model.ship = Ship(ship_types[model_number])
-        self.model.new_ship(self.parent)
-
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.model.ship.name = ship_name
+        ship_details = f"{ship_name} - 0 - R - 0 - R - 0"
+
+        self.model.new_ship(ship_details, ship_types[model_number], self.parent)
 
         self.model.load_financials(data['financials'], self.parent)
         self._load_location(data['location'])
@@ -156,8 +154,7 @@ class MenuScreen(Screen):
         # all ship components need to be loaded after star systems
         # since we need that list to build destinations
 
-        self.model.ship = ship_from(data['ship details'], data['ship model'])
-        self.model.new_ship(self.parent)
+        self.model.new_ship(data['ship details'], data['ship model'], self.parent)
 
         passengers = []
         for line in data['passengers']:
@@ -340,13 +337,12 @@ class MenuScreen(Screen):
         ship_types = get_ship_models()
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
-        self.model.ship = Ship(ship_types[model_number])
-        self.model.new_ship(self.parent)
-
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
-        self.model.ship.name = ship_name
+        ship_details = f"{ship_name} - 0 - R - 0 - R - 0"
+
+        self.model.new_ship(ship_details, ship_types[model_number], self.parent)
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self.model.load_financials(financials_string, self.parent)
