@@ -4,6 +4,7 @@ Model - contains references to all game model objects.
 """
 from typing import List, Any, cast
 from src.calendar import Calendar, modify_calendar_from
+from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.credits import Credits
@@ -79,6 +80,11 @@ class Model:
         self.depot = CargoDepot(self.get_star_system(), self.get_current_date())
         self.depot.add_observer(observer)
         self.depot.controls = observer
+
+    @property
+    def cargo(self) -> List[Cargo]:
+        """Return a list of Cargo available at the current StarSystem's CargoDepot."""
+        return self.depot.cargo
 
     # FINANCIALS ========================================
     @property

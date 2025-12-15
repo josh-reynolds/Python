@@ -3003,9 +3003,7 @@
 # the Model parent class.
 #
 #
-#
 #  self.model.depot.broker_fee()                               1  src/trade.py
-#  self.model.depot.cargo                                      4  src/trade.py
 #  self.model.depot.confirm_transaction()                      2  src/trade.py
 #  self.model.depot.determine_price()                          2  src/trade.py
 #  self.model.depot.freight.remove()                           1  src/trade.py
@@ -3223,6 +3221,7 @@
 #  self.model.depot.add_observer()                             1  src/menu.py
 #  self.model.depot.controls                                   1  src/jump.py
 #  self.model.depot.controls                                   1  src/menu.py
+#  self.model.depot.cargo                                      4  src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~
@@ -3627,6 +3626,8 @@
 
 ~HERE~
 
+#  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
+#  * [    ] CargoDepot.remove_cargo() overlaps with Ship.unload_cargo()
 #  * [    ] Inconstent application of properties in Model interface
 #  * [    ] Some ambiguity with usage of 'destination' and 'location' in different
 #           context, should probably give separate uses separate names

@@ -38,7 +38,7 @@ class TradeScreen(PlayScreen):
     def goods(self) -> None:
         """Show goods available for purchase."""
         print(f"{BOLD_BLUE}Available cargo loads:{END_FORMAT}")
-        pr_list(self.model.depot.cargo)
+        pr_list(self.model.cargo)
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
@@ -52,8 +52,8 @@ class TradeScreen(PlayScreen):
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
-        pr_list(self.model.depot.cargo)
-        cargo = self.model.depot.get_cargo_lot(self.model.depot.cargo, "buy")
+        pr_list(self.model.cargo)
+        cargo = self.model.depot.get_cargo_lot(self.model.cargo, "buy")
         if cargo is None:
             return
 
@@ -75,7 +75,7 @@ class TradeScreen(PlayScreen):
         if not self.model.depot.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
-        self.model.depot.remove_cargo(self.model.depot.cargo, cargo, quantity)
+        self.model.depot.remove_cargo(self.model.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
