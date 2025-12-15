@@ -154,7 +154,7 @@ class TradeScreen(PlayScreen):
             return
 
         for entry in selection:
-            self.model.depot.freight[destination].remove(entry)
+            self.model.remove_freight(destination, entry)
             self.model.ship.load_cargo(Freight(entry,
                                                self.model.get_star_system(),
                                                destination))

@@ -101,6 +101,10 @@ class Model:
         """Calculate the price of a Cargo transaction."""
         return self.depot.determine_price(prompt, cargo, quantity, skill)
 
+    def remove_freight(self, destination: StarSystem, lot: int) -> None:
+        """Remove the specified Freight lot from the destination list."""
+        self.depot.freight[destination].remove(lot)
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:
