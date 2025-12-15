@@ -67,7 +67,7 @@ class TradeScreen(PlayScreen):
             return
 
         cost = self.model.determine_price("purchase", cargo, quantity,
-                                          self.model.ship.trade_skill())
+                                          self.model.trade_skill())
 
         if self.model.depot.insufficient_funds(cost, self.model.balance):
             return
@@ -108,7 +108,7 @@ class TradeScreen(PlayScreen):
             return
 
         sale_price = self.model.determine_price("sale", cargo, quantity,
-                                                broker_skill + self.model.ship.trade_skill())
+                                                broker_skill + self.model.trade_skill())
 
         self.model.debit(self.model.broker_fee( broker_skill, sale_price), "broker fee")
 

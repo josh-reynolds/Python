@@ -3025,14 +3025,12 @@
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
 #
-#  self.model.ship                                             3+ src/menu.py
 #  self.model.ship.__str__()                                   1+ src/play.py
 #  self.model.ship.cargo_hold()                                1  src/play.py
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
 #  self.model.ship.encode()                                    1  src/play.py
-#  self.model.ship.engineering_skill()                         1  src/jump.py
 #  8  self.model.ship.hold                                        1  src/menu.py
 #  self.model.ship.hold                                        1  src/orbit.py
 #  self.model.ship.hold                                        1  src/play.py
@@ -3042,7 +3040,6 @@
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
 #  self.model.ship.load_cargo()                                2  src/trade.py
 #  self.model.ship.maintenance_cost()                          1  src/starport.py
-#  self.model.ship.medic_skill()                               1  src/orbit.py
 #  self.model.ship.model.fuel_tank                             1  src/jump.py
 #  self.model.ship.model.fuel_tank                             1  src/play.py
 #  self.model.ship.model.name                                  1  src/play.py
@@ -3051,7 +3048,6 @@
 #  self.model.ship.recharge()                                  1  src/starport.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
-#  self.model.ship.trade_skill()                               2  src/trade.py
 #  self.model.ship.unrefined_jump_counter                      1  src/jump.py
 #  self.model.ship.unrefined_jump_counter                      2  src/starport.py
 #  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
@@ -3223,6 +3219,10 @@
 #  self.model.depot.get_available_freight()                    1  src/trade.py
 #  self.model.ship.add_observer()                              3  src/menu.py
 #  self.model.ship.controls                                    3  src/menu.py
+#  self.model.ship                                             3+ src/menu.py
+#  self.model.ship.engineering_skill()                         1  src/jump.py
+#  self.model.ship.medic_skill()                               1  src/orbit.py
+#  self.model.ship.trade_skill()                               2  src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~

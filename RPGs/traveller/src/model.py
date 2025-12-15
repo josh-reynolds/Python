@@ -44,8 +44,8 @@ class Model:
         if self.ship.repair_status == RepairStatus.PATCHED:
             return "Further repairs require starport facilities."
 
-        self.date.day += 1
-        if die_roll(2) + self.ship.engineering_skill() > 9:
+        self.add_day()
+        if die_roll(2) + self.engineering_skill() > 9:
             self.ship.repair_status = RepairStatus.PATCHED
             return "Ship partially repaired. Visit a starport for further work."
         return "No progress today. Drives are still out of commission."
@@ -344,6 +344,18 @@ class Model:
         """Unload all Baggage from the Ship's cargo hold."""
         self.ship.hold = [item for item in self.ship.hold
                           if not isinstance(item, Baggage)]
+
+    def trade_skill(self) -> int:
+        """Return the best trade skill from the Ship's crew."""
+        return self.ship.trade_skill()
+
+    def medic_skill(self) -> int:
+        """Return the best medic skill from the Ship's crew."""
+        return self.ship.medic_skill()
+
+    def engineering_skill(self) -> int:
+        """Return the best engineering skill from the Ship's crew."""
+        return self.ship.engineering_skill()
 
     # DATE ==============================================
     def get_current_date(self) -> ImperialDate:

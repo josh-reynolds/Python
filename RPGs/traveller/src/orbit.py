@@ -65,7 +65,7 @@ class OrbitScreen(PlayScreen):
         if self.model.low_passenger_count > 0:
             low_passengers = self.model.get_low_passengers()
             for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.model.ship.medic_skill() < 5:
+                if die_roll(2) + passenger.endurance + self.model.medic_skill() < 5:
                     passenger.survived = False
 
             survivors = [p for p in low_passengers if p.survived]
