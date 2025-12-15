@@ -90,7 +90,7 @@ class StarportScreen(PlayScreen):
             print("Annual maintenance can only be performed at class A or B starports.")
             return
 
-        cost = self.model.ship.maintenance_cost()
+        cost = self.model.maintenance_cost()
         if self.model.balance < cost:
             print("You do not have enough funds to pay for maintenance.\n"
                   f"It will cost {cost}. Your balance is {self.model.balance}.")

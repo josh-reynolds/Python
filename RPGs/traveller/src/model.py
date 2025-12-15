@@ -357,6 +357,10 @@ class Model:
         """Return the best engineering skill from the Ship's crew."""
         return self.ship.engineering_skill()
 
+    def maintenance_cost(self) -> Credits:
+        """Return the annual maintenance cost for the Ship."""
+        return self.ship.maintenance_cost()
+
     # DATE ==============================================
     def get_current_date(self) -> ImperialDate:
         """Return the Calendar's current date."""
