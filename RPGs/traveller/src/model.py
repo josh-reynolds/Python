@@ -203,6 +203,12 @@ class Model:
         return self.star_map.get_system_at_coordinate(coord)
 
     # SHIP ==============================================
+    # TO_DO: unify Ship ctor and ship_from
+    def new_ship(self, observer: Any) -> None:
+        """Create a new Ship."""
+        self.ship.add_observer(observer)
+        self.ship.controls = observer
+
     @property
     def streamlined(self) -> bool:
         """Return whether the Ship is streamlined or not."""

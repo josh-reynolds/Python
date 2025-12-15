@@ -3027,17 +3027,12 @@
 #
 #  self.model.ship                                             3+ src/menu.py
 #  self.model.ship.__str__()                                   1+ src/play.py
-#  self.model.ship.add_observer()                              3  src/menu.py
 #  self.model.ship.cargo_hold()                                1  src/play.py
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
-#  self.model.ship.controls                                    3  src/menu.py
 #  self.model.ship.crew                                        1  src/play.py
 #  self.model.ship.encode()                                    1  src/play.py
 #  self.model.ship.engineering_skill()                         1  src/jump.py
-#  self.model.ship.free_space()                                1  src/play.py
-#  self.model.ship.free_space()                                1  src/terminal.py
-#  self.model.ship.free_space()                                2  src/trade.py
 #  8  self.model.ship.hold                                        1  src/menu.py
 #  self.model.ship.hold                                        1  src/orbit.py
 #  self.model.ship.hold                                        1  src/play.py
@@ -3218,11 +3213,16 @@
 #  self.model.depot.controls                                   1  src/jump.py
 #  self.model.depot.controls                                   1  src/menu.py
 #  self.model.depot.cargo                                      4  src/trade.py
+#  self.model.ship.free_space()                                1  src/play.py
+#  self.model.ship.free_space()                                1  src/terminal.py
+#  self.model.ship.free_space()                                2  src/trade.py
 #  self.model.depot.broker_fee()                               1  src/trade.py
 #  self.model.depot.confirm_transaction()                      2  src/trade.py
 #  self.model.depot.determine_price()                          2  src/trade.py
 #  self.model.depot.freight.remove()                           1  src/trade.py
 #  self.model.depot.get_available_freight()                    1  src/trade.py
+#  self.model.ship.add_observer()                              3  src/menu.py
+#  self.model.ship.controls                                    3  src/menu.py
 # -------------------------------------------------------------
 
 ~HERE~

@@ -6,7 +6,6 @@ from typing import Any
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
-from src.passengers import Passage
 from src.play import PlayScreen
 from src.utilities import confirm_input
 
@@ -50,8 +49,7 @@ class StarportScreen(PlayScreen):
                   f"passengers for {self.model.destination_name}.")
 
         if self.model.low_passenger_count > 0:
-            low_passengers = [p for p in self.model.get_passengers() if
-                              p.passage == Passage.LOW]
+            low_passengers = self.model.get_low_passengers()
             for passenger in low_passengers:
                 passenger.guess_survivors(self.model.low_passenger_count)
 

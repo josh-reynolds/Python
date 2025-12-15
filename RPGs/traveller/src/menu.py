@@ -120,8 +120,7 @@ class MenuScreen(Screen):
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
         self.model.ship = Ship(ship_types[model_number])
-        self.model.ship.add_observer(self.parent)
-        self.model.ship.controls = self.parent
+        self.model.new_ship(self.parent)
 
         ship_name = ""
         while not ship_name:
@@ -158,8 +157,7 @@ class MenuScreen(Screen):
         # since we need that list to build destinations
 
         self.model.ship = ship_from(data['ship details'], data['ship model'])
-        self.model.ship.add_observer(self.parent)
-        self.model.ship.controls = self.parent
+        self.model.new_ship(self.parent)
 
         passengers = []
         for line in data['passengers']:
@@ -343,8 +341,7 @@ class MenuScreen(Screen):
         model_number = choose_from(ship_types, "\nChoose a ship to start with. ")
 
         self.model.ship = Ship(ship_types[model_number])
-        self.model.ship.add_observer(self.parent)
-        self.model.ship.controls = self.parent
+        self.model.new_ship(self.parent)
 
         ship_name = ""
         while not ship_name:
