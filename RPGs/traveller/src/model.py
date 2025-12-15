@@ -95,6 +95,12 @@ class Model:
         """Confirm a sale or purchase."""
         return self.depot.confirm_transaction(prompt, cargo, quantity, price)
 
+    def determine_price(self, prompt: str,
+                        cargo: Cargo, quantity: int,
+                        skill: int) -> Credits:
+        """Calculate the price of a Cargo transaction."""
+        return self.depot.determine_price(prompt, cargo, quantity, skill)
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:
