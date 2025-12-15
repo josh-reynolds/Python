@@ -90,6 +90,11 @@ class Model:
         """Return the broker's fee for Cargo sale."""
         return self.depot.broker_fee(broker_skill, sale_price)
 
+    def confirm_transaction(self, prompt: str, cargo: Cargo,
+                            quantity: int, price: Credits) -> bool:
+        """Confirm a sale or purchase."""
+        return self.depot.confirm_transaction(prompt, cargo, quantity, price)
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:

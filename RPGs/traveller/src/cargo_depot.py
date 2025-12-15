@@ -62,7 +62,7 @@ class CargoDepot:
         for observer in self.observers:
             observer.on_notify(message, priority)
 
-    def get_input(self, constraint, prompt):
+    def get_input(self, constraint: str, prompt: str) -> str | int:
         """Request input from controls."""
         return self.controls.get_input(constraint, prompt)
 
@@ -176,7 +176,7 @@ class CargoDepot:
             self.message_observers("   " + str(self.freight[world]))
             self.message_observers("")
 
-        destination_number = self.get_input('int', "Enter destination number: ")
+        destination_number = cast(int, self.get_input('int', "Enter destination number: "))
         if destination_number >= len(destinations):
             self.message_observers("That is not a valid destination number.")
             return (None, None)
@@ -194,7 +194,7 @@ class CargoDepot:
             self.message_observers("   " + str(self.passengers[world]))
             self.message_observers("")
 
-        destination_number = self.get_input('int', "Enter destination number: ")
+        destination_number = cast(int, self.get_input('int', "Enter destination number: "))
         if destination_number >= len(destinations):
             self.message_observers("That is not a valid destination number.")
             return (None, None)
@@ -225,7 +225,7 @@ class CargoDepot:
 
     def get_cargo_lot(self, source: List[Cargo], prompt: str) -> Cargo | None:
         """Select a Cargo lot from a list."""
-        item_number = self.get_input('int', f"Enter cargo number to {prompt}: ")
+        item_number = cast(int, self.get_input('int', f"Enter cargo number to {prompt}: "))
         if item_number >= len(source):
             self.message_observers("That is not a valid cargo ID.")
             return None
@@ -233,7 +233,7 @@ class CargoDepot:
 
     def get_cargo_quantity(self, prompt: str, cargo: Cargo) -> None | int:
         """Get a quantify of Cargo from the player to sell or purchase."""
-        quantity = self.get_input('int', f"How many would you like to {prompt}? ")
+        quantity = cast(int, self.get_input('int', f"How many would you like to {prompt}? "))
         if quantity > cargo.quantity:
             self.message_observers("There is not enough available. Specify a lower quantity.")
             return None
@@ -257,7 +257,7 @@ class CargoDepot:
         broker_skill = 0
         if broker == 'y':
             while broker_skill < 1 or broker_skill > 4:
-                broker_skill = self.get_input('int', "What level of broker (1-4)? ")
+                broker_skill = cast(int, self.get_input('int', "What level of broker (1-4)? "))
 
             broker_confirm = self.get_input('confirm', "This will incur a " +
                                            f"{5 * broker_skill}% fee. " +

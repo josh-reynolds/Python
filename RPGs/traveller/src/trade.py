@@ -72,7 +72,7 @@ class TradeScreen(PlayScreen):
         if self.model.depot.insufficient_funds(cost, self.model.balance):
             return
 
-        if not self.model.depot.confirm_transaction("purchase", cargo, quantity, cost):
+        if not self.model.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
         self.model.depot.remove_cargo(self.model.cargo, cargo, quantity)
@@ -112,7 +112,7 @@ class TradeScreen(PlayScreen):
 
         self.model.debit(self.model.broker_fee( broker_skill, sale_price), "broker fee")
 
-        if not self.model.depot.confirm_transaction("sale", cargo, quantity, sale_price):
+        if not self.model.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
         self.model.depot.remove_cargo(self.model.ship.hold, cargo, quantity)
