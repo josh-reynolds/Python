@@ -11,7 +11,7 @@ from src.coordinate import Coordinate
 from src.credits import Credits
 from src.financials import Financials, financials_from
 from src.imperial_date import ImperialDate
-from src.passengers import Passenger
+from src.passengers import Passenger, Passage
 from src.ship import Ship, RepairStatus, FuelQuality
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
@@ -286,6 +286,10 @@ class Model:
     def get_passengers(self) -> List[Passenger]:
         """Return a list of Passengers on board the Ship."""
         return self.ship.passengers
+
+    def get_low_passengers(self) -> List[Passenger]:
+        """Return a list of the Low Passengers on board the Ship."""
+        return [p for p in self.get_passengers() if p.passage == Passage.LOW]
 
     def set_passengers(self, passengers: List[Passenger]) -> None:
         """Set the list of Passengers on board the Ship."""
