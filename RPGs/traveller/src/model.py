@@ -3,6 +3,7 @@
 Model - contains references to all game model objects.
 """
 from typing import List, Any, cast, Sequence
+from src.baggage import Baggage
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
@@ -328,6 +329,11 @@ class Model:
     def free_cargo_space(self) -> int:
         """Return the amount of free space in the Ship's cargo hold, in displacent tons."""
         return self.ship.free_space()
+
+    def remove_baggage(self) -> None:
+        """Unload all Baggage from the Ship's cargo hold."""
+        self.ship.hold = [item for item in self.ship.hold
+                          if not isinstance(item, Baggage)]
 
     # DATE ==============================================
     def get_current_date(self) -> ImperialDate:

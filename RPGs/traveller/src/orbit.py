@@ -3,7 +3,6 @@
 OrbitScreen - contains commands for the orbit state.
 """
 from typing import Any
-from src.baggage import Baggage
 from src.command import Command
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
@@ -55,8 +54,7 @@ class OrbitScreen(PlayScreen):
                 self._low_lottery(low_lottery_amount)
 
                 self.model.set_passengers([])
-                self.model.ship.hold = [item for item in self.model.ship.hold
-                                  if not isinstance(item, Baggage)]
+                self.model.remove_baggage()
 
         self.model.financials.berthing_fee(self.model.on_surface)
         self.model.set_location("starport")
