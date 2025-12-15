@@ -86,6 +86,10 @@ class Model:
         """Return a list of Cargo available at the current StarSystem's CargoDepot."""
         return self.depot.cargo
 
+    def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
+        """Return the broker's fee for Cargo sale."""
+        return self.depot.broker_fee(broker_skill, sale_price)
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:

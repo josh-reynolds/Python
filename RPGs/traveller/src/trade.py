@@ -110,8 +110,7 @@ class TradeScreen(PlayScreen):
         sale_price = self.model.depot.determine_price("sale", cargo, quantity,
                                                 broker_skill + self.model.ship.trade_skill())
 
-        self.model.debit(self.model.depot.broker_fee(
-                                            broker_skill, sale_price), "broker fee")
+        self.model.debit(self.model.broker_fee( broker_skill, sale_price), "broker fee")
 
         if not self.model.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return
