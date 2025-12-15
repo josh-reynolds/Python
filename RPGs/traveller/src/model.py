@@ -2,7 +2,7 @@
 
 Model - contains references to all game model objects.
 """
-from typing import List, Any, cast
+from typing import List, Any, cast, Sequence
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
@@ -104,6 +104,12 @@ class Model:
     def remove_freight(self, destination: StarSystem, lot: int) -> None:
         """Remove the specified Freight lot from the destination list."""
         self.depot.freight[destination].remove(lot)
+
+    def get_available_freight(self,
+                              destinations: Sequence[StarSystem]
+                              ) -> tuple[Coordinate | None, list[Any] | None]:
+        """Present a list of worlds and Freight shipments for the player to choose from."""
+        return self.depot.get_available_freight(destinations)
 
     # FINANCIALS ========================================
     @property

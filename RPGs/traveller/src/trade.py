@@ -131,7 +131,7 @@ class TradeScreen(PlayScreen):
         if not destinations:
             return
 
-        coordinate, available = self.model.depot.get_available_freight(destinations)
+        coordinate, available = self.model.get_available_freight(destinations)
         if available is None:
             return
 
