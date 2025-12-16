@@ -59,8 +59,7 @@ class JumpScreen(PlayScreen):
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
-        status = self.model.financials.maintenance_status(
-                                     self.model.get_current_date())
+        status = self.model.maintenance_status(self.model.get_current_date())
         self.model.ship.check_failure_pre_jump(status)
 
         if not self.model.can_jump():
@@ -116,8 +115,7 @@ class JumpScreen(PlayScreen):
             modifier = 3
         else:
             modifier = -1
-        if self.model.financials.maintenance_status(
-                                self.model.get_current_date()) == "red":
+        if self.model.maintenance_status(self.model.get_current_date()) == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier

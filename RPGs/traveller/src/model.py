@@ -142,6 +142,11 @@ class Model:
         """Set the contents of the account ledger."""
         self.financials.ledger = entries
 
+    # TO_DO: aren't we always calling this with the current date?
+    def maintenance_status(self, date: ImperialDate) -> str:
+        """Return the current maintenance status of the Ship."""
+        return self.financials.maintenance_status(date)
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
