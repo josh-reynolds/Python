@@ -87,7 +87,7 @@ class PlayScreen(Screen):
         """View the bank transaction ledger."""
         print(f"{BOLD_BLUE}Financial transactions:{END_FORMAT}")
         print("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO")
-        transactions = self.model.financials.ledger
+        transactions = self.model.get_ledger()
         for transaction in transactions:
             print(transaction)
         _ = input("\nPress ENTER key to continue.")
@@ -171,7 +171,7 @@ class PlayScreen(Screen):
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
                      'financials' : self.model.financials.encode(),
-                     'ledger' : self.model.financials.ledger
+                     'ledger' : self.model.get_ledger()
                      }
 
         filename = get_next_file("save_game", "json")
@@ -208,7 +208,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        ledger = self.model.financials.ledger
+        ledger = self.model.get_ledger()
         if len(ledger) == 0:
             print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
             return

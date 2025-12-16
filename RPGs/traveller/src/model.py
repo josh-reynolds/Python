@@ -134,6 +134,14 @@ class Model:
         """Deduct the specified amount from the current account balance."""
         self.financials.debit(amount, memo)
 
+    def get_ledger(self) -> List[str]:
+        """Return the contents of the account ledger."""
+        return self.financials.ledger
+
+    def set_ledger(self, entries: List[str]) -> None:
+        """Set the contents of the account ledger."""
+        self.financials.ledger = entries
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""

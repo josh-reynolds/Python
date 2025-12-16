@@ -186,7 +186,7 @@ class MenuScreen(Screen):
             return None
 
         self.model.load_financials(data['financials'], self.parent)
-        self.model.financials.ledger = data['ledger']
+        self.model.set_ledger(data['ledger'])
         self._load_location(data['location'])
         self._create_depot()
         self.model.attach_date_observers()

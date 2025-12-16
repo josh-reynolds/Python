@@ -3018,14 +3018,11 @@
 #  self.model.financials.berthing_fee                          1  src/orbit.py
 #  self.model.financials.encode()                              1  src/play.py
 #  self.model.financials.last_maintenance                      1  src/starport.py
-#  self.model.financials.ledger                                1  src/menu.py
-#  self.model.financials.ledger                                3  src/play.py
 #  self.model.financials.location                              1  src/jump.py
 #  self.model.financials.location                              1  src/menu.py
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
 #
-#  self.model.ship.__str__()                                   1+ src/play.py
 #  self.model.ship.cargo_hold()                                1  src/play.py
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
@@ -3221,8 +3218,11 @@
 #  self.model.ship.model.fuel_tank                             1  src/play.py
 #  self.model.ship.model.name                                  1  src/play.py
 #  self.model.ship.name                                        2  src/menu.py
+#  self.model.ship.__str__()                                   1+ src/play.py
 #  self.model.ship.recharge()                                  1  src/starport.py
 #  self.model.ship.model.trip_fuel_cost                        1  src/play.py
+#  self.model.financials.ledger                                1  src/menu.py
+#  self.model.financials.ledger                                3  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~
