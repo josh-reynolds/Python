@@ -167,10 +167,10 @@ class PlayScreen(Screen):
                      'location' : f"{self.model.coordinate}",
                      'menu' : f"{self.parent.screen}",
                      'ship model' : self.model.ship_model_name(),
-                     'ship details' : self.model.ship.encode(),
+                     'ship details' : self.model.encode_ship(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,
-                     'financials' : self.model.financials.encode(),
+                     'financials' : self.model.encode_financials(),
                      'ledger' : self.model.get_ledger()
                      }
 

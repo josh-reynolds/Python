@@ -3014,8 +3014,6 @@
 #  self.model.depot.passengers                                 2  src/terminal.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
-#  self.model.financials.encode()                              1  src/play.py
-#
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
@@ -3223,6 +3221,7 @@
 #  self.model.financials.location                              1  src/jump.py
 #  self.model.financials.location                              1  src/menu.py
 #  self.model.financials.berthing_fee                          1  src/orbit.py
+#  self.model.financials.encode()                              1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

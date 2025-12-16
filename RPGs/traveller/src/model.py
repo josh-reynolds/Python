@@ -159,6 +159,10 @@ class Model:
         """Deduct fee for berth at a starport from the account balance."""
         self.financials.berthing_fee(self.on_surface)
 
+    def encode_financials(self) -> str:
+        """Return a string encoding the current state of the Financials object."""
+        return self.financials.encode()
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
@@ -238,6 +242,10 @@ class Model:
         self.ship = ship_from(ship_details, ship_model)
         self.ship.add_observer(observer)
         self.ship.controls = observer
+
+    def encode_ship(self) -> str:
+        """Return a string encoding the current state of the Ship."""
+        return self.ship.encode()
 
     def ship_string(self) -> str:
         """Return the string representation of the Ship."""
