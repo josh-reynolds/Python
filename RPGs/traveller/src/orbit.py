@@ -55,7 +55,7 @@ class OrbitScreen(PlayScreen):
                 self.model.set_passengers([])
                 self.model.remove_baggage()
 
-        self.model.financials.berthing_fee(self.model.on_surface)
+        self.model.berthing_fee()
         self.model.set_location("starport")
         self.parent.change_state("Starport")
         return None

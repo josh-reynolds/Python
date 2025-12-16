@@ -155,6 +155,10 @@ class Model:
         """Set the date annual maintenance was last performed to today."""
         self.financials.last_maintenance = self.get_current_date()
 
+    def berthing_fee(self) -> None:
+        """Deduct fee for berth at a starport from the account balance."""
+        self.financials.berthing_fee(self.on_surface)
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
