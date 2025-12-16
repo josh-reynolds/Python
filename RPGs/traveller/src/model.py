@@ -270,6 +270,10 @@ class Model:
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
 
+    def leg_fuel_cost(self) -> int:
+        """Return the amount of fuel used in one leg of trip, in tons."""
+        return self.ship.model.trip_fuel_cost // 2
+
     def burn_fuel(self, amount: int) -> None:
         """Reduce the fuel in the Ship's tanks by the specified amount."""
         self.ship.current_fuel -= amount

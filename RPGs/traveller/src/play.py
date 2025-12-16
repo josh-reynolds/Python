@@ -262,10 +262,11 @@ class PlayScreen(Screen):
 
     def _check_fuel_level(self, prompt: str) -> int | None:
         """Verify there is sufficient fuel in the tanks to make a trip."""
-        leg_fc = self.model.ship.model.trip_fuel_cost // 2
-        if self.model.fuel_level() < leg_fc:
+        leg_fc = self.model.leg_fuel_cost()
+        current_fuel = self.model.fuel_level()
+        if current_fuel < leg_fc:
             print(f"Insufficient fuel. Travel {prompt} the jump point "
                   f"requires {leg_fc} tons, only "
-                  f"{self.model.fuel_level()} tons in tanks.")
+                  f"{current_fuel} tons in tanks.")
             return None
         return leg_fc
