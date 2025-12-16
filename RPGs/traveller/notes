@@ -3051,7 +3051,6 @@
 #  self.model.ship.unrefined_jump_counter                      2  src/starport.py
 #  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
 #
-#  self.model.star_map                                         1+ src/menu.py
 #  self.model.star_map.get_all_systems()                       1  src/play.py
 #  self.model.star_map.get_subsector_string()                  2  src/play.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
@@ -3223,6 +3222,7 @@
 #  self.model.ship.medic_skill()                               1  src/orbit.py
 #  self.model.ship.trade_skill()                               2  src/trade.py
 #  self.model.ship.maintenance_cost()                          1  src/starport.py
+#  self.model.star_map                                         1+ src/menu.py
 # -------------------------------------------------------------
 
 ~HERE~

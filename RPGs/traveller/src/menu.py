@@ -14,7 +14,6 @@ from src.model import Model
 from src.passengers import Passage, passenger_from
 from src.screen import Screen
 from src.ship_model import get_ship_models
-from src.star_map import StarMap
 from src.star_system import DeepSpace, StarSystem
 from src.star_system_factory import hex_from
 from src.subsector import subsector_from
@@ -72,7 +71,7 @@ class MenuScreen(Screen):
             map_hex = hex_from(line)
             systems[map_hex.coordinate] = map_hex
 
-        self.model.star_map = StarMap(systems)
+        self.model.new_star_map(systems)
 
     def _load_subsectors(self, data: List[str]) -> None:
         """Apply Subsectors from json data to Game star_map field."""
@@ -121,6 +120,7 @@ class MenuScreen(Screen):
         ship_name = ""
         while not ship_name:
             ship_name = input("What is the name of your ship? ")
+        # TO_DO: this ought to move into the new_game file
         ship_details = f"{ship_name} - 0 - R - 0 - R - 0"
 
         self.model.new_ship(ship_details, ship_types[model_number], self.parent)

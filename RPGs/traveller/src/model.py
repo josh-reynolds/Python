@@ -2,7 +2,7 @@
 
 Model - contains references to all game model objects.
 """
-from typing import List, Any, cast, Sequence
+from typing import List, Any, cast, Sequence, Dict
 from src.baggage import Baggage
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
@@ -198,6 +198,10 @@ class Model:
                                                                            self.jump_range)
 
     # STAR MAP ==========================================
+    def new_star_map(self, systems: Dict[Coordinate, Hex]) -> None:
+        """Create a new StarMap."""
+        self.star_map = StarMap(systems)
+
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)
