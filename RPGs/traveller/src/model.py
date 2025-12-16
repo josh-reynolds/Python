@@ -247,6 +247,10 @@ class Model:
         """Reduce life support supplies consumed during travel."""
         self.ship.life_support_level = 0
 
+    def recharge_life_support(self) -> None:
+        """Recharge the Ship's life support system."""
+        self.debit(self.ship.recharge(), "life support")
+
     @property
     def jump_range(self) -> int:
         """Return the jump range of the Ship (in parsecs)."""

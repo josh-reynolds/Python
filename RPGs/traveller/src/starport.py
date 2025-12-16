@@ -75,8 +75,7 @@ class StarportScreen(PlayScreen):
     def recharge(self) -> None:
         """Recharge the Ship's life support system."""
         print(f"{BOLD_BLUE}Replenishing life support system.{END_FORMAT}")
-        cost = self.model.ship.recharge()
-        self.model.debit(cost, "life support")
+        self.model.recharge_life_support()
 
     def refuel(self) -> None:
         """Refuel the Ship."""
