@@ -218,6 +218,10 @@ class Model:
         """Return the string representation of the Ship."""
         return str(self.ship)
 
+    def ship_model_name(self) -> str:
+        """Return the name of the Ship's Model."""
+        return self.ship.model.name
+
     @property
     def streamlined(self) -> bool:
         """Return whether the Ship is streamlined or not."""

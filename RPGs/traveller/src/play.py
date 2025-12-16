@@ -166,7 +166,7 @@ class PlayScreen(Screen):
                      'subsectors' : subsectors,
                      'location' : f"{self.model.coordinate}",
                      'menu' : f"{self.parent.screen}",
-                     'ship model' : self.model.ship.model.name,
+                     'ship model' : self.model.ship_model_name(),
                      'ship details' : self.model.ship.encode(),
                      'passengers' : passenger_list,
                      'cargo_hold' : cargo_hold_list,

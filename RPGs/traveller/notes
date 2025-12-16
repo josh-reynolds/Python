@@ -3038,9 +3038,7 @@
 #  self.model.ship.hold                                        4  src/trade.py
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
-#  self.model.ship.model.name                                  1  src/play.py
 #  self.model.ship.model.trip_fuel_cost                        1  src/play.py
-#  self.model.ship.name                                        2  src/menu.py
 #  self.model.ship.recharge()                                  1  src/starport.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
@@ -3223,6 +3221,8 @@
 #  self.model.ship.load_cargo()                                2  src/trade.py
 #  self.model.ship.model.fuel_tank                             1  src/jump.py
 #  self.model.ship.model.fuel_tank                             1  src/play.py
+#  self.model.ship.model.name                                  1  src/play.py
+#  self.model.ship.name                                        2  src/menu.py
 # -------------------------------------------------------------
 
 ~HERE~
