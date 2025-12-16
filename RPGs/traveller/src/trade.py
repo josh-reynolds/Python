@@ -222,11 +222,10 @@ class TradeScreen(PlayScreen):
 
         if self.model.destination() == self.model.get_star_system():
             freight_tonnage = sum(f.tonnage for f in freight)
-            self.model.ship.hold = [c for c in self.model.ship.hold
-                                           if isinstance(c, Cargo)]
+            self.model.remove_all_freight()
 
             payment = Credits(1000 * freight_tonnage)
-            self.model.credit(Credits(1000 * freight_tonnage), "freight shipment")
+            self.model.credit(payment, "freight shipment")
             print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
 
             self.model.add_day()

@@ -10,6 +10,7 @@ from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.financials import Financials, financials_from
+from src.freight import Freight
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship, RepairStatus, FuelQuality, ship_from
@@ -348,6 +349,13 @@ class Model:
         """Unload all Baggage from the Ship's cargo hold."""
         self.ship.hold = [item for item in self.ship.hold
                           if not isinstance(item, Baggage)]
+
+    # TO_DO: also removes Baggage - should not be any on board when this
+    #        method is called, but still...
+    def remove_all_freight(self) -> None:
+        """Unload all Freight from the Ship's cargo hold."""
+        self.ship.hold = [item for item in self.ship.hold
+                          if not isinstance(item, Freight)]
 
     def trade_skill(self) -> int:
         """Return the best trade skill from the Ship's crew."""
