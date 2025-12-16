@@ -108,7 +108,7 @@ class StarportScreen(PlayScreen):
             return
 
         print(f"Performing maintenance. Charging {cost}.")
-        self.model.financials.last_maintenance = self.model.get_current_date()
+        self.model.set_maintenance_date()
         self.model.debit(cost, "annual maintenance")
         self.model.plus_week()
         print(self.model.repair_ship())

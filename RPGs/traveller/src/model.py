@@ -147,6 +147,10 @@ class Model:
         """Return the current maintenance status of the Ship."""
         return self.financials.maintenance_status(date)
 
+    def set_maintenance_date(self) -> None:
+        """Set the date annual maintenance was last performed to today."""
+        self.financials.last_maintenance = self.get_current_date()
+
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
