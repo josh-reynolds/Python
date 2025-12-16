@@ -62,7 +62,7 @@ class PlayScreen(Screen):
         repair_state = self.model.get_repair_string()
 
         fuel_amount = f"{self.model.fuel_level()}/" +\
-                      f"{self.model.ship.model.fuel_tank}"
+                      f"{self.model.fuel_tank_size}"
 
         self._draw_banner(fuel_quality, fuel_amount, repair_state)
 

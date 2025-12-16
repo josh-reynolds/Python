@@ -268,15 +268,19 @@ class Model:
 
     def tanks_are_full(self) -> bool:
         """Test whether the Ship's fuel tanks are full or not."""
-        return self.fuel_level() == self.ship.model.fuel_tank
+        return self.fuel_level() == self.fuel_tank_size()
 
     def fuel_level(self) -> int:
         """Return the current amount of fuel in the Ship's tanks."""
         return self.ship.current_fuel
 
+    def fuel_tank_size(self) -> int:
+        """Return the capacity of the Ship's fuel tanks."""
+        return self.ship.model.fuel_tank
+
     def fill_tanks(self, quality: str="refined") -> None:
         """Fill the Ship's fuel tanks to their full capacity."""
-        self.ship.current_fuel = self.ship.model.fuel_tank
+        self.ship.current_fuel = self.fuel_tank_size()
         if quality == "unrefined":
             self.ship.fuel_quality = FuelQuality.UNREFINED
 
@@ -343,6 +347,10 @@ class Model:
     def empty_passenger_berths(self) -> int:
         """Return the number of unoccupied passenger staterooms on the Ship."""
         return self.ship.empty_passenger_berths
+
+    def load_cargo(self, cargo: Cargo | Freight) -> None:
+        """Load the specified cargo into the Ship's hold."""
+        self.ship.load_cargo(cargo)
 
     @property
     def free_cargo_space(self) -> int:
