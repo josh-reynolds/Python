@@ -3023,16 +3023,10 @@
 #  self.model.financials.maintenance_status()                  1  src/starport.py
 #  self.model.financials.maintenance_status()                  2  src/jump.py
 #
-#  self.model.ship.cargo_hold()                                1  src/play.py
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
 #  self.model.ship.encode()                                    1  src/play.py
-#  8  self.model.ship.hold                                        1  src/menu.py
-#  self.model.ship.hold                                        1  src/orbit.py
-#  self.model.ship.hold                                        1  src/play.py
-#  self.model.ship.hold                                        1  src/terminal.py
-#  self.model.ship.hold                                        4  src/trade.py
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
@@ -3223,6 +3217,12 @@
 #  self.model.ship.model.trip_fuel_cost                        1  src/play.py
 #  self.model.financials.ledger                                1  src/menu.py
 #  self.model.financials.ledger                                3  src/play.py
+#  self.model.ship.hold                                        1  src/menu.py
+#  self.model.ship.hold                                        1  src/orbit.py
+#  self.model.ship.hold                                        1  src/play.py
+#  self.model.ship.hold                                        1  src/terminal.py
+#  self.model.ship.hold                                        4  src/trade.py
+#  self.model.ship.cargo_hold()                                1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

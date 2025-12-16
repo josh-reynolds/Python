@@ -95,7 +95,7 @@ class PlayScreen(Screen):
     def cargo_hold(self) -> None:
         """Show the contents of the Ship's cargo hold."""
         print(f"{BOLD_BLUE}Contents of cargo hold:{END_FORMAT}")
-        contents = self.model.ship.cargo_hold()
+        contents = self.model.get_cargo_hold()
         if len(contents) == 0:
             print("Empty.")
         else:
@@ -158,7 +158,7 @@ class PlayScreen(Screen):
 
         passenger_list = [p.encode() for p in self.model.get_passengers()]
 
-        cargo_hold_list = [p.encode() for p in self.model.ship.hold]
+        cargo_hold_list = [p.encode() for p in self.model.get_cargo_hold()]
 
         save_data = {
                      'date' : f"{self.model.date_string}",

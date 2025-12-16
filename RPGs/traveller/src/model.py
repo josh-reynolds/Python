@@ -368,6 +368,14 @@ class Model:
         """Return the number of unoccupied passenger staterooms on the Ship."""
         return self.ship.empty_passenger_berths
 
+    def get_cargo_hold(self) -> List[Freight | Cargo]:
+        """Return the current contents of the Ship's cargo hold."""
+        return self.ship.cargo_hold()
+
+    def set_cargo_hold(self, contents: List[Freight | Cargo]) -> None:
+        """Set the contents of the Ship's cargo hold."""
+        self.ship.hold = contents
+
     def load_cargo(self, cargo: Cargo | Freight) -> None:
         """Load the specified cargo into the Ship's hold."""
         self.ship.load_cargo(cargo)

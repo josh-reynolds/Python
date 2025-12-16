@@ -169,9 +169,9 @@ class MenuScreen(Screen):
             passenger.guess_survivors(self.model.low_passenger_count)
         self.model.set_passengers(passengers)
 
-        hold_contents = cast(List[Freight | Cargo], cargo_hold_from(data['cargo_hold'],
-                                                      self.model.star_map.systems))
-        self.model.ship.hold = hold_contents
+        hold_contents = cast(List[Freight | Cargo],
+                             cargo_hold_from(data['cargo_hold'], self.model.star_map.systems))
+        self.model.set_cargo_hold(hold_contents)
 
         destinations = set()
         for passenger in passengers:

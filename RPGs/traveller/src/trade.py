@@ -87,7 +87,7 @@ class TradeScreen(PlayScreen):
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
         print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
-        cargoes = [c for c in self.model.ship.hold if isinstance(c, Cargo)]
+        cargoes = [c for c in self.model.get_cargo_hold() if isinstance(c, Cargo)]
 
         if len(cargoes) == 0:
             print("You have no cargo on board.")
@@ -115,7 +115,7 @@ class TradeScreen(PlayScreen):
         if not self.model.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        self.model.depot.remove_cargo(self.model.ship.hold, cargo, quantity)
+        self.model.depot.remove_cargo(self.model.get_cargo_hold(), cargo, quantity)
 
         self.model.credit(sale_price, "cargo sale")
         self.model.add_day()
@@ -213,7 +213,7 @@ class TradeScreen(PlayScreen):
             print("You have no contracted destination.")
             return
 
-        freight = [f for f in self.model.ship.hold if isinstance(f, Freight)]
+        freight = [f for f in self.model.get_cargo_hold() if isinstance(f, Freight)]
         if len(freight) == 0:
             print("You have no freight on board.")
             return
