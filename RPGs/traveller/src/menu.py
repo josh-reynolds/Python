@@ -84,7 +84,7 @@ class MenuScreen(Screen):
         coord = coordinate_from(data)
         self.model.set_hex(self.model.get_system_at_coordinate(coord))
         self.model.set_destinations()
-        self.model.financials.location = self.model.get_star_system()
+        self.model.set_financials_location(self.model.get_star_system())
 
     def _create_depot(self) -> None:
         """Create a CargoDepot and apply to Game depot field."""

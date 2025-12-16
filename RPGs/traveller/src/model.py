@@ -142,6 +142,10 @@ class Model:
         """Set the contents of the account ledger."""
         self.financials.ledger = entries
 
+    def set_financials_location(self, location: StarSystem) -> None:
+        """Set the current location of the Financials object."""
+        self.financials.location = location
+
     # TO_DO: aren't we always calling this with the current date?
     def maintenance_status(self, date: ImperialDate) -> str:
         """Return the current maintenance status of the Ship."""

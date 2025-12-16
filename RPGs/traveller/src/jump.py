@@ -103,7 +103,7 @@ class JumpScreen(PlayScreen):
 
         self.model.new_depot(self.parent)
 
-        self.model.financials.location = destination
+        self.model.set_financials_location(destination)
 
         self.model.consume_life_support()
         self.model.burn_fuel(self.model.ship.model.jump_fuel_cost)
