@@ -214,6 +214,10 @@ class Model:
         self.ship.add_observer(observer)
         self.ship.controls = observer
 
+    def ship_string(self) -> str:
+        """Return the string representation of the Ship."""
+        return str(self.ship)
+
     @property
     def streamlined(self) -> bool:
         """Return whether the Ship is streamlined or not."""

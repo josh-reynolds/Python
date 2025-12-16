@@ -124,7 +124,7 @@ class PlayScreen(Screen):
     def view_ship(self) -> None:
         """View the details of the Ship."""
         print(f"{BOLD_BLUE}Ship details:{END_FORMAT}")
-        print(self.model.ship)
+        print(self.model.ship_string())
         _ = input("\nPress ENTER key to continue.")
 
     def view_map(self) -> None:
