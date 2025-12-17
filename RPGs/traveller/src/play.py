@@ -148,7 +148,7 @@ class PlayScreen(Screen):
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = []
         for coord in self.model.star_map.systems:
-            map_hex = self.model.star_map.systems[coord]
+            map_hex = self.model.get_system_at_coordinate(coord)
             systems.append(f"{coord} - {map_hex}")
 
         subsectors = []
@@ -233,7 +233,7 @@ class PlayScreen(Screen):
         system_coords = self.model.star_map.get_systems_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
-            system_list.append(self.model.star_map.systems[entry])
+            system_list.append(self.model.get_system_at_coordinate(entry))
 
         draw_map(system_list, sub_name, print_friendly)
 

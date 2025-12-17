@@ -101,7 +101,7 @@ class MenuScreen(Screen):
 
                 if converted in occupied:
                     continue
-                self.model.star_map.systems[converted] = DeepSpace(converted)
+                self.model.set_system_at_coordinate(converted, DeepSpace(converted))
 
     def new_game(self) -> None:
         """Start a new game."""
@@ -308,7 +308,7 @@ class MenuScreen(Screen):
 
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
-        return isinstance(self.model.star_map.systems[coord], StarSystem)
+        return isinstance(self.model.get_system_at_coordinate(coord), StarSystem)
 
     def import_map(self) -> None:
         """Import Traveller map data and start a new game."""

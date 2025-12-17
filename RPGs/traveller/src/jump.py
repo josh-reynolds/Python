@@ -125,7 +125,7 @@ class JumpScreen(PlayScreen):
             print(f"{misjump_target} at distance {distance}")
 
             self.model.set_hex(self.model.get_system_at_coordinate(misjump_target))
-            self.model.star_map.systems[misjump_target] = self.model.get_star_system()
+            self.model.set_system_at_coordinate(misjump_target, self.model.get_star_system())
         else:
             self.model.set_hex(self.model.get_system_at_coordinate(destination))
 

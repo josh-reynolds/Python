@@ -3017,7 +3017,6 @@
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
-#  self.model.ship.encode()                                    1  src/play.py
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
 #  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
@@ -3031,9 +3030,6 @@
 #  self.model.star_map.list_map()                              1  src/play.py
 #  5  self.model.star_map.subsectors                              2  src/menu.py
 #  self.model.star_map.subsectors                              3  src/play.py
-#  8  self.model.star_map.systems                                 1  src/jump.py
-#  self.model.star_map.systems                                 3  src/play.py
-#  self.model.star_map.systems                                 4  src/menu.py
 #
 #  The guard clauses in the command procedures seem like natural clumps.
 #  They have different messages, and the Model shouldn't handle any
@@ -3222,6 +3218,11 @@
 #  self.model.financials.location                              1  src/menu.py
 #  self.model.financials.berthing_fee                          1  src/orbit.py
 #  self.model.financials.encode()                              1  src/play.py
+#  self.model.ship.encode()                                    1  src/play.py
+#
+#  8  self.model.star_map.systems                                 1  src/jump.py
+#  self.model.star_map.systems                                 3  src/play.py
+#  self.model.star_map.systems                                 4  src/menu.py
 # -------------------------------------------------------------
 
 ~HERE~

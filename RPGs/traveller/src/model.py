@@ -236,6 +236,10 @@ class Model:
         """Return the contents of the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)
 
+    def set_system_at_coordinate(self, coord: Coordinate, map_hex: Hex) -> None:
+        """Set the specified coordinate in the StarMap to the specified Hex object."""
+        self.star_map.systems[coord] = map_hex
+
     # SHIP ==============================================
     def new_ship(self, ship_details: str, ship_model: str, observer: Any) -> None:
         """Create a new Ship."""
