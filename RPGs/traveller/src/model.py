@@ -90,6 +90,15 @@ class Model:
         """Return a list of Cargo available at the current StarSystem's CargoDepot."""
         return self.depot.cargo
 
+    # TO_DO: why is this in CargoDepot?
+    def insufficient_funds(self, cost: Credits) -> bool:
+        """Check if the player's bank balance has enough funds for a given cost."""
+        return self.depot.insufficient_funds(cost, self.balance)
+
+    def invalid_cargo_origin(self, cargo: Cargo) -> bool:
+        """Restrict Cargo sale based on world of origin."""
+        return self.depot.invalid_cargo_origin(cargo)
+
     def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
         """Return the broker's fee for Cargo sale."""
         return self.depot.broker_fee(broker_skill, sale_price)
