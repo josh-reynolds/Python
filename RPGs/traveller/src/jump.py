@@ -66,12 +66,12 @@ class JumpScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
             return
 
-        if not self.model.ship.sufficient_jump_fuel():
-            print(self.model.ship.insufficient_jump_fuel_message())
+        if not self.model.sufficient_jump_fuel():
+            print(self.model.insufficient_jump_fuel_message())
             return
 
-        if not self.model.ship.sufficient_life_support():
-            print(self.model.ship.insufficient_life_support_message())
+        if not self.model.sufficient_life_support():
+            print(self.model.insufficient_life_support_message())
             return
 
         jump_range = self.model.jump_range
@@ -83,7 +83,7 @@ class JumpScreen(PlayScreen):
         destination = cast(StarSystem,
                            self.model.get_system_at_coordinate(coordinate))
 
-        self.model.ship.warn_if_not_contracted(destination)
+        self.model.warn_if_not_contracted(destination)
 
         confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':

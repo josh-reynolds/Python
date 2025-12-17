@@ -333,6 +333,26 @@ class Model:
         """Return the jump range of the Ship (in parsecs)."""
         return self.ship.model.jump_range
 
+    def warn_if_not_contracted(self, destination: StarSystem) -> None:
+        """Notify the player if the choose a different jump target while under contract."""
+        self.ship.warn_if_not_contracted(destination)
+
+    def sufficient_jump_fuel(self) -> bool:
+        """Test whether there is enough fuel to make a jump."""
+        return self.ship.sufficient_jump_fuel()
+
+    def insufficient_jump_fuel_message(self) -> str:
+        """Return message for when there is not enough fuel for a jump."""
+        return self.ship.insufficient_jump_fuel_message()
+
+    def sufficient_life_support(self) -> bool:
+        """Test whether there is enough life support for a jump."""
+        return self.ship.sufficient_life_support()
+
+    def insufficient_life_support_message(self) -> str:
+        """Return message for when there is not enough life support for a jump."""
+        return self.ship.insufficient_life_support_message()
+
     def check_failure_pre_jump(self, maintenance_status: str) -> None:
         """Test for drive failure before performing a hyperspace jump."""
         self.ship.check_failure_pre_jump(maintenance_status)

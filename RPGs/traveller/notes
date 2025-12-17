@@ -3013,13 +3013,6 @@
 #  self.model.depot.invalid_cargo_origin()                     1  src/trade.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
-#  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
-#  self.model.ship.insufficient_life_support_message()         1  src/jump.py
-#  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
-#  self.model.ship.sufficient_life_support()                   1  src/jump.py
-#  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
-#
-#
 #  The guard clauses in the command procedures seem like natural clumps.
 #  They have different messages, and the Model shouldn't handle any
 #  display or printing. Maybe inserting an observer here would help.
@@ -3222,6 +3215,11 @@
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
 #  self.model.depot.passengers                                 2  src/terminal.py
+#  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
+#  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
+#  self.model.ship.insufficient_life_support_message()         1  src/jump.py
+#  self.model.ship.sufficient_jump_fuel()                      1  src/jump.py
+#  self.model.ship.sufficient_life_support()                   1  src/jump.py
 # -------------------------------------------------------------
 
 ~HERE~
