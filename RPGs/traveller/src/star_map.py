@@ -19,7 +19,7 @@ class StarMap:
         for key in self.systems.keys():
             if not key.is_valid():
                 raise ValueError(f"Invalid three-axis coordinate: {key}")
-        self.subsectors = {
+        self.subsectors: Dict[Tuple[int,int], Subsector] = {
                 (0,0) : Subsector("ORIGIN", (0,0)),
                 }
 

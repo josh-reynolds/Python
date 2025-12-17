@@ -2,7 +2,7 @@
 
 Model - contains references to all game model objects.
 """
-from typing import List, Any, cast, Sequence, Dict
+from typing import List, Any, cast, Sequence, Dict, Tuple
 from src.baggage import Baggage
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
@@ -16,6 +16,7 @@ from src.passengers import Passenger, Passage
 from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
+from src.subsector import Subsector
 from src.utilities import die_roll
 
 # pylint: disable=R0904
@@ -237,12 +238,24 @@ class Model:
         return self.star_map.systems
 
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
-        """Return the contents of the specified coordinate, or create it."""
+        """Return the Hex at the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)
 
     def set_system_at_coordinate(self, coord: Coordinate, map_hex: Hex) -> None:
         """Set the specified coordinate in the StarMap to the specified Hex object."""
         self.star_map.systems[coord] = map_hex
+
+    def get_all_subsectors(self) -> Dict[Tuple[int, int], Subsector]:
+        """Return a dictionary of all Subsectors in the StarMap, keyed by coordinate."""
+        return self.star_map.subsectors
+
+    def get_subsector_at_coordinate(self, sub_coord: Tuple[int,int]) -> Subsector:
+        """Return the Subsector at the specified coordinate."""
+        return self.star_map.subsectors[sub_coord]
+
+    def set_subsector_at_coordinate(self, sub_coord: Tuple[int,int], sub: Subsector) -> None:
+        """Set the specified coordinate in the StarMap to the specified Subsector object."""
+        self.star_map.subsectors[sub_coord] = sub
 
     # SHIP ==============================================
     def new_ship(self, ship_details: str, ship_model: str, observer: Any) -> None:

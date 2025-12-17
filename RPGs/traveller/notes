@@ -3028,8 +3028,6 @@
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/play.py
 #  self.model.star_map.list_map()                              1  src/play.py
-#  5  self.model.star_map.subsectors                              2  src/menu.py
-#  self.model.star_map.subsectors                              3  src/play.py
 #
 #  The guard clauses in the command procedures seem like natural clumps.
 #  They have different messages, and the Model shouldn't handle any
@@ -3222,6 +3220,8 @@
 #  self.model.star_map.systems                                 1  src/jump.py
 #  self.model.star_map.systems                                 3  src/play.py
 #  self.model.star_map.systems                                 4  src/menu.py
+#  self.model.star_map.subsectors                              2  src/menu.py
+#  self.model.star_map.subsectors                              3  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~

@@ -152,8 +152,8 @@ class PlayScreen(Screen):
             systems.append(f"{coord} - {map_hex}")
 
         subsectors = []
-        for sub_coord in self.model.star_map.subsectors:
-            sub = self.model.star_map.subsectors[sub_coord]
+        for sub_coord in self.model.get_all_subsectors():
+            sub = self.model.get_subsector_at_coordinate(sub_coord)
             subsectors.append(f"{sub_coord} - {sub}")
 
         passenger_list = [p.encode() for p in self.model.get_passengers()]
@@ -221,7 +221,7 @@ class PlayScreen(Screen):
     def draw_map(self) -> None:
         """Create and save a bitmap file of the current map."""
         print(f"{BOLD_BLUE}Creating map image.{END_FORMAT}")
-        sub_list = list(self.model.star_map.subsectors.items())
+        sub_list = list(self.model.get_all_subsectors().items())
         subsector = choose_from(sub_list, "Choose a subsector to draw: ")
         sub_coord = sub_list[subsector][0]
         sub_name = sub_list[subsector][1].name

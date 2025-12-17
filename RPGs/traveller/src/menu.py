@@ -77,7 +77,7 @@ class MenuScreen(Screen):
         """Apply Subsectors from json data to Game star_map field."""
         for line in data:
             subsector = subsector_from(line)
-            self.model.star_map.subsectors[subsector.coordinate] = subsector
+            self.model.set_subsector_at_coordinate(subsector.coordinate, subsector)
 
     def _load_location(self, data: str) -> None:
         """Apply location from json data to Game location field."""
@@ -92,7 +92,7 @@ class MenuScreen(Screen):
 
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
-        for sub_coord in self.model.star_map.subsectors:
+        for sub_coord in self.model.get_all_subsectors():
             occupied = self.model.star_map.get_systems_in_subsector(sub_coord)
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
 
