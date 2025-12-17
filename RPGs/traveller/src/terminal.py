@@ -91,8 +91,7 @@ class TerminalScreen(PlayScreen):
         self.model.load_cargo(baggage)        #type: ignore[arg-type]
         self.model.add_passengers(middle)
         self.model.add_passengers(low)
-        self.model.depot.passengers[destination] = tuple(a-b for a,b in
-                        zip(self.model.depot.passengers[destination], selection))
+        self.model.remove_passengers_from_depot(destination, selection)
 
     def _select_passengers(self, available: Tuple[int, ...],
                            destination: Hex) -> Tuple[int, ...]:

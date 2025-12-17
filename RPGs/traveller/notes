@@ -3011,7 +3011,6 @@
 #  self.model.depot.insufficient_funds()                       1  src/trade.py
 #  self.model.depot.insufficient_hold_space()                  1  src/trade.py
 #  self.model.depot.invalid_cargo_origin()                     1  src/trade.py
-#  self.model.depot.passengers                                 2  src/terminal.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
@@ -3222,6 +3221,7 @@
 #  self.model.ship.check_failure_post_jump()                   1  src/jump.py
 #  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
+#  self.model.depot.passengers                                 2  src/terminal.py
 # -------------------------------------------------------------
 
 ~HERE~

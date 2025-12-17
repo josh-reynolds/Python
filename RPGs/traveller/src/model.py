@@ -115,6 +115,12 @@ class Model:
         """Present a list of worlds and Freight shipments for the player to choose from."""
         return self.depot.get_available_freight(destinations)
 
+    def remove_passengers_from_depot(self, destination: StarSystem,
+                                     selection: Tuple[int, ...]) -> None:
+        """Remove the selection from the available passengers at the CargoDepot."""
+        self.depot.passengers[destination] = tuple(a-b for a,b in
+                                        zip(self.depot.passengers[destination], selection))
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:
