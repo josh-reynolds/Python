@@ -193,7 +193,7 @@ class PlayScreen(Screen):
                 if confirmation == "n":
                     return
 
-        system_list = self.model.star_map.list_map()
+        system_list = self.model.list_map()
 
         with open("star_map.txt", "w", encoding="utf-8") as a_file:
             for line in system_list:

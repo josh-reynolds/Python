@@ -3023,7 +3023,6 @@
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
 #  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
 #
-#  self.model.star_map.list_map()                              1  src/play.py
 #
 #  The guard clauses in the command procedures seem like natural clumps.
 #  They have different messages, and the Model shouldn't handle any
@@ -3222,6 +3221,7 @@
 #  self.model.star_map.get_all_systems()                       1  src/play.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/play.py
+#  self.model.star_map.list_map()                              1  src/play.py
 # -------------------------------------------------------------
 
 ~HERE~
