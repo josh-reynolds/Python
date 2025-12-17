@@ -241,6 +241,10 @@ class Model:
         """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
         return self.star_map.systems
 
+    def get_all_systems(self) -> List[StarSystem]:
+        """Return a list of all StarSystem contained in the StarMap."""
+        return self.star_map.get_all_systems()
+
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the Hex at the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)

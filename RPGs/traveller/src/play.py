@@ -130,7 +130,7 @@ class PlayScreen(Screen):
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
-        systems = self.model.star_map.get_all_systems()
+        systems = self.model.get_all_systems()
         system_strings = []
         highlight = ""
         for sys in systems:

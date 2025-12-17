@@ -3023,7 +3023,6 @@
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
 #  self.model.ship.warn_if_not_contracted()                    1  src/jump.py
 #
-#  self.model.star_map.get_subsector_string()                  2  src/play.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/play.py
 #  self.model.star_map.list_map()                              1  src/play.py
@@ -3221,6 +3220,7 @@
 #  self.model.star_map.systems                                 4  src/menu.py
 #  self.model.star_map.subsectors                              2  src/menu.py
 #  self.model.star_map.subsectors                              3  src/play.py
+#  self.model.star_map.get_subsector_string()                  2  src/play.py
 #  self.model.star_map.get_all_systems()                       1  src/play.py
 # -------------------------------------------------------------
 
@@ -3244,6 +3244,28 @@
 # delegate to 'interior' classes. But this is an intermediary state. What I 
 # _am_ getting is separation of View and Model, and the ability to test all
 # the logic previously obscured by all the side-effect laden Screen methods.
+#
+# All the same, this is a pretty lengthy exercise, with no new functionality
+# to show for it. Theoretically it will be easier to build on top afterwards.
+# Remains to be seen - I believe it, but haven't proved it.
+#
+# The shuffling around above (reminiscent of Titanic deck chairs) is just the
+# first step, too. Rough road map:
+#
+# 1) Get all references to 'model interior' classes out of Screen - should only
+#    talk to the Model surface.
+# 2) Move all commands from Screen classes to Model.
+# 3) Finish breaking up command methods.
+# 4) Streamline command structure in Screen, possibly wrap direct references
+#    to Model methods.
+# 5) Move methods up and down (and across) model classes.
+# 6) Unit tests for everything.
+# 7) Break up model interior classes as needed.
+# 8) Extract a Controller class and migrate to it.
+#
+# From there we'd have a more or less stable architecture. All classes (almost)
+# fit into either Model, View or Controller - or primitive dataclasses. (The 
+# Game entry point is a bit of an outlier too...)
 #
 # -------------------------------------------------------------
 
