@@ -61,7 +61,6 @@ class StarMap:
 
         return f"{sub_string} {hex_string}"
 
-
     def get_systems_in_subsector(self, sub_coord: Tuple[int,int]) -> List[Coordinate]:
         """Return list of all StarSystems in the given Subsector."""
         return [c for c in self.systems if c.trav_coord[1] == sub_coord]

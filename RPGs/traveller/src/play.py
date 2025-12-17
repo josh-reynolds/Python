@@ -230,7 +230,7 @@ class PlayScreen(Screen):
         color_choice = choose_from(color_schemes, "Choose a color scheme: ")
         print_friendly = color_choice == 0
 
-        system_coords = self.model.star_map.get_systems_in_subsector(sub_coord)
+        system_coords = self.model.get_coords_in_subsector(sub_coord)
         system_list = []
         for entry in system_coords:
             system_list.append(self.model.get_system_at_coordinate(entry))

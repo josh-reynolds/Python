@@ -233,10 +233,6 @@ class Model:
         """Create a new StarMap."""
         self.star_map = StarMap(systems)
 
-    def get_subsector_string(self, map_hex: Hex) -> str:
-        """Return the subsector coordinates for a given StarSystem."""
-        return self.star_map.get_subsector_string(map_hex)
-
     def get_all_hexes(self) -> Dict[Coordinate, Hex]:
         """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
         return self.star_map.systems
@@ -253,9 +249,17 @@ class Model:
         """Set the specified coordinate in the StarMap to the specified Hex object."""
         self.star_map.systems[coord] = map_hex
 
+    def get_subsector_string(self, map_hex: Hex) -> str:
+        """Return the subsector coordinates for a given StarSystem."""
+        return self.star_map.get_subsector_string(map_hex)
+
     def get_all_subsectors(self) -> Dict[Tuple[int, int], Subsector]:
         """Return a dictionary of all Subsectors in the StarMap, keyed by coordinate."""
         return self.star_map.subsectors
+
+    def get_coords_in_subsector(self, sub_coord: Tuple[int,int]) -> List[Coordinate]:
+        """Return a list of all Coordinates in the specified subsector."""
+        return self.star_map.get_systems_in_subsector(sub_coord)
 
     def get_subsector_at_coordinate(self, sub_coord: Tuple[int,int]) -> Subsector:
         """Return the Subsector at the specified coordinate."""

@@ -93,7 +93,7 @@ class MenuScreen(Screen):
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
         for sub_coord in self.model.get_all_subsectors():
-            occupied = self.model.star_map.get_systems_in_subsector(sub_coord)
+            occupied = self.model.get_coords_in_subsector(sub_coord)
             all_coords = [(i,j) for i in range(1,9) for j in range(1,11)]
 
             for coord in all_coords:
