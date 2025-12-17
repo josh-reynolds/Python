@@ -326,6 +326,14 @@ class Model:
         """Return the jump range of the Ship (in parsecs)."""
         return self.ship.model.jump_range
 
+    def check_failure_pre_jump(self, maintenance_status: str) -> None:
+        """Test for drive failure before performing a hyperspace jump."""
+        self.ship.check_failure_pre_jump(maintenance_status)
+
+    def check_failure_post_jump(self) -> None:
+        """Test for drive failure after completing a hyperspace jump."""
+        self.ship.check_failure_post_jump()
+
     def check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
         if self.tanks_are_polluted():

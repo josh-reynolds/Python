@@ -3014,8 +3014,6 @@
 #  self.model.depot.passengers                                 2  src/terminal.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
-#  self.model.ship.check_failure_post_jump()                   1  src/jump.py
-#  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 #  self.model.ship.crew                                        1  src/play.py
 #  self.model.ship.insufficent_jump_fuel_message()             1  src/jump.py
 #  self.model.ship.insufficient_life_support_message()         1  src/jump.py
@@ -3222,6 +3220,8 @@
 #  self.model.star_map.get_systems_in_subsector()              1  src/menu.py
 #  self.model.star_map.get_systems_in_subsector()              1  src/play.py
 #  self.model.star_map.list_map()                              1  src/play.py
+#  self.model.ship.check_failure_post_jump()                   1  src/jump.py
+#  self.model.ship.check_failure_pre_jump()                    1  src/jump.py
 # -------------------------------------------------------------
 
 ~HERE~

@@ -60,7 +60,7 @@ class JumpScreen(PlayScreen):
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
         status = self.model.maintenance_status(self.model.get_current_date())
-        self.model.ship.check_failure_pre_jump(status)
+        self.model.check_failure_pre_jump(status)
 
         if not self.model.can_jump():
             print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
@@ -97,7 +97,7 @@ class JumpScreen(PlayScreen):
         self._misjump_check(coordinate)
         self.model.set_location("jump")
 
-        self.model.ship.check_failure_post_jump()
+        self.model.check_failure_post_jump()
 
         self.model.set_destinations()
 
