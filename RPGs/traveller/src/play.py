@@ -118,7 +118,7 @@ class PlayScreen(Screen):
     def crew_roster(self) -> None:
         """Show the Ship's crew."""
         print(f"{BOLD_BLUE}Crew roster:{END_FORMAT}")
-        pr_list(self.model.ship.crew)
+        pr_list(self.model.get_crew())
         _ = input("\nPress ENTER key to continue.")
 
     def view_ship(self) -> None:
