@@ -79,7 +79,7 @@ class PlayScreen(Screen):
     def view_world(self) -> None:
         """View the characteristics of the local world."""
         print(f"{BOLD_BLUE}Local world characteristics:{END_FORMAT}")
-        print(f"{self.model.star_map.get_subsector_string(self.model.get_star_system())} : " +
+        print(f"{self.model.get_subsector_string(self.model.get_star_system())} : " +
               f"{self.model.map_hex}")
         _ = input("\nPress ENTER key to continue.")
 
@@ -134,7 +134,7 @@ class PlayScreen(Screen):
         system_strings = []
         highlight = ""
         for sys in systems:
-            combined = f"{self.model.star_map.get_subsector_string(sys)} : {sys}"
+            combined = f"{self.model.get_subsector_string(sys)} : {sys}"
             system_strings.append(combined)
             if sys == self.model.get_star_system():
                 highlight = combined

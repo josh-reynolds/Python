@@ -233,6 +233,10 @@ class Model:
         """Create a new StarMap."""
         self.star_map = StarMap(systems)
 
+    def get_subsector_string(self, map_hex: Hex) -> str:
+        """Return the subsector coordinates for a given StarSystem."""
+        return self.star_map.get_subsector_string(map_hex)
+
     def get_all_hexes(self) -> Dict[Coordinate, Hex]:
         """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
         return self.star_map.systems
