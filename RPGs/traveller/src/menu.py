@@ -158,7 +158,7 @@ class MenuScreen(Screen):
 
         passengers = []
         for line in data['passengers']:
-            passengers.append(passenger_from(line, self.model.star_map.systems))
+            passengers.append(passenger_from(line, self.model.get_all_hexes()))
 
         # strictly speaking, this is only necessary if the ship is
         # not on the surface, as it will be re-run on liftoff, and also:
@@ -170,7 +170,7 @@ class MenuScreen(Screen):
         self.model.set_passengers(passengers)
 
         hold_contents = cast(List[Freight | Cargo],
-                             cargo_hold_from(data['cargo_hold'], self.model.star_map.systems))
+                             cargo_hold_from(data['cargo_hold'], self.model.get_all_hexes()))
         self.model.set_cargo_hold(hold_contents)
 
         destinations = set()

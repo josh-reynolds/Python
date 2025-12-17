@@ -232,6 +232,10 @@ class Model:
         """Create a new StarMap."""
         self.star_map = StarMap(systems)
 
+    def get_all_hexes(self) -> Dict[Coordinate, Hex]:
+        """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
+        return self.star_map.systems
+
     def get_system_at_coordinate(self, coord: Coordinate) -> Hex:
         """Return the contents of the specified coordinate, or create it."""
         return self.star_map.get_system_at_coordinate(coord)

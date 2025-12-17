@@ -147,7 +147,7 @@ class PlayScreen(Screen):
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
         systems = []
-        for coord in self.model.star_map.systems:
+        for coord in self.model.get_all_hexes():
             map_hex = self.model.get_system_at_coordinate(coord)
             systems.append(f"{coord} - {map_hex}")
 

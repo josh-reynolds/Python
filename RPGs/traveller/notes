@@ -3219,8 +3219,7 @@
 #  self.model.financials.berthing_fee                          1  src/orbit.py
 #  self.model.financials.encode()                              1  src/play.py
 #  self.model.ship.encode()                                    1  src/play.py
-#
-#  8  self.model.star_map.systems                                 1  src/jump.py
+#  self.model.star_map.systems                                 1  src/jump.py
 #  self.model.star_map.systems                                 3  src/play.py
 #  self.model.star_map.systems                                 4  src/menu.py
 # -------------------------------------------------------------
