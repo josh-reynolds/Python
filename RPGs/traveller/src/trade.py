@@ -53,11 +53,11 @@ class TradeScreen(PlayScreen):
         """Purchase cargo for speculative trade."""
         print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
         pr_list(self.model.cargo)
-        cargo = self.model.depot.get_cargo_lot(self.model.cargo, "buy")
+        cargo = self.model.get_cargo_lot(self.model.cargo, "buy")
         if cargo is None:
             return
 
-        quantity = self.model.depot.get_cargo_quantity("buy", cargo)
+        quantity = self.model.get_cargo_quantity("buy", cargo)
         if quantity is None:
             return
 
@@ -73,7 +73,7 @@ class TradeScreen(PlayScreen):
         if not self.model.confirm_transaction("purchase", cargo, quantity, cost):
             return
 
-        self.model.depot.remove_cargo(self.model.cargo, cargo, quantity)
+        self.model.remove_cargo(self.model.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
@@ -92,7 +92,7 @@ class TradeScreen(PlayScreen):
             return
 
         pr_list(cargoes)
-        cargo = self.model.depot.get_cargo_lot(cargoes, "sell")
+        cargo = self.model.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             return
 
@@ -101,7 +101,7 @@ class TradeScreen(PlayScreen):
 
         broker_skill = self.model.get_broker()
 
-        quantity = self.model.depot.get_cargo_quantity("sell", cargo)
+        quantity = self.model.get_cargo_quantity("sell", cargo)
         if quantity is None:
             return
 
@@ -113,7 +113,7 @@ class TradeScreen(PlayScreen):
         if not self.model.confirm_transaction("sale", cargo, quantity, sale_price):
             return
 
-        self.model.depot.remove_cargo(self.model.get_cargo_hold(), cargo, quantity)
+        self.model.remove_cargo(self.model.get_cargo_hold(), cargo, quantity)
 
         self.model.credit(sale_price, "cargo sale")
         self.model.add_day()

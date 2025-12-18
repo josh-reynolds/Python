@@ -335,7 +335,6 @@ class CargoDepot:
             return False
         return True
 
-    # this overlaps with ship.unload_cargo()...
     def remove_cargo(self, source: List, cargo: Cargo, quantity: int) -> None:
         """Remove cargo from a storage location."""
         if cargo in source:

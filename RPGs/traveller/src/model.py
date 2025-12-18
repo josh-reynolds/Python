@@ -90,6 +90,15 @@ class Model:
         """Return a list of Cargo available at the current StarSystem's CargoDepot."""
         return self.depot.cargo
 
+    # TO_DO: overlap with choose_from()
+    def get_cargo_lot(self, source: List[Cargo], prompt: str) -> Cargo | None:
+        """Select a Cargo lot from a list."""
+        return self.depot.get_cargo_lot(source, prompt)
+
+    def get_cargo_quantity(self, prompt: str, cargo: Cargo) -> int | None:
+        """Get a quantify of Cargo from the player to sell or purchase."""
+        return self.depot.get_cargo_quantity(prompt, cargo)
+
     # TO_DO: why is this in CargoDepot?
     def insufficient_funds(self, cost: Credits) -> bool:
         """Check if the player's bank balance has enough funds for a given cost."""
@@ -121,6 +130,12 @@ class Model:
                         skill: int) -> Credits:
         """Calculate the price of a Cargo transaction."""
         return self.depot.determine_price(prompt, cargo, quantity, skill)
+
+    # TO_DO: this overlaps with ship.unload_cargo()...
+    #        also don't think it uses any instance data - functionify it?
+    def remove_cargo(self, source: List, cargo: Cargo, quantity: int) -> None:
+        """Remove cargo from a storage location."""
+        self.depot.remove_cargo(source, cargo, quantity)
 
     def remove_freight(self, destination: StarSystem, lot: int) -> None:
         """Remove the specified Freight lot from the destination list."""
@@ -395,6 +410,10 @@ class Model:
         """Decontaminate the Ship's fuel tanks."""
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
+
+    def jump_fuel_cost(self) -> int:
+        """Return the amount of fuel used in one hyperspace jump."""
+        return self.ship.model.jump_fuel_cost
 
     def leg_fuel_cost(self) -> int:
         """Return the amount of fuel used in one leg of trip, in tons."""

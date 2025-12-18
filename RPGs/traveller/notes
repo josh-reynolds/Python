@@ -3002,12 +3002,6 @@
 # and all the model classes - ideally they just know about
 # the Model parent class.
 #
-~HERE~
-#
-#  self.model.depot.get_cargo_lot()                            2  src/trade.py
-#  self.model.depot.get_cargo_quantity()                       2  src/trade.py
-#  self.model.depot.remove_cargo()                             2  src/trade.py
-#
 #  The guard clauses in the command procedures seem like natural clumps.
 #  They have different messages, and the Model shouldn't handle any
 #  display or printing. Maybe inserting an observer here would help.
@@ -3220,6 +3214,10 @@
 #  self.model.depot.insufficient_hold_space()                  1  src/trade.py
 #  self.model.depot.get_available_passengers()                 1  src/terminal.py
 #  self.model.depot.get_broker()                               1  src/trade.py
+#  self.model.depot.get_cargo_lot()                            2  src/trade.py
+#  self.model.depot.get_cargo_quantity()                       2  src/trade.py
+#  self.model.depot.remove_cargo()                             2  src/trade.py
+#  self.model.ship.model.jump_fuel_cost                        1  src/jump.py
 # -------------------------------------------------------------
 
 ~HERE~
@@ -3250,8 +3248,8 @@
 # The shuffling around above (reminiscent of Titanic deck chairs) is just the
 # first step, too. Rough road map:
 #
-# 1) Get all references to 'model interior' classes out of Screen - should only
-#    talk to the Model surface.
+# 1) [DONE] Get all references to 'model interior' classes out of Screen - should
+#    only talk to the Model surface.
 # 2) Move all commands from Screen classes to Model.
 # 3) Finish breaking up command methods.
 # 4) Streamline command structure in Screen, possibly wrap direct references
@@ -3653,6 +3651,8 @@
 #           context, should probably give separate uses separate names
 #  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
+#  * [    ] Scrub for methods that don't use any instance (self) data - candidates to
+#           become module-level functions
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Deal with non-portable font in drawing module

@@ -106,7 +106,7 @@ class JumpScreen(PlayScreen):
         self.model.set_financials_location(destination)
 
         self.model.consume_life_support()
-        self.model.burn_fuel(self.model.ship.model.jump_fuel_cost)
+        self.model.burn_fuel(self.model.jump_fuel_cost())
         self.model.plus_week()
 
     def _misjump_check(self, destination: Coordinate) -> None:
