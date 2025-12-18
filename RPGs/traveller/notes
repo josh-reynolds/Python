@@ -2958,7 +2958,7 @@
 #
 #   import unittest
 #   import BunchOfMocks
-#   import SomDataTypes
+#   import SomeDataTypes
 #   import ClassUnderTest
 #
 # So anywhere we see non-datatype classes being imported into
@@ -3002,44 +3002,44 @@
 # and all the model classes - ideally they just know about
 # the Model parent class.
 #
-#  The guard clauses in the command procedures seem like natural clumps.
-#  They have different messages, and the Model shouldn't handle any
-#  display or printing. Maybe inserting an observer here would help.
+# The guard clauses in the command procedures seem like natural clumps.
+# They have different messages, and the Model shouldn't handle any
+# display or printing. Maybe inserting an observer here would help.
 #
-#  Another observation: the contents of the commands in the Screen classes
-#  can probably be lifted directly over to Model, but there's both good
-#  and bad there.
+# Another observation: the contents of the commands in the Screen classes
+# can probably be lifted directly over to Model, but there's both good
+# and bad there.
 #
-#  On the plus side, we can convert them to just return a string back to
-#  the Screen, which makes these procedures testable finally. That's a big
-#  win.
+# On the plus side, we can convert them to just return a string back to
+# the Screen, which makes these procedures testable finally. That's a big
+# win.
 #
-#  On the negative side, though, a few of these procedures are quite large
-#  and ought to be broken down further. Arguably I could do that _after_
-#  the move, but now is a good time to peel out at least a few pieces.
+# On the negative side, though, a few of these procedures are quite large
+# and ought to be broken down further. Arguably I could do that _after_
+# the move, but now is a good time to peel out at least a few pieces.
 #
-#  The other problem is the interface to Model is going to get very large.
-#  Not sure yet where we'll go with that particular issue. Probably shift
-#  a bunch of things to internals and/or private methods, and spin up
-#  manager classes as needed. But the externally facing interface still
-#  needs a lot of stuff, and I _do_ want to keep it within a single class
-#  to minimize coupling from Screen. It's also possible I'll spot some
-#  visible seams that provide a natural place to break Model into a small
-#  (two or three) number of classes. We'll see.
+# The other problem is the interface to Model is going to get very large.
+# Not sure yet where we'll go with that particular issue. Probably shift
+# a bunch of things to internals and/or private methods, and spin up
+# manager classes as needed. But the externally facing interface still
+# needs a lot of stuff, and I _do_ want to keep it within a single class
+# to minimize coupling from Screen. It's also possible I'll spot some
+# visible seams that provide a natural place to break Model into a small
+# (two or three) number of classes. We'll see.
 #
-#  Hrm. Collections are tricky. Need to consider whether they appear on
-#  LHS or RHS of any statements they are used in, and what sort of action
-#  is being performed - append, deletion, query, etc. Really ought to
-#  encapsulate them first. To a lesser extent this applies to direct field
-#  access as well. LHS vs. RHS matters.
+# Hrm. Collections are tricky. Need to consider whether they appear on
+# LHS or RHS of any statements they are used in, and what sort of action
+# is being performed - append, deletion, query, etc. Really ought to
+# encapsulate them first. To a lesser extent this applies to direct field
+# access as well. LHS vs. RHS matters.
 #
-#  I think too that once everything has been moved onto Model we'll be
-#  able to shuffle things around underneath - and the classes that 
-#  appear to map directly to concepts in the domain may become limiting.
-#  That is, instead of a "Ship" class, maybe the ship is actually
-#  a whole bunch of smaller, more abstract classes. Obvious things
-#  like a fuel system, maybe, but also classes that aren't apparent
-#  or don't map. Code clusters should guide this reformulation.
+# I think too that once everything has been moved onto Model we'll be
+# able to shuffle things around underneath - and the classes that 
+# appear to map directly to concepts in the domain may become limiting.
+# That is, instead of a "Ship" class, maybe the ship is actually
+# a whole bunch of smaller, more abstract classes. Obvious things
+# like a fuel system, maybe, but also classes that aren't apparent
+# or don't map. Code clusters should guide this reformulation.
 #
 #  Handled:
 #
@@ -3250,14 +3250,16 @@
 #
 # 1) [DONE] Get all references to 'model interior' classes out of Screen - should
 #    only talk to the Model surface.
-# 2) Move all commands from Screen classes to Model.
-# 3) Finish breaking up command methods.
-# 4) Streamline command structure in Screen, possibly wrap direct references
+# 2) Unit tests for everything.
+# 3) Move all commands from Screen classes to Model.
+# 4) Finish breaking up command methods.
+# 5) Streamline command structure in Screen, possibly wrap direct references
 #    to Model methods.
-# 5) Move methods up and down (and across) model classes.
-# 6) Unit tests for everything.
+# 6) Move methods up and down (and across) model classes.
 # 7) Break up model interior classes as needed.
 # 8) Extract a Controller class and migrate to it.
+#
+# Order isn't precise, and probably some back and forth will happen too.
 #
 # From there we'd have a more or less stable architecture. All classes (almost)
 # fit into either Model, View or Controller - or primitive dataclasses. (The 
@@ -3645,7 +3647,7 @@
 ~HERE~
 
 #  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
-#  * [    ] CargoDepot.remove_cargo() overlaps with Ship.unload_cargo()
+#  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Inconstent application of properties in Model interface
 #  * [    ] Some ambiguity with usage of 'destination' and 'location' in different
 #           context, should probably give separate uses separate names
@@ -3703,7 +3705,6 @@
 #  * [    ] Review world string UWP for errors, do we need an e-hex function?
 #  * [    ] Extract text strings
 #  * [    ] Some payments don't check bank balance first - scrub & fix!
-#  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Now that we have file operations, need to properly trap errors (FileNotFound etc.)
 #  * [    ] Catch up test coverage, both for known/fixed bugs and methods & code paths
 #  * [    ] Assess need to unset berth recurrence/expiry on takeoff

@@ -129,39 +129,10 @@ class JumpScreen(PlayScreen):
         else:
             self.model.set_hex(self.model.get_system_at_coordinate(destination))
 
-    # Book 2 p. 35
-    # Unrefined fuel may be obtained by skimming the atmosphere of a
-    # gas giant if unavailable elsewhere. Most star systems have at
-    # least one...
-    #
-    # Traveller '77 does not restrict this to streamlined ships, and
-    # also does not include ocean refuelling, but I think I will be
-    # including both options. (In all likelihood this will lean heavily
-    # toward second edition...)
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        if not self.model.get_star_system().gas_giant:
-            if self.model.in_deep_space():
-                print("You are stranded in deep space. No fuel skimming possible.")
-            else:
-                print("There is no gas giant in this system. No fuel skimming possible.")
-            return
-
-        if not self.model.streamlined:
-            print("Your ship is not streamlined and cannot skim fuel.")
-            return
-
-        if not self.model.can_maneuver():
-            print(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
-            return
-
-        if self.model.tanks_are_full():
-            print("Fuel tank is already full.")
-            return
-
-        self.model.fill_tanks("unrefined")
-        self.model.add_day()
+        print(self.model.skim())
 
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""

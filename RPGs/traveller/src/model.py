@@ -11,6 +11,7 @@ from src.coordinate import Coordinate
 from src.credits import Credits
 from src.crew import Crew
 from src.financials import Financials, financials_from
+from src.format import BOLD_RED, END_FORMAT
 from src.freight import Freight
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
@@ -75,7 +76,36 @@ class Model:
             return f"No fuel is available at starport {self.starport}."
 
         cost = self.ship.refuel(self.starport)
-        self.financials.debit(cost, "refuelling")
+        self.debit(cost, "refuelling")
+        return "Your ship is fully refuelled."
+
+    # Book 2 p. 35
+    # Unrefined fuel may be obtained by skimming the atmosphere of a
+    # gas giant if unavailable elsewhere. Most star systems have at
+    # least one...
+    #
+    # Traveller '77 does not restrict this to streamlined ships, and
+    # also does not include ocean refuelling, but I think I will be
+    # including both options. (In all likelihood this will lean heavily
+    # toward second edition...)
+    def skim(self) -> str:
+        """Refuel the Ship by skimming from a gas giant planet."""
+        if not self.gas_giant:
+            if self.in_deep_space():
+                return "You are stranded in deep space. No fuel skimming possible."
+            return "There is no gas giant in this system. No fuel skimming possible."
+
+        if not self.streamlined:
+            return "Your ship is not streamlined and cannot skim fuel."
+
+        if not self.can_maneuver():
+            return f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}"
+
+        if self.tanks_are_full():
+            return "Fuel tank is already full."
+
+        self.fill_tanks("unrefined")
+        self.add_day()
         return "Your ship is fully refuelled."
 
     # DEPOT =============================================
@@ -435,6 +465,7 @@ class Model:
         """Return the capacity of the Ship's fuel tanks."""
         return self.ship.model.fuel_tank
 
+    # TO_DO: overlap with ship.refuel()
     def fill_tanks(self, quality: str="refined") -> None:
         """Fill the Ship's fuel tanks to their full capacity."""
         self.ship.current_fuel = self.fuel_tank_size()
