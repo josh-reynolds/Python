@@ -7,11 +7,11 @@ from src.baggage import Baggage
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
-from src.coordinate import Coordinate
+from src.coordinate import Coordinate, get_misjump_target
 from src.credits import Credits
 from src.crew import Crew
 from src.financials import Financials, financials_from
-from src.format import BOLD_RED, END_FORMAT
+from src.format import BOLD_RED, BOLD_GREEN, END_FORMAT
 from src.freight import Freight
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
@@ -107,6 +107,28 @@ class Model:
         self.fill_tanks("unrefined")
         self.add_day()
         return "Your ship is fully refuelled."
+
+    def misjump_check(self, destination: Coordinate) -> str:
+        """Test for misjump and report results."""
+        if self.tanks_are_polluted():
+            modifier = 3
+        else:
+            modifier = -1
+        if self.maintenance_status(self.get_current_date()) == "red":
+            modifier += 2
+
+        misjump_check = die_roll(2) + modifier
+        if misjump_check > 11:
+            misjump_target, distance = get_misjump_target(self.coordinate)
+
+            self.set_hex(self.get_system_at_coordinate(misjump_target))
+            self.set_system_at_coordinate(misjump_target, self.get_star_system())
+
+            return f"{BOLD_RED}MISJUMP!{END_FORMAT}\n" +\
+                   f"{misjump_target} at distance {distance}"
+
+        self.set_hex(self.get_system_at_coordinate(destination))
+        return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
 
     # DEPOT =============================================
     def new_depot(self, observer: Any) -> None:

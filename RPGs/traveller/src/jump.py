@@ -4,12 +4,11 @@ JumpScreen - contains commands for the jump state.
 """
 from typing import Any, cast
 from src.command import Command
-from src.coordinate import Coordinate, get_misjump_target
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.play import PlayScreen
 from src.star_system import StarSystem
-from src.utilities import die_roll, choose_from, confirm_input
+from src.utilities import choose_from, confirm_input
 
 class JumpScreen(PlayScreen):
     """Contains commands for the jump state."""
@@ -94,7 +93,8 @@ class JumpScreen(PlayScreen):
 
         print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
-        self._misjump_check(coordinate)
+        print(self.model.misjump_check(coordinate))
+
         self.model.set_location("jump")
 
         self.model.check_failure_post_jump()
@@ -108,26 +108,6 @@ class JumpScreen(PlayScreen):
         self.model.consume_life_support()
         self.model.burn_fuel(self.model.jump_fuel_cost())
         self.model.plus_week()
-
-    def _misjump_check(self, destination: Coordinate) -> None:
-        """Test for misjump and report results."""
-        if self.model.tanks_are_polluted():
-            modifier = 3
-        else:
-            modifier = -1
-        if self.model.maintenance_status(self.model.get_current_date()) == "red":
-            modifier += 2
-
-        misjump_check = die_roll(2) + modifier
-        if misjump_check > 11:
-            print(f"{BOLD_RED}MISJUMP!{END_FORMAT}")
-            misjump_target, distance = get_misjump_target(self.model.coordinate)
-            print(f"{misjump_target} at distance {distance}")
-
-            self.model.set_hex(self.model.get_system_at_coordinate(misjump_target))
-            self.model.set_system_at_coordinate(misjump_target, self.model.get_star_system())
-        else:
-            self.model.set_hex(self.model.get_system_at_coordinate(destination))
 
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
