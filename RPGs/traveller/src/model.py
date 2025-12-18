@@ -114,7 +114,7 @@ class Model:
             modifier = 3
         else:
             modifier = -1
-        if self.maintenance_status(self.get_current_date()) == "red":
+        if self.maintenance_status() == "red":
             modifier += 2
 
         misjump_check = die_roll(2) + modifier
@@ -242,10 +242,9 @@ class Model:
         """Set the current location of the Financials object."""
         self.financials.location = location
 
-    # TO_DO: aren't we always calling this with the current date?
-    def maintenance_status(self, date: ImperialDate) -> str:
+    def maintenance_status(self) -> str:
         """Return the current maintenance status of the Ship."""
-        return self.financials.maintenance_status(date)
+        return self.financials.maintenance_status(self.get_current_date())
 
     def set_maintenance_date(self) -> None:
         """Set the date annual maintenance was last performed to today."""

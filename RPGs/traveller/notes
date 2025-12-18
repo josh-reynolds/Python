@@ -3220,8 +3220,6 @@
 #  self.model.ship.model.jump_fuel_cost                        1  src/jump.py
 # -------------------------------------------------------------
 
-~HERE~
-
 # -------------------------------------------------------------
 # Watched some videos criticizing Clean Code yesterday, and they make 
 # some good points. Deep chains of tiny methods, each with just one line, 
@@ -3266,6 +3264,61 @@
 # Game entry point is a bit of an outlier too...)
 #
 # -------------------------------------------------------------
+
+# -------------------------------------------------------------
+# The tedious reference shuffle into the Model class is done. It is the
+# only class to directly access all the interior classes - everything
+# else needs to go through its interface.
+#
+# I _should_ start catching up test coverage now, but that's more
+# tedium, and also I expect a bunch of these newly-introduced 
+# micro-methods will go away once we move the commands in. So maybe
+# go back and forth.
+#
+# Focusing on JumpScreen to start with, since we already have a couple
+# of its commands shifted over.
+#
+# The basic conversion is:
+#
+# * Create a new method on Model with the same name, and copy over
+#   the entire body of the command method.
+# * Drop the initial {BOLD_BLUE} command message, that stays in
+#   the Screen class (and actually might get absorbed into Command
+#   eventually...)
+# * Signature of the command should change to return a string.
+# * The command in the Screen class should just have the message
+#   print, and then print the return value of the Model method.
+# * All print statements in the Model change to return their string,
+#   and the following bare return gets deleted.
+# * (Intermediate print statements might need to be shuffled around
+#    and merged...)
+# * All references to self.model.foo change to self.foo
+#
+# That covers the straightforward commands. Not sure what proportion
+# overall that is.
+#
+# The more complicated ones take user input, potentially more than
+# once. Longer term this probably ties in with unsnarling the controller
+# design, and all the get_input() jazz down in the model interior.
+#
+# So I could go that route and add a controller reference (and get_input())
+# to Model, or split up the command into pieces. JumpScreen.jump() is a
+# good example:
+#
+# 1) first verification
+# 2) INPUT: choose destination
+# 3) second verification
+# 4) INPUT: confirm choice
+# 5) execute jump
+#
+# Thinking about it, though, the final design probably involves _both_
+# so it's arbitrary which I choose first. However, the motivation for this
+# push is to break up the fat command methods, so I think I'll try that
+# route first.
+#
+# -------------------------------------------------------------
+
+~HERE~
 
 # -------------------------------------------------------------
 # ROADMAP
