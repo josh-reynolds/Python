@@ -95,6 +95,10 @@ class Model:
         """Check if the player's bank balance has enough funds for a given cost."""
         return self.depot.insufficient_funds(cost, self.balance)
 
+    def insufficient_hold_space(self, cargo: Cargo, quantity: int) -> bool:
+        """Check if a given quantity of Cargo will fit in the Ship's hold."""
+        return self.depot.insufficient_hold_space(cargo, quantity, self.free_cargo_space)
+
     def invalid_cargo_origin(self, cargo: Cargo) -> bool:
         """Restrict Cargo sale based on world of origin."""
         return self.depot.invalid_cargo_origin(cargo)

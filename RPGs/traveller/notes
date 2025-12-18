@@ -3008,7 +3008,6 @@
 #  self.model.depot.get_broker()                               1  src/trade.py
 #  self.model.depot.get_cargo_lot()                            2  src/trade.py
 #  self.model.depot.get_cargo_quantity()                       2  src/trade.py
-#  self.model.depot.insufficient_hold_space()                  1  src/trade.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
 #
 #  The guard clauses in the command procedures seem like natural clumps.
@@ -3220,15 +3219,16 @@
 #  self.model.ship.sufficient_life_support()                   1  src/jump.py
 #  self.model.depot.invalid_cargo_origin()                     1  src/trade.py
 #  self.model.depot.insufficient_funds()                       1  src/trade.py
+#  self.model.depot.insufficient_hold_space()                  1  src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~
 
 # -------------------------------------------------------------
-# Watched some videos on Clean Code yesterday, and they make some good points.
-# Deep chains of tiny methods, each with just one line, are very 
-# annoying to deal with, and harder to understand than the 'dirty' code
-# they're meant to replace.
+# Watched some videos criticizing Clean Code yesterday, and they make 
+# some good points. Deep chains of tiny methods, each with just one line, 
+# are very annoying to deal with, and harder to understand than the 'dirty' 
+# code they're meant to replace.
 #
 # I think the real point of SOLID and DRY and all the rest of that shit
 # is decoupling, not slavish adherence to clean code rules. And pushing

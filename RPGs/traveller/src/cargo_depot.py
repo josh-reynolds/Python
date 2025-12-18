@@ -300,8 +300,7 @@ class CargoDepot:
                                pr_function)
         return price
 
-    def insufficient_hold_space(self, cargo: Cargo,
-                                quantity: int, free_space: int) -> bool:
+    def insufficient_hold_space(self, cargo: Cargo, quantity: int, free_space: int) -> bool:
         """Check if a given quantity of Cargo will fit in the Ship's hold."""
         if quantity * cargo.unit_size > free_space:
             self.message_observers("That amount will not fit in your hold.")

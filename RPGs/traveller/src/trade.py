@@ -61,9 +61,7 @@ class TradeScreen(PlayScreen):
         if quantity is None:
             return
 
-        if self.model.depot.insufficient_hold_space(cargo,
-                                                     quantity,
-                                                     self.model.free_cargo_space):
+        if self.model.insufficient_hold_space(cargo, quantity):
             return
 
         cost = self.model.determine_price("purchase", cargo, quantity,
