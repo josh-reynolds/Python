@@ -591,6 +591,10 @@ class Model:
         self.ship.hold = [item for item in self.ship.hold
                           if not isinstance(item, Baggage)]
 
+    def get_freight(self) -> List[Freight]:
+        """Return a list of all Freight in the Ship's cargo hold."""
+        return [f for f in self.get_cargo_hold() if isinstance(f, Freight)]
+
     # TO_DO: also removes Baggage - should not be any on board when this
     #        method is called, but still...
     def remove_all_freight(self) -> None:

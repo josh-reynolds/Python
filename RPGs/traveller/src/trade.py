@@ -202,16 +202,11 @@ class TradeScreen(PlayScreen):
         """Unload Freight from the Ship and receive payment."""
         print(f"{BOLD_BLUE}Unloading freight.{END_FORMAT}")
 
-        # truth table: passengers, freight, destination flag,...
-
-        # It should not be possible for there to be freight in the hold,
-        # and a destination flag set to None. Should we assert just
-        # in case, so we could track down any such bug:
         if self.model.destination() is None:
             print("You have no contracted destination.")
             return
 
-        freight = [f for f in self.model.get_cargo_hold() if isinstance(f, Freight)]
+        freight = self.model.get_freight()
         if len(freight) == 0:
             print("You have no freight on board.")
             return
