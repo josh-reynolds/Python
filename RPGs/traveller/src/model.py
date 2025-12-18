@@ -130,6 +130,18 @@ class Model:
         self.set_hex(self.get_system_at_coordinate(destination))
         return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
 
+    def flush(self) -> str:
+        """Decontaminate the Ship's fuel tanks."""
+        if not self.tanks_are_polluted():
+            return "Ship fuel tanks are clean. No need to flush."
+
+        if not self.can_flush():
+            return f"There are no facilities to flush tanks at starport {self.starport}."
+
+        self.clean_fuel_tanks()
+        self.plus_week()
+        return "Fuel tanks have been decontaminated."
+
     # DEPOT =============================================
     def new_depot(self, observer: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""

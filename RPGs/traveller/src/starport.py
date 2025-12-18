@@ -115,18 +115,7 @@ class StarportScreen(PlayScreen):
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
         print(f"{BOLD_BLUE}Flushing out fuel tanks.{END_FORMAT}")
-        if not self.model.tanks_are_polluted():
-            print("Ship fuel tanks are clean. No need to flush.")
-            return
-
-        if not self.model.can_flush():
-            print(f"There are no facilities to flush tanks "
-                  f"at starport {self.model.starport}.")
-            return
-
-        print("Fuel tanks have been decontaminated.")
-        self.model.clean_fuel_tanks()
-        self.model.plus_week()
+        print(self.model.flush())
 
     def repair_ship(self) -> None:
         """Fully repair damage to the Ship (Starport)."""
