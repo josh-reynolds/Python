@@ -53,10 +53,7 @@ class TerminalScreen(PlayScreen):
         if not destinations:
             return
 
-        # for now we will stuff this in cargo depot, though it may better
-        # be served by a separate class. If it _does_ stay in the depot, we
-        # may want to adjust the nomenclature to make this more clear.
-        coordinate, available = self.model.depot.get_available_passengers(destinations)
+        coordinate, available = self.model.get_available_passengers(destinations)
         if available is None:
             return
 

@@ -99,7 +99,7 @@ class TradeScreen(PlayScreen):
         if self.model.invalid_cargo_origin(cargo):
             return
 
-        broker_skill = self.model.depot.get_broker()
+        broker_skill = self.model.get_broker()
 
         quantity = self.model.depot.get_cargo_quantity("sell", cargo)
         if quantity is None:

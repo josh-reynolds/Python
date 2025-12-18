@@ -103,6 +103,10 @@ class Model:
         """Restrict Cargo sale based on world of origin."""
         return self.depot.invalid_cargo_origin(cargo)
 
+    def get_broker(self) -> int:
+        """Allow player to select a broker for Cargo sales."""
+        return self.depot.get_broker()
+
     def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
         """Return the broker's fee for Cargo sale."""
         return self.depot.broker_fee(broker_skill, sale_price)
@@ -127,6 +131,10 @@ class Model:
                               ) -> tuple[Coordinate | None, list[Any] | None]:
         """Present a list of worlds and Freight shipments for the player to choose from."""
         return self.depot.get_available_freight(destinations)
+
+    def get_available_passengers(self, destinations: Sequence[StarSystem]) -> tuple:
+        """Present a list of worlds and Passengers for the player to choose from."""
+        return self.depot.get_available_passengers(destinations)
 
     def remove_passengers_from_depot(self, destination: StarSystem,
                                      selection: Tuple[int, ...]) -> None:

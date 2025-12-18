@@ -3004,8 +3004,6 @@
 #
 ~HERE~
 #
-#  self.model.depot.get_available_passengers()                 1  src/terminal.py
-#  self.model.depot.get_broker()                               1  src/trade.py
 #  self.model.depot.get_cargo_lot()                            2  src/trade.py
 #  self.model.depot.get_cargo_quantity()                       2  src/trade.py
 #  self.model.depot.remove_cargo()                             2  src/trade.py
@@ -3220,6 +3218,8 @@
 #  self.model.depot.invalid_cargo_origin()                     1  src/trade.py
 #  self.model.depot.insufficient_funds()                       1  src/trade.py
 #  self.model.depot.insufficient_hold_space()                  1  src/trade.py
+#  self.model.depot.get_available_passengers()                 1  src/terminal.py
+#  self.model.depot.get_broker()                               1  src/trade.py
 # -------------------------------------------------------------
 
 ~HERE~

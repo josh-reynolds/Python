@@ -259,8 +259,8 @@ class CargoDepot:
             while broker_skill < 1 or broker_skill > 4:
                 broker_skill = cast(int, self.get_input('int', "What level of broker (1-4)? "))
 
-            broker_confirm = self.get_input('confirm', "This will incur a " +
-                                           f"{5 * broker_skill}% fee. " +
+            broker_confirm = self.get_input('confirm',
+                                            f"This will incur a {5 * broker_skill}% fee. " +
                                             "Confirm (y/n)? ")
             if broker_confirm == 'n':
                 broker_skill = 0
