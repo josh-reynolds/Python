@@ -3316,6 +3316,32 @@
 # push is to break up the fat command methods, so I think I'll try that
 # route first.
 #
+# Small tweak to the model above - a string return value isn't nuanced
+# enough in some cases. It only works when all state change happens
+# within the model-side method, and the wrapper/command just prints
+# a value or something similar.
+#
+# But I moved a couple state transitions, which included a couple 
+# small challenges:
+#
+# 1) First, they relied on a base class private method. I moved that
+#    over to model first, and problem solved. Easy enough.
+#
+# 2) But in the case of success, they also communicated with 
+#    self.parent (Game). I don't want to couple that to Model. It
+#    doesn't have any outbound references (some of the interior
+#    classes use observer/controller, but that's slightly 
+#    different).
+#
+#    I suppose I _could_ introduce a third kind of light reference
+#    or overload observer/controller. But I decided on something
+#    simpler.
+#
+#    Instead of a simple string, we'll return a Tuple[bool,str].
+#    The boolean is success/failure, and the str is the corresponding
+#    message. Seems OK so far, will see if we need to spread to others
+#    or go some other direction.
+#
 # -------------------------------------------------------------
 
 ~HERE~

@@ -85,8 +85,9 @@ class OrbitScreen(PlayScreen):
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
         print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} jump point.{END_FORMAT}")
-        print(self.model.outbound_to_jump())
-        # BUG: should only change state on successful jump
-        self.parent.change_state("Jump")
+        result = self.model.outbound_to_jump()
+        print(result[1])
+        if result[0]:
+            self.parent.change_state("Jump")
 
     # ACTIONS ==============================================================

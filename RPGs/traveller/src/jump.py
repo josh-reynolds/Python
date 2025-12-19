@@ -33,8 +33,10 @@ class JumpScreen(PlayScreen):
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
-        print(self.model.inbound_from_jump())
-        self.parent.change_state("Orbit")
+        result = self.model.inbound_from_jump()
+        print(result[1])
+        if result[0]:
+            self.parent.change_state("Orbit")
 
     # ACTIONS ==============================================================
     def jump(self) -> None:
