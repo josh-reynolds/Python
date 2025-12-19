@@ -8,7 +8,6 @@ from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model
 from src.play import PlayScreen
-from src.utilities import die_roll
 
 class OrbitScreen(PlayScreen):
     """Contains commands for the orbit state."""
@@ -50,7 +49,7 @@ class OrbitScreen(PlayScreen):
                 print(f"Receiving {funds} in passenger fares.")
                 self.model.credit(funds, "passenger fare")
 
-                self._low_lottery(low_lottery_amount)
+                print(self.model.low_lottery(low_lottery_amount))
 
                 self.model.set_passengers([])
                 self.model.remove_baggage()
@@ -59,28 +58,6 @@ class OrbitScreen(PlayScreen):
         self.model.berthing_fee()
         self.parent.change_state("Starport")
         return None
-
-    def _low_lottery(self, low_lottery_amount) -> None:
-        """Run the low passage lottery and apply results."""
-        if self.model.low_passenger_count > 0:
-            low_passengers = self.model.get_low_passengers()
-            for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.model.medic_skill() < 5:
-                    passenger.survived = False
-
-            survivors = [p for p in low_passengers if p.survived]
-            print(f"{len(survivors)} of {len(low_passengers)} low passengers "
-                  "survived revival.")
-
-            winner = False
-            for passenger in low_passengers:
-                if passenger.guess == len(survivors) and passenger.survived:
-                    winner = True
-
-            if not winner:
-                print(f"No surviving low lottery winner. "
-                      f"The captain is awarded {low_lottery_amount}.")
-                self.model.credit(low_lottery_amount, "low lottery")
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""

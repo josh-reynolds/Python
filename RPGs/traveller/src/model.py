@@ -265,6 +265,30 @@ class Model:
         self.depot.passengers[destination] = tuple(a-b for a,b in
                                         zip(self.depot.passengers[destination], selection))
 
+    def low_lottery(self, low_lottery_amount) -> str:
+        """Run the low passage lottery and apply results."""
+        result = ""
+        if self.low_passenger_count > 0:
+            low_passengers = self.get_low_passengers()
+            for passenger in low_passengers:
+                if die_roll(2) + passenger.endurance + self.medic_skill() < 5:
+                    passenger.survived = False
+
+            survivors = [p for p in low_passengers if p.survived]
+            result += f"{len(survivors)} of {len(low_passengers)} low passengers survived revival."
+
+            winner = False
+            for passenger in low_passengers:
+                if passenger.guess == len(survivors) and passenger.survived:
+                    winner = True
+
+            if not winner:
+                result += "\nNo surviving low lottery winner. "
+                result += f"The captain is awarded {low_lottery_amount}."
+                self.credit(low_lottery_amount, "low lottery")
+
+        return result
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:
