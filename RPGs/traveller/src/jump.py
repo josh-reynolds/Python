@@ -37,14 +37,15 @@ class JumpScreen(PlayScreen):
                   f"There is no inner system to travel to.{END_FORMAT}")
             return None
 
-        print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
-
         if not self.model.can_maneuver():
             print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
             return None
 
-        leg_fc = self._check_fuel_level("in from")
+        print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
+
+        leg_fc = self.model.check_fuel_level()
         if not leg_fc:
+            print("Insufficient fuel to travel in from the jump point.")
             return None
 
         self.model.burn_fuel(leg_fc)

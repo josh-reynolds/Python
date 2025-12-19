@@ -91,8 +91,9 @@ class OrbitScreen(PlayScreen):
             print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
             return None
 
-        leg_fc = self._check_fuel_level("out to")
+        leg_fc = self.model.check_fuel_level()
         if not leg_fc:
+            print("Insufficient fuel to travel out to the jump point.")
             return None
 
         self.model.burn_fuel(leg_fc)

@@ -505,6 +505,13 @@ class Model:
         """Return the current amount of fuel in the Ship's tanks."""
         return self.ship.current_fuel
 
+    # TO_DO: this would be better as a boolean test
+    def check_fuel_level(self) -> int | None:
+        """Verify there is sufficient fuel in the tanks to make a trip."""
+        if self.fuel_level() < self.leg_fuel_cost():
+            return None
+        return self.leg_fuel_cost()
+
     def fuel_tank_size(self) -> int:
         """Return the capacity of the Ship's fuel tanks."""
         return self.ship.model.fuel_tank

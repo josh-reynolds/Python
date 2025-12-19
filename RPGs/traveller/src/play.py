@@ -105,12 +105,11 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-        destination = self.model.destination_name
 
         print(f"High passengers: {self.model.high_passenger_count}\n"
               f"Middle passengers: {self.model.middle_passenger_count}\n"
               f"Low passengers: {self.model.low_passenger_count}\n"
-              f"DESTINATION: {destination}\n\n"
+              f"DESTINATION: {self.model.destination_name}\n\n"
               f"Empty berths: {self.model.empty_passenger_berths}\n"
               f"Empty low berths: {self.model.empty_low_berths}")
         _ = input("\nPress ENTER key to continue.")
@@ -259,14 +258,3 @@ class PlayScreen(Screen):
             result = potential_destinations
 
         return result
-
-    def _check_fuel_level(self, prompt: str) -> int | None:
-        """Verify there is sufficient fuel in the tanks to make a trip."""
-        leg_fc = self.model.leg_fuel_cost()
-        current_fuel = self.model.fuel_level()
-        if current_fuel < leg_fc:
-            print(f"Insufficient fuel. Travel {prompt} the jump point "
-                  f"requires {leg_fc} tons, only "
-                  f"{current_fuel} tons in tanks.")
-            return None
-        return leg_fc
