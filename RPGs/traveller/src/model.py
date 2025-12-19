@@ -130,6 +130,17 @@ class Model:
         self.set_hex(self.get_system_at_coordinate(destination))
         return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
 
+    def perform_jump(self, observer: Any, destination: StarSystem) -> None:
+        """Perform a hyperspace jump to the specified destination."""
+        self.set_location("jump")
+        self.check_failure_post_jump()
+        self.set_destinations()
+        self.new_depot(observer)
+        self.set_financials_location(destination)
+        self.consume_life_support()
+        self.burn_fuel(self.jump_fuel_cost())
+        self.plus_week()
+
     def flush(self) -> str:
         """Decontaminate the Ship's fuel tanks."""
         if not self.tanks_are_polluted():

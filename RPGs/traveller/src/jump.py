@@ -95,19 +95,7 @@ class JumpScreen(PlayScreen):
 
         print(self.model.misjump_check(coordinate))
 
-        self.model.set_location("jump")
-
-        self.model.check_failure_post_jump()
-
-        self.model.set_destinations()
-
-        self.model.new_depot(self.parent)
-
-        self.model.set_financials_location(destination)
-
-        self.model.consume_life_support()
-        self.model.burn_fuel(self.model.jump_fuel_cost())
-        self.model.plus_week()
+        self.model.perform_jump(self.parent, destination)
 
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
