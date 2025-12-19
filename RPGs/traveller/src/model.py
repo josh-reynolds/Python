@@ -58,6 +58,20 @@ class Model:
         self.set_location("orbit")
         return "Successfully travelled in to orbit."
 
+    def outbound_to_jump(self) -> str:
+        """Move from orbit to the jump point."""
+        if not self.can_maneuver():
+            return f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}"
+
+        leg_fc = self.check_fuel_level()
+        if not leg_fc:
+            return "Insufficient fuel to travel out to the jump point."
+
+        self.burn_fuel(leg_fc)
+        self.add_day()
+        self.set_location("jump")
+        return "Successfully travelled out to the jump point."
+
     # PROCEDURES ========================================
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""

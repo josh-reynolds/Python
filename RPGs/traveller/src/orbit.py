@@ -84,22 +84,9 @@ class OrbitScreen(PlayScreen):
 
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
-        print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} " +
-              f"jump point.{END_FORMAT}")
-
-        if not self.model.can_maneuver():
-            print(f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
-            return None
-
-        leg_fc = self.model.check_fuel_level()
-        if not leg_fc:
-            print("Insufficient fuel to travel out to the jump point.")
-            return None
-
-        self.model.burn_fuel(leg_fc)
-        self.model.add_day()
-        self.model.set_location("jump")
+        print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} jump point.{END_FORMAT}")
+        print(self.model.outbound_to_jump())
+        # BUG: should only change state on successful jump
         self.parent.change_state("Jump")
-        return None
 
     # ACTIONS ==============================================================
