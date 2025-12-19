@@ -39,6 +39,25 @@ class Model:
         """Return the developer string representation of the Model object."""
         return "Model()"
 
+    # TRANSITIONS =======================================
+    def inbound_from_jump(self) -> str:
+        """Move from the jump point to orbit."""
+        if self.in_deep_space():
+            return f"{BOLD_RED}You are in deep space. " +\
+                   f"There is no inner system to travel to.{END_FORMAT}"
+
+        if not self.can_maneuver():
+            return f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}"
+
+        leg_fc = self.check_fuel_level()
+        if not leg_fc:
+            return "Insufficient fuel to travel in from the jump point."
+
+        self.burn_fuel(leg_fc)
+        self.add_day()
+        self.set_location("orbit")
+        return "Successfully travelled in to orbit."
+
     # PROCEDURES ========================================
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""

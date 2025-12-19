@@ -32,27 +32,9 @@ class JumpScreen(PlayScreen):
     # STATE TRANSITIONS ====================================================
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
-        if self.model.in_deep_space():
-            print(f"{BOLD_RED}You are in deep space. "
-                  f"There is no inner system to travel to.{END_FORMAT}")
-            return None
-
-        if not self.model.can_maneuver():
-            print(f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
-            return None
-
         print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
-
-        leg_fc = self.model.check_fuel_level()
-        if not leg_fc:
-            print("Insufficient fuel to travel in from the jump point.")
-            return None
-
-        self.model.burn_fuel(leg_fc)
-        self.model.add_day()
-        self.model.set_location("orbit")
+        print(self.model.inbound_from_jump())
         self.parent.change_state("Orbit")
-        return None
 
     # ACTIONS ==============================================================
     def jump(self) -> None:
