@@ -6,7 +6,7 @@ from typing import Any
 from src.command import Command
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.model import Model
+from src.model import Model, GuardClauseFailure
 from src.play import PlayScreen
 
 class OrbitScreen(PlayScreen):
@@ -62,9 +62,10 @@ class OrbitScreen(PlayScreen):
     def outbound_to_jump(self) -> None:
         """Move from orbit to the jump point."""
         print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} jump point.{END_FORMAT}")
-        result = self.model.outbound_to_jump()
-        print(result[1])
-        if result[0]:
+        try:
+            print(self.model.outbound_to_jump())
             self.parent.change_state("Jump")
+        except GuardClauseFailure as exception:
+            print(exception)
 
     # ACTIONS ==============================================================

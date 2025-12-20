@@ -5,7 +5,7 @@ JumpScreen - contains commands for the jump state.
 from typing import Any, cast
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.model import Model
+from src.model import Model, GuardClauseFailure
 from src.play import PlayScreen
 from src.star_system import StarSystem
 from src.utilities import choose_from, confirm_input
@@ -33,10 +33,11 @@ class JumpScreen(PlayScreen):
     def inbound_from_jump(self) -> None:
         """Move from the jump point to orbit."""
         print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
-        result = self.model.inbound_from_jump()
-        print(result[1])
-        if result[0]:
+        try:
+            print(self.model.inbound_from_jump())
             self.parent.change_state("Orbit")
+        except GuardClauseFailure as exception:
+            print(exception)
 
     # ACTIONS ==============================================================
     def jump(self) -> None:

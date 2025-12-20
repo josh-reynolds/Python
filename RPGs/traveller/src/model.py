@@ -40,37 +40,39 @@ class Model:
         return "Model()"
 
     # TRANSITIONS =======================================
-    def inbound_from_jump(self) -> Tuple[bool, str]:
+    def inbound_from_jump(self) -> str:
         """Move from the jump point to orbit."""
         if self.in_deep_space():
-            return (False, f"{BOLD_RED}You are in deep space. " +\
+            raise GuardClauseFailure(f"{BOLD_RED}You are in deep space. " +\
                            f"There is no inner system to travel to.{END_FORMAT}")
 
         if not self.can_maneuver():
-            return (False, f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot travel " +\
+                                      "to orbit.{END_FORMAT}")
 
         leg_fc = self.check_fuel_level()
         if not leg_fc:
-            return (False, "Insufficient fuel to travel in from the jump point.")
+            raise GuardClauseFailure("Insufficient fuel to travel in from the jump point.")
 
         self.burn_fuel(leg_fc)
         self.add_day()
         self.set_location("orbit")
-        return (True, "Successfully travelled in to orbit.")
+        return "Successfully travelled in to orbit."
 
-    def outbound_to_jump(self) -> Tuple[bool, str]:
+    def outbound_to_jump(self) -> str:
         """Move from orbit to the jump point."""
         if not self.can_maneuver():
-            return (False, f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot " +\
+                                     f"travel to the jump point.{END_FORMAT}")
 
         leg_fc = self.check_fuel_level()
         if not leg_fc:
-            return (False, "Insufficient fuel to travel out to the jump point.")
+            raise GuardClauseFailure("Insufficient fuel to travel out to the jump point.")
 
         self.burn_fuel(leg_fc)
         self.add_day()
         self.set_location("jump")
-        return (True, "Successfully travelled out to the jump point.")
+        return "Successfully travelled out to the jump point."
 
     # PROCEDURES ========================================
     def damage_control(self) -> str:
@@ -724,3 +726,9 @@ class Model:
         """Attach observers to Calendar field."""
         self.date.add_observer(self.depot)
         self.date.add_observer(self.financials)
+
+class Error(Exception):
+    """Base class for all exceptions raised by this module."""
+
+class GuardClauseFailure(Error):
+    """A guard clause in the method did not pass."""

@@ -3342,6 +3342,10 @@
 #    message. Seems OK so far, will see if we need to spread to others
 #    or go some other direction.
 #
+#    Hrm. But maybe we should throw an exception instead... That's
+#    probably more Pythonic. Giving this a go... Seems cleaner,
+#    let's go with that instead.
+#
 # -------------------------------------------------------------
 
 ~HERE~
