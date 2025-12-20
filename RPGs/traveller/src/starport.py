@@ -60,14 +60,14 @@ class StarportScreen(PlayScreen):
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""
         print(f"{BOLD_BLUE}Entering {self.model.system_name()} trade depot.{END_FORMAT}")
-        self.model.set_location("trade")
+        print(self.model.to_depot())
         self.parent.change_state("Trade")
 
     def to_terminal(self) -> None:
         """Move from the starport to the passenger terminal."""
         print(f"{BOLD_BLUE}Entering {self.model.system_name()} " +
               f"passenger terminal.{END_FORMAT}")
-        self.model.set_location("terminal")
+        print(self.model.to_terminal())
         self.parent.change_state("Terminal")
 
     # ACTIONS ==============================================================

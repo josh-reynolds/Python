@@ -104,6 +104,16 @@ class Model:
         result += f"Landed at the {self.system_name()} starport."""
         return result
 
+    def to_depot(self) -> str:
+        """Move from the starport to the trade depot."""
+        self.set_location("trade")
+        return f"Entered the {self.system_name()} cargo depot."
+
+    def to_terminal(self) -> str:
+        """Move from the starport to the passenger terminal."""
+        self.set_location("terminal")
+        return f"Entered the {self.system_name()} passenger terminal."
+
     # PROCEDURES ========================================
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""
