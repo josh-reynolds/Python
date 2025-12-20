@@ -684,9 +684,10 @@ class Model:
         """Set the contents of the Ship's cargo hold."""
         self.ship.hold = contents
 
-    def load_cargo(self, cargo: Cargo | Freight) -> None:
+    def load_cargo(self, cargo: List[Cargo | Freight]) -> None:
         """Load the specified cargo into the Ship's hold."""
-        self.ship.load_cargo(cargo)
+        for item in cargo:
+            self.ship.load_cargo(item)
 
     @property
     def free_cargo_space(self) -> int:

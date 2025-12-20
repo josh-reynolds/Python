@@ -77,7 +77,7 @@ class TradeScreen(PlayScreen):
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
-        self.model.load_cargo(purchased)
+        self.model.load_cargo([purchased])
 
         self.model.debit(cost, "cargo purchase")
         self.model.add_day()
@@ -153,7 +153,7 @@ class TradeScreen(PlayScreen):
 
         for entry in selection:
             self.model.remove_freight(destination, entry)
-            self.model.load_cargo(Freight(entry, self.model.get_star_system(), destination))
+            self.model.load_cargo([Freight(entry, self.model.get_star_system(), destination)])
         self.model.add_day()
 
     def _select_freight_lots(self, available: List[int],
