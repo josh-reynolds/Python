@@ -4,8 +4,8 @@ StarportScreen - contains commands for the starport state.
 """
 from typing import Any
 from src.command import Command
-from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.model import Model
+from src.format import BOLD_BLUE, END_FORMAT
+from src.model import Model, GuardClauseFailure
 from src.play import PlayScreen
 from src.utilities import confirm_input
 
@@ -36,26 +36,11 @@ class StarportScreen(PlayScreen):
     def liftoff(self) -> None:
         """Move from the starport to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
-
-        if not self.model.can_maneuver():
-            print(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
-            return None
-
-        # corner case - these messages assume passengers are coming
-        # from the current world, which should be true most
-        # of the time, but not necessarily all the time
-        if self.model.total_passenger_count > 0:
-            print(f"Boarding {self.model.total_passenger_count} "
-                  f"passengers for {self.model.destination_name}.")
-
-        if self.model.low_passenger_count > 0:
-            low_passengers = self.model.get_low_passengers()
-            for passenger in low_passengers:
-                passenger.guess_survivors(self.model.low_passenger_count)
-
-        self.model.set_location("orbit")
-        self.parent.change_state("Orbit")
-        return None
+        try:
+            print(self.model.liftoff())
+            self.parent.change_state("Orbit")
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def to_depot(self) -> None:
         """Move from the starport to the trade depot."""

@@ -85,13 +85,13 @@ class Model:
         result = ""
         if self.destination() == self.get_star_system():
             if self.total_passenger_count > 0:
-                result += f"Passengers disembarking on {self.system_name()}."
+                result += f"Passengers disembarking on {self.system_name()}.\n"
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
                         self.get_passengers()))
                 low_lottery_amount = Credits(10) * self.low_passenger_count
                 funds -= low_lottery_amount
-                result += f"Receiving {funds} in passenger fares."
+                result += f"Receiving {funds} in passenger fares.\n"
                 self.credit(funds, "passenger fare")
 
                 result += self.low_lottery(low_lottery_amount)
@@ -101,7 +101,7 @@ class Model:
 
         self.set_location("starport")
         self.berthing_fee()
-        result += f"Landed at the {self.system_name()} starport."""
+        result += f"\nLanded at the {self.system_name()} starport."""
         return result
 
     def to_depot(self) -> str:
@@ -113,6 +113,28 @@ class Model:
         """Move from the starport to the passenger terminal."""
         self.set_location("terminal")
         return f"Entered the {self.system_name()} passenger terminal."
+
+    def liftoff(self) -> str:
+        """Move from the starport to orbit."""
+        if not self.can_maneuver():
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
+
+        result = ""
+        # corner case - these messages assume passengers are coming
+        # from the current world, which should be true most
+        # of the time, but not necessarily all the time
+        if self.total_passenger_count > 0:
+            result += f"Boarding {self.total_passenger_count} "
+            result += f"passengers for {self.destination_name}.\n"
+
+        if self.low_passenger_count > 0:
+            low_passengers = self.get_low_passengers()
+            for passenger in low_passengers:
+                passenger.guess_survivors(self.low_passenger_count)
+
+        self.set_location("orbit")
+        result += f"Successfully lifted off to orbit from {self.system_name()}."
+        return result
 
     # PROCEDURES ========================================
     def damage_control(self) -> str:
