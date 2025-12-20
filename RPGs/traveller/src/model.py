@@ -74,6 +74,36 @@ class Model:
         self.set_location("jump")
         return "Successfully travelled out to the jump point."
 
+    def land(self) -> str:
+        """Move from orbit to the starport."""
+        if not self.streamlined:
+            raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
+
+        if not self.can_maneuver():
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
+
+        result = ""
+        if self.destination() == self.get_star_system():
+            if self.total_passenger_count > 0:
+                result += f"Passengers disembarking on {self.system_name()}."
+
+                funds = Credits(sum(p.ticket_price.amount for p in \
+                        self.get_passengers()))
+                low_lottery_amount = Credits(10) * self.low_passenger_count
+                funds -= low_lottery_amount
+                result += f"Receiving {funds} in passenger fares."
+                self.credit(funds, "passenger fare")
+
+                result += self.low_lottery(low_lottery_amount)
+
+                self.set_passengers([])
+                self.remove_baggage()
+
+        self.set_location("starport")
+        self.berthing_fee()
+        result += f"Landed at the {self.system_name()} starport."""
+        return result
+
     # PROCEDURES ========================================
     def damage_control(self) -> str:
         """Repair damage to the Ship (Engineer)."""
