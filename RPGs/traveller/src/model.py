@@ -324,7 +324,6 @@ class Model:
         return self.depot.determine_price(prompt, cargo, quantity, skill)
 
     # TO_DO: this overlaps with ship.unload_cargo()...
-    #        also don't think it uses any instance data - functionify it?
     def remove_cargo(self, source: List, cargo: Cargo, quantity: int) -> None:
         """Remove cargo from a storage location."""
         self.depot.remove_cargo(source, cargo, quantity)

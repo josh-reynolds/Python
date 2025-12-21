@@ -83,50 +83,11 @@ class CargoDepot:
         """
         self.passengers = {}
         for world in destinations:
-            origin_counts = self._passenger_origin_table(self.system.population)
+            origin_counts = _passenger_origin_table(self.system.population)
             passengers = self._passenger_destination_table(world.population,
                                                           origin_counts)
             self.passengers[world] = passengers
 
-    def _passenger_origin_table(self, population: int) -> Tuple[int, int, int]:
-        """Return a number of Passengers based on world of origin.
-
-        This data comes from the table on page 7 of Traveller '77
-        Book 2. In that text, the table goes up to population 12,
-        but the world generation procedure only generates populations
-        up to 10, so those entries are omitted here.
-        """
-        if population < 2:
-            result = (0,0,0)
-        if population == 2:
-            result = (die_roll()-die_roll(),
-                      die_roll()-die_roll(),
-                      die_roll(3)-die_roll())
-        if population == 3:
-            result = (die_roll(3)-die_roll(2),
-                      die_roll(2)-die_roll(2),
-                      die_roll(3)-die_roll())
-        if population == 4:
-            result = (die_roll(3)-die_roll(3),
-                      die_roll(3)-die_roll(3),
-                      die_roll(4)-die_roll())
-        if population == 5:
-            result = (die_roll(3)-die_roll(2),
-                      die_roll(3)-die_roll(2),
-                      die_roll(4)-die_roll())
-        if population in (6, 7):
-            result = (die_roll(3)-die_roll(2),
-                      die_roll(3)-die_roll(2),
-                      die_roll(3))
-        if population == 8:
-            result = (die_roll(2)-die_roll(),
-                      die_roll(3)-die_roll(2),
-                      die_roll(4))
-        if population > 8:
-            result = (die_roll(2)-die_roll(),
-                      die_roll(2)-die_roll(),
-                      die_roll(4))
-        return result
 
     def _passenger_destination_table(self,
                                      population: int,
@@ -398,4 +359,44 @@ def cargo_hold_from(strings: List[str],
         if len(destinations) > 1:
             raise ValueError(f"more than one destination in saved data: '{destinations}'")
 
+    return result
+
+def _passenger_origin_table(population: int) -> Tuple[int, int, int]:
+    """Return a number of Passengers based on world of origin.
+
+    This data comes from the table on page 7 of Traveller '77
+    Book 2. In that text, the table goes up to population 12,
+    but the world generation procedure only generates populations
+    up to 10, so those entries are omitted here.
+    """
+    if population < 2:
+        result = (0,0,0)
+    if population == 2:
+        result = (die_roll()-die_roll(),
+                  die_roll()-die_roll(),
+                  die_roll(3)-die_roll())
+    if population == 3:
+        result = (die_roll(3)-die_roll(2),
+                  die_roll(2)-die_roll(2),
+                  die_roll(3)-die_roll())
+    if population == 4:
+        result = (die_roll(3)-die_roll(3),
+                  die_roll(3)-die_roll(3),
+                  die_roll(4)-die_roll())
+    if population == 5:
+        result = (die_roll(3)-die_roll(2),
+                  die_roll(3)-die_roll(2),
+                  die_roll(4)-die_roll())
+    if population in (6, 7):
+        result = (die_roll(3)-die_roll(2),
+                  die_roll(3)-die_roll(2),
+                  die_roll(3))
+    if population == 8:
+        result = (die_roll(2)-die_roll(),
+                  die_roll(3)-die_roll(2),
+                  die_roll(4))
+    if population > 8:
+        result = (die_roll(2)-die_roll(),
+                  die_roll(2)-die_roll(),
+                  die_roll(4))
     return result

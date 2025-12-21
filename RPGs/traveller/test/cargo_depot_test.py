@@ -2,7 +2,7 @@
 import unittest
 from test.mock import ObserverMock, DateMock, SystemMock, ControlsMock
 from src.cargo import Cargo
-from src.cargo_depot import CargoDepot
+from src.cargo_depot import CargoDepot, _passenger_origin_table
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.star_system import StarSystem
@@ -336,78 +336,75 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertTrue(freight is None)
         self.assertEqual(observer.message, "That is not a valid destination number.")
 
-    # pylint: disable=W0212, R0915
-    # W0212: Access to a protected member _passenger_origin_table of a client class
-    # R0915: Too many statements (58/50)
+    # pylint: disable=R0915
+    # R0915: Too many statements (57/50)
     def test_passenger_origin_table(self) -> None:
         """Test calculation of passengers by origin world."""
-        depot = CargoDepotTestCase.depot
+        self.assertEqual(_passenger_origin_table(0), (0,0,0))
+        self.assertEqual(_passenger_origin_table(1), (0,0,0))
 
-        self.assertEqual(depot._passenger_origin_table(0), (0,0,0))
-        self.assertEqual(depot._passenger_origin_table(1), (0,0,0))
+        self.assertGreater(_passenger_origin_table(2)[0], -6)
+        self.assertLess(_passenger_origin_table(2)[0], 6)
+        self.assertGreater(_passenger_origin_table(2)[1], -6)
+        self.assertLess(_passenger_origin_table(2)[1], 6)
+        self.assertGreater(_passenger_origin_table(2)[2], -4)
+        self.assertLess(_passenger_origin_table(2)[2], 18)
 
-        self.assertGreater(depot._passenger_origin_table(2)[0], -6)
-        self.assertLess(depot._passenger_origin_table(2)[0], 6)
-        self.assertGreater(depot._passenger_origin_table(2)[1], -6)
-        self.assertLess(depot._passenger_origin_table(2)[1], 6)
-        self.assertGreater(depot._passenger_origin_table(2)[2], -4)
-        self.assertLess(depot._passenger_origin_table(2)[2], 18)
+        self.assertGreater(_passenger_origin_table(3)[0], -10)
+        self.assertLess(_passenger_origin_table(3)[0], 17)
+        self.assertGreater(_passenger_origin_table(3)[1], -11)
+        self.assertLess(_passenger_origin_table(3)[1], 11)
+        self.assertGreater(_passenger_origin_table(3)[2], -4)
+        self.assertLess(_passenger_origin_table(3)[2], 18)
 
-        self.assertGreater(depot._passenger_origin_table(3)[0], -10)
-        self.assertLess(depot._passenger_origin_table(3)[0], 17)
-        self.assertGreater(depot._passenger_origin_table(3)[1], -11)
-        self.assertLess(depot._passenger_origin_table(3)[1], 11)
-        self.assertGreater(depot._passenger_origin_table(3)[2], -4)
-        self.assertLess(depot._passenger_origin_table(3)[2], 18)
+        self.assertGreater(_passenger_origin_table(4)[0], -16)
+        self.assertLess(_passenger_origin_table(4)[0], 16)
+        self.assertGreater(_passenger_origin_table(4)[1], -16)
+        self.assertLess(_passenger_origin_table(4)[1], 16)
+        self.assertGreater(_passenger_origin_table(4)[2], -3)
+        self.assertLess(_passenger_origin_table(4)[2], 24)
 
-        self.assertGreater(depot._passenger_origin_table(4)[0], -16)
-        self.assertLess(depot._passenger_origin_table(4)[0], 16)
-        self.assertGreater(depot._passenger_origin_table(4)[1], -16)
-        self.assertLess(depot._passenger_origin_table(4)[1], 16)
-        self.assertGreater(depot._passenger_origin_table(4)[2], -3)
-        self.assertLess(depot._passenger_origin_table(4)[2], 24)
+        self.assertGreater(_passenger_origin_table(5)[0], -10)
+        self.assertLess(_passenger_origin_table(5)[0], 17)
+        self.assertGreater(_passenger_origin_table(5)[1], -10)
+        self.assertLess(_passenger_origin_table(5)[1], 17)
+        self.assertGreater(_passenger_origin_table(5)[2], -3)
+        self.assertLess(_passenger_origin_table(5)[2], 24)
 
-        self.assertGreater(depot._passenger_origin_table(5)[0], -10)
-        self.assertLess(depot._passenger_origin_table(5)[0], 17)
-        self.assertGreater(depot._passenger_origin_table(5)[1], -10)
-        self.assertLess(depot._passenger_origin_table(5)[1], 17)
-        self.assertGreater(depot._passenger_origin_table(5)[2], -3)
-        self.assertLess(depot._passenger_origin_table(5)[2], 24)
+        self.assertGreater(_passenger_origin_table(6)[0], -10)
+        self.assertLess(_passenger_origin_table(6)[0], 17)
+        self.assertGreater(_passenger_origin_table(6)[1], -10)
+        self.assertLess(_passenger_origin_table(6)[1], 17)
+        self.assertGreater(_passenger_origin_table(6)[2], 2)
+        self.assertLess(_passenger_origin_table(6)[2], 19)
 
-        self.assertGreater(depot._passenger_origin_table(6)[0], -10)
-        self.assertLess(depot._passenger_origin_table(6)[0], 17)
-        self.assertGreater(depot._passenger_origin_table(6)[1], -10)
-        self.assertLess(depot._passenger_origin_table(6)[1], 17)
-        self.assertGreater(depot._passenger_origin_table(6)[2], 2)
-        self.assertLess(depot._passenger_origin_table(6)[2], 19)
+        self.assertGreater(_passenger_origin_table(7)[0], -10)
+        self.assertLess(_passenger_origin_table(7)[0], 17)
+        self.assertGreater(_passenger_origin_table(7)[1], -10)
+        self.assertLess(_passenger_origin_table(7)[1], 17)
+        self.assertGreater(_passenger_origin_table(7)[2], 2)
+        self.assertLess(_passenger_origin_table(7)[2], 19)
 
-        self.assertGreater(depot._passenger_origin_table(7)[0], -10)
-        self.assertLess(depot._passenger_origin_table(7)[0], 17)
-        self.assertGreater(depot._passenger_origin_table(7)[1], -10)
-        self.assertLess(depot._passenger_origin_table(7)[1], 17)
-        self.assertGreater(depot._passenger_origin_table(7)[2], 2)
-        self.assertLess(depot._passenger_origin_table(7)[2], 19)
+        self.assertGreater(_passenger_origin_table(8)[0], -5)
+        self.assertLess(_passenger_origin_table(8)[0], 12)
+        self.assertGreater(_passenger_origin_table(8)[1], -10)
+        self.assertLess(_passenger_origin_table(8)[1], 17)
+        self.assertGreater(_passenger_origin_table(8)[2], 3)
+        self.assertLess(_passenger_origin_table(8)[2], 25)
 
-        self.assertGreater(depot._passenger_origin_table(8)[0], -5)
-        self.assertLess(depot._passenger_origin_table(8)[0], 12)
-        self.assertGreater(depot._passenger_origin_table(8)[1], -10)
-        self.assertLess(depot._passenger_origin_table(8)[1], 17)
-        self.assertGreater(depot._passenger_origin_table(8)[2], 3)
-        self.assertLess(depot._passenger_origin_table(8)[2], 25)
+        self.assertGreater(_passenger_origin_table(9)[0], -5)
+        self.assertLess(_passenger_origin_table(9)[0], 12)
+        self.assertGreater(_passenger_origin_table(9)[1], -5)
+        self.assertLess(_passenger_origin_table(9)[1], 12)
+        self.assertGreater(_passenger_origin_table(9)[2], 3)
+        self.assertLess(_passenger_origin_table(9)[2], 25)
 
-        self.assertGreater(depot._passenger_origin_table(9)[0], -5)
-        self.assertLess(depot._passenger_origin_table(9)[0], 12)
-        self.assertGreater(depot._passenger_origin_table(9)[1], -5)
-        self.assertLess(depot._passenger_origin_table(9)[1], 12)
-        self.assertGreater(depot._passenger_origin_table(9)[2], 3)
-        self.assertLess(depot._passenger_origin_table(9)[2], 25)
-
-        self.assertGreater(depot._passenger_origin_table(10)[0], -5)
-        self.assertLess(depot._passenger_origin_table(10)[0], 12)
-        self.assertGreater(depot._passenger_origin_table(10)[1], -5)
-        self.assertLess(depot._passenger_origin_table(10)[1], 12)
-        self.assertGreater(depot._passenger_origin_table(10)[2], 3)
-        self.assertLess(depot._passenger_origin_table(10)[2], 25)
+        self.assertGreater(_passenger_origin_table(10)[0], -5)
+        self.assertLess(_passenger_origin_table(10)[0], 12)
+        self.assertGreater(_passenger_origin_table(10)[1], -5)
+        self.assertLess(_passenger_origin_table(10)[1], 12)
+        self.assertGreater(_passenger_origin_table(10)[2], 3)
+        self.assertLess(_passenger_origin_table(10)[2], 25)
 
     def test_passenger_destination_table(self) -> None:
         """Test determination of passenger count modifiers by destination world."""
