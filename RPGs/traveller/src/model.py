@@ -109,18 +109,13 @@ class Model:
         self.set_location("trade")
         return f"Entered the {self.system_name()} cargo depot."
 
-    def leave_depot(self) -> str:
-        """Move from the trade depot to the starport."""
-        self.set_location("starport")
-        return f"Entered the {self.system_name()} starport."
-
     def to_terminal(self) -> str:
         """Move from the starport to the passenger terminal."""
         self.set_location("terminal")
         return f"Entered the {self.system_name()} passenger terminal."
 
-    def leave_terminal(self) -> str:
-        """Move from the passenger terminal to the starport."""
+    def to_starport(self) -> str:
+        """Move to the starport from the depot or terminal."""
         self.set_location("starport")
         return f"Entered the {self.system_name()} starport."
 

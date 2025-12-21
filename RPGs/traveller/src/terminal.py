@@ -38,7 +38,7 @@ class TerminalScreen(PlayScreen):
         """Move from the passenger terminal to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} " +
               f"passenger terminal.{END_FORMAT}")
-        print(self.model.leave_terminal())
+        print(self.model.to_starport())
         self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
