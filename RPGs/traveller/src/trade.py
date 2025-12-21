@@ -45,7 +45,7 @@ class TradeScreen(PlayScreen):
     def leave_depot(self) -> None:
         """Move from the trade depot to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} trade depot.{END_FORMAT}")
-        self.model.set_location("starport")
+        print(self.model.leave_depot())
         self.parent.change_state("Starport")
 
     # ACTIONS ==============================================================
