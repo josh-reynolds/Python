@@ -210,6 +210,21 @@ class Model:
         self.add_day()
         return "Your ship is fully refuelled."
 
+    def jump_systems_check(self) -> str:
+        """Verify the Ship is ready to perform a hyperspace jump."""
+        self.check_failure_pre_jump(self.maintenance_status())
+
+        if not self.can_jump():
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
+
+        if not self.sufficient_jump_fuel():
+            raise GuardClauseFailure(self.insufficient_jump_fuel_message())
+
+        if not self.sufficient_life_support():
+            raise GuardClauseFailure(self.insufficient_life_support_message())
+
+        return "All systems ready for jump."
+
     def misjump_check(self, destination: Coordinate) -> str:
         """Test for misjump and report results."""
         if self.tanks_are_polluted():

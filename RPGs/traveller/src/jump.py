@@ -44,20 +44,10 @@ class JumpScreen(PlayScreen):
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
 
-        status = self.model.maintenance_status()
-        self.model.check_failure_pre_jump(status)
-
-        if not self.model.can_jump():
-            print(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
-            return
-
-        if not self.model.sufficient_jump_fuel():
-            print(self.model.insufficient_jump_fuel_message())
-            return
-
-        if not self.model.sufficient_life_support():
-            print(self.model.insufficient_life_support_message())
-            return
+        try:
+            print(self.model.jump_systems_check())
+        except GuardClauseFailure as exception:
+            print(exception)
 
         jump_range = self.model.jump_range
         print(f"Systems within jump-{jump_range}:")
