@@ -86,10 +86,6 @@ class MenuScreen(Screen):
         self.model.set_destinations()
         self.model.set_financials_location(self.model.get_star_system())
 
-    def _create_depot(self) -> None:
-        """Create a CargoDepot and apply to Game depot field."""
-        self.model.new_depot(self.parent)
-
     def _create_empty_hexes(self) -> None:
         """Fill unoccupied hexes in subsectors with DeepSpace."""
         for sub_coord in self.model.get_all_subsectors():
@@ -127,7 +123,7 @@ class MenuScreen(Screen):
 
         self.model.load_financials(data['financials'], self.parent)
         self._load_location(data['location'])
-        self._create_depot()
+        self.model.new_depot(self.parent)
         self.model.attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
@@ -188,7 +184,7 @@ class MenuScreen(Screen):
         self.model.load_financials(data['financials'], self.parent)
         self.model.set_ledger(data['ledger'])
         self._load_location(data['location'])
-        self._create_depot()
+        self.model.new_depot(self.parent)
         self.model.attach_date_observers()
 
         _ = input("Press ENTER key to continue.")
@@ -353,7 +349,7 @@ class MenuScreen(Screen):
             return None
 
         self._load_location(f"{location}")
-        self._create_depot()
+        self.model.new_depot(self.parent)
         self.model.attach_date_observers()
 
         _ = input("\nPress ENTER key to continue.")
