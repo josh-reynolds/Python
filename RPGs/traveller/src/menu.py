@@ -185,7 +185,7 @@ class MenuScreen(Screen):
         for entry in system_data:
             tokens = entry.split()
 
-            three_axis_coord = self._subsector_coord_to_3_axis(tokens[0], tokens[1],
+            three_axis_coord = _subsector_coord_to_3_axis(tokens[0], tokens[1],
                                                                subsector_data)
             world_name = tokens[2]
             uwp = tokens[3]
@@ -207,22 +207,12 @@ class MenuScreen(Screen):
             subsector_list.append(f"{value} - {key}")
         return subsector_list
 
-    def _subsector_coord_to_3_axis(self, subsector_name: str, coord: str,
-                                   subsector_data: Dict[str,str]) -> Coordinate:
-        """Convert imported Location data into a 3-axis Coordinate."""
-        subsector_coord = subsector_data[subsector_name]
-        sub_x, sub_y = _parse_coordinates(subsector_coord)
-
-        column = int(coord[:2])
-        row = int(coord[2:])
-
-        return create_3_axis(column, row, sub_x, sub_y)
 
     def _import_location(self, subsector_data: Dict[str,str],
                          location_data: str) -> Coordinate:
         """Convert imported Location data into a Coordinate used by _load_systems()."""
         tokens = location_data.split()
-        return self._subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
+        return _subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
 
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
@@ -355,3 +345,14 @@ def _parse_import_file_contents(content: List[str]) -> Dict[str, Dict | List | s
                     raise ValueError(f"more than one location specified: '{line}'")
 
     return data
+
+def _subsector_coord_to_3_axis(subsector_name: str, coord: str,
+                               subsector_data: Dict[str,str]) -> Coordinate:
+    """Convert imported Location data into a 3-axis Coordinate."""
+    subsector_coord = subsector_data[subsector_name]
+    sub_x, sub_y = _parse_coordinates(subsector_coord)
+
+    column = int(coord[:2])
+    row = int(coord[2:])
+
+    return create_3_axis(column, row, sub_x, sub_y)
