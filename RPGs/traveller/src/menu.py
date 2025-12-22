@@ -180,12 +180,6 @@ class MenuScreen(Screen):
         return None
 
 
-    def _import_location(self, subsector_data: Dict[str,str],
-                         location_data: str) -> Coordinate:
-        """Convert imported Location data into a Coordinate used by _load_systems()."""
-        tokens = location_data.split()
-        return _subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
-
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
         return isinstance(self.model.get_system_at_coordinate(coord), StarSystem)
@@ -226,8 +220,8 @@ class MenuScreen(Screen):
 
         financials_string = "10000000 - 001-1105 - 001-1105 - 001-1105 - 001-1105 - 352-1104"
         self.model.load_financials(financials_string, self.parent)
-        location = self._import_location(data['subsectors'],  # type: ignore[index, arg-type]
-                                         data['location'])    # type: ignore[index, arg-type]
+        location = _import_location(data['subsectors'],  # type: ignore[index, arg-type]
+                                    data['location'])    # type: ignore[index, arg-type]
         if not self._is_star_system(location):
             print(f"{BOLD_RED}The start location in the import file is in Deep Space.{END_FORMAT}")
             return None
@@ -355,3 +349,9 @@ def _import_subsectors(subsector_data: Dict[str,str]) -> List[str]:
     for key, value in subsector_data.items():   # type: ignore[union-attr]
         subsector_list.append(f"{value} - {key}")
     return subsector_list
+
+def _import_location(subsector_data: Dict[str,str],
+                     location_data: str) -> Coordinate:
+    """Convert imported Location data into a Coordinate used by _load_systems()."""
+    tokens = location_data.split()
+    return _subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
