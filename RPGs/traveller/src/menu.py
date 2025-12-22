@@ -180,14 +180,6 @@ class MenuScreen(Screen):
         return None
 
 
-    def _import_subsectors(self, subsector_data: Dict[str,str]) -> List[str]:
-        """Convert imported Subsector data into format used by _load_systems()."""
-        subsector_list = []
-        for key, value in subsector_data.items():   # type: ignore[union-attr]
-            subsector_list.append(f"{value} - {key}")
-        return subsector_list
-
-
     def _import_location(self, subsector_data: Dict[str,str],
                          location_data: str) -> Coordinate:
         """Convert imported Location data into a Coordinate used by _load_systems()."""
@@ -212,7 +204,7 @@ class MenuScreen(Screen):
                                       data['subsectors'])       # type: ignore[index, arg-type]
         self._load_systems(system_list)
 
-        subsector_list = self._import_subsectors(data['subsectors']) # type: ignore[index, arg-type]
+        subsector_list = _import_subsectors(data['subsectors']) # type: ignore[index, arg-type]
         self._load_subsectors(subsector_list)
         self._create_empty_hexes()
 
@@ -356,3 +348,10 @@ def _import_systems(system_data: List[str], subsector_data: Dict[str,str]) -> Li
         system_list.append(world_string)
 
     return system_list
+
+def _import_subsectors(subsector_data: Dict[str,str]) -> List[str]:
+    """Convert imported Subsector data into format used by _load_systems()."""
+    subsector_list = []
+    for key, value in subsector_data.items():   # type: ignore[union-attr]
+        subsector_list.append(f"{value} - {key}")
+    return subsector_list
