@@ -84,46 +84,9 @@ class CargoDepot:
         self.passengers = {}
         for world in destinations:
             origin_counts = _passenger_origin_table(self.system.population)
-            passengers = self._passenger_destination_table(world.population,
+            passengers = _passenger_destination_table(world.population,
                                                           origin_counts)
             self.passengers[world] = passengers
-
-
-    def _passenger_destination_table(self,
-                                     population: int,
-                                     counts: Tuple[int, int, int]) -> Tuple[int, ...]:
-        """Adjust a number of Passengers based on destination.
-
-        This data comes from the table on page 7 of Traveller '77
-        Book 2. In that text, the table goes up to population 12,
-        but the world generation procedure only generates populations
-        up to 10, so those entries are omitted here.
-        """
-        match population:
-            case 0:
-                return (0,0,0)
-            case 1:
-                return (0,0,0)
-            case 2:
-                modifiers = (-1,-2,-4)
-            case 3:
-                modifiers = (-1,-1,-3)
-            case 4:
-                modifiers = (-1,-1,-2)
-            case 5:
-                modifiers = (0,-1,-1)
-            case 6:
-                modifiers = (0,0,-1)
-            case 7:
-                modifiers = (0,0,0)
-            case 8:
-                modifiers = (1,0,0)
-            case 9:
-                modifiers = (1,1,0)
-            case 10:
-                modifiers = (1,1,2)
-
-        return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))
 
     def get_available_freight(self,
                               destinations: Sequence[StarSystem]
@@ -400,3 +363,38 @@ def _passenger_origin_table(population: int) -> Tuple[int, int, int]:
                   die_roll(2)-die_roll(),
                   die_roll(4))
     return result
+
+def _passenger_destination_table(population: int,
+                                 counts: Tuple[int, int, int]) -> Tuple[int, ...]:
+    """Adjust a number of Passengers based on destination.
+
+    This data comes from the table on page 7 of Traveller '77
+    Book 2. In that text, the table goes up to population 12,
+    but the world generation procedure only generates populations
+    up to 10, so those entries are omitted here.
+    """
+    match population:
+        case 0:
+            return (0,0,0)
+        case 1:
+            return (0,0,0)
+        case 2:
+            modifiers = (-1,-2,-4)
+        case 3:
+            modifiers = (-1,-1,-3)
+        case 4:
+            modifiers = (-1,-1,-2)
+        case 5:
+            modifiers = (0,-1,-1)
+        case 6:
+            modifiers = (0,0,-1)
+        case 7:
+            modifiers = (0,0,0)
+        case 8:
+            modifiers = (1,0,0)
+        case 9:
+            modifiers = (1,1,0)
+        case 10:
+            modifiers = (1,1,2)
+
+    return tuple(constrain(a + b, 0, 40) for a,b in zip(counts,modifiers))

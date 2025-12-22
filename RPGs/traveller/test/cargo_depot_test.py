@@ -3,6 +3,7 @@ import unittest
 from test.mock import ObserverMock, DateMock, SystemMock, ControlsMock
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot, _passenger_origin_table
+from src.cargo_depot import _passenger_destination_table
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.star_system import StarSystem
@@ -408,27 +409,25 @@ class CargoDepotTestCase(unittest.TestCase):
 
     def test_passenger_destination_table(self) -> None:
         """Test determination of passenger count modifiers by destination world."""
-        depot = CargoDepotTestCase.depot
-
         counts = (4,4,4)
-        self.assertEqual(depot._passenger_destination_table(0, counts), (0,0,0))
-        self.assertEqual(depot._passenger_destination_table(1, counts), (0,0,0))
-        self.assertEqual(depot._passenger_destination_table(2, counts), (3,2,0))
-        self.assertEqual(depot._passenger_destination_table(3, counts), (3,3,1))
-        self.assertEqual(depot._passenger_destination_table(4, counts), (3,3,2))
-        self.assertEqual(depot._passenger_destination_table(5, counts), (4,3,3))
-        self.assertEqual(depot._passenger_destination_table(6, counts), (4,4,3))
-        self.assertEqual(depot._passenger_destination_table(7, counts), (4,4,4))
-        self.assertEqual(depot._passenger_destination_table(8, counts), (5,4,4))
-        self.assertEqual(depot._passenger_destination_table(9, counts), (5,5,4))
-        self.assertEqual(depot._passenger_destination_table(10, counts), (5,5,6))
+        self.assertEqual(_passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(_passenger_destination_table(1, counts), (0,0,0))
+        self.assertEqual(_passenger_destination_table(2, counts), (3,2,0))
+        self.assertEqual(_passenger_destination_table(3, counts), (3,3,1))
+        self.assertEqual(_passenger_destination_table(4, counts), (3,3,2))
+        self.assertEqual(_passenger_destination_table(5, counts), (4,3,3))
+        self.assertEqual(_passenger_destination_table(6, counts), (4,4,3))
+        self.assertEqual(_passenger_destination_table(7, counts), (4,4,4))
+        self.assertEqual(_passenger_destination_table(8, counts), (5,4,4))
+        self.assertEqual(_passenger_destination_table(9, counts), (5,5,4))
+        self.assertEqual(_passenger_destination_table(10, counts), (5,5,6))
 
         counts = (0,0,0)
-        self.assertEqual(depot._passenger_destination_table(0, counts), (0,0,0))
-        self.assertEqual(depot._passenger_destination_table(2, counts), (0,0,0))
+        self.assertEqual(_passenger_destination_table(0, counts), (0,0,0))
+        self.assertEqual(_passenger_destination_table(2, counts), (0,0,0))
 
         counts = (50,50,50)
-        self.assertEqual(depot._passenger_destination_table(7, counts), (40,40,40))
+        self.assertEqual(_passenger_destination_table(7, counts), (40,40,40))
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _refresh_freight of a client class
