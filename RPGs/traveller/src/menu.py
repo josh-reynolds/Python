@@ -36,19 +36,6 @@ class MenuScreen(Screen):
         """Return the developer string representation of a Menu object."""
         return f"Menu({self.parent!r})"
 
-    def _print_title(self) -> None:
-        """Draw the game title."""
-        # ASCII art from https://patorjk.com/software
-        # 'Grafitti' font
-        title_lines = get_lines("./data/title.txt")
-        string = "Welcome to the Traveller Trading Game!"
-
-        print(f"{HOME}{CLEAR}")
-        for line in title_lines:
-            line = line.rstrip()
-            print(f"{BOLD_RED}{line}{END_FORMAT}")
-        print(f"{BOLD}\n{string}{END_FORMAT}")
-
     def _get_menu_choice(self):
         """Take player's choice from the menu."""
         for command in self.commands:
@@ -58,7 +45,7 @@ class MenuScreen(Screen):
 
     def update(self) -> None:
         """Draw the screen and present menu choices."""
-        self._print_title()
+        _print_title()
         self._get_menu_choice()
 
     # VIEW COMMANDS ========================================================
@@ -356,3 +343,16 @@ class MenuScreen(Screen):
         self.model.set_location("starport")
         self.parent.change_state("Starport")
         return None
+
+def _print_title() -> None:
+    """Draw the game title."""
+    # ASCII art from https://patorjk.com/software
+    # 'Grafitti' font
+    title_lines = get_lines("./data/title.txt")
+    string = "Welcome to the Traveller Trading Game!"
+
+    print(f"{HOME}{CLEAR}")
+    for line in title_lines:
+        line = line.rstrip()
+        print(f"{BOLD_RED}{line}{END_FORMAT}")
+    print(f"{BOLD}\n{string}{END_FORMAT}")
