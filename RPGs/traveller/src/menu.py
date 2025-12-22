@@ -179,15 +179,6 @@ class MenuScreen(Screen):
         self.parent.change_state(data['menu'])
         return None
 
-    def _parse_coordinates(self, coord: str) -> Tuple[int, int]:
-        r"""Parse a string and extract coordinates from it.
-
-        String is in the format:  (-?\d*,-?\d*)
-        This method removes the parentheses, splits on the comma,
-        and converts the remaining tokens to integers.
-        """
-        sub_x, sub_y = coord[1:-1].split(',')
-        return (int(sub_x), int(sub_y))
 
     def _parse_import_file_contents(self,
                                     content: List[str]) -> Dict[str, Dict | List | str] | None:
@@ -276,7 +267,7 @@ class MenuScreen(Screen):
                                    subsector_data: Dict[str,str]) -> Coordinate:
         """Convert imported Location data into a 3-axis Coordinate."""
         subsector_coord = subsector_data[subsector_name]
-        sub_x, sub_y = self._parse_coordinates(subsector_coord)
+        sub_x, sub_y = _parse_coordinates(subsector_coord)
 
         column = int(coord[:2])
         row = int(coord[2:])
@@ -356,3 +347,13 @@ def _print_title() -> None:
         line = line.rstrip()
         print(f"{BOLD_RED}{line}{END_FORMAT}")
     print(f"{BOLD}\n{string}{END_FORMAT}")
+
+def _parse_coordinates(coord: str) -> Tuple[int, int]:
+    r"""Parse a string and extract coordinates from it.
+
+    String is in the format:  (-?\d*,-?\d*)
+    This method removes the parentheses, splits on the comma,
+    and converts the remaining tokens to integers.
+    """
+    sub_x, sub_y = coord[1:-1].split(',')
+    return (int(sub_x), int(sub_y))
