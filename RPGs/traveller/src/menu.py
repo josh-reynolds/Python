@@ -179,62 +179,6 @@ class MenuScreen(Screen):
         self.parent.change_state(data['menu'])
         return None
 
-
-    def _parse_import_file_contents(self,
-                                    content: List[str]) -> Dict[str, Dict | List | str] | None:
-        """Convert lines from a Traveller map import file into a dictionary.
-
-        The returned dictionary will have three keys: 'subsectors,', 'location' and
-        'systems', corresponding to those sections in the file.
-
-        The 'subsectors' key points to a dictionary mapping subsector names
-        to their coordinates.
-
-        The 'location' key points to a coordinate on the map (including both
-        system coordinate and subsector name).
-
-        The 'systems' key points to a list of star system data in string
-        format, one system per line.
-        """
-        section = ''
-        data: Dict[str, Dict | List | str] = {}
-        for line in content:
-            if len(line) < 2 or line[0] == '#':   # skip blank lines & comments
-                continue
-            line = line.rstrip()
-
-            if line[0] == '[':
-                match line:
-                    case '[Subsectors]':
-                        section = 'subsectors'
-                        data[section] = {}
-                    case '[Systems]':
-                        section = 'systems'
-                        data[section] = []
-                    case '[Location]':
-                        section = 'location'
-                        data[section] = ""
-                    case _:
-                        print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
-                        return None
-                continue
-
-            # data is type Dict[str, Dict | List | str] and mypy
-            # can't distinguish the union in the assignments below
-            match section:
-                case 'subsectors':
-                    tokens = line.split()
-                    data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload,index]
-                case 'systems':
-                    data[section].append(line)            # type: ignore[union-attr]
-                case 'location':
-                    if not data[section]:
-                        data[section] = line              # type: ignore[union-attr]
-                    else:
-                        raise ValueError(f"more than one location specified: '{line}'")
-
-        return data
-
     def _import_systems(self, system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
         """Convert imported StarSystem data into format used by _load_systems()."""
         system_list = []
@@ -292,7 +236,7 @@ class MenuScreen(Screen):
         load_file = files[file_number]
 
         content = get_lines(f"./import/{load_file}")
-        data = self._parse_import_file_contents(content)
+        data = _parse_import_file_contents(content)
 
         system_list = self._import_systems(data['systems'],          # type: ignore[index, arg-type]
                                            data['subsectors'])       # type: ignore[index, arg-type]
@@ -357,3 +301,57 @@ def _parse_coordinates(coord: str) -> Tuple[int, int]:
     """
     sub_x, sub_y = coord[1:-1].split(',')
     return (int(sub_x), int(sub_y))
+
+def _parse_import_file_contents(content: List[str]) -> Dict[str, Dict | List | str] | None:
+    """Convert lines from a Traveller map import file into a dictionary.
+
+    The returned dictionary will have three keys: 'subsectors,', 'location' and
+    'systems', corresponding to those sections in the file.
+
+    The 'subsectors' key points to a dictionary mapping subsector names
+    to their coordinates.
+
+    The 'location' key points to a coordinate on the map (including both
+    system coordinate and subsector name).
+
+    The 'systems' key points to a list of star system data in string
+    format, one system per line.
+    """
+    section = ''
+    data: Dict[str, Dict | List | str] = {}
+    for line in content:
+        if len(line) < 2 or line[0] == '#':   # skip blank lines & comments
+            continue
+        line = line.rstrip()
+
+        if line[0] == '[':
+            match line:
+                case '[Subsectors]':
+                    section = 'subsectors'
+                    data[section] = {}
+                case '[Systems]':
+                    section = 'systems'
+                    data[section] = []
+                case '[Location]':
+                    section = 'location'
+                    data[section] = ""
+                case _:
+                    print(f"{BOLD_RED}Unrecognized section header: '{line}'.{END_FORMAT}")
+                    return None
+            continue
+
+        # data is type Dict[str, Dict | List | str] and mypy
+        # can't distinguish the union in the assignments below
+        match section:
+            case 'subsectors':
+                tokens = line.split()
+                data[section][tokens[0]] = tokens[1]  # type: ignore[call-overload,index]
+            case 'systems':
+                data[section].append(line)            # type: ignore[union-attr]
+            case 'location':
+                if not data[section]:
+                    data[section] = line              # type: ignore[union-attr]
+                else:
+                    raise ValueError(f"more than one location specified: '{line}'")
+
+    return data
