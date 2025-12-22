@@ -1,6 +1,10 @@
 """Contains the game simulation model with references to all component objects.
 
 Model - contains references to all game model objects.
+
+Error - base class for exceptions thrown from this module.
+
+GuardClauseFailure - thrown when a guard clause in the method did not pass.
 """
 from typing import List, Any, cast, Sequence, Dict, Tuple
 from src.baggage import Baggage

@@ -51,10 +51,7 @@ DOT_RADIUS = SIZE / 4.5
 
 COLORS: Dict[str, Tuple[int,int,int]] = {}
 
-# This is not portable. Either see what default font looks like,
-# or package a font with this application.
-FONT_NAME = "/nix/store/q74idm55v5km2pp9yh5qhzc4cw639kp4-cantarell-fonts-0.303.1" +\
-           "/share/fonts/cantarell/Cantarell-VF.otf"
+FONT_NAME = "./data/Cantarell-Regular.ttf"
 font_reg = ImageFont.truetype(FONT_NAME, 16)
 font_sm = ImageFont.truetype(FONT_NAME, 12)
 

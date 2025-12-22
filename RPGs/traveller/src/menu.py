@@ -179,7 +179,6 @@ class MenuScreen(Screen):
         self.parent.change_state(data['menu'])
         return None
 
-
     def _is_star_system(self, coord: Coordinate) -> bool:
         """Test whether a given Coordinate contains a StarSystem or not."""
         return isinstance(self.model.get_system_at_coordinate(coord), StarSystem)

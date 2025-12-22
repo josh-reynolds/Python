@@ -3716,6 +3716,9 @@
 #  * [DONE] Properly separate __repr__ and __str__ for all classes
 #           Note that __repr__ should be recursive for arg objects
 #  * [DONE] Add a 'Model' class and move references from Game to it
+#  * [DONE] Scrub for methods that don't use any instance (self) data - candidates to
+#           become module-level functions
+#  * [DONE] Deal with non-portable font in drawing module
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3736,11 +3739,8 @@
 #           context, should probably give separate uses separate names
 #  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
-#  * [    ] Scrub for methods that don't use any instance (self) data - candidates to
-#           become module-level functions
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
-#  * [    ] Deal with non-portable font in drawing module
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?
 #  * [    ] BUG: import can't handle spaces in world name (e.g. Regina 0604 Beck's World)
 #  * [    ] Remove Ship & Location from Financials ctor arguments? We are bypassing
