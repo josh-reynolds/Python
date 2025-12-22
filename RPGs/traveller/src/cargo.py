@@ -29,7 +29,7 @@ class Cargo:
                  source_world: StarSystem | None = None) -> None:
         """Create an instance of Cargo."""
         self.name = name
-        self.quantity = self._determine_quantity(quantity)
+        self.quantity = _determine_quantity(quantity)
         self.price = price
         self.unit_size = unit_size
         self.purchase_dms = purchase_dms
@@ -87,24 +87,6 @@ class Cargo:
             string += f" ({self.unit_size} tons/item)"
         return string
 
-    def _determine_quantity(self, quantity: str) -> int:
-        """Convert a die roll amount of Cargo to a specific amount.
-
-        If the quantity parameter string contains "Dx" then it
-        specifies a random quantity to be generated. Otherwise
-        it is an exact amount.
-        The value returned is either tonnage or a number of items
-        as indicated by the Cargo unit_size field.
-        """
-        amount = str(quantity)
-        if "Dx" in amount:
-            die_count, multiplier = [int(n) for n in amount.split("Dx")]
-            value = 0
-            for _ in range(0, die_count):
-                value += die_roll()
-            value *= multiplier
-            return value
-        return int(quantity)
 
     def encode(self) -> str:
         """Return a string encoding the Cargo object to save and load state."""
@@ -165,3 +147,22 @@ def get_cargo_table() -> Dict[int, Cargo]:
 
         table[table_key] = Cargo(name, quantity, price, unit_size, purchase, sale)
     return table
+
+def _determine_quantity(quantity: str) -> int:
+    """Convert a die roll amount of Cargo to a specific amount.
+
+    If the quantity parameter string contains "Dx" then it
+    specifies a random quantity to be generated. Otherwise
+    it is an exact amount.
+    The value returned is either tonnage or a number of items
+    as indicated by the Cargo unit_size field.
+    """
+    amount = str(quantity)
+    if "Dx" in amount:
+        die_count, multiplier = [int(n) for n in amount.split("Dx")]
+        value = 0
+        for _ in range(0, die_count):
+            value += die_roll()
+        value *= multiplier
+        return value
+    return int(quantity)
