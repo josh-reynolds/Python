@@ -179,26 +179,6 @@ class MenuScreen(Screen):
         self.parent.change_state(data['menu'])
         return None
 
-    def _import_systems(self, system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
-        """Convert imported StarSystem data into format used by _load_systems()."""
-        system_list = []
-        for entry in system_data:
-            tokens = entry.split()
-
-            three_axis_coord = _subsector_coord_to_3_axis(tokens[0], tokens[1],
-                                                               subsector_data)
-            world_name = tokens[2]
-            uwp = tokens[3]
-
-            gas_giant = ""
-            if len(tokens) == 5:
-                gas_giant = f" - {tokens[4]}"
-
-            world_string = f"{three_axis_coord} - {world_name} - {uwp}{gas_giant}"
-
-            system_list.append(world_string)
-
-        return system_list
 
     def _import_subsectors(self, subsector_data: Dict[str,str]) -> List[str]:
         """Convert imported Subsector data into format used by _load_systems()."""
@@ -228,8 +208,8 @@ class MenuScreen(Screen):
         content = get_lines(f"./import/{load_file}")
         data = _parse_import_file_contents(content)
 
-        system_list = self._import_systems(data['systems'],          # type: ignore[index, arg-type]
-                                           data['subsectors'])       # type: ignore[index, arg-type]
+        system_list = _import_systems(data['systems'],          # type: ignore[index, arg-type]
+                                      data['subsectors'])       # type: ignore[index, arg-type]
         self._load_systems(system_list)
 
         subsector_list = self._import_subsectors(data['subsectors']) # type: ignore[index, arg-type]
@@ -356,3 +336,23 @@ def _subsector_coord_to_3_axis(subsector_name: str, coord: str,
     row = int(coord[2:])
 
     return create_3_axis(column, row, sub_x, sub_y)
+
+def _import_systems(system_data: List[str], subsector_data: Dict[str,str]) -> List[str]:
+    """Convert imported StarSystem data into format used by _load_systems()."""
+    system_list = []
+    for entry in system_data:
+        tokens = entry.split()
+
+        three_axis_coord = _subsector_coord_to_3_axis(tokens[0], tokens[1], subsector_data)
+        world_name = tokens[2]
+        uwp = tokens[3]
+
+        gas_giant = ""
+        if len(tokens) == 5:
+            gas_giant = f" - {tokens[4]}"
+
+        world_string = f"{three_axis_coord} - {world_name} - {uwp}{gas_giant}"
+
+        system_list.append(world_string)
+
+    return system_list
