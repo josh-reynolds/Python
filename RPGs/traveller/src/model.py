@@ -465,7 +465,7 @@ class Model:
 
     def set_location(self, location: str) -> None:
         """Change the location within the current map hex."""
-        cast(StarSystem, self.map_hex).detail = location
+        cast(StarSystem, self.map_hex).location = location
 
     def can_flush(self) -> bool:
         """Test whether facilities to flush fuel tanks are present at the current location."""

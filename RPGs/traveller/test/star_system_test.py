@@ -30,38 +30,38 @@ class StarSystemTestCase(unittest.TestCase):
         """Test the descriptive location string of a StarSystem object."""
         world = StarSystemTestCase.system
 
-        world.detail = "starport"
+        world.location = "starport"
         self.assertEqual(world.description(), "at the Test starport")
 
-        world.detail = "orbit"
+        world.location = "orbit"
         self.assertEqual(world.description(), "in orbit around Test")
 
-        world.detail = "jump"
+        world.location = "jump"
         self.assertEqual(world.description(), "at the Test jump point")
 
-        world.detail = "trade"
+        world.location = "trade"
         self.assertEqual(world.description(), "at the Test trade depot")
 
-        world.detail = "terminal"
+        world.location = "terminal"
         self.assertEqual(world.description(), "at the Test passenger terminal")
 
     def test_on_surface(self) -> None:
         """Test detection of whether the player is on the world's surface."""
         world = StarSystemTestCase.system
 
-        world.detail = "starport"
+        world.location = "starport"
         self.assertTrue(world.on_surface())
 
-        world.detail = "trade"
+        world.location = "trade"
         self.assertTrue(world.on_surface())
 
-        world.detail = "terminal"
+        world.location = "terminal"
         self.assertTrue(world.on_surface())
 
-        world.detail = "orbit"
+        world.location = "orbit"
         self.assertFalse(world.on_surface())
 
-        world.detail = "jump"
+        world.location = "jump"
         self.assertFalse(world.on_surface())
 
     def test_equality(self) -> None:

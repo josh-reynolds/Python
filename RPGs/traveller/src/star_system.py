@@ -35,7 +35,7 @@ class DeepSpace(Hex):
     def __init__(self, coordinate: Coordinate) -> None:
         """Create an instance of a DeepSpace object."""
         super().__init__(coordinate)
-        self.detail = ""
+        self.location = ""
         self.population = 0
         self.gas_giant = False
 
@@ -70,7 +70,7 @@ class StarSystem(Hex):
         self.name = name
         self.uwp = uwp
         self.gas_giant = gas_giant
-        self.detail = "orbit"
+        self.location = "orbit"
 
     @property
     def agricultural(self) -> bool:
@@ -184,28 +184,28 @@ class StarSystem(Hex):
 
     def description(self) -> str:
         """Return the descriptor for the current location within the StarSystem."""
-        if self.detail == "starport":
+        if self.location == "starport":
             return f"at the {self.name} starport"
 
-        if self.detail == "orbit":
+        if self.location == "orbit":
             return f"in orbit around {self.name}"
 
-        if self.detail == "jump":
+        if self.location == "jump":
             return f"at the {self.name} jump point"
 
-        if self.detail == "trade":
+        if self.location == "trade":
             return f"at the {self.name} trade depot"
 
-        if self.detail == "terminal":
+        if self.location == "terminal":
             return f"at the {self.name} passenger terminal"
 
         return "ERROR"    # should not be able to reach this point
                           # ensure there are only five (currently)
-                          # possible values for self.detail?
+                          # possible values for self.location?
 
     def on_surface(self) -> bool:
         """Test whether the player is currently on the world's surface."""
-        return self.detail in ('starport', 'trade', 'terminal')
+        return self.location in ('starport', 'trade', 'terminal')
 
 
 def verify_world(world: str, systems: Mapping[Coordinate, Hex]) -> StarSystem:
