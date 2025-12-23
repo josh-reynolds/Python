@@ -3809,6 +3809,10 @@
 #  * [    ] Fix ImperialDate ctor logic for increments larger than one year
 #  * [    ] Shotgun surgery between starting commands and star system detail setting
 #  PHASE SEVEN ====================================================
+#  * [DONE] Set a 'visited' flag on StarSystem when jumping in? Might be needed
+#           for perf as discussed above, but even if not I could see map displays
+#           making use of it. Sort of a Fog of War mechanic. This may be as
+#           simple as whether StarSystem.destinations is populated or not.
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
 #           as it can't land or skim, and can't recharge life support either. We need
@@ -3836,10 +3840,6 @@
 #  * [    ] Restrict life support recharge at low-facility starports?
 #  * [    ] Should life support percentage be tied to 'days duration?' But what
 #           happens if it hits zero?
-#  * [    ] Set a 'visited' flag on StarSystem when jumping in? Might be needed
-#           for perf as discussed above, but even if not I could see map displays
-#           making use of it. Sort of a Fog of War mechanic. This may be as
-#           simple as whether StarSystem.destinations is populated or not.
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)

@@ -69,7 +69,7 @@ def draw_hexes_on(surface, systems: Dict[Tuple[int,int], Hex]) -> None:
 
             hex_content = systems.get((j+1,i+1), "empty")
 
-            draw_hex(surface, center_x, center_y, j+1, i+1)
+            draw_hex(surface, center_x, center_y, j+1, i+1, hex_content=="empty")
 
             if isinstance(hex_content, StarSystem):
                 draw_system(surface, center_x, center_y, hex_content)
@@ -131,11 +131,19 @@ def draw_system(surface, center_x: int, center_y: int, system: StarSystem) -> No
                  anchor="mb",
                  fill=COLORS["STARPORT"])
 
+# pylint: disable=R0913
+# R0913: Too many arguments(6/5)
 def draw_hex(surface, center_x: int, center_y: int,
-             column: int, row: int) -> None:
+             column: int, row: int, empty: bool) -> None:
     """Draw an empty Traveller map hex on the supplied surface."""
+    if empty:
+        fill_color = COLORS["EMPTY_HEX"]
+    else:
+        fill_color = None
+
     surface.regular_polygon((center_x, center_y, SIZE),
                             6,
+                            fill = fill_color,
                             outline=COLORS["HEX_LINES"])
 
     surface.text((center_x, center_y - 23),
@@ -148,6 +156,7 @@ def draw_map(systems: List[Hex], subsector_name: str, print_friendly: bool=False
     """Create a map image and write to a file."""
     if print_friendly:
         COLORS["BACKGROUND"] = (225,225,225)
+        COLORS["EMPTY_HEX"] = (150,150,150)
         COLORS["HEX_LINES"] = (75,75,75)
         COLORS["COORD"] = (75,75,75)
         COLORS["WET_WORLD"] = (60,60,60)
@@ -158,6 +167,7 @@ def draw_map(systems: List[Hex], subsector_name: str, print_friendly: bool=False
         COLORS["TITLE"] = (0,0,0)
     else:
         COLORS["BACKGROUND"] = (0,0,0)
+        COLORS["EMPTY_HEX"] = (75,75,75)
         COLORS["HEX_LINES"] = (50,79,53)
         COLORS["COORD"] = (100,100,100)
         COLORS["WET_WORLD"] = (27,66,170)
