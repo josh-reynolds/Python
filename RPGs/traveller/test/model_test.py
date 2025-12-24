@@ -30,3 +30,11 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(model.date_string, "001-1105")
         model.add_day()
         self.assertEqual(model.date_string, "002-1105")
+
+    def test_plus_week(self) -> None:
+        """Tests advancing the curret date by a week."""
+        model = Model()
+        model.date = Calendar()
+        self.assertEqual(model.date_string, "001-1105")
+        model.plus_week()
+        self.assertEqual(model.date_string, "008-1105")
