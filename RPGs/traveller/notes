@@ -3248,9 +3248,9 @@
 #
 # 1) [DONE] Get all references to 'model interior' classes out of Screen - should
 #    only talk to the Model surface.
-# 2) Unit tests for everything.
-# 3) Move all commands from Screen classes to Model.
-# 4) Finish breaking up command methods.
+# 2) [....] Unit tests for everything.
+# 3) [....] Move all commands from Screen classes to Model.
+# 4) [....] Finish breaking up command methods.
 # 5) Streamline command structure in Screen, possibly wrap direct references
 #    to Model methods.
 # 6) Move methods up and down (and across) model classes.
