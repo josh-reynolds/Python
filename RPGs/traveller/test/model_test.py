@@ -22,3 +22,11 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(model.get_current_date(), ImperialDate(1,1105))
         model.add_day()
         self.assertEqual(model.get_current_date(), ImperialDate(2,1105))
+
+    def test_date_string(self) -> None:
+        """Tests retrieval of the current date from the Model as a string."""
+        model = Model()
+        model.date = Calendar()
+        self.assertEqual(model.date_string, "001-1105")
+        model.add_day()
+        self.assertEqual(model.date_string, "002-1105")
