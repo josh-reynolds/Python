@@ -5,6 +5,7 @@ from src.cargo import Cargo
 from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.credits import Credits
+from src.financials import Financials
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship
@@ -24,6 +25,13 @@ class CargoDepotMock(CargoDepot):
     def __init__(self) -> None:
         """Create an instance of a CargoDepotMock."""
         super().__init__(SystemMock(), DateMock(1))
+
+class FinancialsMock(Financials):
+    """Mocks a Financials for testing."""
+
+    def __init__(self) -> None:
+        """Create an instance of a FinancialsMock."""
+        super().__init__(1, DateMock(1), ShipMock(), SystemMock())
 
 
 # pylint: disable=R0903
@@ -158,7 +166,7 @@ class ControlsMock:
 class ShipMock(Ship):
     """Mocks a Ship for testing."""
 
-    def __init__(self, model: str) -> None:
+    def __init__(self, model: str="Type A Free Trader") -> None:
         """Create an instance of a ShipMock object."""
         super().__init__(model)
         self.last_maintenance = DateMock(1)

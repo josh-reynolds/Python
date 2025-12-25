@@ -1,10 +1,8 @@
 """Contains tests for the model module."""
 import unittest
-from test.mock import SystemMock, CalendarMock, CargoDepotMock
-from src.financials import Financials
+from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
 from src.imperial_date import ImperialDate
 from src.model import Model
-from src.ship import Ship
 
 class ModelTestCase(unittest.TestCase):
     """Tests Model class."""
@@ -76,13 +74,10 @@ class ModelTestCase(unittest.TestCase):
         """Tests attaching observers to the Model calendar."""
         ModelTestCase.model.map_hex = SystemMock()
         ModelTestCase.model.depot = CargoDepotMock()
-        ModelTestCase.model.financials = Financials(1,
-                                                    ModelTestCase.model.get_current_date(),
-                                      Ship("Type A Free Trader"),
-                                                    ModelTestCase.model.get_star_system())
+        ModelTestCase.model.financials = FinancialsMock()
         self.assertEqual(ModelTestCase.model.date_string, "001-1105")
 
         ModelTestCase.model.attach_date_observers()
         self.assertEqual(len(ModelTestCase.model.date.observers), 2)
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[0], CargoDepotMock))
-        self.assertTrue(isinstance(ModelTestCase.model.date.observers[1], Financials))
+        self.assertTrue(isinstance(ModelTestCase.model.date.observers[1], FinancialsMock))
