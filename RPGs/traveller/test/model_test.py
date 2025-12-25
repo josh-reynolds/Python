@@ -1,7 +1,6 @@
 """Contains tests for the model module."""
 import unittest
-from test.mock import SystemMock, CalendarMock
-from src.cargo_depot import CargoDepot
+from test.mock import SystemMock, CalendarMock, CargoDepotMock
 from src.financials import Financials
 from src.imperial_date import ImperialDate
 from src.model import Model
@@ -76,8 +75,7 @@ class ModelTestCase(unittest.TestCase):
     def test_attach_date_observers(self) -> None:
         """Tests attaching observers to the Model calendar."""
         ModelTestCase.model.map_hex = SystemMock()
-        ModelTestCase.model.depot = CargoDepot(ModelTestCase.model.get_star_system(),
-                                               ModelTestCase.model.get_current_date())
+        ModelTestCase.model.depot = CargoDepotMock()
         ModelTestCase.model.financials = Financials(1,
                                                     ModelTestCase.model.get_current_date(),
                                       Ship("Type A Free Trader"),
@@ -86,5 +84,5 @@ class ModelTestCase(unittest.TestCase):
 
         ModelTestCase.model.attach_date_observers()
         self.assertEqual(len(ModelTestCase.model.date.observers), 2)
-        self.assertTrue(isinstance(ModelTestCase.model.date.observers[0], CargoDepot))
+        self.assertTrue(isinstance(ModelTestCase.model.date.observers[0], CargoDepotMock))
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[1], Financials))

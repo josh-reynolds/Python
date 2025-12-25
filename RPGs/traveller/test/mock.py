@@ -2,6 +2,7 @@
 from typing import Any, Self, List, cast
 from src.calendar import Calendar
 from src.cargo import Cargo
+from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.imperial_date import ImperialDate
@@ -15,6 +16,15 @@ class CalendarMock(Calendar):
     def __init__(self) -> None:
         """Create an instance of a CalendarMock."""
         super().__init__()
+
+
+class CargoDepotMock(CargoDepot):
+    """Mocks a CargoDepot for testing."""
+
+    def __init__(self) -> None:
+        """Create an instance of a CargoDepotMock."""
+        super().__init__(SystemMock(), DateMock(1))
+
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
