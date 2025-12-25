@@ -1,5 +1,6 @@
 """Contains mock classes for testing."""
 from typing import Any, Self, List, cast
+from src.calendar import Calendar
 from src.cargo import Cargo
 from src.coordinate import Coordinate
 from src.credits import Credits
@@ -7,6 +8,13 @@ from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship
 from src.star_system import StarSystem
+
+class CalendarMock(Calendar):
+    """Mocks a Calendar for testing."""
+
+    def __init__(self) -> None:
+        """Create an instance of a CalendarMock."""
+        super().__init__()
 
 # pylint: disable=R0903
 # R0903: Too few public methods (1/2)
