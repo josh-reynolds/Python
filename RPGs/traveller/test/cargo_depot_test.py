@@ -6,7 +6,6 @@ from src.cargo_depot import CargoDepot, _passenger_origin_table
 from src.cargo_depot import _passenger_destination_table
 from src.coordinate import Coordinate
 from src.credits import Credits
-from src.star_system import StarSystem
 
 class CargoDepotTestCase(unittest.TestCase):
     """Tests CargoDepot class."""
@@ -105,20 +104,7 @@ class CargoDepotTestCase(unittest.TestCase):
         observer = ObserverMock()
         depot.add_observer(observer)
 
-        # pylint: disable=R0903
-        # R0903: Too few public methods (1/2)
-        class Location(StarSystem):
-            """Mocks a location interface for testing."""
-
-            # pylint: disable=W0231
-            # W0231: __init__ method from base class 'StarSystem' is not called
-            def __init__(self, name):
-                self.name = name
-
-            def __eq__(self, other):
-                return self.name == other.name
-
-        location1 = Location("Jupiter")
+        location1 = SystemMock("Jupiter")
         cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {}, location1)
         self.assertFalse(depot.invalid_cargo_origin(cargo1))
         self.assertEqual(observer.message, "")
@@ -129,7 +115,7 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        location2 = Location("Uranus")
+        location2 = SystemMock("Uranus")
         cargo3 = Cargo("Test", '10', Credits(1), 1, {}, {}, location2)
         self.assertTrue(depot.invalid_cargo_origin(cargo3))
         self.assertEqual(observer.message,
