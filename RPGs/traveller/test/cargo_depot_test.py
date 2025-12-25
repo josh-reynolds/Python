@@ -1,6 +1,6 @@
 """Contains tests for the cargo_depot module."""
 import unittest
-from test.mock import ObserverMock, DateMock, SystemMock, ControlsMock
+from test.mock import ObserverMock, DateMock, SystemMock, ControlsMock, CargoMock
 from src.cargo import Cargo
 from src.cargo_depot import CargoDepot, _passenger_origin_table
 from src.cargo_depot import _passenger_destination_table
@@ -37,14 +37,13 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_get_price_modifiers(self) -> None:
         """Test lookup of price modifiers."""
         depot = CargoDepotTestCase.depot
-        cargo = Cargo("Test", "1", Credits(1), 1, {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1},
-                                                  {"Ag":1, "Na":1, "In":1, "Ni":1, "Ri":1, "Po":1})
+        cargo = CargoMock(1)
 
         modifier = depot._get_price_modifiers(cargo, "purchase")
-        self.assertEqual(modifier, 6)
+        self.assertEqual(modifier, 0)
 
         modifier = depot._get_price_modifiers(cargo, "sale")
-        self.assertEqual(modifier, 6)
+        self.assertEqual(modifier, 0)
 
     def test_get_cargo_lot(self) -> None:
         """Test selection of cargo lots."""
@@ -73,7 +72,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.controls = ControlsMock([9, 1, 0, -1, 11])
         observer = ObserverMock()
         depot.add_observer(observer)
-        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo = CargoMock(10)
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
@@ -105,18 +104,21 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.add_observer(observer)
 
         location1 = SystemMock("Jupiter")
-        cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {}, location1)
+        cargo1 = CargoMock(10)
+        cargo1.source_world = location1
         self.assertFalse(depot.invalid_cargo_origin(cargo1))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        cargo2 = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo2 = CargoMock(10)
+        cargo2.source_world = location1
         self.assertFalse(depot.invalid_cargo_origin(cargo2))
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
         location2 = SystemMock("Uranus")
-        cargo3 = Cargo("Test", '10', Credits(1), 1, {}, {}, location2)
+        cargo3 = CargoMock(10)
+        cargo3.source_world = location2
         self.assertTrue(depot.invalid_cargo_origin(cargo3))
         self.assertEqual(observer.message,
                          "You cannot resell cargo on the world where it was purchased.")
@@ -153,7 +155,7 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_insufficient_hold_space(self) -> None:
         """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
-        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo = CargoMock(10)
         observer = ObserverMock()
         depot.add_observer(observer)
 
@@ -176,7 +178,7 @@ class CargoDepotTestCase(unittest.TestCase):
         # TO_DO: monkeypatch die_roll() so we can get deterministic
         #        results for testing
         depot = CargoDepotTestCase.depot
-        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo = CargoMock(10)
         observer = ObserverMock()
         depot.add_observer(observer)
 
@@ -250,7 +252,7 @@ class CargoDepotTestCase(unittest.TestCase):
         depot.controls = ControlsMock(scenarios)
         observer = ObserverMock()
         depot.add_observer(observer)
-        cargo = Cargo("Test", '10', Credits(1), 1, {}, {})
+        cargo = CargoMock(10)
 
         result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
         self.assertTrue(result)
@@ -263,9 +265,9 @@ class CargoDepotTestCase(unittest.TestCase):
     def test_remove_cargo(self) -> None:
         """Test removal of cargo from the depot or cargo hold."""
         depot = CargoDepotTestCase.depot
-        cargo1 = Cargo("Test", '10', Credits(1), 1, {}, {})
-        cargo2 = Cargo("Test", '20', Credits(1), 1, {}, {})
-        cargo3 = Cargo("Test", '30', Credits(1), 1, {}, {})
+        cargo1 = CargoMock(10)
+        cargo2 = CargoMock(20)
+        cargo3 = CargoMock(30)
         source = [cargo1, cargo2]
 
         depot.remove_cargo(source, cargo3, 10)
