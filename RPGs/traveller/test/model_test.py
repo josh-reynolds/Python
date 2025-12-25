@@ -1,14 +1,12 @@
 """Contains tests for the model module."""
 import unittest
+from test.mock import SystemMock
 from src.calendar import Calendar
 from src.cargo_depot import CargoDepot
-from src.coordinate import Coordinate
 from src.financials import Financials
 from src.imperial_date import ImperialDate
 from src.model import Model
 from src.ship import Ship
-from src.star_system import StarSystem
-from src.uwp import UWP
 
 class ModelTestCase(unittest.TestCase):
     """Tests Model class."""
@@ -83,7 +81,7 @@ class ModelTestCase(unittest.TestCase):
         """Tests attaching observers to the Model calendar."""
         model = Model()
         model.date = Calendar()
-        model.map_hex = StarSystem("TEST", Coordinate(1,1,1), UWP('A',1,1,1,1,1,1,1))
+        model.map_hex = SystemMock()
         model.depot = CargoDepot(model.get_star_system(), model.get_current_date())
         model.financials = Financials(1, model.get_current_date(),
                                       Ship("Type A Free Trader"), model.get_star_system())
