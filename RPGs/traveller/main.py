@@ -12,6 +12,7 @@ from src.starport import StarportScreen
 from src.terminal import TerminalScreen
 from src.trade import TradeScreen
 from src.utilities import int_input, confirm_input
+from src.wilderness import WildernessScreen
 
 class Game:
     """Contains the game loop and basic controller/view logic."""
@@ -69,6 +70,8 @@ class Game:
                 self.screen = TradeScreen(self, self.screen.model)
             case "Terminal":
                 self.screen = TerminalScreen(self, self.screen.model)
+            case "Wilderness":
+                self.screen = WildernessScreen(self, self.screen.model)
             case _:
                 raise ValueError(f"unrecognized menu item: '{new_state}'")
 
