@@ -15,7 +15,8 @@ class OrbitScreen(PlayScreen):
         """Create an OrbitScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('land', 'Land at starport', self.land),
+                Command('starport', 'Land at starport', self.starport),
+                Command('wilderness', 'Land in the wilderness', self.wilderness),
                 Command('outbound', 'Go to jump point', self.outbound_to_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
@@ -26,12 +27,21 @@ class OrbitScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def land(self) -> None:
+    def starport(self) -> None:
         """Move from orbit to the starport."""
-        print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
+        print(f"{BOLD_BLUE}Landing at the {self.model.system_name()} starport.{END_FORMAT}")
         try:
             print(self.model.land())
             self.parent.change_state("Starport")
+        except GuardClauseFailure as exception:
+            print(exception)
+
+    def wilderness(self) -> None:
+        """Move from orbit to the wilderness."""
+        print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
+        try:
+            print(self.model.wilderness())
+            self.parent.change_state("Wilderness")
         except GuardClauseFailure as exception:
             print(exception)
 

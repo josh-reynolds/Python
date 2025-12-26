@@ -78,6 +78,7 @@ class Model:
         self.set_location("jump")
         return "Successfully travelled out to the jump point."
 
+    # TO_DO: should merge with wilderness()
     def land(self) -> str:
         """Move from orbit to the starport."""
         if not self.streamlined:
@@ -106,6 +107,20 @@ class Model:
         self.set_location("starport")
         self.berthing_fee()
         result += f"\nLanded at the {self.system_name()} starport."""
+        return result
+
+    def wilderness(self) -> str:
+        """Move from orbit to the planet's surface."""
+        if not self.streamlined:
+            raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
+
+        if not self.can_maneuver():
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
+
+        result = ""
+
+        self.set_location("wilderness")
+        result += f"\nLanded on the surface of {self.system_name()}."""
         return result
 
     def to_depot(self) -> str:
