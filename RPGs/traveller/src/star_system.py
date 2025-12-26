@@ -199,6 +199,9 @@ class StarSystem(Hex):
         if self.location == "terminal":
             return f"at the {self.name} passenger terminal"
 
+        if self.location == "wilderness":
+            return f"on the surface of {self.name}"
+
         return "ERROR"    # should not be able to reach this point
                           # ensure there are only five (currently)
                           # possible values for self.location?
