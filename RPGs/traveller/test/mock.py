@@ -6,6 +6,7 @@ from src.cargo_depot import CargoDepot
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.financials import Financials
+from src.freight import Freight
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship
@@ -180,15 +181,14 @@ class ShipMock(Ship):
         return Credits(1)
 
 
-# TO_DO: is this class used anywhere?
 # pylint: disable=R0903
 # R0903: Too few public methods (0/2)
-class FreightMock:
+class FreightMock(Freight):
     """Mocks a freight interface for testing."""
 
     def __init__(self, destination: Any) -> None:
         """Create an instance of a FreightMock object."""
-        self.destination_world = destination
+        super().__init__(1, SystemMock(), destination)
 
 
 # pylint: disable=R0903,W0231

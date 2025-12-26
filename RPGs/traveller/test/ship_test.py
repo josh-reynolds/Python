@@ -1,9 +1,8 @@
 """Contains tests for the ship module."""
 import unittest
-from test.mock import ObserverMock, SystemMock, CargoMock
+from test.mock import ObserverMock, SystemMock, CargoMock, FreightMock
 from test.mock import PassengerMock, ControlsMock
 from src.credits import Credits
-from src.freight import Freight
 from src.ship import Ship, FuelQuality, RepairStatus, ship_from
 
 # pylint: disable=R0904
@@ -121,8 +120,8 @@ class ShipTestCase(unittest.TestCase):
         ship.load_cargo(CargoMock(20))
         self.assertEqual(ship.destination, None)
 
-        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
-        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
+        ship.load_cargo(FreightMock(SystemMock("Uranus")))
+        ship.load_cargo(FreightMock(SystemMock("Uranus")))
         self.assertEqual(ship.destination, SystemMock("Uranus"))
 
         ship.load_cargo(CargoMock(20))
@@ -130,7 +129,7 @@ class ShipTestCase(unittest.TestCase):
 
         self.assertEqual(len(ship.hold), 4)
 
-        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Jupiter")))
+        ship.load_cargo(FreightMock(SystemMock("Jupiter")))
         with self.assertRaises(ValueError) as context:
             _ = ship.destination
         self.assertEqual(f"{context.exception}",
@@ -169,7 +168,7 @@ class ShipTestCase(unittest.TestCase):
         ship = ShipTestCase.ship
         self.assertEqual(ship.destination, None)
 
-        ship.load_cargo(Freight(1, SystemMock("Pluto"), SystemMock("Uranus")))
+        ship.load_cargo(FreightMock(SystemMock("Uranus")))
         ship.passengers += [PassengerMock("Jupiter")]
         with self.assertRaises(ValueError) as context:
             _ = ship.destination
@@ -183,11 +182,10 @@ class ShipTestCase(unittest.TestCase):
         observer = ObserverMock()
         ship.add_observer(observer)
 
-        source = SystemMock("Pluto")
         contract = SystemMock("Uranus")
         destination = SystemMock("Jupiter")
 
-        ship.load_cargo(Freight(1, source, contract))
+        ship.load_cargo(FreightMock(contract))
         self.assertEqual(ship.destination, contract)
 
         ship.warn_if_not_contracted(destination)
