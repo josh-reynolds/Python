@@ -3813,6 +3813,7 @@
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic. This may be as
 #           simple as whether StarSystem.destinations is populated or not.
+#  * [....] Add wilderness location and refuelling option
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
 #           as it can't land or skim, and can't recharge life support either. We need
