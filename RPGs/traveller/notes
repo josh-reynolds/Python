@@ -3348,6 +3348,38 @@
 #
 # -------------------------------------------------------------
 
+# -------------------------------------------------------------
+# Doing some small feature work - this long refactoring push is
+# really a drag, need to implement something a bit more fun.
+#
+# Adding a wilderness location now, for wilderness refuelling.
+# It will be very simple. The Screen classes follow a very 
+# straightforward template - just need to decide on commands
+# available, and transistions to and from the state.
+#
+# Commands will be just transitions and refuelling. The latter
+# ought to be limited by the world's hydrographics value - no
+# water, no wilderness refuelling. Pretty sure that is RAW
+# even in '77, but if not it should be. And of course the 
+# fuel will be unrefined.
+#
+# Slightly more advanced, we might want to consider whether
+# law level ties in too. A restrictive government won't want
+# ships landing anywhere they please.
+#
+# Also, if the world is heavily developed (high population), then
+# there may be no wilderness at all. (Calculate available surface
+# area and population density?)
+#
+# For now though, keep it simple and just test the water.
+#
+# As for transitions, I think you should be able to go here from
+# the Starport or from Orbit, and back again. Don't forget that
+# the berthing fee will need to be applied when moving to the
+# Starport. And that this location counts as 'on surface.'
+#
+# -------------------------------------------------------------
+
 ~HERE~
 
 # -------------------------------------------------------------
@@ -3814,6 +3846,7 @@
 #           making use of it. Sort of a Fog of War mechanic. This may be as
 #           simple as whether StarSystem.destinations is populated or not.
 #  * [....] Add wilderness location and refuelling option
+#  * [    ] Should population and/or law level limit wilderness access?
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
 #           as it can't land or skim, and can't recharge life support either. We need
