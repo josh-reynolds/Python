@@ -27,13 +27,11 @@ class WildernessScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    # TO_DO: review Model.liftoff() for applicability
-    # TO_DO: this duplicates Starport.liftoff()
     def liftoff(self) -> None:
         """Move from the surface to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
         try:
-            #print(self.model.liftoff())
+            print(self.model.to_orbit())
             self.parent.change_state("Orbit")
         except GuardClauseFailure as exception:
             print(exception)

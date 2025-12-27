@@ -140,25 +140,34 @@ class Model:
 
     def liftoff(self) -> str:
         """Move from the starport to orbit."""
-        if not self.can_maneuver():
-            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
+        try:
+            result = self.to_orbit()
+        except GuardClauseFailure as exception:
+            raise GuardClauseFailure(f'{exception}') from exception
 
-        result = ""
+        passenger_string = ""
         # corner case - these messages assume passengers are coming
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
         if self.total_passenger_count > 0:
-            result += f"Boarding {self.total_passenger_count} "
-            result += f"passengers for {self.destination_name}.\n"
+            passenger_string += f"Boarding {self.total_passenger_count} "
+            passenger_string += f"passengers for {self.destination_name}.\n"
 
         if self.low_passenger_count > 0:
             low_passengers = self.get_low_passengers()
             for passenger in low_passengers:
                 passenger.guess_survivors(self.low_passenger_count)
 
-        self.set_location("orbit")
-        result += f"Successfully lifted off to orbit from {self.system_name()}."
+        result = passenger_string + result
         return result
+
+    def to_orbit(self) -> str:
+        """Move from the planet surface to orbit."""
+        if not self.can_maneuver():
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
+
+        self.set_location("orbit")
+        return f"Successfully lifted off to orbit from {self.system_name()}."
 
     # PROCEDURES ========================================
     def damage_control(self) -> str:
