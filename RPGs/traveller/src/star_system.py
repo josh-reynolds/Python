@@ -182,6 +182,8 @@ class StarSystem(Hex):
         """Return the UWP tech level value."""
         return self.uwp.tech
 
+    # pylint: disable=R0911
+    # R0911: Too many return statements (7/6)
     def description(self) -> str:
         """Return the descriptor for the current location within the StarSystem."""
         if self.location == "starport":

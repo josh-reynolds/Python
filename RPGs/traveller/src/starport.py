@@ -24,6 +24,7 @@ class StarportScreen(PlayScreen):
                 Command('maintenance', 'Annual maintenance', self.maintenance),
                 Command('flush tanks', 'Flush fuel tanks', self.flush),
                 Command('repair', 'Repair ship', self.repair_ship),
+                Command('wilderness', 'Fly to the wilderness', self.wilderness),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -54,6 +55,18 @@ class StarportScreen(PlayScreen):
               f"passenger terminal.{END_FORMAT}")
         print(self.model.to_terminal())
         self.parent.change_state("Terminal")
+
+    # TO_DO: duplicates OrbitScreen.wilderness()
+    # pylint: disable=R0801
+    # R0801: Similar lines in 2 files
+    def wilderness(self) -> None:
+        """Fly from the starport to the wilderness."""
+        print(f"{BOLD_BLUE}Flying to the wilderness on {self.model.system_name()}.{END_FORMAT}")
+        try:
+            print(self.model.wilderness())
+            self.parent.change_state("Wilderness")
+        except GuardClauseFailure as exception:
+            print(exception)
 
     # ACTIONS ==============================================================
     # TO_DO: should this be restricted at low-facility starports (E/X)?

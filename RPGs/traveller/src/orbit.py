@@ -36,6 +36,9 @@ class OrbitScreen(PlayScreen):
         except GuardClauseFailure as exception:
             print(exception)
 
+    # TO_DO: duplicates StarportScreen.wilderness()
+    # pylint: disable=R0801
+    # R0801: Similar lines in 2 files
     def wilderness(self) -> None:
         """Move from orbit to the wilderness."""
         print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
