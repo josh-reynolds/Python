@@ -235,6 +235,18 @@ class Model:
         self.add_day()
         return "Your ship is fully refuelled."
 
+    def wilderness_refuel(self) -> str:
+        """Refuel the Ship from open water on the world's surface."""
+        if cast(StarSystem, self.map_hex).hydrographics == 0:
+            return "No water available on this planet."
+
+        if self.tanks_are_full():
+            return "Fuel tank is already full."
+
+        self.fill_tanks("unrefined")
+        self.add_day()
+        return "Your ship is fully refuelled."
+
     def jump_systems_check(self) -> str:
         """Verify the Ship is ready to perform a hyperspace jump."""
         self.check_failure_pre_jump(self.maintenance_status())

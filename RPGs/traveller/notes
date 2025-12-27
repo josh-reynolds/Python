@@ -3378,6 +3378,42 @@
 # the berthing fee will need to be applied when moving to the
 # Starport. And that this location counts as 'on surface.'
 #
+# Actually, after reviewing usage, 'on surface' is only used
+# in Financials to determine whether to charge fees or not. So
+# I renamed it to 'at starport.' When we add a highport location,
+# that one will need to be added. Don't yet have a need to 
+# distinguish the planet's surface otherwise.
+#
+# Transitions are done, just need to sort out refuelling. And
+# while we're at it, might want to clean up the various fuel
+# handling methods, lots of overlap and shared code.
+#
+# Currently we have:
+#
+# JumpScreen.skim()
+#     Model.skim()
+#         Model.fill_tanks()
+#
+# StarportScreen.refuel()
+#     Model.refuel()
+#         Ship.refuel()
+#
+# WildernessScreen.refuel()
+#     ???
+#
+# Wilderness refuelling is most similar to skimming: unrefined,
+# free of charge. The difference is in the restrictions:
+#
+# * Skimming requires a maneuverable streamlined ship, and a
+#   gas giant planet.
+# * Wilderness refuelling implicitly requires the first part, but
+#   that is implied by being on the surface to begin with. It
+#   also requires standing water - is anything other than hydro 0
+#   acceptable?
+#
+# Let's add a simple method based on skim(), then work on refactoring
+# the duplication.
+#
 # -------------------------------------------------------------
 
 ~HERE~

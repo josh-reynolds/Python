@@ -54,4 +54,4 @@ class WildernessScreen(PlayScreen):
     def refuel(self) -> None:
         """Perform wilderness refuelling."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        #print(self.model.refuel())
+        print(self.model.wilderness_refuel())
