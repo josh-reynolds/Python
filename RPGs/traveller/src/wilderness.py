@@ -36,13 +36,14 @@ class WildernessScreen(PlayScreen):
         except GuardClauseFailure as exception:
             print(exception)
 
-    # TO_DO: review Model.land() for applicability
-    # TO_DO: this duplicates Orbit.land()
+    # TO_DO: duplicates OrbitScreen.starport()
+    # pylint: disable=R0801
+    # R0801: Similar lines in 2 files
     def starport(self) -> None:
         """Move from the wilderness to the starport."""
         print(f"{BOLD_BLUE}Flying to {self.model.system_name()} starport.{END_FORMAT}")
         try:
-            #print(self.model.land())
+            print(self.model.land())
             self.parent.change_state("Starport")
         except GuardClauseFailure as exception:
             print(exception)

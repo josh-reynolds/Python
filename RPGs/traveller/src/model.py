@@ -117,11 +117,8 @@ class Model:
         if not self.can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
 
-        result = ""
-
         self.set_location("wilderness")
-        result += f"\nLanded on the surface of {self.system_name()}."""
-        return result
+        return f"\nLanded on the surface of {self.system_name()}."""
 
     def to_depot(self) -> str:
         """Move from the starport to the trade depot."""

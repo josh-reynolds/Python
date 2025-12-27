@@ -27,6 +27,9 @@ class OrbitScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
+    # TO_DO: duplicates WildernessScreen.starport()
+    # pylint: disable=R0801
+    # R0801: Similar lines in 2 files
     def starport(self) -> None:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing at the {self.model.system_name()} starport.{END_FORMAT}")
