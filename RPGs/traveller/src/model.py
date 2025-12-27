@@ -440,7 +440,7 @@ class Model:
 
     def berthing_fee(self) -> None:
         """Deduct fee for berth at a starport from the account balance."""
-        self.financials.berthing_fee(self.on_surface)
+        self.financials.berthing_fee(self.at_starport)
 
     def encode_financials(self) -> str:
         """Return a string encoding the current state of the Financials object."""
@@ -480,9 +480,9 @@ class Model:
         return cast(StarSystem, self.map_hex).gas_giant
 
     @property
-    def on_surface(self) -> bool:
-        """Return whether the Ship is currently on the surface of the mainworld."""
-        return cast(StarSystem, self.map_hex).on_surface()
+    def at_starport(self) -> bool:
+        """Return whether the Ship is currently berthed at the mainworld's starport."""
+        return cast(StarSystem, self.map_hex).at_starport()
 
     def set_location(self, location: str) -> None:
         """Change the location within the current map hex."""

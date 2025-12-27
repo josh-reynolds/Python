@@ -208,8 +208,8 @@ class StarSystem(Hex):
                           # ensure there are only five (currently)
                           # possible values for self.location?
 
-    def on_surface(self) -> bool:
-        """Test whether the player is currently on the world's surface."""
+    def at_starport(self) -> bool:
+        """Test whether the player is currently berthed at the world's starport."""
         return self.location in ('starport', 'trade', 'terminal')
 
 

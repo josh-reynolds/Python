@@ -88,7 +88,7 @@ class Financials:
 
     def _berth_notification(self, date: ImperialDate) -> None:
         """Pay recurring fee for starport berth."""
-        if date > self.berth_expiry and self.location.on_surface():
+        if date > self.berth_expiry and self.location.at_starport():
             self._renew_berth(date)
 
     def _salary_notification(self, date: ImperialDate) -> None:
@@ -118,9 +118,9 @@ class Financials:
     # additional day spent in port. In some locations this fee will
     # be higher, while at others local government subsidies will
     # lower or eliminate it.
-    def berthing_fee(self, on_surface: bool) -> None:
+    def berthing_fee(self, at_starport: bool) -> None:
         """Deduct fee for berth at a starport from Financials balance."""
-        if on_surface:
+        if at_starport:
             self.message_observers("Charging 100 Cr berthing fee.")
             self.debit(Credits(100), "berthing fee")
             self.berth_recurrence = 1

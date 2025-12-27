@@ -142,8 +142,8 @@ class SystemMock(StarSystem):
         """Return the developer string representation of a SystemMock object."""
         return f"SystemMock('{self.name}')"
 
-    def on_surface(self) -> bool:
-        """Test whether the player is on the world's surface."""
+    def at_starport(self) -> bool:
+        """Test whether the player is at the world's starport."""
         return True
 
 

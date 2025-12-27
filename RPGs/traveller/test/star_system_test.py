@@ -45,24 +45,27 @@ class StarSystemTestCase(unittest.TestCase):
         world.location = "terminal"
         self.assertEqual(world.description(), "at the Test passenger terminal")
 
-    def test_on_surface(self) -> None:
-        """Test detection of whether the player is on the world's surface."""
+    def test_at_starport(self) -> None:
+        """Test detection of whether the player is berthed at the world's starport."""
         world = StarSystemTestCase.system
 
         world.location = "starport"
-        self.assertTrue(world.on_surface())
+        self.assertTrue(world.at_starport())
 
         world.location = "trade"
-        self.assertTrue(world.on_surface())
+        self.assertTrue(world.at_starport())
 
         world.location = "terminal"
-        self.assertTrue(world.on_surface())
+        self.assertTrue(world.at_starport())
+
+        world.location = "wilderness"
+        self.assertFalse(world.at_starport())
 
         world.location = "orbit"
-        self.assertFalse(world.on_surface())
+        self.assertFalse(world.at_starport())
 
         world.location = "jump"
-        self.assertFalse(world.on_surface())
+        self.assertFalse(world.at_starport())
 
     def test_equality(self) -> None:
         """Test for equivalence between two StarSystems."""

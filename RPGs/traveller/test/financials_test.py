@@ -244,7 +244,7 @@ class FinancialsTestCase(unittest.TestCase):
                          DateMock(1))
 
         date = DateMock(7)
-        financials.location.on_surface = lambda : False
+        financials.location.at_starport = lambda : False
         financials._berth_notification(date)
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
@@ -255,7 +255,7 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(observer.message, "")
         self.assertEqual(observer.priority, "")
 
-        financials.location.on_surface = lambda : True
+        financials.location.at_starport = lambda : True
         financials.berth_recurrence = 1
         financials.berth_expiry = financials.current_date + 6
         date = DateMock(8)
