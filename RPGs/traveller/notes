@@ -3807,6 +3807,7 @@
 #           context, should probably give separate uses separate names
 #  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
+#  * [    ] Consider a decorator for Screen class command methods, much of it is identical
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
 #  * [    ] Experiment with layout values in drawing module, can we support resizing?

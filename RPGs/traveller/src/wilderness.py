@@ -49,9 +49,10 @@ class WildernessScreen(PlayScreen):
             print(exception)
 
     # ACTIONS ==============================================================
-    # TO_DO: restrict this by world hydrosphere value
-    # TO_DO: this should only supply unrefined fuel
     def refuel(self) -> None:
         """Perform wilderness refuelling."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        print(self.model.wilderness_refuel())
+        try:
+            print(self.model.wilderness_refuel())
+        except GuardClauseFailure as exception:
+            print(exception)

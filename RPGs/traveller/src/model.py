@@ -240,10 +240,10 @@ class Model:
     def wilderness_refuel(self) -> str:
         """Refuel the Ship from open water on the world's surface."""
         if cast(StarSystem, self.map_hex).hydrographics == 0:
-            return "No water available on this planet."
+            raise GuardClauseFailure("No water available on this planet.")
 
         if self.tanks_are_full():
-            return "Fuel tank is already full."
+            raise GuardClauseFailure("Fuel tank is already full.")
 
         self.fill_tanks("unrefined")
         self.add_day()
