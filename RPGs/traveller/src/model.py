@@ -230,11 +230,7 @@ class Model:
         if not self.can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
-        if self.tanks_are_full():
-            raise GuardClauseFailure("Fuel tank is already full.")
-
         self.fill_tanks("unrefined")
-        self.add_day()
         return "Your ship is fully refuelled."
 
     def wilderness_refuel(self) -> str:
@@ -242,11 +238,7 @@ class Model:
         if cast(StarSystem, self.map_hex).hydrographics == 0:
             raise GuardClauseFailure("No water available on this planet.")
 
-        if self.tanks_are_full():
-            raise GuardClauseFailure("Fuel tank is already full.")
-
         self.fill_tanks("unrefined")
-        self.add_day()
         return "Your ship is fully refuelled."
 
     def jump_systems_check(self) -> str:
@@ -698,7 +690,11 @@ class Model:
     # TO_DO: overlap with ship.refuel()
     def fill_tanks(self, quality: str="refined") -> None:
         """Fill the Ship's fuel tanks to their full capacity."""
+        if self.tanks_are_full():
+            raise GuardClauseFailure("Fuel tank is already full.")
+
         self.ship.current_fuel = self.fuel_tank_size()
+        self.add_day()
         if quality == "unrefined":
             self.ship.fuel_quality = FuelQuality.UNREFINED
 
