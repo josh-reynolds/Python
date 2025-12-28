@@ -76,7 +76,10 @@ class JumpScreen(PlayScreen):
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""
         print(f"{BOLD_BLUE}Skimming fuel from a gas giant planet.{END_FORMAT}")
-        print(self.model.skim())
+        try:
+            print(self.model.skim())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def damage_control(self) -> None:
         """Repair damage to the Ship (Engineer)."""

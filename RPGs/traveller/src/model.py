@@ -219,17 +219,19 @@ class Model:
         """Refuel the Ship by skimming from a gas giant planet."""
         if not self.gas_giant:
             if self.in_deep_space():
-                return "You are stranded in deep space. No fuel skimming possible."
-            return "There is no gas giant in this system. No fuel skimming possible."
+                raise GuardClauseFailure("You are stranded in deep space." +
+                                         "No fuel skimming possible.")
+            raise GuardClauseFailure("There is no gas giant in this system." +
+                                     "No fuel skimming possible.")
 
         if not self.streamlined:
-            return "Your ship is not streamlined and cannot skim fuel."
+            raise GuardClauseFailure("Your ship is not streamlined and cannot skim fuel.")
 
         if not self.can_maneuver():
-            return f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}"
+            raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
         if self.tanks_are_full():
-            return "Fuel tank is already full."
+            raise GuardClauseFailure("Fuel tank is already full.")
 
         self.fill_tanks("unrefined")
         self.add_day()
