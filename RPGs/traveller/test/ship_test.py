@@ -76,9 +76,6 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.current_fuel, 30)
         self.assertEqual(cost, Credits(15000))    # 'yes' case
 
-        cost = ship.refuel("A")
-        self.assertEqual(cost, Credits(0))        # full tank case
-
     def test_recharge(self) -> None:
         """Test recharging the Ship's life support."""
         ship = ShipTestCase.ship

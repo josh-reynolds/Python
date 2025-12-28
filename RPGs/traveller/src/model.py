@@ -202,6 +202,9 @@ class Model:
         if self.starport in ('E', 'X'):
             raise GuardClauseFailure(f"No fuel is available at starport {self.starport}.")
 
+        if self.tanks_are_full():
+            raise GuardClauseFailure("Fuel tank is already full.")
+
         cost = self.ship.refuel(self.starport)
         self.debit(cost, "refuelling")
         return "Your ship is fully refuelled."

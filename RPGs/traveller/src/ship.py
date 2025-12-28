@@ -225,10 +225,6 @@ class Ship:
     # ship empties its tanks every trip.
     def refuel(self, starport: str) -> Credits:
         """Refuel the Ship, accounting for fuel type."""
-        if self.current_fuel == self.model.fuel_tank:
-            self.message_observers("Fuel tank is full.")
-            return Credits(0)
-
         if starport not in ("A", "B"):
             per_ton = 100
             self.message_observers("Note: only unrefined fuel available at this facility.")
