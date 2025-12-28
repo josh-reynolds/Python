@@ -78,7 +78,10 @@ class StarportScreen(PlayScreen):
     def refuel(self) -> None:
         """Refuel the Ship."""
         print(f"{BOLD_BLUE}Refuelling ship.{END_FORMAT}")
-        print(self.model.refuel())
+        try:
+            print(self.model.refuel())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""

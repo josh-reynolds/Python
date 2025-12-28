@@ -200,7 +200,7 @@ class Model:
     def refuel(self) -> str:
         """Refuel the Ship."""
         if self.starport in ('E', 'X'):
-            return f"No fuel is available at starport {self.starport}."
+            raise GuardClauseFailure(f"No fuel is available at starport {self.starport}.")
 
         cost = self.ship.refuel(self.starport)
         self.debit(cost, "refuelling")
@@ -215,6 +215,8 @@ class Model:
     # also does not include ocean refuelling, but I think I will be
     # including both options. (In all likelihood this will lean heavily
     # toward second edition...)
+
+    # TO_DO: is it worth restricting by location too? (jump)
     def skim(self) -> str:
         """Refuel the Ship by skimming from a gas giant planet."""
         if not self.gas_giant:
@@ -233,6 +235,7 @@ class Model:
         self.fill_tanks("unrefined")
         return "Your ship is fully refuelled."
 
+    # TO_DO: is it worth restricting by location too? (wilderness)
     def wilderness_refuel(self) -> str:
         """Refuel the Ship from open water on the world's surface."""
         if cast(StarSystem, self.map_hex).hydrographics == 0:

@@ -3414,6 +3414,29 @@
 # Let's add a simple method based on skim(), then work on refactoring
 # the duplication.
 #
+# WildernessScreen.refuel()
+#     Model.wilderness_refuel()
+#         Model.fill_tanks()
+#
+# Then the duplication between skim() & wilderness_refuel() can move
+# into fill_tanks(). That just leaves refuel(). This is an opportunity
+# to move some things up and out of Ship. Only hitch is the confirmation.
+# Maybe it's time to wire up a controller to Model...
+#
+# StarportScreen.refuel()
+#     Model.refuel()
+#         Return NOP if low-grade starport (E/X)
+#         Ship.refuel()
+#             Return NOP if tank is full
+#             Warn if unrefined fuel
+#             Set cost by fuel grade
+#             Calculate cost
+#             Confirm purchase
+#             Refill tank
+#             Set fuel grade
+#             Return cost
+#         Deduct cost from balance
+#
 # -------------------------------------------------------------
 
 ~HERE~
