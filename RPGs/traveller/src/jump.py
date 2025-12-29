@@ -2,13 +2,11 @@
 
 JumpScreen - contains commands for the jump state.
 """
-from typing import Any, cast
+from typing import Any
 from src.command import Command
-from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
+from src.format import BOLD_BLUE, END_FORMAT
 from src.model import Model, GuardClauseFailure
 from src.play import PlayScreen
-from src.star_system import StarSystem
-from src.utilities import choose_from, confirm_input
 
 class JumpScreen(PlayScreen):
     """Contains commands for the jump state."""
@@ -46,32 +44,9 @@ class JumpScreen(PlayScreen):
 
         try:
             print(self.model.jump_systems_check())
+            print(self.model.perform_jump(self.parent))
         except GuardClauseFailure as exception:
             print(exception)
-
-        jump_range = self.model.jump_range
-        print(f"Systems within jump-{jump_range}:")
-        destinations = self.model.destinations
-        destination_number = choose_from(destinations, "Enter destination number: ")
-
-        coordinate = destinations[destination_number].coordinate
-        destination = cast(StarSystem,
-                           self.model.get_system_at_coordinate(coordinate))
-
-        self.model.warn_if_not_contracted(destination)
-
-        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling jump.")
-            return
-
-        self.model.check_unrefined_jump()
-
-        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
-
-        print(self.model.misjump_check(coordinate))
-
-        self.model.perform_jump(self.parent, destination)
 
     def skim(self) -> None:
         """Refuel the Ship by skimming from a gas giant planet."""

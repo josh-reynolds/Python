@@ -3462,6 +3462,13 @@
 # Another difference jumps out: refuelling at the Starport costs
 # money, but zero time, while the other two methods are free and
 # take one day.
+#
+# OK, this is all sorted. And along the way I got controls/observers
+# implemented in Model, so that will help when bringing in other
+# stuff. I think Model is going to get it from both sides for a 
+# little while, then once everything is mushed together it will
+# separate out again to the appropriate layer.
+#
 # -------------------------------------------------------------
 
 ~HERE~

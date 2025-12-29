@@ -23,7 +23,7 @@ from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
 from src.subsector import Subsector
-from src.utilities import die_roll
+from src.utilities import die_roll, choose_from, confirm_input
 
 # pylint: disable=R0904, R0902
 # R0904: too many public methods (21/20)
@@ -336,8 +336,31 @@ class Model:
         self.set_hex(self.get_system_at_coordinate(destination))
         return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
 
-    def perform_jump(self, observer: Any, destination: StarSystem) -> None:
+    # TO_DO: replace print, confirm_input and choose_from with
+    #        actions on observers & controls
+    def perform_jump(self, observer: Any) -> str:
         """Perform a hyperspace jump to the specified destination."""
+        jump_range = self.jump_range
+        print(f"Systems within jump-{jump_range}:")
+        destinations = self.destinations
+        destination_number = choose_from(destinations, "Enter destination number: ")
+
+        coordinate = destinations[destination_number].coordinate
+        destination = cast(StarSystem,
+                           self.get_system_at_coordinate(coordinate))
+
+        self.warn_if_not_contracted(destination)
+
+        confirmation = confirm_input(f"Confirming jump to {destination.name} (y/n)? ")
+        if confirmation == 'n':
+            return "Cancelling jump."
+
+        self.check_unrefined_jump()
+
+        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
+
+        print(self.misjump_check(coordinate))
+
         self.set_location("jump")
         self.check_failure_post_jump()
         self.set_destinations()
@@ -346,6 +369,7 @@ class Model:
         self.consume_life_support()
         self.burn_fuel(self.jump_fuel_cost())
         self.plus_week()
+        return "Jump complete."
 
     def flush(self) -> str:
         """Decontaminate the Ship's fuel tanks."""
