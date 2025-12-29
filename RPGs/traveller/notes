@@ -3426,14 +3426,14 @@
 # StarportScreen.refuel()
 #     Model.refuel()
 #         Return NOP if low-grade starport (E/X)
-#         Return NOP if tank is full
 #         TO_DO: Warn if unrefined fuel
 #         Set cost by fuel grade
 #         Calculate cost
 #         Confirm purchase
-#         Refill tank
-#         Set fuel grade
-#         Return cost
+#         Model.fill_tanks()
+#             Return NOP if tank is full
+#             Refill tank
+#             Set fuel grade
 #         Deduct cost from balance
 #
 # For comparison:
@@ -3835,6 +3835,8 @@
 #  * [DONE] Scrub for methods that don't use any instance (self) data - candidates to
 #           become module-level functions
 #  * [DONE] Deal with non-portable font in drawing module
+#  * [DONE] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
+#           and Ship classes
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3845,8 +3847,6 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
-#  * [....] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
-#           and Ship classes
 
 ~HERE~
 

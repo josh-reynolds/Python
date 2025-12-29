@@ -227,28 +227,24 @@ class Model:
         if self.starport in ('E', 'X'):
             raise GuardClauseFailure(f"No fuel is available at starport {self.starport}.")
 
-        if self.tanks_are_full():
-            raise GuardClauseFailure("Fuel tank is already full.")
-
         if self.starport not in ("A", "B"):
             per_ton = 100
+            fuel_quality = "unrefined"
             #self.message_observers("Note: only unrefined fuel available at this facility.")
         else:
             per_ton = 500
+            fuel_quality = "refined"
 
         amount = self.fuel_tank_size() - self.fuel_level()
         price = Credits(amount * per_ton)
+
         confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")
         if confirm == 'n':
             return ""
 
         #self.message_observers(f"Charging {price} for refuelling.")
 
-        self.ship.current_fuel = self.fuel_tank_size()
-
-        if self.starport not in ("A", "B"):
-            self.ship.fuel_quality = FuelQuality.UNREFINED
-
+        self.fill_tanks(fuel_quality)
         self.debit(price, "refuelling")
         return "Your ship is fully refuelled."
 
