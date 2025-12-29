@@ -25,12 +25,13 @@ from src.star_map import StarMap
 from src.subsector import Subsector
 from src.utilities import die_roll
 
-# pylint: disable=R0904
+# pylint: disable=R0904, R0902
 # R0904: too many public methods (21/20)
+# R0902: too many instance attributes (8/7)
 class Model:
     """Contains references to all game model objects."""
 
-    # TO_DO: we don't have type for Controls
+    # TO_DO: we don't have type for Controls or Observers
     def __init__(self, controls: Any) -> None:
         """Create an instance of a Model object."""
         self.date: Calendar
@@ -40,6 +41,7 @@ class Model:
         self.financials: Financials
         self.depot: CargoDepot
 
+        self.observers: List[Any] = [controls]
         self.controls = controls
 
     def __repr__(self) -> str:
@@ -49,6 +51,15 @@ class Model:
     def get_input(self, constraint: str, prompt: str) -> str | int:
         """Request input from controls."""
         return self.controls.get_input(constraint, prompt)    # type: ignore[union-attr]
+
+    def add_observer(self, observer: Any) -> None:
+        """Add an observer to respond to UI messages."""
+        self.observers.append(observer)
+
+    def message_observers(self, message: str, priority: str="") -> None:
+        """Pass a message on to all observers."""
+        for observer in self.observers:
+            observer.on_notify(message, priority)
 
     # TRANSITIONS =======================================
     def inbound_from_jump(self) -> str:
@@ -230,7 +241,7 @@ class Model:
         if self.starport not in ("A", "B"):
             per_ton = 100
             fuel_quality = "unrefined"
-            #self.message_observers("Note: only unrefined fuel available at this facility.")
+            self.message_observers("Note: only unrefined fuel available at this facility.")
         else:
             per_ton = 500
             fuel_quality = "refined"
@@ -242,7 +253,7 @@ class Model:
         if confirm == 'n':
             return ""
 
-        #self.message_observers(f"Charging {price} for refuelling.")
+        self.message_observers(f"Charging {price} for refuelling.")
 
         self.fill_tanks(fuel_quality)
         self.debit(price, "refuelling")
