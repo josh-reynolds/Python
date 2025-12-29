@@ -67,12 +67,12 @@ class ShipTestCase(unittest.TestCase):
         ship.controls = ControlsMock(['y', 'n'])
         self.assertEqual(ship.current_fuel, 0)
 
-        cost = ship.refuel("A")
+        cost = ship.refuel("A", 500)
         self.assertEqual(ship.current_fuel, 0)
         self.assertEqual(cost, Credits(0))        # 'no' case
 
         self.assertEqual(ship.current_fuel, 0)
-        cost = ship.refuel("A")
+        cost = ship.refuel("A", 500)
         self.assertEqual(ship.current_fuel, 30)
         self.assertEqual(cost, Credits(15000))    # 'yes' case
 

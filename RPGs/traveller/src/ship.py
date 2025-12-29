@@ -223,14 +223,8 @@ class Ship:
 
     # From this, trip fuel usage is 10 tons, and jump-1 is 20 tons. The
     # ship empties its tanks every trip.
-    def refuel(self, starport: str) -> Credits:
+    def refuel(self, starport: str, per_ton: int) -> Credits:
         """Refuel the Ship, accounting for fuel type."""
-        if starport not in ("A", "B"):
-            per_ton = 100
-            self.message_observers("Note: only unrefined fuel available at this facility.")
-        else:
-            per_ton = 500
-
         amount = self.model.fuel_tank - self.current_fuel
         price = Credits(amount * per_ton)
         confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")

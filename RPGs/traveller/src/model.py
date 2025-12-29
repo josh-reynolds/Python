@@ -212,7 +212,13 @@ class Model:
         if self.tanks_are_full():
             raise GuardClauseFailure("Fuel tank is already full.")
 
-        cost = self.ship.refuel(self.starport)
+        if self.starport not in ("A", "B"):
+            per_ton = 100
+            #self.message_observers("Note: only unrefined fuel available at this facility.")
+        else:
+            per_ton = 500
+
+        cost = self.ship.refuel(self.starport, per_ton)
         self.debit(cost, "refuelling")
         return "Your ship is fully refuelled."
 

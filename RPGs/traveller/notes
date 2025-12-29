@@ -3426,10 +3426,10 @@
 # StarportScreen.refuel()
 #     Model.refuel()
 #         Return NOP if low-grade starport (E/X)
+#         Return NOP if tank is full
+#         TO_DO: Warn if unrefined fuel
+#         Set cost by fuel grade
 #         Ship.refuel()
-#             Return NOP if tank is full
-#             Warn if unrefined fuel
-#             Set cost by fuel grade
 #             Calculate cost
 #             Confirm purchase
 #             Refill tank
@@ -3437,6 +3437,32 @@
 #             Return cost
 #         Deduct cost from balance
 #
+# For comparison:
+#
+# WildernessScreen.refuel()
+#     Model.wilderness_refuel()
+#         Return NOP if no water available
+#         Model.fill_tanks()
+#             Return NOP if tank is full
+#             Refill tank
+#             Advance calendar one day
+#             Set fuel grade
+#
+# JumpScreen.skim()
+#     Model.skim()
+#         Return NOP if deep space
+#         Return NOP if no gas giant
+#         Return NOP if not streamlined
+#         Return NOP if ship damaged
+#         Model.fill_tanks()
+#             Return NOP if tank is full
+#             Refill tank
+#             Advance calendar one day
+#             Set fuel grade
+#
+# Another difference jumps out: refuelling at the Starport costs
+# money, but zero time, while the other two methods are free and
+# take one day.
 # -------------------------------------------------------------
 
 ~HERE~
@@ -3820,6 +3846,8 @@
 #  * [....] Look for multiline message_observer() usage - may need to adjust
 #           ObserverMock to retain all messages in a queue, currently only holds last one
 #  * [....] Review test fixtures for mock opportunities
+#  * [....] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
+#           and Ship classes
 
 ~HERE~
 
@@ -3827,9 +3855,7 @@
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Inconstent application of properties in Model interface
 #  * [    ] Some ambiguity with usage of 'destination' and 'location' in different
-#           context, should probably give separate uses separate names
-#  * [    ] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
-#           and Ship classes
+#           contexts, should probably give separate uses separate names
 #  * [    ] Consider a decorator for Screen class command methods, much of it is identical
 #  * [    ] Review confirm blocks, inconsistent usage throughout
 #  * [    ] BUG: maintenance date warning prints twice
