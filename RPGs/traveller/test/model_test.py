@@ -1,6 +1,7 @@
 """Contains tests for the model module."""
 import unittest
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
+from test.mock import ControlsMock
 from src.imperial_date import ImperialDate
 from src.model import Model
 
@@ -11,7 +12,7 @@ class ModelTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         """Create fixtures for testing."""
-        ModelTestCase.model = Model()
+        ModelTestCase.model = Model(ControlsMock([]))
         ModelTestCase.model.date = CalendarMock()
 
     def test_get_current_date(self) -> None:

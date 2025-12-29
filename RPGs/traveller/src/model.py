@@ -30,7 +30,8 @@ from src.utilities import die_roll
 class Model:
     """Contains references to all game model objects."""
 
-    def __init__(self) -> None:
+    # TO_DO: we don't have type for Controls
+    def __init__(self, controls: Any) -> None:
         """Create an instance of a Model object."""
         self.date: Calendar
         self.ship: Ship
@@ -39,9 +40,15 @@ class Model:
         self.financials: Financials
         self.depot: CargoDepot
 
+        self.controls = controls
+
     def __repr__(self) -> str:
         """Return the developer string representation of the Model object."""
         return "Model()"
+
+    def get_input(self, constraint: str, prompt: str) -> str | int:
+        """Request input from controls."""
+        return self.controls.get_input(constraint, prompt)    # type: ignore[union-attr]
 
     # TRANSITIONS =======================================
     def inbound_from_jump(self) -> str:

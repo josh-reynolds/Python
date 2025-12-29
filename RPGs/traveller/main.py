@@ -20,7 +20,7 @@ class Game:
     def __init__(self) -> None:
         """Create an instance of Game."""
         self.running = False
-        self.screen: Screen = MenuScreen(self, Model())
+        self.screen: Screen = MenuScreen(self, Model(self))
 
     def __repr__(self) -> str:
         """Return the developer string representation of the Game object."""
