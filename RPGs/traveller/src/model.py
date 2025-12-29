@@ -218,7 +218,15 @@ class Model:
         else:
             per_ton = 500
 
-        cost = self.ship.refuel(self.starport, per_ton)
+        amount = self.ship.model.fuel_tank - self.ship.current_fuel
+        price = Credits(amount * per_ton)
+        confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")
+        if confirm == 'n':
+            return ""
+
+        #self.message_observers(f"Charging {price} for refuelling.")
+
+        cost = self.ship.refuel(self.starport, amount, price)
         self.debit(cost, "refuelling")
         return "Your ship is fully refuelled."
 

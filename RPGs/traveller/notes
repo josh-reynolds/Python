@@ -3429,9 +3429,9 @@
 #         Return NOP if tank is full
 #         TO_DO: Warn if unrefined fuel
 #         Set cost by fuel grade
+#         Calculate cost
+#         Confirm purchase
 #         Ship.refuel()
-#             Calculate cost
-#             Confirm purchase
 #             Refill tank
 #             Set fuel grade
 #             Return cost

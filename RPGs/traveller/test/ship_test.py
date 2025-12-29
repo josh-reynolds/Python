@@ -67,14 +67,15 @@ class ShipTestCase(unittest.TestCase):
         ship.controls = ControlsMock(['y', 'n'])
         self.assertEqual(ship.current_fuel, 0)
 
-        cost = ship.refuel("A", 500)
-        self.assertEqual(ship.current_fuel, 0)
-        self.assertEqual(cost, Credits(0))        # 'no' case
+        cost = ship.refuel("A", 10, Credits(5000))
+        self.assertEqual(ship.current_fuel, 10)
+        self.assertEqual(cost, Credits(5000))
+        self.assertEqual(ship.fuel_quality, FuelQuality.REFINED)
 
-        self.assertEqual(ship.current_fuel, 0)
-        cost = ship.refuel("A", 500)
+        cost = ship.refuel("C", 20, Credits(10000))
         self.assertEqual(ship.current_fuel, 30)
-        self.assertEqual(cost, Credits(15000))    # 'yes' case
+        self.assertEqual(cost, Credits(10000))
+        self.assertEqual(ship.fuel_quality, FuelQuality.UNREFINED)
 
     def test_recharge(self) -> None:
         """Test recharging the Ship's life support."""
