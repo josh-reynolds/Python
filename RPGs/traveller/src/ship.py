@@ -205,31 +205,6 @@ class Ship:
         else:
             cargo.quantity -= quantity
 
-    # Book 2 pp. 5-6
-    # Starship fuel costs 500 Cr per ton (refined) or 100 Cr per ton
-    # (unrefined) at most starports.
-    # A power plant, to provide power for one trip ... requires fuel
-    # in accordance with the formula 10 * Pn, where Pn is the power plant
-    # size rating. The formula indicates the amount of fuel in tons, and
-    # all such fuel is consumed in the process of a normal trip.
-    # A jump drive requires fuel to make one jump (regardless of jump
-    # number) based on the formula 0.1 * M * Jn, where M equals the mass
-    # displacement of the ship and Jn equals the jump number of the drive.
-    # Book 2 p. 19
-    # Using the type 200 hull, the free trader...
-    # Jump drive-A, maneuver drive-A and power plant-A are all installed...
-    # giving the starship capability for acceleration of 1G and jump-1.
-    # Fuel tankage for 30 tons...
-
-    # From this, trip fuel usage is 10 tons, and jump-1 is 20 tons. The
-    # ship empties its tanks every trip.
-    def refuel(self, starport: str, amount: int, price: Credits) -> Credits:
-        """Refuel the Ship, accounting for fuel type."""
-        self.current_fuel += amount
-        if starport not in ("A", "B"):
-            self.fuel_quality = FuelQuality.UNREFINED
-        return price
-
     def sufficient_jump_fuel(self) -> bool:
         """Test whether there is enough fuel to make a jump."""
         return self.model.jump_fuel_cost <= self.current_fuel

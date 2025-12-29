@@ -204,6 +204,24 @@ class Model:
         self.plus_week()
         return "Your ship is fully repaired and decontaminated."
 
+    # Book 2 pp. 5-6
+    # Starship fuel costs 500 Cr per ton (refined) or 100 Cr per ton
+    # (unrefined) at most starports.
+    # A power plant, to provide power for one trip ... requires fuel
+    # in accordance with the formula 10 * Pn, where Pn is the power plant
+    # size rating. The formula indicates the amount of fuel in tons, and
+    # all such fuel is consumed in the process of a normal trip.
+    # A jump drive requires fuel to make one jump (regardless of jump
+    # number) based on the formula 0.1 * M * Jn, where M equals the mass
+    # displacement of the ship and Jn equals the jump number of the drive.
+    # Book 2 p. 19
+    # Using the type 200 hull, the free trader...
+    # Jump drive-A, maneuver drive-A and power plant-A are all installed...
+    # giving the starship capability for acceleration of 1G and jump-1.
+    # Fuel tankage for 30 tons...
+
+    # From this, trip fuel usage is 10 tons, and jump-1 is 20 tons. The
+    # ship empties its tanks every trip.
     def refuel(self) -> str:
         """Refuel the Ship."""
         if self.starport in ('E', 'X'):
@@ -218,7 +236,7 @@ class Model:
         else:
             per_ton = 500
 
-        amount = self.ship.model.fuel_tank - self.ship.current_fuel
+        amount = self.fuel_tank_size() - self.fuel_level()
         price = Credits(amount * per_ton)
         confirm = self.get_input('confirm', f"Purchase {amount} tons of fuel for {price}? ")
         if confirm == 'n':
@@ -226,8 +244,12 @@ class Model:
 
         #self.message_observers(f"Charging {price} for refuelling.")
 
-        cost = self.ship.refuel(self.starport, amount, price)
-        self.debit(cost, "refuelling")
+        self.ship.current_fuel = self.fuel_tank_size()
+
+        if self.starport not in ("A", "B"):
+            self.ship.fuel_quality = FuelQuality.UNREFINED
+
+        self.debit(price, "refuelling")
         return "Your ship is fully refuelled."
 
     # Book 2 p. 35

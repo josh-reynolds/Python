@@ -61,22 +61,6 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ShipTestCase.ship.free_space(), 82)
         self.assertEqual(len(ShipTestCase.ship.hold), 0)
 
-    def test_refuel(self) -> None:
-        """Test refuelling the Ship."""
-        ship = ShipTestCase.ship
-        ship.controls = ControlsMock(['y', 'n'])
-        self.assertEqual(ship.current_fuel, 0)
-
-        cost = ship.refuel("A", 10, Credits(5000))
-        self.assertEqual(ship.current_fuel, 10)
-        self.assertEqual(cost, Credits(5000))
-        self.assertEqual(ship.fuel_quality, FuelQuality.REFINED)
-
-        cost = ship.refuel("C", 20, Credits(10000))
-        self.assertEqual(ship.current_fuel, 30)
-        self.assertEqual(cost, Credits(10000))
-        self.assertEqual(ship.fuel_quality, FuelQuality.UNREFINED)
-
     def test_recharge(self) -> None:
         """Test recharging the Ship's life support."""
         ship = ShipTestCase.ship

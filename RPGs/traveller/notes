@@ -3431,10 +3431,9 @@
 #         Set cost by fuel grade
 #         Calculate cost
 #         Confirm purchase
-#         Ship.refuel()
-#             Refill tank
-#             Set fuel grade
-#             Return cost
+#         Refill tank
+#         Set fuel grade
+#         Return cost
 #         Deduct cost from balance
 #
 # For comparison:
