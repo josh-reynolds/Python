@@ -3444,8 +3444,8 @@
 #         Model.fill_tanks()
 #             Return NOP if tank is full
 #             Refill tank
-#             Advance calendar one day
 #             Set fuel grade
+#         Advance calendar one day
 #
 # JumpScreen.skim()
 #     Model.skim()
@@ -3456,8 +3456,8 @@
 #         Model.fill_tanks()
 #             Return NOP if tank is full
 #             Refill tank
-#             Advance calendar one day
 #             Set fuel grade
+#         Advance calendar one day
 #
 # Another difference jumps out: refuelling at the Starport costs
 # money, but zero time, while the other two methods are free and

@@ -279,6 +279,7 @@ class Model:
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
         self.fill_tanks("unrefined")
+        self.add_day()
         return "Your ship is fully refuelled."
 
     # TO_DO: is it worth restricting by location too? (wilderness)
@@ -288,6 +289,7 @@ class Model:
             raise GuardClauseFailure("No water available on this planet.")
 
         self.fill_tanks("unrefined")
+        self.add_day()
         return "Your ship is fully refuelled."
 
     def jump_systems_check(self) -> str:
@@ -736,14 +738,12 @@ class Model:
         """Return the capacity of the Ship's fuel tanks."""
         return self.ship.model.fuel_tank
 
-    # TO_DO: overlap with ship.refuel()
     def fill_tanks(self, quality: str="refined") -> None:
         """Fill the Ship's fuel tanks to their full capacity."""
         if self.tanks_are_full():
             raise GuardClauseFailure("Fuel tank is already full.")
 
         self.ship.current_fuel = self.fuel_tank_size()
-        self.add_day()
         if quality == "unrefined":
             self.ship.fuel_quality = FuelQuality.UNREFINED
 
