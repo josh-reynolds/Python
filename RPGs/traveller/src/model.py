@@ -336,8 +336,7 @@ class Model:
         self.set_hex(self.get_system_at_coordinate(destination))
         return f"{BOLD_GREEN}Successful jump to {self.system_name()}{END_FORMAT}"
 
-    # TO_DO: remove observer argument
-    def perform_jump(self, observer: Any) -> str:
+    def perform_jump(self) -> str:
         """Perform a hyperspace jump to the specified destination."""
         self.message_observers(self.jump_systems_check())
 
@@ -370,7 +369,7 @@ class Model:
         self.set_location("jump")
         self.check_failure_post_jump()
         self.set_destinations()
-        self.new_depot(observer)
+        self.new_depot(self.observers[0])     # TO_DO: clean up muddled observer nomenclature
         self.set_financials_location(destination)
         self.consume_life_support()
         self.burn_fuel(self.jump_fuel_cost())

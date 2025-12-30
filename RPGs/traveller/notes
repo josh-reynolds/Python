@@ -3858,6 +3858,8 @@
 
 ~HERE~
 
+#  * [    ] Clarify muddled Observer pattern usage - we're mixing Views, Controls and
+#           cross-class communication with same terminology
 #  * [    ] message_observers()/on_notify() protocol should accept (and print) lists
 #  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
