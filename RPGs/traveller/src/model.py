@@ -338,10 +338,11 @@ class Model:
 
     # TO_DO: replace print, confirm_input and choose_from with
     #        actions on observers & controls
+    # TO_DO: remove observer argument
     def perform_jump(self, observer: Any) -> str:
         """Perform a hyperspace jump to the specified destination."""
         jump_range = self.jump_range
-        print(f"Systems within jump-{jump_range}:")
+        self.message_observers(f"Systems within jump-{jump_range}:")
         destinations = self.destinations
         destination_number = choose_from(destinations, "Enter destination number: ")
 
@@ -357,9 +358,9 @@ class Model:
 
         self.check_unrefined_jump()
 
-        print(f"{BOLD_RED}Executing jump!{END_FORMAT}")
+        self.message_observers(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
-        print(self.misjump_check(coordinate))
+        self.message_observers(self.misjump_check(coordinate))
 
         self.set_location("jump")
         self.check_failure_post_jump()
