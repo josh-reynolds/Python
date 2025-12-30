@@ -3844,6 +3844,7 @@
 #  * [DONE] Deal with non-portable font in drawing module
 #  * [DONE] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
+#  * [DONE] BUG: destination system name not displayed correctly in jump 'green' message
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3858,7 +3859,6 @@
 ~HERE~
 
 #  * [    ] message_observers()/on_notify() protocol should accept (and print) lists
-#  * [    ] BUG: destination system name not displayed correctly in jump 'green' message
 #  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()
 #  * [    ] Inconstent application of properties in Model interface

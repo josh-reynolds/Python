@@ -334,7 +334,7 @@ class Model:
                    f"{misjump_target} at distance {distance}"
 
         self.set_hex(self.get_system_at_coordinate(destination))
-        return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
+        return f"{BOLD_GREEN}Successful jump to {self.system_name()}{END_FORMAT}"
 
     # TO_DO: remove observer argument
     def perform_jump(self, observer: Any) -> str:
