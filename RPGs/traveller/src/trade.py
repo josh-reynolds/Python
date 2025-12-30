@@ -3,7 +3,6 @@
 TradeScreen - contains commands for the trade state.
 """
 from typing import Any, cast, List, Tuple
-from src.cargo import Cargo
 from src.command import Command
 from src.coordinate import Coordinate
 from src.credits import Credits
@@ -60,38 +59,10 @@ class TradeScreen(PlayScreen):
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""
         print(f"{BOLD_BLUE}Selling cargo.{END_FORMAT}")
-        cargoes = [c for c in self.model.get_cargo_hold() if isinstance(c, Cargo)]
-
-        if len(cargoes) == 0:
-            print("You have no cargo on board.")
-            return
-
-        pr_list(cargoes)
-        cargo = self.model.get_cargo_lot(cargoes, "sell")
-        if cargo is None:
-            return
-
-        if self.model.invalid_cargo_origin(cargo):
-            return
-
-        broker_skill = self.model.get_broker()
-
-        quantity = self.model.get_cargo_quantity("sell", cargo)
-        if quantity is None:
-            return
-
-        sale_price = self.model.determine_price("sale", cargo, quantity,
-                                                broker_skill + self.model.trade_skill())
-
-        self.model.debit(self.model.broker_fee( broker_skill, sale_price), "broker fee")
-
-        if not self.model.confirm_transaction("sale", cargo, quantity, sale_price):
-            return
-
-        self.model.remove_cargo(self.model.get_cargo_hold(), cargo, quantity)
-
-        self.model.credit(sale_price, "cargo sale")
-        self.model.add_day()
+        try:
+            print(self.model.sell_cargo())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""

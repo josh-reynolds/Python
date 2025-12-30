@@ -25,9 +25,10 @@ from src.star_map import StarMap
 from src.subsector import Subsector
 from src.utilities import die_roll
 
-# pylint: disable=R0904, R0902
+# pylint: disable=R0904, R0902, C0302
 # R0904: too many public methods (21/20)
 # R0902: too many instance attributes (8/7)
+# C0302: too many lines in module (1034/1000)
 class Model:
     """Contains references to all game model objects."""
 
@@ -447,6 +448,42 @@ class Model:
         self.debit(cost, "cargo purchase")
         self.add_day()
         return f"Successfully purchased {purchased}."
+
+    def sell_cargo(self) -> str:
+        """Sell cargo in speculative trade."""
+        cargoes = [c for c in self.get_cargo_hold() if isinstance(c, Cargo)]
+
+        if len(cargoes) == 0:
+            raise GuardClauseFailure("You have no cargo on board.")
+
+        for i,entry in enumerate(cargoes):
+            self.message_views(f"{i} - {entry}")
+        cargo = self.get_cargo_lot(cargoes, "sell")
+        if cargo is None:
+            raise GuardClauseFailure("No cargo selected.")
+
+        if self.invalid_cargo_origin(cargo):
+            raise GuardClauseFailure("You cannot sell cargo on its source world.")
+
+        broker_skill = self.get_broker()
+
+        quantity = self.get_cargo_quantity("sell", cargo)
+        if quantity is None:
+            raise GuardClauseFailure("No cargo selected.")
+
+        sale_price = self.determine_price("sale", cargo, quantity,
+                                          broker_skill + self.trade_skill())
+
+        self.debit(self.broker_fee(broker_skill, sale_price), "broker fee")
+
+        if not self.confirm_transaction("sale", cargo, quantity, sale_price):
+            return "Cancelling purchase."
+
+        self.remove_cargo(self.get_cargo_hold(), cargo, quantity)
+
+        self.credit(sale_price, "cargo sale")
+        self.add_day()
+        return f"Successfully sold {cargo}."
 
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
