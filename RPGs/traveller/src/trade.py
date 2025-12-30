@@ -8,7 +8,7 @@ from src.command import Command
 from src.coordinate import Coordinate
 from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
-from src.model import Model
+from src.model import Model, GuardClauseFailure
 from src.freight import Freight
 from src.play import PlayScreen
 from src.star_system import Hex, StarSystem
@@ -52,35 +52,10 @@ class TradeScreen(PlayScreen):
     def buy_cargo(self) -> None:
         """Purchase cargo for speculative trade."""
         print(f"{BOLD_BLUE}Purchasing cargo.{END_FORMAT}")
-        pr_list(self.model.cargo)
-        cargo = self.model.get_cargo_lot(self.model.cargo, "buy")
-        if cargo is None:
-            return
-
-        quantity = self.model.get_cargo_quantity("buy", cargo)
-        if quantity is None:
-            return
-
-        if self.model.insufficient_hold_space(cargo, quantity):
-            return
-
-        cost = self.model.determine_price("purchase", cargo, quantity,
-                                          self.model.trade_skill())
-
-        if self.model.insufficient_funds(cost):
-            return
-
-        if not self.model.confirm_transaction("purchase", cargo, quantity, cost):
-            return
-
-        self.model.remove_cargo(self.model.cargo, cargo, quantity)
-
-        purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
-                          cargo.purchase_dms, cargo.sale_dms, self.model.get_star_system())
-        self.model.load_cargo([purchased])
-
-        self.model.debit(cost, "cargo purchase")
-        self.model.add_day()
+        try:
+            print(self.model.buy_cargo())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def sell_cargo(self) -> None:
         """Sell cargo in speculative trade."""

@@ -417,6 +417,37 @@ class Model:
         self.plus_week()
         return self.repair_ship()
 
+    def buy_cargo(self) -> str:
+        """Purchase cargo for speculative trade."""
+        for i,entry in enumerate(self.cargo):
+            self.message_views(f"{i} - {entry}")
+
+        cargo = self.get_cargo_lot(self.cargo, "buy")
+        quantity = self.get_cargo_quantity("buy", cargo)
+        if quantity is None or cargo is None:
+            raise GuardClauseFailure("No cargo available for purchase.")
+
+        if self.insufficient_hold_space(cargo, quantity):
+            raise GuardClauseFailure("There is not enough space available in the hold.")
+
+        cost = self.determine_price("purchase", cargo, quantity, self.trade_skill())
+
+        if self.insufficient_funds(cost):
+            raise GuardClauseFailure("You do not have enough funds for this purchase.")
+
+        if not self.confirm_transaction("purchase", cargo, quantity, cost):
+            return "Cancelling purchase."
+
+        self.remove_cargo(self.cargo, cargo, quantity)
+
+        purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
+                          cargo.purchase_dms, cargo.sale_dms, self.get_star_system())
+        self.load_cargo([purchased])
+
+        self.debit(cost, "cargo purchase")
+        self.add_day()
+        return f"Successfully purchased {purchased}."
+
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""
@@ -434,9 +465,11 @@ class Model:
         """Select a Cargo lot from a list."""
         return self.depot.get_cargo_lot(source, prompt)
 
-    def get_cargo_quantity(self, prompt: str, cargo: Cargo) -> int | None:
+    def get_cargo_quantity(self, prompt: str, cargo: Cargo | None) -> int | None:
         """Get a quantify of Cargo from the player to sell or purchase."""
-        return self.depot.get_cargo_quantity(prompt, cargo)
+        if cargo:
+            return self.depot.get_cargo_quantity(prompt, cargo)
+        return None
 
     # TO_DO: why is this in CargoDepot?
     def insufficient_funds(self, cost: Credits) -> bool:
