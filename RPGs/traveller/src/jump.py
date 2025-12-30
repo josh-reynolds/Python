@@ -41,9 +41,7 @@ class JumpScreen(PlayScreen):
     def jump(self) -> None:
         """Perform a hyperspace jump to another StarSystem."""
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
-
         try:
-            print(self.model.jump_systems_check())
             print(self.model.perform_jump(self.parent))
         except GuardClauseFailure as exception:
             print(exception)

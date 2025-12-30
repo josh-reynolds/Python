@@ -341,6 +341,8 @@ class Model:
     # TO_DO: remove observer argument
     def perform_jump(self, observer: Any) -> str:
         """Perform a hyperspace jump to the specified destination."""
+        self.message_observers(self.jump_systems_check())
+
         jump_range = self.jump_range
         self.message_observers(f"Systems within jump-{jump_range}:")
         destinations = self.destinations
