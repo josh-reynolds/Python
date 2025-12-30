@@ -2,14 +2,14 @@
 
 TradeScreen - contains commands for the trade state.
 """
-from typing import Any, cast, List, Tuple
+from typing import Any, cast
 from src.command import Command
 from src.coordinate import Coordinate
-from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
+from src.format import BOLD_BLUE, END_FORMAT
 from src.model import Model, GuardClauseFailure
 from src.freight import Freight
 from src.play import PlayScreen
-from src.star_system import Hex, StarSystem
+from src.star_system import StarSystem
 from src.utilities import confirm_input, pr_list
 
 class TradeScreen(PlayScreen):
@@ -84,7 +84,7 @@ class TradeScreen(PlayScreen):
         print(f"Freight shipments for {destination.name}")
         print(available)
 
-        total_tonnage, selection = self._select_freight_lots(available, destination)
+        total_tonnage, selection = self.model.select_freight_lots(available, destination)
 
         if total_tonnage == 0:
             print("No freight shipments selected.")
@@ -100,48 +100,6 @@ class TradeScreen(PlayScreen):
             self.model.remove_freight(destination, entry)
             self.model.load_cargo([Freight(entry, self.model.get_star_system(), destination)])
         self.model.add_day()
-
-    def _select_freight_lots(self, available: List[int],
-                             destination: Hex) -> Tuple[int, List[int]]:
-        """Select Freight lots from a list of available shipments."""
-        selection: List[int] = []
-        total_tonnage = 0
-        hold_tonnage = self.model.free_cargo_space
-        while True:
-            if len(available) == 0:
-                print(f"No more freight available for {destination.name}.")
-                break
-
-            # can't use int input here since we allow for 'q' as well...
-            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
-            if response == 'q':
-                break
-
-            try:
-                response = int(response)
-            except ValueError:
-                print("Please input a number.")
-                continue
-
-            if response in available:
-                if response <= hold_tonnage:
-                    # even though we cast to int above in try/catch,
-                    # mypy is unaware, need to cast again to silence it.
-                    # sort this out...
-                    available.remove(cast(int, response))
-                    selection.append(cast(int, response))
-                    total_tonnage += response
-                    hold_tonnage -= response
-                    print(available)
-                    print(f"Cargo space left: {hold_tonnage}")
-                else:
-                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
-                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
-            else:
-                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
-
-        print("Done selecting shipments.")
-        return (total_tonnage, selection)
 
     def unload_freight(self) -> None:
         """Unload Freight from the Ship and receive payment."""

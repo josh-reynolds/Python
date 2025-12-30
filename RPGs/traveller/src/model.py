@@ -613,6 +613,48 @@ class Model:
 
         return result
 
+    def select_freight_lots(self, available: List[int],
+                             destination: Hex) -> Tuple[int, List[int]]:
+        """Select Freight lots from a list of available shipments."""
+        selection: List[int] = []
+        total_tonnage = 0
+        hold_tonnage = self.free_cargo_space
+        while True:
+            if len(available) == 0:
+                print(f"No more freight available for {destination.name}.")
+                break
+
+            # can't use int input here since we allow for 'q' as well...
+            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
+            if response == 'q':
+                break
+
+            try:
+                response = int(response)
+            except ValueError:
+                print("Please input a number.")
+                continue
+
+            if response in available:
+                if response <= hold_tonnage:
+                    # even though we cast to int above in try/catch,
+                    # mypy is unaware, need to cast again to silence it.
+                    # sort this out...
+                    available.remove(cast(int, response))
+                    selection.append(cast(int, response))
+                    total_tonnage += response
+                    hold_tonnage -= response
+                    print(available)
+                    print(f"Cargo space left: {hold_tonnage}")
+                else:
+                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
+                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
+            else:
+                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
+
+        print("Done selecting shipments.")
+        return (total_tonnage, selection)
+
     # FINANCIALS ========================================
     @property
     def balance(self) -> Credits:

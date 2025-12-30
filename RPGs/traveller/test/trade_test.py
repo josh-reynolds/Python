@@ -31,8 +31,7 @@ class TradeScreenTestCase(unittest.TestCase):
         #     under contract but not in range
         # else
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _select_freight_lots of a client class
+    # TO_DO: should move to model_test module
     @unittest.skip("test has side effects: printing & input")
     def test_select_freight_lots(self):
         """Test selection of freight from a list."""
@@ -42,7 +41,7 @@ class TradeScreenTestCase(unittest.TestCase):
         available = [5, 10, 15, 20]
         destination = trade.model.map_hex.destinations[0]
 
-        tonnage, selection = trade._select_freight_lots(available, destination)
+        tonnage, selection = trade.model.select_freight_lots(available, destination)
         print(tonnage, selection)
 
         # no freight remaining, auto-exit
