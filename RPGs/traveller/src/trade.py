@@ -5,7 +5,6 @@ TradeScreen - contains commands for the trade state.
 from typing import Any, cast, List, Tuple
 from src.command import Command
 from src.coordinate import Coordinate
-from src.credits import Credits
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED
 from src.model import Model, GuardClauseFailure
 from src.freight import Freight
@@ -147,28 +146,7 @@ class TradeScreen(PlayScreen):
     def unload_freight(self) -> None:
         """Unload Freight from the Ship and receive payment."""
         print(f"{BOLD_BLUE}Unloading freight.{END_FORMAT}")
-
-        if self.model.destination() is None:
-            print("You have no contracted destination.")
-            return
-
-        freight = self.model.get_freight()
-        if len(freight) == 0:
-            print("You have no freight on board.")
-            return
-
-        if self.model.destination() == self.model.get_star_system():
-            freight_tonnage = sum(f.tonnage for f in freight)
-            self.model.remove_all_freight()
-
-            payment = Credits(1000 * freight_tonnage)
-            self.model.credit(payment, "freight shipment")
-            print(f"Receiving payment of {payment} for {freight_tonnage} tons shipped.")
-
-            self.model.add_day()
-
-        else:
-            print(f"{BOLD_RED}You are not at the contracted "
-                  f"destination for this freight.{END_FORMAT}")
-            print(f"{BOLD_RED}It should be unloaded at "
-                  f"{self.model.destination_name}.{END_FORMAT}")
+        try:
+            print(self.model.unload_freight())
+        except GuardClauseFailure as exception:
+            print(exception)

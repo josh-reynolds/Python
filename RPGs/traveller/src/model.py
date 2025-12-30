@@ -485,6 +485,30 @@ class Model:
         self.add_day()
         return f"Successfully sold {cargo}."
 
+    def unload_freight(self) -> str:
+        """Unload Freight from the Ship and receive payment."""
+        if self.destination() is None:
+            raise GuardClauseFailure("You have no contracted destination.")
+
+        freight = self.get_freight()
+        if len(freight) == 0:
+            raise GuardClauseFailure("You have no freight on board.")
+
+        if self.destination() != self.get_star_system():
+            raise GuardClauseFailure(f"{BOLD_RED}You are not at the contracted " +\
+                                     "destination for this freight.\n" +\
+                                     "It should be unloaded at "
+                                     f"{self.destination_name}.{END_FORMAT}")
+
+        freight_tonnage = sum(f.tonnage for f in freight)
+        self.remove_all_freight()
+
+        payment = Credits(1000 * freight_tonnage)
+        self.credit(payment, "freight shipment")
+        self.add_day()
+
+        return f"Receiving payment of {payment} for {freight_tonnage} tons shipped."
+
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""
