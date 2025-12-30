@@ -3857,6 +3857,7 @@
 
 ~HERE~
 
+#  * [    ] message_observers()/on_notify() protocol should accept (and print) lists
 #  * [    ] BUG: destination system name not displayed correctly in jump 'green' message
 #  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()

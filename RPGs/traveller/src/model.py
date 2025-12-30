@@ -23,7 +23,7 @@ from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
 from src.subsector import Subsector
-from src.utilities import die_roll, pr_list
+from src.utilities import die_roll
 
 # pylint: disable=R0904, R0902
 # R0904: too many public methods (21/20)
@@ -336,7 +336,6 @@ class Model:
         self.set_hex(self.get_system_at_coordinate(destination))
         return f"{BOLD_GREEN}Successful jump to {self.system_name}{END_FORMAT}"
 
-    # TO_DO: remove pr_list usage, replace w/ observer
     # TO_DO: remove observer argument
     def perform_jump(self, observer: Any) -> str:
         """Perform a hyperspace jump to the specified destination."""
@@ -345,7 +344,8 @@ class Model:
         jump_range = self.jump_range
         self.message_observers(f"Systems within jump-{jump_range}:")
         destinations = self.destinations
-        pr_list(destinations)
+        for i,entry in enumerate(destinations):
+            self.message_observers(f"{i} - {entry}")
 
         choice = -1
         while not 0 <= choice < len(destinations):
