@@ -41,7 +41,7 @@ class Model:
         self.financials: Financials
         self.depot: CargoDepot
 
-        self.observers: List[Any] = [controls]
+        self.views: List[Any] = [controls]
         self.controls = controls
 
     def __repr__(self) -> str:
@@ -52,14 +52,15 @@ class Model:
         """Request input from controls."""
         return self.controls.get_input(constraint, prompt)    # type: ignore[union-attr]
 
-    def add_observer(self, observer: Any) -> None:
-        """Add an observer to respond to UI messages."""
-        self.observers.append(observer)
+    # TO_DO: is this ever called?
+    def add_view(self, view: Any) -> None:
+        """Add an view to respond to UI messages."""
+        self.views.append(view)
 
-    def message_observers(self, message: str, priority: str="") -> None:
-        """Pass a message on to all observers."""
-        for observer in self.observers:
-            observer.on_notify(message, priority)
+    def message_views(self, message: str, priority: str="") -> None:
+        """Pass a message on to all views."""
+        for view in self.views:
+            view.on_notify(message, priority)
 
     # TRANSITIONS =======================================
     def inbound_from_jump(self) -> str:
@@ -241,7 +242,7 @@ class Model:
         if self.starport not in ("A", "B"):
             per_ton = 100
             fuel_quality = "unrefined"
-            self.message_observers("Note: only unrefined fuel available at this facility.")
+            self.message_views("Note: only unrefined fuel available at this facility.")
         else:
             per_ton = 500
             fuel_quality = "refined"
@@ -253,7 +254,7 @@ class Model:
         if confirm == 'n':
             return ""
 
-        self.message_observers(f"Charging {price} for refuelling.")
+        self.message_views(f"Charging {price} for refuelling.")
 
         self.fill_tanks(fuel_quality)
         self.debit(price, "refuelling")
@@ -338,13 +339,13 @@ class Model:
 
     def perform_jump(self) -> str:
         """Perform a hyperspace jump to the specified destination."""
-        self.message_observers(self.jump_systems_check())
+        self.message_views(self.jump_systems_check())
 
         jump_range = self.jump_range
-        self.message_observers(f"Systems within jump-{jump_range}:")
+        self.message_views(f"Systems within jump-{jump_range}:")
         destinations = self.destinations
         for i,entry in enumerate(destinations):
-            self.message_observers(f"{i} - {entry}")
+            self.message_views(f"{i} - {entry}")
 
         choice = -1
         while not 0 <= choice < len(destinations):
@@ -362,14 +363,14 @@ class Model:
 
         self.check_unrefined_jump()
 
-        self.message_observers(f"{BOLD_RED}Executing jump!{END_FORMAT}")
+        self.message_views(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
-        self.message_observers(self.misjump_check(coordinate))
+        self.message_views(self.misjump_check(coordinate))
 
         self.set_location("jump")
         self.check_failure_post_jump()
         self.set_destinations()
-        self.new_depot(self.observers[0])     # TO_DO: clean up muddled observer nomenclature
+        self.new_depot(self.views[0])     # TO_DO: clean up muddled observer nomenclature
         self.set_financials_location(destination)
         self.consume_life_support()
         self.burn_fuel(self.jump_fuel_cost())
@@ -388,12 +389,40 @@ class Model:
         self.plus_week()
         return "Fuel tanks have been decontaminated."
 
+    def annual_maintenance(self) -> str:
+        """Perform annual maintenance on the Ship."""
+        if self.no_shipyard():
+            raise GuardClauseFailure("Annual maintenance can only be performed " +
+                                     "at class A or B starports.")
+
+        cost = self.maintenance_cost()
+        if self.balance < cost:
+            raise GuardClauseFailure("You do not have enough funds to pay for maintenance.\n"
+                  f"It will cost {cost}. Your balance is {self.balance}.")
+
+        if self.maintenance_status() == "green":
+            confirmation = self.get_input('confirm', "Maintenance was performed less than " +
+                                          "10 months ago. Continue (y/n)? ")
+            if confirmation == "n":
+                return "Cancelling maintenance."
+
+        confirmation = self.get_input('confirm', f"Maintenance will cost {cost} and take " +
+                                      "two weeks. Continue (y/n)? ")
+        if confirmation == "n":
+            return "Cancelling maintenance."
+
+        self.message_views(f"Performing maintenance. Charging {cost}.")
+        self.set_maintenance_date()
+        self.debit(cost, "annual maintenance")
+        self.plus_week()
+        return self.repair_ship()
+
     # DEPOT =============================================
-    def new_depot(self, observer: Any) -> None:
+    def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""
         self.depot = CargoDepot(self.get_star_system(), self.get_current_date())
-        self.depot.add_observer(observer)
-        self.depot.controls = observer
+        self.depot.add_view(view)
+        self.depot.controls = view
 
     @property
     def cargo(self) -> List[Cargo]:
@@ -496,11 +525,11 @@ class Model:
         """Return current account balance."""
         return self.financials.balance
 
-    def load_financials(self, data: str, observer: Any) -> None:
+    def load_financials(self, data: str, view: Any) -> None:
         """Apply Financials from json data to Financials field."""
         self.financials = financials_from(data)
         self.financials.ship = self.ship
-        self.financials.add_observer(observer)
+        self.financials.add_view(view)
         self.date.add_observer(self.financials)
 
     def credit(self, amount: Credits, memo: str="") -> None:
@@ -649,11 +678,11 @@ class Model:
         self.star_map.subsectors[sub_coord] = sub
 
     # SHIP ==============================================
-    def new_ship(self, ship_details: str, ship_model: str, observer: Any) -> None:
+    def new_ship(self, ship_details: str, ship_model: str, view: Any) -> None:
         """Create a new Ship."""
         self.ship = ship_from(ship_details, ship_model)
-        self.ship.add_observer(observer)
-        self.ship.controls = observer
+        self.ship.add_view(view)
+        self.ship.controls = view
 
     def encode_ship(self) -> str:
         """Return a string encoding the current state of the Ship."""

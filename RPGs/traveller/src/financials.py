@@ -36,7 +36,7 @@ class Financials:
 
         self.last_maintenance = self.current_date - 14
 
-        self.observers: List[Any] = []
+        self.views: List[Any] = []
 
         self.ledger: List[str] = []
 
@@ -56,14 +56,14 @@ class Financials:
         return f"Financials({self.balance}, {self.current_date!r}, " +\
                f"{self.ship!r}, {self.location!r}"
 
-    def add_observer(self, observer: Any) -> None:
-        """Add an observer to respond to UI messages."""
-        self.observers.append(observer)
+    def add_view(self, view: Any) -> None:
+        """Add an view to respond to UI messages."""
+        self.views.append(view)
 
-    def message_observers(self, message: str, priority="") -> None:
-        """Send message to all observers with indicated priority."""
-        for observer in self.observers:
-            observer.on_notify(message, priority)
+    def message_views(self, message: str, priority="") -> None:
+        """Send message to all views with indicated priority."""
+        for view in self.views:
+            view.on_notify(message, priority)
 
     def debit(self, amount: Credits, memo: str="") -> None:
         """Deduct a specified amount from the Financials balance."""
@@ -109,7 +109,7 @@ class Financials:
         """Check days since last maintenance."""
         status = self.maintenance_status(date)
         if status != 'green':
-            self.message_observers(f"Days since last maintenance = {date - self.last_maintenance}",
+            self.message_views(f"Days since last maintenance = {date - self.last_maintenance}",
                                    status)
 
     # Book 2 p. 7:
@@ -121,7 +121,7 @@ class Financials:
     def berthing_fee(self, at_starport: bool) -> None:
         """Deduct fee for berth at a starport from Financials balance."""
         if at_starport:
-            self.message_observers("Charging 100 Cr berthing fee.")
+            self.message_views("Charging 100 Cr berthing fee.")
             self.debit(Credits(100), "berthing fee")
             self.berth_recurrence = 1
             self.berth_expiry = self.current_date + 6
@@ -135,20 +135,20 @@ class Financials:
             else:
                 unit = "days"
             amount = Credits(days_extra * 100)
-            self.message_observers(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
+            self.message_views(f"Renewing berth on {date} for {days_extra} {unit} ({amount}).")
             self.debit(amount, "berth renewal")
             self.berth_expiry = date + self.berth_recurrence
 
     def _pay_salaries(self) -> None:
         """Deduct ship salaries from Financials balance."""
         amount = self.ship.crew_salary()
-        self.message_observers(f"Paying crew salaries on {self.salary_paid} for {amount}.")
+        self.message_views(f"Paying crew salaries on {self.salary_paid} for {amount}.")
         self.debit(amount, "crew salaries")
 
     def _pay_loan(self) -> None:
         """Deduct loan payment from Financials balance."""
         amount = self.ship.loan_payment()
-        self.message_observers(f"Paying ship loan on {self.loan_paid} for {amount}.")
+        self.message_views(f"Paying ship loan on {self.loan_paid} for {amount}.")
         self.debit(amount, "loan payment")
 
     def maintenance_status(self, date: ImperialDate) -> str:

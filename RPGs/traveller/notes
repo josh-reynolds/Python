@@ -3471,6 +3471,35 @@
 #
 # -------------------------------------------------------------
 
+# -------------------------------------------------------------
+# That helped break through some struggles dismantling the rest
+# of the Screen classes and moving logic into Model. I was dragging
+# my feet on getting observers/controls into Model proper, and
+# wrestling with the decomposition of those big methods on *Screen.
+#
+# They still need to be broken up, but I think I'll bring what I've
+# got and continue to peel them apart once they are on Model.
+#
+# One tangent, though - I think 'observer' has become overloaded.
+# I'm using the Observer pattern in three different ways in 
+# this app:
+#
+# 1) Sending output to be displayed
+# 2) Requesting input from controls
+# 3) Inter-process notifications
+#
+# The majority of my 'observers' are actually just #1. I believe
+# only observers of the calendar are behaving as #3. Things are
+# extra-muddled right now because Game is behaving as a 
+# View/Controller hybrid. So when I'm passing in an 'observer'
+# argument, I have to pause a moment to understand which role
+# is being served.
+# 
+# I think it will be helpful to standardize the nomenclature
+# across the board. Doing that now.
+#
+# -------------------------------------------------------------
+
 ~HERE~
 
 # -------------------------------------------------------------
@@ -3845,6 +3874,8 @@
 #  * [DONE] Refactoring opportunity: overlap between skim() & refuel() in Screens, Model
 #           and Ship classes
 #  * [DONE] BUG: destination system name not displayed correctly in jump 'green' message
+#  * [DONE] Clarify muddled Observer pattern usage - we're mixing Views, Controls and
+#           cross-class communication with same terminology
 #  * [....] Adjust UI elements, play with more ANSI codes - also review color
 #           coding for warnings, positive/negative messages, etc.
 #  * [....] Extract all the three-axis coordinate math to its own class
@@ -3858,8 +3889,6 @@
 
 ~HERE~
 
-#  * [    ] Clarify muddled Observer pattern usage - we're mixing Views, Controls and
-#           cross-class communication with same terminology
 #  * [    ] message_observers()/on_notify() protocol should accept (and print) lists
 #  * [    ] CargoDepot.get_cargo_lot() duplicates choose_from()
 #  * [    ] Review overlap of CargoDepot.remove_cargo() and Ship.unload_cargo()

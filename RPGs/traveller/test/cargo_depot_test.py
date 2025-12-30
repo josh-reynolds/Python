@@ -49,13 +49,13 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test selection of cargo lots."""
         depot = CargoDepotTestCase.depot
         depot.controls = ControlsMock([2, 1, 0, 7])
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
         cargo_list = ["a", "b", "c"]
 
         item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
-        self.assertEqual(observer.message, "That is not a valid cargo ID.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "That is not a valid cargo ID.")
+        self.assertEqual(view.priority, "")
 
         item = depot.get_cargo_lot(cargo_list, "buy")    #type: ignore[arg-type]
         self.assertEqual(item, "a")
@@ -70,25 +70,25 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test selection of cargo quantity."""
         depot = CargoDepotTestCase.depot
         depot.controls = ControlsMock([9, 1, 0, -1, 11])
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
         cargo = CargoMock(10)
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
-        self.assertEqual(observer.message,
+        self.assertEqual(view.message,
                          "There is not enough available. Specify a lower quantity.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.priority, "")
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
-        self.assertEqual(observer.message, "Quantity needs to be a positive number.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Quantity needs to be a positive number.")
+        self.assertEqual(view.priority, "")
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, None)
-        self.assertEqual(observer.message, "Quantity needs to be a positive number.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Quantity needs to be a positive number.")
+        self.assertEqual(view.priority, "")
 
         amount = depot.get_cargo_quantity("buy", cargo)
         self.assertEqual(amount, 1)
@@ -100,37 +100,37 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test validation of cargo origin."""
         depot = CargoDepotTestCase.depot
         self.assertEqual(depot.system.name, "Uranus")
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         location1 = SystemMock("Jupiter")
         cargo1 = CargoMock(10)
         cargo1.source_world = location1
         self.assertFalse(depot.invalid_cargo_origin(cargo1))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         cargo2 = CargoMock(10)
         cargo2.source_world = location1
         self.assertFalse(depot.invalid_cargo_origin(cargo2))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         location2 = SystemMock("Uranus")
         cargo3 = CargoMock(10)
         cargo3.source_world = location2
         self.assertTrue(depot.invalid_cargo_origin(cargo3))
-        self.assertEqual(observer.message,
+        self.assertEqual(view.message,
                          "You cannot resell cargo on the world where it was purchased.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.priority, "")
 
     def test_get_broker(self) -> None:
         """Test choosing a broker."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 4, 5, 'y', 'y', 4, 5, 'y', 'n', 1, 'y', 'y', 1, 0, 'y', 'n']
         depot.controls = ControlsMock(scenarios)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         # n
         result = depot.get_broker()
@@ -156,16 +156,16 @@ class CargoDepotTestCase(unittest.TestCase):
         """Test validation of cargo hold space."""
         depot = CargoDepotTestCase.depot
         cargo = CargoMock(10)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         self.assertFalse(depot.insufficient_hold_space(cargo, 10, 10))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         self.assertTrue(depot.insufficient_hold_space(cargo, 10, 0))
-        self.assertEqual(observer.message, "You only have 0 tons free.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "You only have 0 tons free.")
+        self.assertEqual(view.priority, "")
 
     def test_determine_price(self) -> None:
         """Test calculation of sale & purchase prices.
@@ -173,21 +173,21 @@ class CargoDepotTestCase(unittest.TestCase):
         Since the prices are randomly determined, the tests below need
         to account for variable output. Also, the determine_price()
         method will set a priority based on whether the price is good
-        or bad - so validating the observer.priority field is tricky.
+        or bad - so validating the view.priority field is tricky.
         """
         # TO_DO: monkeypatch die_roll() so we can get deterministic
         #        results for testing
         depot = CargoDepotTestCase.depot
         cargo = CargoMock(10)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         price = depot.determine_price("sale", cargo, 10, 0)
         self.assertTrue(isinstance(price, Credits))
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
-        self.assertEqual(observer.message[:31], "Sale price of that quantity is ")
-        #self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message[:31], "Sale price of that quantity is ")
+        #self.assertEqual(view.priority, "")
 
         self.assertEqual(cargo.price_adjustment, 0)
         price = depot.determine_price("purchase", cargo, 10, 0)
@@ -195,63 +195,63 @@ class CargoDepotTestCase(unittest.TestCase):
         self.assertGreaterEqual(price, Credits(4))
         self.assertLessEqual(price, Credits(40))
         self.assertGreater(cargo.price_adjustment, 0)
-        self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
-        #self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message[:35], "Purchase price of that quantity is ")
+        #self.assertEqual(view.priority, "")
 
         price2 = depot.determine_price("purchase", cargo, 10, 0)
         self.assertEqual(price2, price)
-        self.assertEqual(observer.message[:35], "Purchase price of that quantity is ")
-        #self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message[:35], "Purchase price of that quantity is ")
+        #self.assertEqual(view.priority, "")
 
     def test_insufficient_funds(self) -> None:
         """Test validation of bank balance."""
         depot = CargoDepotTestCase.depot
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         result = depot.insufficient_funds(Credits(1), Credits(1))
         self.assertFalse(result)
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         result = depot.insufficient_funds(Credits(1), Credits(2))
         self.assertFalse(result)
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         result = depot.insufficient_funds(Credits(2), Credits(1))
         self.assertTrue(result)
-        self.assertEqual(observer.message, "Your available balance is 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Your available balance is 1 Cr.")
+        self.assertEqual(view.priority, "")
 
     def test_broker_fee(self) -> None:
         """Test calculation of broker fees."""
         depot = CargoDepotTestCase.depot
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
 
         fee = depot.broker_fee(0, Credits(100))
         self.assertEqual(fee, Credits(0))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         fee = depot.broker_fee(1, Credits(100))
         self.assertEqual(fee, Credits(5))
-        self.assertEqual(observer.message, "Deducting 5 Cr broker fee for skill 1.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Deducting 5 Cr broker fee for skill 1.")
+        self.assertEqual(view.priority, "")
 
         fee = depot.broker_fee(4, Credits(100))
         self.assertEqual(fee, Credits(20))
-        self.assertEqual(observer.message, "Deducting 20 Cr broker fee for skill 4.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Deducting 20 Cr broker fee for skill 4.")
+        self.assertEqual(view.priority, "")
 
     def test_confirm_transaction(self) -> None:
         """Test transaction confirmation."""
         depot = CargoDepotTestCase.depot
         scenarios = ['n', 'y']
         depot.controls = ControlsMock(scenarios)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
         cargo = CargoMock(10)
 
         result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
@@ -259,8 +259,8 @@ class CargoDepotTestCase(unittest.TestCase):
 
         result = depot.confirm_transaction("purchase", cargo, 1, Credits(1))
         self.assertFalse(result)
-        self.assertEqual(observer.message, "Cancelling purchase.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Cancelling purchase.")
+        self.assertEqual(view.priority, "")
 
     def test_remove_cargo(self) -> None:
         """Test removal of cargo from the depot or cargo hold."""
@@ -302,8 +302,8 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = ControlsMock(scenarios)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
         world1 = SystemMock()
         world1.name = "Pluto"
         world1.coordinate = Coordinate(2,2,2)
@@ -323,7 +323,7 @@ class CargoDepotTestCase(unittest.TestCase):
         coord, freight = depot.get_available_freight(destinations)
         self.assertEqual(coord, None)
         self.assertTrue(freight is None)
-        self.assertEqual(observer.message, "That is not a valid destination number.")
+        self.assertEqual(view.message, "That is not a valid destination number.")
 
     # pylint: disable=R0915
     # R0915: Too many statements (57/50)
@@ -440,8 +440,8 @@ class CargoDepotTestCase(unittest.TestCase):
         depot = CargoDepotTestCase.depot
         scenarios = [2, 1, 0]
         depot.controls = ControlsMock(scenarios)
-        observer = ObserverMock()
-        depot.add_observer(observer)
+        view = ObserverMock()
+        depot.add_view(view)
         world1 = SystemMock()
         world1.name = "Pluto"
         world1.coordinate = Coordinate(2,2,2)
@@ -461,4 +461,4 @@ class CargoDepotTestCase(unittest.TestCase):
         coord, passengers = depot.get_available_passengers(destinations)
         self.assertEqual(coord, None)
         self.assertTrue(passengers is None)
-        self.assertEqual(observer.message, "That is not a valid destination number.")
+        self.assertEqual(view.message, "That is not a valid destination number.")

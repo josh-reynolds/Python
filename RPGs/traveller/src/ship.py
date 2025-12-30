@@ -50,7 +50,7 @@ class Ship:
         self.life_support_level = 0
         self.passengers: List[Passenger] = []
 
-        self.observers: List[Any] = []     # we don't have a type representing Observers
+        self.views: List[Any] = []     # we don't have a type representing Observers
         self.controls: Any | None = None   # same story for controls...
 
         self.model = ship_model_from(model)
@@ -166,14 +166,14 @@ class Ship:
         return self.model.low_berths - self.low_passenger_count
 
     # TO_DO: we don't have a type to represent Observers
-    def add_observer(self, observer: Any) -> None:
-        """Add an observer to respond to UI messages."""
-        self.observers.append(observer)
+    def add_view(self, view: Any) -> None:
+        """Add an view to respond to UI messages."""
+        self.views.append(view)
 
-    def message_observers(self, message: str, priority: str="") -> None:
-        """Pass a message on to all observers."""
-        for observer in self.observers:
-            observer.on_notify(message, priority)
+    def message_views(self, message: str, priority: str="") -> None:
+        """Pass a message on to all views."""
+        for view in self.views:
+            view.on_notify(message, priority)
 
     def get_input(self, constraint: str, prompt: str) -> str | int:
         """Request input from controls."""
@@ -243,7 +243,7 @@ class Ship:
     def recharge(self) -> Credits:
         """Recharge the Ship's life support system."""
         if self.life_support_level == 100:
-            self.message_observers("Life support is fully charged.")
+            self.message_views("Life support is fully charged.")
             return Credits(0)
 
         price = Credits((len(self.crew) + self.model.passenger_berths) * 2000 +
@@ -252,7 +252,7 @@ class Ship:
         if confirm == 'n':
             return Credits(0)
 
-        self.message_observers(f"Charging {price} for life support replenishment.")
+        self.message_views(f"Charging {price} for life support replenishment.")
         self.life_support_level = 100
         return price
 
@@ -318,7 +318,7 @@ class Ship:
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if they choose a different jump target while under contract."""
         if self.destination is not None and self.destination != destination:
-            self.message_observers("Warning: your contracted destination is " +
+            self.message_views("Warning: your contracted destination is " +
                                    f"{self.destination.name} not {destination.name}.",
                                    "red")
 
@@ -326,14 +326,14 @@ class Ship:
         """Test for drive failure before performing a hyperspace jump."""
         if (maintenance_status == "red" and die_roll(2) == 12):
             self.repair_status = RepairStatus.BROKEN
-            self.message_observers("Warning: drive failure! Unable to jump.", "red")
+            self.message_views("Warning: drive failure! Unable to jump.", "red")
 
     def check_failure_post_jump(self) -> None:
         """Test for drive failure after completing a hyperspace jump."""
         if (self.fuel_quality == FuelQuality.UNREFINED and
             die_roll(2) + self.unrefined_jump_counter > 10):
             self.repair_status = RepairStatus.BROKEN
-            self.message_observers("Warning: drive failure!", "red")
+            self.message_views("Warning: drive failure!", "red")
 
     def encode(self) -> str:
         """Return a string encoding the Ship to save and load state."""

@@ -21,20 +21,20 @@ class FinancialsTestCase(unittest.TestCase):
     def test_on_notify(self) -> None:
         """Test notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         date = DateMock(8)
         financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
-        self.assertEqual(observer.message, "Renewing berth on 8 for 7 days (700 Cr).")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Renewing berth on 8 for 7 days (700 Cr).")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(16)
         financials.on_notify(date)
         self.assertEqual(financials.current_date, date)
-        self.assertEqual(observer.message, "Renewing berth on 16 for 2 days (200 Cr).")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Renewing berth on 16 for 2 days (200 Cr).")
+        self.assertEqual(view.priority, "")
 
     def test_debit_and_credit(self) -> None:
         """Test debiting and crediting a balance managed by a Financials object."""
@@ -52,8 +52,8 @@ class FinancialsTestCase(unittest.TestCase):
     def test_salary_notification(self) -> None:
         """Test salary notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.salary_paid, DateMock(1))
 
@@ -61,45 +61,45 @@ class FinancialsTestCase(unittest.TestCase):
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(99))
         self.assertEqual(financials.salary_paid, DateMock(29))
-        self.assertEqual(observer.message, "Paying crew salaries on 29 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying crew salaries on 29 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(60)
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(98))
         self.assertEqual(financials.salary_paid, DateMock(57))
-        self.assertEqual(observer.message, "Paying crew salaries on 57 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying crew salaries on 57 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(120)
         financials._salary_notification(date)
         self.assertEqual(financials.balance, Credits(96))
         self.assertEqual(financials.salary_paid, DateMock(113))
-        self.assertEqual(observer.message, "Paying crew salaries on 113 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying crew salaries on 113 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _pay_salaries of a client class
     def test_pay_salaries(self) -> None:
         """Test paying monthly crew salaries."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.balance, Credits(100))
 
         financials._pay_salaries()
         self.assertEqual(financials.balance, Credits(99))
-        self.assertEqual(observer.message, "Paying crew salaries on 1 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying crew salaries on 1 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _loan_notification of a client class
     def test_loan_notification(self) -> None:
         """Test loan notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.loan_paid, DateMock(1))
 
@@ -107,72 +107,72 @@ class FinancialsTestCase(unittest.TestCase):
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(99))
         self.assertEqual(financials.loan_paid, DateMock(29))
-        self.assertEqual(observer.message, "Paying ship loan on 29 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying ship loan on 29 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(60)
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(98))
         self.assertEqual(financials.loan_paid, DateMock(57))
-        self.assertEqual(observer.message, "Paying ship loan on 57 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying ship loan on 57 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(120)
         financials._loan_notification(date)
         self.assertEqual(financials.balance, Credits(96))
         self.assertEqual(financials.loan_paid, DateMock(113))
-        self.assertEqual(observer.message, "Paying ship loan on 113 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying ship loan on 113 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _pay_loan of a client class
     def test_pay_loan(self) -> None:
         """Test monthly load payment."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.balance, Credits(100))
 
         financials._pay_loan()
         self.assertEqual(financials.balance, Credits(99))
-        self.assertEqual(observer.message, "Paying ship loan on 1 for 1 Cr.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Paying ship loan on 1 for 1 Cr.")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _maintenance_notification of a client class
     def test_maintenance_notification(self) -> None:
         """Test maintenance behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.last_maintenance, DateMock(-13))
 
         date = DateMock(30)
         financials._maintenance_notification(date)
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(296)
         financials._maintenance_notification(date)
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(297)
         financials._maintenance_notification(date)
-        self.assertEqual(observer.message, "Days since last maintenance = 310")
-        self.assertEqual(observer.priority, "yellow")
+        self.assertEqual(view.message, "Days since last maintenance = 310")
+        self.assertEqual(view.priority, "yellow")
 
         date = DateMock(352)
         financials._maintenance_notification(date)
-        self.assertEqual(observer.message, "Days since last maintenance = 365")
-        self.assertEqual(observer.priority, "yellow")
+        self.assertEqual(view.message, "Days since last maintenance = 365")
+        self.assertEqual(view.priority, "yellow")
 
         date = DateMock(353)
         financials._maintenance_notification(date)
-        self.assertEqual(observer.message, "Days since last maintenance = 366")
-        self.assertEqual(observer.priority, "red")
+        self.assertEqual(view.message, "Days since last maintenance = 366")
+        self.assertEqual(view.priority, "red")
 
     def test_maintenance_status(self) -> None:
         """Test maintenance status notification."""
@@ -202,8 +202,8 @@ class FinancialsTestCase(unittest.TestCase):
     def test_berthing_fee(self) -> None:
         """Test payment of starport berthing fees."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
@@ -217,24 +217,24 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, 6)
         self.assertEqual(financials.berth_expiry,
                          DateMock(1))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         financials.berthing_fee(True)
         self.assertEqual(financials.balance, Credits(0))
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          DateMock(7))
-        self.assertEqual(observer.message, "Charging 100 Cr berthing fee.")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Charging 100 Cr berthing fee.")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _berth_notification of a client class
     def test_berth_notification(self) -> None:
         """Test berth notification behavior of a Financials object."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
@@ -252,8 +252,8 @@ class FinancialsTestCase(unittest.TestCase):
                          DateMock(1))
         self.assertEqual(financials.current_date,
                          DateMock(1))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         financials.location.at_starport = lambda : True
         financials.berth_recurrence = 1
@@ -264,16 +264,16 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          DateMock(9))
-        self.assertEqual(observer.message, "Renewing berth on 8 for 1 day (100 Cr).")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Renewing berth on 8 for 1 day (100 Cr).")
+        self.assertEqual(view.priority, "")
 
     # pylint: disable=W0212
     # W0212: Access to a protected member _renew_berth of a client class
     def test_renew_berth(self) -> None:
         """Test berth renewal."""
         financials = FinancialsTestCase.financials
-        observer = ObserverMock()
-        financials.add_observer(observer)
+        view = ObserverMock()
+        financials.add_view(view)
 
         self.assertEqual(financials.balance, Credits(100))
         self.assertEqual(financials.berth_recurrence, 6)
@@ -290,8 +290,8 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          DateMock(7))
-        self.assertEqual(observer.message, "")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "")
+        self.assertEqual(view.priority, "")
 
         date = DateMock(8)
         financials._renew_berth(date)
@@ -299,8 +299,8 @@ class FinancialsTestCase(unittest.TestCase):
         self.assertEqual(financials.berth_recurrence, 1)
         self.assertEqual(financials.berth_expiry,
                          DateMock(9))
-        self.assertEqual(observer.message, "Renewing berth on 8 for 1 day (100 Cr).")
-        self.assertEqual(observer.priority, "")
+        self.assertEqual(view.message, "Renewing berth on 8 for 1 day (100 Cr).")
+        self.assertEqual(view.priority, "")
 
     def test_ledger(self) -> None:
         """Test recording of transactions in ledger."""

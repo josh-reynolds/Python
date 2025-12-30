@@ -7,7 +7,6 @@ from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
 from src.model import Model, GuardClauseFailure
 from src.play import PlayScreen
-from src.utilities import confirm_input
 
 class StarportScreen(PlayScreen):
     """Contains commands for the starport state."""
@@ -86,32 +85,10 @@ class StarportScreen(PlayScreen):
     def maintenance(self) -> None:
         """Perform annual maintenance on the Ship."""
         print(f"{BOLD_BLUE}Performing annual ship maintenance.{END_FORMAT}")
-        if self.model.no_shipyard():
-            print("Annual maintenance can only be performed at class A or B starports.")
-            return
-
-        cost = self.model.maintenance_cost()
-        if self.model.balance < cost:
-            print("You do not have enough funds to pay for maintenance.\n"
-                  f"It will cost {cost}. Your balance is {self.model.balance}.")
-            return
-
-        if self.model.maintenance_status() == "green":
-            confirmation = confirm_input("Maintenance was performed less than 10 months " +
-                                         "ago. Continue (y/n)? ")
-            if confirmation == "n":
-                return
-
-        confirmation = confirm_input(f"Maintenance will cost {cost} and take " +
-                                     "two weeks. Continue (y/n)? ")
-        if confirmation == "n":
-            return
-
-        print(f"Performing maintenance. Charging {cost}.")
-        self.model.set_maintenance_date()
-        self.model.debit(cost, "annual maintenance")
-        self.model.plus_week()
-        print(self.model.repair_ship())
+        try:
+            print(self.model.annual_maintenance())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def flush(self) -> None:
         """Decontaminate the Ship's fuel tanks."""

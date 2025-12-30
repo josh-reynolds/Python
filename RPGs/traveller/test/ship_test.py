@@ -161,8 +161,8 @@ class ShipTestCase(unittest.TestCase):
     def test_warn_if_not_contracted(self) -> None:
         """Test warning message if destination does not match the contract."""
         ship = ShipTestCase.ship
-        observer = ObserverMock()
-        ship.add_observer(observer)
+        view = ObserverMock()
+        ship.add_view(view)
 
         contract = SystemMock("Uranus")
         destination = SystemMock("Jupiter")
@@ -171,60 +171,60 @@ class ShipTestCase(unittest.TestCase):
         self.assertEqual(ship.destination, contract)
 
         ship.warn_if_not_contracted(destination)
-        self.assertEqual(observer.message,
+        self.assertEqual(view.message,
                          "Warning: your contracted destination is Uranus not Jupiter.")
-        self.assertEqual(observer.priority, "red")
+        self.assertEqual(view.priority, "red")
 
     def test_check_failure_post_jump(self) -> None:
         """Test drive failure check after jump."""
         ship = ShipTestCase.ship
-        observer = ObserverMock()
-        ship.add_observer(observer)
+        view = ObserverMock()
+        ship.add_view(view)
 
         ship.fuel_quality = FuelQuality.UNREFINED
         ship.unrefined_jump_counter = 10
         ship.check_failure_post_jump()
         self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
-        self.assertEqual(observer.message, "Warning: drive failure!")
-        self.assertEqual(observer.priority, "red")
+        self.assertEqual(view.message, "Warning: drive failure!")
+        self.assertEqual(view.priority, "red")
 
     def test_check_failure_pre_jump(self) -> None:
         """Test drive failure check before jump."""
         ship = ShipTestCase.ship
-        observer = ObserverMock()
-        ship.add_observer(observer)
+        view = ObserverMock()
+        ship.add_view(view)
 
         for _ in range(144):                         # 1 in 36 chance of failure
             ship.check_failure_pre_jump("red")
         self.assertEqual(ship.repair_status, RepairStatus.BROKEN)
-        self.assertEqual(observer.message, "Warning: drive failure! Unable to jump.")
-        self.assertEqual(observer.priority, "red")
+        self.assertEqual(view.message, "Warning: drive failure! Unable to jump.")
+        self.assertEqual(view.priority, "red")
 
-    def test_add_observer(self) -> None:
-        """Test adding an observer to the Ship."""
+    def test_add_view(self) -> None:
+        """Test adding an view to the Ship."""
         ship = ShipTestCase.ship
-        observer = ObserverMock()
+        view = ObserverMock()
 
-        ship.add_observer(observer)
-        self.assertEqual(ship.observers[0], observer)
+        ship.add_view(view)
+        self.assertEqual(ship.views[0], view)
 
-    def test_message_observers(self) -> None:
-        """Test sending messages to observers."""
+    def test_message_views(self) -> None:
+        """Test sending messages to views."""
         ship = ShipTestCase.ship
-        observer = ObserverMock()
-        ship.add_observer(observer)
+        view = ObserverMock()
+        ship.add_view(view)
 
-        ship.message_observers("This is a test")
-        self.assertEqual(observer.message, "This is a test")
-        self.assertEqual(observer.priority, "")
+        ship.message_views("This is a test")
+        self.assertEqual(view.message, "This is a test")
+        self.assertEqual(view.priority, "")
 
-        ship.message_observers("This is another test", "yellow")
-        self.assertEqual(observer.message, "This is another test")
-        self.assertEqual(observer.priority, "yellow")
+        ship.message_views("This is another test", "yellow")
+        self.assertEqual(view.message, "This is another test")
+        self.assertEqual(view.priority, "yellow")
 
-        ship.message_observers("Yet another test", "red")
-        self.assertEqual(observer.message, "Yet another test")
-        self.assertEqual(observer.priority, "red")
+        ship.message_views("Yet another test", "red")
+        self.assertEqual(view.message, "Yet another test")
+        self.assertEqual(view.priority, "red")
 
     # pylint: disable=R0915
     # R0915: Too many statements (88/50)
