@@ -485,6 +485,40 @@ class Model:
         self.add_day()
         return f"Successfully sold {cargo}."
 
+    def load_freight(self) -> str:
+        """Select and load Freight onto the Ship."""
+        jump_range = self.jump_range
+        potential_destinations = self.destinations
+        destinations = self.get_destinations(potential_destinations,
+                                              jump_range, "freight shipments")
+        if not destinations:
+            return "No destinations available."
+
+        coordinate, available = self.get_available_freight(destinations)
+        if available is None:
+            return "No freight available."
+
+        destination = cast(StarSystem,
+                           self.get_system_at_coordinate(cast(Coordinate, coordinate)))
+        self.message_views(f"Freight shipments for {destination.name}")
+        self.message_views(f"{available}")
+
+        total_tonnage, selection = self.select_freight_lots(available, destination)
+
+        if total_tonnage == 0:
+            return "No freight shipments selected."
+        self.message_views(f"{total_tonnage} tons selected.")
+
+        confirmation = self.get_input('confirm', f"Load {total_tonnage} tons of freight? (y/n)? ")
+        if confirmation == 'n':
+            return "Cancelling freight selection."
+
+        for entry in selection:
+            self.remove_freight(destination, entry)
+            self.load_cargo([Freight(entry, self.get_star_system(), destination)])
+        self.add_day()
+        return f"Successfully loaded {total_tonnage} tons of Freight for {destination}."
+
     def unload_freight(self) -> str:
         """Unload Freight from the Ship and receive payment."""
         if self.destination() is None:

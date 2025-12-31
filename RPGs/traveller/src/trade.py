@@ -2,15 +2,12 @@
 
 TradeScreen - contains commands for the trade state.
 """
-from typing import Any, cast
+from typing import Any
 from src.command import Command
-from src.coordinate import Coordinate
 from src.format import BOLD_BLUE, END_FORMAT
 from src.model import Model, GuardClauseFailure
-from src.freight import Freight
 from src.play import PlayScreen
-from src.star_system import StarSystem
-from src.utilities import confirm_input, pr_list
+from src.utilities import pr_list
 
 class TradeScreen(PlayScreen):
     """Contains commands for the trade state."""
@@ -66,40 +63,10 @@ class TradeScreen(PlayScreen):
     def load_freight(self) -> None:
         """Select and load Freight onto the Ship."""
         print(f"{BOLD_BLUE}Loading freight.{END_FORMAT}")
-
-        jump_range = self.model.jump_range
-        potential_destinations = self.model.destinations
-        destinations = self.model.get_destinations(potential_destinations,
-                                              jump_range, "freight shipments")
-        if not destinations:
-            return
-
-        coordinate, available = self.model.get_available_freight(destinations)
-        if available is None:
-            return
-
-        destination = cast(StarSystem,
-                           self.model.get_system_at_coordinate(
-                               cast(Coordinate, coordinate)))
-        print(f"Freight shipments for {destination.name}")
-        print(available)
-
-        total_tonnage, selection = self.model.select_freight_lots(available, destination)
-
-        if total_tonnage == 0:
-            print("No freight shipments selected.")
-            return
-        print(f"{total_tonnage} tons selected.")
-
-        confirmation = confirm_input(f"Load {total_tonnage} tons of freight? (y/n)? ")
-        if confirmation == 'n':
-            print("Cancelling freight selection.")
-            return
-
-        for entry in selection:
-            self.model.remove_freight(destination, entry)
-            self.model.load_cargo([Freight(entry, self.model.get_star_system(), destination)])
-        self.model.add_day()
+        try:
+            print(self.model.load_freight())
+        except GuardClauseFailure as exception:
+            print(exception)
 
     def unload_freight(self) -> None:
         """Unload Freight from the Ship and receive payment."""
