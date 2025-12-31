@@ -566,6 +566,26 @@ class Model:
 
         return result
 
+    # TERMINAL ==========================================
+    def valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
+        """Validate passenger selection input."""
+        if len(tokens) != 2:
+            self.message_views("Please enter in the format: passage number (example: h 5).")
+            return None, None
+
+        passage = tokens[0]
+        if passage not in ['h', 'm', 'l']:
+            self.message_views("Please enter 'h', 'm' or 'l' for passage class.")
+            return None, None
+
+        try:
+            count = int(tokens[1])
+        except ValueError:
+            self.message_views("Please input a number.")
+            return None, None
+
+        return count, passage
+
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""

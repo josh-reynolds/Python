@@ -2,7 +2,7 @@
 
 TerminalScreen - contains commands for the terminal state.
 """
-from typing import cast, Tuple, Any, List
+from typing import cast, Tuple, Any
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
@@ -108,7 +108,7 @@ class TerminalScreen(PlayScreen):
                 break
 
             tokens = response.split()
-            count, passage = _valid_input(tokens)
+            count, passage = self.model.valid_input(tokens)
             if not count:
                 continue
 
@@ -173,22 +173,3 @@ def _sufficient_quantity(passage: str, available: int,
             return False
 
     return True
-
-def _valid_input(tokens: List[str]) -> Tuple[int | None, str | None]:
-    """Validate passenger selection input."""
-    if len(tokens) != 2:
-        print("Please enter in the format: passage number (example: h 5).")
-        return None, None
-
-    passage = tokens[0]
-    if passage not in ['h', 'm', 'l']:
-        print("Please enter 'h', 'm' or 'l' for passage class.")
-        return None, None
-
-    try:
-        count = int(tokens[1])
-    except ValueError:
-        print("Please input a number.")
-        return None, None
-
-    return count, passage
