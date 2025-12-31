@@ -5,13 +5,12 @@ PlayScreen - draws the play screen and gathers input from the player.
 import json
 from fnmatch import fnmatch
 from os import listdir
-from typing import Any, List, cast
+from typing import Any, List
 from src.command import Command
 from src.draw_map import draw_map
 from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLOW_ON_RED, HOME
 from src.model import Model
 from src.screen import Screen
-from src.star_system import StarSystem
 from src.utilities import choose_from, pr_list, pr_highlight_list
 from src.utilities import get_next_file, confirm_input
 
@@ -235,26 +234,3 @@ class PlayScreen(Screen):
             system_list.append(self.model.get_system_at_coordinate(entry))
 
         draw_map(system_list, sub_name, print_friendly)
-
-    def _get_destinations(self, potential_destinations: List[StarSystem],
-                           jump_range: int, prompt: str) -> List[StarSystem]:
-        """Return a list of all reachable destinations with Freight or Passengers."""
-        result: List[StarSystem] = []
-        if self.model.destination() is not None:
-            if self.model.destination() == self.model.get_star_system():
-                print(f"{BOLD_RED}There is still freight to be unloaded "
-                      f"on {self.model.system_name()}.{END_FORMAT}")
-                return result
-            if self.model.destination() in potential_destinations:
-                print(f"You are under contract. Only showing {prompt} for " +
-                      f"{self.model.destination_name}:\n")
-                result = [cast(StarSystem, self.model.destination())]
-            else:
-                print(f"You are under contract to {self.model.destination_name} " +
-                      "but it is not within jump range of here.")
-
-        else:
-            print(f"Available {prompt} within jump-{jump_range}:\n")
-            result = potential_destinations
-
-        return result

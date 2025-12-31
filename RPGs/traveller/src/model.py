@@ -509,6 +509,29 @@ class Model:
 
         return f"Receiving payment of {payment} for {freight_tonnage} tons shipped."
 
+    def get_destinations(self, potential_destinations: List[StarSystem],
+                         jump_range: int, prompt: str) -> List[StarSystem]:
+        """Return a list of all reachable destinations with Freight or Passengers."""
+        result: List[StarSystem] = []
+        if self.destination() is not None:
+            if self.destination() == self.get_star_system():
+                self.message_views(f"{BOLD_RED}There is still freight to be unloaded "
+                      f"on {self.system_name()}.{END_FORMAT}")
+                return result
+            if self.destination() in potential_destinations:
+                self.message_views(f"You are under contract. Only showing {prompt} for " +
+                      f"{self.destination_name}:\n")
+                result = [cast(StarSystem, self.destination())]
+            else:
+                self.message_views(f"You are under contract to {self.destination_name} " +
+                      "but it is not within jump range of here.")
+
+        else:
+            self.message_views(f"Available {prompt} within jump-{jump_range}:\n")
+            result = potential_destinations
+
+        return result
+
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""

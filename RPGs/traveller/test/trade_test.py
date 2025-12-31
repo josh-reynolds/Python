@@ -10,8 +10,7 @@ from src.star_system import StarSystem
 class TradeScreenTestCase(unittest.TestCase):
     """Test TradeScreen class."""
 
-    # pylint: disable=W0212
-    # W0212: Access to a protected member _get_freight_destinations of a client class
+    # TO_DO: should move to model_test module
     @unittest.skip("test has side effects: printing")
     def test_get_destinations(self) -> None:
         """Test getting list of freight destinations."""
@@ -21,7 +20,7 @@ class TradeScreenTestCase(unittest.TestCase):
         potential_destinations = cast(List[StarSystem],
                                       trade.model.map_hex.destinations.copy())
 
-        destinations = trade._get_destinations(potential_destinations,
+        destinations = trade.model.get_destinations(potential_destinations,
                                                1, "freight shipments")
         print(destinations)
 

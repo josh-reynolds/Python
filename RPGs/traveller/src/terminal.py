@@ -48,7 +48,7 @@ class TerminalScreen(PlayScreen):
 
         jump_range = self.model.jump_range
         potential_destinations = self.model.destinations
-        destinations = self._get_destinations(potential_destinations,
+        destinations = self.model.get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:
             return
