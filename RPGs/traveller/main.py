@@ -41,6 +41,7 @@ class Game:
 
         print(fmt + message + end)
 
+    # TO_DO: incorporate other input flavors here: quit-int, choose_from, etc.
     def get_input(self, constraint: str, prompt: str) -> str | int:
         """Get input from the player and return results to the model class."""
         if constraint == 'confirm':

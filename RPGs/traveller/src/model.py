@@ -621,18 +621,18 @@ class Model:
         hold_tonnage = self.free_cargo_space
         while True:
             if len(available) == 0:
-                print(f"No more freight available for {destination.name}.")
+                self.message_views(f"No more freight available for {destination.name}.")
                 break
 
             # can't use int input here since we allow for 'q' as well...
-            response: int | str = input("Choose a shipment by tonnage ('q' to exit): ")
+            response: int | str = self.get_input("", "Choose a shipment by tonnage ('q' to exit): ")
             if response == 'q':
                 break
 
             try:
                 response = int(response)
             except ValueError:
-                print("Please input a number.")
+                self.message_views("Please input a number.")
                 continue
 
             if response in available:
@@ -644,15 +644,17 @@ class Model:
                     selection.append(cast(int, response))
                     total_tonnage += response
                     hold_tonnage -= response
-                    print(available)
-                    print(f"Cargo space left: {hold_tonnage}")
+                    self.message_views(f"{available}")
+                    self.message_views(f"Cargo space left: {hold_tonnage}")
                 else:
-                    print(f"{BOLD_RED}That shipment will not fit in your cargo hold.{END_FORMAT}")
-                    print(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
+                    self.message_views(f"{BOLD_RED}That shipment will not " +
+                                       f"fit in your cargo hold.{END_FORMAT}")
+                    self.message_views(f"{BOLD_RED}Hold free space: {hold_tonnage}{END_FORMAT}")
             else:
-                print(f"{BOLD_RED}There are no shipments of size {response}.{END_FORMAT}")
+                self.message_views(f"{BOLD_RED}There are no shipments of " +
+                                   f"size {response}.{END_FORMAT}")
 
-        print("Done selecting shipments.")
+        self.message_views("Done selecting shipments.")
         return (total_tonnage, selection)
 
     # FINANCIALS ========================================
