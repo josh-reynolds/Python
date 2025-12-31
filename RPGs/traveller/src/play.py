@@ -122,14 +122,7 @@ class PlayScreen(Screen):
     def view_map(self) -> None:
         """View all known StarSystems."""
         print(f"{BOLD_BLUE}All known star systems:{END_FORMAT}")
-        systems = self.model.get_all_systems()
-        system_strings = []
-        highlight = ""
-        for sys in systems:
-            combined = f"{self.model.get_subsector_string(sys)} : {sys}"
-            system_strings.append(combined)
-            if sys == self.model.get_star_system():
-                highlight = combined
+        system_strings, highlight = self.model.get_system_strings()
         pr_highlight_list(system_strings, highlight, "\t<- CURRENT LOCATION")
         _ = input("\nPress ENTER key to continue.")
 

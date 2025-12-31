@@ -838,6 +838,18 @@ class Model:
         """Set the specified coordinate in the StarMap to the specified Subsector object."""
         self.star_map.subsectors[sub_coord] = sub
 
+    def get_system_strings(self) -> Tuple[List[str], str]:
+        """Return a list of strings describing all known StarSystems."""
+        systems = self.get_all_systems()
+        system_strings = []
+        highlight = ""
+        for sys in systems:
+            combined = f"{self.get_subsector_string(sys)} : {sys}"
+            system_strings.append(combined)
+            if sys == self.get_star_system():
+                highlight = combined
+        return (system_strings, highlight)
+
     # SHIP ==============================================
     def new_ship(self, ship_details: str, ship_model: str, view: Any) -> None:
         """Create a new Ship."""
