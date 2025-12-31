@@ -1041,6 +1041,15 @@ class Model:
         """Return the current contents of the Ship's cargo hold."""
         return self.ship.cargo_hold()
 
+    def passenger_manifest(self) -> str:
+        """Return a string showing all Passengers on board the Ship."""
+        return f"High passengers: {self.high_passenger_count}\n" +\
+               f"Middle passengers: {self.middle_passenger_count}\n" +\
+               f"Low passengers: {self.low_passenger_count}\n" +\
+               f"DESTINATION: {self.destination_name}\n\n" +\
+               f"Empty berths: {self.empty_passenger_berths}\n" +\
+               f"Empty low berths: {self.empty_low_berths}"
+
     def set_cargo_hold(self, contents: List[Freight | Cargo]) -> None:
         """Set the contents of the Ship's cargo hold."""
         self.ship.hold = contents

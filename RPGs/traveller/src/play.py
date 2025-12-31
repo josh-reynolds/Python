@@ -104,13 +104,7 @@ class PlayScreen(Screen):
     def passenger_manifest(self) -> None:
         """Show the Passengers booked for transport."""
         print(f"{BOLD_BLUE}Passenger manifest:{END_FORMAT}")
-
-        print(f"High passengers: {self.model.high_passenger_count}\n"
-              f"Middle passengers: {self.model.middle_passenger_count}\n"
-              f"Low passengers: {self.model.low_passenger_count}\n"
-              f"DESTINATION: {self.model.destination_name}\n\n"
-              f"Empty berths: {self.model.empty_passenger_berths}\n"
-              f"Empty low berths: {self.model.empty_low_berths}")
+        print(self.model.passenger_manifest())
         _ = input("\nPress ENTER key to continue.")
 
     def crew_roster(self) -> None:
