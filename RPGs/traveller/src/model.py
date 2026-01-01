@@ -423,23 +423,23 @@ class Model:
         for i,entry in enumerate(self.cargo):
             self.message_views(f"{i} - {entry}")
 
-        cargo = self.get_cargo_lot(self.cargo, "buy")
-        quantity = self.get_cargo_quantity("buy", cargo)
+        cargo = self.depot.get_cargo_lot(self.cargo, "buy")
+        quantity = self._get_cargo_quantity("buy", cargo)
         if quantity is None or cargo is None:
             raise GuardClauseFailure("No cargo available for purchase.")
 
-        if self.insufficient_hold_space(cargo, quantity):
+        if self.depot.insufficient_hold_space(cargo, quantity, self.free_cargo_space):
             raise GuardClauseFailure("There is not enough space available in the hold.")
 
-        cost = self.determine_price("purchase", cargo, quantity, self.trade_skill())
+        cost = self.depot.determine_price("purchase", cargo, quantity, self.trade_skill())
 
-        if self.insufficient_funds(cost):
+        if self.depot.insufficient_funds(cost, self.balance):
             raise GuardClauseFailure("You do not have enough funds for this purchase.")
 
-        if not self.confirm_transaction("purchase", cargo, quantity, cost):
+        if not self.depot.confirm_transaction("purchase", cargo, quantity, cost):
             return "Cancelling purchase."
 
-        self.remove_cargo(self.cargo, cargo, quantity)
+        self.depot.remove_cargo(self.cargo, cargo, quantity)
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.get_star_system())
@@ -458,28 +458,28 @@ class Model:
 
         for i,entry in enumerate(cargoes):
             self.message_views(f"{i} - {entry}")
-        cargo = self.get_cargo_lot(cargoes, "sell")
+        cargo = self.depot.get_cargo_lot(cargoes, "sell")
         if cargo is None:
             raise GuardClauseFailure("No cargo selected.")
 
-        if self.invalid_cargo_origin(cargo):
+        if self.depot.invalid_cargo_origin(cargo):
             raise GuardClauseFailure("You cannot sell cargo on its source world.")
 
-        broker_skill = self.get_broker()
+        broker_skill = self.depot.get_broker()
 
-        quantity = self.get_cargo_quantity("sell", cargo)
+        quantity = self._get_cargo_quantity("sell", cargo)
         if quantity is None:
             raise GuardClauseFailure("No cargo selected.")
 
-        sale_price = self.determine_price("sale", cargo, quantity,
+        sale_price = self.depot.determine_price("sale", cargo, quantity,
                                           broker_skill + self.trade_skill())
 
-        self.debit(self.broker_fee(broker_skill, sale_price), "broker fee")
+        self.debit(self.depot.broker_fee(broker_skill, sale_price), "broker fee")
 
-        if not self.confirm_transaction("sale", cargo, quantity, sale_price):
+        if not self.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return "Cancelling purchase."
 
-        self.remove_cargo(self.get_cargo_hold(), cargo, quantity)
+        self.depot.remove_cargo(self.get_cargo_hold(), cargo, quantity)
 
         self.credit(sale_price, "cargo sale")
         self.add_day()
@@ -583,7 +583,7 @@ class Model:
                            self.get_system_at_coordinate(coordinate))
         self.message_views(f"Passengers for {destination.name} (H,M,L): {available}")
 
-        selection = self.select_passengers(available, destination)
+        selection = self._select_passengers(available, destination)
 
         if selection == (0,0,0):
             return "No passengers selected."
@@ -614,7 +614,7 @@ class Model:
                 f"passengers for {destination}."
 
     # TERMINAL ==========================================
-    def valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
+    def _valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
         """Validate passenger selection input."""
         if len(tokens) != 2:
             self.message_views("Please enter in the format: passage number (example: h 5).")
@@ -635,7 +635,7 @@ class Model:
 
     # pylint: disable=R0913
     # R0913: too many arguments (6/5)
-    def sufficient_quantity(self, passage: str, available: int,
+    def _sufficient_quantity(self, passage: str, available: int,
                             capacity: int, count: int, hold: int) -> bool:
         """Test whether there are enough berths/passengers to book."""
         if available - count < 0:
@@ -656,7 +656,7 @@ class Model:
 
         return True
 
-    def select_passengers(self, available: Tuple[int, ...],
+    def _select_passengers(self, available: Tuple[int, ...],
                           destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
@@ -676,7 +676,7 @@ class Model:
                 break
 
             tokens = cast(str, response).split()
-            count, passage = self.valid_input(tokens)
+            count, passage = self._valid_input(tokens)
             if not count:
                 continue
 
@@ -686,7 +686,7 @@ class Model:
             # E1130: bad operand type for unary-: NoneType
             match passage:
                 case 'h':
-                    if not self.sufficient_quantity("high", available[0],
+                    if not self._sufficient_quantity("high", available[0],
                                                 ship_capacity[0], count, ship_hold):
                         continue
                     self.message_views(f"Adding {count} high passenger{suffix}.")
@@ -696,7 +696,7 @@ class Model:
                     ship_hold -= count
 
                 case 'm':
-                    if not self.sufficient_quantity("middle", available[1],
+                    if not self._sufficient_quantity("middle", available[1],
                                                 ship_capacity[0], count, ship_hold):
                         continue
                     self.message_views(f"Adding {count} middle passenger{suffix}.")
@@ -705,7 +705,7 @@ class Model:
                     ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
 
                 case 'l':
-                    if not self.sufficient_quantity("low", available[2],
+                    if not self._sufficient_quantity("low", available[2],
                                                 ship_capacity[1], count, ship_hold):
                         continue
                     self.message_views(f"Adding {count} low passenger{suffix}.")
@@ -733,53 +733,13 @@ class Model:
         """Return a list of Cargo available at the current StarSystem's CargoDepot."""
         return self.depot.cargo
 
-    # TO_DO: overlap with choose_from()
-    def get_cargo_lot(self, source: List[Cargo], prompt: str) -> Cargo | None:
-        """Select a Cargo lot from a list."""
-        return self.depot.get_cargo_lot(source, prompt)
-
-    def get_cargo_quantity(self, prompt: str, cargo: Cargo | None) -> int | None:
+    def _get_cargo_quantity(self, prompt: str, cargo: Cargo | None) -> int | None:
         """Get a quantify of Cargo from the player to sell or purchase."""
         if cargo:
             return self.depot.get_cargo_quantity(prompt, cargo)
         return None
 
-    # TO_DO: why is this in CargoDepot?
-    def insufficient_funds(self, cost: Credits) -> bool:
-        """Check if the player's bank balance has enough funds for a given cost."""
-        return self.depot.insufficient_funds(cost, self.balance)
-
-    def insufficient_hold_space(self, cargo: Cargo, quantity: int) -> bool:
-        """Check if a given quantity of Cargo will fit in the Ship's hold."""
-        return self.depot.insufficient_hold_space(cargo, quantity, self.free_cargo_space)
-
-    def invalid_cargo_origin(self, cargo: Cargo) -> bool:
-        """Restrict Cargo sale based on world of origin."""
-        return self.depot.invalid_cargo_origin(cargo)
-
-    def get_broker(self) -> int:
-        """Allow player to select a broker for Cargo sales."""
-        return self.depot.get_broker()
-
-    def broker_fee(self, broker_skill: int, sale_price: Credits) -> Credits:
-        """Return the broker's fee for Cargo sale."""
-        return self.depot.broker_fee(broker_skill, sale_price)
-
-    def confirm_transaction(self, prompt: str, cargo: Cargo,
-                            quantity: int, price: Credits) -> bool:
-        """Confirm a sale or purchase."""
-        return self.depot.confirm_transaction(prompt, cargo, quantity, price)
-
-    def determine_price(self, prompt: str,
-                        cargo: Cargo, quantity: int,
-                        skill: int) -> Credits:
-        """Calculate the price of a Cargo transaction."""
-        return self.depot.determine_price(prompt, cargo, quantity, skill)
-
-    # TO_DO: this overlaps with ship.unload_cargo()...
-    def remove_cargo(self, source: List, cargo: Cargo, quantity: int) -> None:
-        """Remove cargo from a storage location."""
-        self.depot.remove_cargo(source, cargo, quantity)
+    # TO_DO: scrubbed private/inlines to here...
 
     def remove_freight(self, destination: StarSystem, lot: int) -> None:
         """Remove the specified Freight lot from the destination list."""

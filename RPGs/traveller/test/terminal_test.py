@@ -31,6 +31,8 @@ class TerminalScreenTestCase(unittest.TestCase):
         # else
 
     # TO_DO: move to model_test
+    # pylint: disable=W0212
+    # W0212: access to a protected member _select_passengers of a client class
     @unittest.skip("test has side effects: printing & input")
     def test_select_passengers(self) -> None:
         """Test selection of passengers from a list."""
@@ -40,7 +42,7 @@ class TerminalScreenTestCase(unittest.TestCase):
         available = (5,5,5)
         destination = passengers.model.map_hex.destinations[0]
 
-        selection = passengers.model.select_passengers(available, destination)
+        selection = passengers.model._select_passengers(available, destination)
         print(selection)
 
         # no passengers remaining, auto-exit
