@@ -3,8 +3,6 @@
 PlayScreen - draws the play screen and gathers input from the player.
 """
 import json
-from fnmatch import fnmatch
-from os import listdir
 from typing import Any, List
 from src.command import Command
 from src.draw_map import draw_map
@@ -12,7 +10,7 @@ from src.format import BOLD_BLUE, END_FORMAT, BOLD_RED, BOLD_GREEN, CLEAR, YELLO
 from src.model import Model
 from src.screen import Screen
 from src.utilities import choose_from, pr_list, pr_highlight_list
-from src.utilities import get_next_file, confirm_input
+from src.utilities import get_next_file, confirm_overwrite
 
 class PlayScreen(Screen):
     """Draws the play screen and gathers input from the player.
@@ -172,36 +170,26 @@ class PlayScreen(Screen):
     def dump_map(self) -> None:
         """Output the map data to a file in a human-readable format."""
         print(f"{BOLD_BLUE}Dumping map data.{END_FORMAT}")
-        for file in listdir():
-            if fnmatch(file, "star_map.txt"):
-                confirmation = confirm_input("Star map file already exists. Continue (y/n)? ")
-                if confirmation == "n":
-                    return
+        if confirm_overwrite("star_map.txt"):
+            system_list = self.model.list_map()
 
-        system_list = self.model.list_map()
-
-        with open("star_map.txt", "w", encoding="utf-8") as a_file:
-            for line in system_list:
-                a_file.write(line)
+            with open("star_map.txt", "w", encoding="utf-8") as a_file:
+                for line in system_list:
+                    a_file.write(line)
 
     def dump_ledger(self) -> None:
         """Output the ledger data to a file in a human-readable format."""
         print(f"{BOLD_BLUE}Dumping ledger data.{END_FORMAT}")
-        for file in listdir():
-            if fnmatch(file, "ledger.txt"):
-                confirmation = confirm_input("Ledger file already exists. Continue (y/n)? ")
-                if confirmation == "n":
-                    return
+        if confirm_overwrite("ledger.txt"):
+            ledger = self.model.get_ledger()
+            if len(ledger) == 0:
+                print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
+                return
+            text = "\n".join(ledger) + "\n"
 
-        ledger = self.model.get_ledger()
-        if len(ledger) == 0:
-            print(f"{BOLD_RED}There are no ledger entries to write.{END_FORMAT}")
-            return
-        text = "\n".join(ledger) + "\n"
-
-        with open("ledger.txt", "w", encoding="utf-8") as a_file:
-            a_file.write("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO\n")
-            a_file.write(text)
+            with open("ledger.txt", "w", encoding="utf-8") as a_file:
+                a_file.write("DATE\t\t - DEBIT\t - CREDIT\t - BALANCE\t - SYSTEM\t - MEMO\n")
+                a_file.write(text)
 
     def draw_map(self) -> None:
         """Create and save a bitmap file of the current map."""

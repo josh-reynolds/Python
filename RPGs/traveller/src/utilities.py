@@ -26,6 +26,8 @@ get_files() - return a list of all files in the specified directory.
 
 get_next_file() - return the next file to be created in the 'saves' directory.
 
+confirm_overwrite() - ask for confimation before overwriting a_file.
+
 get_json_data() - retrieve data from a JSON file.
 
 get_tokens() - split a string into tokens, validating the expected number is received.
@@ -37,6 +39,7 @@ is_bad_deal() - assess whether a given adjustment is a bad deal.
 get_plural_suffix() - return a suffix based on number of items.
 """
 import json
+from fnmatch import fnmatch
 import re
 from os import listdir
 from os.path import isfile, join
@@ -162,6 +165,18 @@ def get_next_file(base_name: str, extension: str) -> str:
     # will still output three+ digit numbers, but
     # ordering will break
     return f"{base_name}_{highest+1:02}.{extension}"
+
+def confirm_overwrite(a_file: str) -> bool:
+    """Ask for confimation before overwriting a_file.
+
+    This only checks in the current directory.
+    """
+    for file in listdir():
+        if fnmatch(file, a_file):
+            confirmation = confirm_input(f"{a_file} already exists. Continue (y/n)? ")
+            if confirmation == "n":
+                return False
+    return True
 
 def get_json_data(filename: str) -> Dict[str, Any] | None:
     """Retrieve data from a JSON file.
