@@ -118,7 +118,7 @@ class TerminalScreen(PlayScreen):
             # E1130: bad operand type for unary-: NoneType
             match passage:
                 case 'h':
-                    if not _sufficient_quantity("high", available[0],
+                    if not self.model.sufficient_quantity("high", available[0],
                                                 ship_capacity[0], count, ship_hold):
                         continue
                     print(f"Adding {count} high passenger{suffix}.")
@@ -128,7 +128,7 @@ class TerminalScreen(PlayScreen):
                     ship_hold -= count
 
                 case 'm':
-                    if not _sufficient_quantity("middle", available[1],
+                    if not self.model.sufficient_quantity("middle", available[1],
                                                 ship_capacity[0], count, ship_hold):
                         continue
                     print(f"Adding {count} middle passenger{suffix}.")
@@ -137,7 +137,7 @@ class TerminalScreen(PlayScreen):
                     ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
 
                 case 'l':
-                    if not _sufficient_quantity("low", available[2],
+                    if not self.model.sufficient_quantity("low", available[2],
                                                 ship_capacity[1], count, ship_hold):
                         continue
                     print(f"Adding {count} low passenger{suffix}.")
@@ -152,24 +152,3 @@ class TerminalScreen(PlayScreen):
 
         print("Done selecting passengers.")
         return selection
-
-def _sufficient_quantity(passage: str, available: int,
-                         capacity: int, count: int, hold: int) -> bool:
-    """Test whether there are enough berths/passengers to book."""
-    if available - count < 0:
-        print(f"There are not enough {passage} passengers available.")
-        return False
-
-    if capacity - count < 0:
-        berths = "staterooms"
-        if passage == "low":
-            berths = "low berths"
-        print(f"There are not enough {berths} available.")
-        return False
-
-    if passage == "high":
-        if hold - count < 0:
-            print("There is not enough cargo space available.")
-            return False
-
-    return True

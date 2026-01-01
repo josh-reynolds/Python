@@ -586,6 +586,29 @@ class Model:
 
         return count, passage
 
+    # pylint: disable=R0913
+    # R0913: too many arguments (6/5)
+    def sufficient_quantity(self, passage: str, available: int,
+                            capacity: int, count: int, hold: int) -> bool:
+        """Test whether there are enough berths/passengers to book."""
+        if available - count < 0:
+            self.message_views(f"There are not enough {passage} passengers available.")
+            return False
+
+        if capacity - count < 0:
+            berths = "staterooms"
+            if passage == "low":
+                berths = "low berths"
+            self.message_views(f"There are not enough {berths} available.")
+            return False
+
+        if passage == "high":
+            if hold - count < 0:
+                self.message_views("There is not enough cargo space available.")
+                return False
+
+        return True
+
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""
