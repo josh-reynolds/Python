@@ -23,7 +23,7 @@ from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
 from src.star_map import StarMap
 from src.subsector import Subsector
-from src.utilities import die_roll
+from src.utilities import die_roll, get_plural_suffix
 
 # pylint: disable=R0904, R0902, C0302
 # R0904: too many public methods (21/20)
@@ -608,6 +608,71 @@ class Model:
                 return False
 
         return True
+
+    def select_passengers(self, available: Tuple[int, ...],
+                          destination: Hex) -> Tuple[int, ...]:
+        """Select Passengers from a list of available candidates."""
+        selection: Tuple[int, ...] = (0,0,0)
+        ship_capacity: Tuple[int, ...] = (self.empty_passenger_berths,
+                                          self.empty_low_berths)
+        ship_hold = self.free_cargo_space
+
+        while True:
+            if available == (0,0,0):
+                self.message_views(f"No more passengers available for {destination.name}.")
+                break
+
+            # can't use int input here since we allow for 'q' as well...
+            response = self.get_input("", "Choose a passenger by type (h, m, l) " +
+                                                     "and number, or q to exit): ")
+            if response == 'q':
+                break
+
+            tokens = cast(str, response).split()
+            count, passage = self.valid_input(tokens)
+            if not count:
+                continue
+
+            suffix = get_plural_suffix(count)
+
+            # pylint: disable=E1130
+            # E1130: bad operand type for unary-: NoneType
+            match passage:
+                case 'h':
+                    if not self.sufficient_quantity("high", available[0],
+                                                ship_capacity[0], count, ship_hold):
+                        continue
+                    self.message_views(f"Adding {count} high passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
+                    available = tuple(a+b for a,b in zip(available,(-count,0,0)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+                    ship_hold -= count
+
+                case 'm':
+                    if not self.sufficient_quantity("middle", available[1],
+                                                ship_capacity[0], count, ship_hold):
+                        continue
+                    self.message_views(f"Adding {count} middle passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
+                    available = tuple(a+b for a,b in zip(available,(0,-count,0)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
+
+                case 'l':
+                    if not self.sufficient_quantity("low", available[2],
+                                                ship_capacity[1], count, ship_hold):
+                        continue
+                    self.message_views(f"Adding {count} low passenger{suffix}.")
+                    selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
+                    available = tuple(a+b for a,b in zip(available,(0,0,-count)))
+                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
+
+            self.message_views("")
+            self.message_views(f"Remaining (H, M, L): {available}")
+            self.message_views(f"Selected (H, M, L): {selection}")
+            self.message_views(f"Empty ship berths (H+M, L): {ship_capacity}\n")
+
+        self.message_views("Done selecting passengers.")
+        return selection
 
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:

@@ -2,15 +2,15 @@
 
 TerminalScreen - contains commands for the terminal state.
 """
-from typing import cast, Tuple, Any
+from typing import cast, Any
 from src.baggage import Baggage
 from src.command import Command
 from src.format import BOLD_BLUE, END_FORMAT
 from src.model import Model
 from src.passengers import Passenger, Passage
 from src.play import PlayScreen
-from src.star_system import Hex, StarSystem
-from src.utilities import confirm_input, get_plural_suffix
+from src.star_system import StarSystem
+from src.utilities import confirm_input
 
 class TerminalScreen(PlayScreen):
     """Contains commands for the terminal state."""
@@ -61,7 +61,7 @@ class TerminalScreen(PlayScreen):
                            self.model.get_system_at_coordinate(coordinate))
         print(f"Passengers for {destination.name} (H,M,L): {available}")
 
-        selection = self._select_passengers(available, destination)
+        selection = self.model.select_passengers(available, destination)
 
         if selection == (0,0,0):
             print("No passengers selected.")
@@ -89,66 +89,3 @@ class TerminalScreen(PlayScreen):
         self.model.add_passengers(middle)
         self.model.add_passengers(low)
         self.model.remove_passengers_from_depot(destination, selection)
-
-    def _select_passengers(self, available: Tuple[int, ...],
-                           destination: Hex) -> Tuple[int, ...]:
-        """Select Passengers from a list of available candidates."""
-        selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.model.empty_passenger_berths,
-                                          self.model.empty_low_berths)
-        ship_hold = self.model.free_cargo_space
-
-        while True:
-            if available == (0,0,0):
-                print(f"No more passengers available for {destination.name}.")
-                break
-
-            response = input("Choose a passenger by type (h, m, l) and number, or q to exit): ")
-            if response == 'q':
-                break
-
-            tokens = response.split()
-            count, passage = self.model.valid_input(tokens)
-            if not count:
-                continue
-
-            suffix = get_plural_suffix(count)
-
-            # pylint: disable=E1130
-            # E1130: bad operand type for unary-: NoneType
-            match passage:
-                case 'h':
-                    if not self.model.sufficient_quantity("high", available[0],
-                                                ship_capacity[0], count, ship_hold):
-                        continue
-                    print(f"Adding {count} high passenger{suffix}.")
-                    selection = tuple(a+b for a,b in zip(selection,(count,0,0)))
-                    available = tuple(a+b for a,b in zip(available,(-count,0,0)))
-                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
-                    ship_hold -= count
-
-                case 'm':
-                    if not self.model.sufficient_quantity("middle", available[1],
-                                                ship_capacity[0], count, ship_hold):
-                        continue
-                    print(f"Adding {count} middle passenger{suffix}.")
-                    selection = tuple(a+b for a,b in zip(selection,(0,count,0)))
-                    available = tuple(a+b for a,b in zip(available,(0,-count,0)))
-                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(-count,0)))
-
-                case 'l':
-                    if not self.model.sufficient_quantity("low", available[2],
-                                                ship_capacity[1], count, ship_hold):
-                        continue
-                    print(f"Adding {count} low passenger{suffix}.")
-                    selection = tuple(a+b for a,b in zip(selection,(0,0,count)))
-                    available = tuple(a+b for a,b in zip(available,(0,0,-count)))
-                    ship_capacity = tuple(a+b for a,b in zip(ship_capacity,(0,-count)))
-
-            print()
-            print(f"Remaining (H, M, L): {available}")
-            print(f"Selected (H, M, L): {selection}")
-            print(f"Empty ship berths (H+M, L): {ship_capacity}\n")
-
-        print("Done selecting passengers.")
-        return selection
