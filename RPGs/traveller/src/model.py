@@ -566,6 +566,53 @@ class Model:
 
         return result
 
+    def book_passengers(self) -> str:
+        """Book passengers for travel to a destination."""
+        jump_range = self.jump_range
+        potential_destinations = self.destinations
+        destinations = self.get_destinations(potential_destinations,
+                                              jump_range, "passengers")
+        if not destinations:
+            return "No destinations available."
+
+        coordinate, available = self.get_available_passengers(destinations)
+        if available is None:
+            return "No freight available."
+
+        destination = cast(StarSystem,
+                           self.get_system_at_coordinate(coordinate))
+        self.message_views(f"Passengers for {destination.name} (H,M,L): {available}")
+
+        selection = self.select_passengers(available, destination)
+
+        if selection == (0,0,0):
+            return "No passengers selected."
+        self.message_views(f"Selected (H, M, L): {selection}")
+
+        confirmation = self.get_input('confirm', f"Book {selection} passengers? (y/n)? ")
+        if confirmation == 'n':
+            return "Cancelling passenger selection."
+
+        # TO_DO: need to consider the case where we already have passengers
+        #        Probably want to wrap passenger field access in a property...
+        high = [Passenger(Passage.HIGH, destination)
+                for _ in range(selection[Passage.HIGH.value])]
+        baggage = [Baggage(self.get_star_system(), destination)
+                   for _ in range(selection[Passage.HIGH.value])]
+        middle = [Passenger(Passage.MIDDLE, destination)
+                  for _ in range(selection[Passage.MIDDLE.value])]
+        low = [Passenger(Passage.LOW, destination)
+               for _ in range(selection[Passage.LOW.value])]
+
+        self.add_passengers(high)
+        self.load_cargo(baggage)        #type: ignore[arg-type]
+        self.add_passengers(middle)
+        self.add_passengers(low)
+        self.remove_passengers_from_depot(destination, selection)
+
+        return f"Successfully booked {self.total_passenger_count} " +\
+                f"passengers for {destination}."
+
     # TERMINAL ==========================================
     def valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
         """Validate passenger selection input."""
