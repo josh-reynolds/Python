@@ -70,30 +70,30 @@ class Model:
             raise GuardClauseFailure(f"{BOLD_RED}You are in deep space. " +\
                            f"There is no inner system to travel to.{END_FORMAT}")
 
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot travel " +\
                                       "to orbit.{END_FORMAT}")
 
-        leg_fc = self.check_fuel_level()
+        leg_fc = self._check_fuel_level()
         if not leg_fc:
             raise GuardClauseFailure("Insufficient fuel to travel in from the jump point.")
 
-        self.burn_fuel(leg_fc)
+        self._burn_fuel(leg_fc)
         self.add_day()
         self.set_location("orbit")
         return "Successfully travelled in to orbit."
 
     def outbound_to_jump(self) -> str:
         """Move from orbit to the jump point."""
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot " +\
                                      f"travel to the jump point.{END_FORMAT}")
 
-        leg_fc = self.check_fuel_level()
+        leg_fc = self._check_fuel_level()
         if not leg_fc:
             raise GuardClauseFailure("Insufficient fuel to travel out to the jump point.")
 
-        self.burn_fuel(leg_fc)
+        self._burn_fuel(leg_fc)
         self.add_day()
         self.set_location("jump")
         return "Successfully travelled out to the jump point."
@@ -104,12 +104,12 @@ class Model:
         if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
 
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
 
         result = ""
         if self.ship.destination == self.get_star_system():
-            if self.total_passenger_count > 0:
+            if self.ship.total_passenger_count > 0:
                 result += f"Passengers disembarking on {self.system_name()}.\n"
 
                 funds = Credits(sum(p.ticket_price.amount for p in \
@@ -134,7 +134,7 @@ class Model:
         if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
 
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
 
         self.set_location("wilderness")
@@ -166,12 +166,12 @@ class Model:
         # corner case - these messages assume passengers are coming
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
-        if self.total_passenger_count > 0:
-            passenger_string += f"Boarding {self.total_passenger_count} "
+        if self.ship.total_passenger_count > 0:
+            passenger_string += f"Boarding {self.ship.total_passenger_count} "
             passenger_string += f"passengers for {self._destination_name}.\n"
 
         if self.low_passenger_count > 0:
-            low_passengers = self.get_low_passengers()
+            low_passengers = self._get_low_passengers()
             for passenger in low_passengers:
                 passenger.guess_survivors(self.low_passenger_count)
 
@@ -180,7 +180,7 @@ class Model:
 
     def to_orbit(self) -> str:
         """Move from the planet surface to orbit."""
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
 
         self.set_location("orbit")
@@ -213,7 +213,7 @@ class Model:
             return "Your ship is not damaged."
 
         self.ship.repair_status = RepairStatus.REPAIRED
-        self.clean_fuel_tanks()
+        self._clean_fuel_tanks()
         self.plus_week()
         return "Your ship is fully repaired and decontaminated."
 
@@ -257,7 +257,7 @@ class Model:
 
         self.message_views(f"Charging {price} for refuelling.")
 
-        self.fill_tanks(fuel_quality)
+        self._fill_tanks(fuel_quality)
         self.financials.debit(price, "refuelling")
         return "Your ship is fully refuelled."
 
@@ -284,10 +284,10 @@ class Model:
         if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot skim fuel.")
 
-        if not self.can_maneuver():
+        if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
-        self.fill_tanks("unrefined")
+        self._fill_tanks("unrefined")
         self.add_day()
         return "Your ship is fully refuelled."
 
@@ -297,22 +297,22 @@ class Model:
         if cast(StarSystem, self.map_hex).hydrographics == 0:
             raise GuardClauseFailure("No water available on this planet.")
 
-        self.fill_tanks("unrefined")
+        self._fill_tanks("unrefined")
         self.add_day()
         return "Your ship is fully refuelled."
 
     def jump_systems_check(self) -> str:
         """Verify the Ship is ready to perform a hyperspace jump."""
-        self.check_failure_pre_jump(self.maintenance_status())
+        self.ship.check_failure_pre_jump(self.maintenance_status())
 
-        if not self.can_jump():
+        if not self._can_jump():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
 
-        if not self.sufficient_jump_fuel():
-            raise GuardClauseFailure(self.insufficient_jump_fuel_message())
+        if not self.ship.sufficient_jump_fuel():
+            raise GuardClauseFailure(self.ship.insufficient_jump_fuel_message())
 
-        if not self.sufficient_life_support():
-            raise GuardClauseFailure(self.insufficient_life_support_message())
+        if not self.ship.sufficient_life_support():
+            raise GuardClauseFailure(self.ship.insufficient_life_support_message())
 
         return "All systems ready for jump."
 
@@ -356,25 +356,25 @@ class Model:
         destination = cast(StarSystem,
                            self.get_system_at_coordinate(coordinate))
 
-        self.warn_if_not_contracted(destination)
+        self.ship.warn_if_not_contracted(destination)
 
         confirmation = self.get_input('confirm', f"Confirming jump to {destination.name} (y/n)? ")
         if confirmation == 'n':
             return "Cancelling jump."
 
-        self.check_unrefined_jump()
+        self._check_unrefined_jump()
 
         self.message_views(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
         self.message_views(self.misjump_check(coordinate))
 
         self.set_location("jump")
-        self.check_failure_post_jump()
+        self.ship.check_failure_post_jump()
         self.set_destinations()
         self.new_depot(self.views[0])     # TO_DO: clean up muddled observer nomenclature
         self.set_financials_location(destination)
         self._consume_life_support()
-        self.burn_fuel(self.jump_fuel_cost())
+        self._burn_fuel(self.ship.model.jump_fuel_cost)
         self.plus_week()
         return "Jump complete."
 
@@ -386,7 +386,7 @@ class Model:
         if not self._can_flush():
             return f"There are no facilities to flush tanks at starport {self._starport}."
 
-        self.clean_fuel_tanks()
+        self._clean_fuel_tanks()
         self.plus_week()
         return "Fuel tanks have been decontaminated."
 
@@ -443,7 +443,7 @@ class Model:
 
         purchased = Cargo(cargo.name, str(quantity), cargo.price, cargo.unit_size,
                           cargo.purchase_dms, cargo.sale_dms, self.get_star_system())
-        self.load_cargo([purchased])
+        self._load_cargo([purchased])
 
         self.financials.debit(cost, "cargo purchase")
         self.add_day()
@@ -515,7 +515,7 @@ class Model:
 
         for entry in selection:
             self.depot.freight[destination].remove(entry)
-            self.load_cargo([Freight(entry, self.get_star_system(), destination)])
+            self._load_cargo([Freight(entry, self.get_star_system(), destination)])
         self.add_day()
         return f"Successfully loaded {total_tonnage} tons of Freight for {destination}."
 
@@ -604,13 +604,13 @@ class Model:
         low = [Passenger(Passage.LOW, destination)
                for _ in range(selection[Passage.LOW.value])]
 
-        self.add_passengers(high)
-        self.load_cargo(baggage)        #type: ignore[arg-type]
-        self.add_passengers(middle)
-        self.add_passengers(low)
+        self._add_passengers(high)
+        self._load_cargo(baggage)        #type: ignore[arg-type]
+        self._add_passengers(middle)
+        self._add_passengers(low)
         self._remove_passengers_from_depot(destination, selection)
 
-        return f"Successfully booked {self.total_passenger_count} " +\
+        return f"Successfully booked {self.ship.total_passenger_count} " +\
                 f"passengers for {destination}."
 
     def recharge_life_support(self) -> None:
@@ -664,8 +664,8 @@ class Model:
                           destination: Hex) -> Tuple[int, ...]:
         """Select Passengers from a list of available candidates."""
         selection: Tuple[int, ...] = (0,0,0)
-        ship_capacity: Tuple[int, ...] = (self.empty_passenger_berths,
-                                          self.empty_low_berths)
+        ship_capacity: Tuple[int, ...] = (self.ship.empty_passenger_berths,
+                                          self.ship.empty_low_berths)
         ship_hold = self.free_cargo_space
 
         while True:
@@ -754,7 +754,7 @@ class Model:
         """Run the low passage lottery and apply results."""
         result = ""
         if self.low_passenger_count > 0:
-            low_passengers = self.get_low_passengers()
+            low_passengers = self._get_low_passengers()
             for passenger in low_passengers:
                 if die_roll(2) + passenger.endurance + self.medic_skill() < 5:
                     passenger.survived = False
@@ -1010,37 +1010,7 @@ class Model:
         """Reduce life support supplies consumed during travel."""
         self.ship.life_support_level = 0
 
-    # TO_DO: scrubbed private/inlines to ~HERE~
-
-    def warn_if_not_contracted(self, destination: StarSystem) -> None:
-        """Notify the player if the choose a different jump target while under contract."""
-        self.ship.warn_if_not_contracted(destination)
-
-    def sufficient_jump_fuel(self) -> bool:
-        """Test whether there is enough fuel to make a jump."""
-        return self.ship.sufficient_jump_fuel()
-
-    def insufficient_jump_fuel_message(self) -> str:
-        """Return message for when there is not enough fuel for a jump."""
-        return self.ship.insufficient_jump_fuel_message()
-
-    def sufficient_life_support(self) -> bool:
-        """Test whether there is enough life support for a jump."""
-        return self.ship.sufficient_life_support()
-
-    def insufficient_life_support_message(self) -> str:
-        """Return message for when there is not enough life support for a jump."""
-        return self.ship.insufficient_life_support_message()
-
-    def check_failure_pre_jump(self, maintenance_status: str) -> None:
-        """Test for drive failure before performing a hyperspace jump."""
-        self.ship.check_failure_pre_jump(maintenance_status)
-
-    def check_failure_post_jump(self) -> None:
-        """Test for drive failure after completing a hyperspace jump."""
-        self.ship.check_failure_post_jump()
-
-    def check_unrefined_jump(self) -> None:
+    def _check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
         if self.tanks_are_polluted():
             self.ship.unrefined_jump_counter += 1
@@ -1049,24 +1019,20 @@ class Model:
         """Test whether the Ship's fuel tanks have been polluted by unrefined fuel."""
         return self.ship.fuel_quality == FuelQuality.UNREFINED
 
-    def clean_fuel_tanks(self) -> None:
+    def _clean_fuel_tanks(self) -> None:
         """Decontaminate the Ship's fuel tanks."""
         self.ship.fuel_quality = FuelQuality.REFINED
         self.ship.unrefined_jump_counter = 0
 
-    def jump_fuel_cost(self) -> int:
-        """Return the amount of fuel used in one hyperspace jump."""
-        return self.ship.model.jump_fuel_cost
-
-    def leg_fuel_cost(self) -> int:
+    def _leg_fuel_cost(self) -> int:
         """Return the amount of fuel used in one leg of trip, in tons."""
         return self.ship.model.trip_fuel_cost // 2
 
-    def burn_fuel(self, amount: int) -> None:
+    def _burn_fuel(self, amount: int) -> None:
         """Reduce the fuel in the Ship's tanks by the specified amount."""
         self.ship.current_fuel -= amount
 
-    def tanks_are_full(self) -> bool:
+    def _tanks_are_full(self) -> bool:
         """Test whether the Ship's fuel tanks are full or not."""
         return self.fuel_level() == self.fuel_tank_size()
 
@@ -1075,30 +1041,30 @@ class Model:
         return self.ship.current_fuel
 
     # TO_DO: this would be better as a boolean test
-    def check_fuel_level(self) -> int | None:
+    def _check_fuel_level(self) -> int | None:
         """Verify there is sufficient fuel in the tanks to make a trip."""
-        if self.fuel_level() < self.leg_fuel_cost():
+        if self.fuel_level() < self._leg_fuel_cost():
             return None
-        return self.leg_fuel_cost()
+        return self._leg_fuel_cost()
 
     def fuel_tank_size(self) -> int:
         """Return the capacity of the Ship's fuel tanks."""
         return self.ship.model.fuel_tank
 
-    def fill_tanks(self, quality: str="refined") -> None:
+    def _fill_tanks(self, quality: str="refined") -> None:
         """Fill the Ship's fuel tanks to their full capacity."""
-        if self.tanks_are_full():
+        if self._tanks_are_full():
             raise GuardClauseFailure("Fuel tank is already full.")
 
         self.ship.current_fuel = self.fuel_tank_size()
         if quality == "unrefined":
             self.ship.fuel_quality = FuelQuality.UNREFINED
 
-    def can_maneuver(self) -> bool:
+    def _can_maneuver(self) -> bool:
         """Test whether the Ship can travel to a destination."""
         return self.ship.repair_status != RepairStatus.BROKEN
 
-    def can_jump(self) -> bool:
+    def _can_jump(self) -> bool:
         """Test whether the Ship can perform a hyperspace jump."""
         return self.ship.repair_status not in (RepairStatus.BROKEN, RepairStatus.PATCHED)
 
@@ -1116,7 +1082,7 @@ class Model:
         """Return a list of Passengers on board the Ship."""
         return self.ship.passengers
 
-    def get_low_passengers(self) -> List[Passenger]:
+    def _get_low_passengers(self) -> List[Passenger]:
         """Return a list of the Low Passengers on board the Ship."""
         return [p for p in self.get_passengers() if p.passage == Passage.LOW]
 
@@ -1124,39 +1090,14 @@ class Model:
         """Set the list of Passengers on board the Ship."""
         self.ship.passengers = passengers
 
-    def add_passengers(self, passengers: List[Passenger]) -> None:
+    def _add_passengers(self, passengers: List[Passenger]) -> None:
         """Add a list of Passengers to those present on board the Ship."""
         self.ship.passengers += passengers
-
-    @property
-    def high_passenger_count(self) -> int:
-        """Return the number of high passengers on board the Ship."""
-        return self.ship.high_passenger_count
-
-    @property
-    def middle_passenger_count(self) -> int:
-        """Return the number of middle passengers on board the Ship."""
-        return self.ship.middle_passenger_count
 
     @property
     def low_passenger_count(self) -> int:
         """Return the number of low passengers on board the Ship."""
         return self.ship.low_passenger_count
-
-    @property
-    def total_passenger_count(self) -> int:
-        """Return the total number of passengers on board the Ship."""
-        return self.ship.total_passenger_count
-
-    @property
-    def empty_low_berths(self) -> int:
-        """Return the number of unoccupied low berths on the Ship."""
-        return self.ship.empty_low_berths
-
-    @property
-    def empty_passenger_berths(self) -> int:
-        """Return the number of unoccupied passenger staterooms on the Ship."""
-        return self.ship.empty_passenger_berths
 
     def get_cargo_hold(self) -> List[Freight | Cargo]:
         """Return the current contents of the Ship's cargo hold."""
@@ -1164,21 +1105,23 @@ class Model:
 
     def passenger_manifest(self) -> str:
         """Return a string showing all Passengers on board the Ship."""
-        return f"High passengers: {self.high_passenger_count}\n" +\
-               f"Middle passengers: {self.middle_passenger_count}\n" +\
+        return f"High passengers: {self.ship.high_passenger_count}\n" +\
+               f"Middle passengers: {self.ship.middle_passenger_count}\n" +\
                f"Low passengers: {self.low_passenger_count}\n" +\
                f"DESTINATION: {self._destination_name}\n\n" +\
-               f"Empty berths: {self.empty_passenger_berths}\n" +\
-               f"Empty low berths: {self.empty_low_berths}"
+               f"Empty berths: {self.ship.empty_passenger_berths}\n" +\
+               f"Empty low berths: {self.ship.empty_low_berths}"
 
     def set_cargo_hold(self, contents: List[Freight | Cargo]) -> None:
         """Set the contents of the Ship's cargo hold."""
         self.ship.hold = contents
 
-    def load_cargo(self, cargo: List[Cargo | Freight]) -> None:
+    def _load_cargo(self, cargo: List[Cargo | Freight]) -> None:
         """Load the specified cargo into the Ship's hold."""
         for item in cargo:
             self.ship.load_cargo(item)
+
+    # TO_DO: scrubbed private/inlines to ~HERE~
 
     @property
     def free_cargo_space(self) -> int:
