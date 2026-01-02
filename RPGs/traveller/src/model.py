@@ -101,14 +101,14 @@ class Model:
     # TO_DO: should merge with wilderness()
     def land(self) -> str:
         """Move from orbit to the starport."""
-        if not self.streamlined:
+        if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
 
         if not self.can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
 
         result = ""
-        if self.destination() == self.get_star_system():
+        if self.ship.destination == self.get_star_system():
             if self.total_passenger_count > 0:
                 result += f"Passengers disembarking on {self.system_name()}.\n"
 
@@ -131,7 +131,7 @@ class Model:
 
     def wilderness(self) -> str:
         """Move from orbit to the planet's surface."""
-        if not self.streamlined:
+        if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot land.")
 
         if not self.can_maneuver():
@@ -168,7 +168,7 @@ class Model:
         # of the time, but not necessarily all the time
         if self.total_passenger_count > 0:
             passenger_string += f"Boarding {self.total_passenger_count} "
-            passenger_string += f"passengers for {self.destination_name}.\n"
+            passenger_string += f"passengers for {self._destination_name}.\n"
 
         if self.low_passenger_count > 0:
             low_passengers = self.get_low_passengers()
@@ -281,7 +281,7 @@ class Model:
             raise GuardClauseFailure("There is no gas giant in this system." +
                                      "No fuel skimming possible.")
 
-        if not self.streamlined:
+        if not self.ship.model.streamlined:
             raise GuardClauseFailure("Your ship is not streamlined and cannot skim fuel.")
 
         if not self.can_maneuver():
@@ -342,7 +342,7 @@ class Model:
         """Perform a hyperspace jump to the specified destination."""
         self.message_views(self.jump_systems_check())
 
-        jump_range = self.jump_range
+        jump_range = self.ship.model.jump_range
         self.message_views(f"Systems within jump-{jump_range}:")
         destinations = self._destinations
         for i,entry in enumerate(destinations):
@@ -373,7 +373,7 @@ class Model:
         self.set_destinations()
         self.new_depot(self.views[0])     # TO_DO: clean up muddled observer nomenclature
         self.set_financials_location(destination)
-        self.consume_life_support()
+        self._consume_life_support()
         self.burn_fuel(self.jump_fuel_cost())
         self.plus_week()
         return "Jump complete."
@@ -487,7 +487,7 @@ class Model:
 
     def load_freight(self) -> str:
         """Select and load Freight onto the Ship."""
-        jump_range = self.jump_range
+        jump_range = self.ship.model.jump_range
         potential_destinations = self._destinations
         destinations = self.get_destinations(potential_destinations,
                                               jump_range, "freight shipments")
@@ -521,18 +521,18 @@ class Model:
 
     def unload_freight(self) -> str:
         """Unload Freight from the Ship and receive payment."""
-        if self.destination() is None:
+        if self.ship.destination is None:
             raise GuardClauseFailure("You have no contracted destination.")
 
         freight = self.get_freight()
         if len(freight) == 0:
             raise GuardClauseFailure("You have no freight on board.")
 
-        if self.destination() != self.get_star_system():
+        if self.ship.destination != self.get_star_system():
             raise GuardClauseFailure(f"{BOLD_RED}You are not at the contracted " +\
                                      "destination for this freight.\n" +\
                                      "It should be unloaded at "
-                                     f"{self.destination_name}.{END_FORMAT}")
+                                     f"{self._destination_name}.{END_FORMAT}")
 
         freight_tonnage = sum(f.tonnage for f in freight)
         self.remove_all_freight()
@@ -547,17 +547,17 @@ class Model:
                          jump_range: int, prompt: str) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
-        if self.destination() is not None:
-            if self.destination() == self.get_star_system():
+        if self.ship.destination is not None:
+            if self.ship.destination == self.get_star_system():
                 self.message_views(f"{BOLD_RED}There is still freight to be unloaded "
                       f"on {self.system_name()}.{END_FORMAT}")
                 return result
-            if self.destination() in potential_destinations:
+            if self.ship.destination in potential_destinations:
                 self.message_views(f"You are under contract. Only showing {prompt} for " +
-                      f"{self.destination_name}:\n")
-                result = [cast(StarSystem, self.destination())]
+                      f"{self._destination_name}:\n")
+                result = [cast(StarSystem, self.ship.destination)]
             else:
-                self.message_views(f"You are under contract to {self.destination_name} " +
+                self.message_views(f"You are under contract to {self._destination_name} " +
                       "but it is not within jump range of here.")
 
         else:
@@ -568,7 +568,7 @@ class Model:
 
     def book_passengers(self) -> str:
         """Book passengers for travel to a destination."""
-        jump_range = self.jump_range
+        jump_range = self.ship.model.jump_range
         potential_destinations = self._destinations
         destinations = self.get_destinations(potential_destinations,
                                               jump_range, "passengers")
@@ -612,6 +612,10 @@ class Model:
 
         return f"Successfully booked {self.total_passenger_count} " +\
                 f"passengers for {destination}."
+
+    def recharge_life_support(self) -> None:
+        """Recharge the Ship's life support system."""
+        self.financials.debit(self.ship.recharge(), "life support")
 
     # TERMINAL ==========================================
     def _valid_input(self, tokens: List[str]) -> Tuple[int | None, str | None]:
@@ -910,10 +914,9 @@ class Model:
     # TO_DO: shouldn't this be a property setter?
     def set_destinations(self) -> None:
         """Determine and save the StarSystems within jump range of the current MapHex."""
+        jump_range = self.ship.model.jump_range
         self.map_hex.destinations = self.star_map.get_systems_within_range(self.coordinate,
-                                                                           self.jump_range)
-
-    # TO_DO: scrubbed private/inlines to ~HERE~
+                                                                           jump_range)
 
     # STAR MAP ==========================================
     def new_star_map(self, systems: Dict[Coordinate, Hex]) -> None:
@@ -924,7 +927,7 @@ class Model:
         """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
         return self.star_map.systems
 
-    def get_all_systems(self) -> List[StarSystem]:
+    def _get_all_systems(self) -> List[StarSystem]:
         """Return a list of all StarSystem contained in the StarMap."""
         return self.star_map.get_all_systems()
 
@@ -962,7 +965,7 @@ class Model:
 
     def get_system_strings(self) -> Tuple[List[str], str]:
         """Return a list of strings describing all known StarSystems."""
-        systems = self.get_all_systems()
+        systems = self._get_all_systems()
         system_strings = []
         highlight = ""
         for sys in systems:
@@ -992,16 +995,7 @@ class Model:
         return self.ship.model.name
 
     @property
-    def streamlined(self) -> bool:
-        """Return whether the Ship is streamlined or not."""
-        return self.ship.model.streamlined
-
-    def destination(self) -> StarSystem | None:
-        """Return the Ship's contracted destination, if any."""
-        return self.ship.destination
-
-    @property
-    def destination_name(self) -> str:
+    def _destination_name(self) -> str:
         """Return the name of the Ship's destination."""
         if self.ship.destination:
             return self.ship.destination.name
@@ -1012,18 +1006,11 @@ class Model:
         """Return the current life support level of the Ship."""
         return self.ship.life_support_level
 
-    def consume_life_support(self) -> None:
+    def _consume_life_support(self) -> None:
         """Reduce life support supplies consumed during travel."""
         self.ship.life_support_level = 0
 
-    def recharge_life_support(self) -> None:
-        """Recharge the Ship's life support system."""
-        self.financials.debit(self.ship.recharge(), "life support")
-
-    @property
-    def jump_range(self) -> int:
-        """Return the jump range of the Ship (in parsecs)."""
-        return self.ship.model.jump_range
+    # TO_DO: scrubbed private/inlines to ~HERE~
 
     def warn_if_not_contracted(self, destination: StarSystem) -> None:
         """Notify the player if the choose a different jump target while under contract."""
@@ -1180,7 +1167,7 @@ class Model:
         return f"High passengers: {self.high_passenger_count}\n" +\
                f"Middle passengers: {self.middle_passenger_count}\n" +\
                f"Low passengers: {self.low_passenger_count}\n" +\
-               f"DESTINATION: {self.destination_name}\n\n" +\
+               f"DESTINATION: {self._destination_name}\n\n" +\
                f"Empty berths: {self.empty_passenger_berths}\n" +\
                f"Empty low berths: {self.empty_low_berths}"
 
