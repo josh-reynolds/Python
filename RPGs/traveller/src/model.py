@@ -6,7 +6,7 @@ Error - base class for exceptions thrown from this module.
 
 GuardClauseFailure - thrown when a guard clause in the method did not pass.
 """
-from typing import List, Any, cast, Sequence, Dict, Tuple
+from typing import List, Any, cast, Dict, Tuple
 from src.baggage import Baggage
 from src.calendar import Calendar, modify_calendar_from
 from src.cargo import Cargo
@@ -117,15 +117,15 @@ class Model:
                 low_lottery_amount = Credits(10) * self.low_passenger_count
                 funds -= low_lottery_amount
                 result += f"Receiving {funds} in passenger fares.\n"
-                self.credit(funds, "passenger fare")
+                self.financials.credit(funds, "passenger fare")
 
-                result += self.low_lottery(low_lottery_amount)
+                result += self._low_lottery(low_lottery_amount)
 
                 self.set_passengers([])
                 self.remove_baggage()
 
         self.set_location("starport")
-        self.berthing_fee()
+        self.financials.berthing_fee(self.at_starport)
         result += f"\nLanded at the {self.system_name()} starport."""
         return result
 
@@ -258,7 +258,7 @@ class Model:
         self.message_views(f"Charging {price} for refuelling.")
 
         self.fill_tanks(fuel_quality)
-        self.debit(price, "refuelling")
+        self.financials.debit(price, "refuelling")
         return "Your ship is fully refuelled."
 
     # Book 2 p. 35
@@ -413,8 +413,8 @@ class Model:
             return "Cancelling maintenance."
 
         self.message_views(f"Performing maintenance. Charging {cost}.")
-        self.set_maintenance_date()
-        self.debit(cost, "annual maintenance")
+        self.financials.last_maintenance = self.get_current_date()
+        self.financials.debit(cost, "annual maintenance")
         self.plus_week()
         return self.repair_ship()
 
@@ -445,7 +445,7 @@ class Model:
                           cargo.purchase_dms, cargo.sale_dms, self.get_star_system())
         self.load_cargo([purchased])
 
-        self.debit(cost, "cargo purchase")
+        self.financials.debit(cost, "cargo purchase")
         self.add_day()
         return f"Successfully purchased {purchased}."
 
@@ -474,14 +474,14 @@ class Model:
         sale_price = self.depot.determine_price("sale", cargo, quantity,
                                           broker_skill + self.trade_skill())
 
-        self.debit(self.depot.broker_fee(broker_skill, sale_price), "broker fee")
+        self.financials.debit(self.depot.broker_fee(broker_skill, sale_price), "broker fee")
 
         if not self.depot.confirm_transaction("sale", cargo, quantity, sale_price):
             return "Cancelling purchase."
 
         self.depot.remove_cargo(self.get_cargo_hold(), cargo, quantity)
 
-        self.credit(sale_price, "cargo sale")
+        self.financials.credit(sale_price, "cargo sale")
         self.add_day()
         return f"Successfully sold {cargo}."
 
@@ -494,7 +494,7 @@ class Model:
         if not destinations:
             return "No destinations available."
 
-        coordinate, available = self.get_available_freight(destinations)
+        coordinate, available = self.depot.get_available_freight(destinations)
         if available is None:
             return "No freight available."
 
@@ -503,7 +503,7 @@ class Model:
         self.message_views(f"Freight shipments for {destination.name}")
         self.message_views(f"{available}")
 
-        total_tonnage, selection = self.select_freight_lots(available, destination)
+        total_tonnage, selection = self._select_freight_lots(available, destination)
 
         if total_tonnage == 0:
             return "No freight shipments selected."
@@ -514,7 +514,7 @@ class Model:
             return "Cancelling freight selection."
 
         for entry in selection:
-            self.remove_freight(destination, entry)
+            self.depot.freight[destination].remove(entry)
             self.load_cargo([Freight(entry, self.get_star_system(), destination)])
         self.add_day()
         return f"Successfully loaded {total_tonnage} tons of Freight for {destination}."
@@ -538,7 +538,7 @@ class Model:
         self.remove_all_freight()
 
         payment = Credits(1000 * freight_tonnage)
-        self.credit(payment, "freight shipment")
+        self.financials.credit(payment, "freight shipment")
         self.add_day()
 
         return f"Receiving payment of {payment} for {freight_tonnage} tons shipped."
@@ -575,7 +575,7 @@ class Model:
         if not destinations:
             return "No destinations available."
 
-        coordinate, available = self.get_available_passengers(destinations)
+        coordinate, available = self.depot.get_available_passengers(destinations)
         if available is None:
             return "No freight available."
 
@@ -608,7 +608,7 @@ class Model:
         self.load_cargo(baggage)        #type: ignore[arg-type]
         self.add_passengers(middle)
         self.add_passengers(low)
-        self.remove_passengers_from_depot(destination, selection)
+        self._remove_passengers_from_depot(destination, selection)
 
         return f"Successfully booked {self.total_passenger_count} " +\
                 f"passengers for {destination}."
@@ -739,29 +739,14 @@ class Model:
             return self.depot.get_cargo_quantity(prompt, cargo)
         return None
 
-    # TO_DO: scrubbed private/inlines to here...
-
-    def remove_freight(self, destination: StarSystem, lot: int) -> None:
-        """Remove the specified Freight lot from the destination list."""
-        self.depot.freight[destination].remove(lot)
-
-    def get_available_freight(self,
-                              destinations: Sequence[StarSystem]
-                              ) -> tuple[Coordinate | None, list[Any] | None]:
-        """Present a list of worlds and Freight shipments for the player to choose from."""
-        return self.depot.get_available_freight(destinations)
-
-    def get_available_passengers(self, destinations: Sequence[StarSystem]) -> tuple:
-        """Present a list of worlds and Passengers for the player to choose from."""
-        return self.depot.get_available_passengers(destinations)
-
-    def remove_passengers_from_depot(self, destination: StarSystem,
+    def _remove_passengers_from_depot(self, destination: StarSystem,
                                      selection: Tuple[int, ...]) -> None:
         """Remove the selection from the available passengers at the CargoDepot."""
         self.depot.passengers[destination] = tuple(a-b for a,b in
                                         zip(self.depot.passengers[destination], selection))
 
-    def low_lottery(self, low_lottery_amount) -> str:
+
+    def _low_lottery(self, low_lottery_amount) -> str:
         """Run the low passage lottery and apply results."""
         result = ""
         if self.low_passenger_count > 0:
@@ -781,11 +766,12 @@ class Model:
             if not winner:
                 result += "\nNo surviving low lottery winner. "
                 result += f"The captain is awarded {low_lottery_amount}."
-                self.credit(low_lottery_amount, "low lottery")
+                self.financials.credit(low_lottery_amount, "low lottery")
 
         return result
 
-    def select_freight_lots(self, available: List[int],
+
+    def _select_freight_lots(self, available: List[int],
                              destination: Hex) -> Tuple[int, List[int]]:
         """Select Freight lots from a list of available shipments."""
         selection: List[int] = []
@@ -842,14 +828,6 @@ class Model:
         self.financials.add_view(view)
         self.date.add_observer(self.financials)
 
-    def credit(self, amount: Credits, memo: str="") -> None:
-        """Add the specified amount to the current account balance."""
-        self.financials.credit(amount, memo)
-
-    def debit(self, amount: Credits, memo: str="") -> None:
-        """Deduct the specified amount from the current account balance."""
-        self.financials.debit(amount, memo)
-
     def get_ledger(self) -> List[str]:
         """Return the contents of the account ledger."""
         return self.financials.ledger
@@ -866,17 +844,11 @@ class Model:
         """Return the current maintenance status of the Ship."""
         return self.financials.maintenance_status(self.get_current_date())
 
-    def set_maintenance_date(self) -> None:
-        """Set the date annual maintenance was last performed to today."""
-        self.financials.last_maintenance = self.get_current_date()
-
-    def berthing_fee(self) -> None:
-        """Deduct fee for berth at a starport from the account balance."""
-        self.financials.berthing_fee(self.at_starport)
-
     def encode_financials(self) -> str:
         """Return a string encoding the current state of the Financials object."""
         return self.financials.encode()
+
+    # TO_DO: scrubbed private/inlines to ~HERE~
 
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
@@ -1045,7 +1017,7 @@ class Model:
 
     def recharge_life_support(self) -> None:
         """Recharge the Ship's life support system."""
-        self.debit(self.ship.recharge(), "life support")
+        self.financials.debit(self.ship.recharge(), "life support")
 
     @property
     def jump_range(self) -> int:
