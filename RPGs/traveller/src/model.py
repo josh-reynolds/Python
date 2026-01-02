@@ -17,7 +17,6 @@ from src.crew import Crew
 from src.financials import Financials, financials_from
 from src.format import BOLD_RED, BOLD_GREEN, END_FORMAT
 from src.freight import Freight
-from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship, RepairStatus, FuelQuality, ship_from
 from src.star_system import StarSystem, Hex, DeepSpace
@@ -79,7 +78,7 @@ class Model:
             raise GuardClauseFailure("Insufficient fuel to travel in from the jump point.")
 
         self._burn_fuel(leg_fc)
-        self.add_day()
+        self._add_day()
         self.set_location("orbit")
         return "Successfully travelled in to orbit."
 
@@ -94,7 +93,7 @@ class Model:
             raise GuardClauseFailure("Insufficient fuel to travel out to the jump point.")
 
         self._burn_fuel(leg_fc)
-        self.add_day()
+        self._add_day()
         self.set_location("jump")
         return "Successfully travelled out to the jump point."
 
@@ -122,7 +121,7 @@ class Model:
                 result += self._low_lottery(low_lottery_amount)
 
                 self.set_passengers([])
-                self.remove_baggage()
+                self._remove_baggage()
 
         self.set_location("starport")
         self.financials.berthing_fee(self._at_starport)
@@ -195,8 +194,8 @@ class Model:
         if self.ship.repair_status == RepairStatus.PATCHED:
             return "Further repairs require starport facilities."
 
-        self.add_day()
-        if die_roll(2) + self.engineering_skill() > 9:
+        self._add_day()
+        if die_roll(2) + self.ship.engineering_skill() > 9:
             self.ship.repair_status = RepairStatus.PATCHED
             return "Ship partially repaired. Visit a starport for further work."
         return "No progress today. Drives are still out of commission."
@@ -288,7 +287,7 @@ class Model:
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
         self._fill_tanks("unrefined")
-        self.add_day()
+        self._add_day()
         return "Your ship is fully refuelled."
 
     # TO_DO: is it worth restricting by location too? (wilderness)
@@ -298,7 +297,7 @@ class Model:
             raise GuardClauseFailure("No water available on this planet.")
 
         self._fill_tanks("unrefined")
-        self.add_day()
+        self._add_day()
         return "Your ship is fully refuelled."
 
     def jump_systems_check(self) -> str:
@@ -396,7 +395,7 @@ class Model:
             raise GuardClauseFailure("Annual maintenance can only be performed " +
                                      "at class A or B starports.")
 
-        cost = self.maintenance_cost()
+        cost = self.ship.maintenance_cost()
         if self.balance < cost:
             raise GuardClauseFailure("You do not have enough funds to pay for maintenance.\n"
                   f"It will cost {cost}. Your balance is {self.balance}.")
@@ -413,7 +412,7 @@ class Model:
             return "Cancelling maintenance."
 
         self.message_views(f"Performing maintenance. Charging {cost}.")
-        self.financials.last_maintenance = self.get_current_date()
+        self.financials.last_maintenance = self.date.current_date
         self.financials.debit(cost, "annual maintenance")
         self.plus_week()
         return self.repair_ship()
@@ -431,7 +430,7 @@ class Model:
         if self.depot.insufficient_hold_space(cargo, quantity, self.free_cargo_space):
             raise GuardClauseFailure("There is not enough space available in the hold.")
 
-        cost = self.depot.determine_price("purchase", cargo, quantity, self.trade_skill())
+        cost = self.depot.determine_price("purchase", cargo, quantity, self.ship.trade_skill())
 
         if self.depot.insufficient_funds(cost, self.balance):
             raise GuardClauseFailure("You do not have enough funds for this purchase.")
@@ -446,7 +445,7 @@ class Model:
         self._load_cargo([purchased])
 
         self.financials.debit(cost, "cargo purchase")
-        self.add_day()
+        self._add_day()
         return f"Successfully purchased {purchased}."
 
     def sell_cargo(self) -> str:
@@ -472,7 +471,7 @@ class Model:
             raise GuardClauseFailure("No cargo selected.")
 
         sale_price = self.depot.determine_price("sale", cargo, quantity,
-                                          broker_skill + self.trade_skill())
+                                          broker_skill + self.ship.trade_skill())
 
         self.financials.debit(self.depot.broker_fee(broker_skill, sale_price), "broker fee")
 
@@ -482,7 +481,7 @@ class Model:
         self.depot.remove_cargo(self.get_cargo_hold(), cargo, quantity)
 
         self.financials.credit(sale_price, "cargo sale")
-        self.add_day()
+        self._add_day()
         return f"Successfully sold {cargo}."
 
     def load_freight(self) -> str:
@@ -516,7 +515,7 @@ class Model:
         for entry in selection:
             self.depot.freight[destination].remove(entry)
             self._load_cargo([Freight(entry, self.get_star_system(), destination)])
-        self.add_day()
+        self._add_day()
         return f"Successfully loaded {total_tonnage} tons of Freight for {destination}."
 
     def unload_freight(self) -> str:
@@ -524,7 +523,7 @@ class Model:
         if self.ship.destination is None:
             raise GuardClauseFailure("You have no contracted destination.")
 
-        freight = self.get_freight()
+        freight = self._get_freight()
         if len(freight) == 0:
             raise GuardClauseFailure("You have no freight on board.")
 
@@ -535,11 +534,11 @@ class Model:
                                      f"{self._destination_name}.{END_FORMAT}")
 
         freight_tonnage = sum(f.tonnage for f in freight)
-        self.remove_all_freight()
+        self._remove_all_freight()
 
         payment = Credits(1000 * freight_tonnage)
         self.financials.credit(payment, "freight shipment")
-        self.add_day()
+        self._add_day()
 
         return f"Receiving payment of {payment} for {freight_tonnage} tons shipped."
 
@@ -728,7 +727,7 @@ class Model:
     # DEPOT =============================================
     def new_depot(self, view: Any) -> None:
         """Create a new CargoDepot attached to the current game state."""
-        self.depot = CargoDepot(self.get_star_system(), self.get_current_date())
+        self.depot = CargoDepot(self.get_star_system(), self.date.current_date)
         self.depot.add_view(view)
         self.depot.controls = view
 
@@ -756,7 +755,7 @@ class Model:
         if self.low_passenger_count > 0:
             low_passengers = self._get_low_passengers()
             for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.medic_skill() < 5:
+                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
                     passenger.survived = False
 
             survivors = [p for p in low_passengers if p.survived]
@@ -846,7 +845,7 @@ class Model:
 
     def maintenance_status(self) -> str:
         """Return the current maintenance status of the Ship."""
-        return self.financials.maintenance_status(self.get_current_date())
+        return self.financials.maintenance_status(self.date.current_date)
 
     def encode_financials(self) -> str:
         """Return a string encoding the current state of the Financials object."""
@@ -1121,25 +1120,23 @@ class Model:
         for item in cargo:
             self.ship.load_cargo(item)
 
-    # TO_DO: scrubbed private/inlines to ~HERE~
-
     @property
     def free_cargo_space(self) -> int:
         """Return the amount of free space in the Ship's cargo hold, in displacent tons."""
         return self.ship.free_space()
 
-    def remove_baggage(self) -> None:
+    def _remove_baggage(self) -> None:
         """Unload all Baggage from the Ship's cargo hold."""
         self.ship.hold = [item for item in self.ship.hold
                           if not isinstance(item, Baggage)]
 
-    def get_freight(self) -> List[Freight]:
+    def _get_freight(self) -> List[Freight]:
         """Return a list of all Freight in the Ship's cargo hold."""
         return [f for f in self.get_cargo_hold() if isinstance(f, Freight)]
 
     # TO_DO: also removes Baggage - should not be any on board when this
     #        method is called, but still...
-    def remove_all_freight(self) -> None:
+    def _remove_all_freight(self) -> None:
         """Unload all Freight from the Ship's cargo hold."""
         self.ship.hold = [item for item in self.ship.hold
                           if not isinstance(item, Freight)]
@@ -1148,33 +1145,13 @@ class Model:
         """Return a list of the Ship's Crew."""
         return self.ship.crew
 
-    def trade_skill(self) -> int:
-        """Return the best trade skill from the Ship's crew."""
-        return self.ship.trade_skill()
-
-    def medic_skill(self) -> int:
-        """Return the best medic skill from the Ship's crew."""
-        return self.ship.medic_skill()
-
-    def engineering_skill(self) -> int:
-        """Return the best engineering skill from the Ship's crew."""
-        return self.ship.engineering_skill()
-
-    def maintenance_cost(self) -> Credits:
-        """Return the annual maintenance cost for the Ship."""
-        return self.ship.maintenance_cost()
-
     # DATE ==============================================
-    def get_current_date(self) -> ImperialDate:
-        """Return the Calendar's current date."""
-        return self.date.current_date
-
     @property
     def date_string(self) -> str:
         """Return the current date as a string."""
         return f"{self.date}"
 
-    def add_day(self) -> None:
+    def _add_day(self) -> None:
         """Advance the Calendar by a day."""
         self.date.day += 1
 
