@@ -66,7 +66,7 @@ class Model:
     # TRANSITIONS =======================================
     def inbound_from_jump(self) -> str:
         """Move from the jump point to orbit."""
-        if self.in_deep_space():
+        if self._in_deep_space():
             raise GuardClauseFailure(f"{BOLD_RED}You are in deep space. " +\
                            f"There is no inner system to travel to.{END_FORMAT}")
 
@@ -125,7 +125,7 @@ class Model:
                 self.remove_baggage()
 
         self.set_location("starport")
-        self.financials.berthing_fee(self.at_starport)
+        self.financials.berthing_fee(self._at_starport)
         result += f"\nLanded at the {self.system_name()} starport."""
         return result
 
@@ -206,8 +206,8 @@ class Model:
     #        but that probably ought to change.
     def repair_ship(self) -> str:
         """Fully repair damage to the Ship (Starport)."""
-        if self.starport in ["D", "E", "X"]:
-            return f"No repair facilities available at starport {self.starport}"
+        if self._starport in ["D", "E", "X"]:
+            return f"No repair facilities available at starport {self._starport}"
 
         if self.ship.repair_status == RepairStatus.REPAIRED:
             return "Your ship is not damaged."
@@ -237,10 +237,10 @@ class Model:
     # ship empties its tanks every trip.
     def refuel(self) -> str:
         """Refuel the Ship."""
-        if self.starport in ('E', 'X'):
-            raise GuardClauseFailure(f"No fuel is available at starport {self.starport}.")
+        if self._starport in ('E', 'X'):
+            raise GuardClauseFailure(f"No fuel is available at starport {self._starport}.")
 
-        if self.starport not in ("A", "B"):
+        if self._starport not in ("A", "B"):
             per_ton = 100
             fuel_quality = "unrefined"
             self.message_views("Note: only unrefined fuel available at this facility.")
@@ -274,8 +274,8 @@ class Model:
     # TO_DO: is it worth restricting by location too? (jump)
     def skim(self) -> str:
         """Refuel the Ship by skimming from a gas giant planet."""
-        if not self.gas_giant:
-            if self.in_deep_space():
+        if not self._gas_giant:
+            if self._in_deep_space():
                 raise GuardClauseFailure("You are stranded in deep space." +
                                          "No fuel skimming possible.")
             raise GuardClauseFailure("There is no gas giant in this system." +
@@ -344,7 +344,7 @@ class Model:
 
         jump_range = self.jump_range
         self.message_views(f"Systems within jump-{jump_range}:")
-        destinations = self.destinations
+        destinations = self._destinations
         for i,entry in enumerate(destinations):
             self.message_views(f"{i} - {entry}")
 
@@ -383,8 +383,8 @@ class Model:
         if not self.tanks_are_polluted():
             return "Ship fuel tanks are clean. No need to flush."
 
-        if not self.can_flush():
-            return f"There are no facilities to flush tanks at starport {self.starport}."
+        if not self._can_flush():
+            return f"There are no facilities to flush tanks at starport {self._starport}."
 
         self.clean_fuel_tanks()
         self.plus_week()
@@ -392,7 +392,7 @@ class Model:
 
     def annual_maintenance(self) -> str:
         """Perform annual maintenance on the Ship."""
-        if self.no_shipyard():
+        if self._no_shipyard():
             raise GuardClauseFailure("Annual maintenance can only be performed " +
                                      "at class A or B starports.")
 
@@ -488,7 +488,7 @@ class Model:
     def load_freight(self) -> str:
         """Select and load Freight onto the Ship."""
         jump_range = self.jump_range
-        potential_destinations = self.destinations
+        potential_destinations = self._destinations
         destinations = self.get_destinations(potential_destinations,
                                               jump_range, "freight shipments")
         if not destinations:
@@ -569,7 +569,7 @@ class Model:
     def book_passengers(self) -> str:
         """Book passengers for travel to a destination."""
         jump_range = self.jump_range
-        potential_destinations = self.destinations
+        potential_destinations = self._destinations
         destinations = self.get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:
@@ -848,8 +848,6 @@ class Model:
         """Return a string encoding the current state of the Financials object."""
         return self.financials.encode()
 
-    # TO_DO: scrubbed private/inlines to ~HERE~
-
     # LOCATION ==========================================
     def set_hex(self, map_hex: Hex) -> None:
         """Change the current map hex."""
@@ -874,17 +872,17 @@ class Model:
         return self.map_hex.description()
 
     @property
-    def starport(self) -> str:
+    def _starport(self) -> str:
         """Return the classification of the current location's starport."""
         return cast(StarSystem, self.map_hex).starport
 
     @property
-    def gas_giant(self) -> bool:
+    def _gas_giant(self) -> bool:
         """Return whether the StarSystem contains a gas giant planet or not."""
         return cast(StarSystem, self.map_hex).gas_giant
 
     @property
-    def at_starport(self) -> bool:
+    def _at_starport(self) -> bool:
         """Return whether the Ship is currently berthed at the mainworld's starport."""
         return cast(StarSystem, self.map_hex).at_starport()
 
@@ -892,27 +890,30 @@ class Model:
         """Change the location within the current map hex."""
         cast(StarSystem, self.map_hex).location = location
 
-    def can_flush(self) -> bool:
+    def _can_flush(self) -> bool:
         """Test whether facilities to flush fuel tanks are present at the current location."""
-        return self.starport in ('A', 'B', 'C', 'D')
+        return self._starport in ('A', 'B', 'C', 'D')
 
-    def no_shipyard(self) -> bool:
+    def _no_shipyard(self) -> bool:
         """Test whether maintenance can be performed at the current location."""
-        return self.starport not in ('A', 'B')
+        return self._starport not in ('A', 'B')
 
-    def in_deep_space(self) -> bool:
+    def _in_deep_space(self) -> bool:
         """Test whether the Ship is currently in a DeepSpace Hex."""
         return isinstance(self.map_hex, DeepSpace)
 
     @property
-    def destinations(self) -> List[StarSystem]:
+    def _destinations(self) -> List[StarSystem]:
         """Return a list of StarSystems reachable from the current MapHex."""
         return self.map_hex.destinations.copy()
 
+    # TO_DO: shouldn't this be a property setter?
     def set_destinations(self) -> None:
         """Determine and save the StarSystems within jump range of the current MapHex."""
         self.map_hex.destinations = self.star_map.get_systems_within_range(self.coordinate,
                                                                            self.jump_range)
+
+    # TO_DO: scrubbed private/inlines to ~HERE~
 
     # STAR MAP ==========================================
     def new_star_map(self, systems: Dict[Coordinate, Hex]) -> None:
