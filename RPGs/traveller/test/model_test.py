@@ -123,3 +123,14 @@ class ModelTestCase(unittest.TestCase):
             ModelTestCase.model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel in from the jump point.")
+
+    def test_inbound_with_insufficient_fuel(self) -> None:
+        """Tests attempting to travel to inner system when there is not enough fuel in the tanks."""
+        ModelTestCase.model.map_hex = SystemMock()
+        ModelTestCase.model.ship = ShipMock()
+
+        self.assertEqual(ModelTestCase.model.fuel_level(), 0)
+        with self.assertRaises(GuardClauseFailure) as context:
+            ModelTestCase.model.inbound_from_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel in from the jump point.")
