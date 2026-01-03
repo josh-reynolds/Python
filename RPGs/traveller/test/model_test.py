@@ -1,9 +1,10 @@
 """Contains tests for the model module."""
 import unittest
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
-from test.mock import ControlsMock, DeepSpaceMock
+from test.mock import ControlsMock, DeepSpaceMock, ShipMock
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
+from src.ship import RepairStatus
 from src.utilities import BOLD_RED, END_FORMAT
 
 class ModelTestCase(unittest.TestCase):
@@ -93,8 +94,32 @@ class ModelTestCase(unittest.TestCase):
     def test_inbound_from_deep_space(self) -> None:
         """Tests attempting to travel to inner system while in Deep Space."""
         ModelTestCase.model.map_hex = DeepSpaceMock()
+
         with self.assertRaises(GuardClauseFailure) as context:
             ModelTestCase.model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          f"{BOLD_RED}You are in deep space. There is no " +\
                                  f"inner system to travel to.{END_FORMAT}")
+
+    def test_inbound_with_drive_failure(self) -> None:
+        """Tests attempting to travel to inner system when drives need repair."""
+        ModelTestCase.model.map_hex = SystemMock()
+        ModelTestCase.model.ship = ShipMock()
+
+        ModelTestCase.model.ship.repair_status = RepairStatus.BROKEN
+        with self.assertRaises(GuardClauseFailure) as context:
+            ModelTestCase.model.inbound_from_jump()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
+
+        ModelTestCase.model.ship.repair_status = RepairStatus.PATCHED
+        with self.assertRaises(GuardClauseFailure) as context:
+            ModelTestCase.model.inbound_from_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel in from the jump point.")
+
+        ModelTestCase.model.ship.repair_status = RepairStatus.REPAIRED
+        with self.assertRaises(GuardClauseFailure) as context:
+            ModelTestCase.model.inbound_from_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel in from the jump point.")

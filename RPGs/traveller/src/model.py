@@ -71,7 +71,7 @@ class Model:
 
         if not self._can_maneuver():
             raise GuardClauseFailure(f"{BOLD_RED}Drive failure. Cannot travel " +\
-                                      "to orbit.{END_FORMAT}")
+                                     f"to orbit.{END_FORMAT}")
 
         leg_fc = self._check_fuel_level()
         if not leg_fc:
