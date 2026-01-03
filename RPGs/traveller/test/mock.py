@@ -98,6 +98,7 @@ class SystemMock(StarSystem):
         self.destinations = []
         self.uwp = 7777777         #type: ignore[assignment]
         self.gas_giant = True
+        self.location = "jump"
 
     @property
     def population(self) -> int:

@@ -130,7 +130,25 @@ class ModelTestCase(unittest.TestCase):
         ModelTestCase.model.ship = ShipMock()
 
         self.assertEqual(ModelTestCase.model.fuel_level(), 0)
+
         with self.assertRaises(GuardClauseFailure) as context:
             ModelTestCase.model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel in from the jump point.")
+
+    def test_inbound_to_orbit(self) -> None:
+        """Tests successful travel from the jump point to orbit of the mainworld."""
+        ModelTestCase.model.map_hex = SystemMock()
+        ModelTestCase.model.ship = ShipMock()
+        ModelTestCase.model.ship.current_fuel = ModelTestCase.model.fuel_tank_size()
+
+        self.assertEqual(ModelTestCase.model.fuel_level(), 30)
+        self.assertEqual(ModelTestCase.model.date.current_date, ImperialDate(1, 1105))
+        self.assertEqual(ModelTestCase.model.map_hex.location, "jump")
+
+        result = ModelTestCase.model.inbound_from_jump()
+
+        self.assertEqual(ModelTestCase.model.fuel_level(), 25)
+        self.assertEqual(ModelTestCase.model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(ModelTestCase.model.map_hex.location, "orbit")
+        self.assertEqual(result, "Successfully travelled in to orbit.")
