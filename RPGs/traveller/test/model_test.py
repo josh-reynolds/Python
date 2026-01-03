@@ -1,9 +1,10 @@
 """Contains tests for the model module."""
 import unittest
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
-from test.mock import ControlsMock
+from test.mock import ControlsMock, DeepSpaceMock
 from src.imperial_date import ImperialDate
-from src.model import Model
+from src.model import Model, GuardClauseFailure
+from src.utilities import BOLD_RED, END_FORMAT
 
 class ModelTestCase(unittest.TestCase):
     """Tests Model class."""
@@ -88,3 +89,12 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(len(ModelTestCase.model.date.observers), 2)
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[0], CargoDepotMock))
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[1], FinancialsMock))
+
+    def test_inbound_from_deep_space(self) -> None:
+        """Tests attempting to travel to inner system while in Deep Space."""
+        ModelTestCase.model.map_hex = DeepSpaceMock()
+        with self.assertRaises(GuardClauseFailure) as context:
+            ModelTestCase.model.inbound_from_jump()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}You are in deep space. There is no " +\
+                                 f"inner system to travel to.{END_FORMAT}")

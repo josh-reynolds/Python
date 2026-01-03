@@ -10,7 +10,7 @@ from src.freight import Freight
 from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship
-from src.star_system import StarSystem
+from src.star_system import StarSystem, DeepSpace
 
 class CalendarMock(Calendar):
     """Mocks a Calendar for testing."""
@@ -145,6 +145,14 @@ class SystemMock(StarSystem):
     def at_starport(self) -> bool:
         """Test whether the player is at the world's starport."""
         return True
+
+
+class DeepSpaceMock(DeepSpace):
+    """Mocks a DeepSpace for testing."""
+
+    def __init__(self) -> None:
+        """Create an instance of a DeepSpaceMock."""
+        super().__init__(Coordinate(1,1,1))
 
 
 # pylint: disable=R0903
