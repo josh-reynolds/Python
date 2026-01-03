@@ -1,5 +1,6 @@
 """Contains tests for the model module."""
 import unittest
+from typing import cast
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
 from test.mock import ControlsMock, DeepSpaceMock, ShipMock
 from src.imperial_date import ImperialDate
@@ -91,64 +92,75 @@ class ModelTestCase(unittest.TestCase):
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[0], CargoDepotMock))
         self.assertTrue(isinstance(ModelTestCase.model.date.observers[1], FinancialsMock))
 
+
+class InboundFromJumpTestCase(unittest.TestCase):
+    """Tests Model.inbound_from_jump() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        InboundFromJumpTestCase.model = Model(ControlsMock([]))
+        InboundFromJumpTestCase.model.date = CalendarMock()
+        InboundFromJumpTestCase.model.map_hex = SystemMock()
+        InboundFromJumpTestCase.model.ship = ShipMock()
+
     def test_inbound_from_deep_space(self) -> None:
         """Tests attempting to travel to inner system while in Deep Space."""
-        ModelTestCase.model.map_hex = DeepSpaceMock()
+        model = InboundFromJumpTestCase.model
+        model.map_hex = DeepSpaceMock()
 
         with self.assertRaises(GuardClauseFailure) as context:
-            ModelTestCase.model.inbound_from_jump()
+            model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          f"{BOLD_RED}You are in deep space. There is no " +\
-                                 f"inner system to travel to.{END_FORMAT}")
+                         f"inner system to travel to.{END_FORMAT}")
 
     def test_inbound_with_drive_failure(self) -> None:
         """Tests attempting to travel to inner system when drives need repair."""
-        ModelTestCase.model.map_hex = SystemMock()
-        ModelTestCase.model.ship = ShipMock()
+        model = InboundFromJumpTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
 
-        ModelTestCase.model.ship.repair_status = RepairStatus.BROKEN
         with self.assertRaises(GuardClauseFailure) as context:
-            ModelTestCase.model.inbound_from_jump()
+            model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          f"{BOLD_RED}Drive failure. Cannot travel to orbit.{END_FORMAT}")
 
-        ModelTestCase.model.ship.repair_status = RepairStatus.PATCHED
+        model.ship.repair_status = RepairStatus.PATCHED
         with self.assertRaises(GuardClauseFailure) as context:
-            ModelTestCase.model.inbound_from_jump()
+            model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel in from the jump point.")
 
-        ModelTestCase.model.ship.repair_status = RepairStatus.REPAIRED
+        model.ship.repair_status = RepairStatus.REPAIRED
         with self.assertRaises(GuardClauseFailure) as context:
-            ModelTestCase.model.inbound_from_jump()
+            model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel in from the jump point.")
 
     def test_inbound_with_insufficient_fuel(self) -> None:
         """Tests attempting to travel to inner system when there is not enough fuel in the tanks."""
-        ModelTestCase.model.map_hex = SystemMock()
-        ModelTestCase.model.ship = ShipMock()
+        model = InboundFromJumpTestCase.model
 
-        self.assertEqual(ModelTestCase.model.fuel_level(), 0)
+        self.assertEqual(model.fuel_level(), 0)
 
         with self.assertRaises(GuardClauseFailure) as context:
-            ModelTestCase.model.inbound_from_jump()
+            model.inbound_from_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel in from the jump point.")
 
     def test_inbound_to_orbit(self) -> None:
         """Tests successful travel from the jump point to orbit of the mainworld."""
-        ModelTestCase.model.map_hex = SystemMock()
-        ModelTestCase.model.ship = ShipMock()
-        ModelTestCase.model.ship.current_fuel = ModelTestCase.model.fuel_tank_size()
+        model = InboundFromJumpTestCase.model
+        model.ship.current_fuel = model.fuel_tank_size()
 
-        self.assertEqual(ModelTestCase.model.fuel_level(), 30)
-        self.assertEqual(ModelTestCase.model.date.current_date, ImperialDate(1, 1105))
-        self.assertEqual(ModelTestCase.model.map_hex.location, "jump")
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "jump")
 
-        result = ModelTestCase.model.inbound_from_jump()
+        result = model.inbound_from_jump()
 
-        self.assertEqual(ModelTestCase.model.fuel_level(), 25)
-        self.assertEqual(ModelTestCase.model.date.current_date, ImperialDate(2, 1105))
-        self.assertEqual(ModelTestCase.model.map_hex.location, "orbit")
+        self.assertEqual(model.fuel_level(), 25)
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "orbit")
         self.assertEqual(result, "Successfully travelled in to orbit.")
