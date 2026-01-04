@@ -238,6 +238,8 @@ class LandTestCase(unittest.TestCase):
         """Create fixtures for testing."""
         LandTestCase.model = Model(ControlsMock([]))
         LandTestCase.model.ship = ShipMock()
+        LandTestCase.model.map_hex = SystemMock()
+        LandTestCase.model.financials = FinancialsMock()
 
     def test_unstreamlined_landing(self) -> None:
         """Tests successful travel from orbit to the jump point."""
@@ -248,3 +250,32 @@ class LandTestCase(unittest.TestCase):
             model.land()
         self.assertEqual(f"{context.exception}",
                          "Your ship is not streamlined and cannot land.")
+
+    def test_landing_with_drive_failure(self) -> None:
+        """Tests attempting to travel land when drives need repair."""
+        model = LandTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.land()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        result = model.land()
+        self.assertEqual(result, "\nLanded at the Uranus starport.")
+
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.ship.repair_status = RepairStatus.REPAIRED
+        result = model.land()
+        self.assertEqual(result, "\nLanded at the Uranus starport.")
+
+    # disembark passengers on landing
+    # don't disembark if not destination
+    # collect passenger fares
+    # run low lottery
+    # remove all passengers
+    # remove all baggage
+    # set location to starport
+    # charge berthing fee
+    # return success message
