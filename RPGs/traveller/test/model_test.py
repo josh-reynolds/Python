@@ -198,3 +198,14 @@ class OutboundToJumpTestCase(unittest.TestCase):
             model.outbound_to_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel out to the jump point.")
+
+    def test_outbound_with_insufficient_fuel(self) -> None:
+        """Tests attempting to travel to jump point when there is not enough fuel in the tanks."""
+        model = OutboundToJumpTestCase.model
+
+        self.assertEqual(model.fuel_level(), 0)
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.outbound_to_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel out to the jump point.")
