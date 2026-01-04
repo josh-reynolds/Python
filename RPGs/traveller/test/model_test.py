@@ -165,6 +165,7 @@ class InboundFromJumpTestCase(unittest.TestCase):
         self.assertEqual(cast(SystemMock, model.map_hex).location, "orbit")
         self.assertEqual(result, "Successfully travelled in to orbit.")
 
+
 class OutboundToJumpTestCase(unittest.TestCase):
     """Tests Model.outbound_from_jump() method."""
 
@@ -226,3 +227,24 @@ class OutboundToJumpTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         self.assertEqual(cast(SystemMock, model.map_hex).location, "jump")
         self.assertEqual(result, "Successfully travelled out to the jump point.")
+
+
+class LandTestCase(unittest.TestCase):
+    """Tests Model.land() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        LandTestCase.model = Model(ControlsMock([]))
+        LandTestCase.model.ship = ShipMock()
+
+    def test_unstreamlined_landing(self) -> None:
+        """Tests successful travel from orbit to the jump point."""
+        model = LandTestCase.model
+        model.ship.model.streamlined = False
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.land()
+        self.assertEqual(f"{context.exception}",
+                         "Your ship is not streamlined and cannot land.")
