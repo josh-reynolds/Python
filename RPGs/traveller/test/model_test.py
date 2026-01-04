@@ -164,3 +164,37 @@ class InboundFromJumpTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         self.assertEqual(cast(SystemMock, model.map_hex).location, "orbit")
         self.assertEqual(result, "Successfully travelled in to orbit.")
+
+class OutboundToJumpTestCase(unittest.TestCase):
+    """Tests Model.outbound_from_jump() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        OutboundToJumpTestCase.model = Model(ControlsMock([]))
+        OutboundToJumpTestCase.model.date = CalendarMock()
+        OutboundToJumpTestCase.model.map_hex = SystemMock()
+        OutboundToJumpTestCase.model.ship = ShipMock()
+
+    def test_outbound_with_drive_failure(self) -> None:
+        """Tests attempting to travel to jump point when drives need repair."""
+        model = OutboundToJumpTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.outbound_to_jump()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot travel to the jump point.{END_FORMAT}")
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.outbound_to_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel out to the jump point.")
+
+        model.ship.repair_status = RepairStatus.REPAIRED
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.outbound_to_jump()
+        self.assertEqual(f"{context.exception}",
+                         "Insufficient fuel to travel out to the jump point.")
