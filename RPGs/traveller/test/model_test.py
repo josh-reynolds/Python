@@ -209,3 +209,20 @@ class OutboundToJumpTestCase(unittest.TestCase):
             model.outbound_to_jump()
         self.assertEqual(f"{context.exception}",
                          "Insufficient fuel to travel out to the jump point.")
+
+    def test_outbound_to_orbit(self) -> None:
+        """Tests successful travel from orbit to the jump point."""
+        model = OutboundToJumpTestCase.model
+        model.ship.current_fuel = model.fuel_tank_size()
+        cast(SystemMock, model.map_hex).location = "orbit"
+
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "orbit")
+
+        result = model.outbound_to_jump()
+
+        self.assertEqual(model.fuel_level(), 25)
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "jump")
+        self.assertEqual(result, "Successfully travelled out to the jump point.")
