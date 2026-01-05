@@ -367,3 +367,25 @@ class LandTestCase(unittest.TestCase):
                                  "Receiving 990 Cr in passenger fares.\n" +
                                  "1 of 1 low passengers survived revival.\n" +
                                  "Landed at the Uranus starport.")
+
+
+class WildernessTestCase(unittest.TestCase):
+    """Tests Model.wilderness() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        WildernessTestCase.model = Model(ControlsMock([]))
+        WildernessTestCase.model.ship = ShipMock()
+        WildernessTestCase.model.map_hex = SystemMock()
+
+    def test_unstreamlined_landing(self) -> None:
+        """Tests attempting to land with an unstreamlined ship."""
+        model = WildernessTestCase.model
+        model.ship.model.streamlined = False
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.wilderness()
+        self.assertEqual(f"{context.exception}",
+                         "Your ship is not streamlined and cannot land.")
