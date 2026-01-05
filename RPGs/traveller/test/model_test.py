@@ -289,7 +289,7 @@ class LandTestCase(unittest.TestCase):
         self.assertEqual(result, "\nLanded at the Uranus starport.")
 
     # pylint: disable=W0212
-    # W0212: access to a protected member _add_day of a client class
+    # W0212: access to a protected member _add_passengers of a client class
     def test_landing_at_uncontracted_destination(self) -> None:
         """Tests successful landing with passengers for different destination."""
         model = LandTestCase.model
@@ -312,7 +312,8 @@ class LandTestCase(unittest.TestCase):
         self.assertEqual(result, "\nLanded at the Uranus starport.")
 
     # pylint: disable=W0212
-    # W0212: access to a protected member _add_day of a client class
+    # W0212: access to a protected member _add_passengers of a client class
+    # W0212: access to a protected member _load_cargo of a client class
     def test_landing_at_contracted_destination(self) -> None:
         """Tests successful landing with passengers for this destination."""
         model = LandTestCase.model
@@ -339,4 +340,30 @@ class LandTestCase(unittest.TestCase):
                                  "Receiving 10,000 Cr in passenger fares.\n" +
                                  "\nLanded at the Uranus starport.")
 
-    # run low lottery
+    # pylint: disable=W0212
+    # W0212: access to a protected member _add_passengers of a client class
+    def test_landing_with_low_passengers(self) -> None:
+        """Tests successful landing with low passengers for this destination."""
+        model = LandTestCase.model
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.financials.balance = Credits(500)
+        view = ObserverMock()
+        model.financials.add_view(view)
+        destination = SystemMock("Uranus")
+        passenger = Passenger(Passage.LOW, destination)
+        passenger.endurance = 5    # guarantee this passenger survives
+        passenger.guess = 1        # and they correctly guess the number of survivors
+        model._add_passengers([passenger])
+
+        self.assertEqual(model.ship.destination, destination)
+        self.assertEqual(model.ship.total_passenger_count, 1)
+
+        result = model.land()
+        self.assertEqual(model.ship.total_passenger_count, 0)
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
+        self.assertEqual(view.message, "Charging 100 Cr berthing fee.")
+        self.assertEqual(model.balance, Credits(1390))
+        self.assertEqual(result, "Passengers disembarking on Uranus.\n" +
+                                 "Receiving 990 Cr in passenger fares.\n" +
+                                 "1 of 1 low passengers survived revival.\n" +
+                                 "Landed at the Uranus starport.")
