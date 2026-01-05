@@ -3,6 +3,7 @@ import unittest
 from typing import cast
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
 from test.mock import ControlsMock, DeepSpaceMock, ShipMock, ObserverMock
+from src.baggage import Baggage
 from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
@@ -310,8 +311,32 @@ class LandTestCase(unittest.TestCase):
         self.assertEqual(model.balance, Credits(400))
         self.assertEqual(result, "\nLanded at the Uranus starport.")
 
-    # disembark passengers on landing
-    # collect passenger fares
+    # pylint: disable=W0212
+    # W0212: access to a protected member _add_day of a client class
+    def test_landing_at_contracted_destination(self) -> None:
+        """Tests successful landing with passengers for this destination."""
+        model = LandTestCase.model
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.financials.balance = Credits(500)
+        view = ObserverMock()
+        model.financials.add_view(view)
+        destination = SystemMock("Uranus")
+        passengers = [Passenger(Passage.HIGH, destination)]
+        model._add_passengers(passengers)
+        model._load_cargo([Baggage(SystemMock("Neptune"), destination)])
+
+        self.assertEqual(model.ship.destination, destination)
+        self.assertEqual(model.ship.total_passenger_count, 1)
+        self.assertEqual(model.free_cargo_space, 81)
+
+        result = model.land()
+        self.assertEqual(model.ship.total_passenger_count, 0)
+        self.assertEqual(model.free_cargo_space, 82)
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
+        self.assertEqual(view.message, "Charging 100 Cr berthing fee.")
+        self.assertEqual(model.balance, Credits(10400))
+        self.assertEqual(result, "Passengers disembarking on Uranus.\n" +
+                                 "Receiving 10,000 Cr in passenger fares.\n" +
+                                 "\nLanded at the Uranus starport.")
+
     # run low lottery
-    # remove all passengers
-    # remove all baggage
