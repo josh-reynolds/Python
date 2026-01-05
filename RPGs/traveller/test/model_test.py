@@ -6,6 +6,7 @@ from test.mock import ControlsMock, DeepSpaceMock, ShipMock, ObserverMock
 from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
+from src.passengers import Passenger, Passage
 from src.ship import RepairStatus
 from src.utilities import BOLD_RED, END_FORMAT
 
@@ -286,9 +287,30 @@ class LandTestCase(unittest.TestCase):
         self.assertEqual(model.balance, Credits(400))
         self.assertEqual(result, "\nLanded at the Uranus starport.")
 
+    # pylint: disable=W0212
+    # W0212: access to a protected member _add_day of a client class
+    def test_landing_at_uncontracted_destination(self) -> None:
+        """Tests successful landing with passengers for different destination."""
+        model = LandTestCase.model
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.financials.balance = Credits(500)
+        view = ObserverMock()
+        model.financials.add_view(view)
+        destination = SystemMock("Jupiter")
+        passengers = [Passenger(Passage.MIDDLE, destination)]
+        model._add_passengers(passengers)
+
+        self.assertEqual(model.ship.destination, destination)
+        self.assertEqual(model.ship.total_passenger_count, 1)
+
+        result = model.land()
+        self.assertEqual(model.ship.total_passenger_count, 1)
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
+        self.assertEqual(view.message, "Charging 100 Cr berthing fee.")
+        self.assertEqual(model.balance, Credits(400))
+        self.assertEqual(result, "\nLanded at the Uranus starport.")
 
     # disembark passengers on landing
-    # don't disembark if not destination
     # collect passenger fares
     # run low lottery
     # remove all passengers
