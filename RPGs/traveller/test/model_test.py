@@ -2,7 +2,8 @@
 import unittest
 from typing import cast
 from test.mock import SystemMock, CalendarMock, CargoDepotMock, FinancialsMock
-from test.mock import ControlsMock, DeepSpaceMock, ShipMock
+from test.mock import ControlsMock, DeepSpaceMock, ShipMock, ObserverMock
+from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
 from src.ship import RepairStatus
@@ -242,7 +243,7 @@ class LandTestCase(unittest.TestCase):
         LandTestCase.model.financials = FinancialsMock()
 
     def test_unstreamlined_landing(self) -> None:
-        """Tests successful travel from orbit to the jump point."""
+        """Tests attempting to land with an unstreamlined ship."""
         model = LandTestCase.model
         model.ship.model.streamlined = False
 
@@ -252,7 +253,7 @@ class LandTestCase(unittest.TestCase):
                          "Your ship is not streamlined and cannot land.")
 
     def test_landing_with_drive_failure(self) -> None:
-        """Tests attempting to travel land when drives need repair."""
+        """Tests attempting to land when drives need repair."""
         model = LandTestCase.model
         model.ship.repair_status = RepairStatus.BROKEN
 
@@ -270,12 +271,25 @@ class LandTestCase(unittest.TestCase):
         result = model.land()
         self.assertEqual(result, "\nLanded at the Uranus starport.")
 
+    def test_landing_with_no_passengers(self) -> None:
+        """Tests successful landing with no passengers on board."""
+        model = LandTestCase.model
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.financials.balance = Credits(500)
+        view = ObserverMock()
+        model.financials.add_view(view)
+        # NOTE: transition does not check source location, should we?
+
+        result = model.land()
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
+        self.assertEqual(view.message, "Charging 100 Cr berthing fee.")
+        self.assertEqual(model.balance, Credits(400))
+        self.assertEqual(result, "\nLanded at the Uranus starport.")
+
+
     # disembark passengers on landing
     # don't disembark if not destination
     # collect passenger fares
     # run low lottery
     # remove all passengers
     # remove all baggage
-    # set location to starport
-    # charge berthing fee
-    # return success message
