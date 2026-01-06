@@ -296,7 +296,7 @@ class WildernessTestCase(unittest.TestCase):
         WildernessTestCase.model.map_hex = SystemMock()
 
     def test_unstreamlined_landing(self) -> None:
-        """Tests attempting to land with an unstreamlined ship."""
+        """Tests attempting to land in the wilderness with an unstreamlined ship."""
         model = WildernessTestCase.model
         model.ship.model.streamlined = False
 
@@ -304,3 +304,22 @@ class WildernessTestCase(unittest.TestCase):
             model.wilderness()
         self.assertEqual(f"{context.exception}",
                          "Your ship is not streamlined and cannot land.")
+
+    def test_landing_with_drive_failure(self) -> None:
+        """Tests attempting to land in the wilderness when drives need repair."""
+        model = WildernessTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.wilderness()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot land.{END_FORMAT}")
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        result = model.wilderness()
+        self.assertEqual(result, "\nLanded on the surface of Uranus.")
+
+        cast(SystemMock, model.map_hex).location = "orbit"
+        model.ship.repair_status = RepairStatus.REPAIRED
+        result = model.wilderness()
+        self.assertEqual(result, "\nLanded on the surface of Uranus.")
