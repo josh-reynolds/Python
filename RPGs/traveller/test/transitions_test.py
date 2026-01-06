@@ -331,6 +331,7 @@ class WildernessTestCase(unittest.TestCase):
         self.assertEqual(result, "\nLanded on the surface of Uranus.")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "wilderness")
 
+
 class ToDepotTestCase(unittest.TestCase):
     """Tests Model.to_depot() method."""
 
@@ -347,3 +348,21 @@ class ToDepotTestCase(unittest.TestCase):
         result = model.to_depot()
         self.assertEqual(result, "Entered the Uranus cargo depot.")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "trade")
+
+
+class ToTerminalTestCase(unittest.TestCase):
+    """Tests Model.to_terminal() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        ToTerminalTestCase.model = Model(ControlsMock([]))
+        ToTerminalTestCase.model.map_hex = SystemMock()
+
+    def test_to_depot(self) -> None:
+        """Tests successfully moving to the trade depot."""
+        model = ToTerminalTestCase.model
+        result = model.to_terminal()
+        self.assertEqual(result, "Entered the Uranus passenger terminal.")
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "terminal")
