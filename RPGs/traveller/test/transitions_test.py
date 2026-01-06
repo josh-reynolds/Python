@@ -366,3 +366,21 @@ class ToTerminalTestCase(unittest.TestCase):
         result = model.to_terminal()
         self.assertEqual(result, "Entered the Uranus passenger terminal.")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "terminal")
+
+
+class ToStarportTestCase(unittest.TestCase):
+    """Tests Model.to_starport() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        ToStarportTestCase.model = Model(ControlsMock([]))
+        ToStarportTestCase.model.map_hex = SystemMock()
+
+    def test_to_depot(self) -> None:
+        """Tests successfully moving to the trade depot."""
+        model = ToStarportTestCase.model
+        result = model.to_starport()
+        self.assertEqual(result, "Entered the Uranus starport.")
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
