@@ -323,3 +323,10 @@ class WildernessTestCase(unittest.TestCase):
         model.ship.repair_status = RepairStatus.REPAIRED
         result = model.wilderness()
         self.assertEqual(result, "\nLanded on the surface of Uranus.")
+
+    def test_wilderness_landing(self) -> None:
+        """Tests a successful wilderness landing."""
+        model = WildernessTestCase.model
+        result = model.wilderness()
+        self.assertEqual(result, "\nLanded on the surface of Uranus.")
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "wilderness")
