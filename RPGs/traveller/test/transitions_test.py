@@ -384,3 +384,34 @@ class ToStarportTestCase(unittest.TestCase):
         result = model.to_starport()
         self.assertEqual(result, "Entered the Uranus starport.")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
+
+class LiftoffTestCase(unittest.TestCase):
+    """Tests Model.liftoff() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        LiftoffTestCase.model = Model(ControlsMock([]))
+        LiftoffTestCase.model.ship = ShipMock()
+        LiftoffTestCase.model.map_hex = SystemMock()
+
+    def test_liftoff_with_drive_failure(self) -> None:
+        """Tests attempting to lift off from the starport when drives need repair."""
+        model = LiftoffTestCase.model
+        result = model.to_starport()
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.liftoff()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        result = model.liftoff()
+        self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
+
+        cast(SystemMock, model.map_hex).location = "starport"
+        model.ship.repair_status = RepairStatus.REPAIRED
+        result = model.liftoff()
+        self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
