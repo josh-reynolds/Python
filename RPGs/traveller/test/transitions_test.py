@@ -415,3 +415,16 @@ class LiftoffTestCase(unittest.TestCase):
         model.ship.repair_status = RepairStatus.REPAIRED
         result = model.liftoff()
         self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
+
+    def test_liftoff_with_no_passengers(self) -> None:
+        """Tests successful lift off from the starport with no booked passengers."""
+        model = LiftoffTestCase.model
+        result = model.to_starport()
+
+        self.assertEqual(model.ship.total_passenger_count, 0)
+
+        result = model.liftoff()
+        self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
+
+    # with passengers
+    # low passengers
