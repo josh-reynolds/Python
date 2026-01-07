@@ -449,4 +449,19 @@ class LiftoffTestCase(unittest.TestCase):
         self.assertEqual(result, "Boarding 2 passengers for Jupiter." +
                                  "\nSuccessfully lifted off to orbit from Uranus.")
 
-    # low passengers
+    # pylint: disable=W0212
+    # W0212: access to a protected member _add_passengers of a client class
+    def test_liftoff_with_low_passengers(self) -> None:
+        """Tests successful lift off from the starport with booked low passengers."""
+        model = LiftoffTestCase.model
+        destination = SystemMock("Jupiter")
+        passengers = [Passenger(Passage.LOW, destination)]
+        model._add_passengers(passengers)
+
+        self.assertEqual(model.ship.total_passenger_count, 1)
+        self.assertEqual(passengers[0].guess, None)
+
+        result = model.liftoff()
+        self.assertEqual(result, "Boarding 1 passenger for Jupiter." +
+                                 "\nSuccessfully lifted off to orbit from Uranus.")
+        self.assertNotEqual(passengers[0].guess, None)

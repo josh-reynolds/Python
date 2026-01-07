@@ -64,6 +64,8 @@ class Passenger:
         return NotImplemented
 
     # TO_DO: should be restricted to low passengers only
+    # TO_DO: wouldn't the passenger always guess they themselves survive? So
+    #        the lower bound should be 1, right?
     def guess_survivors(self, total: int) -> None:
         """Guess the number of low passage survivors."""
         self.guess = randint(0, total)
