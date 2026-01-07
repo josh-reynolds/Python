@@ -478,21 +478,21 @@ class ToOrbitTestCase(unittest.TestCase):
         ToOrbitTestCase.model.ship = ShipMock()
         ToOrbitTestCase.model.map_hex = SystemMock()
 
-    def test_liftoff_with_drive_failure(self) -> None:
+    def test_to_orbit_with_drive_failure(self) -> None:
         """Tests attempting to lift off from the wilderness when drives need repair."""
         model = ToOrbitTestCase.model
         model.ship.repair_status = RepairStatus.BROKEN
 
         with self.assertRaises(GuardClauseFailure) as context:
-            model.liftoff()
+            model.to_orbit()
         self.assertEqual(f"{context.exception}",
                          f"{BOLD_RED}Drive failure. Cannot lift off.{END_FORMAT}")
 
         model.ship.repair_status = RepairStatus.PATCHED
-        result = model.liftoff()
+        result = model.to_orbit()
         self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
 
         cast(SystemMock, model.map_hex).location = "starport"
         model.ship.repair_status = RepairStatus.REPAIRED
-        result = model.liftoff()
+        result = model.to_orbit()
         self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
