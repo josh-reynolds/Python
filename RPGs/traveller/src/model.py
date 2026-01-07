@@ -166,8 +166,13 @@ class Model:
         # from the current world, which should be true most
         # of the time, but not necessarily all the time
         if self.ship.total_passenger_count > 0:
+            if self.ship.total_passenger_count > 1:
+                suffix = "s"
+            else:
+                suffix = ""
+
             passenger_string += f"Boarding {self.ship.total_passenger_count} "
-            passenger_string += f"passengers for {self._destination_name}.\n"
+            passenger_string += f"passenger{suffix} for {self._destination_name}.\n"
 
         if self.low_passenger_count > 0:
             low_passengers = self._get_low_passengers()

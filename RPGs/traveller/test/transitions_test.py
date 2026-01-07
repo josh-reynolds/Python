@@ -385,6 +385,7 @@ class ToStarportTestCase(unittest.TestCase):
         self.assertEqual(result, "Entered the Uranus starport.")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "starport")
 
+
 class LiftoffTestCase(unittest.TestCase):
     """Tests Model.liftoff() method."""
 
@@ -399,7 +400,6 @@ class LiftoffTestCase(unittest.TestCase):
     def test_liftoff_with_drive_failure(self) -> None:
         """Tests attempting to lift off from the starport when drives need repair."""
         model = LiftoffTestCase.model
-        result = model.to_starport()
         model.ship.repair_status = RepairStatus.BROKEN
 
         with self.assertRaises(GuardClauseFailure) as context:
@@ -419,12 +419,34 @@ class LiftoffTestCase(unittest.TestCase):
     def test_liftoff_with_no_passengers(self) -> None:
         """Tests successful lift off from the starport with no booked passengers."""
         model = LiftoffTestCase.model
-        result = model.to_starport()
 
         self.assertEqual(model.ship.total_passenger_count, 0)
 
         result = model.liftoff()
         self.assertEqual(result, "Successfully lifted off to orbit from Uranus.")
 
-    # with passengers
+    # pylint: disable=W0212
+    # W0212: access to a protected member _add_passengers of a client class
+    def test_liftoff_with_passengers(self) -> None:
+        """Tests successful lift off from the starport with booked passengers."""
+        model = LiftoffTestCase.model
+        destination = SystemMock("Jupiter")
+        passengers = [Passenger(Passage.MIDDLE, destination)]
+        model._add_passengers(passengers)
+
+        self.assertEqual(model.ship.total_passenger_count, 1)
+
+        result = model.liftoff()
+        self.assertEqual(result, "Boarding 1 passenger for Jupiter." +
+                                 "\nSuccessfully lifted off to orbit from Uranus.")
+
+        passengers = [Passenger(Passage.MIDDLE, destination)]
+        model._add_passengers(passengers)
+
+        self.assertEqual(model.ship.total_passenger_count, 2)
+
+        result = model.liftoff()
+        self.assertEqual(result, "Boarding 2 passengers for Jupiter." +
+                                 "\nSuccessfully lifted off to orbit from Uranus.")
+
     # low passengers
