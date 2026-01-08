@@ -39,11 +39,28 @@ class DamageControlTestCase(unittest.TestCase):
         """Tests successful damage control."""
         model = DamageControlTestCase.model
         model.ship.repair_status = RepairStatus.BROKEN
-        model.ship.crew[0].engineer_skill = 8        # guarantee the repair succeeds
+        for c in model.ship.crew:
+            c.engineer_skill = 8                     # guarantee the repair succeeds
 
         self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
 
         result = model.damage_control()
 
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        model.ship.repair_status = RepairStatus.PATCHED
         self.assertEqual(result, "Ship partially repaired. Visit a starport for further work.")
+
+    def test_damage_control_failure(self) -> None:
+        """Tests failed damage control."""
+        model = DamageControlTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+        for c in model.ship.crew:
+            c.engineer_skill = -4                     # guarantee the repair fails
+
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.damage_control()
+
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        model.ship.repair_status = RepairStatus.PATCHED
+        self.assertEqual(result, "No progress today. Drives are still out of commission.")
