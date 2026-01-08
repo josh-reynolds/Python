@@ -23,3 +23,12 @@ class DamageControlTestCase(unittest.TestCase):
         result = model.damage_control()
 
         self.assertEqual(result, "Your ship is not damaged.")
+
+    def test_damage_control_with_patched_ship(self) -> None:
+        """Tests attempting to perform damage control when the ship is partially repaired."""
+        model = DamageControlTestCase.model
+        model.ship.repair_status = RepairStatus.PATCHED
+
+        result = model.damage_control()
+
+        self.assertEqual(result, "Further repairs require starport facilities.")
