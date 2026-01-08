@@ -1,6 +1,7 @@
 """Contains tests for game procedures."""
 import unittest
-from test.mock import ControlsMock, ShipMock, CalendarMock
+from typing import cast
+from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
 from src.imperial_date import ImperialDate
 from src.model import Model
 from src.ship import RepairStatus
@@ -39,8 +40,8 @@ class DamageControlTestCase(unittest.TestCase):
         """Tests successful damage control."""
         model = DamageControlTestCase.model
         model.ship.repair_status = RepairStatus.BROKEN
-        for c in model.ship.crew:
-            c.engineer_skill = 8                     # guarantee the repair succeeds
+        for crewmember in model.ship.crew:
+            crewmember.engineer_skill = 8                     # guarantee the repair succeeds
 
         self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
 
@@ -54,8 +55,8 @@ class DamageControlTestCase(unittest.TestCase):
         """Tests failed damage control."""
         model = DamageControlTestCase.model
         model.ship.repair_status = RepairStatus.BROKEN
-        for c in model.ship.crew:
-            c.engineer_skill = -4                     # guarantee the repair fails
+        for crewmember in model.ship.crew:
+            crewmember.engineer_skill = -4                     # guarantee the repair fails
 
         self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
 
@@ -64,3 +65,32 @@ class DamageControlTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         model.ship.repair_status = RepairStatus.PATCHED
         self.assertEqual(result, "No progress today. Drives are still out of commission.")
+
+class RepairShipTestCase(unittest.TestCase):
+    """Tests Model.repair_ship() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        RepairShipTestCase.model = Model(ControlsMock([]))
+        RepairShipTestCase.model.ship = ShipMock()
+        RepairShipTestCase.model.map_hex = SystemMock()
+
+    # pylint: disable=W0212
+    # W0212: access to a protected member _starport of a client class
+    def test_repair_with_no_facilities(self) -> None:
+        """Tests attempting to perform repairs at a low-grade starport."""
+        model = RepairShipTestCase.model
+
+        cast(SystemMock, model.map_hex)._starport = "D"
+        result = model.repair_ship()
+        self.assertEqual(result, "No repair facilities available at starport D.")
+
+        cast(SystemMock, model.map_hex)._starport = "E"
+        result = model.repair_ship()
+        self.assertEqual(result, "No repair facilities available at starport E.")
+
+        cast(SystemMock, model.map_hex)._starport = "X"
+        result = model.repair_ship()
+        self.assertEqual(result, "No repair facilities available at starport X.")

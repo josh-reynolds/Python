@@ -99,6 +99,12 @@ class SystemMock(StarSystem):
         self.uwp = 7777777         #type: ignore[assignment]
         self.gas_giant = True
         self.location = "jump"
+        self._starport = "A"
+
+    @property
+    def starport(self) -> str:
+        """Return an overriden UWP starport value."""
+        return self._starport
 
     @property
     def population(self) -> int:

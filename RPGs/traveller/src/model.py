@@ -211,7 +211,7 @@ class Model:
     def repair_ship(self) -> str:
         """Fully repair damage to the Ship (Starport)."""
         if self._starport in ["D", "E", "X"]:
-            return f"No repair facilities available at starport {self._starport}"
+            return f"No repair facilities available at starport {self._starport}."
 
         if self.ship.repair_status == RepairStatus.REPAIRED:
             return "Your ship is not damaged."
