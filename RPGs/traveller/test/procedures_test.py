@@ -4,7 +4,7 @@ from typing import cast
 from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
 from src.imperial_date import ImperialDate
 from src.model import Model
-from src.ship import RepairStatus
+from src.ship import RepairStatus, FuelQuality
 
 class DamageControlTestCase(unittest.TestCase):
     """Tests Model.damage_control() method."""
@@ -121,4 +121,15 @@ class RepairShipTestCase(unittest.TestCase):
         self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
         self.assertEqual(model.date.current_date, ImperialDate(15, 1105))
 
-    # unrefined fuel
+    def test_repair_with_polluted_tanks(self) -> None:
+        """Tests successful repairs when fuel tanks are polluted."""
+        model = RepairShipTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+        model.ship.fuel_quality = FuelQuality.UNREFINED
+
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.repair_ship()
+        self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
+        self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
