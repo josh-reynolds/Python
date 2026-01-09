@@ -94,3 +94,12 @@ class RepairShipTestCase(unittest.TestCase):
         cast(SystemMock, model.map_hex)._starport = "X"
         result = model.repair_ship()
         self.assertEqual(result, "No repair facilities available at starport X.")
+
+    def test_repair_with_repaired_ship(self) -> None:
+        """Tests attempting to perform repairs when ship is not damaged."""
+        model = RepairShipTestCase.model
+
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
+
+        result = model.repair_ship()
+        self.assertEqual(result, "Your ship is not damaged.")
