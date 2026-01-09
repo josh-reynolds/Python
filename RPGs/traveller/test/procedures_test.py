@@ -179,7 +179,7 @@ class RefuelTestCase(unittest.TestCase):
         model = RefuelTestCase.model
         view = ObserverMock()
         model.views = [view]
-        model.controls = ControlsMock(['y', 'n', 'n'])
+        model.controls = ControlsMock(['y', 'y', 'y', 'n', 'n'])
         model.financials.balance = Credits(5000)
 
         self.assertEqual(model.fuel_level(), 0)
@@ -209,8 +209,25 @@ class RefuelTestCase(unittest.TestCase):
                          "1\t - 3,000 Cr\t - \t\t - 2,000 Cr\t - Uranus\t - refuelling")
         self.assertEqual(result, "Your ship is fully refuelled.")
 
-        # low grade starport - no fuel
-        # medium grade starport - unrefined fuel
+        cast(SystemMock, model.map_hex)._starport = "D"
+        model.ship.current_fuel = 20
+        model.ship.fuel_quality = FuelQuality.REFINED
+        result = model.refuel()
+        self.assertEqual(view.message, "Charging 1,000 Cr for refuelling.")
+        self.assertEqual(model.controls.invocations, 4)
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.UNREFINED)
+        self.assertEqual(model.balance, Credits(1000))
+        self.assertEqual(len(model.financials.ledger), 2)
+        self.assertEqual(model.financials.ledger[1],
+                         "1\t - 1,000 Cr\t - \t\t - 1,000 Cr\t - Uranus\t - refuelling")
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.refuel()
+        self.assertEqual(f"{context.exception}",
+                         "Fuel tank is already full.")
+
         # high grade starport - refined fuel
         # empty tanks
         # partial tanks
