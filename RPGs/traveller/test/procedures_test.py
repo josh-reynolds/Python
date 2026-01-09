@@ -76,6 +76,7 @@ class RepairShipTestCase(unittest.TestCase):
         RepairShipTestCase.model = Model(ControlsMock([]))
         RepairShipTestCase.model.ship = ShipMock()
         RepairShipTestCase.model.map_hex = SystemMock()
+        RepairShipTestCase.model.date = CalendarMock()
 
     # pylint: disable=W0212
     # W0212: access to a protected member _starport of a client class
@@ -103,3 +104,21 @@ class RepairShipTestCase(unittest.TestCase):
 
         result = model.repair_ship()
         self.assertEqual(result, "Your ship is not damaged.")
+
+    def test_repair_with_damaged_ship(self) -> None:
+        """Tests successful repairs when ship is damaged."""
+        model = RepairShipTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.repair_ship()
+        self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
+        self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        result = model.repair_ship()
+        self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
+        self.assertEqual(model.date.current_date, ImperialDate(15, 1105))
+
+    # unrefined fuel
