@@ -3889,6 +3889,8 @@
 
 ~HERE~
 
+#  * [    ] Earliest Model methods used strings for failure cases rather than 
+#           GuardClauseFailure - scrub and fix
 #  * [    ] Consider adding starting state guard clause to transition methods (why not
 #           all model commands - Transitions, Procedures, Queries?)
 #  * [    ] message_observers()/on_notify() protocol should accept (and print) lists

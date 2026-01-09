@@ -3,7 +3,7 @@ import unittest
 from typing import cast
 from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
 from src.imperial_date import ImperialDate
-from src.model import Model
+from src.model import Model, GuardClauseFailure
 from src.ship import RepairStatus, FuelQuality
 
 class DamageControlTestCase(unittest.TestCase):
@@ -66,6 +66,7 @@ class DamageControlTestCase(unittest.TestCase):
         model.ship.repair_status = RepairStatus.PATCHED
         self.assertEqual(result, "No progress today. Drives are still out of commission.")
 
+
 class RepairShipTestCase(unittest.TestCase):
     """Tests Model.repair_ship() method."""
 
@@ -78,6 +79,7 @@ class RepairShipTestCase(unittest.TestCase):
         RepairShipTestCase.model.map_hex = SystemMock()
         RepairShipTestCase.model.date = CalendarMock()
 
+    # TO_DO: should shift the failure cases here to use GuardClauseFailure
     # pylint: disable=W0212
     # W0212: access to a protected member _starport of a client class
     def test_repair_with_no_facilities(self) -> None:
@@ -115,11 +117,13 @@ class RepairShipTestCase(unittest.TestCase):
         result = model.repair_ship()
         self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
         self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
 
         model.ship.repair_status = RepairStatus.PATCHED
         result = model.repair_ship()
         self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
         self.assertEqual(model.date.current_date, ImperialDate(15, 1105))
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
 
     def test_repair_with_polluted_tanks(self) -> None:
         """Tests successful repairs when fuel tanks are polluted."""
@@ -133,3 +137,34 @@ class RepairShipTestCase(unittest.TestCase):
         self.assertEqual(result, "Your ship is fully repaired and decontaminated.")
         self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
         self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
+
+
+class RefuelTestCase(unittest.TestCase):
+    """Tests Model.refuel() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        RefuelTestCase.model = Model(ControlsMock([]))
+        RefuelTestCase.model.ship = ShipMock()
+        RefuelTestCase.model.map_hex = SystemMock()
+
+    # pylint: disable=W0212
+    # W0212: access to a protected member _starport of a client class
+    def test_refuel_with_no_facilities(self) -> None:
+        """Tests attempting to refuel at a low-grade starport."""
+        model = RefuelTestCase.model
+
+        cast(SystemMock, model.map_hex)._starport = "E"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.refuel()
+        self.assertEqual(f"{context.exception}",
+                         "No fuel is available at starport E.")
+
+        cast(SystemMock, model.map_hex)._starport = "X"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.refuel()
+        self.assertEqual(f"{context.exception}",
+                         "No fuel is available at starport X.")
