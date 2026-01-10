@@ -283,6 +283,7 @@ class RefuelTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "Fuel tank is already full.")
 
+
 class SkimTestCase(unittest.TestCase):
     """Tests Model.skim() method."""
 
@@ -316,6 +317,15 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "There is no gas giant in this system. No fuel skimming possible.")
 
-    # unstreamlined ship
+    def test_skim_unstreamlined(self) -> None:
+        """Tests attempting to skim in an unstreamlined ship."""
+        model = SkimTestCase.model
+        model.ship.model.streamlined = False
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.skim()
+        self.assertEqual(f"{context.exception}",
+                         "Your ship is not streamlined and cannot skim fuel.")
+
     # unmaneuverable ship
     # success - full tanks, unrefined, +1 day, message
