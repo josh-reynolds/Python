@@ -228,12 +228,57 @@ class RefuelTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "Fuel tank is already full.")
 
-        # high grade starport - refined fuel
-        # empty tanks
-        # partial tanks
-        # full tanks
-        # debit cost from balance
-        # ledger entries
-        # price per ton of fuel, unrefined vs. refined
-        # view notifications
-        # confirm/deny transaction
+    # pylint: disable=W0212
+    # W0212: access to a protected member _starport of a client class
+    def test_refuel_with_high_facilities(self) -> None:
+        """Tests attempting to refuel at a high-grade starport."""
+        model = RefuelTestCase.model
+        view = ObserverMock()
+        model.views = [view]
+        model.controls = ControlsMock(['y', 'y', 'y', 'n', 'n'])
+        model.financials.balance = Credits(20000)
+
+        self.assertEqual(model.fuel_level(), 0)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+        self.assertEqual(len(model.financials.ledger), 0)
+
+        cast(SystemMock, model.map_hex)._starport = "A"
+        result = model.refuel()
+        self.assertEqual(view.message, "")
+        self.assertEqual(model.controls.invocations, 1)
+
+        cast(SystemMock, model.map_hex)._starport = "B"
+        result = model.refuel()
+        self.assertEqual(view.message, "")
+        self.assertEqual(model.controls.invocations, 2)
+
+        cast(SystemMock, model.map_hex)._starport = "A"
+        result = model.refuel()
+        # TO_DO: ObserverMock only keeps the last messsage, should accumulate a list
+        self.assertEqual(view.message, "Charging 15,000 Cr for refuelling.")
+        self.assertEqual(model.controls.invocations, 3)
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+        self.assertEqual(model.balance, Credits(5000))
+        self.assertEqual(len(model.financials.ledger), 1)
+        self.assertEqual(model.financials.ledger[0],
+                         "1\t - 15,000 Cr\t - \t\t - 5,000 Cr\t - Uranus\t - refuelling")
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
+        cast(SystemMock, model.map_hex)._starport = "B"
+        model.ship.current_fuel = 20
+        result = model.refuel()
+        self.assertEqual(view.message, "Charging 5,000 Cr for refuelling.")
+        self.assertEqual(model.controls.invocations, 4)
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+        self.assertEqual(model.balance, Credits(0))
+        self.assertEqual(len(model.financials.ledger), 2)
+        self.assertEqual(model.financials.ledger[1],
+                         "1\t - 5,000 Cr\t - \t\t - 0 Cr\t - Uranus\t - refuelling")
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.refuel()
+        self.assertEqual(f"{context.exception}",
+                         "Fuel tank is already full.")
