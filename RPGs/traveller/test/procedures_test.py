@@ -306,7 +306,16 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "You are stranded in deep space. No fuel skimming possible.")
 
-    # no gas giant - in system
+    def test_skim_no_gas_giant(self) -> None:
+        """Tests attempting to skim in StarSystem with no gas giant."""
+        model = SkimTestCase.model
+        cast(SystemMock, model.map_hex).gas_giant = False
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.skim()
+        self.assertEqual(f"{context.exception}",
+                         "There is no gas giant in this system. No fuel skimming possible.")
+
     # unstreamlined ship
     # unmaneuverable ship
     # success - full tanks, unrefined, +1 day, message
