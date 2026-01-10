@@ -280,9 +280,9 @@ class Model:
         """Refuel the Ship by skimming from a gas giant planet."""
         if not self._gas_giant:
             if self._in_deep_space():
-                raise GuardClauseFailure("You are stranded in deep space." +
+                raise GuardClauseFailure("You are stranded in deep space. " +
                                          "No fuel skimming possible.")
-            raise GuardClauseFailure("There is no gas giant in this system." +
+            raise GuardClauseFailure("There is no gas giant in this system. " +
                                      "No fuel skimming possible.")
 
         if not self.ship.model.streamlined:

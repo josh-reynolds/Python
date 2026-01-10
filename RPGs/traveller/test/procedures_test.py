@@ -2,7 +2,7 @@
 import unittest
 from typing import cast
 from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
-from test.mock import ObserverMock, FinancialsMock
+from test.mock import ObserverMock, FinancialsMock, DeepSpaceMock
 from src.credits import Credits
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
@@ -282,3 +282,31 @@ class RefuelTestCase(unittest.TestCase):
             model.refuel()
         self.assertEqual(f"{context.exception}",
                          "Fuel tank is already full.")
+
+class SkimTestCase(unittest.TestCase):
+    """Tests Model.skim() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        SkimTestCase.model = Model(ControlsMock([]))
+        SkimTestCase.model.ship = ShipMock()
+        SkimTestCase.model.map_hex = SystemMock()
+
+    # TO_DO: should we warn or restrict if tanks are full?
+
+    def test_skim_in_deep_space(self) -> None:
+        """Tests attempting to skim in deep space."""
+        model = SkimTestCase.model
+        SkimTestCase.model.map_hex = DeepSpaceMock()
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.skim()
+        self.assertEqual(f"{context.exception}",
+                         "You are stranded in deep space. No fuel skimming possible.")
+
+    # no gas giant - in system
+    # unstreamlined ship
+    # unmaneuverable ship
+    # success - full tanks, unrefined, +1 day, message
