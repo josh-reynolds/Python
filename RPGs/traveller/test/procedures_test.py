@@ -4,6 +4,7 @@ from typing import cast
 from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
 from test.mock import ObserverMock, FinancialsMock, DeepSpaceMock
 from src.credits import Credits
+from src.format import BOLD_RED, END_FORMAT
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
 from src.ship import RepairStatus, FuelQuality
@@ -327,5 +328,14 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "Your ship is not streamlined and cannot skim fuel.")
 
-    # unmaneuverable ship
-    # success - full tanks, unrefined, +1 day, message
+    def test_skim_unmaneuverable(self) -> None:
+        """Tests attempting to skim in a Ship that needs repairs."""
+        model = SkimTestCase.model
+        model.ship.repair_status = RepairStatus.BROKEN
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.skim()
+        self.assertEqual(f"{context.exception}",
+                         f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
+
+    # success - full tanks, unrefined, +1 day, message - both REPAIRED and PATCHED
