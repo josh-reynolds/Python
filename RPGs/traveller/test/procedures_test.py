@@ -295,8 +295,7 @@ class SkimTestCase(unittest.TestCase):
         SkimTestCase.model = Model(ControlsMock([]))
         SkimTestCase.model.ship = ShipMock()
         SkimTestCase.model.map_hex = SystemMock()
-
-    # TO_DO: should we warn or restrict if tanks are full?
+        SkimTestCase.model.date = CalendarMock()
 
     def test_skim_in_deep_space(self) -> None:
         """Tests attempting to skim in deep space."""
@@ -338,4 +337,18 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
+    def test_skim_with_repaired_ship(self) -> None:
+        """Tests successful fuel skimming from a gas giant."""
+        model = SkimTestCase.model
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
+        self.assertEqual(model.fuel_level(), 0)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.skim()
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.UNREFINED)
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
     # success - full tanks, unrefined, +1 day, message - both REPAIRED and PATCHED
+    # full tanks
