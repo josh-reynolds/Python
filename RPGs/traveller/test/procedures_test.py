@@ -363,4 +363,15 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         self.assertEqual(result, "Your ship is fully refuelled.")
 
-    # full tanks
+    def test_skim_with_full_tanks(self) -> None:
+        """Tests attempting to skim fuel from a gas giant when fuel tanks are full."""
+        model = SkimTestCase.model
+        model.ship.current_fuel = 30
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.skim()
+        self.assertEqual(f"{context.exception}",
+                         "Fuel tank is already full.")
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
