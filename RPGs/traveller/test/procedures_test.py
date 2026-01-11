@@ -413,4 +413,14 @@ class WildernessRefuelTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         self.assertEqual(result, "Your ship is fully refuelled.")
 
-    # full tanks
+    def test_wilderness_refuel_with_full_tanks(self) -> None:
+        """Tests attempting wilderness refuelling when the fuel tanks are full."""
+        model = WildernessRefuelTestCase.model
+        model.ship.current_fuel = 30
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.wilderness_refuel()
+        self.assertEqual(f"{context.exception}",
+                         "Fuel tank is already full.")
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
