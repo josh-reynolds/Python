@@ -424,3 +424,48 @@ class WildernessRefuelTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "Fuel tank is already full.")
         self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+
+class JumpSystemsCheckTestCase(unittest.TestCase):
+    """Tests Model._jump_systems_check() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        JumpSystemsCheckTestCase.model = Model(ControlsMock([]))
+        JumpSystemsCheckTestCase.model.ship = ShipMock()
+        JumpSystemsCheckTestCase.model.date = CalendarMock()
+        JumpSystemsCheckTestCase.model.financials = FinancialsMock()
+
+    # TO_DO: need to monkeypatch die_roll to make this fail 100%
+    # pylint: disable=W0212
+    # W0212: access to a protected member _jump_systems_check of a client class
+    @unittest.skip("test is not reliable")
+    def test_drive_failure_pre_jump(self) -> None:
+        """Tests stardrive breakdown prior to performing a jump."""
+        model = JumpSystemsCheckTestCase.model
+        model.date.year += 1    # to set maintenance to red status
+        model._jump_systems_check()
+
+    # pylint: disable=W0212
+    # W0212: access to a protected member _jump_systems_check of a client class
+    def test_jump_with_broken_drives(self) -> None:
+        """Tests attempting to jump with broken or patched drives."""
+        model = JumpSystemsCheckTestCase.model
+
+        model.ship.repair_status = RepairStatus.PATCHED
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
+
+        model.ship.repair_status = RepairStatus.BROKEN
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
+
+    # insufficient fuel
+    # insufficient life support
+    # success

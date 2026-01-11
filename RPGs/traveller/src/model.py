@@ -305,7 +305,7 @@ class Model:
         self._add_day()
         return "Your ship is fully refuelled."
 
-    def jump_systems_check(self) -> str:
+    def _jump_systems_check(self) -> str:
         """Verify the Ship is ready to perform a hyperspace jump."""
         self.ship.check_failure_pre_jump(self.maintenance_status())
 
@@ -320,7 +320,7 @@ class Model:
 
         return "All systems ready for jump."
 
-    def misjump_check(self, destination: Coordinate) -> str:
+    def _misjump_check(self, destination: Coordinate) -> str:
         """Test for misjump and report results."""
         if self.tanks_are_polluted():
             modifier = 3
@@ -344,7 +344,7 @@ class Model:
 
     def perform_jump(self) -> str:
         """Perform a hyperspace jump to the specified destination."""
-        self.message_views(self.jump_systems_check())
+        self.message_views(self._jump_systems_check())
 
         jump_range = self.ship.model.jump_range
         self.message_views(f"Systems within jump-{jump_range}:")
@@ -370,7 +370,7 @@ class Model:
 
         self.message_views(f"{BOLD_RED}Executing jump!{END_FORMAT}")
 
-        self.message_views(self.misjump_check(coordinate))
+        self.message_views(self._misjump_check(coordinate))
 
         self.set_location("jump")
         self.ship.check_failure_post_jump()
