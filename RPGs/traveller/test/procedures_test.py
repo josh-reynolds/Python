@@ -338,7 +338,7 @@ class SkimTestCase(unittest.TestCase):
                          f"{BOLD_RED}Drive failure. Cannot skim fuel.{END_FORMAT}")
 
     def test_skim_with_repaired_ship(self) -> None:
-        """Tests successful fuel skimming from a gas giant."""
+        """Tests successful fuel skimming from a gas giant in a fully-repaired Ship."""
         model = SkimTestCase.model
         self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
         self.assertEqual(model.fuel_level(), 0)
@@ -350,5 +350,17 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
         self.assertEqual(result, "Your ship is fully refuelled.")
 
-    # success - full tanks, unrefined, +1 day, message - both REPAIRED and PATCHED
+    def test_skim_with_patched_ship(self) -> None:
+        """Tests successful fuel skimming from a gas giant in a partially-repaired Ship."""
+        model = SkimTestCase.model
+        model.ship.repair_status = RepairStatus.PATCHED
+        self.assertEqual(model.fuel_level(), 0)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.skim()
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.UNREFINED)
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
     # full tanks
