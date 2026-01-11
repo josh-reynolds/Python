@@ -387,6 +387,7 @@ class WildernessRefuelTestCase(unittest.TestCase):
         WildernessRefuelTestCase.model = Model(ControlsMock([]))
         WildernessRefuelTestCase.model.ship = ShipMock()
         WildernessRefuelTestCase.model.map_hex = SystemMock()
+        WildernessRefuelTestCase.model.date = CalendarMock()
 
     # pylint: disable=W0212
     # W0212: access to a protected member _hydrographics of a client class
@@ -400,5 +401,16 @@ class WildernessRefuelTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "No water available on this planet.")
 
-    # success
+    def test_wilderness_refuel(self) -> None:
+        """Tests successful wilderness refuelling."""
+        model = WildernessRefuelTestCase.model
+        self.assertEqual(model.fuel_level(), 0)
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.wilderness_refuel()
+        self.assertEqual(model.fuel_level(), 30)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.UNREFINED)
+        self.assertEqual(model.date.current_date, ImperialDate(2, 1105))
+        self.assertEqual(result, "Your ship is fully refuelled.")
+
     # full tanks
