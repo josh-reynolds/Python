@@ -466,6 +466,23 @@ class JumpSystemsCheckTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
             f"{BOLD_RED}Drive failure. Cannot perform jump.{END_FORMAT}")
 
-    # insufficient fuel
+    # pylint: disable=W0212
+    # W0212: access to a protected member _jump_systems_check of a client class
+    def test_jump_with_insufficient_fuel(self) -> None:
+        """Tests attempting to jump with insufficient fuel."""
+        model = JumpSystemsCheckTestCase.model
+        self.assertEqual(model.fuel_level(), 0)
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            "Insufficient fuel. Jump requires 20 tons, only 0 tons in tanks.")
+
+        self.model.ship.current_fuel = 19
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            "Insufficient fuel. Jump requires 20 tons, only 19 tons in tanks.")
+
     # insufficient life support
     # success
