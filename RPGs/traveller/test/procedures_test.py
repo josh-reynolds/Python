@@ -375,3 +375,30 @@ class SkimTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
                          "Fuel tank is already full.")
         self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+
+class WildernessRefuelTestCase(unittest.TestCase):
+    """Tests Model.wilderness_refuel() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        WildernessRefuelTestCase.model = Model(ControlsMock([]))
+        WildernessRefuelTestCase.model.ship = ShipMock()
+        WildernessRefuelTestCase.model.map_hex = SystemMock()
+
+    # pylint: disable=W0212
+    # W0212: access to a protected member _hydrographics of a client class
+    def test_wilderness_refuel_on_desert_world(self) -> None:
+        """Tests attempting to wilderness refuel on a world with no water."""
+        model = WildernessRefuelTestCase.model
+        cast(SystemMock, model.map_hex)._hydrographics = 0
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.wilderness_refuel()
+        self.assertEqual(f"{context.exception}",
+                         "No water available on this planet.")
+
+    # success
+    # full tanks

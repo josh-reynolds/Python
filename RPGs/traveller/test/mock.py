@@ -100,6 +100,12 @@ class SystemMock(StarSystem):
         self.gas_giant = True
         self.location = "jump"
         self._starport = "A"
+        self._hydrographics = 7
+
+    @property
+    def hydrographics(self) -> int:
+        """Return an overriden UWP hydrographics value."""
+        return self._hydrographics
 
     @property
     def starport(self) -> str:
