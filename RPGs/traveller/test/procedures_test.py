@@ -560,6 +560,7 @@ class FlushTestCase(unittest.TestCase):
         """Create fixtures for testing."""
         FlushTestCase.model = Model(ControlsMock([]))
         FlushTestCase.model.ship = ShipMock()
+        FlushTestCase.model.map_hex = SystemMock()
 
     def test_clean_tanks(self) -> None:
         """Tests attempting to flush tanks when they are not polluted."""
@@ -568,3 +569,16 @@ class FlushTestCase(unittest.TestCase):
 
         result = model.flush()
         self.assertEqual(result, "Ship fuel tanks are clean. No need to flush.")
+
+    def test_flush_with_no_facilities(self) -> None:
+        """Tests attempting to flush tanks at a low-grade starport."""
+        model = FlushTestCase.model
+        model.ship.fuel_quality = FuelQuality.UNREFINED
+
+        cast(SystemMock, model.map_hex)._starport = "E"
+        result = model.flush()
+        self.assertEqual(result, "There are no facilities to flush tanks at starport E.")
+
+        cast(SystemMock, model.map_hex)._starport = "X"
+        result = model.flush()
+        self.assertEqual(result, "There are no facilities to flush tanks at starport X.")
