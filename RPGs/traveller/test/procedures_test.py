@@ -597,3 +597,50 @@ class FlushTestCase(unittest.TestCase):
         self.assertEqual(model.ship.unrefined_jump_counter, 0)
         self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
         self.assertEqual(result, "Fuel tanks have been decontaminated.")
+
+
+class AnnualMaintenanceTestCase(unittest.TestCase):
+    """Tests Model.annual_maintenance() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        AnnualMaintenanceTestCase.model = Model(ControlsMock([]))
+        AnnualMaintenanceTestCase.model.ship = ShipMock()
+        AnnualMaintenanceTestCase.model.map_hex = SystemMock()
+
+    # pylint: disable=W0212
+    # W0212: access to a protected member _starport of a client class
+    def test_maintenance_with_no_facilities(self) -> None:
+        """Tests attempting to perform annual maintenance at a low-grade starport."""
+        model = AnnualMaintenanceTestCase.model
+
+        cast(SystemMock, model.map_hex)._starport = "C"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.annual_maintenance()
+        self.assertEqual(f"{context.exception}",
+            "Annual maintenance can only be performed at class A or B starports.")
+
+        cast(SystemMock, model.map_hex)._starport = "D"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.annual_maintenance()
+        self.assertEqual(f"{context.exception}",
+            "Annual maintenance can only be performed at class A or B starports.")
+
+        cast(SystemMock, model.map_hex)._starport = "E"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.annual_maintenance()
+        self.assertEqual(f"{context.exception}",
+            "Annual maintenance can only be performed at class A or B starports.")
+
+        cast(SystemMock, model.map_hex)._starport = "X"
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.annual_maintenance()
+        self.assertEqual(f"{context.exception}",
+            "Annual maintenance can only be performed at class A or B starports.")
+
+    # insufficient funds
+    # warning if recent maintenance, chance to cancel
+    # confirm/cancel maintenance
+    # successful maintenance
