@@ -503,4 +503,68 @@ class JumpSystemsCheckTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
             "Insufficient life support to survive jump.\nLife support is at 99%.")
 
-    # success
+    # pylint: disable=W0212
+    # W0212: access to a protected member _jump_systems_check of a client class
+    def test_jump_systems(self) -> None:
+        """Tests jump systems with all systems green."""
+        model = JumpSystemsCheckTestCase.model
+        self.model.ship.current_fuel = 20
+        self.model.ship.life_support_level = 100
+
+        result = model._jump_systems_check()
+        self.assertEqual(result, "All systems ready for jump.")
+
+
+# TO_DO: need to monkeypatch die_roll to make these tests pass or fail 100%
+class MisjumpCheckTestCase(unittest.TestCase):
+    """Tests Model._misjump_check() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        MisjumpCheckTestCase.model = Model(ControlsMock([]))
+
+    # misjump
+    # successful jump
+
+
+class PerformJumpTestCase(unittest.TestCase):
+    """Tests Model.perform_jump() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        PerformJumpTestCase.model = Model(ControlsMock([]))
+
+    # message jump systems check
+    # choose destination from list
+    # warn if not contracted
+    # confirm/cancel jump
+    # increment jump counter if unrefined fuel
+    # message misjump check
+    # check drive failure post jump
+    # set destinations
+    # burn life support
+    # burn fuel
+    # burn time (1 week)
+
+
+class FlushTestCase(unittest.TestCase):
+    """Tests Model.flush() method."""
+
+    model: Model
+
+    def setUp(self) -> None:
+        """Create fixtures for testing."""
+        FlushTestCase.model = Model(ControlsMock([]))
+        FlushTestCase.model.ship = ShipMock()
+
+    def test_clean_tanks(self) -> None:
+        """Tests attempting to flush tanks when they are not polluted."""
+        model = FlushTestCase.model
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+
+        result = model.flush()
+        self.assertEqual(result, "Ship fuel tanks are clean. No need to flush.")
