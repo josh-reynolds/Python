@@ -484,5 +484,23 @@ class JumpSystemsCheckTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
             "Insufficient fuel. Jump requires 20 tons, only 19 tons in tanks.")
 
-    # insufficient life support
+    # pylint: disable=W0212
+    # W0212: access to a protected member _jump_systems_check of a client class
+    def test_jump_with_insufficient_life_support(self) -> None:
+        """Tests attempting to jump with insufficient life support."""
+        model = JumpSystemsCheckTestCase.model
+        self.model.ship.current_fuel = 30
+        self.assertEqual(model.ship.life_support_level, 0)
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            "Insufficient life support to survive jump.\nLife support is at 0%.")
+
+        self.model.ship.life_support_level = 99
+        with self.assertRaises(GuardClauseFailure) as context:
+            model._jump_systems_check()
+        self.assertEqual(f"{context.exception}",
+            "Insufficient life support to survive jump.\nLife support is at 99%.")
+
     # success
