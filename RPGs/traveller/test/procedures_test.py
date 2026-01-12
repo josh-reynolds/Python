@@ -561,8 +561,9 @@ class FlushTestCase(unittest.TestCase):
         FlushTestCase.model = Model(ControlsMock([]))
         FlushTestCase.model.ship = ShipMock()
         FlushTestCase.model.map_hex = SystemMock()
+        FlushTestCase.model.date = CalendarMock()
 
-    def test_clean_tanks(self) -> None:
+    def test_flush_with_clean_tanks(self) -> None:
         """Tests attempting to flush tanks when they are not polluted."""
         model = FlushTestCase.model
         self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
@@ -570,6 +571,8 @@ class FlushTestCase(unittest.TestCase):
         result = model.flush()
         self.assertEqual(result, "Ship fuel tanks are clean. No need to flush.")
 
+    # pylint: disable=W0212
+    # W0212: access to a protected member _starport of a client class
     def test_flush_with_no_facilities(self) -> None:
         """Tests attempting to flush tanks at a low-grade starport."""
         model = FlushTestCase.model
@@ -582,3 +585,15 @@ class FlushTestCase(unittest.TestCase):
         cast(SystemMock, model.map_hex)._starport = "X"
         result = model.flush()
         self.assertEqual(result, "There are no facilities to flush tanks at starport X.")
+
+    def test_flush(self) -> None:
+        """Tests successful cleaning of polluted fuel tanks."""
+        model = FlushTestCase.model
+        model.ship.fuel_quality = FuelQuality.UNREFINED
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
+        result = model.flush()
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+        self.assertEqual(model.ship.unrefined_jump_counter, 0)
+        self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
+        self.assertEqual(result, "Fuel tanks have been decontaminated.")
