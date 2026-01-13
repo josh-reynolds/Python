@@ -2,9 +2,10 @@
 import unittest
 from typing import cast
 from test.mock import ControlsMock, ShipMock, CalendarMock, SystemMock
-from test.mock import ObserverMock, FinancialsMock, DeepSpaceMock
+from test.mock import ObserverMock, FinancialsMock, DeepSpaceMock, StarMapMock
 from src.credits import Credits
-from src.format import BOLD_RED, END_FORMAT
+from src.coordinate import Coordinate
+from src.format import BOLD_RED, END_FORMAT, BOLD_GREEN
 from src.imperial_date import ImperialDate
 from src.model import Model, GuardClauseFailure
 from src.ship import RepairStatus, FuelQuality
@@ -537,6 +538,35 @@ class PerformJumpTestCase(unittest.TestCase):
     def setUp(self) -> None:
         """Create fixtures for testing."""
         PerformJumpTestCase.model = Model(ControlsMock([]))
+        PerformJumpTestCase.model.ship = ShipMock()
+        PerformJumpTestCase.model.financials = FinancialsMock()
+        PerformJumpTestCase.model.date = CalendarMock()
+
+        coord = Coordinate(1,0,-1)
+        world = SystemMock()
+        world.coordinate = coord
+        PerformJumpTestCase.model.map_hex = world
+        PerformJumpTestCase.model.star_map = StarMapMock({coord : world})
+
+    def test_jump_systems(self) -> None:
+        """Tests jump systems check."""
+        model = PerformJumpTestCase.model
+        model.ship.current_fuel = 20
+        model.ship.life_support_level = 100
+
+        coord = Coordinate(0,0,0)
+        destination = SystemMock("Jupiter")
+        destination.coordinate = coord
+        model.map_hex.destinations = [destination]
+        model.star_map.systems[coord] = destination
+
+        view = ObserverMock()
+        model.views = [view]
+        model.controls = ControlsMock(['y',0])
+
+        result = model.perform_jump()
+        self.assertEqual(view.message, f"{BOLD_GREEN}Successful jump to Jupiter.{END_FORMAT}")
+        self.assertEqual(result, "Jump complete.")
 
     # message jump systems check
     # choose destination from list

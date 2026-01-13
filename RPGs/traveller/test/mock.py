@@ -11,6 +11,7 @@ from src.imperial_date import ImperialDate
 from src.passengers import Passenger, Passage
 from src.ship import Ship
 from src.star_system import StarSystem, DeepSpace
+from src.star_map import StarMap
 
 class CalendarMock(Calendar):
     """Mocks a Calendar for testing."""
@@ -82,6 +83,10 @@ class DateMock(ImperialDate):
     def __str__(self) -> str:
         """Return the string representation of a DateMock object."""
         return f"{self.value}"
+
+
+class StarMapMock(StarMap):
+    """Mocks a StarMap for testing."""
 
 
 # pylint: disable=R0903, R0902
