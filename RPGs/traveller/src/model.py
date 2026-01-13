@@ -417,10 +417,11 @@ class Model:
             return "Cancelling maintenance."
 
         self.message_views(f"Performing maintenance. Charging {cost}.")
-        self.financials.last_maintenance = self.date.current_date
+        self.financials.last_maintenance = self.date.current_date.copy()
         self.financials.debit(cost, "annual maintenance")
         self.plus_week()
-        return self.repair_ship()
+        _ = self.repair_ship()
+        return "Maintenance complete."
 
     def buy_cargo(self) -> str:
         """Purchase cargo for speculative trade."""

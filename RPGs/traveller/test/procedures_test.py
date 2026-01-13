@@ -667,6 +667,30 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
         self.assertEqual(model.controls.invocations, 1)
         self.assertEqual(result, "Cancelling maintenance.")
 
+    def test_maintenance_cancel_or_confirm(self) -> None:
+        """Tests confirming or cancelling annual maintenance command."""
+        model = AnnualMaintenanceTestCase.model
+        model.financials.balance = Credits(40000)
+        model.financials.last_maintenance = model.date.current_date - 366
+        model.controls = ControlsMock(['y', 'n'])
+        view = ObserverMock()
+        model.views = [view]
 
-    # confirm/cancel maintenance
-    # successful maintenance
+        self.assertEqual(model.maintenance_status(), "red")
+
+        result = model.annual_maintenance()
+        self.assertEqual(model.controls.invocations, 1)
+        self.assertEqual(result, "Cancelling maintenance.")
+
+        result = model.annual_maintenance()
+        self.assertEqual(model.controls.invocations, 2)
+        self.assertEqual(view.message, "Performing maintenance. Charging 37,080 Cr.")
+        self.assertEqual(model.financials.last_maintenance, model.date.current_date - 7)
+        self.assertEqual(model.balance, Credits(2920))
+        self.assertEqual(len(model.financials.ledger), 1)
+        self.assertEqual(model.financials.ledger[0],
+                         "1\t - 37,080 Cr\t - \t\t - 2,920 Cr\t - Uranus\t - annual maintenance")
+        self.assertEqual(model.date.current_date, ImperialDate(8,1105))
+        self.assertEqual(result, "Maintenance complete.")
+        self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
+        self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)

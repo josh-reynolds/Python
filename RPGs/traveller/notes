@@ -3889,6 +3889,8 @@
 
 ~HERE~
 
+#  * [    ] BUG: if the ship is damaged when performing annual maintenance, it will
+#           take two weeks, not just one - do we want this behavior?
 #  * [    ] Earliest Model methods used strings for failure cases rather than 
 #           GuardClauseFailure - scrub and fix
 #  * [    ] Consider adding starting state guard clause to transition methods (why not
