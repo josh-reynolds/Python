@@ -548,8 +548,8 @@ class PerformJumpTestCase(unittest.TestCase):
         PerformJumpTestCase.model.map_hex = world
         PerformJumpTestCase.model.star_map = StarMapMock({coord : world})
 
-    def test_jump_systems(self) -> None:
-        """Tests jump systems check."""
+    def test_successful_jump(self) -> None:
+        """Tests performing a successful hyperspace jump."""
         model = PerformJumpTestCase.model
         model.ship.current_fuel = 20
         model.ship.life_support_level = 100
@@ -564,8 +564,14 @@ class PerformJumpTestCase(unittest.TestCase):
         model.views = [view]
         model.controls = ControlsMock(['y',0])
 
+        self.assertEqual(model.date.current_date, ImperialDate(1, 1105))
+
         result = model.perform_jump()
         self.assertEqual(view.message, f"{BOLD_GREEN}Successful jump to Jupiter.{END_FORMAT}")
+        self.assertEqual(cast(SystemMock, model.map_hex).location, "jump")
+        self.assertEqual(model.ship.life_support_level, 0)
+        self.assertEqual(model.ship.current_fuel, 0)
+        self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
         self.assertEqual(result, "Jump complete.")
 
     # message jump systems check
@@ -576,9 +582,6 @@ class PerformJumpTestCase(unittest.TestCase):
     # message misjump check
     # check drive failure post jump
     # set destinations
-    # burn life support
-    # burn fuel
-    # burn time (1 week)
 
 
 class FlushTestCase(unittest.TestCase):
