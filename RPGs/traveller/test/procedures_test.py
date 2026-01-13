@@ -610,6 +610,7 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
         AnnualMaintenanceTestCase.model.ship = ShipMock()
         AnnualMaintenanceTestCase.model.map_hex = SystemMock()
         AnnualMaintenanceTestCase.model.financials = FinancialsMock()
+        AnnualMaintenanceTestCase.model.date = CalendarMock()
 
     # pylint: disable=W0212
     # W0212: access to a protected member _starport of a client class
@@ -653,6 +654,19 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
             "You do not have enough funds to pay for maintenance.\n" +
             "It will cost 37,080 Cr. Your balance is 1 Cr.")
 
-    # warning if recent maintenance, chance to cancel
+    def test_maintenance_in_the_green(self) -> None:
+        """Tests attempting to perform annual maintenance when it has been performed recently."""
+        model = AnnualMaintenanceTestCase.model
+        model.financials.balance = Credits(40000)
+        model.financials.last_maintenance = model.date.current_date
+        model.controls = ControlsMock(['n'])
+
+        self.assertEqual(model.maintenance_status(), "green")
+
+        result = model.annual_maintenance()
+        self.assertEqual(model.controls.invocations, 1)
+        self.assertEqual(result, "Cancelling maintenance.")
+
+
     # confirm/cancel maintenance
     # successful maintenance
