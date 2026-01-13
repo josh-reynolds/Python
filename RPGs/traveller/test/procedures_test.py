@@ -609,6 +609,7 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
         AnnualMaintenanceTestCase.model = Model(ControlsMock([]))
         AnnualMaintenanceTestCase.model.ship = ShipMock()
         AnnualMaintenanceTestCase.model.map_hex = SystemMock()
+        AnnualMaintenanceTestCase.model.financials = FinancialsMock()
 
     # pylint: disable=W0212
     # W0212: access to a protected member _starport of a client class
@@ -640,7 +641,18 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
             "Annual maintenance can only be performed at class A or B starports.")
 
-    # insufficient funds
+    def test_maintenance_with_insufficient_funds(self) -> None:
+        """Tests attempting to perform annual maintenance with insufficient funds."""
+        model = AnnualMaintenanceTestCase.model
+
+        self.assertTrue(self.model.balance < self.model.ship.maintenance_cost())
+
+        with self.assertRaises(GuardClauseFailure) as context:
+            model.annual_maintenance()
+        self.assertEqual(f"{context.exception}",
+            "You do not have enough funds to pay for maintenance.\n" +
+            "It will cost 37,080 Cr. Your balance is 1 Cr.")
+
     # warning if recent maintenance, chance to cancel
     # confirm/cancel maintenance
     # successful maintenance
