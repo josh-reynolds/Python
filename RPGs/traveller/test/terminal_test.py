@@ -11,6 +11,8 @@ class TerminalScreenTestCase(unittest.TestCase):
     """Test TerminalScreen class."""
 
     # TO_DO: should move to model_test module
+    # pylint: disable=W0212
+    # W0212: access to a protected member _get_destinations of a client class
     @unittest.skip("test has side effects: printing")
     def test_get_destinations(self) -> None:
         """Test getting list of passenger destinations."""
@@ -20,7 +22,7 @@ class TerminalScreenTestCase(unittest.TestCase):
         potential_destinations = cast(List[StarSystem],
                                       passengers.model.map_hex.destinations.copy())
 
-        destinations = passengers.model.get_destinations(potential_destinations,
+        destinations = passengers.model._get_destinations(potential_destinations,
                                                     1, "passengers")
         print(destinations)
 

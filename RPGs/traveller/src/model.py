@@ -191,7 +191,7 @@ class Model:
         return f"Successfully lifted off to orbit from {self.system_name()}."
 
     # PROCEDURES ========================================
-    def damage_control(self) -> str:
+    def damage_control(self, rng=die_roll) -> str:
         """Repair damage to the Ship (Engineer)."""
         if self.ship.repair_status == RepairStatus.REPAIRED:
             return "Your ship is not damaged."
@@ -200,7 +200,7 @@ class Model:
             return "Further repairs require starport facilities."
 
         self._add_day()
-        if die_roll(2) + self.ship.engineering_skill() > 9:
+        if rng(2) + self.ship.engineering_skill() > 9:
             self.ship.repair_status = RepairStatus.PATCHED
             return "Ship partially repaired. Visit a starport for further work."
         return "No progress today. Drives are still out of commission."
@@ -320,7 +320,7 @@ class Model:
 
         return "All systems ready for jump."
 
-    def _misjump_check(self, destination: Coordinate) -> str:
+    def _misjump_check(self, destination: Coordinate, rng=die_roll) -> str:
         """Test for misjump and report results."""
         if self.tanks_are_polluted():
             modifier = 3
@@ -329,7 +329,7 @@ class Model:
         if self.maintenance_status() == "red":
             modifier += 2
 
-        misjump_check = die_roll(2) + modifier
+        misjump_check = rng(2) + modifier
         if misjump_check > 11:
             misjump_target, distance = get_misjump_target(self.coordinate)
 
@@ -494,7 +494,7 @@ class Model:
         """Select and load Freight onto the Ship."""
         jump_range = self.ship.model.jump_range
         potential_destinations = self._destinations
-        destinations = self.get_destinations(potential_destinations,
+        destinations = self._get_destinations(potential_destinations,
                                               jump_range, "freight shipments")
         if not destinations:
             return "No destinations available."
@@ -548,7 +548,7 @@ class Model:
 
         return f"Receiving payment of {payment} for {freight_tonnage} tons shipped."
 
-    def get_destinations(self, potential_destinations: List[StarSystem],
+    def _get_destinations(self, potential_destinations: List[StarSystem],
                          jump_range: int, prompt: str) -> List[StarSystem]:
         """Return a list of all reachable destinations with Freight or Passengers."""
         result: List[StarSystem] = []
@@ -575,7 +575,7 @@ class Model:
         """Book passengers for travel to a destination."""
         jump_range = self.ship.model.jump_range
         potential_destinations = self._destinations
-        destinations = self.get_destinations(potential_destinations,
+        destinations = self._get_destinations(potential_destinations,
                                               jump_range, "passengers")
         if not destinations:
             return "No destinations available."
@@ -755,13 +755,13 @@ class Model:
                                         zip(self.depot.passengers[destination], selection))
 
 
-    def _low_lottery(self, low_lottery_amount) -> str:
+    def _low_lottery(self, low_lottery_amount, rng=die_roll) -> str:
         """Run the low passage lottery and apply results."""
         result = ""
         if self.low_passenger_count > 0:
             low_passengers = self._get_low_passengers()
             for passenger in low_passengers:
-                if die_roll(2) + passenger.endurance + self.ship.medic_skill() < 5:
+                if rng(2) + passenger.endurance + self.ship.medic_skill() < 5:
                     passenger.survived = False
 
             survivors = [p for p in low_passengers if p.survived]

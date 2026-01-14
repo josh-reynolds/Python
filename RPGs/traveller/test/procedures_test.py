@@ -727,3 +727,11 @@ class AnnualMaintenanceTestCase(unittest.TestCase):
         self.assertEqual(result, "Maintenance complete.")
         self.assertEqual(model.ship.repair_status, RepairStatus.REPAIRED)
         self.assertEqual(model.ship.fuel_quality, FuelQuality.REFINED)
+
+# BUY CARGO
+# SELL CARGO
+# LOAD FREIGHT
+# UNLOAD FREIGHT
+# GET DESTINATIONS
+# BOOK PASSENGERS
+# RECHARGE LIFE SUPPORT
