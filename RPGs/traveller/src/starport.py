@@ -18,6 +18,7 @@ class StarportScreen(PlayScreen):
                 Command('life support', 'Recharge life support', self.recharge),
                 Command('refuel', 'Refuel', self.refuel),
                 Command('liftoff', 'Lift off to orbit', self.liftoff),
+                Command('highport', 'Lift off to the highport', self.highport),
                 Command('depot', 'Trade depot', self.to_depot),
                 Command('terminal', 'Passenger terminal', self.to_terminal),
                 Command('maintenance', 'Annual maintenance', self.maintenance),
@@ -39,6 +40,16 @@ class StarportScreen(PlayScreen):
         try:
             print(self.model.liftoff())
             self.parent.change_state("Orbit")
+        except GuardClauseFailure as exception:
+            print(exception)
+
+    def highport(self) -> None:
+        """Move from the starport to the highport."""
+        print(f"{BOLD_BLUE}Lifting off to dock with the {self.model.system_name()} " +
+              f"highport.{END_FORMAT}")
+        try:
+            print(self.model.dock())
+            self.parent.change_state("Highport")
         except GuardClauseFailure as exception:
             print(exception)
 
