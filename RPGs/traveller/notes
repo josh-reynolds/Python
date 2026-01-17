@@ -3526,6 +3526,34 @@
 # states, and consequently the same screens available. Needs
 # some thought.
 #
+# OK, transitions. Should be able to get to the highport from
+# orbit or the starport for sure.
+#
+#                WILDERNESS
+#              /     |
+# JUMP - ORBIT - STARPORT - TRADE
+#              \     |    \
+#                HIGHPORT   TERMINAL
+#
+# Trickier question is what to do about the trade depot and
+# the terminal? If they _are_ accessible from the highport,
+# when exiting you need to get back to where you started (should
+# the states be a stack?).
+#
+# Then there's the question of shuttles. Let's start with just
+# the basic/obvious transitions.
+#
+# Some other tidbits:
+#
+# * Messages in Model.to_orbit() should be tweaked slightly
+#   to reflect we're not travelling from the surface.
+#
+# * Passengers disembark in Model.land() - we should do
+#   the same when docking with the highport. (There's the
+#   shuttle question here...)
+#
+# * We should assess berthing fees at the highport.
+#
 # -------------------------------------------------------------
 
 ~HERE~
