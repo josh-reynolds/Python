@@ -189,6 +189,9 @@ class StarSystem(Hex):
         if self.location == "starport":
             return f"at the {self.name} starport"
 
+        if self.location == "highport":
+            return f"at the {self.name} highport"
+
         if self.location == "orbit":
             return f"in orbit around {self.name}"
 
@@ -210,7 +213,7 @@ class StarSystem(Hex):
 
     def at_starport(self) -> bool:
         """Test whether the player is currently berthed at the world's starport."""
-        return self.location in ('starport', 'trade', 'terminal')
+        return self.location in ('starport', 'trade', 'terminal', 'highport')
 
 
 def verify_world(world: str, systems: Mapping[Coordinate, Hex]) -> StarSystem:

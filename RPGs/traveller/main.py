@@ -3,6 +3,7 @@
 Game - contains the game loop and basic controller/view logic.
 """
 from src.format import BOLD_YELLOW, BOLD_RED, END_FORMAT, BOLD_GREEN
+from src.highport import HighportScreen
 from src.jump import JumpScreen
 from src.menu import MenuScreen
 from src.model import Model
@@ -65,6 +66,8 @@ class Game:
                 self.screen = OrbitScreen(self, self.screen.model)
             case "Starport":
                 self.screen = StarportScreen(self, self.screen.model)
+            case "Highport":
+                self.screen = HighportScreen(self, self.screen.model)
             case "Jump":
                 self.screen = JumpScreen(self, self.screen.model)
             case "Trade":

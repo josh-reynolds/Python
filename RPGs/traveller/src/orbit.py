@@ -15,7 +15,8 @@ class OrbitScreen(PlayScreen):
         """Create an OrbitScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('starport', 'Land at starport', self.starport),
+                Command('starport', 'Land at the starport', self.starport),
+                Command('highport', 'Dock at the highport', self.highport),
                 Command('wilderness', 'Land in the wilderness', self.wilderness),
                 Command('outbound', 'Go to jump point', self.outbound_to_jump),
                 ]
@@ -36,6 +37,15 @@ class OrbitScreen(PlayScreen):
         try:
             print(self.model.land())
             self.parent.change_state("Starport")
+        except GuardClauseFailure as exception:
+            print(exception)
+
+    def highport(self) -> None:
+        """Move from orbit to the highport."""
+        print(f"{BOLD_BLUE}Docking at the {self.model.system_name()} highport.{END_FORMAT}")
+        try:
+            print(self.model.dock())
+            self.parent.change_state("Highport")
         except GuardClauseFailure as exception:
             print(exception)
 

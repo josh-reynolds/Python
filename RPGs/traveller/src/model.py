@@ -97,6 +97,30 @@ class Model:
         self.set_location("jump")
         return "Successfully travelled out to the jump point."
 
+    def dock(self) -> str:
+        """Move from orbit to the highport."""
+        result = ""
+        if self.ship.destination == self.get_star_system():
+            if self.ship.total_passenger_count > 0:
+                result += f"Passengers disembarking for {self.system_name()}.\n"
+
+                funds = Credits(sum(p.ticket_price.amount for p in \
+                        self.get_passengers()))
+                low_lottery_amount = Credits(10) * self.low_passenger_count
+                funds -= low_lottery_amount
+                result += f"Receiving {funds} in passenger fares.\n"
+                self.financials.credit(funds, "passenger fare")
+
+                result += self._low_lottery(low_lottery_amount)
+
+                self.set_passengers([])
+                self._remove_baggage()
+
+        self.set_location("highport")
+        self.financials.berthing_fee(self._at_starport)
+        result += f"\nDocked at the {self.system_name()} highport."""
+        return result
+
     # TO_DO: should merge with wilderness()
     def land(self) -> str:
         """Move from orbit to the starport."""
