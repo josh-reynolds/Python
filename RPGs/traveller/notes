@@ -3500,6 +3500,34 @@
 #
 # -------------------------------------------------------------
 
+# -------------------------------------------------------------
+# Been slugging away at refactoring for a long time now. Overall
+# it's coming into shape, but there's still a lot to do and I'm
+# getting bored. Time to cherry-pick another feature.
+#
+# Let's do highport. That would solve the issue of unstreamlined
+# ships refuelling.
+#
+# First pass is just adding the Screen class and state transitions.
+# We'll also need commands, which will probably be very close
+# to those available at the downport. And we'll need to add this 
+# state to at_starport().
+#
+# More interesting question later is how exactly it ought to work.
+#
+# Not every system should have one. We could probably assume
+# a starport A does, and X doesn't, but the categories inbetween
+# aren't as clear. Traveller '77 doesn't even mention highports
+# IIRC. Will need to dig through later rules to figure out a 
+# good scheme.
+#
+# But then, how do we make the screen/state/transitions
+# conditional? Right now, every StarSystm has the exact same
+# states, and consequently the same screens available. Needs
+# some thought.
+#
+# -------------------------------------------------------------
+
 ~HERE~
 
 # -------------------------------------------------------------
@@ -3976,12 +4004,17 @@
 #           for perf as discussed above, but even if not I could see map displays
 #           making use of it. Sort of a Fog of War mechanic. This may be as
 #           simple as whether StarSystem.destinations is populated or not.
-#  * [....] Add wilderness location and refuelling option
+#  * [DONE] Add wilderness location and refuelling option
+#  * [DONE] Ocean refuelling option if hydrographics permit it (should we then
+#           split out another surface location? Implication of current 'surface' location
+#           is it is the starport, which this is not. Scope creep, maybe hold this one
+#           until phase five...
 #  * [    ] Should population and/or law level limit wilderness access?
-#  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
-#  * [    ] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
+#  * [....] Distinguish between highport and downport
+#  * [....] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
 #           as it can't land or skim, and can't recharge life support either. We need
 #           a highport location and/or shuttle refuelling to make this usable.
+#  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] Add customization of crew members, names, etc.
 #  * [    ] Add support for Bases, Travel Zones, Xboat Routes and Allegiance in import data
 #  * [    ] DESIGN ISSUE: player can cancel and retry sale to get a better price
@@ -4033,10 +4066,6 @@
 #           here like adjusting world creation parameters, but initially just
 #           customizing ship and crew
 #  * [    ] Would be nice to warp or randomly color UI if the ship is BROKEN...
-#  * [    ] Ocean refuelling option if hydrographics permit it (should we then
-#           split out another surface location? Implication of current 'surface' location
-#           is it is the starport, which this is not. Scope creep, maybe hold this one
-#           until phase five...
 #  * [    ] Add extended StarSystem details
 #  * [    ] Controls now allows us to have an AI or kiosk mode...
 #  * [    ] Working passage?
@@ -4049,7 +4078,6 @@
 #           Defer - currently all uses are positive, even debts, but haven't
 #           implemented a ledger or more accounting features yet
 #  * [    ] Add loan history and statement (amortization schedule too?)
-#  * [    ] Distinguish between highport and downport
 #  * [    ] Replace dummy/test data with 'real' values
 #  * [    ] Need to be able to see maintenance date
 #  * [    ] Should we have a 'stranded' condition? Pay for a tow truck?
