@@ -3554,6 +3554,41 @@
 #
 # * We should assess berthing fees at the highport.
 #
+# Basics are in place. There's a lot of overlap with StarportScreen,
+# I think we should break out another class, and make
+# StarportScreen a common parent. Then we can move methods
+# up and down. Will need to see if any need specialization and
+# overriding.
+#
+# I think they will mostly be differentiated by transitions. 
+# Action commands should be the same. (Though as we elaborate
+# per the discussion above may need to split up a bit.)
+#
+# Current:
+#
+# StarportScreen
+#   liftoff()
+#   highport()
+#   to_depot()
+#   to_terminal()
+#   wilderness()
+#   --
+#   recharge()         **
+#   refuel()           **
+#   maintenance()      **
+#   flush()            **
+#   repair_ship()      **
+# HighportScreen
+#   launch()
+#   starport()
+#   ---
+#   recharge()         **
+#   refuel()           **
+#   maintenance()      **
+#   flush()            **
+#   repair_ship()      **
+# DownportScreen
+#
 # -------------------------------------------------------------
 
 ~HERE~
