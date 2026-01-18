@@ -956,6 +956,14 @@ class Model:
         """Return a dictionary of all Hexes in the StarMap, keyed by Coordinate."""
         return self.star_map.systems
 
+    def get_encoded_hexes(self) -> List[str]:
+        """Return a list of strings representing all Hexes and their Coordinate."""
+        systems = []
+        for coord in self.get_all_hexes():
+            map_hex = self.get_system_at_coordinate(coord)
+            systems.append(f"{coord} - {map_hex}")
+        return systems
+
     def _get_all_systems(self) -> List[StarSystem]:
         """Return a list of all StarSystem contained in the StarMap."""
         return self.star_map.get_all_systems()

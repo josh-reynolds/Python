@@ -129,11 +129,6 @@ class PlayScreen(Screen):
     def save_game(self) -> None:
         """Save current game state."""
         print(f"{BOLD_BLUE}Saving game.{END_FORMAT}")
-        systems = []
-        for coord in self.model.get_all_hexes():
-            map_hex = self.model.get_system_at_coordinate(coord)
-            systems.append(f"{coord} - {map_hex}")
-
         subsectors = []
         for sub_coord in self.model.get_all_subsectors():
             sub = self.model.get_subsector_at_coordinate(sub_coord)
@@ -141,11 +136,11 @@ class PlayScreen(Screen):
 
         passenger_list = [p.encode() for p in self.model.get_passengers()]
 
-        cargo_hold_list = [p.encode() for p in self.model.get_cargo_hold()]
+        cargo_hold_list = [c.encode() for c in self.model.get_cargo_hold()]
 
         save_data = {
                      'date' : f"{self.model.date_string}",
-                     'systems' : systems,
+                     'systems' : self.model.get_encoded_hexes(),
                      'subsectors' : subsectors,
                      'location' : f"{self.model.coordinate}",
                      'menu' : f"{self.parent.screen}",
