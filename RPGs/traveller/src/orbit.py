@@ -15,10 +15,10 @@ class OrbitScreen(PlayScreen):
         """Create an OrbitScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('starport', 'Land at the starport', self.starport),
-                Command('highport', 'Dock at the highport', self.highport),
-                Command('wilderness', 'Land in the wilderness', self.wilderness),
-                Command('outbound', 'Go to jump point', self.outbound_to_jump),
+                Command('starport', 'Land at the starport', self.to_downport),
+                Command('highport', 'Dock at the highport', self.to_highport),
+                Command('wilderness', 'Land in the wilderness', self.to_wilderness),
+                Command('outbound', 'Go to jump point', self.to_jump),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -31,7 +31,7 @@ class OrbitScreen(PlayScreen):
     # TO_DO: duplicates WildernessScreen.starport()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def starport(self) -> None:
+    def to_downport(self) -> None:
         """Move from orbit to the starport."""
         print(f"{BOLD_BLUE}Landing at the {self.model.system_name()} starport.{END_FORMAT}")
         try:
@@ -40,7 +40,7 @@ class OrbitScreen(PlayScreen):
         except GuardClauseFailure as exception:
             print(exception)
 
-    def highport(self) -> None:
+    def to_highport(self) -> None:
         """Move from orbit to the highport."""
         print(f"{BOLD_BLUE}Docking at the {self.model.system_name()} highport.{END_FORMAT}")
         try:
@@ -52,7 +52,7 @@ class OrbitScreen(PlayScreen):
     # TO_DO: duplicates StarportScreen.wilderness()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def wilderness(self) -> None:
+    def to_wilderness(self) -> None:
         """Move from orbit to the wilderness."""
         print(f"{BOLD_BLUE}Landing on {self.model.system_name()}.{END_FORMAT}")
         try:
@@ -61,7 +61,7 @@ class OrbitScreen(PlayScreen):
         except GuardClauseFailure as exception:
             print(exception)
 
-    def outbound_to_jump(self) -> None:
+    def to_jump(self) -> None:
         """Move from orbit to the jump point."""
         print(f"{BOLD_BLUE}Travelling out to {self.model.system_name()} jump point.{END_FORMAT}")
         try:

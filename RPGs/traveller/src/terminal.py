@@ -18,7 +18,7 @@ class TerminalScreen(PlayScreen):
         # this is declared as List[Command] in super(),
         # but mypy still cannot determine type
         self.commands += [                        # type: ignore[has-type]
-                Command('leave', 'Leave terminal', self.leave_terminal),
+                Command('leave', 'Leave terminal', self.to_downport),
                 Command('book', 'Book passengers', self.book_passengers),
                 ]
         self.commands = sorted(self.commands,     # type: ignore[has-type]
@@ -30,7 +30,7 @@ class TerminalScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def leave_terminal(self) -> None:
+    def to_downport(self) -> None:
         """Move from the passenger terminal to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} " +
               f"passenger terminal.{END_FORMAT}")

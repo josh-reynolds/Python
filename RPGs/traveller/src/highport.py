@@ -15,8 +15,8 @@ class HighportScreen(StarportScreen):
         """Create a HighportScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('launch', 'Return to orbit', self.launch),
-                Command('starport', 'Land at the downport', self.starport),
+                Command('launch', 'Return to orbit', self.to_orbit),
+                Command('starport', 'Land at the downport', self.to_downport),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -29,7 +29,7 @@ class HighportScreen(StarportScreen):
     # TO_DO: duplicates WildernessScreen.liftoff()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def launch(self) -> None:
+    def to_orbit(self) -> None:
         """Move from the highport to orbit."""
         print(f"{BOLD_BLUE}Launching to orbit {self.model.system_name()}.{END_FORMAT}")
         try:
@@ -41,7 +41,7 @@ class HighportScreen(StarportScreen):
     # TO_DO: duplicates OrbitScreen.starport()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def starport(self) -> None:
+    def to_downport(self) -> None:
         """Move from the highport to the downport."""
         print(f"{BOLD_BLUE}Landing at {self.model.system_name()} starport.{END_FORMAT}")
         try:

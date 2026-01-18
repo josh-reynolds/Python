@@ -16,8 +16,8 @@ class WildernessScreen(PlayScreen):
         super().__init__(parent, model)
         self.commands += [
                 Command('refuel', 'Refuel', self.refuel),
-                Command('liftoff', 'Lift off to orbit', self.liftoff),
-                Command('starport', 'Fly to starport', self.starport),
+                Command('liftoff', 'Lift off to orbit', self.to_orbit),
+                Command('starport', 'Fly to starport', self.to_downport),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -27,7 +27,7 @@ class WildernessScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def liftoff(self) -> None:
+    def to_orbit(self) -> None:
         """Move from the surface to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
         try:
@@ -39,7 +39,7 @@ class WildernessScreen(PlayScreen):
     # TO_DO: duplicates OrbitScreen.starport()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def starport(self) -> None:
+    def to_downport(self) -> None:
         """Move from the wilderness to the starport."""
         print(f"{BOLD_BLUE}Flying to {self.model.system_name()} starport.{END_FORMAT}")
         try:

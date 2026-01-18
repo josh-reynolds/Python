@@ -15,7 +15,7 @@ class JumpScreen(PlayScreen):
         """Create a JumpScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('inbound', 'Inbound to orbit', self.inbound_from_jump),
+                Command('inbound', 'Inbound to orbit', self.to_orbit),
                 Command('jump', 'Jump to new system', self.jump),
                 Command('skim', 'Skim fuel from gas giant', self.skim),
                 Command('damage control', 'Engineering damage control', self.damage_control),
@@ -28,7 +28,7 @@ class JumpScreen(PlayScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def inbound_from_jump(self) -> None:
+    def to_orbit(self) -> None:
         """Move from the jump point to orbit."""
         print(f"{BOLD_BLUE}Travelling in to orbit {self.model.system_name()}.{END_FORMAT}")
         try:

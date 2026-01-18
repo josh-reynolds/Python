@@ -16,7 +16,7 @@ class TradeScreen(PlayScreen):
         """Create a TradeScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('leave', 'Leave trade depot', self.leave_depot),
+                Command('leave', 'Leave trade depot', self.to_downport),
                 Command('buy', 'Buy cargo', self.buy_cargo),
                 Command('sell', 'Sell cargo', self.sell_cargo),
                 Command('view goods', 'View trade goods', self.goods),
@@ -37,7 +37,7 @@ class TradeScreen(PlayScreen):
         _ = input("\nPress ENTER key to continue.")
 
     # STATE TRANSITIONS ====================================================
-    def leave_depot(self) -> None:
+    def to_downport(self) -> None:
         """Move from the trade depot to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} trade depot.{END_FORMAT}")
         print(self.model.to_starport())

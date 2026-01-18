@@ -15,11 +15,11 @@ class DownportScreen(StarportScreen):
         """Create a DownportScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('liftoff', 'Lift off to orbit', self.liftoff),
-                Command('highport', 'Lift off to the highport', self.highport),
+                Command('liftoff', 'Lift off to orbit', self.to_orbit),
+                Command('highport', 'Lift off to the highport', self.to_highport),
                 Command('depot', 'Trade depot', self.to_depot),
                 Command('terminal', 'Passenger terminal', self.to_terminal),
-                Command('wilderness', 'Fly to the wilderness', self.wilderness),
+                Command('wilderness', 'Fly to the wilderness', self.to_wilderness),
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
@@ -29,7 +29,7 @@ class DownportScreen(StarportScreen):
 
     # VIEW COMMANDS ========================================================
     # STATE TRANSITIONS ====================================================
-    def liftoff(self) -> None:
+    def to_orbit(self) -> None:
         """Move from the starport to orbit."""
         print(f"{BOLD_BLUE}Lifting off to orbit {self.model.system_name()}.{END_FORMAT}")
         try:
@@ -38,7 +38,7 @@ class DownportScreen(StarportScreen):
         except GuardClauseFailure as exception:
             print(exception)
 
-    def highport(self) -> None:
+    def to_highport(self) -> None:
         """Move from the starport to the highport."""
         print(f"{BOLD_BLUE}Lifting off to dock with the {self.model.system_name()} " +
               f"highport.{END_FORMAT}")
@@ -64,7 +64,7 @@ class DownportScreen(StarportScreen):
     # TO_DO: duplicates OrbitScreen.wilderness()
     # pylint: disable=R0801
     # R0801: Similar lines in 2 files
-    def wilderness(self) -> None:
+    def to_wilderness(self) -> None:
         """Fly from the starport to the wilderness."""
         print(f"{BOLD_BLUE}Flying to the wilderness on {self.model.system_name()}.{END_FORMAT}")
         try:
