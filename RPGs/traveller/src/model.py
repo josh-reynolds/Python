@@ -988,6 +988,14 @@ class Model:
         """Return a dictionary of all Subsectors in the StarMap, keyed by coordinate."""
         return self.star_map.subsectors
 
+    def get_encoded_subsectors(self) -> List[str]:
+        """Return a list of strings representing all Subsectors and their Coordinate."""
+        subsectors = []
+        for sub_coord in self.get_all_subsectors():
+            sub = self.get_subsector_at_coordinate(sub_coord)
+            subsectors.append(f"{sub_coord} - {sub}")
+        return subsectors
+
     def get_coords_in_subsector(self, sub_coord: Tuple[int,int]) -> List[Coordinate]:
         """Return a list of all Coordinates in the specified subsector."""
         return self.star_map.get_systems_in_subsector(sub_coord)
