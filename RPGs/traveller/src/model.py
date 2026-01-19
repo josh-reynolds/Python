@@ -302,7 +302,7 @@ class Model:
     # TO_DO: is it worth restricting by location too? (jump)
     def skim(self) -> str:
         """Refuel the Ship by skimming from a gas giant planet."""
-        if not self._gas_giant:
+        if not self.gas_giant:
             if self._in_deep_space():
                 raise GuardClauseFailure("You are stranded in deep space. " +
                                          "No fuel skimming possible.")
@@ -910,7 +910,7 @@ class Model:
         return cast(StarSystem, self.map_hex).starport
 
     @property
-    def _gas_giant(self) -> bool:
+    def gas_giant(self) -> bool:
         """Return whether the StarSystem contains a gas giant planet or not."""
         return cast(StarSystem, self.map_hex).gas_giant
 

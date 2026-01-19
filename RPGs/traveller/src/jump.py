@@ -17,9 +17,14 @@ class JumpScreen(PlayScreen):
         self.commands += [
                 Command('inbound', 'Inbound to orbit', self.to_orbit),
                 Command('jump', 'Jump to new system', self.jump),
-                Command('skim', 'Skim fuel from gas giant', self.skim),
                 Command('damage control', 'Engineering damage control', self.damage_control),
                 ]
+
+        if self.model.gas_giant:
+            self.commands += [
+                Command('skim', 'Skim fuel from gas giant', self.skim),
+                    ]
+
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     def __repr__(self) -> str:
@@ -43,6 +48,7 @@ class JumpScreen(PlayScreen):
         print(f"{BOLD_BLUE}Preparing for jump.{END_FORMAT}")
         try:
             print(self.model.perform_jump())
+            self.parent.change_state("Jump")
         except GuardClauseFailure as exception:
             print(exception)
 

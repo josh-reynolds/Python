@@ -3564,7 +3564,6 @@
 # Action commands should be the same. (Though as we elaborate
 # per the discussion above may need to split up a bit.)
 #
-#
 # StarportScreen
 #   recharge()
 #   refuel()
@@ -3582,6 +3581,16 @@
 #   to_wilderness()
 #
 # Also going to rename the all the state transitions for consistency.
+#
+# On to conditional states. And I think it's probably not the _state_
+# that needs to be conditional. It's the _transitions_ into it. This
+# is the same issue as we have with the skim() command when there's
+# no gas giant. We want to dynamically enable/disable commands.
+#
+# We can probably handle this in Game.change_state(), or rather
+# in the Screen ctors that it calls. Instead to automatically
+# adding commands to their list, they should check against the 
+# Model. Giving it a try...
 #
 # -------------------------------------------------------------
 
@@ -4011,11 +4020,6 @@
 #  * [    ] Is Subsector class redundant? Should kill?
 #  * [    ] Review flow, confirmations, notifications - streamline where annoying,
 #           slow down where mistakes happen
-#  * [    ] Rather than having up-front tests, make some commands dynamically
-#           available in command lists when conditions merit - e.g. only present
-#           skimming as jump point command if the system has a gas giant
-#           Handle this in Play.update() - each state should have a method to
-#           add/remove commands dynamically, call it on transition
 #  * [    ] Per Beck's 'prefer symmetry,' instead of foo_from() and Foo.encode(),
 #           maybe we should have either decode_foo() and Foo.encode() or
 #           foo_from() and Foo.to()...
@@ -4070,7 +4074,14 @@
 #  * [DONE] We have our first unstreamlined ship (Type Y Yacht) - it can't refuel
 #           as it can't land or skim, and can't recharge life support either. We need
 #           a highport location and/or shuttle refuelling to make this usable.
+#  * [DONE] Rather than having up-front tests, make some commands dynamically
+#           available in command lists when conditions merit - e.g. only present
+#           skimming as jump point command if the system has a gas giant
+#           Handle this in Play.update() - each state should have a method to
+#           add/remove commands dynamically, call it on transition
 #  * [    ] Not all systems have a highport. Need to make states/screen dynamically accessible
+#  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
+#  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Should population and/or law level limit wilderness access?
 #  * [    ] Consider alternate image layouts: 'circle map', or not bound to subsector edges
 #  * [    ] Add customization of crew members, names, etc.
@@ -4147,8 +4158,6 @@
 #           another that allows choosing a subsector by name and displaying its contents.
 #           Now that we support importing data, the list has has hit this limit - should
 #           rework.
-#  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
-#  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Add ship design mode - ship customization and/or building from scratch
 #  * [    ] RPG lite elements: named crew, brokers, color events & encounters, etc.
 #  * [    ] Color: jump dimming
