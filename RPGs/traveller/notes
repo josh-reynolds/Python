@@ -3592,6 +3592,27 @@
 # adding commands to their list, they should check against the 
 # Model. Giving it a try...
 #
+# OK, works fine for skimming, should be able to apply to the
+# highport transitions next. But we need to decide criteria -
+# as noted above, we'll need to check out some alternate rulesets
+# to figure this out.
+#
+# Also, if the highport presence is not perfectly deterministic,
+# we will need to save this state when saving the game.
+#
+# Traveller '81 is pretty cagey about it too - on p. 9 of Book 2 
+# they mention 'any A,B,C starport has shuttle service to orbit.'
+# That implies a highport. (Actually '77 mentions shuttles too.)
+#
+# Traveller 5e has specific rules on p. 306:
+#   Starport A has highport if population 7+
+#   Starport B has highport if population 8+
+#   Starport C has highport if population 9+
+#   Starport D/E/X do not have a highport
+#
+# This seems reasonable (and it is nicely deterministic). Let's 
+# go with it.
+#
 # -------------------------------------------------------------
 
 ~HERE~

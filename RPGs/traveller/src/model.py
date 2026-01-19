@@ -910,6 +910,11 @@ class Model:
         return cast(StarSystem, self.map_hex).starport
 
     @property
+    def _population(self) -> int:
+        """Return the current location's population value."""
+        return cast(StarSystem, self.map_hex).population
+
+    @property
     def gas_giant(self) -> bool:
         """Return whether the StarSystem contains a gas giant planet or not."""
         return cast(StarSystem, self.map_hex).gas_giant
@@ -946,6 +951,22 @@ class Model:
         jump_range = self.ship.model.jump_range
         self.map_hex.destinations = self.star_map.get_systems_within_range(self.coordinate,
                                                                            jump_range)
+
+    # Determination of highport presence comes from Traveller 5e p. 306
+    def has_highport(self) -> bool:
+        """Test whether the current system has a highport or not."""
+        result = False
+        match self._starport:
+            case "A":
+                if self._population > 6:
+                    result = True
+            case "B":
+                if self._population > 7:
+                    result = True
+            case "C":
+                if self._population > 8:
+                    result = True
+        return result
 
     # STAR MAP ==========================================
     def new_star_map(self, systems: Dict[Coordinate, Hex]) -> None:
