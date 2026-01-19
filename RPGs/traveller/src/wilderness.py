@@ -17,8 +17,13 @@ class WildernessScreen(PlayScreen):
         self.commands += [
                 Command('refuel', 'Refuel', self.refuel),
                 Command('liftoff', 'Lift off to orbit', self.to_orbit),
-                Command('starport', 'Fly to starport', self.to_downport),
                 ]
+
+        if self.model.has_downport():
+            self.commands += [
+                Command('starport', 'Fly to the starport', self.to_downport),
+                    ]
+
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     def __repr__(self) -> str:

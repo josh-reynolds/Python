@@ -15,7 +15,6 @@ class OrbitScreen(PlayScreen):
         """Create an OrbitScreen object."""
         super().__init__(parent, model)
         self.commands += [
-                Command('starport', 'Land at the starport', self.to_downport),
                 Command('wilderness', 'Land in the wilderness', self.to_wilderness),
                 Command('outbound', 'Go to jump point', self.to_jump),
                 ]
@@ -23,6 +22,11 @@ class OrbitScreen(PlayScreen):
         if self.model.has_highport():
             self.commands += [
                 Command('highport', 'Dock at the highport', self.to_highport),
+                    ]
+
+        if self.model.has_downport():
+            self.commands += [
+                Command('starport', 'Land at the starport', self.to_downport),
                     ]
 
         self.commands = sorted(self.commands, key=lambda command: command.key)
