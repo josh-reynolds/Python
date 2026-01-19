@@ -968,6 +968,14 @@ class Model:
                     result = True
         return result
 
+    def has_downport(self) -> bool:
+        """Test whether the current system has a downport or not."""
+        match self._starport:
+            case "X":
+                return False
+            case _:
+                return True
+
     # STAR MAP ==========================================
     def new_star_map(self, systems: Dict[Coordinate, Hex]) -> None:
         """Create a new StarMap."""
