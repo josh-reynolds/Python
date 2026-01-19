@@ -4100,7 +4100,11 @@
 #           skimming as jump point command if the system has a gas giant
 #           Handle this in Play.update() - each state should have a method to
 #           add/remove commands dynamically, call it on transition
-#  * [    ] Not all systems have a highport. Need to make states/screen dynamically accessible
+
+~HERE~
+
+#  * [....] Not all systems have a highport. Need to make states/screen dynamically accessible
+#  * [    ] An X starport should only have wilderness landings
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Should population and/or law level limit wilderness access?

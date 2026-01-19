@@ -16,10 +16,15 @@ class OrbitScreen(PlayScreen):
         super().__init__(parent, model)
         self.commands += [
                 Command('starport', 'Land at the starport', self.to_downport),
-                Command('highport', 'Dock at the highport', self.to_highport),
                 Command('wilderness', 'Land in the wilderness', self.to_wilderness),
                 Command('outbound', 'Go to jump point', self.to_jump),
                 ]
+
+        if self.model.has_highport():
+            self.commands += [
+                Command('highport', 'Dock at the highport', self.to_highport),
+                    ]
+
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     def __repr__(self) -> str:

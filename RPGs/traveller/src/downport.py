@@ -16,11 +16,16 @@ class DownportScreen(StarportScreen):
         super().__init__(parent, model)
         self.commands += [
                 Command('liftoff', 'Lift off to orbit', self.to_orbit),
-                Command('highport', 'Lift off to the highport', self.to_highport),
                 Command('depot', 'Trade depot', self.to_depot),
                 Command('terminal', 'Passenger terminal', self.to_terminal),
                 Command('wilderness', 'Fly to the wilderness', self.to_wilderness),
                 ]
+
+        if self.model.has_highport():
+            self.commands += [
+                Command('highport', 'Lift off to the highport', self.to_highport),
+                ]
+
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
     def __repr__(self) -> str:
