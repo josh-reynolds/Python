@@ -148,7 +148,8 @@ class Model:
                 self._remove_baggage()
 
         self.set_location("starport")
-        self.financials.berthing_fee(self._at_starport)
+        if self._starport in ["A", "B", "C", "D"]:
+            self.financials.berthing_fee(self._at_starport)
         result += f"\nLanded at the {self.system_name()} starport."""
         return result
 
