@@ -28,6 +28,10 @@ class DownportScreen(StarportScreen):
 
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Downport"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Downport({self.parent!r})"

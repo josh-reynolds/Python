@@ -24,6 +24,10 @@ class TerminalScreen(PlayScreen):
         self.commands = sorted(self.commands,     # type: ignore[has-type]
                                key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Terminal"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Terminal({self.parent!r})"
@@ -35,7 +39,7 @@ class TerminalScreen(PlayScreen):
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} " +
               f"passenger terminal.{END_FORMAT}")
         print(self.model.to_starport())
-        self.parent.change_state("Starport")
+        self.parent.change_state("Downport")
 
     # ACTIONS ==============================================================
     def book_passengers(self) -> None:

@@ -25,6 +25,10 @@ class TradeScreen(PlayScreen):
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Trade"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Trade({self.parent!r})"
@@ -41,7 +45,7 @@ class TradeScreen(PlayScreen):
         """Move from the trade depot to the starport."""
         print(f"{BOLD_BLUE}Leaving {self.model.system_name()} trade depot.{END_FORMAT}")
         print(self.model.to_starport())
-        self.parent.change_state("Starport")
+        self.parent.change_state("Downport")
 
     # ACTIONS ==============================================================
     def buy_cargo(self) -> None:

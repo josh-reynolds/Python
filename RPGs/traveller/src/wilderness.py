@@ -26,6 +26,10 @@ class WildernessScreen(PlayScreen):
 
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Wilderness"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Wilderness({self.parent!r})"
@@ -49,7 +53,7 @@ class WildernessScreen(PlayScreen):
         print(f"{BOLD_BLUE}Flying to {self.model.system_name()} starport.{END_FORMAT}")
         try:
             print(self.model.land())
-            self.parent.change_state("Starport")
+            self.parent.change_state("Downport")
         except GuardClauseFailure as exception:
             print(exception)
 

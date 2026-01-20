@@ -20,6 +20,10 @@ class HighportScreen(StarportScreen):
                 ]
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Highport"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Highport({self.parent!r})"
@@ -46,7 +50,7 @@ class HighportScreen(StarportScreen):
         print(f"{BOLD_BLUE}Landing at {self.model.system_name()} starport.{END_FORMAT}")
         try:
             print(self.model.land())
-            self.parent.change_state("Starport")
+            self.parent.change_state("Downport")
         except GuardClauseFailure as exception:
             print(exception)
 

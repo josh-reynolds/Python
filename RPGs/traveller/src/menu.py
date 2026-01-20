@@ -231,7 +231,7 @@ class MenuScreen(Screen):
 
         _ = input("\nPress ENTER key to continue.")
         self.model.set_location("starport")
-        self.parent.change_state("Starport")
+        self.parent.change_state("Downport")
         return None
 
 def _print_title() -> None:

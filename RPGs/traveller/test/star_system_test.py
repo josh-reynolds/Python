@@ -30,7 +30,7 @@ class StarSystemTestCase(unittest.TestCase):
         """Test the descriptive location string of a StarSystem object."""
         world = StarSystemTestCase.system
 
-        world.location = "starport"
+        world.location = "downport"
         self.assertEqual(world.description(), "at the Test starport")
 
         world.location = "orbit"

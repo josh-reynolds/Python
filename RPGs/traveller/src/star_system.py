@@ -186,7 +186,7 @@ class StarSystem(Hex):
     # R0911: Too many return statements (7/6)
     def description(self) -> str:
         """Return the descriptor for the current location within the StarSystem."""
-        if self.location == "starport":
+        if self.location == "downport":
             return f"at the {self.name} starport"
 
         if self.location == "highport":

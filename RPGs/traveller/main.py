@@ -64,7 +64,7 @@ class Game:
         match new_state:
             case "Orbit":
                 self.screen = OrbitScreen(self, self.screen.model)
-            case "Starport":
+            case "Downport":
                 self.screen = DownportScreen(self, self.screen.model)
             case "Highport":
                 self.screen = HighportScreen(self, self.screen.model)

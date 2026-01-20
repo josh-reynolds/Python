@@ -27,6 +27,10 @@ class JumpScreen(PlayScreen):
 
         self.commands = sorted(self.commands, key=lambda command: command.key)
 
+    def __str__(self) -> str:
+        """Return the string representation of the current screen."""
+        return "Jump"
+
     def __repr__(self) -> str:
         """Return the developer string representation of the current screen."""
         return f"Jump({self.parent!r})"
