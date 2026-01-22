@@ -47,7 +47,6 @@ class Ship:
         self.fuel_quality = FuelQuality.REFINED
         self.unrefined_jump_counter = 0
         self.repair_status = RepairStatus.REPAIRED
-        self.life_support_level = 0
         self.passengers: List[Passenger] = []
 
         self.views: List[Any] = []     # we don't have a type representing Observers
@@ -59,6 +58,9 @@ class Ship:
         self.crew = [position() for position in    # type: ignore[operator]
                      self.model.crew_requirements]
 
+        self.current_life_support = 0
+        self.max_life_support = 14 * (len(self.crew) + self.model.passenger_berths)
+
     def __eq__(self, other:Any) -> bool:
         """Test if two Ships are equal."""
         if type(other) is type(self):
@@ -68,7 +70,7 @@ class Ship:
                     self.fuel_quality == other.fuel_quality and\
                     self.unrefined_jump_counter == other.unrefined_jump_counter and\
                     self.repair_status == other.repair_status and\
-                    self.life_support_level == other.life_support_level and\
+                    self.current_life_support == other.current_life_support and\
                     self.passengers == other.passengers and\
                     self.hold == other.hold
 
@@ -90,6 +92,17 @@ class Ship:
     def __repr__(self) -> str:
         """Return the developer string representation of a Ship."""
         return f"Ship({self.model.name})"
+
+    @property
+    def life_support_level(self) -> int:
+        """Return the current life support level expressed as a percentage."""
+        return int((self.current_life_support / self.max_life_support) * 100)
+
+    def burn_life_support(self, days: int) -> None:
+        """Consume life support based on number of days and current occupancy."""
+        consumed = days * (self.total_passenger_count + len(self.crew))
+        self.current_life_support -= consumed
+        # TO_DO: what happens if we go below zero?
 
     @property
     def current_fuel(self) -> int:
@@ -214,6 +227,7 @@ class Ship:
         return f"Insufficient fuel. Jump requires {self.model.jump_fuel_cost} tons, only " +\
                f"{self.current_fuel} tons in tanks."
 
+    # TO_DO: this needs to be adjusted
     def sufficient_life_support(self) -> bool:
         """Test whether there is enough life support for a jump."""
         return self.life_support_level == 100
@@ -253,7 +267,7 @@ class Ship:
             return Credits(0)
 
         self.message_views(f"Charging {price} for life support replenishment.")
-        self.life_support_level = 100
+        self.current_life_support = self.max_life_support
         return price
 
     # Book 2 p. 43
@@ -350,7 +364,7 @@ class Ship:
             repair = "B"
 
         return f"{self.name} - {self.fuel} - {quality} - " +\
-                f"{self.unrefined_jump_counter} - {repair} - {self.life_support_level}"
+                f"{self.unrefined_jump_counter} - {repair} - {self.current_life_support}"
 
 
 def ship_from(string: str, model: str) -> Ship:
@@ -396,8 +410,9 @@ def ship_from(string: str, model: str) -> Ship:
     elif tokens[4] == 'B':
         ship.repair_status = RepairStatus.BROKEN
 
-    ship.life_support_level = int(tokens[5])
-    if ship.life_support_level < 0 or ship.life_support_level > 100:
-        raise ValueError(f"life support must be in the range 0-100: '{ship.life_support_level}'")
+    ship.current_life_support = int(tokens[5])
+    if ship.current_life_support < 0 or ship.current_life_support > ship.max_life_support:
+        raise ValueError("life support must be in the range 0-" +
+                         f"{ship.max_life_support}: '{ship.current_life_support}'")
 
     return ship

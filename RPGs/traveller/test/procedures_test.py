@@ -498,7 +498,7 @@ class JumpSystemsCheckTestCase(unittest.TestCase):
         self.assertEqual(f"{context.exception}",
             "Insufficient life support to survive jump.\nLife support is at 0%.")
 
-        self.model.ship.life_support_level = 99
+        self.model.ship.current_life_support = 139
         with self.assertRaises(GuardClauseFailure) as context:
             model._jump_systems_check()
         self.assertEqual(f"{context.exception}",
@@ -510,7 +510,7 @@ class JumpSystemsCheckTestCase(unittest.TestCase):
         """Tests jump systems with all systems green."""
         model = JumpSystemsCheckTestCase.model
         self.model.ship.current_fuel = 20
-        self.model.ship.life_support_level = 100
+        self.model.ship.current_life_support = 140
 
         result = model._jump_systems_check()
         self.assertEqual(result, "All systems ready for jump.")
@@ -552,7 +552,7 @@ class PerformJumpTestCase(unittest.TestCase):
         """Tests performing a successful hyperspace jump."""
         model = PerformJumpTestCase.model
         model.ship.current_fuel = 20
-        model.ship.life_support_level = 100
+        model.ship.current_life_support = 140
 
         coord = Coordinate(0,0,0)
         destination = SystemMock("Jupiter")
@@ -569,7 +569,7 @@ class PerformJumpTestCase(unittest.TestCase):
         result = model.perform_jump()
         self.assertEqual(view.message, f"{BOLD_GREEN}Successful jump to Jupiter.{END_FORMAT}")
         self.assertEqual(cast(SystemMock, model.map_hex).location, "jump")
-        self.assertEqual(model.ship.life_support_level, 0)
+        self.assertEqual(model.ship.life_support_level, 80)
         self.assertEqual(model.ship.current_fuel, 0)
         self.assertEqual(model.date.current_date, ImperialDate(8, 1105))
         self.assertEqual(result, "Jump complete.")

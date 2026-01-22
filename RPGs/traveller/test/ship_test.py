@@ -135,11 +135,12 @@ class ShipTestCase(unittest.TestCase):
     def test_sufficient_life_support(self) -> None:
         """Test determination of sufficient life support to execute a jump."""
         ship = ShipTestCase.ship
-        ship.life_support_level = 100
+        ship.current_life_support = 140
+        print(ship.life_support_level)
 
         self.assertTrue(ship.sufficient_life_support())
 
-        ship.life_support_level = 99
+        ship.current_life_support = 139
         self.assertFalse(ship.sufficient_life_support())
         self.assertEqual(ship.insufficient_life_support_message(),
                          "Insufficient life support to survive jump.\n" +
@@ -274,7 +275,7 @@ class ShipTestCase(unittest.TestCase):
         string = "Weaselfish - 0 - R - 0 - R - 100"
         actual = ship_from(string, "Type A Free Trader")
         expected = Ship("Type A Free Trader")
-        expected.life_support_level = 100
+        expected.current_life_support = 100
         self.assertEqual(actual, expected)
 
         string = "Weaselfish - 0 - R - 0 - R - 0 - extra"
@@ -335,13 +336,13 @@ class ShipTestCase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
-                         "life support must be in the range 0-100: '-1'")
+                         "life support must be in the range 0-140: '-1'")
 
-        string = "Weaselfish - 0 - R - 0 - R - 101"
+        string = "Weaselfish - 0 - R - 0 - R - 141"
         with self.assertRaises(ValueError) as context:
             _ = ship_from(string, "Type A Free Trader")
         self.assertEqual(f"{context.exception}",
-                         "life support must be in the range 0-100: '101'")
+                         "life support must be in the range 0-140: '141'")
 
         string = "Weaselfish - 0 - R - 0 - R - m"
         with self.assertRaises(ValueError) as context:

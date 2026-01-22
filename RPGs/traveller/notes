@@ -3615,6 +3615,72 @@
 #
 # -------------------------------------------------------------
 
+# -------------------------------------------------------------
+# Getting into some of the fiddly bits around starport services.
+# Like not charging a berthing fee at class E starports (and X
+# has no starport to worry about).
+#
+# Which brings us to life support. I've never been happy with
+# the model we arrived at. Traveller '77 doesn't cover this in
+# much detail, so I just had an on/off (0 or 100%) value, and
+# recharging can only happen at a starport (also it costs money).
+#
+# This becomes an issue for low-grade starports. Since you can't
+# jump without life support (under my current constraints), stopping
+# at a class X system is game over.
+#
+# Similarly, class E might allow for recharging (though there's no
+# fuel there so...), but it shouldn't charge Credits.
+#
+# I think this should be analogous to wilderness refuelling. But
+# it should be tied to _atmosphere_, right? Possibly hydrosphere
+# too.
+#
+# And if we're overhauling, should come up with a better measurement
+# like 'man-days'. And in that case, life support will be burning
+# continuously, every time the clock advances.
+#
+# Need to mull this over.
+#
+# OK. Reviewed a bunch of rulesets, and this is surprisingly not
+# covered anywhere. From Traveller '81 onward, most of them have
+# the "occupied stateroom" qualifier, and give two weeks as the
+# duration of each charge.
+#
+# But nowhere is recharging discussed in detail. I even checked
+# some Starport and Ship Operations Manual supplements. Lots of
+# detail about refuelling but not life support. Open questions:
+#
+# * What happens when life support runs out?
+# * Where can it be recharged? Any starport? Or just high/mid-grade
+#   (A,B,C,D)? How about in the wilderness, assuming good conditions?
+#
+# I think I'm going to have to craft some custom rules here. But
+# first, let's switch the tracking to 'man days.' Then burn
+# life support per occupancy. Last we'll deal with how to recharge it.
+#
+# Going about this now, and there's some wrinkles to consider:
+# * low berths... should they be tracked separately?
+# * ship encoding in save file - do we track the percentage
+#   or the actual man-days left? I think the latter.
+# * timing of burning life support - currently we do it
+#   after completing a jump - ultimately this should
+#   be something like a calendar observer event
+# * sufficient life support for a jump - what number should
+#   we use?
+# * what happens if burn_life_support goes below zero?
+# * cost should be based on actual amount recharged, not
+#   necessarily 100%
+#
+# To ease into this, convert the current field into a property,
+# have a current/max field internally to track state. The 
+# property returns a percentage as before. current & max are
+# in man-days. Minimal other changes to make this work, then
+# we can deal with the corner cases above and anything else
+# turned up by testing.
+#
+# -------------------------------------------------------------
+
 ~HERE~
 
 # -------------------------------------------------------------
@@ -4108,6 +4174,9 @@
 ~HERE~
 
 #  * [    ] Also should  not charge for life support at those locations (E/X starports)
+#  * [    ] Restrict life support recharge at low-facility starports?
+#  * [    ] Should life support percentage be tied to 'days duration?' But what
+#           happens if it hits zero?
 #  * [    ] Add shuttles to surface (esp. for unstreamlined ships)
 #  * [    ] Need to handle passengers if ship is unstreamlined
 #  * [    ] Should population and/or law level limit wilderness access?
@@ -4132,9 +4201,6 @@
 #  * [    ] Other end-game conditions: misjump to deep space, travel in to an E/X
 #           world without refelling from gas giant...
 #  * [    ] Add Navy/Scout bases to StarSystem? Only for color, yes?
-#  * [    ] Restrict life support recharge at low-facility starports?
-#  * [    ] Should life support percentage be tied to 'days duration?' But what
-#           happens if it hits zero?
 #  * [    ] Add visualization of cargo purchase DMs (colorized trade codes?)
 #           (should be able to view in hold and while trading,
 #            possibly also while choosing a destination world)

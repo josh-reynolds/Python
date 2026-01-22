@@ -1081,9 +1081,10 @@ class Model:
         """Return the current life support level of the Ship."""
         return self.ship.life_support_level
 
+    # TO_DO: this needs to be adjusted
     def _consume_life_support(self) -> None:
         """Reduce life support supplies consumed during travel."""
-        self.ship.life_support_level = 0
+        self.ship.burn_life_support(7)
 
     def _check_unrefined_jump(self) -> None:
         """Track hyperspace jumps performed with unrefined fuel."""
