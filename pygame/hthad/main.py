@@ -20,5 +20,6 @@ def update():
 def draw():
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
+    screen.draw.line((0,0,0), (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
 run()
