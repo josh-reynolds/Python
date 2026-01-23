@@ -4,7 +4,8 @@ import os.path
 import pygame
 from random import randint
 from engine import screen, run
-from screen_matrix import push_matrix, pop_matrix, line, rotate, translate, triangle
+from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
+from screen_matrix import equilateral_triangle
 
 WIDTH = 1100
 HEIGHT = 850
@@ -32,20 +33,10 @@ def mithral():
     if not location:
         location = get_random_underground_location()
 
-    sides = 3
-    radius = HEIGHT//10
-    tri_points = []
-    for i in range(sides):
-        p_angle = math.pi * 2/sides * (i+1)
-        vX = radius * math.cos(p_angle)
-        vY = radius * math.sin(p_angle)
-        tri_points.append(vX)
-        tri_points.append(vY)
-
     push_matrix()
     translate(location[0], location[1])
     rotate(angle)
-    triangle(*tri_points)
+    equilateral_triangle(HEIGHT//10)
     pop_matrix()
 
 def update():
