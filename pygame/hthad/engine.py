@@ -361,14 +361,14 @@ class Painter:
     # TO_DO: copied from hex() above, deal with this duplication
     def triangle(self, x, y, radius, color, width=1):
         sides = 3
-        hex_points = []
+        tri_points = []
         for i in range(sides):
             angle = math.pi * 2/sides * (i+1)
             vX = radius * math.cos(angle) + x
             vY = radius * math.sin(angle) + y
-            hex_points.append((vX,vY))
+            tri_points.append((vX,vY))
 
-        pygame.draw.polygon(self.surface, color, hex_points, width)
+        pygame.draw.polygon(self.surface, color, tri_points, width)
 
 class Music:
     """Music - wraps the Pygame music mixer."""
