@@ -29,6 +29,9 @@ class Mithril():
         self.radius = HEIGHT//10
         self.angle = 0
 
+    def update(self):
+        self.angle += 0.01
+
     def draw(self):
         push_matrix()
         translate(self.x, self.y)
@@ -38,7 +41,8 @@ class Mithril():
         pop_matrix()
 
 def update():
-    pass
+    for location in locations:
+        location.update()
 
 def draw():
     global angle
