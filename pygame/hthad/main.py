@@ -36,7 +36,7 @@ def mithral():
     push_matrix()
     translate(location[0], location[1])
     rotate(angle)
-    equilateral_triangle(HEIGHT//10)
+    equilateral_triangle(HEIGHT//10, (255,255,255), 0)
     pop_matrix()
 
 def update():
