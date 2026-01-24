@@ -1,7 +1,4 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
-import math
-import os.path
-import pygame
 from random import randint
 from engine import screen, run
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -27,13 +24,10 @@ def nearest_corner(x, y):
     if x < WIDTH/2:
         if y < HEIGHT/2:
             return (0,0)
-        else:
-            return (0,HEIGHT)
-    else:
-        if y < HEIGHT/2:
-            return (WIDTH,0)
-        else:
-            return (WIDTH,HEIGHT)
+        return (0,HEIGHT)
+    if y < HEIGHT/2:
+        return (WIDTH,0)
+    return (WIDTH,HEIGHT)
 
 class Mithril():
     def __init__(self):
@@ -61,8 +55,6 @@ def update():
         location.update()
 
 def draw():
-    global angle
-
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
