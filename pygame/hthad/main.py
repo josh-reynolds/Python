@@ -23,11 +23,24 @@ locations = []
 def get_random_underground_location():
     return (randint(0,WIDTH), randint(GROUND_LEVEL,HEIGHT))
 
+def nearest_corner(x, y):
+    if x < WIDTH/2:
+        if y < HEIGHT/2:
+            return (0,0)
+        else:
+            return (0,HEIGHT)
+    else:
+        if y < HEIGHT/2:
+            return (WIDTH,0)
+        else:
+            return (WIDTH,HEIGHT)
+
 class Mithril():
     def __init__(self):
         self.x, self.y = get_random_underground_location()
         self.radius = HEIGHT//10
         self.angle = 0
+        self.corner = nearest_corner(self.x, self.y)
 
     def update(self):
         self.angle += 0.01
@@ -40,6 +53,8 @@ class Mithril():
         equilateral_triangle(self.radius, BORDER, 2)
         line(0, 0, self.radius + 20, 0)
         pop_matrix()
+
+        screen.draw.line((0,0,0), (self.x, self.y), self.corner)
 
 def update():
     for location in locations:
