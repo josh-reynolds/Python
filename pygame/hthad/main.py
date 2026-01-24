@@ -38,6 +38,7 @@ class Mithril():
         rotate(self.angle)
         equilateral_triangle(self.radius, MITHRIL, 0)
         equilateral_triangle(self.radius, BORDER, 2)
+        line(0, 0, self.radius + 20, 0)
         pop_matrix()
 
 def update():
@@ -53,6 +54,9 @@ def draw():
 
     for location in locations:
         location.draw()
+
+
+    #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
 # Primordial Age events
 locations.append(Mithril())
