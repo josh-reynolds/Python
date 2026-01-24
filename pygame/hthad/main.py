@@ -34,11 +34,16 @@ class Mithril():
     def __init__(self):
         self.origin = get_random_underground_location()
         self.radius = HEIGHT//10
-        self.angle = 0
         self.corner = nearest_corner(self.origin)
 
+        corner_vector = PVector.normalize(PVector.sub(self.corner, self.origin))
+        heading_vector = PVector.normalize(PVector(self.origin.x, self.radius))
+
+        self.angle = heading_vector.angle_between(corner_vector)
+
     def update(self):
-        self.angle += 0.01
+        #self.angle += 0.01
+        pass
 
     def draw(self):
         push_matrix()
@@ -46,12 +51,14 @@ class Mithril():
         rotate(self.angle)
         equilateral_triangle(self.radius, MITHRIL, 0)
         equilateral_triangle(self.radius, BORDER, 2)
-        line(0, 0, self.radius + 20, 0)
+        line(0, 0, self.radius + 20, 0, 3)
         pop_matrix()
 
         screen.draw.line((0,0,0),
                          (self.origin.x, self.origin.y),
                          (self.corner.x, self.corner.y))
+
+
 
 def update():
     for location in locations:
