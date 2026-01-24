@@ -1,6 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 from random import randint
 from engine import screen, run
+from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
 from screen_matrix import equilateral_triangle
 
@@ -17,38 +18,40 @@ BORDER = (0,0,0)
 
 locations = []
 
-def get_random_underground_location():
-    return (randint(0,WIDTH), randint(GROUND_LEVEL,HEIGHT))
+def get_random_underground_location() -> PVector:
+    return PVector(randint(0,WIDTH), randint(GROUND_LEVEL,HEIGHT))
 
-def nearest_corner(x, y):
-    if x < WIDTH/2:
-        if y < HEIGHT/2:
-            return (0,0)
-        return (0,HEIGHT)
-    if y < HEIGHT/2:
-        return (WIDTH,0)
-    return (WIDTH,HEIGHT)
+def nearest_corner(point: PVector) -> PVector:
+    if point.x < WIDTH/2:
+        if point.y < HEIGHT/2:
+            return PVector(0,0)
+        return PVector(0,HEIGHT)
+    if point.y < HEIGHT/2:
+        return PVector(WIDTH,0)
+    return PVector(WIDTH,HEIGHT)
 
 class Mithril():
     def __init__(self):
-        self.x, self.y = get_random_underground_location()
+        self.origin = get_random_underground_location()
         self.radius = HEIGHT//10
         self.angle = 0
-        self.corner = nearest_corner(self.x, self.y)
+        self.corner = nearest_corner(self.origin)
 
     def update(self):
         self.angle += 0.01
 
     def draw(self):
         push_matrix()
-        translate(self.x, self.y)
+        translate(self.origin.x, self.origin.y)
         rotate(self.angle)
         equilateral_triangle(self.radius, MITHRIL, 0)
         equilateral_triangle(self.radius, BORDER, 2)
         line(0, 0, self.radius + 20, 0)
         pop_matrix()
 
-        screen.draw.line((0,0,0), (self.x, self.y), self.corner)
+        screen.draw.line((0,0,0),
+                         (self.origin.x, self.origin.y),
+                         (self.corner.x, self.corner.y))
 
 def update():
     for location in locations:
