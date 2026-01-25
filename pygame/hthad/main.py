@@ -57,10 +57,10 @@ class Mithril():
 
 class GoldVein():
     def __init__(self):
-        self.left = PVector(0, strata_depth(randint(1,6)))
-        self.right = PVector(WIDTH, strata_depth(randint(1,6)))
-        self.midpoint = PVector(self.right.x - self.left.x,
-                                self.right.y - self.left.y)
+        self.left = PVector(0, strata_depth(randint(0,5)))
+        self.right = PVector(WIDTH, strata_depth(randint(0,5)))
+        self.midpoint = PVector(WIDTH//2, 
+                                (self.right.y - self.left.y)//2 + self.left.y)
 
     def update(self):
         pass
@@ -70,6 +70,8 @@ class GoldVein():
                          (self.left.x, self.left.y),
                          (self.right.x, self.right.y),
                          8)
+        screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
+
 
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
