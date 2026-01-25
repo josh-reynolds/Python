@@ -1,4 +1,5 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
+import math
 from random import randint
 from engine import screen, run
 from pvector import PVector
@@ -36,10 +37,8 @@ class Mithril():
         self.radius = HEIGHT//10
         self.corner = nearest_corner(self.origin)
 
-        corner_vector = PVector.normalize(PVector.sub(self.corner, self.origin))
-        heading_vector = PVector.normalize(PVector(self.origin.x, self.radius))
-
-        self.angle = heading_vector.angle_between(corner_vector)
+        corner_vector = PVector.normalize(PVector.sub(self.origin, self.corner))
+        self.angle = math.radians(corner_vector.heading()) + math.pi
 
     def update(self):
         #self.angle += 0.01
@@ -59,7 +58,6 @@ class Mithril():
                          (self.corner.x, self.corner.y))
 
 
-
 def update():
     for location in locations:
         location.update()
@@ -71,7 +69,6 @@ def draw():
 
     for location in locations:
         location.draw()
-
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 

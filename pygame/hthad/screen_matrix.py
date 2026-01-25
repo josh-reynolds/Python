@@ -144,7 +144,6 @@ def equilateral_triangle(radius, color=(0,0,0), width=1):
 
     triangle(*tri_points, color, width)
 
-
 def polygon(points, color=(0,0,0), width=1):
     sm.draw_polygon(points, color, width)
 
