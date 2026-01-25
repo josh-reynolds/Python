@@ -16,6 +16,7 @@ STRATA_HEIGHT = (HEIGHT - GROUND_LEVEL) // 6
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
 MITHRIL = (255,255,255)
+GOLD = (255,0,0)    # yes, this is red - text says 'draw a red line...'
 BORDER = (0,0,0)
 
 locations = []
@@ -42,7 +43,6 @@ class Mithril():
         self.angle = math.radians(corner_vector.heading()) + math.pi
 
     def update(self):
-        #self.angle += 0.01
         pass
 
     def draw(self):
@@ -55,6 +55,22 @@ class Mithril():
 
         screen.draw.text("Mithril", center=(self.center.x, self.center.y))
 
+class GoldVein():
+    def __init__(self):
+        self.left = PVector(0, strata_depth(randint(1,6)))
+        self.right = PVector(WIDTH, strata_depth(randint(1,6)))
+        self.midpoint = PVector(self.right.x - self.left.x,
+                                self.right.y - self.left.y)
+
+    def update(self):
+        pass
+
+    def draw(self):
+        screen.draw.line(GOLD, 
+                         (self.left.x, self.left.y),
+                         (self.right.x, self.right.y),
+                         8)
+
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
@@ -65,12 +81,12 @@ def update():
 def draw():
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
+    for location in locations:
+        location.draw()
+
     for i in range(6):
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
         screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
-
-    for location in locations:
-        location.draw()
 
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
@@ -80,5 +96,6 @@ def draw():
 # Primordial Age events
 locations.append(Mithril())
 locations.append(Mithril())
+locations.append(GoldVein())
 
 run()
