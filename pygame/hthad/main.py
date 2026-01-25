@@ -33,11 +33,11 @@ def nearest_corner(point: PVector) -> PVector:
 
 class Mithril():
     def __init__(self):
-        self.origin = get_random_underground_location()
+        self.center = get_random_underground_location()
         self.radius = HEIGHT//10
-        self.corner = nearest_corner(self.origin)
+        self.corner = nearest_corner(self.center)
 
-        corner_vector = PVector.normalize(PVector.sub(self.origin, self.corner))
+        corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
         self.angle = math.radians(corner_vector.heading()) + math.pi
 
     def update(self):
@@ -46,16 +46,13 @@ class Mithril():
 
     def draw(self):
         push_matrix()
-        translate(self.origin.x, self.origin.y)
+        translate(self.center.x, self.center.y)
         rotate(self.angle)
         equilateral_triangle(self.radius, MITHRIL, 0)
         equilateral_triangle(self.radius, BORDER, 2)
-        line(0, 0, self.radius + 20, 0, 3)
         pop_matrix()
 
-        screen.draw.line((0,0,0),
-                         (self.origin.x, self.origin.y),
-                         (self.corner.x, self.corner.y))
+        screen.draw.text("Mithril", center=(self.center.x, self.center.y))
 
 
 def update():
