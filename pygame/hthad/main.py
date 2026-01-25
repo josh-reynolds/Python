@@ -11,6 +11,7 @@ HEIGHT = 850
 TITLE = "How to Host a Dungeon"
 
 GROUND_LEVEL = HEIGHT // 5
+STRATA_HEIGHT = (HEIGHT - GROUND_LEVEL) // 6
 
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
@@ -54,6 +55,8 @@ class Mithril():
 
         screen.draw.text("Mithril", center=(self.center.x, self.center.y))
 
+def strata_depth(strata: int) -> int:
+    return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
 def update():
     for location in locations:
@@ -61,6 +64,10 @@ def update():
 
 def draw():
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
+
+    for i in range(6):
+        screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
+        screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
 
     for location in locations:
         location.draw()
