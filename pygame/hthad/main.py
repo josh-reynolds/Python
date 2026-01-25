@@ -63,12 +63,13 @@ def update():
         location.update()
 
 def draw():
-    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
-    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
     for location in locations:
         location.draw()
+
+    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
+    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
