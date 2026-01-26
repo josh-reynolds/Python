@@ -81,12 +81,21 @@ class NaturalCavern():
     def __init__(self):
         self.center = get_random_underground_location()
         self.radius = BEAD
+        self.tunnel = True
+        self.tilt = randint(-FINGER//2, FINGER//2)
 
     def update(self):
         pass
 
     def draw(self):
         screen.draw.circle(self.center.x, self.center.y, self.radius, CAVERN, 0)
+
+        if self.tunnel:
+            screen.draw.line(CAVERN,
+                             (self.center.x - FINGER//2, self.center.y - self.tilt),
+                             (self.center.x + FINGER//2, self.center.y + self.tilt),
+                             12)
+
         screen.draw.text("Cavern", 
                          center=(self.center.x, self.center.y),
                          color = (255,255,255))
