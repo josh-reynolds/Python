@@ -19,9 +19,10 @@ FINGER = HEIGHT // 5
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
 MITHRIL = (255,255,255)
-GOLD = (255,0,0)    # yes, this is red - text says 'draw a red line...'
-BORDER = (0,0,0)
-CAVERN = (0,0,0)
+GOLD = (255, 0, 0)    # yes, this is red - text says 'draw a red line...'
+BORDER = (0, 0, 0)
+CAVERN = (0, 0, 0)
+WATER = (0, 0, 255)
 
 locations = []
 
@@ -58,6 +59,24 @@ class Mithril():
         pop_matrix()
 
         screen.draw.text("Mithril", center=(self.center.x, self.center.y))
+
+
+class UndergroundRiver():
+    def __init__(self):
+        self.left = PVector(0, strata_depth(randint(0,5)))
+        self.right = PVector(WIDTH, strata_depth(randint(0,5)))
+        self.midpoint = PVector(WIDTH//2, 
+                                (self.right.y - self.left.y)//2 + self.left.y)
+
+    def update(self):
+        pass
+
+    def draw(self):
+        screen.draw.line(WATER, 
+                         (self.left.x, self.left.y),
+                         (self.right.x, self.right.y),
+                         8)
+        screen.draw.text("Underground River", center=(self.midpoint.x, self.midpoint.y))
 
 class GoldVein():
     def __init__(self):
@@ -158,5 +177,6 @@ locations.append(Mithril())
 locations.append(Mithril())
 locations.append(GoldVein())
 add_caverns()
+locations.append(UndergroundRiver())
 
 run()
