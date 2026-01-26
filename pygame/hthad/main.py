@@ -12,12 +12,16 @@ TITLE = "How to Host a Dungeon"
 
 GROUND_LEVEL = HEIGHT // 5
 STRATA_HEIGHT = (HEIGHT - GROUND_LEVEL) // 6
+COLUMN_WIDTH = WIDTH // 12
+BEAD = 30
+FINGER = HEIGHT // 5
 
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
 MITHRIL = (255,255,255)
 GOLD = (255,0,0)    # yes, this is red - text says 'draw a red line...'
 BORDER = (0,0,0)
+CAVERN = (0,0,0)
 
 locations = []
 
@@ -36,7 +40,7 @@ def nearest_corner(point: PVector) -> PVector:
 class Mithril():
     def __init__(self):
         self.center = get_random_underground_location()
-        self.radius = HEIGHT//10
+        self.radius = FINGER // 2
         self.corner = nearest_corner(self.center)
 
         corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
@@ -73,6 +77,21 @@ class GoldVein():
         screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
 
 
+class NaturalCavern():
+    def __init__(self):
+        self.center = get_random_underground_location()
+        self.radius = BEAD
+
+    def update(self):
+        pass
+
+    def draw(self):
+        screen.draw.circle(self.center.x, self.center.y, self.radius, CAVERN, 0)
+        screen.draw.text("Cavern", 
+                         center=(self.center.x, self.center.y),
+                         color = (255,255,255))
+
+
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
@@ -99,5 +118,6 @@ def draw():
 locations.append(Mithril())
 locations.append(Mithril())
 locations.append(GoldVein())
+locations.append(NaturalCavern())
 
 run()
