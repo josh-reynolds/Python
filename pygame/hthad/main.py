@@ -146,10 +146,17 @@ def draw():
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
+def add_caverns():
+    locations.append(NaturalCavern())
+    cavern_count = 1
+    while randint(1,6) < 6 and cavern_count < 6:
+        locations.append(NaturalCavern())
+        cavern_count += 1
+
 # Primordial Age events
 locations.append(Mithril())
 locations.append(Mithril())
 locations.append(GoldVein())
-locations.append(NaturalCavern())
+add_caverns()
 
 run()
