@@ -81,8 +81,25 @@ class NaturalCavern():
     def __init__(self):
         self.center = get_random_underground_location()
         self.radius = BEAD
-        self.tunnel = True
-        self.tilt = randint(-FINGER//2, FINGER//2)
+        self.tunnel = False
+        self.tilt = 0
+        self.contents = None
+
+        detail = randint(1,6)
+        match detail:
+            case 1:
+                self.tunnel = True
+                self.tilt = randint(-FINGER//2, FINGER//2)
+            case 2:
+                self.contents = f"Plague {randint(1,4)}"
+            case 3:
+                self.contents = f"Gemstones {randint(1,4)}"
+            case 4:
+                pass
+            case 5:
+                self.contents = f"Primordial Beasts 1"
+            case 6:
+                self.contents = f"Fate 1"
 
     def update(self):
         pass
@@ -96,7 +113,13 @@ class NaturalCavern():
                              (self.center.x + FINGER//2, self.center.y + self.tilt),
                              12)
 
-        screen.draw.text("Cavern", 
+        if self.contents:
+            # TO_DO: line breaks not handled correctly yet
+            text = f"Cavern\n" + self.contents
+        else:
+            text = "Cavern"
+
+        screen.draw.text(text, 
                          center=(self.center.x, self.center.y),
                          color = (255,255,255))
 
