@@ -63,19 +63,22 @@ class Mithril():
 
 class UndergroundRiver():
     def __init__(self):
-        self.left = PVector(0, strata_depth(randint(0,5)))
-        self.right = PVector(WIDTH, strata_depth(randint(0,5)))
+        self.vertices = []
+        self.vertices.append(PVector(0, strata_depth(randint(0,5))))
+        self.vertices.append(PVector(WIDTH, strata_depth(randint(0,5))))
         self.midpoint = PVector(WIDTH//2, 
-                                (self.right.y - self.left.y)//2 + self.left.y)
+                                (self.vertices[0].y - self.vertices[-1].y)//2
+                                + self.vertices[-1].y)
 
     def update(self):
         pass
 
     def draw(self):
-        screen.draw.line(WATER, 
-                         (self.left.x, self.left.y),
-                         (self.right.x, self.right.y),
-                         8)
+        for i,v in enumerate(self.vertices[:-1]):
+            screen.draw.line(WATER, 
+                             (v.x, v.y),
+                             (self.vertices[i+1].x, self.vertices[i+1].y),
+                             8)
         screen.draw.text("Underground River", center=(self.midpoint.x, self.midpoint.y))
 
 class GoldVein():
