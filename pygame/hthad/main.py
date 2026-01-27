@@ -133,14 +133,18 @@ class NaturalCavern():
                              12)
 
         if self.contents:
-            # TO_DO: line breaks not handled correctly yet
-            text = f"Cavern\n" + self.contents
+            y_offset = -10
         else:
-            text = "Cavern"
+            y_offset = 0
 
-        screen.draw.text(text, 
-                         center=(self.center.x, self.center.y),
+        screen.draw.text("Cavern", 
+                         center=(self.center.x, self.center.y + y_offset),
                          color = (255,255,255))
+
+        if self.contents:
+            screen.draw.text(self.contents, 
+                             center=(self.center.x, self.center.y - y_offset),
+                             color = (255,255,255))
 
 
 def strata_depth(strata: int) -> int:
