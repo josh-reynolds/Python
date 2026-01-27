@@ -64,8 +64,14 @@ class Mithril():
 class UndergroundRiver():
     def __init__(self):
         self.vertices = []
-        self.vertices.append(PVector(0, strata_depth(randint(0,5))))
-        self.vertices.append(PVector(WIDTH, strata_depth(randint(0,5))))
+        
+        current_x = 0
+        current_y = strata_depth(randint(0,5))
+
+        while current_x < WIDTH and current_y > GROUND_LEVEL:
+            self.vertices.append(PVector(current_x, current_y))
+            current_x += FINGER
+
         self.midpoint = PVector(WIDTH//2, 
                                 (self.vertices[0].y - self.vertices[-1].y)//2
                                 + self.vertices[-1].y)
