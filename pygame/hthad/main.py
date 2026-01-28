@@ -64,6 +64,8 @@ class Mithril():
 class UndergroundRiver():
     def __init__(self):
         self.vertices = []
+
+        self.caves = []
         
         current_x = 0
         current_y = strata_depth(randint(0,5))
@@ -78,6 +80,9 @@ class UndergroundRiver():
             elif check == 2:
                 current_y += STRATA_HEIGHT
 
+            if randint(1,5) == 1:
+                self.caves.append(PVector(current_x, current_y))
+
         self.vertices.append(PVector(current_x, current_y))
 
         #self.midpoint = PVector(WIDTH//2, 
@@ -88,6 +93,9 @@ class UndergroundRiver():
         pass
 
     def draw(self):
+        for c in self.caves:
+            screen.draw.circle(c.x, c.y, BEAD, CAVERN, 0)
+
         for i,v in enumerate(self.vertices[:-1]):
             screen.draw.line(WATER, 
                              (v.x, v.y),
