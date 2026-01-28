@@ -68,13 +68,21 @@ class UndergroundRiver():
         current_x = 0
         current_y = strata_depth(randint(0,5))
 
-        while current_x < WIDTH and current_y > GROUND_LEVEL:
+        while current_x < WIDTH and current_y < HEIGHT and current_y > GROUND_LEVEL:
             self.vertices.append(PVector(current_x, current_y))
             current_x += FINGER
 
-        self.midpoint = PVector(WIDTH//2, 
-                                (self.vertices[0].y - self.vertices[-1].y)//2
-                                + self.vertices[-1].y)
+            check = randint(0,2)
+            if check == 0:
+                current_y -= STRATA_HEIGHT
+            elif check == 2:
+                current_y += STRATA_HEIGHT
+
+        self.vertices.append(PVector(current_x, current_y))
+
+        #self.midpoint = PVector(WIDTH//2, 
+                                #(self.vertices[0].y - self.vertices[-1].y)//2
+                                #+ self.vertices[-1].y)
 
     def update(self):
         pass
@@ -85,7 +93,7 @@ class UndergroundRiver():
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
-        screen.draw.text("Underground River", center=(self.midpoint.x, self.midpoint.y))
+        #screen.draw.text("Underground River", center=(self.midpoint.x, self.midpoint.y))
 
 class GoldVein():
     def __init__(self):
