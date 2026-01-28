@@ -85,10 +85,6 @@ class UndergroundRiver():
 
         self.vertices.append(PVector(current_x, current_y))
 
-        #self.midpoint = PVector(WIDTH//2, 
-                                #(self.vertices[0].y - self.vertices[-1].y)//2
-                                #+ self.vertices[-1].y)
-
     def update(self):
         pass
 
@@ -101,7 +97,7 @@ class UndergroundRiver():
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
-        #screen.draw.text("Underground River", center=(self.midpoint.x, self.midpoint.y))
+        screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
 
 class GoldVein():
     def __init__(self):
