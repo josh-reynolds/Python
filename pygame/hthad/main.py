@@ -66,6 +66,7 @@ class UndergroundRiver():
         self.vertices = []
 
         self.caves = []
+        self.lakes = []
         
         current_x = 0
         current_y = strata_depth(randint(0,5))
@@ -88,6 +89,11 @@ class UndergroundRiver():
                     current_x -= FINGER
                     current_y += STRATA_HEIGHT // 2
 
+            if current_y < GROUND_LEVEL:
+                lake_x = (current_x - self.vertices[-1].x)//2 + self.vertices[-1].x
+                lake_y = (current_y - self.vertices[-1].y)//2 + self.vertices[-1].y
+                self.lakes.append(PVector(lake_x,lake_y))
+
         self.vertices.append(PVector(current_x, current_y))
 
     def update(self):
@@ -97,6 +103,9 @@ class UndergroundRiver():
         for c in self.caves:
             screen.draw.circle(c.x, c.y, BEAD, CAVERN, 0)
 
+        for l in self.lakes:
+            screen.draw.circle(l.x, l.y, BEAD, WATER, 0)
+            
         for i,v in enumerate(self.vertices[:-1]):
             screen.draw.line(WATER, 
                              (v.x, v.y),
@@ -183,15 +192,15 @@ def update():
 def draw():
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
+    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
+    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
+
     for location in locations:
         location.draw()
 
     for i in range(6):
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
         screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
-
-    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
-    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
