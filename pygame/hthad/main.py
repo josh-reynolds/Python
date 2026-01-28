@@ -90,8 +90,14 @@ class UndergroundRiver():
                     current_y += STRATA_HEIGHT // 2
 
             if current_y < GROUND_LEVEL:
-                lake_x = (current_x - self.vertices[-1].x)//2 + self.vertices[-1].x
-                lake_y = (current_y - self.vertices[-1].y)//2 + self.vertices[-1].y
+                x1, y1 = self.vertices[-1].x, self.vertices[-1].y
+                x2, y2 = current_x, current_y
+                slope = (y2 - y1) / (x2 - x1)
+                intercept = y1 - (slope * x1)
+
+                lake_y = GROUND_LEVEL
+                lake_x = (lake_y - intercept) / slope
+
                 self.lakes.append(PVector(lake_x,lake_y))
 
         self.vertices.append(PVector(current_x, current_y))
@@ -192,15 +198,15 @@ def update():
 def draw():
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
-    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
-    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
-
     for location in locations:
         location.draw()
 
     for i in range(6):
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
         screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
+
+    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
+    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
