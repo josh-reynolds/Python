@@ -74,14 +74,19 @@ class UndergroundRiver():
             self.vertices.append(PVector(current_x, current_y))
             current_x += FINGER
 
-            check = randint(0,2)
-            if check == 0:
-                current_y -= STRATA_HEIGHT
-            elif check == 2:
-                current_y += STRATA_HEIGHT
-
-            if randint(1,5) == 1:
-                self.caves.append(PVector(current_x, current_y))
+            check = randint(0,9)
+            match check:
+                case 0 | 1 | 2:
+                    pass
+                case 3 | 4:
+                    current_y += STRATA_HEIGHT
+                case 5 | 6:
+                    current_y -= STRATA_HEIGHT
+                case 7 | 8:
+                    self.caves.append(PVector(current_x, current_y))
+                case 9:
+                    current_x -= FINGER
+                    current_y += STRATA_HEIGHT // 2
 
         self.vertices.append(PVector(current_x, current_y))
 
