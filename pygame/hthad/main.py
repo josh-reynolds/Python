@@ -188,6 +188,26 @@ class NaturalCavern():
                              color = (255,255,255))
 
 
+class CaveComplex():
+    def __init__(self):
+        self.radius = BEAD
+        self.center_1 = get_random_underground_location()
+
+    def update(self):
+        pass
+
+    def draw(self):
+        screen.draw.circle(self.center_1.x, self.center_1.y, self.radius, CAVERN, 0)
+
+        screen.draw.text("Cavern", 
+                         center=(self.center_1.x, self.center_1.y - 10),
+                         color = (255,255,255))
+
+        screen.draw.text("Primordial Beasts 1", 
+                         center=(self.center_1.x, self.center_1.y + 10),
+                         color = (255,255,255))
+
+
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
@@ -223,5 +243,6 @@ locations.append(Mithril())
 locations.append(GoldVein())
 add_caverns()
 locations.append(UndergroundRiver())
+locations.append(CaveComplex())
 
 run()
