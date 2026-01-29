@@ -209,15 +209,11 @@ class CaveComplex():
         pass
 
     def draw(self):
-        #screen.draw.line(CAVERN,
-                         #(self.center_1.x, self.center_1.y),
-                         #(self.center_2.x , self.center_2.y),
-                         #12)
-#
-        #screen.draw.line(CAVERN,
-                         #(self.center_1.x, self.center_1.y),
-                         #(self.center_3.x , self.center_3.y),
-                         #12)
+        for pair in [(0,1), (0,2)]:
+            screen.draw.line(CAVERN,
+                             (self.caverns[pair[0]].x, self.caverns[pair[0]].y),
+                             (self.caverns[pair[1]].x, self.caverns[pair[1]].y),
+                             12)
 
         for c in self.caverns:
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
