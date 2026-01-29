@@ -191,61 +191,44 @@ class NaturalCavern():
 class CaveComplex():
     def __init__(self):
         self.radius = BEAD
-        self.center_1 = get_random_underground_location()
+
+        self.caverns = []
+        self.caverns.append(get_random_underground_location())
 
         angle_1 = randint(0,359)
-        second_x = 3 * self.radius * math.cos(math.radians(angle_1)) + self.center_1.x
-        second_y = 3 * self.radius * math.sin(math.radians(angle_1)) + self.center_1.y
-        self.center_2 = PVector(second_x, second_y)
+        second_x = 3 * self.radius * math.cos(math.radians(angle_1)) + self.caverns[0].x
+        second_y = 3 * self.radius * math.sin(math.radians(angle_1)) + self.caverns[0].y
+        self.caverns.append(PVector(second_x, second_y))
 
         angle_2 = angle_1 + randint(70,290)
-        third_x = 3 * self.radius * math.cos(math.radians(angle_2)) + self.center_1.x
-        third_y = 3 * self.radius * math.sin(math.radians(angle_2)) + self.center_1.y
-        self.center_3 = PVector(third_x, second_y)
+        third_x = 3 * self.radius * math.cos(math.radians(angle_2)) + self.caverns[0].x
+        third_y = 3 * self.radius * math.sin(math.radians(angle_2)) + self.caverns[0].y
+        self.caverns.append(PVector(third_x, third_y))
 
     def update(self):
         pass
 
     def draw(self):
-        screen.draw.line(CAVERN,
-                         (self.center_1.x, self.center_1.y),
-                         (self.center_2.x , self.center_2.y),
-                         12)
+        #screen.draw.line(CAVERN,
+                         #(self.center_1.x, self.center_1.y),
+                         #(self.center_2.x , self.center_2.y),
+                         #12)
+#
+        #screen.draw.line(CAVERN,
+                         #(self.center_1.x, self.center_1.y),
+                         #(self.center_3.x , self.center_3.y),
+                         #12)
 
-        screen.draw.line(CAVERN,
-                         (self.center_1.x, self.center_1.y),
-                         (self.center_3.x , self.center_3.y),
-                         12)
+        for c in self.caverns:
+            screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
-        screen.draw.circle(self.center_1.x, self.center_1.y, self.radius, CAVERN, 0)
+            screen.draw.text("Cavern", 
+                             center=(c.x, c.y - 10),
+                             color = (255,255,255))
 
-        screen.draw.text("Cavern", 
-                         center=(self.center_1.x, self.center_1.y - 10),
-                         color = (255,255,255))
-
-        screen.draw.text("Primordial Beasts 1", 
-                         center=(self.center_1.x, self.center_1.y + 10),
-                         color = (255,255,255))
-
-        screen.draw.circle(self.center_2.x, self.center_2.y, self.radius, (255,0,0), 0)
-
-        screen.draw.text("Cavern", 
-                         center=(self.center_2.x, self.center_2.y - 10),
-                         color = (255,255,255))
-
-        screen.draw.text("Primordial Beasts 1", 
-                         center=(self.center_2.x, self.center_2.y + 10),
-                         color = (255,255,255))
-
-        screen.draw.circle(self.center_3.x, self.center_3.y, self.radius, (255,0,255), 0)
-
-        screen.draw.text("Cavern", 
-                         center=(self.center_3.x, self.center_3.y - 10),
-                         color = (255,255,255))
-
-        screen.draw.text("Primordial Beasts 1", 
-                         center=(self.center_3.x, self.center_3.y + 10),
-                         color = (255,255,255))
+            screen.draw.text("Primordial Beasts 1", 
+                             center=(c.x, c.y + 10),
+                             color = (255,255,255))
 
 
 def strata_depth(strata: int) -> int:
