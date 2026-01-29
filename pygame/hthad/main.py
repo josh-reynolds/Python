@@ -24,6 +24,8 @@ BORDER = (0, 0, 0)
 CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
 
+show_captions = False
+
 locations = []
 
 def get_random_underground_location() -> PVector:
@@ -58,7 +60,8 @@ class Mithril():
         equilateral_triangle(self.radius, BORDER, 2)
         pop_matrix()
 
-        screen.draw.text("Mithril", center=(self.center.x, self.center.y))
+        if show_captions:
+            screen.draw.text("Mithril", center=(self.center.x, self.center.y))
 
 
 class UndergroundRiver():
@@ -117,7 +120,8 @@ class UndergroundRiver():
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
-        screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
+        if show_captions:
+            screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
 
 class GoldVein():
     def __init__(self):
@@ -134,7 +138,8 @@ class GoldVein():
                          (self.left.x, self.left.y),
                          (self.right.x, self.right.y),
                          8)
-        screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
+        if show_captions:
+            screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
 
 
 class NaturalCavern():
@@ -178,11 +183,12 @@ class NaturalCavern():
         else:
             y_offset = 0
 
-        screen.draw.text("Cavern", 
-                         center=(self.center.x, self.center.y + y_offset),
-                         color = (255,255,255))
+        if show_captions:
+            screen.draw.text("Cavern", 
+                             center=(self.center.x, self.center.y + y_offset),
+                             color = (255,255,255))
 
-        if self.contents:
+        if self.contents and show_captions:
             screen.draw.text(self.contents, 
                              center=(self.center.x, self.center.y - y_offset),
                              color = (255,255,255))
@@ -222,13 +228,14 @@ class CaveComplex():
         for c in self.caverns:
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
-            screen.draw.text("Cavern", 
-                             center=(c.x, c.y - 10),
-                             color = (255,255,255))
+            if show_captions:
+                screen.draw.text("Cavern", 
+                                 center=(c.x, c.y - 10),
+                                 color = (255,255,255))
 
-            screen.draw.text("Primordial Beasts 1", 
-                             center=(c.x, c.y + 10),
-                             color = (255,255,255))
+                screen.draw.text("Primordial Beasts 1", 
+                                 center=(c.x, c.y + 10),
+                                 color = (255,255,255))
 
 
 def strata_depth(strata: int) -> int:
