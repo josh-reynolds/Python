@@ -193,10 +193,20 @@ class CaveComplex():
         self.radius = BEAD
         self.center_1 = get_random_underground_location()
 
+        angle = math.radians(randint(0,359))
+        second_x = 3 * self.radius * math.cos(angle) + self.center_1.x
+        second_y = 3 * self.radius * math.sin(angle) + self.center_1.y
+        self.center_2 = PVector(second_x, second_y)
+
     def update(self):
         pass
 
     def draw(self):
+        screen.draw.line(CAVERN,
+                         (self.center_1.x, self.center_1.y),
+                         (self.center_2.x , self.center_2.y),
+                         12)
+
         screen.draw.circle(self.center_1.x, self.center_1.y, self.radius, CAVERN, 0)
 
         screen.draw.text("Cavern", 
@@ -206,6 +216,17 @@ class CaveComplex():
         screen.draw.text("Primordial Beasts 1", 
                          center=(self.center_1.x, self.center_1.y + 10),
                          color = (255,255,255))
+
+        screen.draw.circle(self.center_2.x, self.center_2.y, self.radius, (255,0,0), 0)
+
+        screen.draw.text("Cavern", 
+                         center=(self.center_2.x, self.center_2.y - 10),
+                         color = (255,255,255))
+
+        screen.draw.text("Primordial Beasts 1", 
+                         center=(self.center_2.x, self.center_2.y + 10),
+                         color = (255,255,255))
+
 
 
 def strata_depth(strata: int) -> int:
