@@ -188,6 +188,12 @@ class NaturalCavern():
                              color = (255,255,255))
 
 
+def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
+        new_x = radius * math.cos(math.radians(angle)) + origin.x
+        new_y = radius * math.sin(math.radians(angle)) + origin.y
+        return PVector(new_x, new_y)
+
+
 class CaveComplex():
     def __init__(self):
         self.radius = BEAD
@@ -196,14 +202,12 @@ class CaveComplex():
         self.caverns.append(get_random_underground_location())
 
         angle_1 = randint(0,359)
-        second_x = 3 * self.radius * math.cos(math.radians(angle_1)) + self.caverns[0].x
-        second_y = 3 * self.radius * math.sin(math.radians(angle_1)) + self.caverns[0].y
-        self.caverns.append(PVector(second_x, second_y))
+        second_point = get_orbital_point(self.caverns[0], 3 * self.radius, angle_1)
+        self.caverns.append(second_point)
 
         angle_2 = angle_1 + randint(70,290)
-        third_x = 3 * self.radius * math.cos(math.radians(angle_2)) + self.caverns[0].x
-        third_y = 3 * self.radius * math.sin(math.radians(angle_2)) + self.caverns[0].y
-        self.caverns.append(PVector(third_x, third_y))
+        third_point = get_orbital_point(self.caverns[0], 3 * self.radius, angle_2)
+        self.caverns.append(third_point)
 
     def update(self):
         pass
