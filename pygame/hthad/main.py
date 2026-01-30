@@ -246,14 +246,14 @@ class AncientWyrm():
         self.caverns.append(get_random_underground_location())
 
         angle_1 = randint(0,359)
-        second_point = get_orbital_point(self.caverns[0], self.radius, angle_1)
+        second_point = get_orbital_point(self.caverns[0], self.radius * 1.5, angle_1)
         self.caverns.append(second_point)
 
     def update(self):
         pass
 
     def draw(self):
-        for c in self.caverns:
+        for i,c in enumerate(self.caverns):
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
             if show_captions:
@@ -261,9 +261,14 @@ class AncientWyrm():
                                  center=(c.x, c.y - 10),
                                  color = (255,255,255))
 
-                screen.draw.text("AncientWyrm 1", 
-                                 center=(c.x, c.y + 10),
-                                 color = (255,255,255))
+                if i == 0:
+                    screen.draw.text("AncientWyrm 1", 
+                                     center=(c.x, c.y + 10),
+                                     color = (255,255,255))
+                else:
+                    screen.draw.text("Treasure 1", 
+                                     center=(c.x, c.y + 10),
+                                     color = (255,255,255))
 
 
 def strata_depth(strata: int) -> int:
