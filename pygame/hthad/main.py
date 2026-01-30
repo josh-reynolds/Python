@@ -24,7 +24,7 @@ BORDER = (0, 0, 0)
 CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
 
-show_captions = False
+show_captions = True
 
 locations = []
 
@@ -238,6 +238,34 @@ class CaveComplex():
                                  color = (255,255,255))
 
 
+class AncientWyrm():
+    def __init__(self):
+        self.radius = BEAD
+
+        self.caverns = []
+        self.caverns.append(get_random_underground_location())
+
+        angle_1 = randint(0,359)
+        second_point = get_orbital_point(self.caverns[0], self.radius, angle_1)
+        self.caverns.append(second_point)
+
+    def update(self):
+        pass
+
+    def draw(self):
+        for c in self.caverns:
+            screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
+
+            if show_captions:
+                screen.draw.text("Cavern", 
+                                 center=(c.x, c.y - 10),
+                                 color = (255,255,255))
+
+                screen.draw.text("AncientWyrm 1", 
+                                 center=(c.x, c.y + 10),
+                                 color = (255,255,255))
+
+
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
@@ -274,5 +302,6 @@ locations.append(GoldVein())
 add_caverns()
 locations.append(UndergroundRiver())
 locations.append(CaveComplex())
+locations.append(AncientWyrm())
 
 run()
