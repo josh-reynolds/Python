@@ -319,4 +319,15 @@ for i in range(3):
         # TO_DO: there is an additional choice for natural disasters,
         #        implement when we come to that rule
 
+# Age of Civilization
+# TO_DO: implmenting Dwarves first, Dark Elf to come later
+
+# Dwarves
+has_minerals = any(type(l) is Mithril or type(l) is GoldVein for l in locations)
+if not has_minerals:
+    print("Adding gold vein")
+    locations.append(GoldVein())
+
+
+
 run()
