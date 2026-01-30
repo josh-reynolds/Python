@@ -1,6 +1,6 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
-from random import randint
+from random import randint, choice
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -328,6 +328,11 @@ if not has_minerals:
     print("Adding gold vein")
     locations.append(GoldVein())
 
+# pick a spot on the surface above a gold vein or mithral deposit
+minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
+selection = choice(minerals)
+print(minerals)
+print(selection)
 
 
 run()
