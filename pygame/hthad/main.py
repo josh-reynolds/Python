@@ -301,12 +301,22 @@ def add_caverns():
         cavern_count += 1
 
 # Primordial Age events
-locations.append(Mithril())
-locations.append(Mithril())
-locations.append(GoldVein())
-add_caverns()
-locations.append(UndergroundRiver())
-locations.append(CaveComplex())
-locations.append(AncientWyrm())
+for i in range(3):
+    check = randint(0,6)
+    match check:
+        case 0:
+            locations.append(Mithril())
+        case 1 | 2:
+            add_caverns()
+        case 3:
+            locations.append(GoldVein())
+        case 4:
+            locations.append(CaveComplex())
+        case 5:
+            locations.append(UndergroundRiver())
+        case 6:
+            locations.append(AncientWyrm())
+        # TO_DO: there is an additional choice for natural disasters,
+        #        implement when we come to that rule
 
 run()
