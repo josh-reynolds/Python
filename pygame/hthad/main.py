@@ -312,6 +312,12 @@ class DwarfMine():
     def draw(self):
         screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
         screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
+        screen.draw.rect(self.x_location - BEAD//2, self.depth - BEAD//2,
+                         BEAD, BEAD, DWARF, 0)
+
+        half_height = (self.depth - GROUND_LEVEL)//2 + GROUND_LEVEL
+        screen.draw.rect(self.x_location - BEAD//2, half_height - BEAD//2,
+                         BEAD, BEAD, DWARF, 0)
 
         if show_labels:
             screen.draw.text("Dwarf Mine", center=(self.x_location, GROUND_LEVEL + 10))
@@ -355,6 +361,7 @@ if not has_minerals:
 # pick a spot on the surface above a gold vein or mithral deposit
 minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
 selection = choice(minerals)
+# TO_DO: alternatively, choose the mineral closest to the surface
 
 x_location = 0
 depth = 0
