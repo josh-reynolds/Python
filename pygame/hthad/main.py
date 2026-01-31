@@ -25,7 +25,7 @@ CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
 DWARF = (100, 80, 255)
 
-show_captions = True
+show_labels = True
 
 locations = []
 
@@ -61,7 +61,7 @@ class Mithril():
         equilateral_triangle(self.radius, BORDER, 2)
         pop_matrix()
 
-        if show_captions:
+        if show_labels:
             screen.draw.text("Mithril", center=(self.center.x, self.center.y))
 
 
@@ -121,7 +121,7 @@ class UndergroundRiver():
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
-        if show_captions:
+        if show_labels:
             screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
 
 class GoldVein():
@@ -139,7 +139,7 @@ class GoldVein():
                          (self.left.x, self.left.y),
                          (self.right.x, self.right.y),
                          8)
-        if show_captions:
+        if show_labels:
             screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
 
 
@@ -184,12 +184,12 @@ class NaturalCavern():
         else:
             y_offset = 0
 
-        if show_captions:
+        if show_labels:
             screen.draw.text("Cavern", 
                              center=(self.center.x, self.center.y + y_offset),
                              color = (255,255,255))
 
-        if self.contents and show_captions:
+        if self.contents and show_labels:
             screen.draw.text(self.contents, 
                              center=(self.center.x, self.center.y - y_offset),
                              color = (255,255,255))
@@ -229,7 +229,7 @@ class CaveComplex():
         for c in self.caverns:
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
-            if show_captions:
+            if show_labels:
                 screen.draw.text("Cavern", 
                                  center=(c.x, c.y - 10),
                                  color = (255,255,255))
@@ -257,7 +257,7 @@ class AncientWyrm():
         for i,c in enumerate(self.caverns):
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
-            if show_captions:
+            if show_labels:
                 screen.draw.text("Cavern", 
                                  center=(c.x, c.y - 10),
                                  color = (255,255,255))
@@ -312,6 +312,9 @@ class DwarfMine():
     def draw(self):
         screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
         screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
+
+        if show_labels:
+            screen.draw.text("Dwarf Mine", center=(self.x_location, GROUND_LEVEL + 10))
 
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
         x1, y1 = start.x, start.y
