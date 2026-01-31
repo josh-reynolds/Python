@@ -23,6 +23,7 @@ GOLD = (255, 0, 0)    # yes, this is red - text says 'draw a red line...'
 BORDER = (0, 0, 0)
 CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
+DWARF = (100, 80, 255)
 
 show_captions = True
 
@@ -300,6 +301,16 @@ def add_caverns():
         locations.append(NaturalCavern())
         cavern_count += 1
 
+class DwarfMine():
+    def __init__(self, x_location: int):
+        self.x_location = x_location
+
+    def update(self):
+        pass
+
+    def draw(self):
+        screen.draw.rect(self.x_location - 20, GROUND_LEVEL, 20, 20, DWARF, 0)
+
 # Primordial Age events
 for i in range(3):
     check = randint(0,6)
@@ -331,8 +342,23 @@ if not has_minerals:
 # pick a spot on the surface above a gold vein or mithral deposit
 minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
 selection = choice(minerals)
-print(minerals)
-print(selection)
+
+x_location = 0
+if isinstance(selection, Mithril):
+    x_location = selection.center.x
+
+if isinstance(selection, GoldVein):
+    if selection.left.y < selection.right.y:
+        x_location = FINGER
+    elif selection.right.y < selection.left.y:
+        x_location = width - FINGER
+    else:
+        if randint(0,1) == 9:
+            x_location = FINGER
+        else:
+            x_location = width - FINGER
+
+locations.append(DwarfMine(x_location))
 
 
 run()
