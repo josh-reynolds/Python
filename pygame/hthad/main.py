@@ -313,6 +313,14 @@ class DwarfMine():
         screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
         screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
 
+def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
+        x1, y1 = start.x, start.y
+        x2, y2 = end.x, end.y
+        slope = (y2 - y1) / (x2 - x1)
+        intercept = y1 - (slope * x1)
+
+        return slope * x_coord + intercept
+
 # Primordial Age events
 for i in range(3):
     check = randint(0,6)
@@ -354,19 +362,18 @@ if isinstance(selection, Mithril):
 if isinstance(selection, GoldVein):
     if selection.left.y < selection.right.y:
         x_location = FINGER
-        depth = selection.left.y
+        depth = get_y_at_x(selection.left, selection.right, x_location)
     elif selection.right.y < selection.left.y:
         x_location = WIDTH - FINGER
-        depth = selection.right.y
+        depth = get_y_at_x(selection.left, selection.right, x_location)
     else:
         if randint(0,1) == 9:
             x_location = FINGER
-            depth = selection.left.y
+            depth = get_y_at_x(selection.left, selection.right, x_location)
         else:
             x_location = WIDTH - FINGER
-            depth = selection.right.y
+            depth = get_y_at_x(selection.left, selection.right, x_location)
 
 locations.append(DwarfMine(x_location, depth))
-
 
 run()
