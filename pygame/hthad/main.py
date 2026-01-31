@@ -302,14 +302,16 @@ def add_caverns():
         cavern_count += 1
 
 class DwarfMine():
-    def __init__(self, x_location: int):
+    def __init__(self, x_location: int, depth: int):
         self.x_location = x_location
+        self.depth = depth
 
     def update(self):
         pass
 
     def draw(self):
-        screen.draw.rect(self.x_location - 20, GROUND_LEVEL, 20, 20, DWARF, 0)
+        screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
+        screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
 
 # Primordial Age events
 for i in range(3):
@@ -344,21 +346,27 @@ minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
 selection = choice(minerals)
 
 x_location = 0
+depth = 0
 if isinstance(selection, Mithril):
     x_location = selection.center.x
+    depth = selection.center.y
 
 if isinstance(selection, GoldVein):
     if selection.left.y < selection.right.y:
         x_location = FINGER
+        depth = selection.left.y
     elif selection.right.y < selection.left.y:
-        x_location = width - FINGER
+        x_location = WIDTH - FINGER
+        depth = selection.right.y
     else:
         if randint(0,1) == 9:
             x_location = FINGER
+            depth = selection.left.y
         else:
-            x_location = width - FINGER
+            x_location = WIDTH - FINGER
+            depth = selection.right.y
 
-locations.append(DwarfMine(x_location))
+locations.append(DwarfMine(x_location, depth))
 
 
 run()
