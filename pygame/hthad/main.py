@@ -259,40 +259,22 @@ def cave_complex_factory() -> List[Cavern | Tunnel]:
 
     return locations
 
+def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
+    radius = BEAD
+    locations = []
 
-class AncientWyrm():
-    def __init__(self) -> None:
-        self.radius = BEAD
+    first_point = get_random_underground_location()
+    contents_1 = Entity("Ancient Wyrm 1")
+    locations.append(Cavern(first_point, contents_1, False, 0))
 
-        self.caverns = []
-        self.caverns.append(get_random_underground_location())
+    angle_1 = randint(0,359)
+    second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
+    contents_2 = Entity("Treasure 1")
+    locations.append(Cavern(second_point, contents_2, False, 0))
 
-        angle_1 = randint(0,359)
-        second_point = get_orbital_point(self.caverns[0], self.radius * 1.5, angle_1)
-        self.caverns.append(second_point)
+    locations.append(Tunnel(locations[0], locations[1]))
 
-    def update(self) -> None:
-        pass
-
-    def draw(self) -> None:
-        for i,c in enumerate(self.caverns):
-            screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
-
-            if show_labels:
-                screen.draw.text("Cavern", 
-                                 center=(c.x, c.y - 10),
-                                 color = (255,255,255))
-
-                if i == 0:
-                    contents = Entity("Ancient Wyrm 1")
-                    screen.draw.text(f"{contents}", 
-                                     center=(c.x, c.y + 10),
-                                     color = (255,255,255))
-                else:
-                    contents = Entity("Treasure 1")
-                    screen.draw.text(f"{contents}", 
-                                     center=(c.x, c.y + 10),
-                                     color = (255,255,255))
+    return locations
 
 
 def strata_depth(strata: int) -> int:
@@ -369,7 +351,7 @@ for i in range(3):
         case 5:
             locations.append(UndergroundRiver())
         case 6:
-            locations.append(AncientWyrm())
+            locations += ancient_wyrm_factory()
         # TO_DO: there is an additional choice for natural disasters,
         #        implement when we come to that rule
 
