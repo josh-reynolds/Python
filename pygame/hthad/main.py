@@ -154,40 +154,24 @@ class Location():
     def __init__(self, coordinate: PVector):
         self.coordinate = coordinate
 
-class NaturalCavern():
-    def __init__(self):
-        self.center = get_random_underground_location()
+class Cavern(Location):
+    def __init__(self, coordinate: PVector, contents: Entity=None, tunnel: bool=False, tilt: int=0):
+        super().__init__(coordinate)
         self.radius = BEAD
-        self.tunnel = False
-        self.tilt = 0
-        self.contents = None
-
-        detail = randint(1,6)
-        match detail:
-            case 1:
-                self.tunnel = True
-                self.tilt = randint(-FINGER//2, FINGER//2)
-            case 2:
-                self.contents = Entity(f"Plague {randint(1,4)}")
-            case 3:
-                self.contents = Entity(f"Gemstones {randint(1,4)}")
-            case 4:
-                pass
-            case 5:
-                self.contents = Entity(f"Primordial Beasts 1")
-            case 6:
-                self.contents = Entity(f"Fate 1")
+        self.tunnel = tunnel
+        self.tilt = tilt
+        self.contents = contents
 
     def update(self):
         pass
 
     def draw(self):
-        screen.draw.circle(self.center.x, self.center.y, self.radius, CAVERN, 0)
+        screen.draw.circle(self.coordinate.x, self.coordinate.y, self.radius, CAVERN, 0)
 
         if self.tunnel:
             screen.draw.line(CAVERN,
-                             (self.center.x - FINGER//2, self.center.y - self.tilt),
-                             (self.center.x + FINGER//2, self.center.y + self.tilt),
+                             (self.coordinate.x - FINGER//2, self.coordinate.y - self.tilt),
+                             (self.coordinate.x + FINGER//2, self.coordinate.y + self.tilt),
                              12)
 
         if self.contents:
@@ -197,13 +181,38 @@ class NaturalCavern():
 
         if show_labels:
             screen.draw.text("Cavern", 
-                             center=(self.center.x, self.center.y + y_offset),
+                             center=(self.coordinate.x, self.coordinate.y + y_offset),
                              color = (255,255,255))
 
         if self.contents and show_labels:
             screen.draw.text(f"{self.contents}", 
-                             center=(self.center.x, self.center.y - y_offset),
+                             center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
+
+
+def natural_cavern_factory() -> Cavern:
+    coordinate = get_random_underground_location()
+
+    tunnel = False
+    tilt = 0
+    contents = None
+    detail = randint(1,6)
+    match detail:
+        case 1:
+            tunnel = True
+            tilt = randint(-FINGER//2, FINGER//2)
+        case 2:
+            contents = Entity(f"Plague {randint(1,4)}")
+        case 3:
+            contents = Entity(f"Gemstones {randint(1,4)}")
+        case 4:
+            pass
+        case 5:
+            contents = Entity(f"Primordial Beasts 1")
+        case 6:
+            contents = Entity(f"Fate 1")
+
+    return Cavern(coordinate, contents, tunnel, tilt)
 
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
@@ -309,10 +318,10 @@ def draw():
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
 def add_caverns():
-    locations.append(NaturalCavern())
+    locations.append(natural_cavern_factory())
     cavern_count = 1
     while randint(1,6) < 6 and cavern_count < 6:
-        locations.append(NaturalCavern())
+        locations.append(natural_cavern_factory())
         cavern_count += 1
 
 class DwarfMine():
