@@ -143,6 +143,17 @@ class GoldVein():
             screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
 
 
+class Entity():
+    def __init__(self, name: str):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+class Location():
+    def __init__(self, coordinate: PVector):
+        self.coordinate = coordinate
+
 class NaturalCavern():
     def __init__(self):
         self.center = get_random_underground_location()
@@ -157,15 +168,15 @@ class NaturalCavern():
                 self.tunnel = True
                 self.tilt = randint(-FINGER//2, FINGER//2)
             case 2:
-                self.contents = f"Plague {randint(1,4)}"
+                self.contents = Entity(f"Plague {randint(1,4)}")
             case 3:
-                self.contents = f"Gemstones {randint(1,4)}"
+                self.contents = Entity(f"Gemstones {randint(1,4)}")
             case 4:
                 pass
             case 5:
-                self.contents = f"Primordial Beasts 1"
+                self.contents = Entity(f"Primordial Beasts 1")
             case 6:
-                self.contents = f"Fate 1"
+                self.contents = Entity(f"Fate 1")
 
     def update(self):
         pass
@@ -190,7 +201,7 @@ class NaturalCavern():
                              color = (255,255,255))
 
         if self.contents and show_labels:
-            screen.draw.text(self.contents, 
+            screen.draw.text(f"{self.contents}", 
                              center=(self.center.x, self.center.y - y_offset),
                              color = (255,255,255))
 
@@ -234,7 +245,8 @@ class CaveComplex():
                                  center=(c.x, c.y - 10),
                                  color = (255,255,255))
 
-                screen.draw.text("Primordial Beasts 1", 
+                contents = Entity("Primordial Beasts 1")
+                screen.draw.text(f"{contents}", 
                                  center=(c.x, c.y + 10),
                                  color = (255,255,255))
 
@@ -263,11 +275,13 @@ class AncientWyrm():
                                  color = (255,255,255))
 
                 if i == 0:
-                    screen.draw.text("AncientWyrm 1", 
+                    contents = Entity("Ancient Wyrm 1")
+                    screen.draw.text(f"{contents}", 
                                      center=(c.x, c.y + 10),
                                      color = (255,255,255))
                 else:
-                    screen.draw.text("Treasure 1", 
+                    contents = Entity("Treasure 1")
+                    screen.draw.text(f"{contents}", 
                                      center=(c.x, c.y + 10),
                                      color = (255,255,255))
 
@@ -305,6 +319,7 @@ class DwarfMine():
     def __init__(self, x_location: int, depth: int):
         self.x_location = x_location
         self.depth = depth
+        # TO_DO: make up a name for the Dwarven tribe
 
     def update(self):
         pass
