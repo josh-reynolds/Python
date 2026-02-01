@@ -200,7 +200,10 @@ class Tunnel():
         pass
 
     def draw(self):
-        pass
+        screen.draw.line(CAVERN,
+                         (self.start.coordinate.x, self.start.coordinate.y),
+                         (self.end.coordinate.x, self.end.coordinate.y),
+                         12)
 
 
 def natural_cavern_factory() -> Cavern:
@@ -255,45 +258,6 @@ def cave_complex_factory() -> List[Cavern | Tunnel]:
     locations.append(Tunnel(locations[0], locations[2]))
 
     return locations
-
-
-class CaveComplex():
-    def __init__(self) -> None:
-        self.radius = BEAD
-
-        self.caverns = []
-        self.caverns.append(get_random_underground_location())
-
-        angle_1 = randint(0,359)
-        second_point = get_orbital_point(self.caverns[0], 3 * self.radius, angle_1)
-        self.caverns.append(second_point)
-
-        angle_2 = angle_1 + randint(70,290)
-        third_point = get_orbital_point(self.caverns[0], 3 * self.radius, angle_2)
-        self.caverns.append(third_point)
-
-    def update(self) -> None:
-        pass
-
-    def draw(self) -> None:
-        for pair in [(0,1), (0,2)]:
-            screen.draw.line(CAVERN,
-                             (self.caverns[pair[0]].x, self.caverns[pair[0]].y),
-                             (self.caverns[pair[1]].x, self.caverns[pair[1]].y),
-                             12)
-
-        for c in self.caverns:
-            screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
-
-            if show_labels:
-                screen.draw.text("Cavern", 
-                                 center=(c.x, c.y - 10),
-                                 color = (255,255,255))
-
-                contents = Entity("Primordial Beasts 1")
-                screen.draw.text(f"{contents}", 
-                                 center=(c.x, c.y + 10),
-                                 color = (255,255,255))
 
 
 class AncientWyrm():
