@@ -1,6 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice
+from typing import List
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -42,7 +43,7 @@ def nearest_corner(point: PVector) -> PVector:
     return PVector(WIDTH,HEIGHT)
 
 class Mithril():
-    def __init__(self):
+    def __init__(self) -> None:
         self.center = get_random_underground_location()
         self.radius = FINGER // 2
         self.corner = nearest_corner(self.center)
@@ -50,10 +51,10 @@ class Mithril():
         corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
         self.angle = math.radians(corner_vector.heading()) + math.pi
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         push_matrix()
         translate(self.center.x, self.center.y)
         rotate(self.angle)
@@ -66,7 +67,7 @@ class Mithril():
 
 
 class UndergroundRiver():
-    def __init__(self):
+    def __init__(self) -> None:
         self.vertices = []
 
         self.caves = []
@@ -106,10 +107,10 @@ class UndergroundRiver():
 
         self.vertices.append(PVector(current_x, current_y))
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         for c in self.caves:
             screen.draw.circle(c.x, c.y, BEAD, CAVERN, 0)
 
@@ -125,16 +126,16 @@ class UndergroundRiver():
             screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
 
 class GoldVein():
-    def __init__(self):
+    def __init__(self) -> None:
         self.left = PVector(0, strata_depth(randint(0,5)))
         self.right = PVector(WIDTH, strata_depth(randint(0,5)))
         self.midpoint = PVector(WIDTH//2, 
                                 (self.right.y - self.left.y)//2 + self.left.y)
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         screen.draw.line(GOLD, 
                          (self.left.x, self.left.y),
                          (self.right.x, self.right.y),
@@ -144,28 +145,29 @@ class GoldVein():
 
 
 class Entity():
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.name = name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 class Location():
-    def __init__(self, coordinate: PVector):
+    def __init__(self, coordinate: PVector) -> None:
         self.coordinate = coordinate
 
 class Cavern(Location):
-    def __init__(self, coordinate: PVector, contents: Entity=None, tunnel: bool=False, tilt: int=0):
+    def __init__(self, coordinate: PVector, contents: Entity=None, 
+                 tunnel: bool=False, tilt: int=0) -> None:
         super().__init__(coordinate)
         self.radius = BEAD
         self.tunnel = tunnel
         self.tilt = tilt
         self.contents = contents
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         screen.draw.circle(self.coordinate.x, self.coordinate.y, self.radius, CAVERN, 0)
 
         if self.tunnel:
@@ -188,6 +190,17 @@ class Cavern(Location):
             screen.draw.text(f"{self.contents}", 
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
+
+class Tunnel():
+    def __init__(self, start: Location, end: Location) -> None:
+        self.start = start
+        self.end = end
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
 
 
 def natural_cavern_factory() -> Cavern:
@@ -220,9 +233,32 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
         new_y = radius * math.sin(math.radians(angle)) + origin.y
         return PVector(new_x, new_y)
 
+def cave_complex_factory() -> List[Cavern | Tunnel]:
+    radius = BEAD
+    locations = []
+
+    first_point = get_random_underground_location()
+    contents_1 = Entity("Primordial Beasts 1")
+    locations.append(Cavern(first_point, contents_1, False, 0))
+
+    angle_1 = randint(0,359)
+    second_point = get_orbital_point(first_point, 3 * radius, angle_1)
+    contents_2 = Entity("Primordial Beasts 1")
+    locations.append(Cavern(second_point, contents_2, False, 0))
+
+    angle_2 = angle_1 + randint(70,290)
+    third_point = get_orbital_point(first_point, 3 * radius, angle_2)
+    contents_3 = Entity("Primordial Beasts 1")
+    locations.append(Cavern(third_point, contents_3, False, 0))
+
+    locations.append(Tunnel(locations[0], locations[1]))
+    locations.append(Tunnel(locations[0], locations[2]))
+
+    return locations
+
 
 class CaveComplex():
-    def __init__(self):
+    def __init__(self) -> None:
         self.radius = BEAD
 
         self.caverns = []
@@ -236,10 +272,10 @@ class CaveComplex():
         third_point = get_orbital_point(self.caverns[0], 3 * self.radius, angle_2)
         self.caverns.append(third_point)
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         for pair in [(0,1), (0,2)]:
             screen.draw.line(CAVERN,
                              (self.caverns[pair[0]].x, self.caverns[pair[0]].y),
@@ -261,7 +297,7 @@ class CaveComplex():
 
 
 class AncientWyrm():
-    def __init__(self):
+    def __init__(self) -> None:
         self.radius = BEAD
 
         self.caverns = []
@@ -271,10 +307,10 @@ class AncientWyrm():
         second_point = get_orbital_point(self.caverns[0], self.radius * 1.5, angle_1)
         self.caverns.append(second_point)
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         for i,c in enumerate(self.caverns):
             screen.draw.circle(c.x, c.y, self.radius, CAVERN, 0)
 
@@ -298,11 +334,11 @@ class AncientWyrm():
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
-def update():
+def update() -> None:
     for location in locations:
         location.update()
 
-def draw():
+def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
     for location in locations:
@@ -317,7 +353,7 @@ def draw():
 
     #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
-def add_caverns():
+def add_caverns() -> None:
     locations.append(natural_cavern_factory())
     cavern_count = 1
     while randint(1,6) < 6 and cavern_count < 6:
@@ -325,15 +361,15 @@ def add_caverns():
         cavern_count += 1
 
 class DwarfMine():
-    def __init__(self, x_location: int, depth: int):
+    def __init__(self, x_location: int, depth: int) -> None:
         self.x_location = x_location
         self.depth = depth
         # TO_DO: make up a name for the Dwarven tribe
 
-    def update(self):
+    def update(self) -> None:
         pass
 
-    def draw(self):
+    def draw(self) -> None:
         screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
         screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
         screen.draw.rect(self.x_location - BEAD//2, self.depth - BEAD//2,
@@ -365,7 +401,7 @@ for i in range(3):
         case 3:
             locations.append(GoldVein())
         case 4:
-            locations.append(CaveComplex())
+            locations += cave_complex_factory()
         case 5:
             locations.append(UndergroundRiver())
         case 6:
