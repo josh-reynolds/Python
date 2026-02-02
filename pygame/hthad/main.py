@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice
-from typing import List
+from typing import List, Tuple
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -206,15 +206,16 @@ class Room(Location):
                          self.size, self.size, DWARF, 0)
 
 class Tunnel():
-    def __init__(self, start: Location, end: Location) -> None:
+    def __init__(self, start: Location, end: Location, color: Tuple=CAVERN) -> None:
         self.start = start
         self.end = end
+        self.color = color
 
     def update(self):
         pass
 
     def draw(self):
-        screen.draw.line(CAVERN,
+        screen.draw.line(self.color,
                          (self.start.coordinate.x, self.start.coordinate.y),
                          (self.end.coordinate.x, self.end.coordinate.y),
                          12)
@@ -329,8 +330,8 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
 
     locations.append(Room(PVector(x_location, depth), Entity("Treasure")))
 
-    locations.append(Tunnel(locations[0], locations[1]))
-    locations.append(Tunnel(locations[1], locations[2]))
+    locations.append(Tunnel(locations[0], locations[1], DWARF))
+    locations.append(Tunnel(locations[1], locations[2], DWARF))
 
     return locations
 
