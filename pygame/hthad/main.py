@@ -159,7 +159,7 @@ class Cavern(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, 
                  tunnel: bool=False, tilt: int=0) -> None:
         super().__init__(coordinate)
-        self.radius = BEAD
+        self.radius = BEAD//2
         self.tunnel = tunnel
         self.tilt = tilt
         self.contents = contents
@@ -190,6 +190,20 @@ class Cavern(Location):
             screen.draw.text(f"{self.contents}", 
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
+
+class Room(Location):
+    def __init__(self, coordinate: PVector, contents: Entity=None) -> None:
+        self.coordinate = coordinate
+        self.size = BEAD
+        self.contents = contents
+
+    def update(self) -> None:
+        pass
+
+    def draw(self) -> None:
+        screen.draw.rect(self.coordinate.x - self.size/2, 
+                         self.coordinate.y - self.size/2,
+                         self.size, self.size, DWARF, 0)
 
 class Tunnel():
     def __init__(self, start: Location, end: Location) -> None:
@@ -276,7 +290,6 @@ def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
 
     return locations
 
-
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
@@ -306,27 +319,20 @@ def add_caverns() -> None:
         locations.append(natural_cavern_factory())
         cavern_count += 1
 
-class DwarfMine():
-    def __init__(self, x_location: int, depth: int) -> None:
-        self.x_location = x_location
-        self.depth = depth
-        # TO_DO: make up a name for the Dwarven tribe
+def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
+    locations = []
 
-    def update(self) -> None:
-        pass
+    locations.append(Room(PVector(x_location, GROUND_LEVEL)))
+    
+    half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
+    locations.append(Room(PVector(x_location, half_height), Entity("Dwarves")))
 
-    def draw(self) -> None:
-        screen.draw.rect(self.x_location - 10, GROUND_LEVEL, 20, 20, DWARF, 0)
-        screen.draw.line(DWARF, (self.x_location, GROUND_LEVEL), (self.x_location, self.depth), 4)
-        screen.draw.rect(self.x_location - BEAD//2, self.depth - BEAD//2,
-                         BEAD, BEAD, DWARF, 0)
+    locations.append(Room(PVector(x_location, depth), Entity("Treasure")))
 
-        half_height = (self.depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-        screen.draw.rect(self.x_location - BEAD//2, half_height - BEAD//2,
-                         BEAD, BEAD, DWARF, 0)
+    locations.append(Tunnel(locations[0], locations[1]))
+    locations.append(Tunnel(locations[1], locations[2]))
 
-        if show_labels:
-            screen.draw.text("Dwarf Mine", center=(self.x_location, GROUND_LEVEL + 10))
+    return locations
 
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
         x1, y1 = start.x, start.y
@@ -390,6 +396,6 @@ if isinstance(selection, GoldVein):
             x_location = WIDTH - FINGER
             depth = get_y_at_x(selection.left, selection.right, x_location)
 
-locations.append(DwarfMine(x_location, depth))
+locations += dwarf_mine_factory(x_location, depth)
 
 run()
