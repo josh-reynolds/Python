@@ -51,6 +51,8 @@ class Mithril():
         corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
         self.angle = math.radians(corner_vector.heading()) + math.pi
 
+        self.z_order = 0
+
     def update(self) -> None:
         pass
 
@@ -72,6 +74,8 @@ class UndergroundRiver():
 
         self.caves = []
         self.lakes = []
+
+        self.z_order = 0
         
         current_x = 0
         current_y = strata_depth(randint(0,5))
@@ -131,6 +135,7 @@ class GoldVein():
         self.right = PVector(WIDTH, strata_depth(randint(0,5)))
         self.midpoint = PVector(WIDTH//2, 
                                 (self.right.y - self.left.y)//2 + self.left.y)
+        self.z_order = 0
 
     def update(self) -> None:
         pass
@@ -163,6 +168,7 @@ class Cavern(Location):
         self.tunnel = tunnel
         self.tilt = tilt
         self.contents = contents
+        self.z_order = 2
 
     def update(self) -> None:
         pass
@@ -196,6 +202,7 @@ class Room(Location):
         self.coordinate = coordinate
         self.size = BEAD
         self.contents = contents
+        self.z_order = 2
 
     def update(self) -> None:
         pass
@@ -210,6 +217,7 @@ class Tunnel():
         self.start = start
         self.end = end
         self.color = color
+        self.z_order = 1
 
     def update(self):
         pass
@@ -301,7 +309,16 @@ def update() -> None:
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
-    for location in locations:
+    back = [l for l in locations if l.z_order == 0]
+    for location in back:
+        location.draw()
+
+    middle = [l for l in locations if l.z_order == 1]
+    for location in middle:
+        location.draw()
+
+    front = [l for l in locations if l.z_order == 2]
+    for location in front:
         location.draw()
 
     for i in range(6):
