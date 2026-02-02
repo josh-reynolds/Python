@@ -212,6 +212,22 @@ class Room(Location):
                          self.coordinate.y - self.size/2,
                          self.size, self.size, DWARF, 0)
 
+        if self.contents:
+            y_offset = -10
+        else:
+            y_offset = 0
+
+        if show_labels:
+            screen.draw.text("Room", 
+                             center=(self.coordinate.x, self.coordinate.y + y_offset),
+                             color = (255,255,255))
+
+        if self.contents and show_labels:
+            screen.draw.text(f"{self.contents}", 
+                             center=(self.coordinate.x, self.coordinate.y - y_offset),
+                             color = (255,255,255))
+
+
 class Tunnel():
     def __init__(self, start: Location, end: Location, color: Tuple=CAVERN) -> None:
         self.start = start
