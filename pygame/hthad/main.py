@@ -156,6 +156,7 @@ class GoldVein():
 class Location():
     def __init__(self, coordinate: PVector) -> None:
         self.coordinate = coordinate
+        self.tunnels = []
 
 
 class Entity():
@@ -179,7 +180,7 @@ class Cavern(Location):
                  tunnel: bool=False, tilt: int=0) -> None:
         super().__init__(coordinate)
         self.radius = BEAD//2
-        self.tunnel = tunnel
+        self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
         self.contents = contents
         self.z_order = 2
@@ -216,7 +217,7 @@ class Cavern(Location):
 
 class Room(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None) -> None:
-        self.coordinate = coordinate
+        super().__init__(coordinate)
         self.size = BEAD
         self.contents = contents
         self.z_order = 2
@@ -251,7 +252,9 @@ class Room(Location):
 class Tunnel():
     def __init__(self, start: Location, end: Location, color: Tuple=CAVERN) -> None:
         self.start = start
+        start.tunnels.append(self)
         self.end = end
+        end.tunnels.append(self)
         self.color = color
         self.z_order = 1
 
@@ -462,5 +465,13 @@ if isinstance(selection, GoldVein):
             depth = get_y_at_x(selection.left, selection.right, x_location)
 
 locations += dwarf_mine_factory(x_location, depth)
+
+# TO_DO: need to keep track of yearly events
+
+# Spring ~~~~~~~~
+# gather all treasures connected to dwarf tunnels that are not dwarven treasures
+# draw a new treasure room for each, or place in existing empty rooms
+# for each treasure gathered, draw a barracks and put a dwarf creature in it,
+# away from the mines
 
 run()
