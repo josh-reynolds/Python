@@ -149,16 +149,26 @@ class GoldVein():
             screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
 
 
+class Location():
+    def __init__(self, coordinate: PVector) -> None:
+        self.coordinate = coordinate
+
+
 class Entity():
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, parent: Location, color: Tuple) -> None:
         self.name = name
+        self.parent = parent
+        self.x = self.parent.coordinate.x
+        self.y = self.parent.coordinate.y
+        self.radius = BEAD//3
+        self.color = color
 
     def __str__(self) -> str:
         return self.name
 
-class Location():
-    def __init__(self, coordinate: PVector) -> None:
-        self.coordinate = coordinate
+    def draw(self) -> None:
+        screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
+
 
 class Cavern(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, 
@@ -197,6 +207,9 @@ class Cavern(Location):
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
 
+        if self.contents:
+            self.contents.draw()
+
 class Room(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None) -> None:
         self.coordinate = coordinate
@@ -227,6 +240,9 @@ class Room(Location):
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
 
+        if self.contents:
+            self.contents.draw()
+
 
 class Tunnel():
     def __init__(self, start: Location, end: Location, color: Tuple=CAVERN) -> None:
@@ -251,23 +267,25 @@ def natural_cavern_factory() -> Cavern:
     tunnel = False
     tilt = 0
     contents = None
+    cavern = Cavern(coordinate)
+
     detail = randint(1,6)
     match detail:
         case 1:
-            tunnel = True
-            tilt = randint(-FINGER//2, FINGER//2)
+            cavern.tunnel = True
+            cavern.tilt = randint(-FINGER//2, FINGER//2)
         case 2:
-            contents = Entity(f"Plague {randint(1,4)}")
+            cavern.contents = Entity(f"Plague {randint(1,4)}", cavern, (255,255,255))
         case 3:
-            contents = Entity(f"Gemstones {randint(1,4)}")
+            cavern.contents = Entity(f"Gemstones {randint(1,4)}", cavern, (255,255,255))
         case 4:
             pass
         case 5:
-            contents = Entity(f"Primordial Beasts 1")
+            cavern.contents = Entity(f"Primordial Beasts 1", cavern, (255,255,255))
         case 6:
-            contents = Entity(f"Fate 1")
+            cavern.contents = Entity(f"Fate 1", cavern, (255,255,255))
 
-    return Cavern(coordinate, contents, tunnel, tilt)
+    return cavern
 
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
@@ -280,18 +298,21 @@ def cave_complex_factory() -> List[Cavern | Tunnel]:
     locations = []
 
     first_point = get_random_underground_location()
-    contents_1 = Entity("Primordial Beasts 1")
-    locations.append(Cavern(first_point, contents_1, False, 0))
+    cavern1 = Cavern(first_point)
+    cavern1.contents = Entity("Primordial Beasts 1", cavern1, (255,255,255))
+    locations.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
-    contents_2 = Entity("Primordial Beasts 1")
-    locations.append(Cavern(second_point, contents_2, False, 0))
+    cavern2 = Cavern(second_point)
+    cavern2.contents = Entity("Primordial Beasts 1", cavern2, (255,255,255))
+    locations.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
-    contents_3 = Entity("Primordial Beasts 1")
-    locations.append(Cavern(third_point, contents_3, False, 0))
+    cavern3 = Cavern(third_point)
+    cavern3.contents = Entity("Primordial Beasts 1", cavern3, (255,255,255))
+    locations.append(cavern3)
 
     locations.append(Tunnel(locations[0], locations[1]))
     locations.append(Tunnel(locations[0], locations[2]))
@@ -303,13 +324,15 @@ def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
     locations = []
 
     first_point = get_random_underground_location()
-    contents_1 = Entity("Ancient Wyrm 1")
-    locations.append(Cavern(first_point, contents_1, False, 0))
+    cavern1 = Cavern(first_point)
+    cavern1.contents = Entity("Ancient Wyrm 1", cavern1, (255,255,255))
+    locations.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
-    contents_2 = Entity("Treasure 1")
-    locations.append(Cavern(second_point, contents_2, False, 0))
+    cavern2 = Cavern(second_point)
+    cavern2.contents = Entity("Treasure 1", cavern1, (255,255,255))
+    locations.append(cavern2)
 
     locations.append(Tunnel(locations[0], locations[1]))
 
@@ -359,9 +382,13 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
     locations.append(Room(PVector(x_location, GROUND_LEVEL)))
     
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-    locations.append(Room(PVector(x_location, half_height), Entity("Dwarves")))
+    room1 = Room(PVector(x_location, half_height))
+    room1.contents = Entity("Dwarves", room1, (255,255,255))
+    locations.append(room1)
 
-    locations.append(Room(PVector(x_location, depth), Entity("Treasure")))
+    room2 = Room(PVector(x_location, depth))
+    room2.contents = Entity("Treasure", room2, (255,255,255))
+    locations.append(room2)
 
     locations.append(Tunnel(locations[0], locations[1], DWARF))
     locations.append(Tunnel(locations[1], locations[2], DWARF))
