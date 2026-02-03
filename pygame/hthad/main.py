@@ -56,6 +56,7 @@ class Mithril():
         self.angle = math.radians(corner_vector.heading()) + math.pi
 
         self.z_order = 0
+        self.name = "Mithril"
 
     def update(self) -> None:
         pass
@@ -69,7 +70,7 @@ class Mithril():
         pop_matrix()
 
         if show_labels:
-            screen.draw.text("Mithril", center=(self.center.x, self.center.y))
+            screen.draw.text(self.name, center=(self.center.x, self.center.y))
 
 
 class UndergroundRiver():
@@ -80,6 +81,7 @@ class UndergroundRiver():
         self.lakes = []
 
         self.z_order = 0
+        self.name = "Underground River"
         
         current_x = 0
         current_y = strata_depth(randint(0,5))
@@ -131,7 +133,7 @@ class UndergroundRiver():
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
         if show_labels:
-            screen.draw.text("Underground River", pos=(self.vertices[0].x, self.vertices[0].y))
+            screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
 
 class GoldVein():
     def __init__(self) -> None:
@@ -140,6 +142,7 @@ class GoldVein():
         self.midpoint = PVector(WIDTH//2, 
                                 (self.right.y - self.left.y)//2 + self.left.y)
         self.z_order = 0
+        self.name = "Gold Vein"
 
     def update(self) -> None:
         pass
@@ -150,13 +153,17 @@ class GoldVein():
                          (self.right.x, self.right.y),
                          8)
         if show_labels:
-            screen.draw.text("Gold Vein", center=(self.midpoint.x, self.midpoint.y))
+            screen.draw.text(self.name, center=(self.midpoint.x, self.midpoint.y))
 
 
 class Location():
-    def __init__(self, coordinate: PVector) -> None:
+    def __init__(self, coordinate: PVector, name) -> None:
         self.coordinate = coordinate
         self.tunnels = []
+        self.name = name
+
+    def __repr__(self) -> str:
+        return self.name
 
 
 class Entity():
@@ -177,8 +184,8 @@ class Entity():
 
 class Cavern(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, 
-                 tunnel: bool=False, tilt: int=0) -> None:
-        super().__init__(coordinate)
+                 tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
+        super().__init__(coordinate, name)
         self.radius = BEAD//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
@@ -203,7 +210,7 @@ class Cavern(Location):
             y_offset = 0
 
         if show_labels:
-            screen.draw.text("Cavern", 
+            screen.draw.text(self.name, 
                              center=(self.coordinate.x, self.coordinate.y + y_offset),
                              color = (255,255,255))
 
@@ -216,8 +223,8 @@ class Cavern(Location):
             self.contents.draw()
 
 class Room(Location):
-    def __init__(self, coordinate: PVector, contents: Entity=None) -> None:
-        super().__init__(coordinate)
+    def __init__(self, coordinate: PVector, contents: Entity=None, name: str="Room") -> None:
+        super().__init__(coordinate, name)
         self.size = BEAD
         self.contents = contents
         self.z_order = 2
@@ -236,7 +243,7 @@ class Room(Location):
             y_offset = 0
 
         if show_labels:
-            screen.draw.text("Room", 
+            screen.draw.text(self.name, 
                              center=(self.coordinate.x, self.coordinate.y + y_offset),
                              color = (255,255,255))
 
@@ -257,6 +264,7 @@ class Tunnel():
         end.tunnels.append(self)
         self.color = color
         self.z_order = 1
+        self.name = "Tunnel"
 
     def update(self):
         pass
@@ -386,7 +394,9 @@ def add_caverns() -> None:
 def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
     locations = []
 
-    locations.append(Room(PVector(x_location, GROUND_LEVEL)))
+    room0 = Room(PVector(x_location, GROUND_LEVEL))
+    room0.name = "Start"
+    locations.append(room0)
     
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
     room1 = Room(PVector(x_location, half_height))
@@ -473,5 +483,10 @@ locations += dwarf_mine_factory(x_location, depth)
 # draw a new treasure room for each, or place in existing empty rooms
 # for each treasure gathered, draw a barracks and put a dwarf creature in it,
 # away from the mines
+
+mine_start = [r for r in locations if r.name == "Start"][0]
+print(mine_start)
+# TO_DO: don't store all locations & tunnels in locations list, we just need
+#        one node (i.e. location) for each graph, and no edges (tunnels) at all
 
 run()
