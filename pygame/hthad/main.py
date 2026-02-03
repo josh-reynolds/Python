@@ -20,7 +20,7 @@ FINGER = HEIGHT // 5
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
 MITHRIL = (255,255,255)
-GOLD = (255, 0, 0)    # yes, this is red - text says 'draw a red line...'
+GOLD = (255, 255, 0)
 BORDER = (0, 0, 0)
 CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
@@ -178,6 +178,9 @@ class Entity():
     def __str__(self) -> str:
         return self.name
 
+    def __repr__(self) -> str:
+        return f"{self.name} ({self.parent})"
+
     def draw(self) -> None:
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
 
@@ -275,6 +278,9 @@ class Tunnel():
                          (self.end.coordinate.x, self.end.coordinate.y),
                          12)
 
+    def __repr__(self) -> str:
+        return f"{self.name}: {self.start} - {self.end}"
+
 
 def natural_cavern_factory() -> Cavern:
     coordinate = get_random_underground_location()
@@ -346,7 +352,7 @@ def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
     cavern2 = Cavern(second_point)
-    cavern2.contents = Entity("Treasure 1", cavern1, TREASURE)
+    cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
     locations.append(cavern2)
 
     locations.append(Tunnel(locations[0], locations[1]))
@@ -400,10 +406,12 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
     
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
     room1 = Room(PVector(x_location, half_height))
+    room1.name = "Barracks"
     room1.contents = Entity("Dwarves", room1, CREATURE)
     locations.append(room1)
 
     room2 = Room(PVector(x_location, depth))
+    room2.name = "Mine"
     room2.contents = Entity("Treasure", room2, TREASURE)
     locations.append(room2)
 
@@ -488,5 +496,43 @@ mine_start = [r for r in locations if r.name == "Start"][0]
 print(mine_start)
 # TO_DO: don't store all locations & tunnels in locations list, we just need
 #        one node (i.e. location) for each graph, and no edges (tunnels) at all
+#
+# Tunnels also probably don't need to be a class - just store the references
+# to connected rooms, and handle the drawing in Location.draw()
+
+
+# this should end up as a DFS or something similar I think...
+treasures = []
+if mine_start.contents and mine_start.contents.name == "Treasure":
+    treasures.append(mine_start.contents)
+print(mine_start.tunnels)
+
+next_room = mine_start.tunnels[0].end
+if next_room.contents and next_room.contents.name == "Treasure":
+    treasures.append(next_room.contents)
+print(next_room.tunnels)
+
+next_next_room = next_room.tunnels[1].end
+if next_next_room.contents and next_next_room.contents.name == "Treasure":
+    treasures.append(next_next_room.contents)
+print(next_next_room.tunnels)
+print(treasures)
 
 run()
+
+# ---------------------------------------------
+# May want to keep the spirit of the original rather than try to exactly
+# duplicate - it's a bunch of analog pen-on-paper mechanics, and a lot of
+# things are left as aesthetic judgement calls on the part of the player.
+#
+# Also the rules are very handwavy about a lot of things. Will need to
+# make decisions how to handle.
+#
+# Random ideas:
+#
+# What if the tailings from mining are gathered and need to go somewhere,
+# like a heap on the surface?
+#
+# I was envisioning mining involving grabbing all the pixels under the
+# mine square and treating each one as an entity - either dirt, water,
+# gold or mithril right now.
