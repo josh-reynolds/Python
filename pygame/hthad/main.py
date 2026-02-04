@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice
-from typing import List, Tuple
+from typing import List, Tuple, Self
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -160,10 +160,16 @@ class Location():
     def __init__(self, coordinate: PVector, name) -> None:
         self.coordinate = coordinate
         self.tunnels = []
+        self.neighbors = []
         self.name = name
 
     def __repr__(self) -> str:
         return self.name
+
+    def add_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
+        self.neighbors.append(neighbor)
+        if bidi:
+            neighbor.add_neighbor(self, False)
 
 
 class Entity():
@@ -335,6 +341,8 @@ def cave_complex_factory() -> List[Cavern | Tunnel]:
     cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
     locations.append(cavern3)
 
+    locations[0].add_neighbor(location[1])
+    locations[0].add_neighbor(location[2])
     locations.append(Tunnel(locations[0], locations[1]))
     locations.append(Tunnel(locations[0], locations[2]))
 
@@ -355,6 +363,7 @@ def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
     cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
     locations.append(cavern2)
 
+    locations[0].add_neighbor(locations[1])
     locations.append(Tunnel(locations[0], locations[1]))
 
     return locations
@@ -414,6 +423,9 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
     room2.name = "Mine"
     room2.contents = Entity("Treasure", room2, TREASURE)
     locations.append(room2)
+
+    locations[0].add_neighbor(locations[1])
+    locations[1].add_neighbor(locations[2])
 
     locations.append(Tunnel(locations[0], locations[1], DWARF))
     locations.append(Tunnel(locations[1], locations[2], DWARF))
