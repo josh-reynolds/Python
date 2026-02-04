@@ -230,6 +230,9 @@ class Cavern(Location):
                              (self.coordinate.x, self.coordinate.y),
                              (n.coordinate.x, n.coordinate.y),
                              12)
+            # TO_DO: kludge to fix overdraw problem
+            if n.contents:
+                n.contents.draw()
 
         if self.contents:
             self.contents.draw()
@@ -270,6 +273,9 @@ class Room(Location):
                              (self.coordinate.x, self.coordinate.y),
                              (n.coordinate.x, n.coordinate.y),
                              12)
+            # TO_DO: kludge to fix overdraw problem
+            if n.contents:
+                n.contents.draw()
 
         if self.contents:
             self.contents.draw()
