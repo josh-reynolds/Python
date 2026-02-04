@@ -228,8 +228,16 @@ class Cavern(Location):
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
 
+        # TO_DO: we're drawing these twice, once from each direction...
+        for n in self.neighbors:
+            screen.draw.line(CAVERN,
+                             (self.coordinate.x, self.coordinate.y),
+                             (n.coordinate.x, n.coordinate.y),
+                             12)
+
         if self.contents:
             self.contents.draw()
+
 
 class Room(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, name: str="Room") -> None:
@@ -261,31 +269,15 @@ class Room(Location):
                              center=(self.coordinate.x, self.coordinate.y - y_offset),
                              color = (255,255,255))
 
+        # TO_DO: we're drawing these twice, once from each direction...
+        for n in self.neighbors:
+            screen.draw.line(DWARF,
+                             (self.coordinate.x, self.coordinate.y),
+                             (n.coordinate.x, n.coordinate.y),
+                             12)
+
         if self.contents:
             self.contents.draw()
-
-
-class Tunnel():
-    def __init__(self, start: Location, end: Location, color: Tuple=CAVERN) -> None:
-        self.start = start
-        start.tunnels.append(self)
-        self.end = end
-        end.tunnels.append(self)
-        self.color = color
-        self.z_order = 1
-        self.name = "Tunnel"
-
-    def update(self):
-        pass
-
-    def draw(self):
-        screen.draw.line(self.color,
-                         (self.start.coordinate.x, self.start.coordinate.y),
-                         (self.end.coordinate.x, self.end.coordinate.y),
-                         12)
-
-    def __repr__(self) -> str:
-        return f"{self.name}: {self.start} - {self.end}"
 
 
 def natural_cavern_factory() -> Cavern:
@@ -320,7 +312,7 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
         new_y = radius * math.sin(math.radians(angle)) + origin.y
         return PVector(new_x, new_y)
 
-def cave_complex_factory() -> List[Cavern | Tunnel]:
+def cave_complex_factory() -> List[Cavern]:
     radius = BEAD
     locations = []
 
@@ -341,14 +333,12 @@ def cave_complex_factory() -> List[Cavern | Tunnel]:
     cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
     locations.append(cavern3)
 
-    locations[0].add_neighbor(location[1])
-    locations[0].add_neighbor(location[2])
-    locations.append(Tunnel(locations[0], locations[1]))
-    locations.append(Tunnel(locations[0], locations[2]))
+    locations[0].add_neighbor(locations[1])
+    locations[0].add_neighbor(locations[2])
 
     return locations
 
-def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
+def ancient_wyrm_factory() -> List[Cavern]:
     radius = BEAD
     locations = []
 
@@ -364,7 +354,6 @@ def ancient_wyrm_factory() -> List[Cavern | Tunnel]:
     locations.append(cavern2)
 
     locations[0].add_neighbor(locations[1])
-    locations.append(Tunnel(locations[0], locations[1]))
 
     return locations
 
@@ -397,7 +386,6 @@ def draw() -> None:
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
-    #print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
 
 def add_caverns() -> None:
     locations.append(natural_cavern_factory())
@@ -406,7 +394,7 @@ def add_caverns() -> None:
         locations.append(natural_cavern_factory())
         cavern_count += 1
 
-def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
+def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
     locations = []
 
     room0 = Room(PVector(x_location, GROUND_LEVEL))
@@ -426,9 +414,6 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room | Tunnel]:
 
     locations[0].add_neighbor(locations[1])
     locations[1].add_neighbor(locations[2])
-
-    locations.append(Tunnel(locations[0], locations[1], DWARF))
-    locations.append(Tunnel(locations[1], locations[2], DWARF))
 
     return locations
 
@@ -500,7 +485,7 @@ def age_of_civilization_setup():
 
     locations += dwarf_mine_factory(x_location, depth)
 
-#create_primordial_age()
+create_primordial_age()
 age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
@@ -519,29 +504,23 @@ if mine_start:
 
 # TO_DO: don't store all locations & tunnels in locations list, we just need
 #        one node (i.e. location) for each graph, and no edges (tunnels) at all
-#
-# Tunnels also probably don't need to be a class - just store the references
-# to connected rooms, and handle the drawing in Location.draw()
-
 
 # this should end up as a DFS or something similar I think...
-if mine_start:
-    treasures = []
-    if mine_start.contents and mine_start.contents.name == "Treasure":
-        treasures.append(mine_start.contents)
-
-    print(mine_start.tunnels)
-
-    next_room = mine_start.tunnels[0].end
-    if next_room.contents and next_room.contents.name == "Treasure":
-        treasures.append(next_room.contents)
-    print(next_room.tunnels)
-
-    next_next_room = next_room.tunnels[1].end
-    if next_next_room.contents and next_next_room.contents.name == "Treasure":
-        treasures.append(next_next_room.contents)
-    print(next_next_room.tunnels)
-    print(treasures)
+#if mine_start:
+    #treasures = []
+    #if mine_start.contents and mine_start.contents.name == "Treasure":
+        #treasures.append(mine_start.contents)
+#
+    #next_room = mine_start.tunnels[0].end
+    #if next_room.contents and next_room.contents.name == "Treasure":
+        #treasures.append(next_room.contents)
+    #print(next_room.tunnels)
+#
+    #next_next_room = next_room.tunnels[1].end
+    #if next_next_room.contents and next_next_room.contents.name == "Treasure":
+        #treasures.append(next_next_room.contents)
+    #print(next_next_room.tunnels)
+    #print(treasures)
 
 run()
 
@@ -561,3 +540,5 @@ run()
 # I was envisioning mining involving grabbing all the pixels under the
 # mine square and treating each one as an entity - either dirt, water,
 # gold or mithril right now.
+
+#print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
