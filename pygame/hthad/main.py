@@ -159,6 +159,7 @@ class Location():
         self.tunnels = []
         self.neighbors = []
         self.name = name
+        self.visited = False
 
     def __repr__(self) -> str:
         return self.name
@@ -167,6 +168,24 @@ class Location():
         self.neighbors.append(neighbor)
         if bidi:
             neighbor.add_neighbor(self, False)
+
+    def print_all_connected_locations(self) -> None:
+        visited = [self]
+        queue = [self]
+        self.visited = True
+       
+        while queue:
+            current_location = queue.pop(0)
+            print(current_location.name)
+       
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+       
+        for location in visited:
+            location.visited = False
 
 
 class Entity():
@@ -493,10 +512,9 @@ mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
     mine_start = mine_start[0]
 
-# TO_DO: don't store all locations & tunnels in locations list, we just need
-#        one node (i.e. location) for each graph, and no edges (tunnels) at all
+# TO_DO: don't store all locations in locations list, we just need
+#        one node (i.e. location) for each graph
 
-# this should end up as a DFS or something similar I think...
 if mine_start:
     treasures = []
     print(f"{mine_start} : {mine_start.neighbors}")
@@ -515,6 +533,9 @@ if mine_start:
     print(f"{next_next_room} : {next_next_room.neighbors}")
 
     print(treasures)
+
+    mine_start.print_all_connected_locations()
+
 
 run()
 
