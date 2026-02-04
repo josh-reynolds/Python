@@ -187,6 +187,28 @@ class Location():
         for location in visited:
             location.visited = False
 
+    def get_all_matching_entities(self, entity_name) -> List:
+        entities = []
+        visited = [self]
+        queue = [self]
+        self.visited = True
+
+        while queue:
+            current_location = queue.pop(0)
+            if current_location.contents and current_location.contents.name == entity_name:
+                entities.append(current_location.contents)
+       
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+       
+        for location in visited:
+            location.visited = False
+
+        return entities
+
 
 class Entity():
     def __init__(self, name: str, parent: Location, color: Tuple) -> None:
@@ -516,23 +538,11 @@ if mine_start:
 #        one node (i.e. location) for each graph
 
 if mine_start:
-    treasures = []
-    print(f"{mine_start} : {mine_start.neighbors}")
-
-    if mine_start.contents and mine_start.contents.name == "Treasure":
-        treasures.append(mine_start.contents)
-
-    next_room = mine_start.neighbors[0]
-    if next_room.contents and next_room.contents.name == "Treasure":
-        treasures.append(next_room.contents)
-    print(f"{next_room} : {next_room.neighbors}")
-
-    next_next_room = next_room.neighbors[1]
-    if next_next_room.contents and next_next_room.contents.name == "Treasure":
-        treasures.append(next_next_room.contents)
-    print(f"{next_next_room} : {next_next_room.neighbors}")
-
+    treasures = mine_start.get_all_matching_entities("Treasure")
     print(treasures)
+
+    dwarves = mine_start.get_all_matching_entities("Dwarves")
+    print(dwarves)
 
     mine_start.print_all_connected_locations()
 
