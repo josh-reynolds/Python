@@ -429,60 +429,67 @@ def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
         return slope * x_coord + intercept
 
 # Primordial Age events
-for i in range(3):
-    check = randint(0,6)
-    match check:
-        case 0:
-            locations.append(Mithril())
-        case 1 | 2:
-            add_caverns()
-        case 3:
-            locations.append(GoldVein())
-        case 4:
-            locations += cave_complex_factory()
-        case 5:
-            locations.append(UndergroundRiver())
-        case 6:
-            locations += ancient_wyrm_factory()
-        # TO_DO: there is an additional choice for natural disasters,
-        #        implement when we come to that rule
+def create_primordial_age():
+    global locations
+    for i in range(3):
+        check = randint(0,6)
+        match check:
+            case 0:
+                locations.append(Mithril())
+            case 1 | 2:
+                add_caverns()
+            case 3:
+                locations.append(GoldVein())
+            case 4:
+                locations += cave_complex_factory()
+            case 5:
+                locations.append(UndergroundRiver())
+            case 6:
+                locations += ancient_wyrm_factory()
+            # TO_DO: there is an additional choice for natural disasters,
+            #        implement when we come to that rule
 
 # Age of Civilization
 # TO_DO: implmenting Dwarves first, Dark Elf to come later
+def age_of_civilization_setup():
+    global locations
 
-# Dwarves
-has_minerals = any(type(l) is Mithril or type(l) is GoldVein for l in locations)
-if not has_minerals:
-    print("Adding gold vein")
-    locations.append(GoldVein())
+    # Dwarves
+    has_minerals = any(type(l) is Mithril or type(l) is GoldVein for l in locations)
+    if not has_minerals:
+        print("Adding gold vein")
+        locations.append(GoldVein())
 
-# pick a spot on the surface above a gold vein or mithral deposit
-minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
-selection = choice(minerals)
-# TO_DO: alternatively, choose the mineral closest to the surface
+    # pick a spot on the surface above a gold vein or mithral deposit
+    minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
+    selection = choice(minerals)
+    # TO_DO: alternatively, choose the mineral closest to the surface
 
-x_location = 0
-depth = 0
-if isinstance(selection, Mithril):
-    x_location = selection.center.x
-    depth = selection.center.y
+    x_location = 0
+    depth = 0
+    if isinstance(selection, Mithril):
+        x_location = selection.center.x
+        depth = selection.center.y
 
-if isinstance(selection, GoldVein):
-    if selection.left.y < selection.right.y:
-        x_location = FINGER
-        depth = get_y_at_x(selection.left, selection.right, x_location)
-    elif selection.right.y < selection.left.y:
-        x_location = WIDTH - FINGER
-        depth = get_y_at_x(selection.left, selection.right, x_location)
-    else:
-        if randint(0,1) == 9:
+    if isinstance(selection, GoldVein):
+        if selection.left.y < selection.right.y:
             x_location = FINGER
             depth = get_y_at_x(selection.left, selection.right, x_location)
-        else:
+        elif selection.right.y < selection.left.y:
             x_location = WIDTH - FINGER
             depth = get_y_at_x(selection.left, selection.right, x_location)
+        else:
+            if randint(0,1) == 9:
+                x_location = FINGER
+                depth = get_y_at_x(selection.left, selection.right, x_location)
+            else:
+                x_location = WIDTH - FINGER
+                depth = get_y_at_x(selection.left, selection.right, x_location)
 
-locations += dwarf_mine_factory(x_location, depth)
+    locations += dwarf_mine_factory(x_location, depth)
+
+#create_primordial_age()
+age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
 
@@ -492,8 +499,12 @@ locations += dwarf_mine_factory(x_location, depth)
 # for each treasure gathered, draw a barracks and put a dwarf creature in it,
 # away from the mines
 
-mine_start = [r for r in locations if r.name == "Start"][0]
-print(mine_start)
+
+mine_start = [r for r in locations if r.name == "Start"]
+if mine_start:
+    mine_start = mine_start[0]
+    print(mine_start)
+
 # TO_DO: don't store all locations & tunnels in locations list, we just need
 #        one node (i.e. location) for each graph, and no edges (tunnels) at all
 #
@@ -502,21 +513,23 @@ print(mine_start)
 
 
 # this should end up as a DFS or something similar I think...
-treasures = []
-if mine_start.contents and mine_start.contents.name == "Treasure":
-    treasures.append(mine_start.contents)
-print(mine_start.tunnels)
+if mine_start:
+    treasures = []
+    if mine_start.contents and mine_start.contents.name == "Treasure":
+        treasures.append(mine_start.contents)
 
-next_room = mine_start.tunnels[0].end
-if next_room.contents and next_room.contents.name == "Treasure":
-    treasures.append(next_room.contents)
-print(next_room.tunnels)
+    print(mine_start.tunnels)
 
-next_next_room = next_room.tunnels[1].end
-if next_next_room.contents and next_next_room.contents.name == "Treasure":
-    treasures.append(next_next_room.contents)
-print(next_next_room.tunnels)
-print(treasures)
+    next_room = mine_start.tunnels[0].end
+    if next_room.contents and next_room.contents.name == "Treasure":
+        treasures.append(next_room.contents)
+    print(next_room.tunnels)
+
+    next_next_room = next_room.tunnels[1].end
+    if next_next_room.contents and next_next_room.contents.name == "Treasure":
+        treasures.append(next_next_room.contents)
+    print(next_next_room.tunnels)
+    print(treasures)
 
 run()
 
