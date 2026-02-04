@@ -518,8 +518,8 @@ def age_of_civilization_setup():
 
     locations += dwarf_mine_factory(x_location, depth)
 
-create_primordial_age()
-age_of_civilization_setup()
+#create_primordial_age()
+#age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
 
@@ -528,6 +528,42 @@ age_of_civilization_setup()
 # draw a new treasure room for each, or place in existing empty rooms
 # for each treasure gathered, draw a barracks and put a dwarf creature in it,
 # away from the mines
+
+# TEMPORARy GRAPHS for testing
+room0 = Room(PVector(250,200))
+room0.name = "Start"
+locations.append(room0)
+
+room1 = Room(PVector(250,300))
+room1.name = "Barracks"
+room1.contents = Entity("Dwarves", room1, CREATURE)
+locations.append(room1)
+
+room2 = Room(PVector(250,400))
+room2.name = "Mine"
+room2.contents = Entity("Treasure", room2, TREASURE)
+locations.append(room2)
+
+room3 = Room(PVector(350,400))
+room3.name = "Mine"
+room3.contents = Entity("Treasure", room3, TREASURE)
+locations.append(room3)
+
+room4 = Room(PVector(450,400))
+room4.name = "Barracks"
+room4.contents = Entity("Dwarves", room4, CREATURE)
+locations.append(room4)
+
+room5 = Room(PVector(450,300))
+room5.name = "Empty"
+locations.append(room5)
+
+locations[0].add_neighbor(locations[1])
+locations[1].add_neighbor(locations[2])
+locations[1].add_neighbor(locations[3])
+locations[2].add_neighbor(locations[3])
+locations[3].add_neighbor(locations[4])
+locations[4].add_neighbor(locations[5])
 
 
 mine_start = [r for r in locations if r.name == "Start"]
