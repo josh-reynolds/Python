@@ -492,27 +492,29 @@ age_of_civilization_setup()
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
     mine_start = mine_start[0]
-    print(mine_start)
 
 # TO_DO: don't store all locations & tunnels in locations list, we just need
 #        one node (i.e. location) for each graph, and no edges (tunnels) at all
 
 # this should end up as a DFS or something similar I think...
-#if mine_start:
-    #treasures = []
-    #if mine_start.contents and mine_start.contents.name == "Treasure":
-        #treasures.append(mine_start.contents)
-#
-    #next_room = mine_start.tunnels[0].end
-    #if next_room.contents and next_room.contents.name == "Treasure":
-        #treasures.append(next_room.contents)
-    #print(next_room.tunnels)
-#
-    #next_next_room = next_room.tunnels[1].end
-    #if next_next_room.contents and next_next_room.contents.name == "Treasure":
-        #treasures.append(next_next_room.contents)
-    #print(next_next_room.tunnels)
-    #print(treasures)
+if mine_start:
+    treasures = []
+    print(f"{mine_start} : {mine_start.neighbors}")
+
+    if mine_start.contents and mine_start.contents.name == "Treasure":
+        treasures.append(mine_start.contents)
+
+    next_room = mine_start.neighbors[0]
+    if next_room.contents and next_room.contents.name == "Treasure":
+        treasures.append(next_room.contents)
+    print(f"{next_room} : {next_room.neighbors}")
+
+    next_next_room = next_room.neighbors[1]
+    if next_next_room.contents and next_next_room.contents.name == "Treasure":
+        treasures.append(next_next_room.contents)
+    print(f"{next_next_room} : {next_next_room.neighbors}")
+
+    print(treasures)
 
 run()
 
@@ -533,4 +535,4 @@ run()
 # mine square and treating each one as an entity - either dirt, water,
 # gold or mithril right now.
 
-#print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
+# print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
