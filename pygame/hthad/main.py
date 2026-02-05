@@ -243,18 +243,13 @@ class Location():
         self.visited = True
 
         while queue:
-            #print()
-            #print(queue)
             current_location = queue.pop(0)
-
-            #print(f"{current_location} {distances[current_location]}")
 
             if current_location == goal:
                 break
 
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
-                    #print(f"not visited: {neighbor}")
                     distances[neighbor] = distances[current_location] + 1
                     visited.append(neighbor)
                     queue.append(neighbor)
@@ -263,8 +258,7 @@ class Location():
         for location in visited:
             location.visited = False
 
-        #print(f"dist = {distances[goal]}")
-        return distances[goal]
+        return distances[goal]     # I think we'll get a KeyError here if goal not in graph...
 
 
 class Entity():
@@ -621,6 +615,16 @@ room6.name = "Barracks"
 room6.contents = Entity("Dwarves", room6, CREATURE)
 locations.append(room6)
 
+room7 = Room(PVector(450,500))
+room7.name = "Barracks"
+room7.contents = Entity("Dwarves", room7, CREATURE)
+locations.append(room7)
+
+room8 = Room(PVector(550,300))
+room8.name = "Barracks"
+room8.contents = Entity("Dwarves", room8, CREATURE)
+locations.append(room8)
+
 room0.add_neighbor(room1)   # start -> barracks
 room1.add_neighbor(room2)   # barracks -> mine 1
 room1.add_neighbor(room3)   # barracks -> mine 2
@@ -628,6 +632,8 @@ room2.add_neighbor(room3)   # mine 1 -> mine 2
 room3.add_neighbor(room4)   # mine 2 -> barracks
 room4.add_neighbor(room5)   # barracks -> treasure room
 room4.add_neighbor(room6)   # barracks -> barracks
+room4.add_neighbor(room7)   # barracks -> barracks
+room5.add_neighbor(room8)   # treasure room -> barracks
 
 print(f"Distance = {room0.distance_to(room6)}\n")
 
@@ -640,25 +646,34 @@ if mine_start:
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
-    #print(treasures)
-
     dwarves = mine_start.get_all_matching_entities("Dwarves")
-    #print(dwarves)
-
-    mine_start.print_all_connected_locations()
 
     if treasures:
         for treasure in treasures:
-            print(f"\nFound 'em ~~~~~~~~~~~~~~~~~~~~~~~")
-
             # find a barracks to attach to
+            selection = None
             barracks = mine_start.get_all_locations("Barracks")
-            #print(barracks)
-            for room in barracks:
-                print("-------------------")
-                print(f"Neighbor count = {len(room.neighbors)}")
-                print(f"Goal = {treasure.parent}")
-                print(f"Distance = {room.distance_to(treasure.parent)}")
+
+            neighbor_counts = [len(b.neighbors) for b in barracks]
+            min_neighbors = min(neighbor_counts)
+
+            first_cut = [b for b in barracks if len(b.neighbors) == min_neighbors]
+
+            if len(first_cut) > 1:
+                distances = [b.distance_to(treasure.parent) for b in first_cut]
+                min_distance = min(distances)
+
+                second_cut = [b for b in first_cut 
+                              if b.distance_to(treasure.parent) == min_distance]
+                if len(second_cut) > 1:
+                    selection = choice(second_cut)
+                else:
+                    selection = second_cut[0]
+            else:
+                selection = first_cut[0]
+
+            print(selection)
+
 
 
             # remove treasure
@@ -666,7 +681,7 @@ if mine_start:
             #
             # create a new treasure room
             #    find a barracks to attach to
-            #       list all barracks
+            #       get all barracks
             #       first priority - barracks w/ least neighbors
             #       second priority - closest barracks to mine source
             #       random choice if still tied
