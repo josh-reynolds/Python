@@ -30,7 +30,7 @@ TREASURE = (255,255,0)
 CREATURE = (255,0,255)
 EVENT = (128,128,128)
 
-show_labels = False
+show_labels = True
 
 locations = []
 
@@ -164,6 +164,9 @@ class Location():
     def __repr__(self) -> str:
         return self.name
 
+    def __hash__(self) -> int:
+        return hash((self.name, self.coordinate))
+
     def add_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
         self.neighbors.append(neighbor)
         if bidi:
@@ -232,25 +235,27 @@ class Location():
 
         return entities
 
-    def distance_to(self, location) -> int:
+    def distance_to(self, goal) -> int:
         # need to consider case when location is not connected to self
-        distance = 0
+        distances = { self : 0 }
         visited = [self]
         queue = [self]
         self.visited = True
 
         while queue:
+            #print()
+            #print(queue)
             current_location = queue.pop(0)
 
-            if current_location == location:
+            #print(f"{current_location} {distances[current_location]}")
+
+            if current_location == goal:
                 break
 
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
-                    if neighbor == location:
-                        distance += 1
-                        break
-
+                    #print(f"not visited: {neighbor}")
+                    distances[neighbor] = distances[current_location] + 1
                     visited.append(neighbor)
                     queue.append(neighbor)
                     neighbor.visited = True
@@ -258,7 +263,8 @@ class Location():
         for location in visited:
             location.visited = False
 
-        return distance
+        #print(f"dist = {distances[goal]}")
+        return distances[goal]
 
 
 class Entity():
@@ -591,12 +597,12 @@ room1.contents = Entity("Dwarves", room1, CREATURE)
 locations.append(room1)
 
 room2 = Room(PVector(250,400))
-room2.name = "Mine"
+room2.name = "Mine 1"
 room2.contents = Entity("Treasure", room2, TREASURE)
 locations.append(room2)
 
 room3 = Room(PVector(350,400))
-room3.name = "Mine"
+room3.name = "Mine 2"
 room3.contents = Entity("Treasure", room3, TREASURE)
 locations.append(room3)
 
@@ -610,13 +616,20 @@ room5.name = "Treasure Room"
 room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
 locations.append(room5)
 
-locations[0].add_neighbor(locations[1])
-locations[1].add_neighbor(locations[2])
-locations[1].add_neighbor(locations[3])
-locations[2].add_neighbor(locations[3])
-locations[3].add_neighbor(locations[4])
-locations[4].add_neighbor(locations[5])
+room6 = Room(PVector(550,400))
+room6.name = "Barracks"
+room6.contents = Entity("Dwarves", room6, CREATURE)
+locations.append(room6)
 
+room0.add_neighbor(room1)   # start -> barracks
+room1.add_neighbor(room2)   # barracks -> mine 1
+room1.add_neighbor(room3)   # barracks -> mine 2
+room2.add_neighbor(room3)   # mine 1 -> mine 2
+room3.add_neighbor(room4)   # mine 2 -> barracks
+room4.add_neighbor(room5)   # barracks -> treasure room
+room4.add_neighbor(room6)   # barracks -> barracks
+
+print(f"Distance = {room0.distance_to(room6)}\n")
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
@@ -627,23 +640,24 @@ if mine_start:
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
-    print(treasures)
+    #print(treasures)
 
     dwarves = mine_start.get_all_matching_entities("Dwarves")
-    print(dwarves)
+    #print(dwarves)
 
     mine_start.print_all_connected_locations()
 
     if treasures:
         for treasure in treasures:
-            print("Found 'em")
+            print(f"\nFound 'em ~~~~~~~~~~~~~~~~~~~~~~~")
 
             # find a barracks to attach to
             barracks = mine_start.get_all_locations("Barracks")
-            print(barracks)
+            #print(barracks)
             for room in barracks:
-                print(len(room.neighbors))
-                print(treasure.parent)
+                print("-------------------")
+                print(f"Neighbor count = {len(room.neighbors)}")
+                print(f"Goal = {treasure.parent}")
                 print(f"Distance = {room.distance_to(treasure.parent)}")
 
 
