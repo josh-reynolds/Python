@@ -665,6 +665,7 @@ if mine_start:
 
                 second_cut = [b for b in first_cut 
                               if b.distance_to(treasure.parent) == min_distance]
+
                 if len(second_cut) > 1:
                     selection = choice(second_cut)
                 else:
@@ -673,6 +674,16 @@ if mine_start:
                 selection = first_cut[0]
 
             print(selection)
+
+            # we'll probably have a bunch of potential sites, and
+            # test until we find winner - order the list by priority,
+            # horizontal first, then vertical, then at an angle
+            candidate_location = PVector.add(selection.coordinate, PVector(100,0))
+
+            candidate = Room(candidate_location)
+            candidate.name = "Test"
+            print(candidate.coordinate)
+            locations.append(candidate)
 
 
 
