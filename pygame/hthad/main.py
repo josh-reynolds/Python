@@ -232,6 +232,34 @@ class Location():
 
         return entities
 
+    def distance_to(self, location) -> int:
+        # need to consider case when location is not connected to self
+        distance = 0
+        visited = [self]
+        queue = [self]
+        self.visited = True
+
+        while queue:
+            current_location = queue.pop(0)
+
+            if current_location == location:
+                break
+
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    if neighbor == location:
+                        distance += 1
+                        break
+
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+
+        for location in visited:
+            location.visited = False
+
+        return distance
+
 
 class Entity():
     def __init__(self, name: str, parent: Location, color: Tuple) -> None:
@@ -615,6 +643,8 @@ if mine_start:
             print(barracks)
             for room in barracks:
                 print(len(room.neighbors))
+                print(treasure.parent)
+                print(f"Distance = {room.distance_to(treasure.parent)}")
 
 
             # remove treasure
@@ -679,3 +709,6 @@ run()
 # gold or mithril right now.
 
 # print(screen.surface.get_at((WIDTH//2,HEIGHT//2)))
+
+# OPEN QUESTIONS
+# How to handle collisions during the Primordial and Civilization setup phases?
