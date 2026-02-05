@@ -169,6 +169,7 @@ class Location():
         if bidi:
             neighbor.add_neighbor(self, False)
 
+    # TO_DO: generalize the BFS pattern
     def print_all_connected_locations(self) -> None:
         visited = [self]
         queue = [self]
@@ -186,6 +187,28 @@ class Location():
        
         for location in visited:
             location.visited = False
+
+    def get_all_locations(self, location_name) -> List:
+        locations = []
+        visited = [self]
+        queue = [self]
+        self.visited = True
+
+        while queue:
+            current_location = queue.pop(0)
+            if current_location.name == location_name:
+                locations.append(current_location)
+       
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+       
+        for location in visited:
+            location.visited = False
+
+        return locations
 
     def get_all_matching_entities(self, entity_name) -> List:
         entities = []
@@ -555,7 +578,8 @@ room4.contents = Entity("Dwarves", room4, CREATURE)
 locations.append(room4)
 
 room5 = Room(PVector(450,300))
-room5.name = "Empty"
+room5.name = "Treasure Room"
+room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
 locations.append(room5)
 
 locations[0].add_neighbor(locations[1])
@@ -581,6 +605,58 @@ if mine_start:
     print(dwarves)
 
     mine_start.print_all_connected_locations()
+
+    if treasures:
+        for treasure in treasures:
+            print("Found 'em")
+
+            # find a barracks to attach to
+            barracks = mine_start.get_all_locations("Barracks")
+            print(barracks)
+            for room in barracks:
+                print(len(room.neighbors))
+
+
+            # remove treasure
+            #    straightforward
+            #
+            # create a new treasure room
+            #    find a barracks to attach to
+            #       list all barracks
+            #       first priority - barracks w/ least neighbors
+            #       second priority - closest barracks to mine source
+            #       random choice if still tied
+            #
+            #    find a non-intersecting location
+            #       choose a point far enough away to not intersect barracks
+            #       priority to horizontal & vertical connections
+            #       treasure room cannot overlap existing dwarf rooms
+            #       treasure room cannot overlap existing dwarf tunnels
+            #       same applies to Barracks -> Treasure Room tunnel, no crossings
+            #       we only check dwarf locations - we *can* intersect caverns
+            #       TBD what happens in that case...
+            #       
+            #    add & connect the treasure room
+            #       straightforward
+            #
+            # add a dwarven treasure to treasure room
+            #    straightforward
+
+            # rectangle-rectangle intersection:
+            #   A.left < B.right and
+            #   A.right > B.left and
+            #   A.top < B.bottom and
+            #   A.bottom > B.top
+            # 
+            # made faster as:
+            #   not (A.left > B.right or
+            #        A.right < B.left or
+            #        A.top > B.bottom or
+            #        A.bottom < B.top)
+
+            # but doesn't pygame have a rect intersect? use that!
+            # or expose through the engine, check Processing API
+            # for a good signature
 
 
 run()
