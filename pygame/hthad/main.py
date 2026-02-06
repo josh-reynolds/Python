@@ -2,6 +2,7 @@
 import math
 from random import randint, choice
 from typing import List, Tuple, Self
+from pygame import Rect
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -30,7 +31,7 @@ TREASURE = (255,255,0)
 CREATURE = (255,0,255)
 EVENT = (128,128,128)
 
-show_labels = True
+show_labels = False
 
 locations = []
 
@@ -155,10 +156,15 @@ class GoldVein():
 
 class Location():
     def __init__(self, coordinate: PVector, name) -> None:
+        self.name = name
         self.coordinate = coordinate
+        self.size = BEAD
+        self.rect = Rect(self.coordinate.x - self.size/2,
+                         self.coordinate.y - self.size/2,
+                         self.size, 
+                         self.size)
         self.tunnels = []
         self.neighbors = []
-        self.name = name
         self.visited = False
 
     def __repr__(self) -> str:
@@ -284,7 +290,7 @@ class Cavern(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, 
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         super().__init__(coordinate, name)
-        self.radius = BEAD//2
+        self.radius = self.size//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
         self.contents = contents
@@ -333,16 +339,13 @@ class Cavern(Location):
 class Room(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, name: str="Room") -> None:
         super().__init__(coordinate, name)
-        self.size = BEAD
         self.contents = contents
 
     def update(self) -> None:
         pass
 
     def draw(self) -> None:
-        screen.draw.rect(self.coordinate.x - self.size/2, 
-                         self.coordinate.y - self.size/2,
-                         self.size, self.size, DWARF, 0)
+        screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, DWARF, 0)
 
         if self.contents:
             y_offset = -10
@@ -685,7 +688,12 @@ if mine_start:
             print(candidate.coordinate)
             locations.append(candidate)
 
+            rect = candidate.rect
+            print(rect)
 
+            # for room in graph:
+            #    if candidate.intersect(room):
+            #        reject
 
             # remove treasure
             #    straightforward
