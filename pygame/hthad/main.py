@@ -178,6 +178,11 @@ class Location():
         if bidi:
             neighbor.add_neighbor(self, False)
 
+    # TO_DO: currently only works for Rooms, which are rects
+    #        Caverns are circles, so we'll need to adjust
+    def intersects(self, other: Self) -> bool:
+        return self.rect.colliderect(other.rect)
+
     # TO_DO: generalize the BFS pattern
     def get_all_connected_locations(self) -> List:
         visited = [self]
@@ -689,10 +694,18 @@ if mine_start:
             print(candidate.coordinate)
             locations.append(candidate)
 
-            rect = candidate.rect
-            print(rect)
+            graph = selection.get_all_connected_locations()
 
-            print(selection.get_all_connected_locations())
+            test = Room(PVector.sub(graph[-1].coordinate, PVector(5,5)))
+            locations.append(test)
+
+            for location in graph:
+                if candidate.intersects(location):
+                    print(f"intersects {location}")
+                if test.intersects(location):
+                    print(f"intersects {location}")
+
+
 
             # for room in graph:
             #    if candidate.intersect(room):
