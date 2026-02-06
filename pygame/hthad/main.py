@@ -155,8 +155,10 @@ class GoldVein():
 
 
 class Location():
-    def __init__(self, coordinate: PVector, name) -> None:
+    def __init__(self, coordinate: PVector, name, color: Tuple) -> None:
         self.name = name
+        self.color = color
+
         self.coordinate = coordinate
         self.size = BEAD
         self.rect = Rect(self.coordinate.x - self.size/2,
@@ -295,7 +297,7 @@ class Entity():
 class Cavern(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, 
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
-        super().__init__(coordinate, name)
+        super().__init__(coordinate, name, CAVERN)
         self.radius = self.size//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
@@ -305,7 +307,7 @@ class Cavern(Location):
         pass
 
     def draw(self) -> None:
-        screen.draw.circle(self.coordinate.x, self.coordinate.y, self.radius, CAVERN, 0)
+        screen.draw.circle(self.coordinate.x, self.coordinate.y, self.radius, self.color, 0)
 
         if self.tunnel:
             screen.draw.line(CAVERN,
@@ -344,14 +346,14 @@ class Cavern(Location):
 
 class Room(Location):
     def __init__(self, coordinate: PVector, contents: Entity=None, name: str="Room") -> None:
-        super().__init__(coordinate, name)
+        super().__init__(coordinate, name, DWARF)
         self.contents = contents
 
     def update(self) -> None:
         pass
 
     def draw(self) -> None:
-        screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, DWARF, 0)
+        screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, self.color, 0)
 
         if self.contents:
             y_offset = -10
@@ -697,6 +699,7 @@ if mine_start:
             graph = selection.get_all_connected_locations()
 
             test = Room(PVector.sub(graph[-1].coordinate, PVector(5,5)))
+            test.color = (255, 80, 80)
             locations.append(test)
 
             for location in graph:
@@ -704,8 +707,6 @@ if mine_start:
                     print(f"intersects {location}")
                 if test.intersects(location):
                     print(f"intersects {location}")
-
-
 
             # for room in graph:
             #    if candidate.intersect(room):
@@ -735,23 +736,6 @@ if mine_start:
             #
             # add a dwarven treasure to treasure room
             #    straightforward
-
-            # rectangle-rectangle intersection:
-            #   A.left < B.right and
-            #   A.right > B.left and
-            #   A.top < B.bottom and
-            #   A.bottom > B.top
-            # 
-            # made faster as:
-            #   not (A.left > B.right or
-            #        A.right < B.left or
-            #        A.top > B.bottom or
-            #        A.bottom < B.top)
-
-            # but doesn't pygame have a rect intersect? use that!
-            # or expose through the engine, check Processing API
-            # for a good signature
-
 
 run()
 
