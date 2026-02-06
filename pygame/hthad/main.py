@@ -179,14 +179,13 @@ class Location():
             neighbor.add_neighbor(self, False)
 
     # TO_DO: generalize the BFS pattern
-    def print_all_connected_locations(self) -> None:
+    def get_all_connected_locations(self) -> List:
         visited = [self]
         queue = [self]
         self.visited = True
        
         while queue:
             current_location = queue.pop(0)
-            print(current_location.name)
        
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
@@ -196,6 +195,8 @@ class Location():
        
         for location in visited:
             location.visited = False
+
+        return visited
 
     def get_all_locations(self, location_name) -> List:
         locations = []
@@ -690,6 +691,8 @@ if mine_start:
 
             rect = candidate.rect
             print(rect)
+
+            print(selection.get_all_connected_locations())
 
             # for room in graph:
             #    if candidate.intersect(room):
