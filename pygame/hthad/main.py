@@ -205,7 +205,29 @@ class Location():
 
         return visited
 
-    def get_all_locations(self, location_name) -> List:
+    def get_all_connected_tunnels(self) -> List:
+        tunnels = [(self,b) for b in self.neighbors]
+        visited = [self]
+        queue = [self]
+        self.visited = True
+
+        while queue:
+            current_location = queue.pop(0)
+       
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    tunnels += [(neighbor,b) for b in neighbor.neighbors 
+                                if (b, neighbor) not in tunnels]
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+       
+        for location in visited:
+            location.visited = False
+
+        return tunnels
+
+    def get_locations_by_name(self, location_name: str) -> List:
         locations = []
         visited = [self]
         queue = [self]
@@ -646,8 +668,6 @@ room4.add_neighbor(room6)   # barracks -> barracks
 room4.add_neighbor(room7)   # barracks -> barracks
 room5.add_neighbor(room8)   # treasure room -> barracks
 
-print(f"Distance = {room0.distance_to(room6)}\n")
-
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
     mine_start = mine_start[0]
@@ -657,13 +677,12 @@ if mine_start:
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
-    dwarves = mine_start.get_all_matching_entities("Dwarves")
 
     if treasures:
         for treasure in treasures:
             # find a barracks to attach to
             selection = None
-            barracks = mine_start.get_all_locations("Barracks")
+            barracks = mine_start.get_locations_by_name("Barracks")
 
             neighbor_counts = [len(b.neighbors) for b in barracks]
             min_neighbors = min(neighbor_counts)
@@ -696,17 +715,23 @@ if mine_start:
             print(candidate.coordinate)
             locations.append(candidate)
 
-            graph = selection.get_all_connected_locations()
+            rooms = selection.get_all_connected_locations()
+            print(f"{len(rooms)} rooms in graph")
 
-            test = Room(PVector.sub(graph[-1].coordinate, PVector(5,5)))
+            test = Room(PVector.sub(rooms[-1].coordinate, PVector(5,5)))
             test.color = (255, 80, 80)
             locations.append(test)
 
-            for location in graph:
+            viable = True
+            for location in rooms:
                 if candidate.intersects(location):
-                    print(f"intersects {location}")
+                    viable = False
                 if test.intersects(location):
                     print(f"intersects {location}")
+
+            tunnels = selection.get_all_connected_tunnels()
+            print(tunnels)
+            print(f"{len(tunnels)} tunnels in graph")
 
             # for room in graph:
             #    if candidate.intersect(room):
