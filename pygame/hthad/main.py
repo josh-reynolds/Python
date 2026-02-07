@@ -776,7 +776,16 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
 
     if u_numerator == 0 and denominator == 0:
         # collinear case
-        pass
+
+        # endpoints touch
+        if (line_1[0] == line_2[0] or line_1[0] == line_2[1] 
+            or line_1[1] == line_2[0] or line_1[1] == line_2[1]):
+            return True
+
+        # overlapping segments
+        # TO_DO
+
+
 
     if denominator == 0:
         # parallel case
@@ -801,7 +810,6 @@ def update() -> None:
             location.color = DWARF
 
     print(f"{segments_intersect(line_a, line_b)}")
-
 
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)

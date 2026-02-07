@@ -29,6 +29,9 @@ class PVector:
         self.x /= scalar
         self.y /= scalar
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
     def dot(self, other):
         return (self.x * other.x) + (self.y * other.y)
 
