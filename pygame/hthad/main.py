@@ -2,7 +2,7 @@
 import math
 from random import randint, choice
 from typing import List, Tuple, Self
-from pygame import Rect
+from pygame import Rect, mouse
 from engine import screen, run
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
@@ -159,10 +159,10 @@ class Location():
         self.name = name
         self.color = color
 
-        self.coordinate = coordinate
+        self._coordinate = coordinate
         self.size = BEAD
-        self.rect = Rect(self.coordinate.x - self.size/2,
-                         self.coordinate.y - self.size/2,
+        self.rect = Rect(self._coordinate.x - self.size/2,
+                         self._coordinate.y - self.size/2,
                          self.size, 
                          self.size)
         self.tunnels = []
@@ -173,7 +173,19 @@ class Location():
         return self.name
 
     def __hash__(self) -> int:
-        return hash((self.name, self.coordinate))
+        return hash((self.name, self._coordinate))
+
+    @property
+    def coordinate(self) -> PVector:
+        return self._coordinate
+
+    @coordinate.setter
+    def coordinate(self, coord: PVector) -> None:
+        self._coordinate = coord
+        self.rect = Rect(self.coordinate.x - self.size/2,
+                         self.coordinate.y - self.size/2,
+                         self.size, 
+                         self.size)
 
     def add_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
         self.neighbors.append(neighbor)
@@ -486,22 +498,6 @@ def ancient_wyrm_factory() -> List[Cavern]:
 def strata_depth(strata: int) -> int:
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
-def update() -> None:
-    for location in locations:
-        location.update()
-
-def draw() -> None:
-    screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
-
-    for location in locations:
-        location.draw()
-
-    for i in range(6):
-        screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
-        screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
-
-    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
-    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
 
 def add_caverns() -> None:
@@ -668,6 +664,11 @@ room4.add_neighbor(room6)   # barracks -> barracks
 room4.add_neighbor(room7)   # barracks -> barracks
 room5.add_neighbor(room8)   # treasure room -> barracks
 
+cursor = Room(PVector(WIDTH//2, HEIGHT//2))
+cursor.name = "Cursor"
+cursor.color = (200,200,0)
+locations.append(cursor)
+
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
     mine_start = mine_start[0]
@@ -761,6 +762,24 @@ if mine_start:
             #
             # add a dwarven treasure to treasure room
             #    straightforward
+
+def update() -> None:
+    cursor.coordinate = PVector(*mouse.get_pos())
+    for location in locations:
+        location.update()
+
+def draw() -> None:
+    screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
+
+    for location in locations:
+        location.draw()
+
+    for i in range(6):
+        screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
+        screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
+
+    screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
+    screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
 run()
 
