@@ -763,8 +763,35 @@ if mine_start:
             # add a dwarven treasure to treasure room
             #    straightforward
 
+line_a = (PVector(800, 600), PVector(900, 600))
+line_b = (PVector(850, 550), PVector(850, 650))
+
+def segment_intersection(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> PVector:
+    r = PVector.sub(line_1[1], line_1[0])
+    s = PVector.sub(line_2[1], line_2[0])
+
+    n = PVector.sub(line_2[0], line_1[0])
+    u_numerator = n.cross(r)
+    denominator = r.cross(s)
+
+    if u_numerator == 0 and denominator == 0:
+        # collinear case
+        pass
+
+    if denominator == 0:
+        # parallel case
+        pass
+
+    u = u_numerator / denominator
+    t = n.cross(s) / denominator
+
+    return t >= 0 and t <= 1 and u >= 0 and u <= 1
+
 def update() -> None:
+    global line_b
     cursor.coordinate = PVector(*mouse.get_pos())
+    line_b = (line_b[0], cursor.coordinate)
+
     for location in locations:
         location.update()
 
@@ -772,6 +799,8 @@ def update() -> None:
             location.color = (255,0,0)
         else:
             location.color = DWARF
+
+    print(f"{segment_intersection(line_a, line_b)}")
 
 
 def draw() -> None:
@@ -786,6 +815,9 @@ def draw() -> None:
 
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
+
+    screen.draw.line(BORDER, (line_a[0].x, line_a[0].y), (line_a[1].x, line_a[1].y), 8)
+    screen.draw.line(BORDER, (line_b[0].x, line_b[0].y), (line_b[1].x, line_b[1].y), 8)
 
 run()
 
@@ -810,3 +842,12 @@ run()
 
 # OPEN QUESTIONS
 # How to handle collisions during the Primordial and Civilization setup phases?
+
+# ---------------------------------------------
+# line segment - rectangle intersection:
+#   check intersection of line segment with each side of rectangle
+#   special case: line segment entirely within rectangle
+#
+# line segment intersection:
+#   see Stack Overflow 563198
+# 

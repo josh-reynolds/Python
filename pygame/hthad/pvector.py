@@ -32,6 +32,9 @@ class PVector:
     def dot(self, other):
         return (self.x * other.x) + (self.y * other.y)
 
+    def cross(self, other):
+        return (self.x * other.y) - (self.y * other.x)
+
     def angle_between(self, other):
         dot = self.dot(other)
         return math.acos(dot / (self.mag() * other.mag()))
@@ -100,5 +103,3 @@ class PVector:
         m = b.x - a.x
         n = b.y - a.y
         return math.sqrt(m ** 2 + n ** 2)
-
-
