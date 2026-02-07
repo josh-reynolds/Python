@@ -766,7 +766,7 @@ if mine_start:
 line_a = (PVector(800, 600), PVector(900, 600))
 line_b = (PVector(850, 550), PVector(850, 650))
 
-def segment_intersection(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> PVector:
+def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
     r = PVector.sub(line_1[1], line_1[0])
     s = PVector.sub(line_2[1], line_2[0])
 
@@ -780,7 +780,7 @@ def segment_intersection(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector,
 
     if denominator == 0:
         # parallel case
-        pass
+        return False
 
     u = u_numerator / denominator
     t = n.cross(s) / denominator
@@ -800,7 +800,7 @@ def update() -> None:
         else:
             location.color = DWARF
 
-    print(f"{segment_intersection(line_a, line_b)}")
+    print(f"{segments_intersect(line_a, line_b)}")
 
 
 def draw() -> None:
