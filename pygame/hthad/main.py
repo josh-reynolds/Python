@@ -768,6 +768,12 @@ def update() -> None:
     for location in locations:
         location.update()
 
+        if cursor.intersects(location):
+            location.color = (255,0,0)
+        else:
+            location.color = DWARF
+
+
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
