@@ -48,6 +48,71 @@ def nearest_corner(point: PVector) -> PVector:
         return PVector(WIDTH,0)
     return PVector(WIDTH,HEIGHT)
 
+def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
+    r = PVector.sub(line_1[1], line_1[0])
+    s = PVector.sub(line_2[1], line_2[0])
+
+    n = PVector.sub(line_2[0], line_1[0])
+
+    u_numerator = n.cross(r)
+    denominator = r.cross(s)
+
+    if u_numerator == 0 and denominator == 0:
+        # collinear case
+
+        # endpoints touch
+        if (line_1[0] == line_2[0] or line_1[0] == line_2[1] 
+            or line_1[1] == line_2[0] or line_1[1] == line_2[1]):
+            return True
+
+        # overlapping segments
+        # segments overlap if their projection onto the x axis overlap
+        # (or y axis if lines are vertical)
+
+        # projection of AB is:
+        # [min(A.x, B.x), max(A.x, B.x)]
+
+        if line_1[0].x != line_1[1].x:     # lines are not vertical
+            projection_1 = (min(line_1[0].x, line_1[1].x),
+                            max(line_1[0].x, line_1[1].x))
+
+            projection_2 = (min(line_2[0].x, line_2[1].x),
+                            max(line_2[0].x, line_2[1].x))
+
+        else:
+            projection_1 = (min(line_1[0].y, line_1[1].y),
+                            max(line_1[0].y, line_1[1].y))
+
+            projection_2 = (min(line_2[0].y, line_2[1].y),
+                            max(line_2[0].y, line_2[1].y))
+
+        return projection_1[0] < projection_2[1] and projection_1[1] > projection_2[0]
+
+
+    if denominator == 0:
+        # parallel case
+        return False
+
+    u = u_numerator / denominator
+    t = n.cross(s) / denominator
+
+    return t >= 0 and t <= 1 and u >= 0 and u <= 1
+
+def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
+    top_left = PVector(rect.x, rect.y)
+    top_right = PVector(rect.x + rect.w, rect.y)
+    bottom_right = PVector(rect.x + rect.w, rect.y + rect.h)
+    bottom_left = PVector(rect.x, rect.y + rect.h)
+
+    top = (top_left, top_right)
+    right = (top_right, bottom_right)
+    bottom = (bottom_right, bottom_left)
+    left = (bottom_left, top_left)
+
+    for edge in (top, right, bottom, left):
+        return segments_intersect(edge, segment)
+
+
 class Mithril():
     def __init__(self) -> None:
         self.center = get_random_underground_location()
@@ -491,9 +556,12 @@ if mine_start:
             print(tunnels)
             print(f"{len(tunnels)} tunnels in graph")
 
-            #for tunnel in tunnels:
-                #if rect_segment_intersects(candidate, tunnel):
-                    #print(f"{tunnel} intersects {candidate}")
+            tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+            print(tunnel_coords)
+
+            for tunnel in tunnel_coords:
+                if rect_segment_intersects(candidate.rect, tunnel):
+                    print(f"{tunnel} intersects {candidate}")
 
 
 
@@ -526,76 +594,10 @@ if mine_start:
             # add a dwarven treasure to treasure room
             #    straightforward
 
-def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
-    top_left = PVector(rect.x, rect.y)
-    top_right = PVector(rect.x + rect.w, rect.y)
-    bottom_right = PVector(rect.x + rect.w, rect.y + rect.h)
-    bottom_left = PVector(rect.x, rect.y + rect.h)
-
-    top = (top_left, top_right)
-    right = (top_right, bottom_right)
-    bottom = (bottom_right, bottom_left)
-    left = (bottom_left, top_left)
-
-    print(top)
-    print(right)
-    print(bottom)
-    print(left)
 
 line_a = (PVector(800, 500), PVector(900, 400))
 line_b = (PVector(700, 600), PVector(850, 650))
 
-rect_segment_intersects(cursor.rect, line_a)
-
-def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
-    r = PVector.sub(line_1[1], line_1[0])
-    s = PVector.sub(line_2[1], line_2[0])
-
-    n = PVector.sub(line_2[0], line_1[0])
-
-    u_numerator = n.cross(r)
-    denominator = r.cross(s)
-
-    if u_numerator == 0 and denominator == 0:
-        # collinear case
-
-        # endpoints touch
-        if (line_1[0] == line_2[0] or line_1[0] == line_2[1] 
-            or line_1[1] == line_2[0] or line_1[1] == line_2[1]):
-            return True
-
-        # overlapping segments
-        # segments overlap if their projection onto the x axis overlap
-        # (or y axis if lines are vertical)
-
-        # projection of AB is:
-        # [min(A.x, B.x), max(A.x, B.x)]
-
-        if line_1[0].x != line_1[1].x:     # lines are not vertical
-            projection_1 = (min(line_1[0].x, line_1[1].x),
-                            max(line_1[0].x, line_1[1].x))
-
-            projection_2 = (min(line_2[0].x, line_2[1].x),
-                            max(line_2[0].x, line_2[1].x))
-
-        else:
-            projection_1 = (min(line_1[0].y, line_1[1].y),
-                            max(line_1[0].y, line_1[1].y))
-
-            projection_2 = (min(line_2[0].y, line_2[1].y),
-                            max(line_2[0].y, line_2[1].y))
-
-        return projection_1[0] < projection_2[1] and projection_1[1] > projection_2[0]
-
-
-    if denominator == 0:
-        # parallel case
-        return False
-
-    u = u_numerator / denominator
-    t = n.cross(s) / denominator
-
-    return t >= 0 and t <= 1 and u >= 0 and u <= 1
 
 def update() -> None:
     global line_b
@@ -609,6 +611,13 @@ def update() -> None:
             location.color = (255,0,0)
         else:
             location.color = DWARF
+
+    tunnels = locations[0].get_all_connected_tunnels()
+    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+
+    for tunnel in tunnel_coords:
+        if rect_segment_intersects(cursor.rect, tunnel):
+            print(f"{tunnel} intersects {cursor}")
 
     #print(f"{segments_intersect(line_a, line_b)}")
 
