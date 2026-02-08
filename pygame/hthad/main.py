@@ -491,6 +491,12 @@ if mine_start:
             print(tunnels)
             print(f"{len(tunnels)} tunnels in graph")
 
+            #for tunnel in tunnels:
+                #if rect_segment_intersects(candidate, tunnel):
+                    #print(f"{tunnel} intersects {candidate}")
+
+
+
             # for room in graph:
             #    if candidate.intersect(room):
             #        reject
@@ -520,14 +526,33 @@ if mine_start:
             # add a dwarven treasure to treasure room
             #    straightforward
 
+def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
+    top_left = PVector(rect.x, rect.y)
+    top_right = PVector(rect.x + rect.w, rect.y)
+    bottom_right = PVector(rect.x + rect.w, rect.y + rect.h)
+    bottom_left = PVector(rect.x, rect.y + rect.h)
+
+    top = (top_left, top_right)
+    right = (top_right, bottom_right)
+    bottom = (bottom_right, bottom_left)
+    left = (bottom_left, top_left)
+
+    print(top)
+    print(right)
+    print(bottom)
+    print(left)
+
 line_a = (PVector(800, 500), PVector(900, 400))
 line_b = (PVector(700, 600), PVector(850, 650))
+
+rect_segment_intersects(cursor.rect, line_a)
 
 def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
     r = PVector.sub(line_1[1], line_1[0])
     s = PVector.sub(line_2[1], line_2[0])
 
     n = PVector.sub(line_2[0], line_1[0])
+
     u_numerator = n.cross(r)
     denominator = r.cross(s)
 
@@ -541,7 +566,7 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
 
         # overlapping segments
         # segments overlap if their projection onto the x axis overlap
-        # (or y axis if lines are vertical) TO_DO
+        # (or y axis if lines are vertical)
 
         # projection of AB is:
         # [min(A.x, B.x), max(A.x, B.x)]
@@ -585,7 +610,7 @@ def update() -> None:
         else:
             location.color = DWARF
 
-    print(f"{segments_intersect(line_a, line_b)}")
+    #print(f"{segments_intersect(line_a, line_b)}")
 
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
