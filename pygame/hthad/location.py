@@ -4,7 +4,7 @@ from engine import screen
 from pvector import PVector
 
 class Location():
-    def __init__(self, coordinate: PVector, name, color: Tuple, size: int) -> None:
+    def __init__(self, coordinate: PVector, name: str, color: Tuple, size: int) -> None:
         self.name = name
         self.color = color
 
@@ -193,10 +193,11 @@ class Cavern(Location):
     def __init__(self, coordinate: PVector, color=(129,128,128), contents=None, 
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         super().__init__(coordinate, name, color, 30)
+        self.contents = contents
+
         self.radius = self.size//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
-        self.contents = contents
 
     def update(self) -> None:
         pass
@@ -209,7 +210,6 @@ class Cavern(Location):
                              (self.coordinate.x - FINGER//2, self.coordinate.y - self.tilt),
                              (self.coordinate.x + FINGER//2, self.coordinate.y + self.tilt),
                              12)
-
 
 
 class Room(Location):

@@ -232,6 +232,7 @@ def cave_complex_factory() -> List[Cavern]:
 
     return locations
 
+# TO_DO: name the wyrm
 def ancient_wyrm_factory() -> List[Cavern]:
     radius = BEAD
     locations = []
@@ -284,6 +285,8 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
 
     return locations
 
+# TO_DO: there's a vector-based solution for this too using
+#        ratio of x along the line segment
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
         x1, y1 = start.x, start.y
         x2, y2 = end.x, end.y
@@ -314,7 +317,7 @@ def create_primordial_age():
             #        implement when we come to that rule
 
 # Age of Civilization
-# TO_DO: implmenting Dwarves first, Dark Elf to come later
+# TO_DO: implementing Dwarves first, Dark Elves to come later
 def age_of_civilization_setup():
     global locations
 
@@ -517,8 +520,8 @@ if mine_start:
             # add a dwarven treasure to treasure room
             #    straightforward
 
-line_a = (PVector(800, 600), PVector(900, 600))
-line_b = (PVector(850, 550), PVector(850, 650))
+line_a = (PVector(800, 500), PVector(900, 400))
+line_b = (PVector(700, 600), PVector(850, 650))
 
 def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
     r = PVector.sub(line_1[1], line_1[0])
@@ -537,8 +540,27 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
             return True
 
         # overlapping segments
-        # TO_DO
+        # segments overlap if their projection onto the x axis overlap
+        # (or y axis if lines are vertical) TO_DO
 
+        # projection of AB is:
+        # [min(A.x, B.x), max(A.x, B.x)]
+
+        if line_1[0].x != line_1[1].x:     # lines are not vertical
+            projection_1 = (min(line_1[0].x, line_1[1].x),
+                            max(line_1[0].x, line_1[1].x))
+
+            projection_2 = (min(line_2[0].x, line_2[1].x),
+                            max(line_2[0].x, line_2[1].x))
+
+        else:
+            projection_1 = (min(line_1[0].y, line_1[1].y),
+                            max(line_1[0].y, line_1[1].y))
+
+            projection_2 = (min(line_2[0].y, line_2[1].y),
+                            max(line_2[0].y, line_2[1].y))
+
+        return projection_1[0] < projection_2[1] and projection_1[1] > projection_2[0]
 
 
     if denominator == 0:
