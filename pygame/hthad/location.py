@@ -46,6 +46,37 @@ class Location():
     def intersects(self, other: Self) -> bool:
         return self.rect.colliderect(other.rect)
 
+    def draw(self) -> None:
+        self.draw_shape()
+
+        #if self.contents:
+            #y_offset = -10
+        #else:
+            #y_offset = 0
+
+        #if show_labels:
+            #screen.draw.text(self.name, 
+                             #center=(self.coordinate.x, self.coordinate.y + y_offset),
+                             #color = (255,255,255))
+#
+        #if self.contents and show_labels:
+            #screen.draw.text(f"{self.contents}", 
+                             #center=(self.coordinate.x, self.coordinate.y - y_offset),
+                             #color = (255,255,255))
+
+        # TO_DO: we're drawing these twice, once from each direction...
+        for n in self.neighbors:
+            screen.draw.line(self.color,
+                             (self.coordinate.x, self.coordinate.y),
+                             (n.coordinate.x, n.coordinate.y),
+                             12)
+            # TO_DO: kludge to fix overdraw problem
+            if n.contents:
+                n.contents.draw()
+
+        if self.contents:
+            self.contents.draw()
+
     # TO_DO: generalize the BFS pattern
     def get_all_connected_locations(self) -> List:
         visited = [self]
@@ -159,9 +190,9 @@ class Location():
 
 
 class Cavern(Location):
-    def __init__(self, coordinate: PVector, contents=None, 
+    def __init__(self, coordinate: PVector, color=(129,128,128), contents=None, 
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
-        super().__init__(coordinate, name, CAVERN, 30)
+        super().__init__(coordinate, name, color, 30)
         self.radius = self.size//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
@@ -170,42 +201,15 @@ class Cavern(Location):
     def update(self) -> None:
         pass
 
-    def draw(self) -> None:
+    def draw_shape(self) -> None:
         screen.draw.circle(self.coordinate.x, self.coordinate.y, self.radius, self.color, 0)
 
         if self.tunnel:
-            screen.draw.line(CAVERN,
+            screen.draw.line(self.color,
                              (self.coordinate.x - FINGER//2, self.coordinate.y - self.tilt),
                              (self.coordinate.x + FINGER//2, self.coordinate.y + self.tilt),
                              12)
 
-        if self.contents:
-            y_offset = -10
-        else:
-            y_offset = 0
-
-        #if show_labels:
-            #screen.draw.text(self.name, 
-                             #center=(self.coordinate.x, self.coordinate.y + y_offset),
-                             #color = (255,255,255))
-#
-        #if self.contents and show_labels:
-            #screen.draw.text(f"{self.contents}", 
-                             #center=(self.coordinate.x, self.coordinate.y - y_offset),
-                             #color = (255,255,255))
-
-        # TO_DO: we're drawing these twice, once from each direction...
-        for n in self.neighbors:
-            screen.draw.line(CAVERN,
-                             (self.coordinate.x, self.coordinate.y),
-                             (n.coordinate.x, n.coordinate.y),
-                             12)
-            # TO_DO: kludge to fix overdraw problem
-            if n.contents:
-                n.contents.draw()
-
-        if self.contents:
-            self.contents.draw()
 
 
 class Room(Location):
@@ -216,33 +220,5 @@ class Room(Location):
     def update(self) -> None:
         pass
 
-    def draw(self) -> None:
+    def draw_shape(self) -> None:
         screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, self.color, 0)
-
-        if self.contents:
-            y_offset = -10
-        else:
-            y_offset = 0
-
-        #if show_labels:
-            #screen.draw.text(self.name, 
-                             #center=(self.coordinate.x, self.coordinate.y + y_offset),
-                             #color = (255,255,255))
-#
-        #if self.contents and show_labels:
-            #screen.draw.text(f"{self.contents}", 
-                             #center=(self.coordinate.x, self.coordinate.y - y_offset),
-                             #color = (255,255,255))
-
-        # TO_DO: we're drawing these twice, once from each direction...
-        for n in self.neighbors:
-            screen.draw.line(self.color,
-                             (self.coordinate.x, self.coordinate.y),
-                             (n.coordinate.x, n.coordinate.y),
-                             12)
-            # TO_DO: kludge to fix overdraw problem
-            if n.contents:
-                n.contents.draw()
-
-        if self.contents:
-            self.contents.draw()
