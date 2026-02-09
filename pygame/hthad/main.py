@@ -109,8 +109,12 @@ def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
     bottom = (bottom_right, bottom_left)
     left = (bottom_left, top_left)
 
+    result = False
     for edge in (top, right, bottom, left):
-        return segments_intersect(edge, segment)
+        if segments_intersect(edge, segment):
+            result = True
+
+    return result
 
 
 class Mithril():
