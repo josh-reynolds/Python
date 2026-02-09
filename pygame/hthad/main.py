@@ -595,37 +595,46 @@ if mine_start:
             #    straightforward
 
 
-line_a = (PVector(800, 500), PVector(900, 400))
-line_b = (PVector(700, 600), PVector(850, 650))
+#line_a = (PVector(800, 500), PVector(900, 400))
+#line_b = (PVector(700, 600), PVector(850, 650))
+
+# 1100 x 850
+lines = [(PVector(550, 100), PVector(550, 750)),
+         (PVector(100, 425), PVector(1000, 425))]
+
+rect = Rect(10, 110, 100, 100)
 
 
 def update() -> None:
-    global line_b
+    global rect
+    #global line_b
     cursor.coordinate = PVector(*mouse.get_pos())
-    line_b = (line_b[0], cursor.coordinate)
+    rect.x = cursor.coordinate.x - rect.w/2
+    rect.y = cursor.coordinate.y - rect.h/2
+    #line_b = (line_b[0], cursor.coordinate)
 
-    for location in locations:
-        location.update()
-
-        if cursor.intersects(location):
-            location.color = (255,0,0)
-        else:
-            location.color = DWARF
-
-    tunnels = locations[0].get_all_connected_tunnels()
-    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
-
-    for tunnel in tunnel_coords:
-        if rect_segment_intersects(cursor.rect, tunnel):
-            print(f"{tunnel} intersects {cursor}")
+    #for location in locations:
+        #location.update()
+#
+        #if cursor.intersects(location):
+            #location.color = (255,0,0)
+        #else:
+            #location.color = DWARF
+#
+    #tunnels = locations[0].get_all_connected_tunnels()
+    #tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+#
+    #for tunnel in tunnel_coords:
+        #if rect_segment_intersects(cursor.rect, tunnel):
+            #print(f"{tunnel} intersects {cursor}")
 
     #print(f"{segments_intersect(line_a, line_b)}")
 
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
-    for location in locations:
-        location.draw()
+    #for location in locations:
+        #location.draw()
 
     for i in range(6):
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
@@ -634,8 +643,13 @@ def draw() -> None:
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 
-    screen.draw.line(BORDER, (line_a[0].x, line_a[0].y), (line_a[1].x, line_a[1].y), 8)
-    screen.draw.line(BORDER, (line_b[0].x, line_b[0].y), (line_b[1].x, line_b[1].y), 8)
+    #screen.draw.line(BORDER, (line_a[0].x, line_a[0].y), (line_a[1].x, line_a[1].y), 8)
+    #screen.draw.line(BORDER, (line_b[0].x, line_b[0].y), (line_b[1].x, line_b[1].y), 8)
+
+    screen.draw.rect(rect.x, rect.y, rect.h, rect.w, (255,0,0), 1)
+
+    for line in lines:
+        screen.draw.line(BORDER, (line[0].x, line[0].y), (line[1].x, line[1].y), 4)
 
 run()
 
