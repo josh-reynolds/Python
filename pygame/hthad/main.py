@@ -602,15 +602,28 @@ if mine_start:
 lines = [(PVector(550, 100), PVector(550, 750)),
          (PVector(100, 425), PVector(1000, 425))]
 
-rect = Rect(10, 110, 100, 100)
+rect_a = Rect(10, 110, 100, 100)
+
+rects = [Rect(540,90,20,20),
+         Rect(90,415,20,20),
+         Rect(540,415,20,20),
+         Rect(990,415,20,20),
+         Rect(540,740,20,20),
+         ]
+
+for rect in rects:
+    print(f"\nChecking {rect}")
+    for line in lines:
+        if rect_segment_intersects(rect, line):
+            print(f"{line} intersects {rect}")
 
 
 def update() -> None:
     global rect
     #global line_b
     cursor.coordinate = PVector(*mouse.get_pos())
-    rect.x = cursor.coordinate.x - rect.w/2
-    rect.y = cursor.coordinate.y - rect.h/2
+    rect_a.x = cursor.coordinate.x - rect_a.w/2
+    rect_a.y = cursor.coordinate.y - rect_a.h/2
     #line_b = (line_b[0], cursor.coordinate)
 
     #for location in locations:
@@ -630,6 +643,10 @@ def update() -> None:
 
     #print(f"{segments_intersect(line_a, line_b)}")
 
+    #for line in lines:
+        #if rect_segment_intersects(rect, line):
+            #print(f"{line} intersects")
+
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
@@ -646,7 +663,10 @@ def draw() -> None:
     #screen.draw.line(BORDER, (line_a[0].x, line_a[0].y), (line_a[1].x, line_a[1].y), 8)
     #screen.draw.line(BORDER, (line_b[0].x, line_b[0].y), (line_b[1].x, line_b[1].y), 8)
 
-    screen.draw.rect(rect.x, rect.y, rect.h, rect.w, (255,0,0), 1)
+    screen.draw.rect(rect_a.x, rect_a.y, rect_a.h, rect_a.w, (255,0,0), 1)
+
+    for rect in rects:
+        screen.draw.rect(rect.x, rect.y, rect.h, rect.w, (255,0,255), 1)
 
     for line in lines:
         screen.draw.line(BORDER, (line[0].x, line[0].y), (line[1].x, line[1].y), 4)
