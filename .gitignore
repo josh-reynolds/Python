@@ -27,6 +27,7 @@
 /pygame/hexes/*.png
 /pygame/hthad/__pycache__
 /pygame/hthad/*.png
+/pygame/intersections/__pycache__
 /pygame/isometric/__pycache__
 /pygame/isometric/*.png
 /pygame/huevos/__pycache__
