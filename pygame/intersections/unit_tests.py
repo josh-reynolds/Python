@@ -54,6 +54,18 @@ class SegmentIntersectionTestCase(unittest.TestCase):
         line_2 = (PVector(125, 100), PVector(150, 100))
         self.assertTrue(segments_intersect(line_1, line_2))
 
+    def test_overlapping_vertical_collinear_lines(self) -> None:
+        """Tests vertical collinear line segments that overlap."""
+        line_1 = (PVector(100, 100), PVector(100, 200))
+        line_2 = (PVector(100, 150), PVector(100, 250))
+        self.assertTrue(segments_intersect(line_1, line_2))
+
+    def test_non_overlapping_vertical_collinear_lines(self) -> None:
+        """Tests vertical collinear line segments that do not overlap."""
+        line_1 = (PVector(100, 100), PVector(100, 200))
+        line_2 = (PVector(100, 250), PVector(100, 350))
+        self.assertFalse(segments_intersect(line_1, line_2))
+
 # line-line intersections ----------------
 # [OK] parallel
 # [OK] collinear - no overlap
@@ -63,6 +75,8 @@ class SegmentIntersectionTestCase(unittest.TestCase):
 # [OK] intersect - touch at an endpoint
 # [OK] intersect within segments
 # [OK] does not intersect within segments
+# [OK] collinear - overlapping vertical lines
+# [OK] collinear - no overlap, vertical lines
 # 
 # should we check different slopes? horizontal, vertical, positive, negative?
 
