@@ -1,5 +1,6 @@
 """Contains tests for the intersections functions."""
 import unittest
+from pygame import Rect
 from pvector import PVector
 from intersections import segments_intersect, rect_segment_intersects
 
@@ -66,6 +67,15 @@ class SegmentIntersectionTestCase(unittest.TestCase):
         line_2 = (PVector(100, 250), PVector(100, 350))
         self.assertFalse(segments_intersect(line_1, line_2))
 
+class RectSegmentIntersectionTestCase(unittest.TestCase):
+    """Tests intersection of a line segment with a rectangle."""
+
+    def test_intersect_with_top(self) -> None:
+        """Tests intersection of a line segment with the top edge of a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(150, 50), PVector(150, 150))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
 # line-line intersections ----------------
 # [OK] parallel
 # [OK] collinear - no overlap
@@ -82,11 +92,15 @@ class SegmentIntersectionTestCase(unittest.TestCase):
 
 # rect-line intersections ----------------
 # [  ] does not intersect
-# [  ] intersects top
+# [OK] intersects top
 # [  ] intersects right
 # [  ] intersects bottom
 # [  ] intersects left
 # [  ] segment inside rect
+# [  ] segment intersects a corner
+
+# two sides? does that matter?
+# check all four corners?
 
 def suite():
     """Create a suite of test cases."""
