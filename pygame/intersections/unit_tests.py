@@ -106,6 +106,12 @@ class RectSegmentIntersectionTestCase(unittest.TestCase):
         line = (PVector(110, 150), PVector(190, 150))
         self.assertTrue(rect_segment_intersects(rect, line))
 
+    def test_intersect_with_corner(self) -> None:
+        """Tests intersection of a line segment with the corner of a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(50, 150), PVector(150, 50))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
 # line-line intersections ----------------
 # [OK] parallel
 # [OK] collinear - no overlap
@@ -129,7 +135,8 @@ class RectSegmentIntersectionTestCase(unittest.TestCase):
 # [OK] intersects bottom
 # [OK] intersects left
 # [OK] segment inside rect
-# [  ] segment intersects a corner
+# [OK] segment intersects a corner
+
 
 # two sides? does that matter?
 # check all four corners?
