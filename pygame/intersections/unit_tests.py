@@ -70,10 +70,34 @@ class SegmentIntersectionTestCase(unittest.TestCase):
 class RectSegmentIntersectionTestCase(unittest.TestCase):
     """Tests intersection of a line segment with a rectangle."""
 
+    def test_no_intersect(self) -> None:
+        """Tests a line segment not intersecting a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(50, 50), PVector(150, 50))
+        self.assertFalse(rect_segment_intersects(rect, line))
+
     def test_intersect_with_top(self) -> None:
         """Tests intersection of a line segment with the top edge of a rectangle."""
         rect = Rect(100, 100, 100, 100)
         line = (PVector(150, 50), PVector(150, 150))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
+    def test_intersect_with_right(self) -> None:
+        """Tests intersection of a line segment with the right edge of a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(250, 150), PVector(150, 150))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
+    def test_intersect_with_bottom(self) -> None:
+        """Tests intersection of a line segment with the bottom edge of a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(150, 250), PVector(150, 150))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
+    def test_intersect_with_left(self) -> None:
+        """Tests intersection of a line segment with the left edge of a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(50, 150), PVector(150, 150))
         self.assertTrue(rect_segment_intersects(rect, line))
 
 # line-line intersections ----------------
@@ -87,15 +111,17 @@ class RectSegmentIntersectionTestCase(unittest.TestCase):
 # [OK] does not intersect within segments
 # [OK] collinear - overlapping vertical lines
 # [OK] collinear - no overlap, vertical lines
-# 
+#
 # should we check different slopes? horizontal, vertical, positive, negative?
+# probably should get some negative numbers in there too
+# how about floats? supported?
 
 # rect-line intersections ----------------
-# [  ] does not intersect
+# [OK] does not intersect
 # [OK] intersects top
-# [  ] intersects right
-# [  ] intersects bottom
-# [  ] intersects left
+# [OK] intersects right
+# [OK] intersects bottom
+# [OK] intersects left
 # [  ] segment inside rect
 # [  ] segment intersects a corner
 
