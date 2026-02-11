@@ -49,6 +49,7 @@ def nearest_corner(point: PVector) -> PVector:
     return PVector(WIDTH,HEIGHT)
 
 def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, PVector]) -> bool:
+    """Test whether two line segments intersect between their endpoints."""
     r = PVector.sub(line_1[1], line_1[0])
     s = PVector.sub(line_2[1], line_2[0])
 
@@ -61,7 +62,7 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
         # collinear case
 
         # endpoints touch
-        if (line_1[0] == line_2[0] or line_1[0] == line_2[1] 
+        if (line_1[0] == line_2[0] or line_1[0] == line_2[1]
             or line_1[1] == line_2[0] or line_1[1] == line_2[1]):
             return True
 
@@ -98,7 +99,12 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
 
     return t >= 0 and t <= 1 and u >= 0 and u <= 1
 
-def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
+def rect_segment_intersects(rect: Rect, segment: Tuple[Tuple, Tuple]) -> bool:
+    """Test whether a line segment intersects a rectangle."""
+    if (rect.collidepoint(segment[0].x, segment[0].y) and
+        rect.collidepoint(segment[1].x, segment[1].y)):
+        return True
+
     top_left = PVector(rect.x, rect.y)
     top_right = PVector(rect.x + rect.w, rect.y)
     bottom_right = PVector(rect.x + rect.w, rect.y + rect.h)
@@ -623,7 +629,7 @@ for rect in rects:
 
 
 def update() -> None:
-    global rect
+    global rect_a
     #global line_b
     cursor.coordinate = PVector(*mouse.get_pos())
     rect_a.x = cursor.coordinate.x - rect_a.w/2
@@ -647,9 +653,9 @@ def update() -> None:
 
     #print(f"{segments_intersect(line_a, line_b)}")
 
-    #for line in lines:
-        #if rect_segment_intersects(rect, line):
-            #print(f"{line} intersects")
+    for line in lines:
+        if rect_segment_intersects(rect_a, line):
+            print(f"{line} intersects")
 
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
