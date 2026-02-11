@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice
-from typing import List, Tuple, Self
+from typing import List, Tuple
 from pygame import Rect, mouse
 from engine import screen, run
 from pvector import PVector
@@ -97,7 +97,7 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
     u = u_numerator / denominator
     t = n.cross(s) / denominator
 
-    return t >= 0 and t <= 1 and u >= 0 and u <= 1
+    return 0 <= t <= 1 and 0 <= u <= 1
 
 def rect_segment_intersects(rect: Rect, segment: Tuple[Tuple, Tuple]) -> bool:
     """Test whether a line segment intersects a rectangle."""
