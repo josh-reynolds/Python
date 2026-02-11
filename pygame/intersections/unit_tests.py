@@ -100,6 +100,12 @@ class RectSegmentIntersectionTestCase(unittest.TestCase):
         line = (PVector(50, 150), PVector(150, 150))
         self.assertTrue(rect_segment_intersects(rect, line))
 
+    def test_segment_inside_rect(self) -> None:
+        """Tests intersection of a line segment that is inside a rectangle."""
+        rect = Rect(100, 100, 100, 100)
+        line = (PVector(110, 150), PVector(190, 150))
+        self.assertTrue(rect_segment_intersects(rect, line))
+
 # line-line intersections ----------------
 # [OK] parallel
 # [OK] collinear - no overlap
@@ -122,7 +128,7 @@ class RectSegmentIntersectionTestCase(unittest.TestCase):
 # [OK] intersects right
 # [OK] intersects bottom
 # [OK] intersects left
-# [  ] segment inside rect
+# [OK] segment inside rect
 # [  ] segment intersects a corner
 
 # two sides? does that matter?

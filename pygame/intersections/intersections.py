@@ -55,8 +55,12 @@ def segments_intersect(line_1: Tuple[PVector, PVector], line_2: Tuple[PVector, P
     return t >= 0 and t <= 1 and u >= 0 and u <= 1
 
 # TO_DO: special case - line segment entirely inside the rect
-def rect_segment_intersects(rect: Rect, segment: Tuple) -> bool:
+def rect_segment_intersects(rect: Rect, segment: Tuple[Tuple, Tuple]) -> bool:
     """Test whether a line segment intersects a rectangle."""
+    if (rect.collidepoint(segment[0].x, segment[0].y) and
+        rect.collidepoint(segment[1].x, segment[1].y)):
+        return True
+
     top_left = PVector(rect.x, rect.y)
     top_right = PVector(rect.x + rect.w, rect.y)
     bottom_right = PVector(rect.x + rect.w, rect.y + rect.h)
