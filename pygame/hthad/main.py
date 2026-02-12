@@ -160,7 +160,7 @@ class GoldVein():
 class Entity():
     def __init__(self, name: str, parent: Location, color: Tuple) -> None:
         self.name = name
-        self.parent = parent
+        self._parent = parent
         self.x = self.parent.coordinate.x
         self.y = self.parent.coordinate.y
         self.radius = BEAD//3
@@ -171,6 +171,16 @@ class Entity():
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.parent})"
+
+    @property
+    def parent(self) -> Location:
+        return self._parent
+
+    @parent.setter
+    def parent(self, new_parent: Location) -> None:
+        self._parent = new_parent
+        self.x = self.parent.coordinate.x
+        self.y = self.parent.coordinate.y
 
     def draw(self) -> None:
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
@@ -467,8 +477,6 @@ if mine_start:
             else:
                 selection = first_cut[0]
 
-            print(selection)
-
             # we'll probably have a bunch of potential sites, and
             # test until we find winner - order the list by priority,
             # horizontal first, then vertical, then at an angle
@@ -476,11 +484,9 @@ if mine_start:
 
             candidate = Room(candidate_location)
             candidate.name = "Test"
-            print(candidate.coordinate)
             locations.append(candidate)
 
             rooms = selection.get_all_connected_locations()
-            print(f"{len(rooms)} rooms in graph")
 
             viable = True
             for location in rooms:
@@ -488,15 +494,21 @@ if mine_start:
                     viable = False
 
             tunnels = selection.get_all_connected_tunnels()
-            print(tunnels)
-            print(f"{len(tunnels)} tunnels in graph")
 
             tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
-            print(tunnel_coords)
 
             for tunnel in tunnel_coords:
                 if rect_segment_intersects(candidate.rect, tunnel):
-                    print(f"{tunnel} intersects {candidate}")
+                    viable = False
+
+            if viable:
+                print("Candidate location is viable - adding room.")
+                selection.add_neighbor(candidate)
+                candidate.color = selection.color
+                treasure.parent = candidate
+                treasure.name = "Dwarven Treasure"
+                candidate.contents = treasure
+
 
             # remove treasure
             #    straightforward
