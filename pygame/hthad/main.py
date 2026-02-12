@@ -371,45 +371,54 @@ def age_of_civilization_setup():
 # TEMPORARy GRAPHS for testing
 room0 = Room(PVector(250,200))
 room0.name = "Start"
+room0.color = DWARF
 locations.append(room0)
 
 room1 = Room(PVector(250,300))
 room1.name = "Barracks"
+room1.color = DWARF
 room1.contents = Entity("Dwarves", room1, CREATURE)
 locations.append(room1)
 
 room2 = Room(PVector(250,400))
 room2.name = "Mine 1"
+room2.color = DWARF
 room2.contents = Entity("Treasure", room2, TREASURE)
 locations.append(room2)
 
 room3 = Room(PVector(350,400))
 room3.name = "Mine 2"
+room3.color = DWARF
 room3.contents = Entity("Treasure", room3, TREASURE)
 locations.append(room3)
 
 room4 = Room(PVector(450,400))
 room4.name = "Barracks"
+room4.color = DWARF
 room4.contents = Entity("Dwarves", room4, CREATURE)
 locations.append(room4)
 
 room5 = Room(PVector(450,300))
 room5.name = "Treasure Room"
+room5.color = DWARF
 room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
 locations.append(room5)
 
 room6 = Room(PVector(550,400))
 room6.name = "Barracks"
+room6.color = DWARF
 room6.contents = Entity("Dwarves", room6, CREATURE)
 locations.append(room6)
 
 room7 = Room(PVector(450,500))
 room7.name = "Barracks"
+room7.color = DWARF
 room7.contents = Entity("Dwarves", room7, CREATURE)
 locations.append(room7)
 
 room8 = Room(PVector(550,300))
 room8.name = "Barracks"
+room8.color = DWARF
 room8.contents = Entity("Dwarves", room8, CREATURE)
 locations.append(room8)
 
@@ -422,11 +431,6 @@ room4.add_neighbor(room5)   # barracks -> treasure room
 room4.add_neighbor(room6)   # barracks -> barracks
 room4.add_neighbor(room7)   # barracks -> barracks
 room5.add_neighbor(room8)   # treasure room -> barracks
-
-cursor = Room(PVector(WIDTH//2, HEIGHT//2))
-cursor.name = "Cursor"
-cursor.color = (200,200,0)
-locations.append(cursor)
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
@@ -478,16 +482,10 @@ if mine_start:
             rooms = selection.get_all_connected_locations()
             print(f"{len(rooms)} rooms in graph")
 
-            test = Room(PVector.sub(rooms[-1].coordinate, PVector(5,5)))
-            test.color = (255, 80, 80)
-            locations.append(test)
-
             viable = True
             for location in rooms:
                 if candidate.intersects(location):
                     viable = False
-                if test.intersects(location):
-                    print(f"intersects {location}")
 
             tunnels = selection.get_all_connected_tunnels()
             print(tunnels)
@@ -499,12 +497,6 @@ if mine_start:
             for tunnel in tunnel_coords:
                 if rect_segment_intersects(candidate.rect, tunnel):
                     print(f"{tunnel} intersects {candidate}")
-
-
-
-            # for room in graph:
-            #    if candidate.intersect(room):
-            #        reject
 
             # remove treasure
             #    straightforward
@@ -531,64 +523,15 @@ if mine_start:
             # add a dwarven treasure to treasure room
             #    straightforward
 
-
-#line_a = (PVector(800, 500), PVector(900, 400))
-#line_b = (PVector(700, 600), PVector(850, 650))
-
-# 1100 x 850
-lines = [(PVector(550, 100), PVector(550, 750)),
-         (PVector(100, 425), PVector(1000, 425))]
-
-rect_a = Rect(10, 110, 100, 100)
-
-rects = [Rect(540,90,20,20),
-         Rect(90,415,20,20),
-         Rect(540,415,20,20),
-         Rect(990,415,20,20),
-         Rect(540,740,20,20),
-         ]
-
-for rect in rects:
-    print(f"\nChecking {rect}")
-    for line in lines:
-        if rect_segment_intersects(rect, line):
-            print(f"{line} intersects {rect}")
-
-
 def update() -> None:
-    global rect_a
-    #global line_b
-    cursor.coordinate = PVector(*mouse.get_pos())
-    rect_a.x = cursor.coordinate.x - rect_a.w/2
-    rect_a.y = cursor.coordinate.y - rect_a.h/2
-    #line_b = (line_b[0], cursor.coordinate)
-
-    #for location in locations:
-        #location.update()
-#
-        #if cursor.intersects(location):
-            #location.color = (255,0,0)
-        #else:
-            #location.color = DWARF
-#
-    #tunnels = locations[0].get_all_connected_tunnels()
-    #tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
-#
-    #for tunnel in tunnel_coords:
-        #if rect_segment_intersects(cursor.rect, tunnel):
-            #print(f"{tunnel} intersects {cursor}")
-
-    #print(f"{segments_intersect(line_a, line_b)}")
-
-    for line in lines:
-        if rect_segment_intersects(rect_a, line):
-            print(f"{line} intersects")
+    for location in locations:
+        location.update()
 
 def draw() -> None:
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
-    #for location in locations:
-        #location.draw()
+    for location in locations:
+        location.draw()
 
     for i in range(6):
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
@@ -596,17 +539,6 @@ def draw() -> None:
 
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
-
-    #screen.draw.line(BORDER, (line_a[0].x, line_a[0].y), (line_a[1].x, line_a[1].y), 8)
-    #screen.draw.line(BORDER, (line_b[0].x, line_b[0].y), (line_b[1].x, line_b[1].y), 8)
-
-    screen.draw.rect(rect_a.x, rect_a.y, rect_a.h, rect_a.w, (255,0,0), 1)
-
-    for rect in rects:
-        screen.draw.rect(rect.x, rect.y, rect.h, rect.w, (255,0,255), 1)
-
-    for line in lines:
-        screen.draw.line(BORDER, (line[0].x, line[0].y), (line[1].x, line[1].y), 4)
 
 run()
 
