@@ -518,6 +518,8 @@ if mine_start:
         # room bonanza above
         for treasure in treasures:
             # new barracks should attach to any non-mine room
+            # preference for fewest neighbors
+            # no other criteria - this can be anywhere in the complex
             # find a non-intersecting location
             # place a barracks there
             # add a dwarf to the barracks
@@ -527,18 +529,40 @@ if mine_start:
             rooms = mine_start.get_locations_by_name("Barracks")
             rooms += mine_start.get_locations_by_name("Treasure Room")
 
-            print(rooms)
-
             neighbor_counts = [len(r.neighbors) for r in rooms]
             min_neighbors = min(neighbor_counts)
+            
+            selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
-            print(neighbor_counts)
+            candidate_location = PVector.add(selection.coordinate, PVector(100,0))
 
-            first_cut = [r for r in rooms if len(r.neighbors) == min_neighbors]
+            candidate = Room(candidate_location)
+            candidate.name = "Barracks"
+            locations.append(candidate)
 
-            print(first_cut)
+            rooms = selection.get_all_connected_locations()
 
+            viable = True
+            for location in rooms:
+                if candidate.intersects(location):
+                    viable = False
 
+            tunnels = selection.get_all_connected_tunnels()
+            tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+
+            for tunnel in tunnel_coords:
+                if rect_segment_intersects(candidate.rect, tunnel):
+                    viable = False
+
+            # TO_DO: tunnel crossing aren't handled yet
+            # TO_DO: intersections with caverns not handled yet
+            # TO_DO: special case: can't build above-ground
+
+            if viable:
+                print("Candidate location is viable - adding room.")
+                selection.add_neighbor(candidate)
+                candidate.color = selection.color
+                candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
 def update() -> None:
     for location in locations:
