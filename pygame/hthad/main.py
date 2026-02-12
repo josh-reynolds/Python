@@ -483,7 +483,7 @@ if mine_start:
             candidate_location = PVector.add(selection.coordinate, PVector(100,0))
 
             candidate = Room(candidate_location)
-            candidate.name = "Test"
+            candidate.name = "Treasure Room"
             locations.append(candidate)
 
             rooms = selection.get_all_connected_locations()
@@ -501,6 +501,10 @@ if mine_start:
                 if rect_segment_intersects(candidate.rect, tunnel):
                     viable = False
 
+            # TO_DO: tunnel crossing aren't handled yet
+            # TO_DO: intersections with caverns not handled yet
+            # TO_DO: special case: can't build above-ground
+
             if viable:
                 print("Candidate location is viable - adding room.")
                 selection.add_neighbor(candidate)
@@ -509,31 +513,32 @@ if mine_start:
                 treasure.name = "Dwarven Treasure"
                 candidate.contents = treasure
 
+        # add another dwarf barracks and populate it - do this in separate
+        # loop because these new arrivals should not be part of the treasure
+        # room bonanza above
+        for treasure in treasures:
+            # new barracks should attach to any non-mine room
+            # find a non-intersecting location
+            # place a barracks there
+            # add a dwarf to the barracks
+            # same special cases as above for treasure rooms - in 
+            # fact we should extract a "get new room" function here
+            selection = None
+            rooms = mine_start.get_locations_by_name("Barracks")
+            rooms += mine_start.get_locations_by_name("Treasure Room")
 
-            # remove treasure
-            #    straightforward
-            #
-            # create a new treasure room
-            #    find a barracks to attach to
-            #       get all barracks
-            #       first priority - barracks w/ least neighbors
-            #       second priority - closest barracks to mine source
-            #       random choice if still tied
-            #
-            #    find a non-intersecting location
-            #       choose a point far enough away to not intersect barracks
-            #       priority to horizontal & vertical connections
-            #       treasure room cannot overlap existing dwarf rooms
-            #       treasure room cannot overlap existing dwarf tunnels
-            #       same applies to Barracks -> Treasure Room tunnel, no crossings
-            #       we only check dwarf locations - we *can* intersect caverns
-            #       TBD what happens in that case...
-            #       
-            #    add & connect the treasure room
-            #       straightforward
-            #
-            # add a dwarven treasure to treasure room
-            #    straightforward
+            print(rooms)
+
+            neighbor_counts = [len(r.neighbors) for r in rooms]
+            min_neighbors = min(neighbor_counts)
+
+            print(neighbor_counts)
+
+            first_cut = [r for r in rooms if len(r.neighbors) == min_neighbors]
+
+            print(first_cut)
+
+
 
 def update() -> None:
     for location in locations:
