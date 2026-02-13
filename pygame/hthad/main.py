@@ -465,6 +465,12 @@ def add_candidate(name: str, selection: Location) -> Location:
         locations.append(candidate)
         return candidate
 
+def is_viable(candidate: Location, rooms: List[Location]) -> bool:
+        for location in rooms:
+            if candidate.intersects(location):
+                return False
+        return True
+
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -500,10 +506,7 @@ if mine_start:
 
             rooms = selection.get_all_connected_locations()
 
-            viable = True
-            for location in rooms:
-                if candidate.intersects(location):
-                    viable = False
+            viable = is_viable(candidate, rooms)
 
             tunnels = selection.get_all_connected_tunnels()
 
@@ -560,10 +563,7 @@ if mine_start:
 
             rooms = selection.get_all_connected_locations()
 
-            viable = True
-            for location in rooms:
-                if candidate.intersects(location):
-                    viable = False
+            viable = is_viable(candidate, rooms)
 
             tunnels = selection.get_all_connected_tunnels()
             tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
