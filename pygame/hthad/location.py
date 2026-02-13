@@ -207,8 +207,8 @@ class Cavern(Location):
 
         if self.tunnel:
             screen.draw.line(self.color,
-                             (self.coordinate.x - FINGER//2, self.coordinate.y - self.tilt),
-                             (self.coordinate.x + FINGER//2, self.coordinate.y + self.tilt),
+                             (self.coordinate.x - 85, self.coordinate.y - self.tilt),
+                             (self.coordinate.x + 85, self.coordinate.y + self.tilt),
                              12)
 
 

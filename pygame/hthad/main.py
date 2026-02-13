@@ -101,7 +101,7 @@ class UndergroundRiver():
                 case 5 | 6:
                     current_y -= STRATA_HEIGHT
                 case 7 | 8:
-                    self.caves.append(Cavern(PVector(current_x, current_y), None, False, 0))
+                    self.caves.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
                 case 9:
                     current_x -= FINGER
                     current_y += STRATA_HEIGHT // 2
@@ -158,7 +158,7 @@ class GoldVein():
 
 
 class Entity():
-    def __init__(self, name: str, parent: Location, color: Tuple) -> None:
+    def __init__(self, name: str, parent: Location, color: Tuple=(128,128,128)) -> None:
         self.name = name
         self._parent = parent
         self.x = self.parent.coordinate.x
@@ -193,6 +193,7 @@ def natural_cavern_factory() -> Cavern:
     tilt = 0
     contents = None
     cavern = Cavern(coordinate)
+    cavern.color = CAVERN
 
     detail = randint(1,6)
     match detail:
@@ -224,18 +225,21 @@ def cave_complex_factory() -> List[Cavern]:
 
     first_point = get_random_underground_location()
     cavern1 = Cavern(first_point)
+    cavern1.color = CAVERN
     cavern1.contents = Entity("Primordial Beasts 1", cavern1, CREATURE)
     locations.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
     cavern2 = Cavern(second_point)
+    cavern2.color = CAVERN
     cavern2.contents = Entity("Primordial Beasts 1", cavern2, CREATURE)
     locations.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
     cavern3 = Cavern(third_point)
+    cavern3.color = CAVERN
     cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
     locations.append(cavern3)
 
@@ -251,12 +255,14 @@ def ancient_wyrm_factory() -> List[Cavern]:
 
     first_point = get_random_underground_location()
     cavern1 = Cavern(first_point)
+    cavern1.color = CAVERN
     cavern1.contents = Entity("Ancient Wyrm 1", cavern1, CREATURE)
     locations.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
     cavern2 = Cavern(second_point)
+    cavern2.color = CAVERN
     cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
     locations.append(cavern2)
 
@@ -279,16 +285,19 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
 
     room0 = Room(PVector(x_location, GROUND_LEVEL))
     room0.name = "Start"
+    room0.color = DWARF
     locations.append(room0)
     
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
     room1 = Room(PVector(x_location, half_height))
     room1.name = "Barracks"
+    room1.color = DWARF
     room1.contents = Entity("Dwarves", room1, CREATURE)
     locations.append(room1)
 
     room2 = Room(PVector(x_location, depth))
     room2.name = "Mine"
+    room2.color = DWARF
     room2.contents = Entity("Treasure", room2, TREASURE)
     locations.append(room2)
 
@@ -367,8 +376,8 @@ def age_of_civilization_setup():
 
     locations += dwarf_mine_factory(x_location, depth)
 
-#create_primordial_age()
-#age_of_civilization_setup()
+create_primordial_age()
+age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
 
@@ -379,68 +388,68 @@ def age_of_civilization_setup():
 # away from the mines
 
 # TEMPORARy GRAPHS for testing
-room0 = Room(PVector(250,200))
-room0.name = "Start"
-room0.color = DWARF
-locations.append(room0)
-
-room1 = Room(PVector(250,300))
-room1.name = "Barracks"
-room1.color = DWARF
-room1.contents = Entity("Dwarves", room1, CREATURE)
-locations.append(room1)
-
-room2 = Room(PVector(250,400))
-room2.name = "Mine 1"
-room2.color = DWARF
-room2.contents = Entity("Treasure", room2, TREASURE)
-locations.append(room2)
-
-room3 = Room(PVector(350,400))
-room3.name = "Mine 2"
-room3.color = DWARF
-room3.contents = Entity("Treasure", room3, TREASURE)
-locations.append(room3)
-
-room4 = Room(PVector(450,400))
-room4.name = "Barracks"
-room4.color = DWARF
-room4.contents = Entity("Dwarves", room4, CREATURE)
-locations.append(room4)
-
-room5 = Room(PVector(450,300))
-room5.name = "Treasure Room"
-room5.color = DWARF
-room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
-locations.append(room5)
-
-room6 = Room(PVector(550,400))
-room6.name = "Barracks"
-room6.color = DWARF
-room6.contents = Entity("Dwarves", room6, CREATURE)
-locations.append(room6)
-
-room7 = Room(PVector(450,500))
-room7.name = "Barracks"
-room7.color = DWARF
-room7.contents = Entity("Dwarves", room7, CREATURE)
-locations.append(room7)
-
-room8 = Room(PVector(550,300))
-room8.name = "Barracks"
-room8.color = DWARF
-room8.contents = Entity("Dwarves", room8, CREATURE)
-locations.append(room8)
-
-room0.add_neighbor(room1)   # start -> barracks
-room1.add_neighbor(room2)   # barracks -> mine 1
-room1.add_neighbor(room3)   # barracks -> mine 2
-room2.add_neighbor(room3)   # mine 1 -> mine 2
-room3.add_neighbor(room4)   # mine 2 -> barracks
-room4.add_neighbor(room5)   # barracks -> treasure room
-room4.add_neighbor(room6)   # barracks -> barracks
-room4.add_neighbor(room7)   # barracks -> barracks
-room5.add_neighbor(room8)   # treasure room -> barracks
+#room0 = Room(PVector(250,200))
+#room0.name = "Start"
+#room0.color = DWARF
+#locations.append(room0)
+#
+#room1 = Room(PVector(250,300))
+#room1.name = "Barracks"
+#room1.color = DWARF
+#room1.contents = Entity("Dwarves", room1, CREATURE)
+#locations.append(room1)
+#
+#room2 = Room(PVector(250,400))
+#room2.name = "Mine 1"
+#room2.color = DWARF
+#room2.contents = Entity("Treasure", room2, TREASURE)
+#locations.append(room2)
+#
+#room3 = Room(PVector(350,400))
+#room3.name = "Mine 2"
+#room3.color = DWARF
+#room3.contents = Entity("Treasure", room3, TREASURE)
+#locations.append(room3)
+#
+#room4 = Room(PVector(450,400))
+#room4.name = "Barracks"
+#room4.color = DWARF
+#room4.contents = Entity("Dwarves", room4, CREATURE)
+#locations.append(room4)
+#
+#room5 = Room(PVector(450,300))
+#room5.name = "Treasure Room"
+#room5.color = DWARF
+#room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
+#locations.append(room5)
+#
+#room6 = Room(PVector(550,400))
+#room6.name = "Barracks"
+#room6.color = DWARF
+#room6.contents = Entity("Dwarves", room6, CREATURE)
+#locations.append(room6)
+#
+#room7 = Room(PVector(450,500))
+#room7.name = "Barracks"
+#room7.color = DWARF
+#room7.contents = Entity("Dwarves", room7, CREATURE)
+#locations.append(room7)
+#
+#room8 = Room(PVector(550,300))
+#room8.name = "Barracks"
+#room8.color = DWARF
+#room8.contents = Entity("Dwarves", room8, CREATURE)
+#locations.append(room8)
+#
+#room0.add_neighbor(room1)   # start -> barracks
+#room1.add_neighbor(room2)   # barracks -> mine 1
+#room1.add_neighbor(room3)   # barracks -> mine 2
+#room2.add_neighbor(room3)   # mine 1 -> mine 2
+#room3.add_neighbor(room4)   # mine 2 -> barracks
+#room4.add_neighbor(room5)   # barracks -> treasure room
+#room4.add_neighbor(room6)   # barracks -> barracks
+#room4.add_neighbor(room7)   # barracks -> barracks
+#room5.add_neighbor(room8)   # treasure room -> barracks
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
@@ -575,9 +584,6 @@ if mine_start:
             for i,room in enumerate(rooms):
                 if distances[i] <= dist_to_parent:
                     room.add_neighbor(candidate)
-
-
-
 
 def update() -> None:
     for location in locations:
