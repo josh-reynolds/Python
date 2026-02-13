@@ -458,6 +458,12 @@ if mine_start:
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
 
+def add_candidate(name: str, selection: Location) -> Location:
+        candidate_location = PVector.add(selection.coordinate, PVector(100,0))
+        candidate = Room(candidate_location)
+        candidate.name = name
+        locations.append(candidate)
+        return candidate
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
@@ -490,11 +496,7 @@ if mine_start:
             # we'll probably have a bunch of potential sites, and
             # test until we find winner - order the list by priority,
             # horizontal first, then vertical, then at an angle
-            candidate_location = PVector.add(selection.coordinate, PVector(100,0))
-
-            candidate = Room(candidate_location)
-            candidate.name = "Treasure Room"
-            locations.append(candidate)
+            candidate = add_candidate("Treasure Room", selection)
 
             rooms = selection.get_all_connected_locations()
 
@@ -554,11 +556,7 @@ if mine_start:
             
             selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
-            candidate_location = PVector.add(selection.coordinate, PVector(100,0))
-
-            candidate = Room(candidate_location)
-            candidate.name = "Barracks"
-            locations.append(candidate)
+            candidate = add_candidate("Barracks", selection)
 
             rooms = selection.get_all_connected_locations()
 
@@ -584,7 +582,7 @@ if mine_start:
                 candidate.color = selection.color
                 candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
-            # The current approach will only build trees as the new room connedt
+            # The current approach will only build trees as the new room connect
             # to just one previous. I think it would be good to add some more
             # connections. This should apply to both treasure rooms and barracks.
             # (And fit into some sort of "new room" routine as mentioned above.)
