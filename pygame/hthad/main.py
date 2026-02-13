@@ -564,6 +564,21 @@ if mine_start:
                 candidate.color = selection.color
                 candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
+            # The current approach will only build trees as the new room connedt
+            # to just one previous. I think it would be good to add some more
+            # connections. This should apply to both treasure rooms and barracks.
+            # (And fit into some sort of "new room" routine as mentioned above.)
+
+            distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+            dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+
+            for i,room in enumerate(rooms):
+                if distances[i] <= dist_to_parent:
+                    room.add_neighbor(candidate)
+
+
+
+
 def update() -> None:
     for location in locations:
         location.update()
