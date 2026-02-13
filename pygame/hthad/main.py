@@ -458,6 +458,7 @@ if mine_start:
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
 
+
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -513,6 +514,9 @@ if mine_start:
             # TO_DO: tunnel crossing aren't handled yet
             # TO_DO: intersections with caverns not handled yet
             # TO_DO: special case: can't build above-ground
+            # TO_DO: don't build off-screen
+            # TO_DO: we're only building candidates to the right currently,
+            #        need to add more directions
 
             if viable:
                 print("Candidate location is viable - adding room.")
@@ -521,6 +525,13 @@ if mine_start:
                 treasure.parent = candidate
                 treasure.name = "Dwarven Treasure"
                 candidate.contents = treasure
+
+            distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+            dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+
+            for i,room in enumerate(rooms):
+                if distances[i] <= dist_to_parent:
+                    room.add_neighbor(candidate)
 
         # add another dwarf barracks and populate it - do this in separate
         # loop because these new arrivals should not be part of the treasure
