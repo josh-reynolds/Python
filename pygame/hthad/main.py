@@ -461,10 +461,15 @@ def add_candidate(name: str, selection: Location) -> Location:
         locations.append(candidate)
         return candidate
 
-def is_viable(candidate: Location, rooms: List[Location]) -> bool:
+def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) -> bool:
         for location in rooms:
             if candidate.intersects(location):
                 return False
+
+        tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+        for tunnel in tunnel_coords:
+            if rect_segment_intersects(candidate.rect, tunnel):
+                viable = False
 
         if out_of_bounds(candidate.coordinate):
             return False
@@ -522,16 +527,9 @@ if mine_start:
             candidate = add_candidate("Treasure Room", selection)
 
             rooms = selection.get_all_connected_locations()
-
-            viable = is_viable(candidate, rooms)
-
             tunnels = selection.get_all_connected_tunnels()
 
-            tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
-
-            for tunnel in tunnel_coords:
-                if rect_segment_intersects(candidate.rect, tunnel):
-                    viable = False
+            viable = is_viable(candidate, rooms, tunnels)
 
             # TO_DO: tunnel crossing aren't handled yet
             # TO_DO: intersections with caverns not handled yet
@@ -582,15 +580,9 @@ if mine_start:
             candidate = add_candidate("Barracks", selection)
 
             rooms = selection.get_all_connected_locations()
-
-            viable = is_viable(candidate, rooms)
-
             tunnels = selection.get_all_connected_tunnels()
-            tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
 
-            for tunnel in tunnel_coords:
-                if rect_segment_intersects(candidate.rect, tunnel):
-                    viable = False
+            viable = is_viable(candidate, rooms, tunnels)
 
             # TO_DO: tunnel crossing aren't handled yet
             # TO_DO: intersections with caverns not handled yet
