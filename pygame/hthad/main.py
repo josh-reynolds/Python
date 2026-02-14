@@ -80,7 +80,6 @@ class UndergroundRiver():
     def __init__(self) -> None:
         self.vertices = []
 
-        self.caves = []
         self.lakes = []
 
         self.name = "Underground River"
@@ -101,7 +100,7 @@ class UndergroundRiver():
                 case 5 | 6:
                     current_y -= STRATA_HEIGHT
                 case 7 | 8:
-                    self.caves.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
+                    locations.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
                 case 9:
                     current_x -= FINGER
                     current_y += STRATA_HEIGHT // 2
@@ -123,9 +122,6 @@ class UndergroundRiver():
         pass
 
     def draw(self) -> None:
-        for c in self.caves:
-            c.draw()
-
         for l in self.lakes:
             screen.draw.circle(l.x, l.y, BEAD, WATER, 0)
             
