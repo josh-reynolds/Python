@@ -465,7 +465,25 @@ def is_viable(candidate: Location, rooms: List[Location]) -> bool:
         for location in rooms:
             if candidate.intersects(location):
                 return False
+
+        if out_of_bounds(candidate.coordinate):
+            return False
+
         return True
+
+def in_bounds(point: PVector) -> bool:
+    return 0 <= point.x <= WIDTH and GROUND_LEVEL <= point.y <= HEIGHT
+
+def out_of_bounds(point: PVector) -> bool:
+    return not in_bounds(point)
+
+# start with priority-sorted list of parent locations
+# take the first one
+#   test candidate locations attached to parent for viability
+#   bail out after some number of attempts?
+# try another if none found
+# how do we handle if _no_ viable locations can be found?
+
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
@@ -480,6 +498,9 @@ if mine_start:
             min_neighbors = min(neighbor_counts)
 
             first_cut = [b for b in barracks if len(b.neighbors) == min_neighbors]
+
+            candidates = sorted(barracks, key=lambda entry: len(entry.neighbors))
+            print(candidates)
 
             if len(first_cut) > 1:
                 distances = [b.distance_to(treasure.parent) for b in first_cut]
