@@ -548,12 +548,15 @@ if mine_start:
                 treasure.name = "Dwarven Treasure"
                 candidate.contents = treasure
 
-            distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-            dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+                distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+                dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
 
-            for i,room in enumerate(rooms):
-                if distances[i] <= dist_to_parent:
-                    room.add_neighbor(candidate)
+                for i,room in enumerate(rooms):
+                    if distances[i] <= dist_to_parent:
+                        room.add_neighbor(candidate)
+            else:
+                locations.remove(candidate)
+
 
         # add another dwarf barracks and populate it - do this in separate
         # loop because these new arrivals should not be part of the treasure
@@ -599,17 +602,19 @@ if mine_start:
                 candidate.color = selection.color
                 candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
+                distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+                dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+
+                for i,room in enumerate(rooms):
+                    if distances[i] <= dist_to_parent:
+                        room.add_neighbor(candidate)
+            else:
+                locations.remove(candidate)
+
             # The current approach will only build trees as the new room connect
             # to just one previous. I think it would be good to add some more
             # connections. This should apply to both treasure rooms and barracks.
             # (And fit into some sort of "new room" routine as mentioned above.)
-
-            distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-            dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
-
-            for i,room in enumerate(rooms):
-                if distances[i] <= dist_to_parent:
-                    room.add_neighbor(candidate)
 
 def update() -> None:
     for location in locations:
