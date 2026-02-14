@@ -20,6 +20,8 @@ COLUMN_WIDTH = WIDTH // 12
 BEAD = 30
 FINGER = HEIGHT // 5
 
+ROOM_SPACING = 100
+
 SKY = (36, 87, 192)
 GROUND = (81, 76, 34)
 MITHRIL = (255,255,255)
@@ -454,8 +456,17 @@ if mine_start:
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
 
-def add_candidate(name: str, selection: Location) -> Location:
-        candidate_location = PVector.add(selection.coordinate, PVector(100,0))
+directions = [PVector(ROOM_SPACING,0), 
+              PVector(-ROOM_SPACING,0), 
+              PVector(0,ROOM_SPACING), 
+              PVector(0,-ROOM_SPACING), 
+              PVector(ROOM_SPACING,ROOM_SPACING), 
+              PVector(-ROOM_SPACING,ROOM_SPACING), 
+              PVector(ROOM_SPACING,-ROOM_SPACING), 
+              PVector(-ROOM_SPACING,-ROOM_SPACING)]
+
+def add_candidate(name: str, selection: Location, direction: int) -> Location:
+        candidate_location = PVector.add(selection.coordinate, directions[direction])
         candidate = Room(candidate_location)
         candidate.name = name
         locations.append(candidate)
@@ -524,7 +535,7 @@ if mine_start:
             # we'll probably have a bunch of potential sites, and
             # test until we find winner - order the list by priority,
             # horizontal first, then vertical, then at an angle
-            candidate = add_candidate("Treasure Room", selection)
+            candidate = add_candidate("Treasure Room", selection, 0)
 
             rooms = selection.get_all_connected_locations()
             tunnels = selection.get_all_connected_tunnels()
@@ -533,8 +544,6 @@ if mine_start:
 
             # TO_DO: tunnel crossing aren't handled yet
             # TO_DO: intersections with caverns not handled yet
-            # TO_DO: special case: can't build above-ground
-            # TO_DO: don't build off-screen
             # TO_DO: we're only building candidates to the right currently,
             #        need to add more directions
 
@@ -577,7 +586,7 @@ if mine_start:
             
             selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
-            candidate = add_candidate("Barracks", selection)
+            candidate = add_candidate("Barracks", selection, 0)
 
             rooms = selection.get_all_connected_locations()
             tunnels = selection.get_all_connected_tunnels()
@@ -586,7 +595,6 @@ if mine_start:
 
             # TO_DO: tunnel crossing aren't handled yet
             # TO_DO: intersections with caverns not handled yet
-            # TO_DO: special case: can't build above-ground
 
             if viable:
                 print("Candidate location is viable - adding room.")
@@ -602,11 +610,6 @@ if mine_start:
                         room.add_neighbor(candidate)
             else:
                 locations.remove(candidate)
-
-            # The current approach will only build trees as the new room connect
-            # to just one previous. I think it would be good to add some more
-            # connections. This should apply to both treasure rooms and barracks.
-            # (And fit into some sort of "new room" routine as mentioned above.)
 
 def update() -> None:
     for location in locations:
