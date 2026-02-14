@@ -500,13 +500,11 @@ def out_of_bounds(point: PVector) -> bool:
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
 
-
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
     if treasures:
         for treasure in treasures:
-            # find a barracks to attach to
             selection = None
             barracks = mine_start.get_locations_by_name("Barracks")
 
@@ -532,38 +530,37 @@ if mine_start:
             else:
                 selection = first_cut[0]
 
-            # we'll probably have a bunch of potential sites, and
-            # test until we find winner - order the list by priority,
-            # horizontal first, then vertical, then at an angle
-            candidate = add_candidate("Treasure Room", selection, 0)
+            attempt = 0
+            while attempt < 8:
+                candidate = add_candidate("Treasure Room", selection, attempt)
 
-            rooms = selection.get_all_connected_locations()
-            tunnels = selection.get_all_connected_tunnels()
+                rooms = selection.get_all_connected_locations()
+                tunnels = selection.get_all_connected_tunnels()
 
-            viable = is_viable(candidate, rooms, tunnels)
+                viable = is_viable(candidate, rooms, tunnels)
 
-            # TO_DO: tunnel crossing aren't handled yet
-            # TO_DO: intersections with caverns not handled yet
-            # TO_DO: we're only building candidates to the right currently,
-            #        need to add more directions
+                # TO_DO: tunnel crossing aren't handled yet
+                # TO_DO: intersections with caverns not handled yet
 
-            if viable:
-                print("Candidate location is viable - adding room.")
-                selection.add_neighbor(candidate)
-                candidate.color = selection.color
-                treasure.parent = candidate
-                treasure.name = "Dwarven Treasure"
-                candidate.contents = treasure
+                if viable:
+                    print("Candidate location is viable - adding room.")
+                    selection.add_neighbor(candidate)
+                    candidate.color = selection.color
+                    treasure.parent = candidate
+                    treasure.name = "Dwarven Treasure"
+                    candidate.contents = treasure
 
-                distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-                dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+                    distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+                    dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
 
-                for i,room in enumerate(rooms):
-                    if distances[i] <= dist_to_parent:
-                        room.add_neighbor(candidate)
-            else:
-                locations.remove(candidate)
+                    for i,room in enumerate(rooms):
+                        if distances[i] <= dist_to_parent:
+                            room.add_neighbor(candidate)
 
+                    attempt = 8
+                else:
+                    locations.remove(candidate)
+                    attempt += 1
 
         # add another dwarf barracks and populate it - do this in separate
         # loop because these new arrivals should not be part of the treasure
@@ -586,30 +583,35 @@ if mine_start:
             
             selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
-            candidate = add_candidate("Barracks", selection, 0)
+            attempt = 0
+            while attempt < 8:
+                candidate = add_candidate("Barracks", selection, attempt)
 
-            rooms = selection.get_all_connected_locations()
-            tunnels = selection.get_all_connected_tunnels()
+                rooms = selection.get_all_connected_locations()
+                tunnels = selection.get_all_connected_tunnels()
 
-            viable = is_viable(candidate, rooms, tunnels)
+                viable = is_viable(candidate, rooms, tunnels)
 
-            # TO_DO: tunnel crossing aren't handled yet
-            # TO_DO: intersections with caverns not handled yet
+                # TO_DO: tunnel crossing aren't handled yet
+                # TO_DO: intersections with caverns not handled yet
 
-            if viable:
-                print("Candidate location is viable - adding room.")
-                selection.add_neighbor(candidate)
-                candidate.color = selection.color
-                candidate.contents = Entity("Dwarves", candidate, CREATURE)
+                if viable:
+                    print("Candidate location is viable - adding room.")
+                    selection.add_neighbor(candidate)
+                    candidate.color = selection.color
+                    candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
-                distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-                dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
+                    distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+                    dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
 
-                for i,room in enumerate(rooms):
-                    if distances[i] <= dist_to_parent:
-                        room.add_neighbor(candidate)
-            else:
-                locations.remove(candidate)
+                    for i,room in enumerate(rooms):
+                        if distances[i] <= dist_to_parent:
+                            room.add_neighbor(candidate)
+
+                    attempt = 8
+                else:
+                    locations.remove(candidate)
+                    attempt += 1
 
 def update() -> None:
     for location in locations:
