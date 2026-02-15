@@ -2,12 +2,9 @@
 import math
 from random import randint, choice
 from typing import List, Tuple
-from pygame import Rect, mouse
 from engine import screen, run
 from pvector import PVector
-from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
-from screen_matrix import equilateral_triangle
-from intersections import segments_intersect, rect_segment_intersects
+from intersections import rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
@@ -25,7 +22,7 @@ class UndergroundRiver():
         self.lakes = []
 
         self.name = "Underground River"
-        
+
         current_x = 0
         current_y = strata_depth(randint(0,5))
 
@@ -66,9 +63,9 @@ class UndergroundRiver():
     def draw(self) -> None:
         for l in self.lakes:
             screen.draw.circle(l.x, l.y, BEAD, WATER, 0)
-            
+
         for i,v in enumerate(self.vertices[:-1]):
-            screen.draw.line(WATER, 
+            screen.draw.line(WATER,
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
@@ -104,9 +101,9 @@ def natural_cavern_factory() -> Cavern:
 
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
-        new_x = radius * math.cos(math.radians(angle)) + origin.x
-        new_y = radius * math.sin(math.radians(angle)) + origin.y
-        return PVector(new_x, new_y)
+    new_x = radius * math.cos(math.radians(angle)) + origin.x
+    new_y = radius * math.sin(math.radians(angle)) + origin.y
+    return PVector(new_x, new_y)
 
 def cave_complex_factory() -> List[Cavern]:
     radius = BEAD
@@ -173,7 +170,7 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
     room0.name = "Start"
     room0.color = DWARF
     locations.append(room0)
-    
+
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
     room1 = Room(PVector(x_location, half_height))
     room1.name = "Barracks"
@@ -229,13 +226,13 @@ def age_of_civilization_setup():
     global locations
 
     # Dwarves
-    has_minerals = any(type(l) is Mithril or type(l) is GoldVein for l in locations)
+    has_minerals = any(isinstance(l, (Mithril, GoldVein)) for l in locations)
     if not has_minerals:
         print("Adding gold vein")
         locations.append(GoldVein())
 
     # pick a spot on the surface above a gold vein or mithral deposit
-    minerals = [l for l in locations if type(l) is Mithril or type(l) is GoldVein]
+    minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
     selection = choice(minerals)
     # TO_DO: alternatively, choose the mineral closest to the surface
 
@@ -344,13 +341,13 @@ if mine_start:
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
 
-directions = [PVector(ROOM_SPACING,0), 
-              PVector(-ROOM_SPACING,0), 
-              PVector(0,ROOM_SPACING), 
-              PVector(0,-ROOM_SPACING), 
-              PVector(ROOM_SPACING,ROOM_SPACING), 
-              PVector(-ROOM_SPACING,ROOM_SPACING), 
-              PVector(ROOM_SPACING,-ROOM_SPACING), 
+directions = [PVector(ROOM_SPACING,0),
+              PVector(-ROOM_SPACING,0),
+              PVector(0,ROOM_SPACING),
+              PVector(0,-ROOM_SPACING),
+              PVector(ROOM_SPACING,ROOM_SPACING),
+              PVector(-ROOM_SPACING,ROOM_SPACING),
+              PVector(ROOM_SPACING,-ROOM_SPACING),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
 def add_candidate(name: str, selection: Location, direction: int) -> Location:
@@ -408,7 +405,7 @@ if mine_start:
                 distances = [b.distance_to(treasure.parent) for b in first_cut]
                 min_distance = min(distances)
 
-                second_cut = [b for b in first_cut 
+                second_cut = [b for b in first_cut
                               if b.distance_to(treasure.parent) == min_distance]
 
                 if len(second_cut) > 1:
@@ -460,7 +457,7 @@ if mine_start:
             # find a non-intersecting location
             # place a barracks there
             # add a dwarf to the barracks
-            # same special cases as above for treasure rooms - in 
+            # same special cases as above for treasure rooms - in
             # fact we should extract a "get new room" function here
             selection = None
             rooms = mine_start.get_locations_by_name("Barracks")
@@ -468,7 +465,7 @@ if mine_start:
 
             neighbor_counts = [len(r.neighbors) for r in rooms]
             min_neighbors = min(neighbor_counts)
-            
+
             selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
             attempt = 0
@@ -549,4 +546,4 @@ run()
 #
 # line segment intersection:
 #   see Stack Overflow 563198
-# 
+#
