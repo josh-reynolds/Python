@@ -125,6 +125,25 @@ def rect(x, y, w, h, color=(0,0,0), width=1):
 def triangle(x1, y1, x2, y2, x3, y3, color=(0,0,0), width=1):
     sm.draw_triangle(x1, y1, x2, y2, x3, y3, color, width)
 
+# TO_DO: should we shift to this model for all regular
+#        figures, rather than have the client figure out
+#        all the vertices?
+# 
+#        shape drawing should create a figure of the desired
+#        configuration at the origin - use translate() & rotate()
+#        to place it
+def equilateral_triangle(radius, color=(0,0,0), width=1):
+    sides = 3
+    tri_points = []
+    for i in range(sides):
+        angle = math.pi * 2/sides * (i+1)
+        vX = radius * math.cos(angle)
+        vY = radius * math.sin(angle)
+        tri_points.append(vX)
+        tri_points.append(vY)
+
+    triangle(*tri_points, color, width)
+
 def polygon(points, color=(0,0,0), width=1):
     sm.draw_polygon(points, color, width)
 

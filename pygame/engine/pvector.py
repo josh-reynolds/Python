@@ -10,6 +10,9 @@ class PVector:
     def __repr__(self):
         return f"({self.x}, {self.y})"
 
+    def __hash__(self):
+        return hash((self.x, self.y))
+
     def __add__(self, other):
         self.x += other.x
         self.y += other.y
@@ -26,8 +29,14 @@ class PVector:
         self.x /= scalar
         self.y /= scalar
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
     def dot(self, other):
         return (self.x * other.x) + (self.y * other.y)
+
+    def cross(self, other):
+        return (self.x * other.y) - (self.y * other.x)
 
     def angle_between(self, other):
         dot = self.dot(other)
@@ -97,5 +106,3 @@ class PVector:
         m = b.x - a.x
         n = b.y - a.y
         return math.sqrt(m ** 2 + n ** 2)
-
-
