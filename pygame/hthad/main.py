@@ -10,6 +10,7 @@ from screen_matrix import equilateral_triangle
 from intersections import segments_intersect, rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
+from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
 
 WIDTH = 1100
 HEIGHT = 850
@@ -40,45 +41,7 @@ show_labels = False
 
 locations = []
 
-def get_random_underground_location() -> PVector:
-    return PVector(randint(0,WIDTH), randint(GROUND_LEVEL,HEIGHT))
-
-def nearest_corner(point: PVector) -> PVector:
-    if point.x < WIDTH/2:
-        if point.y < HEIGHT/2:
-            return PVector(0,0)
-        return PVector(0,HEIGHT)
-    if point.y < HEIGHT/2:
-        return PVector(WIDTH,0)
-    return PVector(WIDTH,HEIGHT)
-
-
-class Mithril():
-    def __init__(self) -> None:
-        self.center = get_random_underground_location()
-        self.radius = FINGER // 2
-        self.corner = nearest_corner(self.center)
-
-        corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
-        self.angle = math.radians(corner_vector.heading()) + math.pi
-
-        self.name = "Mithril"
-
-    def update(self) -> None:
-        pass
-
-    def draw(self) -> None:
-        push_matrix()
-        translate(self.center.x, self.center.y)
-        rotate(self.angle)
-        equilateral_triangle(self.radius, MITHRIL, 0)
-        equilateral_triangle(self.radius, BORDER, 2)
-        pop_matrix()
-
-        if show_labels:
-            screen.draw.text(self.name, center=(self.center.x, self.center.y))
-
-
+# TO_DO: class accesses locations list, need to deal with this before moving
 class UndergroundRiver():
     def __init__(self) -> None:
         self.vertices = []
@@ -135,28 +98,6 @@ class UndergroundRiver():
                              8)
         if show_labels:
             screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
-
-class GoldVein():
-    def __init__(self) -> None:
-        self.left = PVector(0, strata_depth(randint(0,5)))
-        self.right = PVector(WIDTH, strata_depth(randint(0,5)))
-        self.midpoint = PVector(WIDTH//2, 
-                                (self.right.y - self.left.y)//2 + self.left.y)
-        self.name = "Gold Vein"
-
-    def update(self) -> None:
-        pass
-
-    def draw(self) -> None:
-        screen.draw.line(GOLD, 
-                         (self.left.x, self.left.y),
-                         (self.right.x, self.right.y),
-                         8)
-        if show_labels:
-            screen.draw.text(self.name, center=(self.midpoint.x, self.midpoint.y))
-
-
-
 
 def natural_cavern_factory() -> Cavern:
     coordinate = get_random_underground_location()
@@ -241,9 +182,6 @@ def ancient_wyrm_factory() -> List[Cavern]:
     locations[0].add_neighbor(locations[1])
 
     return locations
-
-def strata_depth(strata: int) -> int:
-    return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
 
 def add_caverns() -> None:
     locations.append(natural_cavern_factory())
