@@ -4,19 +4,8 @@ from random import randint
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
-
-# duplicated from main
-WIDTH = 1100
-HEIGHT = 850
-FINGER = HEIGHT // 5
-GROUND_LEVEL = HEIGHT // 5
-STRATA_HEIGHT = (HEIGHT - GROUND_LEVEL) // 6
-GOLD = (255, 255, 0)
-MITHRIL = (255,255,255)
-BORDER = (0, 0, 0)
-
-# TO_DO: broken now that we split across modules, fix!
-show_labels = False
+from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT
+from constants import GOLD, MITHRIL, BORDER, show_labels
 
 def nearest_corner(point: PVector) -> PVector:
     if point.x < WIDTH/2:

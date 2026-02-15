@@ -11,33 +11,9 @@ from intersections import segments_intersect, rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
-
-WIDTH = 1100
-HEIGHT = 850
-TITLE = "How to Host a Dungeon"
-
-GROUND_LEVEL = HEIGHT // 5
-STRATA_HEIGHT = (HEIGHT - GROUND_LEVEL) // 6
-COLUMN_WIDTH = WIDTH // 12
-BEAD = 30
-FINGER = HEIGHT // 5
-
-ROOM_SPACING = 100
-
-SKY = (36, 87, 192)
-GROUND = (81, 76, 34)
-MITHRIL = (255,255,255)
-GOLD = (255, 255, 0)
-BORDER = (0, 0, 0)
-CAVERN = (0, 0, 0)
-WATER = (0, 0, 255)
-DWARF = (100, 80, 255)
-
-TREASURE = (255,255,0)
-CREATURE = (255,0,255)
-EVENT = (128,128,128)
-
-show_labels = False
+from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
+from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
+from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, show_labels
 
 locations = []
 
