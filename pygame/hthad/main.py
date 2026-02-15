@@ -9,6 +9,7 @@ from screen_matrix import push_matrix, pop_matrix, line, rotate, translate
 from screen_matrix import equilateral_triangle
 from intersections import segments_intersect, rect_segment_intersects
 from location import Location, Cavern, Room
+from entity import Entity
 
 WIDTH = 1100
 HEIGHT = 850
@@ -155,33 +156,6 @@ class GoldVein():
             screen.draw.text(self.name, center=(self.midpoint.x, self.midpoint.y))
 
 
-class Entity():
-    def __init__(self, name: str, parent: Location, color: Tuple=(128,128,128)) -> None:
-        self.name = name
-        self._parent = parent
-        self.x = self.parent.coordinate.x
-        self.y = self.parent.coordinate.y
-        self.radius = BEAD//3
-        self.color = color
-
-    def __str__(self) -> str:
-        return self.name
-
-    def __repr__(self) -> str:
-        return f"{self.name} ({self.parent})"
-
-    @property
-    def parent(self) -> Location:
-        return self._parent
-
-    @parent.setter
-    def parent(self, new_parent: Location) -> None:
-        self._parent = new_parent
-        self.x = self.parent.coordinate.x
-        self.y = self.parent.coordinate.y
-
-    def draw(self) -> None:
-        screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
 
 
 def natural_cavern_factory() -> Cavern:
