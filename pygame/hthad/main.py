@@ -210,36 +210,37 @@ def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
 # Primordial Age events
 def create_primordial_age():
     """Generating Primordial Age map locations."""
-    global locations
+    new_locations = []
     for _ in range(3):
         check = randint(0,6)
         match check:
             case 0:
-                locations.append(Mithril())
+                new_locations.append(Mithril())
             case 1 | 2:
                 add_caverns()
             case 3:
-                locations.append(GoldVein())
+                new_locations.append(GoldVein())
             case 4:
-                locations += cave_complex_factory()
+                new_locations += cave_complex_factory()
             case 5:
-                locations.append(UndergroundRiver())
+                new_locations.append(UndergroundRiver())
             case 6:
-                locations += ancient_wyrm_factory()
+                new_locations += ancient_wyrm_factory()
             # TO_DO: there is an additional choice for natural disasters,
             #        implement when we come to that rule
+    return new_locations
 
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
 def age_of_civilization_setup():
     """Generating starting setup for the Age of Civilization map locations."""
-    global locations
+    new_locations = []
 
     # Dwarves
     has_minerals = any(isinstance(l, (Mithril, GoldVein)) for l in locations)
     if not has_minerals:
         print("Adding gold vein")
-        locations.append(GoldVein())
+        new_locations.append(GoldVein())
 
     # pick a spot on the surface above a gold vein or mithral deposit
     minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
@@ -267,10 +268,11 @@ def age_of_civilization_setup():
                 x_location = WIDTH - FINGER
                 depth = get_y_at_x(selection.left, selection.right, x_location)
 
-    locations += dwarf_mine_factory(x_location, depth)
+    new_locations += dwarf_mine_factory(x_location, depth)
+    return new_locations
 
-create_primordial_age()
-age_of_civilization_setup()
+locations += create_primordial_age()
+locations += age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
 
