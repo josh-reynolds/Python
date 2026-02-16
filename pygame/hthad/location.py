@@ -1,3 +1,4 @@
+"""Contains classes to represent locations on the map."""
 from typing import Tuple, Self, List
 from pygame import Rect
 from engine import screen
@@ -12,11 +13,12 @@ class Location():
         self.size = size
         self.rect = Rect(self._coordinate.x - self.size/2,
                          self._coordinate.y - self.size/2,
-                         self.size, 
+                         self.size,
                          self.size)
         self.tunnels = []
         self.neighbors = []
         self.visited = False
+        self.contents = None
 
     def __repr__(self) -> str:
         return self.name
@@ -33,7 +35,7 @@ class Location():
         self._coordinate = coord
         self.rect = Rect(self.coordinate.x - self.size/2,
                          self.coordinate.y - self.size/2,
-                         self.size, 
+                         self.size,
                          self.size)
 
     def add_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
@@ -46,6 +48,9 @@ class Location():
     def intersects(self, other: Self) -> bool:
         return self.rect.colliderect(other.rect)
 
+    def draw_shape(self) -> None:
+        pass
+
     def draw(self) -> None:
         self.draw_shape()
 
@@ -55,12 +60,12 @@ class Location():
             #y_offset = 0
 
         #if show_labels:
-            #screen.draw.text(self.name, 
+            #screen.draw.text(self.name,
                              #center=(self.coordinate.x, self.coordinate.y + y_offset),
                              #color = (255,255,255))
 #
         #if self.contents and show_labels:
-            #screen.draw.text(f"{self.contents}", 
+            #screen.draw.text(f"{self.contents}",
                              #center=(self.coordinate.x, self.coordinate.y - y_offset),
                              #color = (255,255,255))
 
@@ -82,16 +87,16 @@ class Location():
         visited = [self]
         queue = [self]
         self.visited = True
-       
+
         while queue:
             current_location = queue.pop(0)
-       
+
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
                     visited.append(neighbor)
                     queue.append(neighbor)
                     neighbor.visited = True
-       
+
         for location in visited:
             location.visited = False
 
@@ -105,15 +110,15 @@ class Location():
 
         while queue:
             current_location = queue.pop(0)
-       
+
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
-                    tunnels += [(neighbor,b) for b in neighbor.neighbors 
+                    tunnels += [(neighbor,b) for b in neighbor.neighbors
                                 if (b, neighbor) not in tunnels]
                     visited.append(neighbor)
                     queue.append(neighbor)
                     neighbor.visited = True
-       
+
         for location in visited:
             location.visited = False
 
@@ -129,13 +134,13 @@ class Location():
             current_location = queue.pop(0)
             if current_location.name == location_name:
                 locations.append(current_location)
-       
+
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
                     visited.append(neighbor)
                     queue.append(neighbor)
                     neighbor.visited = True
-       
+
         for location in visited:
             location.visited = False
 
@@ -151,13 +156,13 @@ class Location():
             current_location = queue.pop(0)
             if current_location.contents and current_location.contents.name == entity_name:
                 entities.append(current_location.contents)
-       
+
             for neighbor in current_location.neighbors:
                 if not neighbor.visited:
                     visited.append(neighbor)
                     queue.append(neighbor)
                     neighbor.visited = True
-       
+
         for location in visited:
             location.visited = False
 
@@ -190,7 +195,7 @@ class Location():
 
 
 class Cavern(Location):
-    def __init__(self, coordinate: PVector, color=(129,128,128), contents=None, 
+    def __init__(self, coordinate: PVector, color=(129,128,128), contents=None,
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         super().__init__(coordinate, name, color, 30)
         self.contents = contents
@@ -213,7 +218,8 @@ class Cavern(Location):
 
 
 class Room(Location):
-    def __init__(self, coordinate: PVector, color=(128,128,128), contents=None, name: str="Room") -> None:
+    def __init__(self, coordinate: PVector, color=(128,128,128),
+                 contents=None, name: str="Room") -> None:
         super().__init__(coordinate, name, color, 30)
         self.contents = contents
 
