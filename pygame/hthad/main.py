@@ -93,9 +93,9 @@ def natural_cavern_factory() -> Cavern:
         case 4:
             pass
         case 5:
-            cavern.contents = Entity(f"Primordial Beasts 1", cavern, CREATURE)
+            cavern.contents = Entity("Primordial Beasts 1", cavern, CREATURE)
         case 6:
-            cavern.contents = Entity(f"Fate 1", cavern, EVENT)
+            cavern.contents = Entity("Fate 1", cavern, EVENT)
 
     return cavern
 
@@ -192,17 +192,19 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
 # TO_DO: there's a vector-based solution for this too using
 #        ratio of x along the line segment
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
-        x1, y1 = start.x, start.y
-        x2, y2 = end.x, end.y
-        slope = (y2 - y1) / (x2 - x1)
-        intercept = y1 - (slope * x1)
+    """Calculate the y value of a point along a line at x."""
+    x1, y1 = start.x, start.y
+    x2, y2 = end.x, end.y
+    slope = (y2 - y1) / (x2 - x1)
+    intercept = y1 - (slope * x1)
 
-        return slope * x_coord + intercept
+    return slope * x_coord + intercept
 
 # Primordial Age events
 def create_primordial_age():
+    """Generating Primordial Age map locations."""
     global locations
-    for i in range(3):
+    for _ in range(3):
         check = randint(0,6)
         match check:
             case 0:
@@ -223,6 +225,7 @@ def create_primordial_age():
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
 def age_of_civilization_setup():
+    """Generating starting setup for the Age of Civilization map locations."""
     global locations
 
     # Dwarves
@@ -351,26 +354,26 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
 def add_candidate(name: str, selection: Location, direction: int) -> Location:
-        candidate_location = PVector.add(selection.coordinate, directions[direction])
-        candidate = Room(candidate_location)
-        candidate.name = name
-        locations.append(candidate)
-        return candidate
+    candidate_location = PVector.add(selection.coordinate, directions[direction])
+    candidate = Room(candidate_location)
+    candidate.name = name
+    locations.append(candidate)
+    return candidate
 
 def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) -> bool:
-        for location in rooms:
-            if candidate.intersects(location):
-                return False
-
-        tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
-        for tunnel in tunnel_coords:
-            if rect_segment_intersects(candidate.rect, tunnel):
-                viable = False
-
-        if out_of_bounds(candidate.coordinate):
+    for location in rooms:
+        if candidate.intersects(location):
             return False
 
-        return True
+    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+    for tunnel in tunnel_coords:
+        if rect_segment_intersects(candidate.rect, tunnel):
+            viable = False
+
+    if out_of_bounds(candidate.coordinate):
+        return False
+
+    return True
 
 def in_bounds(point: PVector) -> bool:
     return 0 <= point.x <= WIDTH and GROUND_LEVEL <= point.y <= HEIGHT
