@@ -25,4 +25,4 @@ TREASURE = (255,255,0)
 CREATURE = (255,0,255)
 EVENT = (128,128,128)
 
-show_labels = False
+SHOW_LABELS = False

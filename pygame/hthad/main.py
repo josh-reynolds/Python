@@ -10,7 +10,7 @@ from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
 from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
-from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, show_labels
+from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 
 locations = []
 
@@ -73,7 +73,7 @@ class UndergroundRiver():
                              (v.x, v.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
-        if show_labels:
+        if SHOW_LABELS:
             screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
 
 def natural_cavern_factory() -> Cavern:

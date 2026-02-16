@@ -59,12 +59,12 @@ class Location():
         #else:
             #y_offset = 0
 
-        #if show_labels:
+        #if SHOW_LABELS:
             #screen.draw.text(self.name,
                              #center=(self.coordinate.x, self.coordinate.y + y_offset),
                              #color = (255,255,255))
 #
-        #if self.contents and show_labels:
+        #if self.contents and SHOW_LABELS:
             #screen.draw.text(f"{self.contents}",
                              #center=(self.coordinate.x, self.coordinate.y - y_offset),
                              #color = (255,255,255))

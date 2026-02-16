@@ -5,7 +5,7 @@ from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
 from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT
-from constants import GOLD, MITHRIL, BORDER, show_labels
+from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS
 
 def nearest_corner(point: PVector) -> PVector:
     if point.x < WIDTH/2:
@@ -44,7 +44,7 @@ class Mithril():
         equilateral_triangle(self.radius, BORDER, 2)
         pop_matrix()
 
-        if show_labels:
+        if SHOW_LABELS:
             screen.draw.text(self.name, center=(self.center.x, self.center.y))
 
 class GoldVein():
@@ -63,5 +63,5 @@ class GoldVein():
                          (self.left.x, self.left.y),
                          (self.right.x, self.right.y),
                          8)
-        if show_labels:
+        if SHOW_LABELS:
             screen.draw.text(self.name, center=(self.midpoint.x, self.midpoint.y))
