@@ -16,7 +16,10 @@ locations = []
 
 # TO_DO: class accesses locations list, need to deal with this before moving
 class UndergroundRiver():
+    """Represents an underground river generated during the Primordial Age."""
+
     def __init__(self) -> None:
+        """Create an UndergroundRiver object."""
         self.vertices = []
 
         self.lakes = []
@@ -26,7 +29,7 @@ class UndergroundRiver():
         current_x = 0
         current_y = strata_depth(randint(0,5))
 
-        while current_x < WIDTH and current_y < HEIGHT and current_y > GROUND_LEVEL:
+        while current_x < WIDTH and GROUND_LEVEL < current_y < HEIGHT and current_y:
             self.vertices.append(PVector(current_x, current_y))
             current_x += FINGER
 
@@ -58,9 +61,10 @@ class UndergroundRiver():
         self.vertices.append(PVector(current_x, current_y))
 
     def update(self) -> None:
-        pass
+        """Update the UndergroundRiver's state once per frame."""
 
     def draw(self) -> None:
+        """Draw the UndergroundRiver once per frame."""
         for l in self.lakes:
             screen.draw.circle(l.x, l.y, BEAD, WATER, 0)
 
@@ -73,11 +77,9 @@ class UndergroundRiver():
             screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
 
 def natural_cavern_factory() -> Cavern:
+    """Generate a natural cavern."""
     coordinate = get_random_underground_location()
 
-    tunnel = False
-    tilt = 0
-    contents = None
     cavern = Cavern(coordinate)
     cavern.color = CAVERN
 
@@ -101,11 +103,13 @@ def natural_cavern_factory() -> Cavern:
 
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
+    """Generate a random point on a circle of given radius around an origin."""
     new_x = radius * math.cos(math.radians(angle)) + origin.x
     new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
 
 def cave_complex_factory() -> List[Cavern]:
+    """Generate a cave complex."""
     radius = BEAD
     locations = []
 
@@ -136,6 +140,7 @@ def cave_complex_factory() -> List[Cavern]:
 
 # TO_DO: name the wyrm
 def ancient_wyrm_factory() -> List[Cavern]:
+    """Generate a cavern containing an ancient wyrm."""
     radius = BEAD
     locations = []
 
@@ -157,6 +162,7 @@ def ancient_wyrm_factory() -> List[Cavern]:
     return locations
 
 def add_caverns() -> None:
+    """Generate a random number of Caverns."""
     locations.append(natural_cavern_factory())
     cavern_count = 1
     while randint(1,6) < 6 and cavern_count < 6:
@@ -164,6 +170,7 @@ def add_caverns() -> None:
         cavern_count += 1
 
 def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
+    """Generate the start of a Dwarf mine."""
     locations = []
 
     room0 = Room(PVector(x_location, GROUND_LEVEL))
@@ -354,6 +361,7 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
 def add_candidate(name: str, selection: Location, direction: int) -> Location:
+    """Add a candidate location to the locations list."""
     candidate_location = PVector.add(selection.coordinate, directions[direction])
     candidate = Room(candidate_location)
     candidate.name = name
@@ -361,6 +369,7 @@ def add_candidate(name: str, selection: Location, direction: int) -> Location:
     return candidate
 
 def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) -> bool:
+    """Test whether a candidate location is legal."""
     for location in rooms:
         if candidate.intersects(location):
             return False
@@ -376,9 +385,11 @@ def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) 
     return True
 
 def in_bounds(point: PVector) -> bool:
+    """Test whether the given point is within the underground region of the screen."""
     return 0 <= point.x <= WIDTH and GROUND_LEVEL <= point.y <= HEIGHT
 
 def out_of_bounds(point: PVector) -> bool:
+    """Test whether the given point is outside the underground region of the screen."""
     return not in_bounds(point)
 
 # start with priority-sorted list of parent locations
@@ -502,10 +513,12 @@ if mine_start:
                     attempt += 1
 
 def update() -> None:
+    """Update game state once per frame."""
     for location in locations:
         location.update()
 
 def draw() -> None:
+    """Draw the game screen once per frame."""
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
     for location in locations:
