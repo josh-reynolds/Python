@@ -8,6 +8,8 @@ from intersections import rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
+# pylint: disable=W0611
+# W0611: Unused TITLE imported from constants (unused-import)
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
 from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
@@ -379,7 +381,7 @@ def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) 
     tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
     for tunnel in tunnel_coords:
         if rect_segment_intersects(candidate.rect, tunnel):
-            viable = False
+            return False
 
     if out_of_bounds(candidate.coordinate):
         return False
@@ -406,6 +408,8 @@ if mine_start:
 
     if treasures:
         for treasure in treasures:
+            # pylint: disable=C0103
+            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = None
             barracks = mine_start.get_locations_by_name("Barracks")
 
@@ -475,6 +479,9 @@ if mine_start:
             # add a dwarf to the barracks
             # same special cases as above for treasure rooms - in
             # fact we should extract a "get new room" function here
+
+            # pylint: disable=C0103
+            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = None
             rooms = mine_start.get_locations_by_name("Barracks")
             rooms += mine_start.get_locations_by_name("Treasure Room")
