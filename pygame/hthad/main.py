@@ -244,7 +244,7 @@ def age_of_civilization_setup():
 
     # pick a spot on the surface above a gold vein or mithral deposit
     minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
-    selection = choice(minerals)
+    selection = choice(minerals + new_locations)
     # TO_DO: alternatively, choose the mineral closest to the surface
 
     x_location = 0
