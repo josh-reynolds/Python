@@ -50,10 +50,10 @@ class UndergroundRiver():
                     current_y += STRATA_HEIGHT // 2
 
             if current_y < GROUND_LEVEL:
-                x1, y1 = self.vertices[-1].x, self.vertices[-1].y
-                x2, y2 = current_x, current_y
-                slope = (y2 - y1) / (x2 - x1)
-                intercept = y1 - (slope * x1)
+                x_1, y_1 = self.vertices[-1].x, self.vertices[-1].y
+                x_2, y_2 = current_x, current_y
+                slope = (y_2 - y_1) / (x_2 - x_1)
+                intercept = y_1 - (slope * x_1)
 
                 lake_y = GROUND_LEVEL
                 lake_x = (lake_y - intercept) / slope
@@ -67,12 +67,12 @@ class UndergroundRiver():
 
     def draw(self) -> None:
         """Draw the UndergroundRiver once per frame."""
-        for l in self.lakes:
-            screen.draw.circle(l.x, l.y, BEAD, WATER, 0)
+        for lake in self.lakes:
+            screen.draw.circle(lake.x, lake.y, BEAD, WATER, 0)
 
-        for i,v in enumerate(self.vertices[:-1]):
+        for i,vertex in enumerate(self.vertices[:-1]):
             screen.draw.line(WATER,
-                             (v.x, v.y),
+                             (vertex.x, vertex.y),
                              (self.vertices[i+1].x, self.vertices[i+1].y),
                              8)
         if SHOW_LABELS:
@@ -202,10 +202,10 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
 #        ratio of x along the line segment
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
     """Calculate the y value of a point along a line at x."""
-    x1, y1 = start.x, start.y
-    x2, y2 = end.x, end.y
-    slope = (y2 - y1) / (x2 - x1)
-    intercept = y1 - (slope * x1)
+    x_1, y_1 = start.x, start.y
+    x_2, y_2 = end.x, end.y
+    slope = (y_2 - y_1) / (x_2 - x_1)
+    intercept = y_1 - (slope * x_1)
 
     return slope * x_coord + intercept
 
