@@ -70,10 +70,10 @@ class UndergroundRiver():
         for lake in self.lakes:
             screen.draw.circle(lake.x, lake.y, BEAD, WATER, 0)
 
-        for i,vertex in enumerate(self.vertices[:-1]):
+        for index,vertex in enumerate(self.vertices[:-1]):
             screen.draw.line(WATER,
                              (vertex.x, vertex.y),
-                             (self.vertices[i+1].x, self.vertices[i+1].y),
+                             (self.vertices[index+1].x, self.vertices[index+1].y),
                              8)
         if SHOW_LABELS:
             screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
@@ -113,55 +113,55 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
 def cave_complex_factory() -> List[Cavern]:
     """Generate a cave complex."""
     radius = BEAD
-    locations = []
+    sites = []
 
     first_point = get_random_underground_location()
     cavern1 = Cavern(first_point)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Primordial Beasts 1", cavern1, CREATURE)
-    locations.append(cavern1)
+    sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
     cavern2 = Cavern(second_point)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Primordial Beasts 1", cavern2, CREATURE)
-    locations.append(cavern2)
+    sites.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
     cavern3 = Cavern(third_point)
     cavern3.color = CAVERN
     cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
-    locations.append(cavern3)
+    sites.append(cavern3)
 
-    locations[0].add_neighbor(locations[1])
-    locations[0].add_neighbor(locations[2])
+    sites[0].add_neighbor(sites[1])
+    sites[0].add_neighbor(sites[2])
 
-    return locations
+    return sites
 
 # TO_DO: name the wyrm
 def ancient_wyrm_factory() -> List[Cavern]:
     """Generate a cavern containing an ancient wyrm."""
     radius = BEAD
-    locations = []
+    sites = []
 
     first_point = get_random_underground_location()
     cavern1 = Cavern(first_point)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Ancient Wyrm 1", cavern1, CREATURE)
-    locations.append(cavern1)
+    sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
     cavern2 = Cavern(second_point)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
-    locations.append(cavern2)
+    sites.append(cavern2)
 
-    locations[0].add_neighbor(locations[1])
+    sites[0].add_neighbor(sites[1])
 
-    return locations
+    return sites
 
 def add_caverns() -> None:
     """Generate a random number of Caverns."""
@@ -173,30 +173,30 @@ def add_caverns() -> None:
 
 def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
     """Generate the start of a Dwarf mine."""
-    locations = []
+    sites = []
 
     room0 = Room(PVector(x_location, GROUND_LEVEL))
     room0.name = "Start"
     room0.color = DWARF
-    locations.append(room0)
+    sites.append(room0)
 
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
     room1 = Room(PVector(x_location, half_height))
     room1.name = "Barracks"
     room1.color = DWARF
     room1.contents = Entity("Dwarves", room1, CREATURE)
-    locations.append(room1)
+    sites.append(room1)
 
     room2 = Room(PVector(x_location, depth))
     room2.name = "Mine"
     room2.color = DWARF
     room2.contents = Entity("Treasure", room2, TREASURE)
-    locations.append(room2)
+    sites.append(room2)
 
-    locations[0].add_neighbor(locations[1])
-    locations[1].add_neighbor(locations[2])
+    sites[0].add_neighbor(sites[1])
+    sites[1].add_neighbor(sites[2])
 
-    return locations
+    return sites
 
 # TO_DO: there's a vector-based solution for this too using
 #        ratio of x along the line segment
@@ -535,9 +535,9 @@ def draw() -> None:
     for location in locations:
         location.draw()
 
-    for i in range(6):
-        screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
-        screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
+    for index in range(6):
+        screen.draw.text(f"{index+1}", center=(10, strata_depth(index)))
+        screen.draw.text(f"{index+1}", center=(WIDTH-10, strata_depth(index)))
 
     # pylint: disable=E1121
     # E1121: Too many positional arguments for method call
