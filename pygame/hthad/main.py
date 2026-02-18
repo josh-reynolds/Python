@@ -528,6 +528,8 @@ def update() -> None:
 
 def draw() -> None:
     """Draw the game screen once per frame."""
+    # pylint: disable=E1121
+    # E1121: Too many positional arguments for method call
     screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
 
     for location in locations:
@@ -537,6 +539,8 @@ def draw() -> None:
         screen.draw.text(f"{i+1}", center=(10, strata_depth(i)))
         screen.draw.text(f"{i+1}", center=(WIDTH-10, strata_depth(i)))
 
+    # pylint: disable=E1121
+    # E1121: Too many positional arguments for method call
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
 

@@ -8,6 +8,8 @@ from pvector import PVector
 class Location():
     """Base class for game map locations."""
 
+    # pylint: disable=R0902
+    # R0902: Too many instance attributes (9/7)
     def __init__(self, coordinate: PVector, name: str, color: Tuple, size: int) -> None:
         """Create an instance of a Location object."""
         self.name = name
@@ -83,14 +85,14 @@ class Location():
                              #color = (255,255,255))
 
         # TO_DO: we're drawing these twice, once from each direction...
-        for n in self.neighbors:
+        for neighbor in self.neighbors:
             screen.draw.line(self.color,
                              (self.coordinate.x, self.coordinate.y),
-                             (n.coordinate.x, n.coordinate.y),
+                             (neighbor.coordinate.x, neighbor.coordinate.y),
                              12)
             # TO_DO: kludge to fix overdraw problem
-            if n.contents:
-                n.contents.draw()
+            if neighbor.contents:
+                neighbor.contents.draw()
 
         if self.contents:
             self.contents.draw()
@@ -215,6 +217,8 @@ class Location():
 class Cavern(Location):
     """Represents a Cavern location."""
 
+    # pylint: disable=R0913
+    # R0913 Too many arguments (7/5)
     def __init__(self, coordinate: PVector, color=(129,128,128), contents=None,
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         """Create an instance of a Cavern object."""
@@ -253,4 +257,6 @@ class Room(Location):
 
     def draw_shape(self) -> None:
         """Draw the Room object to the screen once per frame."""
+        # pylint: disable=E1121
+        # E1121: Too many positional arguments for method call
         screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, self.color, 0)
