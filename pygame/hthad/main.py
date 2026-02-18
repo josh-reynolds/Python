@@ -8,6 +8,7 @@ from intersections import rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
+from landscape import UndergroundRiver
 # pylint: disable=W0611
 # W0611: Unused TITLE imported from constants (unused-import)
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
@@ -15,68 +16,6 @@ from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 
 locations = []
-
-# TO_DO: class accesses locations list, need to deal with this before moving
-class UndergroundRiver():
-    """Represents an underground river generated during the Primordial Age."""
-
-    def __init__(self) -> None:
-        """Create an UndergroundRiver object."""
-        self.vertices = []
-
-        self.lakes = []
-
-        self.name = "Underground River"
-
-        current_x = 0
-        current_y = strata_depth(randint(0,5))
-
-        while current_x < WIDTH and GROUND_LEVEL < current_y < HEIGHT and current_y:
-            self.vertices.append(PVector(current_x, current_y))
-            current_x += FINGER
-
-            check = randint(0,9)
-            match check:
-                case 0 | 1 | 2:
-                    pass
-                case 3 | 4:
-                    current_y += STRATA_HEIGHT
-                case 5 | 6:
-                    current_y -= STRATA_HEIGHT
-                case 7 | 8:
-                    locations.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
-                case 9:
-                    current_x -= FINGER
-                    current_y += STRATA_HEIGHT // 2
-
-            if current_y < GROUND_LEVEL:
-                x_1, y_1 = self.vertices[-1].x, self.vertices[-1].y
-                x_2, y_2 = current_x, current_y
-                slope = (y_2 - y_1) / (x_2 - x_1)
-                intercept = y_1 - (slope * x_1)
-
-                lake_y = GROUND_LEVEL
-                lake_x = (lake_y - intercept) / slope
-
-                self.lakes.append(PVector(lake_x,lake_y))
-
-        self.vertices.append(PVector(current_x, current_y))
-
-    def update(self) -> None:
-        """Update the UndergroundRiver's state once per frame."""
-
-    def draw(self) -> None:
-        """Draw the UndergroundRiver once per frame."""
-        for lake in self.lakes:
-            screen.draw.circle(lake.x, lake.y, BEAD, WATER, 0)
-
-        for index,vertex in enumerate(self.vertices[:-1]):
-            screen.draw.line(WATER,
-                             (vertex.x, vertex.y),
-                             (self.vertices[index+1].x, self.vertices[index+1].y),
-                             8)
-        if SHOW_LABELS:
-            screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
 
 def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
@@ -225,7 +164,10 @@ def create_primordial_age():
             case 4:
                 new_locations += cave_complex_factory()
             case 5:
-                new_locations.append(UndergroundRiver())
+                river = UndergroundRiver()
+                new_locations.append(river)
+                for cave in river.caves:
+                    new_locations.append(cave)
             case 6:
                 new_locations += ancient_wyrm_factory()
             # TO_DO: there is an additional choice for natural disasters,

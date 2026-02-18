@@ -4,8 +4,9 @@ from random import randint
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
-from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT
-from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS, MARGIN
+from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT, BEAD
+from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS, MARGIN, CAVERN, WATER
+from location import Cavern
 
 def nearest_corner(point: PVector) -> PVector:
     """Return the nearest screen corner to the given point."""
@@ -24,6 +25,7 @@ def get_random_underground_location() -> PVector:
 def strata_depth(strata: int) -> int:
     """Calculate and return the depth in pixels of a given strata layer."""
     return GROUND_LEVEL + STRATA_HEIGHT * strata + STRATA_HEIGHT//2
+
 
 class Mithril():
     """Represents a Mithril deposit."""
@@ -54,6 +56,7 @@ class Mithril():
         if SHOW_LABELS:
             screen.draw.text(self.name, center=(self.center.x, self.center.y))
 
+
 class GoldVein():
     """Represents a GoldVein deposit."""
 
@@ -76,3 +79,66 @@ class GoldVein():
                          8)
         if SHOW_LABELS:
             screen.draw.text(self.name, center=(self.midpoint.x, self.midpoint.y))
+
+
+class UndergroundRiver():
+    """Represents an underground river generated during the Primordial Age."""
+
+    def __init__(self) -> None:
+        """Create an UndergroundRiver object."""
+        self.vertices = []
+
+        self.lakes = []
+        self.caves = []
+
+        self.name = "Underground River"
+
+        current_x = 0
+        current_y = strata_depth(randint(0,5))
+
+        while current_x < WIDTH and GROUND_LEVEL < current_y < HEIGHT and current_y:
+            self.vertices.append(PVector(current_x, current_y))
+            current_x += FINGER
+
+            check = randint(0,9)
+            match check:
+                case 0 | 1 | 2:
+                    pass
+                case 3 | 4:
+                    current_y += STRATA_HEIGHT
+                case 5 | 6:
+                    current_y -= STRATA_HEIGHT
+                case 7 | 8:
+                    self.caves.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
+                case 9:
+                    current_x -= FINGER
+                    current_y += STRATA_HEIGHT // 2
+
+            if current_y < GROUND_LEVEL:
+                x_1, y_1 = self.vertices[-1].x, self.vertices[-1].y
+                x_2, y_2 = current_x, current_y
+                slope = (y_2 - y_1) / (x_2 - x_1)
+                intercept = y_1 - (slope * x_1)
+
+                lake_y = GROUND_LEVEL
+                lake_x = (lake_y - intercept) / slope
+
+                self.lakes.append(PVector(lake_x,lake_y))
+
+        self.vertices.append(PVector(current_x, current_y))
+
+    def update(self) -> None:
+        """Update the UndergroundRiver's state once per frame."""
+
+    def draw(self) -> None:
+        """Draw the UndergroundRiver once per frame."""
+        for lake in self.lakes:
+            screen.draw.circle(lake.x, lake.y, BEAD, WATER, 0)
+
+        for index,vertex in enumerate(self.vertices[:-1]):
+            screen.draw.line(WATER,
+                             (vertex.x, vertex.y),
+                             (self.vertices[index+1].x, self.vertices[index+1].y),
+                             8)
+        if SHOW_LABELS:
+            screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
