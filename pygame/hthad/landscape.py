@@ -5,7 +5,7 @@ from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
 from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT
-from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS
+from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS, MARGIN
 
 def nearest_corner(point: PVector) -> PVector:
     """Return the nearest screen corner to the given point."""
@@ -19,7 +19,7 @@ def nearest_corner(point: PVector) -> PVector:
 
 def get_random_underground_location() -> PVector:
     """Return a random point in the underground region of the screen."""
-    return PVector(randint(0, WIDTH), randint(GROUND_LEVEL, HEIGHT))
+    return PVector(randint(MARGIN, WIDTH-MARGIN), randint(GROUND_LEVEL+MARGIN, HEIGHT-MARGIN))
 
 def strata_depth(strata: int) -> int:
     """Calculate and return the depth in pixels of a given strata layer."""
