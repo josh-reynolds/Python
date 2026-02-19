@@ -104,35 +104,43 @@ class PVector:
         self.x = r * math.cos(new_theta)
         self.y = r * math.sin(new_theta)
 
-    # class methods -------------------------------
-    def add(v, u):
+    @classmethod
+    def add(cls, v, u):
         """Add two PVectors together."""
         return PVector(v.x + u.x, v.y + u.y)
 
-    def sub(v, u):
+    @classmethod
+    def sub(cls, v, u):
         """Subtract one PVector from another."""
         return PVector(v.x - u.x, v.y - u.y)
 
-    def mult(v, scalar):
+    @classmethod
+    def mult(cls, v, scalar):
         """Multiply a PVector by a scalar value."""
         return PVector(v.x * scalar, v.y * scalar)
 
-    def div(v, scalar):
+    @classmethod
+    def div(cls, v, scalar):
         """Divide a PVector by a scalar value."""
         return PVector(v.x / scalar, v.y / scalar)
 
-    def normalize(v):
+    # TO_DO: review usage? Is this being used as a class or
+    #        instance method?
+    @classmethod
+    def normalize(cls, v):
         """Return a PVector normalized to magnitude 1."""
         m = v.mag()
         if m == 0:
             return PVector(0,0)
         return PVector.div(v,m)
 
-    def random2D():
+    @classmethod
+    def random2D(cls):
         """Return a random normalized PVector."""
         return PVector(uniform(-1,1), uniform(-1,1)).normalize()
 
-    def dist(a, b):
+    @classmethod
+    def dist(cls, a, b):
         """Return the distance between two PVectors."""
         m = b.x - a.x
         n = b.y - a.y
