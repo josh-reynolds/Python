@@ -188,29 +188,29 @@ def age_of_civilization_setup():
 
     # pick a spot on the surface above a gold vein or mithral deposit
     minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
-    selection = choice(minerals + new_locations)
+    target_mineral = choice(minerals + new_locations)
     # TO_DO: alternatively, choose the mineral closest to the surface
 
     x_location = 0
     depth = 0
-    if isinstance(selection, Mithril):
-        x_location = selection.center.x
-        depth = selection.center.y
+    if isinstance(target_mineral, Mithril):
+        x_location = target_mineral.center.x
+        depth = target_mineral.center.y
 
-    if isinstance(selection, GoldVein):
-        if selection.left.y < selection.right.y:
+    if isinstance(target_mineral, GoldVein):
+        if target_mineral.left.y < target_mineral.right.y:
             x_location = FINGER
-            depth = get_y_at_x(selection.left, selection.right, x_location)
-        elif selection.right.y < selection.left.y:
+            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+        elif target_mineral.right.y < target_mineral.left.y:
             x_location = WIDTH - FINGER
-            depth = get_y_at_x(selection.left, selection.right, x_location)
+            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
         else:
             if randint(0,1) == 9:
                 x_location = FINGER
-                depth = get_y_at_x(selection.left, selection.right, x_location)
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
             else:
                 x_location = WIDTH - FINGER
-                depth = get_y_at_x(selection.left, selection.right, x_location)
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
 
     new_locations += dwarf_mine_factory(x_location, depth)
     return new_locations
@@ -306,26 +306,26 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(ROOM_SPACING,-ROOM_SPACING),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
-def add_candidate(name: str, selection: Location, direction: int) -> Location:
+def add_candidate(name: str, parent: Location, direction: int) -> Location:
     """Add a candidate location to the locations list."""
-    candidate_location = PVector.add(selection.coordinate, directions[direction])
-    candidate = Room(candidate_location)
-    candidate.name = name
-    locations.append(candidate)
-    return candidate
+    candidate_location = PVector.add(parent.coordinate, directions[direction])
+    new_room = Room(candidate_location)
+    new_room.name = name
+    locations.append(new_room)
+    return new_room
 
-def is_viable(candidate: Location, rooms: List[Location], tunnels: List[Tuple]) -> bool:
+def is_viable(candidate_room: Location, nodes: List[Location], edges: List[Tuple]) -> bool:
     """Test whether a candidate location is legal."""
-    for location in rooms:
-        if candidate.intersects(location):
+    for location in nodes:
+        if candidate_room.intersects(location):
             return False
 
-    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in tunnels]
+    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in edges]
     for tunnel in tunnel_coords:
-        if rect_segment_intersects(candidate.rect, tunnel):
+        if rect_segment_intersects(candidate_room.rect, tunnel):
             return False
 
-    if out_of_bounds(candidate.coordinate):
+    if out_of_bounds(candidate_room.coordinate):
         return False
 
     return True
