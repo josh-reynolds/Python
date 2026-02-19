@@ -29,6 +29,8 @@ class ScreenMatrix:
     def translate(self, target):
         """Apply a translation to the ScreenMatrix."""
         target.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         self.origin + target
 
     def rotate(self, radians):
@@ -48,10 +50,14 @@ class ScreenMatrix:
         """Draw a line on the screen, applying the ScreenMatrix transforms."""
         s = PVector(*start)
         s.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         s + self.origin
 
         e = PVector(*end)
         e.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         e + self.origin
 
         screen.draw.line(self.color, (s.x, s.y), (e.x, e.y), width)
@@ -60,6 +66,8 @@ class ScreenMatrix:
         """Draw a circle on the screen, applying the ScreenMatrix transforms."""
         o = PVector(x,y)
         o.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         o + self.origin
 
         screen.draw.circle(o.x, o.y, radius, color, width)
@@ -68,21 +76,29 @@ class ScreenMatrix:
         """Draw a rectangle on the screen, applying the ScreenMatrix transforms."""
         top_left = PVector(x,y)
         top_left.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         top_left + self.origin
         tl = (top_left.x, top_left.y)
 
         top_right = PVector(x+w,y)
         top_right.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         top_right + self.origin
         tr = (top_right.x, top_right.y)
 
         bottom_left = PVector(x,y+h)
         bottom_left.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         bottom_left + self.origin
         bl = (bottom_left.x, bottom_left.y)
 
         bottom_right = PVector(x+w,y+h)
         bottom_right.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         bottom_right + self.origin
         br = (bottom_right.x, bottom_right.y)
         
@@ -92,6 +108,8 @@ class ScreenMatrix:
         """Draw a triangle on the screen, applying the ScreenMatrix transforms."""
         first = PVector(x1, y1)
         first.rotate(math.degrees(self.angle))
+        # pylint: disable=W0104
+        # W0104: Statement seems to have no effect (pointless-statement)
         first + self.origin
         f = (first.x, first.y)
 
@@ -113,6 +131,8 @@ class ScreenMatrix:
         for p in points:
             pt = PVector(p[0], p[1])
             pt.rotate(math.degrees(self.angle))
+            # pylint: disable=W0104
+            # W0104: Statement seems to have no effect (pointless-statement)
             pt + self.origin
             vertices.append((pt.x, pt.y))
 
