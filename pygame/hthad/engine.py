@@ -65,6 +65,7 @@ class Actor:
     """Actor - class to handle moving graphical objects."""
 
     def __init__(self, image, pos=(0,0), anchor=("center", "center")):
+        """Create an instance of an Actor."""
         if DEBUG_ACTOR:
             print(f"Actor ctor({image}, {pos}, {anchor}) ----- ")
 
@@ -79,26 +80,30 @@ class Actor:
         self.initialize_position(pos, anchor)
 
     def draw(self):
+        """Draw the Actor to the screen once per frame."""
         if DEBUG_ACTOR:
             print("draw()  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
 
         screen.blit(self._image, self.rect.topleft)
 
     def collidepoint(self, point):
+        """Test whether a point intersects the Actor's bounding box."""
         if DEBUG_ACTOR:
             print(f"collidepoint({point})")
 
         return self.rect.collidepoint(point)
 
     def colliderect(self, rect):
+        """Test whether a rectangle intersects the Actor's bounding box."""
         if DEBUG_ACTOR:
             print(f"colliderect({rect})")
 
         return self.rect.colliderect(rect)
 
     def distance_to(self, other):
+        """Return the distance between self and the specified Actor."""
         if DEBUG_ACTOR:
-            print(f"colliderect({rect})")
+            print(f"distance_to({rect})")
 
         pos = pygame.Vector2(self.pos)
         target = pygame.Vector2(other.pos)
@@ -107,30 +112,37 @@ class Actor:
 
     @property
     def width(self):
+        """Return the width of the Actor's bounding box."""
         return self.rect.width
 
     @property
     def height(self):
+        """Return the height of the Actor's bounding box."""
         return self.rect.height
 
     @property
     def left(self):
+        """Return the left edge of the Actor's bounding box."""
         return self.rect.left
 
     @property
     def centerx(self):
+        """Return the x value of the Actor's bounding box center point."""
         return self.rect.centerx
 
     @property
     def centery(self):
+        """Return the y value of the Actor's bounding box center point."""
         return self.rect.centery
 
     @property
     def image(self):
+        """Return the name of the Actor's image."""
         return self.image_name
 
     @image.setter
     def image(self, image_name):
+        """Set the Actor's image by name, loading it from a file."""
         if DEBUG_ACTOR:
             print(f"set_image({image_name})  ~ ~ ~ ~ ~ ~ ~ ~ ~ ")
 
@@ -139,6 +151,7 @@ class Actor:
         self.update_position()
 
     def initialize_position(self, pos, anchor):
+        """Initialize the position of the Actor."""
         if DEBUG_ACTOR:
             print(f"initialize_position({pos}, {anchor})")
 
@@ -147,6 +160,7 @@ class Actor:
         self.pos = pos
 
     def update_position(self):
+        """Update the position of the Actor."""
         if DEBUG_ACTOR:
             print("update_position()")
 
@@ -157,10 +171,12 @@ class Actor:
 
     @property
     def x(self):
+        """Return the x value of the Actor."""
         return self.rect.left + self._anchor_value[0]
 
     @x.setter
     def x(self, new_x):
+        """Set the x value of the Actor."""
         if DEBUG_ACTOR:
             print(f"set_x({new_x})")
 
@@ -168,10 +184,12 @@ class Actor:
 
     @property
     def y(self):
+        """Return the y value of the Actor."""
         return self.rect.top + self._anchor_value[1]
 
     @y.setter
     def y(self, new_y):
+        """Set the y value of the Actor."""
         if DEBUG_ACTOR:
             print(f"set_y({new_y})")
 
@@ -179,6 +197,7 @@ class Actor:
 
     @property
     def pos(self):
+        """Return the position of the Actor."""
         anchor_x, anchor_y = self._anchor_value
 
         return (self.rect.topleft[0] + anchor_x,
@@ -186,6 +205,7 @@ class Actor:
 
     @pos.setter
     def pos(self, new_pos):
+        """Set the position of the Actor."""
         if DEBUG_ACTOR:
             print(f"set_pos({new_pos})")
 
@@ -196,10 +216,12 @@ class Actor:
 
     @property
     def anchor(self):
+        """Return the anchor position of the Actor."""
         return self._anchor
 
     @anchor.setter
     def anchor(self, new_anchor):
+        """Set the anchor position of the Actor."""
         if DEBUG_ACTOR:
             print(f"set_anchor({new_anchor})")
 
@@ -207,6 +229,7 @@ class Actor:
         self.update_position()
 
     def calculate_anchor(self):
+        """Calculate the anchor position of the Anchor."""
         if DEBUG_ACTOR:
             print("calculate_anchor()")
 
@@ -229,14 +252,17 @@ class Actor:
 
     @property
     def top(self):
+        """Return the top edge of the Actor's bounding box."""
         return self.rect.top
 
     @property
     def bottom(self):
+        """Return the bottom edge of the Actor's bounding box."""
         return self.rect.bottom
 
     @property
     def center(self):
+        """Return the center point of the Actor's bounding box."""
         return self.rect.center
 
 
