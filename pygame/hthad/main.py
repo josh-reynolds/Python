@@ -42,9 +42,8 @@ def natural_cavern_factory() -> Cavern:
 
     return cavern
 
-
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
-    """Generate a random point on a circle of given radius around an origin."""
+    """Generate a point on a circle of given radius and angle around an origin."""
     new_x = radius * math.cos(math.radians(angle)) + origin.x
     new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
@@ -345,6 +344,35 @@ def out_of_bounds(point: PVector) -> bool:
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
 
+def get_parent_room():
+    """Return the parent room to attach a new room to."""
+    selection = None
+    barracks = mine_start.get_locations_by_name("Barracks")
+
+    neighbor_counts = [len(b.neighbors) for b in barracks]
+    min_neighbors = min(neighbor_counts)
+
+    first_cut = [b for b in barracks if len(b.neighbors) == min_neighbors]
+
+    candidates = sorted(barracks, key=lambda entry: len(entry.neighbors))
+    print(candidates)
+
+    if len(first_cut) > 1:
+        distances = [b.distance_to(treasure.parent) for b in first_cut]
+        min_distance = min(distances)
+
+        second_cut = [b for b in first_cut
+                      if b.distance_to(treasure.parent) == min_distance]
+
+        if len(second_cut) > 1:
+            selection = choice(second_cut)
+        else:
+            selection = second_cut[0]
+    else:
+        selection = first_cut[0]
+
+    return selection
+
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -352,30 +380,7 @@ if mine_start:
         for treasure in treasures:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-            selection = None
-            barracks = mine_start.get_locations_by_name("Barracks")
-
-            neighbor_counts = [len(b.neighbors) for b in barracks]
-            min_neighbors = min(neighbor_counts)
-
-            first_cut = [b for b in barracks if len(b.neighbors) == min_neighbors]
-
-            candidates = sorted(barracks, key=lambda entry: len(entry.neighbors))
-            print(candidates)
-
-            if len(first_cut) > 1:
-                distances = [b.distance_to(treasure.parent) for b in first_cut]
-                min_distance = min(distances)
-
-                second_cut = [b for b in first_cut
-                              if b.distance_to(treasure.parent) == min_distance]
-
-                if len(second_cut) > 1:
-                    selection = choice(second_cut)
-                else:
-                    selection = second_cut[0]
-            else:
-                selection = first_cut[0]
+            selection = get_parent_room()
 
             attempt = 0
             while attempt < 8:
