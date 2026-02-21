@@ -270,6 +270,7 @@ class Images:
     """Images - provides access to image files in ./images."""
 
     def __init__(self):
+        """Create an instance of an Images object."""
         files = []
         for entry in os.listdir('./images/'):
             if os.path.isfile('./images/' + entry):
@@ -286,6 +287,7 @@ class Screen:
     """Screen - wraps the Pygame screen surface."""
 
     def __init__(self, width, height):
+        """Create an instance of a Screen object."""
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.surface = pygame.display.set_mode((width, height))
         self.images = {}
@@ -294,9 +296,11 @@ class Screen:
         self.height = height
 
     def fill(self, color):
+        """Fill the screen with the specified color."""
         self.surface.fill(color)
 
     def blit(self, image, position, special_flags=0):
+        """Draw the specified image to the screen at the specified position."""
         if isinstance(image, pygame.Surface):
             surf = image
         elif isinstance(image, str):
@@ -314,6 +318,7 @@ class Painter:
     """
 
     def __init__(self, surface):
+        """Create an instance of a Painter object."""
         # TO_DO: make this customizeable
         self.surface = surface
         self.fontname = None
@@ -322,11 +327,13 @@ class Painter:
         self.set_font()
 
     def set_font(self):
+        """Set the font for the Painter."""
         self.font = pygame.font.Font(self.fontname, self.fontsize)
 
     #TO_DO: only partial positioning implemented thus far, and a bit creaky
     # this is 'borrowed' from ptext, which is what Pygame Zero uses internally
     def text(self, text, pos=None, center=None, color=Color('black')):
+        """Draw the specified text to the screen."""
         if center and not pos:
             x, y = center
             hanchor, vanchor = 0.5, 0.5
@@ -348,11 +355,13 @@ class Painter:
         self.surface.blit(img, (x,y))
 
     def line(self, color, start, end, width=1):
+        """Draw a line on the screen."""
         pygame.draw.line(self.surface, color, start, end, width)
 
     # TO_DO: extend this transparency support to other draw methods
     # TO_DO: transparency/outline fix mutually exclusive, needs adjustment
     def rect(self, rect, color, width=1):
+        """Draw a rectangle on the screen."""
         if len(color) == 4:
             s = pygame.Surface((rect.width, rect.height))
             s.set_alpha(color[3])
@@ -364,6 +373,7 @@ class Painter:
 
     # TO_DO: transparency not quite right here, coming out as a square, neds work
     def circle(self, x, y, radius, color, width=0):
+        """Draw a circle on the screen."""
         if len(color) == 4:
             s = pygame.Surface((radius, radius))
             pygame.draw.circle(s, color, (0, 0), radius, width)
@@ -373,12 +383,14 @@ class Painter:
             pygame.draw.circle(self.surface, color, (x, y), radius, width)
 
     def pixel(self, x, y, color):
+        """Draw a single pixel on the screen."""
         pygame.gfxdraw.pixel(self.surface, x, y, color)
 
     # this can be generalized to any regular polygon
     # also, doubling sides in the range (but not the angle) and
     # skipping counts produces a star shape
     def hex(self, x, y, radius, color, width=1):
+        """Draw a hexagon on the screen."""
         sides = 6
         hex_points = []
         for i in range(sides):
@@ -389,14 +401,18 @@ class Painter:
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
 
+    # TO_DO: this overrides definition above - fix!
     def rect(self, x, y, w, h, color, width=0):
+        """Draw a rectangle on the screen."""
         pygame.draw.rect(self.surface, color, (x, y, w, h), width)
 
     def polygon(self, points, color, width=0):
+        """Draw a polygon on the screen."""
         pygame.draw.polygon(self.surface, color, points, width)
 
     # TO_DO: copied from hex() above, deal with this duplication
     def triangle(self, x, y, radius, color, width=1):
+        """Draw a triangle on the screen."""
         sides = 3
         tri_points = []
         for i in range(sides):
@@ -411,20 +427,25 @@ class Music:
     """Music - wraps the Pygame music mixer."""
 
     def __init__(self):
-        pass
+        """Create an instance of a Music object."""
 
     def play(self, song):
+        """Play the specified song."""
         filename = './music/' + song + '.ogg'
         pygame.mixer.music.load(filename)
         pygame.mixer.music.play(-1)     # repeat indefinitely
 
     def stop(self):
+        """Stop playing music."""
         pygame.mixer.music.stop()
 
     def set_volume(self, volume):
+        """Set the volume of the music player."""
         pygame.mixer.music.set_volume(volume)
 
+    # TO_DO: look up unit value for time - in seconds? milliseconds?
     def fadeout(self, time):
+        """Fade out the music over the specified time span."""
         pygame.mixer.music.fadeout(time)
 
 
@@ -432,35 +453,42 @@ class Keyboard:
     """Keyboard - holds flags indicating keyboard state."""
 
     def __init__(self):
+        """Create an instance of a Keyboard object."""
         self.reset()
 
     def reset(self):
+        """Reset all values in the Keyboard object."""
         for i in dir(self):
             if not i.startswith('__') and i != 'reset':
                 setattr(self, i, False)
 
     def __getitem__(self, key):
+        """Get the value of the specified key from the Keyboard object."""
         if hasattr(self, key):
             return getattr(self, key)
 
 
+# pylint: disable=C0103
+# C0103: Class name "keys" doesn't conform to PascalCase naming style (invalid-name)
 class keys:
     """keys - contains all keyboard key name constants."""
-    pass
 
 
 class Mouse:
     """Mouse - holds flags indicating mouse button state."""
 
     def __init__(self):
+        """Create an instance of a Mouse object."""
         self.reset()
 
     def reset(self):
+        """Reset all values in the Mouse object."""
         for i in dir(self):
             if not i.startswith('__') and i != 'reset':
                 setattr(self, i, False)
 
     def __getitem__(self, button):
+        """Get the value of the specified button from the Mouse object."""
         if hasattr(self, button):
             return getattr(self, button)
 
@@ -469,6 +497,7 @@ class Sounds:
     """Sounds - wraps the Pygame audio mixer."""
 
     def __init__(self):
+        """Create an instance of a Sounds object."""
         files = []
         for entry in os.listdir('./sounds/'):
             if os.path.isfile('./sounds/' + entry):
@@ -560,15 +589,16 @@ def run(draw=True):
     pygame.quit()
 
 def remap(old_val, old_min, old_max, new_min, new_max):
+    """Remap a value from one range of values to another."""
     return (new_max - new_min)*(old_val - old_min) / (old_max - old_min) + new_min
 
 def lerp(a, b, scale):
+    """Linear interpolate a value."""
     if scale <= 0:
         return a
-    elif scale >= 1:
+    if scale >= 1:
         return b
-    else:
-        return ((b - a) * scale) + a
+    return ((b - a) * scale) + a
 
 def _trace_function(frame, event, arg, indent=[0]):
     """Internal function to display function entry/exit while debugging."""
