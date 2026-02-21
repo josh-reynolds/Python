@@ -346,8 +346,9 @@ def out_of_bounds(point: PVector) -> bool:
 
 def get_parent_room(types: List[str]) -> Location:
     """Return the parent room to attach a new room to."""
-    selection = None
-    rooms = mine_start.get_locations_by_name(types[0])
+    rooms = []
+    for room_name in types:
+        rooms += mine_start.get_locations_by_name(room_name)
 
     neighbor_counts = [len(r.neighbors) for r in rooms]
     min_neighbors = min(neighbor_counts)
@@ -410,14 +411,7 @@ if mine_start:
 
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-            selection = None
-            rooms = mine_start.get_locations_by_name("Barracks")
-            rooms += mine_start.get_locations_by_name("Treasure Room")
-
-            neighbor_counts = [len(r.neighbors) for r in rooms]
-            min_neighbors = min(neighbor_counts)
-
-            selection = choice([r for r in rooms if len(r.neighbors) == min_neighbors])
+            selection = get_parent_room(["Barracks", "Treasure Room"])
 
             attempt = 0
             while attempt < 8:
