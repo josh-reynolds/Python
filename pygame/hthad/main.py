@@ -344,10 +344,10 @@ def out_of_bounds(point: PVector) -> bool:
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
 
-def get_parent_room():
+def get_parent_room(types: List[str]) -> Location:
     """Return the parent room to attach a new room to."""
     selection = None
-    rooms = mine_start.get_locations_by_name("Barracks")
+    rooms = mine_start.get_locations_by_name(types[0])
 
     neighbor_counts = [len(r.neighbors) for r in rooms]
     min_neighbors = min(neighbor_counts)
@@ -361,7 +361,7 @@ if mine_start:
         for treasure in treasures:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-            selection = get_parent_room()
+            selection = get_parent_room(["Barracks"])
 
             attempt = 0
             while attempt < 8:
