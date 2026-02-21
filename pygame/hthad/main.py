@@ -347,31 +347,12 @@ def out_of_bounds(point: PVector) -> bool:
 def get_parent_room():
     """Return the parent room to attach a new room to."""
     selection = None
-    barracks = mine_start.get_locations_by_name("Barracks")
+    rooms = mine_start.get_locations_by_name("Barracks")
 
-    neighbor_counts = [len(b.neighbors) for b in barracks]
+    neighbor_counts = [len(r.neighbors) for r in rooms]
     min_neighbors = min(neighbor_counts)
 
-    first_cut = [b for b in barracks if len(b.neighbors) == min_neighbors]
-
-    candidates = sorted(barracks, key=lambda entry: len(entry.neighbors))
-    print(candidates)
-
-    if len(first_cut) > 1:
-        distances = [b.distance_to(treasure.parent) for b in first_cut]
-        min_distance = min(distances)
-
-        second_cut = [b for b in first_cut
-                      if b.distance_to(treasure.parent) == min_distance]
-
-        if len(second_cut) > 1:
-            selection = choice(second_cut)
-        else:
-            selection = second_cut[0]
-    else:
-        selection = first_cut[0]
-
-    return selection
+    return choice([r for r in rooms if len(r.neighbors) == min_neighbors])
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
