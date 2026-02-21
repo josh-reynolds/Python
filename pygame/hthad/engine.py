@@ -103,7 +103,7 @@ class Actor:
     def distance_to(self, other):
         """Return the distance between self and the specified Actor."""
         if DEBUG_ACTOR:
-            print(f"distance_to({rect})")
+            print(f"distance_to({other})")
 
         pos = pygame.Vector2(self.pos)
         target = pygame.Vector2(other.pos)
@@ -341,7 +341,7 @@ class Painter:
             x, y = pos
             hanchor, vanchor = 0, 0
         else:
-            raise Exception("Must specify either pos or center location")
+            raise ValueError("Must specify either pos or center location")
 
         img = self.font.render(text, True, color)
 
@@ -395,13 +395,14 @@ class Painter:
         hex_points = []
         for i in range(sides):
             angle = math.pi * 2/sides * (i+1)
-            vX = radius * math.cos(angle) + x
-            vY = radius * math.sin(angle) + y
-            hex_points.append((vX,vY))
+            v_x = radius * math.cos(angle) + x
+            v_y = radius * math.sin(angle) + y
+            hex_points.append((v_x, v_y))
 
         pygame.draw.polygon(self.surface, color, hex_points, width)
 
     # TO_DO: this overrides definition above - fix!
+    # E0102: method already defined line 363 (function-redefined)
     def rect(self, x, y, w, h, color, width=0):
         """Draw a rectangle on the screen."""
         pygame.draw.rect(self.surface, color, (x, y, w, h), width)
@@ -417,9 +418,9 @@ class Painter:
         tri_points = []
         for i in range(sides):
             angle = math.pi * 2/sides * (i+1)
-            vX = radius * math.cos(angle) + x
-            vY = radius * math.sin(angle) + y
-            tri_points.append((vX,vY))
+            v_x = radius * math.cos(angle) + x
+            v_y = radius * math.sin(angle) + y
+            tri_points.append((v_x, v_y))
 
         pygame.draw.polygon(self.surface, color, tri_points, width)
 
@@ -466,10 +467,12 @@ class Keyboard:
         """Get the value of the specified key from the Keyboard object."""
         if hasattr(self, key):
             return getattr(self, key)
+        return None
 
 
-# pylint: disable=C0103
+# pylint: disable=C0103,R0903
 # C0103: Class name "keys" doesn't conform to PascalCase naming style (invalid-name)
+# R0903: Too few public methods (0/2) (too-few-public-methods)
 class keys:
     """keys - contains all keyboard key name constants."""
 
@@ -491,6 +494,7 @@ class Mouse:
         """Get the value of the specified button from the Mouse object."""
         if hasattr(self, button):
             return getattr(self, button)
+        return None
 
 
 class Sounds:
@@ -512,6 +516,9 @@ class Sounds:
 
 pygame.init()
 
+# pylint: disable=W0105
+# W0105: String statement has no effect (pointless-string-statement)
+# TO_DO: annotate these singletons better...
 """screen - singleton instance of Screen for use by game scripts."""
 screen = Screen(1,1)
 
