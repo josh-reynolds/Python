@@ -308,10 +308,10 @@ directions = [PVector(ROOM_SPACING,0),
 def add_candidate(name: str, parent: Location, direction: int) -> Location:
     """Add a candidate location to the locations list."""
     candidate_location = PVector.add(parent.coordinate, directions[direction])
-    new_room = Room(candidate_location)
-    new_room.name = name
-    locations.append(new_room)
-    return new_room
+    room_to_add = Room(candidate_location)
+    room_to_add.name = name
+    locations.append(room_to_add)
+    return room_to_add
 
 def is_viable(candidate_room: Location, nodes: List[Location], edges: List[Tuple]) -> bool:
     """Test whether a candidate location is legal."""
@@ -366,15 +366,13 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
 
         viable = is_viable(candidate, rooms, tunnels)
 
-        # TO_DO: tunnel crossing aren't handled yet
-        # TO_DO: intersections with caverns not handled yet
+        # TO_DO: tunnel crossings aren't handled yet
+        # TO_DO: intersections with caverns aren't handled yet
 
         if viable:
             print("Candidate location is viable - adding room.")
             parent.add_neighbor(candidate)
             candidate.color = parent.color
-            # ----------------------------
-            # ----------------------------
             distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
             dist_to_parent = PVector.dist(candidate.coordinate, parent.coordinate)
 
@@ -398,11 +396,11 @@ if mine_start:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = get_parent_room(["Barracks"])
-            candidate = get_candidate_room(selection, "Treasure Room")
+            new_room = get_candidate_room(selection, "Treasure Room")
 
-            treasure.parent = candidate
+            treasure.parent = new_room
             treasure.name = "Dwarven Treasure"
-            candidate.contents = treasure
+            new_room.contents = treasure
 
         # add another dwarf barracks and populate it - do this in separate
         # loop because these new arrivals should not be part of the treasure
@@ -420,39 +418,9 @@ if mine_start:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = get_parent_room(["Barracks", "Treasure Room"])
+            new_room = get_candidate_room(selection, "Barracks")
 
-            attempt = 0
-            while attempt < 8:
-                candidate = add_candidate("Barracks", selection, attempt)
-
-                rooms = selection.get_all_connected_locations()
-                tunnels = selection.get_all_connected_tunnels()
-
-                viable = is_viable(candidate, rooms, tunnels)
-
-                # TO_DO: tunnel crossing aren't handled yet
-                # TO_DO: intersections with caverns not handled yet
-
-                if viable:
-                    print("Candidate location is viable - adding room.")
-                    selection.add_neighbor(candidate)
-                    candidate.color = selection.color
-                    # ----------------------------
-
-                    candidate.contents = Entity("Dwarves", candidate, CREATURE)
-
-                    # ----------------------------
-                    distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-                    dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
-
-                    for i,room in enumerate(rooms):
-                        if distances[i] <= dist_to_parent:
-                            room.add_neighbor(candidate)
-
-                    attempt = 8
-                else:
-                    locations.remove(candidate)
-                    attempt += 1
+            new_room.contents = Entity("Dwarves", new_room, CREATURE)
 
 def update() -> None:
     """Update game state once per frame."""
