@@ -402,25 +402,27 @@ if mine_start:
             treasure.name = "Dwarven Treasure"
             new_room.contents = treasure
 
-        # add another dwarf barracks and populate it - do this in separate
-        # loop because these new arrivals should not be part of the treasure
-        # room bonanza above
-        for treasure in treasures:
-            # new barracks should attach to any non-mine room
-            # preference for fewest neighbors
-            # no other criteria - this can be anywhere in the complex
-            # find a non-intersecting location
-            # place a barracks there
-            # add a dwarf to the barracks
-            # same special cases as above for treasure rooms - in
-            # fact we should extract a "get new room" function here
+            cavities = [l for l in locations if isinstance(l, Location)]
+            cavities.remove(new_room)
+            for location in cavities:
+                if new_room.intersects(location):
+                    print(f"Intersection detected: {new_room} - {location}")
 
+        # add another dwarf barracks and populate it - do this in separate loop because
+        # these new arrivals should not be part of the treasure room bonanza above
+        for treasure in treasures:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = get_parent_room(["Barracks", "Treasure Room"])
             new_room = get_candidate_room(selection, "Barracks")
 
             new_room.contents = Entity("Dwarves", new_room, CREATURE)
+
+            cavities = [l for l in locations if isinstance(l, Location)]
+            cavities.remove(new_room)
+            for location in cavities:
+                if new_room.intersects(location):
+                    print(f"Intersection detected: {new_room} - {location}")
 
 def update() -> None:
     """Update game state once per frame."""
