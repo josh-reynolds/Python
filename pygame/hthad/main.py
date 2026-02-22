@@ -387,6 +387,15 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
 
     return None
 
+def check_for_connections(room: Location) -> None:
+    """Test whether a newly-added room collides with an existing one, and link up if so."""
+    cavities = [l for l in locations if isinstance(l, Location)]
+    cavities.remove(room)
+    for location in cavities:
+        if room.intersects(location):
+            print(f"Intersection detected: {room} - {location}")
+            room.add_neighbor(location)
+
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -401,12 +410,7 @@ if mine_start:
             treasure.name = "Dwarven Treasure"
             new_room.contents = treasure
 
-            cavities = [l for l in locations if isinstance(l, Location)]
-            cavities.remove(new_room)
-            for location in cavities:
-                if new_room.intersects(location):
-                    print(f"Intersection detected: {new_room} - {location}")
-                    new_room.add_neighbor(location)
+            check_for_connections(new_room)
 
         # add another dwarf barracks and populate it - do this in separate loop because
         # these new arrivals should not be part of the treasure room bonanza above
@@ -418,12 +422,7 @@ if mine_start:
 
             new_room.contents = Entity("Dwarves", new_room, CREATURE)
 
-            cavities = [l for l in locations if isinstance(l, Location)]
-            cavities.remove(new_room)
-            for location in cavities:
-                if new_room.intersects(location):
-                    print(f"Intersection detected: {new_room} - {location}")
-                    new_room.add_neighbor(location)
+            check_for_connections(new_room)
 
     print(f"{mine_start.get_all_connected_locations()}")
 
