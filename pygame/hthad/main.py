@@ -355,7 +355,7 @@ def get_parent_room(types: List[str]) -> Location:
 
     return choice([r for r in parents if len(r.neighbors) == min_neighbors])
 
-def test_candidate_rooms(parent: Location, room_name: str) -> None:
+def get_candidate_room(parent: Location, room_name: str) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
     attempt = 0
     while attempt < 8:
@@ -374,11 +374,6 @@ def test_candidate_rooms(parent: Location, room_name: str) -> None:
             parent.add_neighbor(candidate)
             candidate.color = parent.color
             # ----------------------------
-
-            treasure.parent = candidate
-            treasure.name = "Dwarven Treasure"
-            candidate.contents = treasure
-
             # ----------------------------
             distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
             dist_to_parent = PVector.dist(candidate.coordinate, parent.coordinate)
@@ -387,10 +382,12 @@ def test_candidate_rooms(parent: Location, room_name: str) -> None:
                 if distances[i] <= dist_to_parent:
                     room.add_neighbor(candidate)
 
-            attempt = 8
-        else:
-            locations.remove(candidate)
-            attempt += 1
+            return candidate
+
+        locations.remove(candidate)
+        attempt += 1
+
+    return None
 
 
 if mine_start:
@@ -401,7 +398,11 @@ if mine_start:
             # pylint: disable=C0103
             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
             selection = get_parent_room(["Barracks"])
-            test_candidate_rooms(selection, "Treasure Room")
+            candidate = get_candidate_room(selection, "Treasure Room")
+
+            treasure.parent = candidate
+            treasure.name = "Dwarven Treasure"
+            candidate.contents = treasure
 
         # add another dwarf barracks and populate it - do this in separate
         # loop because these new arrivals should not be part of the treasure
@@ -436,8 +437,11 @@ if mine_start:
                     print("Candidate location is viable - adding room.")
                     selection.add_neighbor(candidate)
                     candidate.color = selection.color
+                    # ----------------------------
+
                     candidate.contents = Entity("Dwarves", candidate, CREATURE)
 
+                    # ----------------------------
                     distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
                     dist_to_parent = PVector.dist(candidate.coordinate, selection.coordinate)
 
