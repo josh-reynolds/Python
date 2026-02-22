@@ -387,7 +387,6 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
 
     return None
 
-
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -407,6 +406,7 @@ if mine_start:
             for location in cavities:
                 if new_room.intersects(location):
                     print(f"Intersection detected: {new_room} - {location}")
+                    new_room.add_neighbor(location)
 
         # add another dwarf barracks and populate it - do this in separate loop because
         # these new arrivals should not be part of the treasure room bonanza above
@@ -423,6 +423,9 @@ if mine_start:
             for location in cavities:
                 if new_room.intersects(location):
                     print(f"Intersection detected: {new_room} - {location}")
+                    new_room.add_neighbor(location)
+
+    print(f"{mine_start.get_all_connected_locations()}")
 
 def update() -> None:
     """Update game state once per frame."""
