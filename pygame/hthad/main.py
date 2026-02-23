@@ -109,7 +109,8 @@ def add_caverns() -> None:
         locations.append(natural_cavern_factory())
         cavern_count += 1
 
-def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
+def dwarf_mine_factory(x_location: int, depth: int,
+                       target_mineral: GoldVein | Mithril) -> List[Room]:
     """Generate the start of a Dwarf mine."""
     sites = []
 
@@ -128,6 +129,7 @@ def dwarf_mine_factory(x_location: int, depth: int) -> List[Room]:
     room2 = Room(PVector(x_location, depth))
     room2.name = "Mine"
     room2.color = DWARF
+    room2.target = target_mineral
     room2.contents = Entity("Treasure", room2, TREASURE)
     sites.append(room2)
 
@@ -211,7 +213,7 @@ def age_of_civilization_setup():
                 x_location = WIDTH - FINGER
                 depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
 
-    new_locations += dwarf_mine_factory(x_location, depth)
+    new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
     return new_locations
 
 locations += create_primordial_age()
@@ -367,7 +369,6 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
         viable = is_viable(candidate, rooms, tunnels)
 
         # TO_DO: tunnel crossings aren't handled yet
-        # TO_DO: intersections with caverns aren't handled yet
 
         if viable:
             print("Candidate location is viable - adding room.")
@@ -426,6 +427,10 @@ if mine_start:
 
     print(f"{mine_start.get_all_connected_locations()}")
 
+    mines = [l for l in locations if l.name == "Mine"]
+    print(mines)
+    print(mines[0].target)
+
 def update() -> None:
     """Update game state once per frame."""
     for location in locations:
@@ -480,4 +485,44 @@ run()
 #
 # line segment intersection:
 #   see Stack Overflow 563198
+#
+# ---------------------------------------------
+# We should generalize the pattern for creating a cave/room so we 
+# get consistent behavior, and can work out things like collisions
+# in a uniform manner. Primordial age caves and the start of the
+# dwarf mine don't obey the rules laid down later.
+#
+# In particular we should lay down one cave/room at a time, and check
+# for collisions immediately. Then, if there is a connecting room to
+# be generated as part of the cluster, test the tunnel first, then
+# the new room.
+#
+# The compound creation functions should be broken up so we can
+# do just one location at a time.
+# 
+# Current steps (consolidated):
+# 1) get a coordinate to place the location
+#       get_random_underground_location()
+#       get_orbital_point()
+#       <determine x_location of mine>
+#       get_parent_room()
+#           get_candidate_room()
+# 2) set color
+# 3) set contents
+# 4) embellishments (tunnels)
+# 5) check for collisions/connections
+# 6) if part of complex, add another per step 1 and connect
+#
+# ---------------------------------------------
+# I'm contemplating compositing all the 'landscape' locations into a
+# single bitmap. Ideally the locations list should only contain Caverns
+# and Rooms.
+#
+# This meshes with the per-pixel ideas above. Treat every background image
+# pixel as a resource unit. Currently we have dirt, mithril, gold and water.
+#
+# We'd need to change all the code that interacts with those location's
+# coordinates. Drawing is easy - just draw the bitmap. For mine start, we 
+# could do ray-casting from the surface down until we strike a mineral. And 
+# so on.
 #
