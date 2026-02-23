@@ -31,6 +31,11 @@ class Stratum():
 strata = []
 strata.append(Stratum(150, (105,99,39)))
 strata.append(Stratum(250, (137,131,75)))
+strata.append(Stratum(350, (87,84,57)))
+strata.append(Stratum(450, (177,169,96)))
+strata.append(Stratum(550, (108,86,19)))
+strata.append(Stratum(650, (125,117,93)))
+strata.append(Stratum(750, (45,48,19)))
 
 def update() -> None:
     """Update game state once per frame."""
