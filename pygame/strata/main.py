@@ -23,6 +23,10 @@ class Stratum():
         self.points.append((WIDTH,HEIGHT))
         self.points.append((0,HEIGHT))
 
+    def draw(self) -> None:
+        """Draw the Stratum to the screen once per frame."""
+        screen.draw.polygon(self.points, self.color, 0)
+
 
 strata = []
 strata.append(Stratum(150, (105,99,39)))
@@ -35,8 +39,7 @@ def draw() -> None:
     """Draw the game screen once per frame."""
     screen.fill((80,80,220))
 
-    screen.draw.polygon(strata[0].points, strata[0].color, 0)
-    screen.draw.polygon(strata[1].points, strata[1].color, 0)
-
+    for stratum in strata:
+        stratum.draw()
 
 run()
