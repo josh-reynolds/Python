@@ -441,10 +441,7 @@ if mine_start:
     print(f"{mine_start.get_all_connected_locations()}")
 
     mines = [l for l in locations if l.name == "Mine"]
-    print(mines)
-
     deposit = mines[0].target
-    print(deposit)
 
     if isinstance(deposit, GoldVein):
         direction = choice([-1,1])
@@ -453,7 +450,11 @@ if mine_start:
         locations.append(Room(PVector(new_x, new_y), color=(255,0,0)))
 
     if isinstance(deposit, Mithril):
-        pass
+        # TO_DO: only works when the mine is centered on the deposit
+        #        need a better approach here
+        to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
+        new_location = PVector.sub(mines[0].coordinate, to_corner)
+        locations.append(Room(new_location, color=(255,0,0)))
 
 
 def update() -> None:

@@ -37,8 +37,8 @@ class Mithril():
         self.radius = FINGER // 2
         self.corner = nearest_corner(self.center)
 
-        corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
-        self.angle = math.radians(corner_vector.heading()) + math.pi
+        self.corner_vector = PVector.normalize(PVector.sub(self.center, self.corner))
+        self.angle = math.radians(self.corner_vector.heading()) + math.pi
 
         self.name = "Mithril"
 
