@@ -1,6 +1,6 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
-from random import randint, choice
+from random import randint, choice, shuffle
 from typing import List, Tuple
 from engine import screen, run
 from pvector import PVector
@@ -8,7 +8,7 @@ from intersections import rect_segment_intersects
 from location import Location, Cavern, Room
 from entity import Entity
 from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
-from landscape import UndergroundRiver
+from landscape import UndergroundRiver, Stratum
 # pylint: disable=W0611
 # W0611: Unused TITLE imported from constants (unused-import)
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
@@ -215,6 +215,19 @@ def age_of_civilization_setup():
 
     new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
     return new_locations
+
+colors = [(105,99,39), 
+          (137,131,75), 
+          (87,84,57), 
+          (177,169,96), 
+          (108,86,19), 
+          (125,117,93), 
+          (45,48,19)]
+shuffle(colors)
+
+strata = []
+for i in range(6):
+    strata.append(Stratum(150 + i * 120, colors[i]))
 
 locations += create_primordial_age()
 locations += age_of_civilization_setup()
@@ -440,7 +453,9 @@ def draw() -> None:
     """Draw the game screen once per frame."""
     # pylint: disable=E1121
     # E1121: Too many positional arguments for method call
-    screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
+    #screen.draw.rect(0, GROUND_LEVEL, WIDTH, HEIGHT, GROUND, 0)
+    for stratum in strata:
+        stratum.draw()
 
     for location in locations:
         location.draw()

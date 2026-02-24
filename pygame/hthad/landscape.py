@@ -1,6 +1,7 @@
 """Contains classes to represent landscape features."""
 import math
 from random import randint
+from typing import Tuple
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
@@ -142,3 +143,23 @@ class UndergroundRiver():
                              8)
         if SHOW_LABELS:
             screen.draw.text(self.name, pos=(self.vertices[0].x, self.vertices[0].y))
+
+class Stratum():
+    """Represents a geologic layer underground."""
+
+    def __init__(self, depth: int, color: Tuple[int,int,int]) -> None:
+        """Create an instance of a Stratum object."""
+        self.depth = depth
+        self.color = color
+
+        self.points = []
+        self.points.append((0,self.depth))
+        for i in range(5):
+            self.points.append(((i+1) * WIDTH//5, self.depth + randint(-10,10)))
+        self.points.append((WIDTH,self.depth))
+        self.points.append((WIDTH,HEIGHT))
+        self.points.append((0,HEIGHT))
+
+    def draw(self) -> None:
+        """Draw the Stratum to the screen once per frame."""
+        screen.draw.polygon(self.points, self.color, 0)
