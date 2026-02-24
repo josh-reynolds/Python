@@ -51,7 +51,6 @@ class Mithril():
         translate(self.center.x, self.center.y)
         rotate(self.angle)
         equilateral_triangle(self.radius, MITHRIL, 0)
-        equilateral_triangle(self.radius, BORDER, 2)
         pop_matrix()
 
         if SHOW_LABELS:
