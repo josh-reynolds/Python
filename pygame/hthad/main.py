@@ -447,14 +447,22 @@ if mine_start:
         direction = choice([-1,1])
         new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
         new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-        locations.append(Room(PVector(new_x, new_y), color=(255,0,0)))
+        new_room = Room(PVector(new_x, new_y))
+        new_room.color = mines[0].color
+        mines[0].add_neighbor(new_room)
+        new_room.contents = Entity("Treasure", new_room, TREASURE)
+        locations.append(new_room)
 
     if isinstance(deposit, Mithril):
         # TO_DO: only works when the mine is centered on the deposit
         #        need a better approach here
         to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
         new_location = PVector.sub(mines[0].coordinate, to_corner)
-        locations.append(Room(new_location, color=(255,0,0)))
+        new_room = Room(new_location)
+        new_room.color = mines[0].color
+        mines[0].add_neighbor(new_room)
+        new_room.contents = Entity("Treasure", new_room, TREASURE)
+        locations.append(new_room)
 
 
 def update() -> None:
