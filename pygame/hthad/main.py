@@ -442,7 +442,19 @@ if mine_start:
 
     mines = [l for l in locations if l.name == "Mine"]
     print(mines)
-    print(mines[0].target)
+
+    deposit = mines[0].target
+    print(deposit)
+
+    if isinstance(deposit, GoldVein):
+        direction = choice([-1,1])
+        new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
+        new_y = get_y_at_x(deposit.left, deposit.right, new_x)
+        locations.append(Room(PVector(new_x, new_y), color=(255,0,0)))
+
+    if isinstance(deposit, Mithril):
+        pass
+
 
 def update() -> None:
     """Update game state once per frame."""
