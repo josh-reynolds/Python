@@ -1,5 +1,5 @@
 """Draw randomly varying layers across the screen."""
-from random import randint
+from random import randint, shuffle
 from typing import Tuple
 from engine import screen, run
 # pylint: disable=W0611
@@ -27,15 +27,18 @@ class Stratum():
         """Draw the Stratum to the screen once per frame."""
         screen.draw.polygon(self.points, self.color, 0)
 
+colors = [(105,99,39), 
+          (137,131,75), 
+          (87,84,57), 
+          (177,169,96), 
+          (108,86,19), 
+          (125,117,93), 
+          (45,48,19)]
+shuffle(colors)
 
 strata = []
-strata.append(Stratum(150, (105,99,39)))
-strata.append(Stratum(250, (137,131,75)))
-strata.append(Stratum(350, (87,84,57)))
-strata.append(Stratum(450, (177,169,96)))
-strata.append(Stratum(550, (108,86,19)))
-strata.append(Stratum(650, (125,117,93)))
-strata.append(Stratum(750, (45,48,19)))
+for i in range(7):
+    strata.append(Stratum(150 + i * 100, colors[i]))
 
 def update() -> None:
     """Update game state once per frame."""
