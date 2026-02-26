@@ -165,7 +165,7 @@ class Location():
         return locations
 
     def get_all_matching_entities(self, entity_name) -> List:
-        """Use BFS to gather all Entities reachable from self."""
+        """Use BFS to gather all matching Entities reachable from self."""
         entities = []
         visited = [self]
         queue = [self]
@@ -174,6 +174,29 @@ class Location():
         while queue:
             current_location = queue.pop(0)
             if current_location.contents and current_location.contents.name == entity_name:
+                entities.append(current_location.contents)
+
+            for neighbor in current_location.neighbors:
+                if not neighbor.visited:
+                    visited.append(neighbor)
+                    queue.append(neighbor)
+                    neighbor.visited = True
+
+        for location in visited:
+            location.visited = False
+
+        return entities
+
+    def get_all_entities(self) -> List:
+        """Use BFS to gather all Entities reachable from self."""
+        entities = []
+        visited = [self]
+        queue = [self]
+        self.visited = True
+
+        while queue:
+            current_location = queue.pop(0)
+            if current_location.contents:
                 entities.append(current_location.contents)
 
             for neighbor in current_location.neighbors:

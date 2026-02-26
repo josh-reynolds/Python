@@ -571,3 +571,19 @@ run()
 # could do ray-casting from the surface down until we strike a mineral. And 
 # so on.
 #
+# ---------------------------------------------
+# How to handle interaction between the groups? I _think_ there's a pretty
+# basic one-for-one attrition when groups meet, with only the larger
+# group remaining. Probably some nuance, but that's a good place to start.
+#
+# So how about each update pass we check all entities to see if they can
+# reach another team, then kill off the losers? We need:
+#
+# Tally all creature entities overall
+# Clump together into groups (same name in same graph)
+# Identify any graphs containing more than one group
+# Eliminate entities accordingly
+#
+# By this logic, a graph shouldn't ever have more than two groups, right?
+# Could there be some odd timing where this happens? A newly-added room
+# tunnels into two different graphs simultaneously?
