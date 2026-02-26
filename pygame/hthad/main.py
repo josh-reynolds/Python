@@ -33,6 +33,14 @@ def create_location(location_type: Callable, coordinate: PVector) -> Location:
     check_for_connections(new_location)
     return new_location
 
+def get_all_entities() -> List[Entity]:
+    """Return a list of all Entities on the map."""
+    entities = []
+    for location in locations:
+        if isinstance(location, Location) and location.contents:
+            entities.append(location.contents)
+    return entities
+
 def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
     coordinate = get_random_underground_location()
@@ -234,12 +242,12 @@ def age_of_civilization_setup():
     new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
     return new_locations
 
-colors = [(105,99,39), 
-          (137,131,75), 
-          (87,84,57), 
-          (177,169,96), 
-          (108,86,19), 
-          (125,117,93), 
+colors = [(105,99,39),
+          (137,131,75),
+          (87,84,57),
+          (177,169,96),
+          (108,86,19),
+          (125,117,93),
           (45,48,19)]
 shuffle(colors)
 
@@ -473,6 +481,8 @@ if mine_start:
         new_room.contents = Entity("Treasure", new_room, TREASURE)
         locations.append(new_room)
 
+print(get_all_entities())
+
 
 def update() -> None:
     """Update game state once per frame."""
@@ -532,7 +542,7 @@ run()
 #   see Stack Overflow 563198
 #
 # ---------------------------------------------
-# We should generalize the pattern for creating a cave/room so we 
+# We should generalize the pattern for creating a cave/room so we
 # get consistent behavior, and can work out things like collisions
 # in a uniform manner. Primordial age caves and the start of the
 # dwarf mine don't obey the rules laid down later.
@@ -544,7 +554,7 @@ run()
 #
 # The compound creation functions should be broken up so we can
 # do just one location at a time.
-# 
+#
 # Current steps (consolidated):
 # 1) get a coordinate to place the location
 #       get_random_underground_location()
@@ -567,8 +577,8 @@ run()
 # pixel as a resource unit. Currently we have dirt, mithril, gold and water.
 #
 # We'd need to change all the code that interacts with those location's
-# coordinates. Drawing is easy - just draw the bitmap. For mine start, we 
-# could do ray-casting from the surface down until we strike a mineral. And 
+# coordinates. Drawing is easy - just draw the bitmap. For mine start, we
+# could do ray-casting from the surface down until we strike a mineral. And
 # so on.
 #
 # ---------------------------------------------
