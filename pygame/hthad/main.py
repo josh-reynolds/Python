@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice, shuffle
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 from engine import screen, run
 from pvector import PVector
 from intersections import rect_segment_intersects
@@ -16,6 +16,10 @@ from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 
 locations = []
+
+def create_location(location_type: Callable, coordinate: PVector) -> Location:
+    """Create a new location and add to the list."""
+    return location_type(coordinate)
 
 def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
@@ -114,19 +118,19 @@ def dwarf_mine_factory(x_location: int, depth: int,
     """Generate the start of a Dwarf mine."""
     sites = []
 
-    room0 = Room(PVector(x_location, GROUND_LEVEL))
+    room0 = create_location(Room, PVector(x_location, GROUND_LEVEL))
     room0.name = "Start"
     room0.color = DWARF
     sites.append(room0)
 
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-    room1 = Room(PVector(x_location, half_height))
+    room1 = create_location(Room, PVector(x_location, half_height))
     room1.name = "Barracks"
     room1.color = DWARF
     room1.contents = Entity("Dwarves", room1, CREATURE)
     sites.append(room1)
 
-    room2 = Room(PVector(x_location, depth))
+    room2 = create_location(Room, PVector(x_location, depth))
     room2.name = "Mine"
     room2.color = DWARF
     room2.target = target_mineral
@@ -323,7 +327,7 @@ directions = [PVector(ROOM_SPACING,0),
 def add_candidate(name: str, parent: Location, direction: int) -> Location:
     """Add a candidate location to the locations list."""
     candidate_location = PVector.add(parent.coordinate, directions[direction])
-    room_to_add = Room(candidate_location)
+    room_to_add = create_location(Room, candidate_location)
     room_to_add.name = name
     locations.append(room_to_add)
     return room_to_add
@@ -447,7 +451,7 @@ if mine_start:
         direction = choice([-1,1])
         new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
         new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-        new_room = Room(PVector(new_x, new_y))
+        new_room = create_location(Room, PVector(new_x, new_y))
         new_room.color = mines[0].color
         mines[0].add_neighbor(new_room)
         new_room.contents = Entity("Treasure", new_room, TREASURE)
@@ -458,7 +462,7 @@ if mine_start:
         #        need a better approach here
         to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
         new_location = PVector.sub(mines[0].coordinate, to_corner)
-        new_room = Room(new_location)
+        new_room = create_location(Room, new_location)
         new_room.color = mines[0].color
         mines[0].add_neighbor(new_room)
         new_room.contents = Entity("Treasure", new_room, TREASURE)
