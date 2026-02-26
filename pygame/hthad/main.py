@@ -17,9 +17,21 @@ from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 
 locations = []
 
+def check_for_connections(room: Location) -> None:
+    """Test whether a newly-added room collides with an existing one, and link up if so."""
+    cavities = [l for l in locations if isinstance(l, Location)]
+    if room in cavities:
+        cavities.remove(room)
+    for location in cavities:
+        if room.intersects(location):
+            print(f"Intersection detected: {room} - {location}")
+            room.add_neighbor(location)
+
 def create_location(location_type: Callable, coordinate: PVector) -> Location:
     """Create a new location and add to the list."""
-    return location_type(coordinate)
+    new_location = location_type(coordinate)
+    check_for_connections(new_location)
+    return new_location
 
 def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
@@ -406,15 +418,6 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
         attempt += 1
 
     return None
-
-def check_for_connections(room: Location) -> None:
-    """Test whether a newly-added room collides with an existing one, and link up if so."""
-    cavities = [l for l in locations if isinstance(l, Location)]
-    cavities.remove(room)
-    for location in cavities:
-        if room.intersects(location):
-            print(f"Intersection detected: {room} - {location}")
-            room.add_neighbor(location)
 
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
