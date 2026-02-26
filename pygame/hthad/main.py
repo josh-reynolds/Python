@@ -25,7 +25,7 @@ def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
     coordinate = get_random_underground_location()
 
-    cavern = Cavern(coordinate)
+    cavern = create_location(Cavern, coordinate)
     cavern.color = CAVERN
 
     detail = randint(1,6)
@@ -58,21 +58,21 @@ def cave_complex_factory() -> List[Cavern]:
     sites = []
 
     first_point = get_random_underground_location()
-    cavern1 = Cavern(first_point)
+    cavern1 = create_location(Cavern, first_point)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Primordial Beasts 1", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
-    cavern2 = Cavern(second_point)
+    cavern2 = create_location(Cavern, second_point)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Primordial Beasts 1", cavern2, CREATURE)
     sites.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
-    cavern3 = Cavern(third_point)
+    cavern3 = create_location(Cavern, third_point)
     cavern3.color = CAVERN
     cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
     sites.append(cavern3)
@@ -89,14 +89,14 @@ def ancient_wyrm_factory() -> List[Cavern]:
     sites = []
 
     first_point = get_random_underground_location()
-    cavern1 = Cavern(first_point)
+    cavern1 = create_location(Cavern, first_point)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Ancient Wyrm 1", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
-    cavern2 = Cavern(second_point)
+    cavern2 = create_location(Cavern, second_point)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
     sites.append(cavern2)
