@@ -7,7 +7,6 @@ from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilatera
 from engine import screen
 from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT, BEAD
 from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS, MARGIN, CAVERN, WATER
-from location import Cavern
 
 def nearest_corner(point: PVector) -> PVector:
     """Return the nearest screen corner to the given point."""
@@ -109,7 +108,7 @@ class UndergroundRiver():
                 case 5 | 6:
                     current_y -= STRATA_HEIGHT
                 case 7 | 8:
-                    self.caves.append(Cavern(PVector(current_x, current_y), CAVERN, None, False, 0))
+                    self.caves.append(PVector(current_x, current_y))
                 case 9:
                     current_x -= FINGER
                     current_y += STRATA_HEIGHT // 2
