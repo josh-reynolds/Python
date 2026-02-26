@@ -172,7 +172,9 @@ def create_primordial_age():
                 river = UndergroundRiver()
                 new_locations.append(river)
                 for coord in river.caves:
-                    new_locations.append(Cavern(coord, CAVERN, None, False, 0))
+                    new_cavern = create_location(Cavern, coord)
+                    new_cavern.color = CAVERN
+                    new_locations.append(new_cavern)
             case 6:
                 new_locations += ancient_wyrm_factory()
             # TO_DO: there is an additional choice for natural disasters,
