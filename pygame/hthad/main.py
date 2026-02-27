@@ -485,6 +485,10 @@ print(get_all_entities())
 creatures = [e for e in get_all_entities() if e.color == CREATURE]
 print(creatures)
 
+for location in locations:
+    if isinstance(location, Location):
+        reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
+        print(f"{location} => {reachables}")
 
 def update() -> None:
     """Update game state once per frame."""
