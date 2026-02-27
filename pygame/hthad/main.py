@@ -266,70 +266,6 @@ locations += age_of_civilization_setup()
 # for each treasure gathered, draw a barracks and put a dwarf creature in it,
 # away from the mines
 
-# TEMPORARy GRAPHS for testing
-#room0 = Room(PVector(250,200))
-#room0.name = "Start"
-#room0.color = DWARF
-#locations.append(room0)
-#
-#room1 = Room(PVector(250,300))
-#room1.name = "Barracks"
-#room1.color = DWARF
-#room1.contents = Entity("Dwarves", room1, CREATURE)
-#locations.append(room1)
-#
-#room2 = Room(PVector(250,400))
-#room2.name = "Mine 1"
-#room2.color = DWARF
-#room2.contents = Entity("Treasure", room2, TREASURE)
-#locations.append(room2)
-#
-#room3 = Room(PVector(350,400))
-#room3.name = "Mine 2"
-#room3.color = DWARF
-#room3.contents = Entity("Treasure", room3, TREASURE)
-#locations.append(room3)
-#
-#room4 = Room(PVector(450,400))
-#room4.name = "Barracks"
-#room4.color = DWARF
-#room4.contents = Entity("Dwarves", room4, CREATURE)
-#locations.append(room4)
-#
-#room5 = Room(PVector(450,300))
-#room5.name = "Treasure Room"
-#room5.color = DWARF
-#room5.contents = Entity("Dwarven Treasure", room5, TREASURE)
-#locations.append(room5)
-#
-#room6 = Room(PVector(550,400))
-#room6.name = "Barracks"
-#room6.color = DWARF
-#room6.contents = Entity("Dwarves", room6, CREATURE)
-#locations.append(room6)
-#
-#room7 = Room(PVector(450,500))
-#room7.name = "Barracks"
-#room7.color = DWARF
-#room7.contents = Entity("Dwarves", room7, CREATURE)
-#locations.append(room7)
-#
-#room8 = Room(PVector(550,300))
-#room8.name = "Barracks"
-#room8.color = DWARF
-#room8.contents = Entity("Dwarves", room8, CREATURE)
-#locations.append(room8)
-#
-#room0.add_neighbor(room1)   # start -> barracks
-#room1.add_neighbor(room2)   # barracks -> mine 1
-#room1.add_neighbor(room3)   # barracks -> mine 2
-#room2.add_neighbor(room3)   # mine 1 -> mine 2
-#room3.add_neighbor(room4)   # mine 2 -> barracks
-#room4.add_neighbor(room5)   # barracks -> treasure room
-#room4.add_neighbor(room6)   # barracks -> barracks
-#room4.add_neighbor(room7)   # barracks -> barracks
-#room5.add_neighbor(room8)   # treasure room -> barracks
-
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
     mine_start = mine_start[0]
@@ -490,6 +426,27 @@ for location in locations:
         reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
         print(f"{location} => {reachables}")
 
+
+class PrimordialAge():
+    """Manages creation of the landscape and entities during the Primordial Age."""
+
+    def __init__() -> None:
+        """Create an instance of a PrimordialAge object."""
+
+    def update() -> None:
+        """Update the state of the PrimordialAge."""
+
+
+class CivilizationAge():
+    """Manages creation of the landscape and entities during the Age of Civilization."""
+
+    def __init__() -> None:
+        """Create an instance of a CivilizationAge object."""
+
+    def update() -> None:
+        """Update the state of the CivilizationAge."""
+
+
 def update() -> None:
     """Update game state once per frame."""
     for location in locations:
@@ -603,3 +560,18 @@ run()
 # By this logic, a graph shouldn't ever have more than two groups, right?
 # Could there be some odd timing where this happens? A newly-added room
 # tunnels into two different graphs simultaneously?
+#
+# ---------------------------------------------
+# Another thought - it would be good to show the rooms/caves being added
+# one by one. Technically they are, but it's too fast to see.
+#
+# I think we need to leverage the update() function. Use a counter to
+# slow things down (so we invoke object.update() every 10 frames or
+# whatever). At least two pulses I can think of right now:
+#
+# * Creation of new rooms
+# * Interaction between creature groups
+#
+# So we'll need something to receive the update pulses. How about a class
+# (or classes) to represent each game phase. Let's start with Primordial.
+
