@@ -381,12 +381,12 @@ class CivilizationAge():
         new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
         return new_locations
 
-counter = 0
+counter = 1
 current_stage = PrimordialAge()
 next_stage = CivilizationAge()
 
 locations += current_stage.create_primordial_age()
-locations += next_stage.age_of_civilization_setup()
+#locations += next_stage.age_of_civilization_setup()
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
@@ -454,12 +454,17 @@ for location in locations:
     if isinstance(location, Location):
         reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
         print(f"{location} => {reachables}")
+
+done = False
+
 def update() -> None:
     """Update game state once per frame."""
-    global counter
+    global counter, locations
 
-    if counter % 100 == 0:
+    if counter % 1000 == 0:
         current_stage.update()
+        if not done:
+            locations += next_stage.age_of_civilization_setup()
 
     for location in locations:
         location.update()
