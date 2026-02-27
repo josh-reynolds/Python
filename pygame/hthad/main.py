@@ -173,34 +173,6 @@ def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
 
     return slope * x_coord + intercept
 
-# Primordial Age events
-def create_primordial_age():
-    """Generating Primordial Age map locations."""
-    new_locations = []
-    for _ in range(3):
-        check = randint(0,6)
-        match check:
-            case 0:
-                new_locations.append(Mithril())
-            case 1 | 2:
-                add_caverns()
-            case 3:
-                new_locations.append(GoldVein())
-            case 4:
-                new_locations += cave_complex_factory()
-            case 5:
-                river = UndergroundRiver()
-                new_locations.append(river)
-                for coord in river.caves:
-                    new_cavern = create_location(Cavern, coord)
-                    new_cavern.color = CAVERN
-                    new_locations.append(new_cavern)
-            case 6:
-                new_locations += ancient_wyrm_factory()
-            # TO_DO: there is an additional choice for natural disasters,
-            #        implement when we come to that rule
-    return new_locations
-
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
 def age_of_civilization_setup():
@@ -255,8 +227,6 @@ strata = []
 for i in range(6):
     strata.append(Stratum(150 + i * 120, colors[i]))
 
-locations += create_primordial_age()
-locations += age_of_civilization_setup()
 
 # TO_DO: need to keep track of yearly events
 
@@ -266,9 +236,6 @@ locations += age_of_civilization_setup()
 # for each treasure gathered, draw a barracks and put a dwarf creature in it,
 # away from the mines
 
-mine_start = [r for r in locations if r.name == "Start"]
-if mine_start:
-    mine_start = mine_start[0]
 
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
@@ -363,6 +330,67 @@ def get_candidate_room(parent: Location, room_name: str) -> Location | None:
 
     return None
 
+
+class PrimordialAge():
+    """Manages creation of the landscape and entities during the Primordial Age."""
+
+    def __init__(self) -> None:
+        """Create an instance of a PrimordialAge object."""
+
+    def update(self) -> None:
+        """Update the state of the PrimordialAge."""
+        print("PrimordialAge.update()")
+
+    # Primordial Age events
+    def create_primordial_age(self):
+        """Generating Primordial Age map locations."""
+        new_locations = []
+        for _ in range(3):
+            check = randint(0,6)
+            match check:
+                case 0:
+                    new_locations.append(Mithril())
+                case 1 | 2:
+                    add_caverns()
+                case 3:
+                    new_locations.append(GoldVein())
+                case 4:
+                    new_locations += cave_complex_factory()
+                case 5:
+                    river = UndergroundRiver()
+                    new_locations.append(river)
+                    for coord in river.caves:
+                        new_cavern = create_location(Cavern, coord)
+                        new_cavern.color = CAVERN
+                        new_locations.append(new_cavern)
+                case 6:
+                    new_locations += ancient_wyrm_factory()
+                # TO_DO: there is an additional choice for natural disasters,
+                #        implement when we come to that rule
+        return new_locations
+
+
+class CivilizationAge():
+    """Manages creation of the landscape and entities during the Age of Civilization."""
+
+    def __init__(self) -> None:
+        """Create an instance of a CivilizationAge object."""
+
+    def update(self) -> None:
+        """Update the state of the CivilizationAge."""
+        print("CivilizationAge.update()")
+
+
+counter = 0
+current_stage = PrimordialAge()
+
+locations += current_stage.create_primordial_age()
+locations += age_of_civilization_setup()
+
+mine_start = [r for r in locations if r.name == "Start"]
+if mine_start:
+    mine_start = mine_start[0]
+
 if mine_start:
     treasures = mine_start.get_all_matching_entities("Treasure")
 
@@ -425,33 +453,6 @@ for location in locations:
     if isinstance(location, Location):
         reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
         print(f"{location} => {reachables}")
-
-
-class PrimordialAge():
-    """Manages creation of the landscape and entities during the Primordial Age."""
-
-    def __init__(self) -> None:
-        """Create an instance of a PrimordialAge object."""
-
-    def update(self) -> None:
-        """Update the state of the PrimordialAge."""
-        print("PrimordialAge.update()")
-
-
-class CivilizationAge():
-    """Manages creation of the landscape and entities during the Age of Civilization."""
-
-    def __init__(self) -> None:
-        """Create an instance of a CivilizationAge object."""
-
-    def update(self) -> None:
-        """Update the state of the CivilizationAge."""
-        print("CivilizationAge.update()")
-
-
-counter = 0
-current_stage = PrimordialAge()
-
 def update() -> None:
     """Update game state once per frame."""
     global counter
