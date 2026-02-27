@@ -482,6 +482,8 @@ if mine_start:
         locations.append(new_room)
 
 print(get_all_entities())
+creatures = [e for e in get_all_entities() if e.color == CREATURE]
+print(creatures)
 
 
 def update() -> None:
