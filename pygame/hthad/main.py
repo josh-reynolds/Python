@@ -60,9 +60,9 @@ def natural_cavern_factory() -> Cavern:
         case 4:
             pass
         case 5:
-            cavern.contents = Entity("Primordial Beasts 1", cavern, CREATURE)
+            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
         case 6:
-            cavern.contents = Entity("Fate 1", cavern, EVENT)
+            cavern.contents = Entity("Fate", cavern, EVENT)
 
     return cavern
 
@@ -80,21 +80,21 @@ def cave_complex_factory() -> List[Cavern]:
     first_point = get_random_underground_location()
     cavern1 = create_location(Cavern, first_point)
     cavern1.color = CAVERN
-    cavern1.contents = Entity("Primordial Beasts 1", cavern1, CREATURE)
+    cavern1.contents = Entity("Primordial Beasts", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
     cavern2 = create_location(Cavern, second_point)
     cavern2.color = CAVERN
-    cavern2.contents = Entity("Primordial Beasts 1", cavern2, CREATURE)
+    cavern2.contents = Entity("Primordial Beasts", cavern2, CREATURE)
     sites.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
     cavern3 = create_location(Cavern, third_point)
     cavern3.color = CAVERN
-    cavern3.contents = Entity("Primordial Beasts 1", cavern3, CREATURE)
+    cavern3.contents = Entity("Primordial Beasts", cavern3, CREATURE)
     sites.append(cavern3)
 
     sites[0].add_neighbor(sites[1])
@@ -111,14 +111,14 @@ def ancient_wyrm_factory() -> List[Cavern]:
     first_point = get_random_underground_location()
     cavern1 = create_location(Cavern, first_point)
     cavern1.color = CAVERN
-    cavern1.contents = Entity("Ancient Wyrm 1", cavern1, CREATURE)
+    cavern1.contents = Entity("Ancient Wyrm", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
     cavern2 = create_location(Cavern, second_point)
     cavern2.color = CAVERN
-    cavern2.contents = Entity("Treasure 1", cavern2, TREASURE)
+    cavern2.contents = Entity("Treasure", cavern2, TREASURE)
     sites.append(cavern2)
 
     sites[0].add_neighbor(sites[1])
