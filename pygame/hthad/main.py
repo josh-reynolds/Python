@@ -173,46 +173,6 @@ def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
 
     return slope * x_coord + intercept
 
-# Age of Civilization
-# TO_DO: implementing Dwarves first, Dark Elves to come later
-def age_of_civilization_setup():
-    """Generating starting setup for the Age of Civilization map locations."""
-    new_locations = []
-
-    # Dwarves
-    has_minerals = any(isinstance(l, (Mithril, GoldVein)) for l in locations)
-    if not has_minerals:
-        print("Adding gold vein")
-        new_locations.append(GoldVein())
-
-    # pick a spot on the surface above a gold vein or mithral deposit
-    minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
-    target_mineral = choice(minerals + new_locations)
-    # TO_DO: alternatively, choose the mineral closest to the surface
-
-    x_location = 0
-    depth = 0
-    if isinstance(target_mineral, Mithril):
-        x_location = target_mineral.center.x
-        depth = target_mineral.center.y
-
-    if isinstance(target_mineral, GoldVein):
-        if target_mineral.left.y < target_mineral.right.y:
-            x_location = FINGER
-            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-        elif target_mineral.right.y < target_mineral.left.y:
-            x_location = WIDTH - FINGER
-            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-        else:
-            if randint(0,1) == 9:
-                x_location = FINGER
-                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-            else:
-                x_location = WIDTH - FINGER
-                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-
-    new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
-    return new_locations
 
 colors = [(105,99,39),
           (137,131,75),
@@ -380,12 +340,53 @@ class CivilizationAge():
         """Update the state of the CivilizationAge."""
         print("CivilizationAge.update()")
 
+    # Age of Civilization
+    # TO_DO: implementing Dwarves first, Dark Elves to come later
+    def age_of_civilization_setup(self):
+        """Generating starting setup for the Age of Civilization map locations."""
+        new_locations = []
+
+        # Dwarves
+        has_minerals = any(isinstance(l, (Mithril, GoldVein)) for l in locations)
+        if not has_minerals:
+            print("Adding gold vein")
+            new_locations.append(GoldVein())
+
+        # pick a spot on the surface above a gold vein or mithral deposit
+        minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
+        target_mineral = choice(minerals + new_locations)
+        # TO_DO: alternatively, choose the mineral closest to the surface
+
+        x_location = 0
+        depth = 0
+        if isinstance(target_mineral, Mithril):
+            x_location = target_mineral.center.x
+            depth = target_mineral.center.y
+
+        if isinstance(target_mineral, GoldVein):
+            if target_mineral.left.y < target_mineral.right.y:
+                x_location = FINGER
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+            elif target_mineral.right.y < target_mineral.left.y:
+                x_location = WIDTH - FINGER
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+            else:
+                if randint(0,1) == 9:
+                    x_location = FINGER
+                    depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+                else:
+                    x_location = WIDTH - FINGER
+                    depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+
+        new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
+        return new_locations
 
 counter = 0
 current_stage = PrimordialAge()
+next_stage = CivilizationAge()
 
 locations += current_stage.create_primordial_age()
-locations += age_of_civilization_setup()
+locations += next_stage.age_of_civilization_setup()
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
