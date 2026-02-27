@@ -430,27 +430,39 @@ for location in locations:
 class PrimordialAge():
     """Manages creation of the landscape and entities during the Primordial Age."""
 
-    def __init__() -> None:
+    def __init__(self) -> None:
         """Create an instance of a PrimordialAge object."""
 
-    def update() -> None:
+    def update(self) -> None:
         """Update the state of the PrimordialAge."""
+        print("PrimordialAge.update()")
 
 
 class CivilizationAge():
     """Manages creation of the landscape and entities during the Age of Civilization."""
 
-    def __init__() -> None:
+    def __init__(self) -> None:
         """Create an instance of a CivilizationAge object."""
 
-    def update() -> None:
+    def update(self) -> None:
         """Update the state of the CivilizationAge."""
+        print("CivilizationAge.update()")
 
+
+counter = 0
+current_stage = PrimordialAge()
 
 def update() -> None:
     """Update game state once per frame."""
+    global counter
+
+    if counter % 100 == 0:
+        current_stage.update()
+
     for location in locations:
         location.update()
+
+    counter += 1
 
 def draw() -> None:
     """Draw the game screen once per frame."""
