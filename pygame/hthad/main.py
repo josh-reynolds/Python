@@ -333,6 +333,29 @@ class PrimordialAge():
         """Return whether the PrimodialAge has completed or not."""
         return self.rolls > 2
 
+def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, int]:
+    """Determine where to start the dwarf mine.
+
+    Returns a tuple of (x_location, depth).
+    """
+    if isinstance(target_mineral, Mithril):
+        return (target_mineral.center.x, target_mineral.center.y)
+
+    if isinstance(target_mineral, GoldVein):
+        if target_mineral.left.y < target_mineral.right.y:
+            x_location = FINGER
+            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+        elif target_mineral.right.y < target_mineral.left.y:
+            x_location = WIDTH - FINGER
+            depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+        else:
+            if randint(0,1) == 9:
+                x_location = FINGER
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+            else:
+                x_location = WIDTH - FINGER
+                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+
 
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
@@ -342,6 +365,7 @@ class CivilizationAge():
     def __init__(self) -> None:
         """Create an instance of a CivilizationAge object."""
         self.done = False
+        self.step = 0
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -352,6 +376,12 @@ class CivilizationAge():
             print("Adding gold vein")
             new_locations.append(GoldVein())
             return new_locations
+
+        #x_location, depth = get_mine_start_location()
+        
+        match self.step:
+            case 0:
+                pass
 
         return new_locations
 
@@ -368,26 +398,7 @@ class CivilizationAge():
         target_mineral = choice(minerals + new_locations)
         # TO_DO: alternatively, choose the mineral closest to the surface
 
-        x_location = 0
-        depth = 0
-        if isinstance(target_mineral, Mithril):
-            x_location = target_mineral.center.x
-            depth = target_mineral.center.y
-
-        if isinstance(target_mineral, GoldVein):
-            if target_mineral.left.y < target_mineral.right.y:
-                x_location = FINGER
-                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-            elif target_mineral.right.y < target_mineral.left.y:
-                x_location = WIDTH - FINGER
-                depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-            else:
-                if randint(0,1) == 9:
-                    x_location = FINGER
-                    depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
-                else:
-                    x_location = WIDTH - FINGER
-                    depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+        x_location, depth = get_mine_start_location(target_mineral)
 
         new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
         return new_locations
