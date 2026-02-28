@@ -301,41 +301,37 @@ class PrimordialAge():
     def update(self) -> Any:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
-        return True
+
+        new_locations = []
+
+        check = randint(0,6)
+        match check:
+            case 0:
+                new_locations.append(Mithril())
+            case 1 | 2:
+                add_caverns()
+            case 3:
+                new_locations.append(GoldVein())
+            case 4:
+                new_locations += cave_complex_factory()
+            case 5:
+                river = UndergroundRiver()
+                new_locations.append(river)
+                for coord in river.caves:
+                    new_cavern = create_location(Cavern, coord)
+                    new_cavern.color = CAVERN
+                    new_locations.append(new_cavern)
+            case 6:
+                new_locations += ancient_wyrm_factory()
+            # TO_DO: there is an additional choice for natural disasters,
+            #        implement when we come to that rule
+
+        self.rolls += 1
+        return new_locations
 
     def is_done(self) -> bool:
         """Return whether the PrimodialAge has completed or not."""
-        return self.rolls >= 2
-
-    # Primordial Age events
-    def create_primordial_age(self) -> List:
-        """Generating Primordial Age map locations."""
-        new_locations = []
-        for _ in range(3):
-            check = randint(0,6)
-            match check:
-                case 0:
-                    new_locations.append(Mithril())
-                case 1 | 2:
-                    add_caverns()
-                case 3:
-                    new_locations.append(GoldVein())
-                case 4:
-                    new_locations += cave_complex_factory()
-                case 5:
-                    river = UndergroundRiver()
-                    new_locations.append(river)
-                    for coord in river.caves:
-                        new_cavern = create_location(Cavern, coord)
-                        new_cavern.color = CAVERN
-                        new_locations.append(new_cavern)
-                case 6:
-                    new_locations += ancient_wyrm_factory()
-                # TO_DO: there is an additional choice for natural disasters,
-                #        implement when we come to that rule
-            self.rolls += 1
-
-        return new_locations
+        return self.rolls > 2
 
 
 class CivilizationAge():
@@ -397,9 +393,6 @@ class CivilizationAge():
 counter = 1
 current_stage = PrimordialAge()
 next_stage = CivilizationAge()
-
-locations += current_stage.create_primordial_age()
-#locations += next_stage.age_of_civilization_setup()
 
 mine_start = [r for r in locations if r.name == "Start"]
 if mine_start:
@@ -474,6 +467,7 @@ def update() -> None:
 
     # probably want to make the Ages into a FSM
     if counter % 500 == 0:
+        locations += current_stage.update()
         if current_stage.is_done():
             locations += next_stage.age_of_civilization_setup()
             current_stage = next_stage
