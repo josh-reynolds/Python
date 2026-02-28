@@ -297,9 +297,10 @@ class PrimordialAge():
     def __init__(self) -> None:
         """Create an instance of a PrimordialAge object."""
 
-    def update(self) -> None:
+    def update(self) -> bool:
         """Update the state of the PrimordialAge."""
         print("PrimordialAge.update()")
+        return True
 
     # Primordial Age events
     def create_primordial_age(self):
@@ -336,9 +337,10 @@ class CivilizationAge():
     def __init__(self) -> None:
         """Create an instance of a CivilizationAge object."""
 
-    def update(self) -> None:
+    def update(self) -> bool:
         """Update the state of the CivilizationAge."""
         print("CivilizationAge.update()")
+        return False
 
     # Age of Civilization
     # TO_DO: implementing Dwarves first, Dark Elves to come later
@@ -455,16 +457,16 @@ for location in locations:
         reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
         print(f"{location} => {reachables}")
 
-done = False
-
 def update() -> None:
     """Update game state once per frame."""
-    global counter, locations
+    global counter, locations, current_stage
 
-    if counter % 1000 == 0:
-        current_stage.update()
-        if not done:
+    # probably want to make the Ages into a FSM
+    if counter % 500 == 0:
+        done = current_stage.update()
+        if done:
             locations += next_stage.age_of_civilization_setup()
+            current_stage = next_stage
 
     for location in locations:
         location.update()
