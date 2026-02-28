@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice, shuffle
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, Any
 from engine import screen, run
 from pvector import PVector
 from intersections import rect_segment_intersects
@@ -296,14 +296,19 @@ class PrimordialAge():
 
     def __init__(self) -> None:
         """Create an instance of a PrimordialAge object."""
+        self.rolls = 0
 
-    def update(self) -> bool:
-        """Update the state of the PrimordialAge."""
+    def update(self) -> Any:
+        """Return the next generated map location."""
         print("PrimordialAge.update()")
         return True
 
+    def is_done(self) -> bool:
+        """Return whether the PrimodialAge has completed or not."""
+        return self.rolls >= 2
+
     # Primordial Age events
-    def create_primordial_age(self):
+    def create_primordial_age(self) -> List:
         """Generating Primordial Age map locations."""
         new_locations = []
         for _ in range(3):
@@ -328,6 +333,8 @@ class PrimordialAge():
                     new_locations += ancient_wyrm_factory()
                 # TO_DO: there is an additional choice for natural disasters,
                 #        implement when we come to that rule
+            self.rolls += 1
+
         return new_locations
 
 
@@ -337,9 +344,13 @@ class CivilizationAge():
     def __init__(self) -> None:
         """Create an instance of a CivilizationAge object."""
 
-    def update(self) -> bool:
-        """Update the state of the CivilizationAge."""
+    def update(self) -> Any:
+        """Return the next generated map location."""
         print("CivilizationAge.update()")
+        return False
+
+    def is_done(self) -> bool:
+        """Return whether the CivilizationAge has completed or not."""
         return False
 
     # Age of Civilization
@@ -463,8 +474,7 @@ def update() -> None:
 
     # probably want to make the Ages into a FSM
     if counter % 500 == 0:
-        done = current_stage.update()
-        if done:
+        if current_stage.is_done():
             locations += next_stage.age_of_civilization_setup()
             current_stage = next_stage
 
