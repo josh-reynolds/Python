@@ -1,7 +1,7 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 import math
 from random import randint, choice, shuffle
-from typing import List, Tuple, Callable, Any
+from typing import List, Tuple, Callable
 from engine import screen, run
 from pvector import PVector
 from intersections import rect_segment_intersects
@@ -298,7 +298,7 @@ class PrimordialAge():
         """Create an instance of a PrimordialAge object."""
         self.rolls = 0
 
-    def update(self) -> Any:
+    def update(self) -> List:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
 
@@ -334,32 +334,34 @@ class PrimordialAge():
         return self.rolls > 2
 
 
+# Age of Civilization
+# TO_DO: implementing Dwarves first, Dark Elves to come later
 class CivilizationAge():
     """Manages creation of the landscape and entities during the Age of Civilization."""
 
     def __init__(self) -> None:
         """Create an instance of a CivilizationAge object."""
+        self.done = False
 
-    def update(self) -> Any:
+    def update(self) -> List:
         """Return the next generated map location."""
         print("CivilizationAge.update()")
-        return False
+        new_locations = []
+
+        if not any(isinstance(l, (Mithril, GoldVein)) for l in locations):
+            print("Adding gold vein")
+            new_locations.append(GoldVein())
+            return new_locations
+
+        return new_locations
 
     def is_done(self) -> bool:
         """Return whether the CivilizationAge has completed or not."""
-        return False
+        return self.done
 
-    # Age of Civilization
-    # TO_DO: implementing Dwarves first, Dark Elves to come later
     def age_of_civilization_setup(self):
         """Generating starting setup for the Age of Civilization map locations."""
         new_locations = []
-
-        # Dwarves
-        has_minerals = any(isinstance(l, (Mithril, GoldVein)) for l in locations)
-        if not has_minerals:
-            print("Adding gold vein")
-            new_locations.append(GoldVein())
 
         # pick a spot on the surface above a gold vein or mithral deposit
         minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
