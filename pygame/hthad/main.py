@@ -338,8 +338,10 @@ def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, in
 
     Returns a tuple of (x_location, depth).
     """
+    x_location = depth = 0
     if isinstance(target_mineral, Mithril):
-        return (target_mineral.center.x, target_mineral.center.y)
+        x_location = target_mineral.center.x
+        depth = target_mineral.center.y
 
     if isinstance(target_mineral, GoldVein):
         if target_mineral.left.y < target_mineral.right.y:
@@ -355,6 +357,8 @@ def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, in
             else:
                 x_location = WIDTH - FINGER
                 depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
+
+    return (x_location, depth)
 
 
 # Age of Civilization
@@ -381,7 +385,15 @@ class CivilizationAge():
         
         match self.step:
             case 0:
-                pass
+                # pick a spot on the surface above a gold vein or mithral deposit
+                minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
+                target_mineral = choice(minerals + new_locations)
+                # TO_DO: alternatively, choose the mineral closest to the surface
+
+                x_location, depth = get_mine_start_location(target_mineral)
+
+                new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
+                return new_locations
 
         return new_locations
 
@@ -389,19 +401,6 @@ class CivilizationAge():
         """Return whether the CivilizationAge has completed or not."""
         return self.done
 
-    def age_of_civilization_setup(self):
-        """Generating starting setup for the Age of Civilization map locations."""
-        new_locations = []
-
-        # pick a spot on the surface above a gold vein or mithral deposit
-        minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
-        target_mineral = choice(minerals + new_locations)
-        # TO_DO: alternatively, choose the mineral closest to the surface
-
-        x_location, depth = get_mine_start_location(target_mineral)
-
-        new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
-        return new_locations
 
 counter = 1
 current_stage = PrimordialAge()
@@ -482,7 +481,6 @@ def update() -> None:
     if counter % 500 == 0:
         locations += current_stage.update()
         if current_stage.is_done():
-            locations += next_stage.age_of_civilization_setup()
             current_stage = next_stage
 
     for location in locations:
