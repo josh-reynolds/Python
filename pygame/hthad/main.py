@@ -248,7 +248,7 @@ def out_of_bounds(point: PVector) -> bool:
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
 
-def get_parent_room(types: List[str]) -> Location:
+def get_parent_room(types: List[str], mine_start: Location) -> Location:
     """Return the parent room to attach a new room to."""
     parents = []
     for room_name in types:
@@ -393,6 +393,69 @@ class CivilizationAge():
                 x_location, depth = get_mine_start_location(target_mineral)
 
                 new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
+                self.step += 1
+                return new_locations
+
+            case 1:
+                mine_start = [r for r in locations if r.name == "Start"]
+                if mine_start:
+                    mine_start = mine_start[0]
+
+                if mine_start:
+                    treasures = mine_start.get_all_matching_entities("Treasure")
+
+                    if treasures:
+                        for treasure in treasures:
+                            # pylint: disable=C0103
+                            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                            selection = get_parent_room(["Barracks"], mine_start)
+                            new_room = get_candidate_room(selection, "Treasure Room")
+
+                            treasure.parent = new_room
+                            treasure.name = "Dwarven Treasure"
+                            new_room.contents = treasure
+
+                            check_for_connections(new_room)
+
+                        # add another dwarf barracks and populate it - do this in separate loop because
+                        # these new arrivals should not be part of the treasure room bonanza above
+                        for treasure in treasures:
+                            # pylint: disable=C0103
+                            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                            selection = get_parent_room(["Barracks", "Treasure Room"], mine_start)
+                            new_room = get_candidate_room(selection, "Barracks")
+
+                            new_room.contents = Entity("Dwarves", new_room, CREATURE)
+
+                            check_for_connections(new_room)
+
+                    print(f"{mine_start.get_all_connected_locations()}")
+
+                    mines = [l for l in locations if l.name == "Mine"]
+                    deposit = mines[0].target
+
+                    if isinstance(deposit, GoldVein):
+                        direction = choice([-1,1])
+                        new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
+                        new_y = get_y_at_x(deposit.left, deposit.right, new_x)
+                        new_room = create_location(Room, PVector(new_x, new_y))
+                        new_room.color = mines[0].color
+                        mines[0].add_neighbor(new_room)
+                        new_room.contents = Entity("Treasure", new_room, TREASURE)
+                        new_locations.append(new_room)
+
+                    if isinstance(deposit, Mithril):
+                        # TO_DO: only works when the mine is centered on the deposit
+                        #        need a better approach here
+                        to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
+                        new_location = PVector.sub(mines[0].coordinate, to_corner)
+                        new_room = create_location(Room, new_location)
+                        new_room.color = mines[0].color
+                        mines[0].add_neighbor(new_room)
+                        new_room.contents = Entity("Treasure", new_room, TREASURE)
+                        new_locations.append(new_room)
+
+                self.step += 1
                 return new_locations
 
         return new_locations
@@ -405,73 +468,6 @@ class CivilizationAge():
 counter = 1
 current_stage = PrimordialAge()
 next_stage = CivilizationAge()
-
-mine_start = [r for r in locations if r.name == "Start"]
-if mine_start:
-    mine_start = mine_start[0]
-
-if mine_start:
-    treasures = mine_start.get_all_matching_entities("Treasure")
-
-    if treasures:
-        for treasure in treasures:
-            # pylint: disable=C0103
-            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-            selection = get_parent_room(["Barracks"])
-            new_room = get_candidate_room(selection, "Treasure Room")
-
-            treasure.parent = new_room
-            treasure.name = "Dwarven Treasure"
-            new_room.contents = treasure
-
-            check_for_connections(new_room)
-
-        # add another dwarf barracks and populate it - do this in separate loop because
-        # these new arrivals should not be part of the treasure room bonanza above
-        for treasure in treasures:
-            # pylint: disable=C0103
-            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-            selection = get_parent_room(["Barracks", "Treasure Room"])
-            new_room = get_candidate_room(selection, "Barracks")
-
-            new_room.contents = Entity("Dwarves", new_room, CREATURE)
-
-            check_for_connections(new_room)
-
-    print(f"{mine_start.get_all_connected_locations()}")
-
-    mines = [l for l in locations if l.name == "Mine"]
-    deposit = mines[0].target
-
-    if isinstance(deposit, GoldVein):
-        direction = choice([-1,1])
-        new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
-        new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-        new_room = create_location(Room, PVector(new_x, new_y))
-        new_room.color = mines[0].color
-        mines[0].add_neighbor(new_room)
-        new_room.contents = Entity("Treasure", new_room, TREASURE)
-        locations.append(new_room)
-
-    if isinstance(deposit, Mithril):
-        # TO_DO: only works when the mine is centered on the deposit
-        #        need a better approach here
-        to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
-        new_location = PVector.sub(mines[0].coordinate, to_corner)
-        new_room = create_location(Room, new_location)
-        new_room.color = mines[0].color
-        mines[0].add_neighbor(new_room)
-        new_room.contents = Entity("Treasure", new_room, TREASURE)
-        locations.append(new_room)
-
-print(get_all_entities())
-creatures = [e for e in get_all_entities() if e.color == CREATURE]
-print(creatures)
-
-for location in locations:
-    if isinstance(location, Location):
-        reachables = [e for e in location.get_all_entities() if e.color == CREATURE]
-        print(f"{location} => {reachables}")
 
 def update() -> None:
     """Update game state once per frame."""
