@@ -382,10 +382,11 @@ class CivilizationAge():
             new_locations.append(GoldVein())
             return new_locations
 
-        #x_location, depth = get_mine_start_location()
-        
+        if self.step > 0:
+            dwarves = self.mine_start.get_all_matching_entities("Dwarves")
+            print(f"Population = {len(dwarves)}")
+
         match self.step:
-            # initial mine tunnel
             case 0:
                 print("Setup")
                 # pick a spot on the surface above a gold vein or mithral deposit
@@ -397,14 +398,16 @@ class CivilizationAge():
 
                 new_locations += dwarf_mine_factory(x_location, depth, target_mineral)
                 self.step += 1
+
+                if not self.mine_start:
+                    self.mine_start = [r for r in new_locations if r.name == "Start"]
+                    if self.mine_start:
+                        self.mine_start = self.mine_start[0]
+
                 return new_locations
 
             case 1:
-                print("Spring")
-                if not self.mine_start:
-                    self.mine_start = [r for r in locations if r.name == "Start"]
-                    if self.mine_start:
-                        self.mine_start = self.mine_start[0]
+                print("Spring - gathering and growing")
 
                 treasures = self.mine_start.get_all_matching_entities("Treasure")
 
@@ -437,7 +440,7 @@ class CivilizationAge():
                 return new_locations
 
             case 2:
-                print("Summer")
+                print("Summer - digging new mines")
                 # TO_DO: should restrict to mines connected to this start
                 #        (though admittedly I don't think we can have more
                 #        than one at this point, so perhaps moot?)
@@ -484,7 +487,7 @@ def update() -> None:
     global counter, locations, current_stage
 
     # probably want to make the Ages into a FSM
-    if counter % 500 == 0:
+    if counter % 200 == 0:
         locations += current_stage.update()
         if current_stage.is_done():
             current_stage = next_stage
