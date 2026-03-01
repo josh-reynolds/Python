@@ -387,6 +387,7 @@ class CivilizationAge():
         match self.step:
             # initial mine tunnel
             case 0:
+                print("Setup")
                 # pick a spot on the surface above a gold vein or mithral deposit
                 minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
                 target_mineral = choice(minerals + new_locations)
@@ -398,45 +399,45 @@ class CivilizationAge():
                 self.step += 1
                 return new_locations
 
-            # gather treasure and add barracks & treasure room
             case 1:
-                self.mine_start = [r for r in locations if r.name == "Start"]
-                if self.mine_start:
-                    self.mine_start = self.mine_start[0]
+                print("Spring")
+                if not self.mine_start:
+                    self.mine_start = [r for r in locations if r.name == "Start"]
+                    if self.mine_start:
+                        self.mine_start = self.mine_start[0]
 
-                if self.mine_start:
-                    treasures = self.mine_start.get_all_matching_entities("Treasure")
+                treasures = self.mine_start.get_all_matching_entities("Treasure")
 
-                    if treasures:
-                        for treasure in treasures:
-                            # pylint: disable=C0103
-                            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-                            selection = get_parent_room(["Barracks"], self.mine_start)
-                            new_room = get_candidate_room(selection, "Treasure Room")
+                if treasures:
+                    for treasure in treasures:
+                        # pylint: disable=C0103
+                        # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                        selection = get_parent_room(["Barracks"], self.mine_start)
+                        new_room = get_candidate_room(selection, "Treasure Room")
 
-                            treasure.parent = new_room
-                            treasure.name = "Dwarven Treasure"
-                            new_room.contents = treasure
+                        treasure.parent = new_room
+                        treasure.name = "Dwarven Treasure"
+                        new_room.contents = treasure
 
-                            check_for_connections(new_room)
+                        check_for_connections(new_room)
 
-                        # add another dwarf barracks and populate it - do this in separate loop because
-                        # these new arrivals should not be part of the treasure room bonanza above
-                        for treasure in treasures:
-                            # pylint: disable=C0103
-                            # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-                            selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
-                            new_room = get_candidate_room(selection, "Barracks")
+                    # add another dwarf barracks and populate it - do this in separate loop because
+                    # these new arrivals should not be part of the treasure room bonanza above
+                    for treasure in treasures:
+                        # pylint: disable=C0103
+                        # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                        selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
+                        new_room = get_candidate_room(selection, "Barracks")
 
-                            new_room.contents = Entity("Dwarves", new_room, CREATURE)
+                        new_room.contents = Entity("Dwarves", new_room, CREATURE)
 
-                            check_for_connections(new_room)
+                        check_for_connections(new_room)
 
                 self.step += 1
                 return new_locations
 
-            # dig a new mine
             case 2:
+                print("Summer")
                 # TO_DO: should restrict to mines connected to this start
                 #        (though admittedly I don't think we can have more
                 #        than one at this point, so perhaps moot?)
