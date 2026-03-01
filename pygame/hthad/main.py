@@ -370,6 +370,7 @@ class CivilizationAge():
         """Create an instance of a CivilizationAge object."""
         self.done = False
         self.step = 0
+        self.mine_start = None
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -384,6 +385,7 @@ class CivilizationAge():
         #x_location, depth = get_mine_start_location()
         
         match self.step:
+            # initial mine tunnel
             case 0:
                 # pick a spot on the surface above a gold vein or mithral deposit
                 minerals = [l for l in locations if isinstance(l, (Mithril, GoldVein))]
@@ -396,19 +398,20 @@ class CivilizationAge():
                 self.step += 1
                 return new_locations
 
+            # gather treasure and add barracks & treasure room
             case 1:
-                mine_start = [r for r in locations if r.name == "Start"]
-                if mine_start:
-                    mine_start = mine_start[0]
+                self.mine_start = [r for r in locations if r.name == "Start"]
+                if self.mine_start:
+                    self.mine_start = self.mine_start[0]
 
-                if mine_start:
-                    treasures = mine_start.get_all_matching_entities("Treasure")
+                if self.mine_start:
+                    treasures = self.mine_start.get_all_matching_entities("Treasure")
 
                     if treasures:
                         for treasure in treasures:
                             # pylint: disable=C0103
                             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-                            selection = get_parent_room(["Barracks"], mine_start)
+                            selection = get_parent_room(["Barracks"], self.mine_start)
                             new_room = get_candidate_room(selection, "Treasure Room")
 
                             treasure.parent = new_room
@@ -422,38 +425,44 @@ class CivilizationAge():
                         for treasure in treasures:
                             # pylint: disable=C0103
                             # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
-                            selection = get_parent_room(["Barracks", "Treasure Room"], mine_start)
+                            selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
                             new_room = get_candidate_room(selection, "Barracks")
 
                             new_room.contents = Entity("Dwarves", new_room, CREATURE)
 
                             check_for_connections(new_room)
 
-                    print(f"{mine_start.get_all_connected_locations()}")
+                self.step += 1
+                return new_locations
 
-                    mines = [l for l in locations if l.name == "Mine"]
-                    deposit = mines[0].target
+            # dig a new mine
+            case 2:
+                # TO_DO: should restrict to mines connected to this start
+                #        (though admittedly I don't think we can have more
+                #        than one at this point, so perhaps moot?)
+                mines = [l for l in locations if l.name == "Mine"]
+                deposit = mines[0].target
 
-                    if isinstance(deposit, GoldVein):
-                        direction = choice([-1,1])
-                        new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
-                        new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-                        new_room = create_location(Room, PVector(new_x, new_y))
-                        new_room.color = mines[0].color
-                        mines[0].add_neighbor(new_room)
-                        new_room.contents = Entity("Treasure", new_room, TREASURE)
-                        new_locations.append(new_room)
+                if isinstance(deposit, GoldVein):
+                    direction = choice([-1,1])
+                    new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
+                    new_y = get_y_at_x(deposit.left, deposit.right, new_x)
+                    new_room = create_location(Room, PVector(new_x, new_y))
+                    new_room.color = mines[0].color
+                    mines[0].add_neighbor(new_room)
+                    new_room.contents = Entity("Treasure", new_room, TREASURE)
+                    new_locations.append(new_room)
 
-                    if isinstance(deposit, Mithril):
-                        # TO_DO: only works when the mine is centered on the deposit
-                        #        need a better approach here
-                        to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
-                        new_location = PVector.sub(mines[0].coordinate, to_corner)
-                        new_room = create_location(Room, new_location)
-                        new_room.color = mines[0].color
-                        mines[0].add_neighbor(new_room)
-                        new_room.contents = Entity("Treasure", new_room, TREASURE)
-                        new_locations.append(new_room)
+                if isinstance(deposit, Mithril):
+                    # TO_DO: only works when the mine is centered on the deposit
+                    #        need a better approach here
+                    to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
+                    new_location = PVector.sub(mines[0].coordinate, to_corner)
+                    new_room = create_location(Room, new_location)
+                    new_room.color = mines[0].color
+                    mines[0].add_neighbor(new_room)
+                    new_room.contents = Entity("Treasure", new_room, TREASURE)
+                    new_locations.append(new_room)
 
                 self.step += 1
                 return new_locations
