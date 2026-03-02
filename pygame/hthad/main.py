@@ -468,7 +468,7 @@ class CivilizationAge():
                     new_room.contents = Entity("Treasure", new_room, TREASURE)
                     new_locations.append(new_room)
 
-                self.step += 1
+                self.step = 1
                 return new_locations
 
         return new_locations
