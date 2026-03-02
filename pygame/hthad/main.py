@@ -446,13 +446,25 @@ class CivilizationAge():
                 #        (though admittedly I don't think we can have more
                 #        than one at this point, so perhaps moot?)
                 mines = [l for l in locations if l.name == "Mine"]
-                parent_mine = choice(mines)
+
+                # we want to add mines at the ends of a GoldVein, or
+                # at the points of a Mithril deposit
+                # figure out GoldVein first...
+                mine_max_x = max([m.coordinate.x for m in mines])
+                mine_min_x = min([m.coordinate.x for m in mines])
+                potential_parents = [m for m in mines if (m.coordinate.x == mine_max_x or
+                                                          m.coordinate.x == mine_min_x)]
+                parent_mine = choice(potential_parents)
+
+                direction = 1
+                if parent_mine.coordinate.x == mine_min_x:
+                    direction = -1
+
                 deposit = parent_mine.target
 
                 # TO_DO: we need the same tests for collision as in
                 #        get_candidate_room()
                 if isinstance(deposit, GoldVein):
-                    direction = choice([-1,1])
                     new_x = parent_mine.coordinate.x + (direction * ROOM_SPACING)
                     new_y = get_y_at_x(deposit.left, deposit.right, new_x)
                     new_room = create_location(Room, PVector(new_x, new_y))
