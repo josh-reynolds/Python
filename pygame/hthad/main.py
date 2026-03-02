@@ -382,9 +382,10 @@ class CivilizationAge():
             new_locations.append(GoldVein())
             return new_locations
 
+        population = 0
         if self.step > 0:
-            dwarves = self.mine_start.get_all_matching_entities("Dwarves")
-            print(f"Population = {len(dwarves)}")
+            population = len(self.mine_start.get_all_matching_entities("Dwarves"))
+        print(f"Population = {population}")
 
         match self.step:
             case 0:
@@ -468,7 +469,19 @@ class CivilizationAge():
                     new_room.contents = Entity("Treasure", new_room, TREASURE)
                     new_locations.append(new_room)
 
-                self.step = 1
+                self.step += 1
+                return new_locations
+
+            case 3:
+                print("Autumn - building")
+
+                self.step += 1
+                return new_locations
+
+            case 4:
+                print("Winter - mourning")
+
+                self.step += 1
                 return new_locations
 
         return new_locations
