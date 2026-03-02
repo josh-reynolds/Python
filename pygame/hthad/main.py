@@ -446,15 +446,20 @@ class CivilizationAge():
                 #        (though admittedly I don't think we can have more
                 #        than one at this point, so perhaps moot?)
                 mines = [l for l in locations if l.name == "Mine"]
-                deposit = mines[0].target
+                parent_mine = choice(mines)
+                deposit = parent_mine.target
 
+                # TO_DO: we need the same tests for collision as in
+                #        get_candidate_room()
                 if isinstance(deposit, GoldVein):
                     direction = choice([-1,1])
-                    new_x = mines[0].coordinate.x + (direction * ROOM_SPACING)
+                    new_x = parent_mine.coordinate.x + (direction * ROOM_SPACING)
                     new_y = get_y_at_x(deposit.left, deposit.right, new_x)
                     new_room = create_location(Room, PVector(new_x, new_y))
-                    new_room.color = mines[0].color
-                    mines[0].add_neighbor(new_room)
+                    new_room.name = "Mine"
+                    new_room.target = parent_mine.target
+                    new_room.color = parent_mine.color
+                    parent_mine.add_neighbor(new_room)
                     new_room.contents = Entity("Treasure", new_room, TREASURE)
                     new_locations.append(new_room)
 
@@ -462,10 +467,12 @@ class CivilizationAge():
                     # TO_DO: only works when the mine is centered on the deposit
                     #        need a better approach here
                     to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
-                    new_location = PVector.sub(mines[0].coordinate, to_corner)
+                    new_location = PVector.sub(parent_mine.coordinate, to_corner)
                     new_room = create_location(Room, new_location)
-                    new_room.color = mines[0].color
-                    mines[0].add_neighbor(new_room)
+                    new_room.name = "Mine"
+                    new_room.target = parent_mine.target
+                    new_room.color = parent_mine.color
+                    parent_mine.add_neighbor(new_room)
                     new_room.contents = Entity("Treasure", new_room, TREASURE)
                     new_locations.append(new_room)
 
