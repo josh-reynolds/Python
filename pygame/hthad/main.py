@@ -475,13 +475,31 @@ class CivilizationAge():
             case 3:
                 print("Autumn - building")
 
+                match population:
+                    case 3:
+                        print("Workshops")
+                    case 4:
+                        print("Great Hall")
+                    case 5:
+                        print("Exploratory Shaft")
+                    case 6:
+                        print("Hall Expansion")
+                    case 7:
+                        print("Hall of Records")
+                    case 8:
+                        print("Dwarven Golden Age City")
+                    case 9:
+                        print("Treasure Room")
+                    case 10:
+                        print("Delve Too Deep")
+
                 self.step += 1
                 return new_locations
 
             case 4:
                 print("Winter - mourning")
 
-                self.step += 1
+                self.step = 1
                 return new_locations
 
         return new_locations
