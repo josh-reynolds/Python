@@ -3,6 +3,7 @@ from typing import Tuple, Self, List
 from pygame import Rect
 from engine import screen
 from pvector import PVector
+from constants import BEAD
 
 # TO_DO: should be ABS
 class Location():
@@ -245,7 +246,7 @@ class Cavern(Location):
     def __init__(self, coordinate: PVector, color=(129,128,128), contents=None,
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         """Create an instance of a Cavern object."""
-        super().__init__(coordinate, name, color, 30)
+        super().__init__(coordinate, name, color, BEAD)
         self.contents = contents
 
         self.radius = self.size//2
@@ -272,7 +273,7 @@ class Room(Location):
     def __init__(self, coordinate: PVector, color=(128,128,128),
                  contents=None, name: str="Room") -> None:
         """Create an instance of a Room object."""
-        super().__init__(coordinate, name, color, 30)
+        super().__init__(coordinate, name, color, BEAD)
         self.contents = contents
 
     def update(self) -> None:

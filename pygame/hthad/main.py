@@ -450,10 +450,18 @@ class CivilizationAge():
 
                 # we want to add mines at the ends of a GoldVein, or
                 # at the points of a Mithril deposit
-                # BUG: we can get offscreen x coordinates
-                mine_max_x = max([m.coordinate.x for m in mines])
-                mine_min_x = min([m.coordinate.x for m in mines])
-                potential_parents = [m for m in mines if m.coordinate.x in (mine_max_x, mine_min_x)]
+                x_coords = [m.coordinate.x for m in mines]
+                mine_max_x = max(x_coords)
+                mine_min_x = min(x_coords)
+
+                endpoints = []
+                if mine_max_x < WIDTH - ROOM_SPACING - BEAD:
+                    endpoints.append(mine_max_x)
+
+                if mine_min_x > ROOM_SPACING + BEAD:
+                    endpoints.append(mine_min_x)
+
+                potential_parents = [m for m in mines if m.coordinate.x in endpoints]
                 parent_mine = choice(potential_parents)
 
                 direction = 1
