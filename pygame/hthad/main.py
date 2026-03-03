@@ -371,6 +371,7 @@ class CivilizationAge():
         self.done = False
         self.step = 0
         self.mine_start = None
+        self.year = 0
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -408,7 +409,7 @@ class CivilizationAge():
                 return new_locations
 
             case 1:
-                print("Spring - gathering and growing")
+                print(f"Year {self.year} Spring - gathering and growing")
 
                 treasures = self.mine_start.get_all_matching_entities("Treasure")
 
@@ -441,7 +442,7 @@ class CivilizationAge():
                 return new_locations
 
             case 2:
-                print("Summer - digging new mines")
+                print(f"Year {self.year} Summer - digging new mines")
                 # TO_DO: should restrict to mines connected to this start
                 #        (though admittedly I don't think we can have more
                 #        than one at this point, so perhaps moot?)
@@ -449,7 +450,7 @@ class CivilizationAge():
 
                 # we want to add mines at the ends of a GoldVein, or
                 # at the points of a Mithril deposit
-                # figure out GoldVein first...
+                # BUG: we can get offscreen x coordinates
                 mine_max_x = max([m.coordinate.x for m in mines])
                 mine_min_x = min([m.coordinate.x for m in mines])
                 potential_parents = [m for m in mines if m.coordinate.x in (mine_max_x, mine_min_x)]
@@ -491,7 +492,7 @@ class CivilizationAge():
                 return new_locations
 
             case 3:
-                print("Autumn - building")
+                print(f"Year {self.year} Autumn - building")
 
                 match population:
                     case 3:
@@ -515,9 +516,10 @@ class CivilizationAge():
                 return new_locations
 
             case 4:
-                print("Winter - mourning")
+                print(f"Year {self.year} Winter - mourning")
 
                 self.step = 1
+                self.year += 1
                 return new_locations
 
         return new_locations
