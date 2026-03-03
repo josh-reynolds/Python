@@ -415,7 +415,7 @@ class CivilizationAge():
                 if treasures:
                     for treasure in treasures:
                         # pylint: disable=C0103
-                        # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                        # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         selection = get_parent_room(["Barracks"], self.mine_start)
                         new_room = get_candidate_room(selection, "Treasure Room")
 
@@ -429,7 +429,7 @@ class CivilizationAge():
                     # these new arrivals should not be part of the treasure room bonanza above
                     for treasure in treasures:
                         # pylint: disable=C0103
-                        # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
+                        # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks")
 
@@ -452,8 +452,7 @@ class CivilizationAge():
                 # figure out GoldVein first...
                 mine_max_x = max([m.coordinate.x for m in mines])
                 mine_min_x = min([m.coordinate.x for m in mines])
-                potential_parents = [m for m in mines if (m.coordinate.x == mine_max_x or
-                                                          m.coordinate.x == mine_min_x)]
+                potential_parents = [m for m in mines if m.coordinate.x in (mine_max_x, mine_min_x)]
                 parent_mine = choice(potential_parents)
 
                 direction = 1
@@ -669,4 +668,3 @@ run()
 #
 # So we'll need something to receive the update pulses. How about a class
 # (or classes) to represent each game phase. Let's start with Primordial.
-
