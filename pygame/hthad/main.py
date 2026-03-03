@@ -509,6 +509,7 @@ class CivilizationAge():
                         print("Great Hall")
                     case 5:
                         print("Exploratory Shaft")
+                        # This can trigger end - see case 10
                     case 6:
                         print("Hall Expansion")
                     case 7:
@@ -519,6 +520,26 @@ class CivilizationAge():
                         print("Treasure Room")
                     case 10:
                         print("Delve Too Deep")
+                        self.done = True
+
+                        all_rooms = self.mine_start.get_all_connected_locations()
+                        print(all_rooms)
+
+                        # might be simpler to sort by y coordinate and pop...
+                        y_coords = [m.coordinate.y for m in all_rooms]
+                        mine_max_y = max(y_coords)
+
+                        potential_bottom = [m for m in all_rooms if m.coordinate.y == mine_max_y]
+                        bottom = choice(potential_bottom)
+
+                        shaft_x = bottom.coordinate.x
+                        shaft_y = HEIGHT + BEAD
+
+                        new_room = create_location(Room, PVector(shaft_x, shaft_y))
+                        new_room.name = "End"
+                        new_room.color = bottom.color
+                        bottom.add_neighbor(new_room)
+                        new_locations.append(new_room)
 
                 self.step += 1
                 return new_locations
