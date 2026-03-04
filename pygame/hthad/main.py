@@ -569,9 +569,28 @@ class CivilizationAge():
         return self.done
 
 
+# Age of Monsters
+# TO_DO: we'll need the Great Disaster too, not sure yet if that folds in here
+#        or should be handled as its own 'Age'
+class MonsterAge():
+    """Manages creation of the landscape and entities during the Age of Monsters."""
+
+    def __init__(self) -> None:
+        """Create an instance of a MonsterAge object."""
+        self.done = False
+
+    def update(self) -> List:
+        """Return the next generated map location."""
+        print("MonsterAge.update()")
+        return []
+
+    def is_done(self) -> bool:
+        """Return whether the MonsterAge has completed or not."""
+        return self.done
+
 counter = 1
-current_stage = PrimordialAge()
-next_stage = CivilizationAge()
+stages = [PrimordialAge(), CivilizationAge(), MonsterAge()]
+current_stage = stages.pop(0)
 
 def update() -> None:
     """Update game state once per frame."""
@@ -581,7 +600,7 @@ def update() -> None:
     if counter % 200 == 0:
         locations += current_stage.update()
         if current_stage.is_done():
-            current_stage = next_stage
+            current_stage = stages.pop(0)
 
     for location in locations:
         location.update()
