@@ -11,17 +11,18 @@ class Location():
 
     # pylint: disable=R0902
     # R0902: Too many instance attributes (9/7)
-    def __init__(self, coordinate: PVector, name: str, color: Tuple, size: int) -> None:
+    def __init__(self, coordinate: PVector, name: str, 
+                 color: Tuple, size: Tuple[int,int]) -> None:
         """Create an instance of a Location object."""
         self.name = name
         self.color = color
 
         self._coordinate = coordinate
         self.size = size
-        self.rect = Rect(self._coordinate.x - self.size/2,
-                         self._coordinate.y - self.size/2,
-                         self.size,
-                         self.size)
+        self.rect = Rect(self._coordinate.x - self.size[0]/2,
+                         self._coordinate.y - self.size[1]/2,
+                         self.size[0],
+                         self.size[1])
         self.tunnels = []
         self.neighbors = []
         self.visited = False
@@ -44,10 +45,10 @@ class Location():
     def coordinate(self, coord: PVector) -> None:
         """Set the Location's coordinates (and rect, implicitly)."""
         self._coordinate = coord
-        self.rect = Rect(self.coordinate.x - self.size/2,
-                         self.coordinate.y - self.size/2,
-                         self.size,
-                         self.size)
+        self.rect = Rect(self.coordinate.x - self.size[0]/2,
+                         self.coordinate.y - self.size[1]/2,
+                         self.size[0],
+                         self.size[1])
 
     def add_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
         """Add a neighbor to this location."""
@@ -246,10 +247,10 @@ class Cavern(Location):
     def __init__(self, coordinate: PVector, color=(129,128,128), contents=None,
                  tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
         """Create an instance of a Cavern object."""
-        super().__init__(coordinate, name, color, BEAD)
+        super().__init__(coordinate, name, color, (BEAD,BEAD))
         self.contents = contents
 
-        self.radius = self.size//2
+        self.radius = self.size[0]//2
         self.tunnel = tunnel        # TO_DO: confusing with graph edge tunnels
         self.tilt = tilt
 
@@ -273,7 +274,7 @@ class Room(Location):
     def __init__(self, coordinate: PVector, color=(128,128,128),
                  contents=None, name: str="Room") -> None:
         """Create an instance of a Room object."""
-        super().__init__(coordinate, name, color, BEAD)
+        super().__init__(coordinate, name, color, (BEAD,BEAD))
         self.contents = contents
 
     def update(self) -> None:
