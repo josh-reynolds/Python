@@ -520,7 +520,6 @@ class CivilizationAge():
                         print("Great Hall")
                     case 5:
                         print("Exploratory Shaft")
-                        # This can trigger end - see case 10
                         all_rooms = self.mine_start.get_all_connected_locations()
                         shaft_x = self.mine_start.coordinate.x
                         shaft_rooms = [m for m in all_rooms if m.coordinate.x == shaft_x]
@@ -535,6 +534,9 @@ class CivilizationAge():
                         shaft_bottom.add_neighbor(new_room)
                         new_locations.append(new_room)
 
+                        if new_room.coordinate.y > HEIGHT:
+                            self.done = True
+
                     case 6:
                         print("Hall Expansion")
                     case 7:
@@ -548,7 +550,6 @@ class CivilizationAge():
                         self.done = True
 
                         all_rooms = self.mine_start.get_all_connected_locations()
-                        print(all_rooms)
 
                         # might be simpler to sort by y coordinate and pop...
                         y_coords = [m.coordinate.y for m in all_rooms]
