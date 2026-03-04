@@ -245,9 +245,10 @@ class Cavern(Location):
     # pylint: disable=R0913
     # R0913 Too many arguments (7/5)
     def __init__(self, coordinate: PVector, color=(129,128,128), contents=None,
-                 tunnel: bool=False, tilt: int=0, name: str="Cavern") -> None:
+                 tunnel: bool=False, tilt: int=0, name: str="Cavern",
+                 size: Tuple[int,int]=(BEAD,BEAD)) -> None:
         """Create an instance of a Cavern object."""
-        super().__init__(coordinate, name, color, (BEAD,BEAD))
+        super().__init__(coordinate, name, color, size)
         self.contents = contents
 
         self.radius = self.size[0]//2
@@ -272,9 +273,9 @@ class Room(Location):
     """Represents a Room location."""
 
     def __init__(self, coordinate: PVector, color=(128,128,128),
-                 contents=None, name: str="Room") -> None:
+                 contents=None, name: str="Room", size: Tuple[int,int]=(BEAD,BEAD)) -> None:
         """Create an instance of a Room object."""
-        super().__init__(coordinate, name, color, (BEAD,BEAD))
+        super().__init__(coordinate, name, color, size)
         self.contents = contents
 
     def update(self) -> None:

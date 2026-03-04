@@ -27,9 +27,10 @@ def check_for_connections(room: Location) -> None:
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
 
-def create_location(location_type: Callable, coordinate: PVector) -> Location:
+def create_location(location_type: Callable, coordinate: PVector,
+                    size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
     """Create a new location and add to the list."""
-    new_location = location_type(coordinate)
+    new_location = location_type(coordinate=coordinate, size=size)
     check_for_connections(new_location)
     return new_location
 
@@ -509,7 +510,7 @@ class CivilizationAge():
                         parent_mine = choice([l for l in locations if l.name == "Mine"])
                         new_location = PVector(parent_mine.coordinate.x, 
                                                parent_mine.coordinate.y + ROOM_SPACING)
-                        new_room = create_location(Room, new_location)
+                        new_room = create_location(Room, new_location, (BEAD*2,BEAD))
                         new_room.name = "Workshop"
                         new_room.color = parent_mine.color
                         parent_mine.add_neighbor(new_room)
