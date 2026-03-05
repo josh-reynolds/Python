@@ -508,13 +508,13 @@ class CivilizationAge():
                     case 3:
                         # TO_DO: vary the size & shape of workshops
                         print("Workshops")
-                        parent_mine = choice([l for l in locations if l.name == "Mine"])
-                        new_location = PVector(parent_mine.coordinate.x, 
-                                               parent_mine.coordinate.y + ROOM_SPACING)
+                        selection = get_parent_room(["Mine"], self.mine_start)
+                        new_location = PVector(selection.coordinate.x, 
+                                               selection.coordinate.y + ROOM_SPACING)
                         new_room = create_location(Room, new_location, (BEAD*2,BEAD))
                         new_room.name = "Workshop"
-                        new_room.color = parent_mine.color
-                        parent_mine.add_neighbor(new_room)
+                        new_room.color = selection.color
+                        selection.add_neighbor(new_room)
                         new_locations.append(new_room)
 
                     case 4:
