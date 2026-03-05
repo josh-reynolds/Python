@@ -210,10 +210,11 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(ROOM_SPACING,-ROOM_SPACING),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
-def add_candidate(name: str, parent: Location, direction: int) -> Location:
+def add_candidate(name: str, parent: Location, direction: int,
+                  size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
     """Add a candidate location to the locations list."""
     candidate_location = PVector.add(parent.coordinate, directions[direction])
-    room_to_add = create_location(Room, candidate_location)
+    room_to_add = create_location(Room, candidate_location, size)
     room_to_add.name = name
     locations.append(room_to_add)
     return room_to_add
@@ -260,11 +261,12 @@ def get_parent_room(types: List[str], mine_start: Location) -> Location:
 
     return choice([r for r in parents if len(r.neighbors) == min_neighbors])
 
-def get_candidate_room(parent: Location, room_name: str) -> Location | None:
+def get_candidate_room(parent: Location, room_name: str,
+                       size: Tuple[int,int]=(BEAD,BEAD)) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
     attempt = 0
     while attempt < 8:
-        candidate = add_candidate(room_name, parent, attempt)
+        candidate = add_candidate(room_name, parent, attempt, size)
 
         rooms = parent.get_all_connected_locations()
         tunnels = parent.get_all_connected_tunnels()
@@ -522,7 +524,7 @@ class CivilizationAge():
                         selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
-                        new_room = get_candidate_room(selection, "Great Hall")
+                        new_room = get_candidate_room(selection, "Great Hall", (FINGER//2, BEAD))
                         new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                         check_for_connections(new_room)
                         
