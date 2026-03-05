@@ -502,6 +502,7 @@ class CivilizationAge():
 
             case 3:
                 print(f"Year {self.year} Autumn - building")
+                all_rooms = self.mine_start.get_all_connected_locations()
 
                 match population:
                     case 3:
@@ -518,9 +519,9 @@ class CivilizationAge():
 
                     case 4:
                         print("Great Hall")
+                        
                     case 5:
                         print("Exploratory Shaft")
-                        all_rooms = self.mine_start.get_all_connected_locations()
                         shaft_x = self.mine_start.coordinate.x
                         shaft_rooms = [m for m in all_rooms if m.coordinate.x == shaft_x]
                         shaft_rooms.sort(key=lambda room: room.coordinate.y)
@@ -548,8 +549,6 @@ class CivilizationAge():
                     case 10:
                         print("Delve Too Deep")
                         self.done = True
-
-                        all_rooms = self.mine_start.get_all_connected_locations()
 
                         # might be simpler to sort by y coordinate and pop...
                         y_coords = [m.coordinate.y for m in all_rooms]
