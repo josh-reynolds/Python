@@ -519,13 +519,10 @@ class CivilizationAge():
 
                     case 4:
                         print("Great Hall")
-                        potential_parents = [r for r in all_rooms 
-                                             if r.name not in ("Mine", "Workshop", "Start")]
-                        potential_parents.sort(key = lambda room: len(room.neighbors))
-                        parent = potential_parents.pop(0)
+                        selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
-                        new_room = get_candidate_room(parent, "Great Hall")
+                        new_room = get_candidate_room(selection, "Great Hall")
                         new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                         check_for_connections(new_room)
                         
