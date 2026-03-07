@@ -302,6 +302,7 @@ def get_candidate_room(parent: Location, room_name: str,
 
         attempt += 1
 
+    print("No viable locations found!")
     return None
 
 
