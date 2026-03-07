@@ -214,7 +214,13 @@ directions = [PVector(ROOM_SPACING,0),
 def add_candidate(name: str, parent: Location, direction: int,
                   size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
     """Add a candidate location to the locations list."""
-    candidate_location = PVector.add(parent.coordinate, directions[direction])
+    orthogonal = directions[0:4]
+    shuffle(orthogonal)
+    diagonal = directions[4:8]
+    shuffle(diagonal)
+    shuffled = orthogonal + diagonal
+
+    candidate_location = PVector.add(parent.coordinate, shuffled[direction])
     room_to_add = create_location(Room, candidate_location, size)
     room_to_add.name = name
     locations.append(room_to_add)
