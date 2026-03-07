@@ -289,9 +289,11 @@ def get_candidate_room(parent: Location, room_name: str,
 
             return candidate
 
-        for neighbor in candidate.neighbors:
-            neighbor.remove_neighbor(candidate)
+        for room in rooms:
+            if candidate in room.neighbors:
+                room.remove_neighbor(candidate)
         locations.remove(candidate)
+
         attempt += 1
 
     return None
