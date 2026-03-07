@@ -572,7 +572,13 @@ class CivilizationAge():
                                                great_hall.rect.h)
 
                     case 7:
+                        # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
+                        selection = get_parent_room(["Great Hall"], self.mine_start)
+                        new_room = get_candidate_room(selection, "Hall of Records", (BEAD, BEAD))
+                        new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                        check_for_connections(new_room)
+
                     case 8:
                         print("Dwarven Golden Age City")
                     case 9:
