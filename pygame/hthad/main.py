@@ -656,6 +656,15 @@ def draw() -> None:
     for location in locations:
         location.draw()
 
+    if isinstance(current_stage, CivilizationAge):
+        candidates = []
+        if current_stage.mine_start:
+            candidates = current_stage.mine_start.get_locations_by_name("Great Hall")
+        for room in candidates:
+            screen.draw.rect(room.rect.x, room.rect.y,
+                             room.rect.w, room.rect.h,
+                             (255,0,0), 2)
+
     for index in range(6):
         screen.draw.text(f"{index+1}", center=(10, strata_depth(index)))
         screen.draw.text(f"{index+1}", center=(WIDTH-10, strata_depth(index)))
