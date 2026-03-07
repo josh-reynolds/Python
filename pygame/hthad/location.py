@@ -56,6 +56,12 @@ class Location():
         if bidi:
             neighbor.add_neighbor(self, False)
 
+    def remove_neighbor(self, neighbor: Self, bidi: bool=True) -> None:
+        """Add a neighbor to this location."""
+        self.neighbors.remove(neighbor)
+        if bidi:
+            neighbor.remove_neighbor(self, False)
+
     # TO_DO: currently only works for Rooms, which are rects
     #        Caverns are circles, so we'll need to adjust
     def intersects(self, other: Self) -> bool:

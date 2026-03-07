@@ -289,6 +289,8 @@ def get_candidate_room(parent: Location, room_name: str,
 
             return candidate
 
+        for neighbor in candidate.neighbors:
+            neighbor.remove_neighbor(candidate)
         locations.remove(candidate)
         attempt += 1
 
@@ -363,7 +365,9 @@ def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, in
                 x_location = FINGER
                 depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
             else:
-                x_location = WIDTH - FINGER
+                # TO_DO: for testing
+                #x_location = WIDTH - FINGER
+                x_location = FINGER
                 depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
 
     return (x_location, depth)
@@ -554,17 +558,14 @@ class CivilizationAge():
                     case 6:
                         print("Hall Expansion")
                         candidates = self.mine_start.get_locations_by_name("Great Hall")
-                        great_hall = candidates[0]
                         print(len(candidates))
-                        print(great_hall.rect)
+                        great_hall = candidates[0]
                         new_x = great_hall.rect.x - BEAD
                         new_w = great_hall.rect.w + (BEAD * 2)
                         great_hall.rect = Rect(new_x,
                                                great_hall.rect.y,
                                                new_w,
                                                great_hall.rect.h)
-                        print(great_hall.rect)
-                        great_hall.color = (255,0,0)
 
                     case 7:
                         print("Hall of Records")
