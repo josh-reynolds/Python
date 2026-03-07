@@ -553,7 +553,9 @@ class CivilizationAge():
 
                     case 6:
                         print("Hall Expansion")
-                        great_hall = self.mine_start.get_locations_by_name("Great Hall")[0]
+                        candidates = self.mine_start.get_locations_by_name("Great Hall")
+                        great_hall = candidates[0]
+                        print(len(candidates))
                         print(great_hall.rect)
                         new_x = great_hall.rect.x - BEAD
                         new_w = great_hall.rect.w + (BEAD * 2)
@@ -562,6 +564,7 @@ class CivilizationAge():
                                                new_w,
                                                great_hall.rect.h)
                         print(great_hall.rect)
+                        great_hall.color = (255,0,0)
 
                     case 7:
                         print("Hall of Records")
