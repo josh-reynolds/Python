@@ -2,6 +2,7 @@
 import math
 from random import randint, choice, shuffle
 from typing import List, Tuple, Callable
+from pygame import Rect
 from engine import screen, run
 from pvector import PVector
 from intersections import rect_segment_intersects
@@ -310,7 +311,9 @@ class PrimordialAge():
         check = randint(0,6)
         match check:
             case 0:
-                new_locations.append(Mithril())
+                # TO_DO: for testing
+                #new_locations.append(Mithril())
+                new_locations.append(GoldVein())
             case 1 | 2:
                 add_caverns()
             case 3:
@@ -351,7 +354,9 @@ def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, in
             x_location = FINGER
             depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
         elif target_mineral.right.y < target_mineral.left.y:
-            x_location = WIDTH - FINGER
+            # TO_DO: for testing
+            #x_location = WIDTH - FINGER
+            x_location = FINGER
             depth = get_y_at_x(target_mineral.left, target_mineral.right, x_location)
         else:
             if randint(0,1) == 9:
@@ -548,6 +553,16 @@ class CivilizationAge():
 
                     case 6:
                         print("Hall Expansion")
+                        great_hall = self.mine_start.get_locations_by_name("Great Hall")[0]
+                        print(great_hall.rect)
+                        new_x = great_hall.rect.x - BEAD
+                        new_w = great_hall.rect.w + (BEAD * 2)
+                        great_hall.rect = Rect(new_x,
+                                               great_hall.rect.y,
+                                               new_w,
+                                               great_hall.rect.h)
+                        print(great_hall.rect)
+
                     case 7:
                         print("Hall of Records")
                     case 8:
