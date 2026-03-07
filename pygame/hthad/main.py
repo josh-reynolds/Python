@@ -305,6 +305,7 @@ class PrimordialAge():
     def __init__(self) -> None:
         """Create an instance of a PrimordialAge object."""
         self.rolls = 0
+        self.name = "Primordial Age"
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -386,6 +387,7 @@ class CivilizationAge():
         self.step = 0
         self.mine_start = None
         self.year = 0
+        self.name = "Age of Civilization"
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -621,6 +623,7 @@ class MonsterAge():
     def __init__(self) -> None:
         """Create an instance of a MonsterAge object."""
         self.done = False
+        self.name = "Age of Monsters"
 
     def update(self) -> List:
         """Return the next generated map location."""
@@ -675,6 +678,8 @@ def draw() -> None:
     # E1121: Too many positional arguments for method call
     screen.draw.rect(0, 0, WIDTH, GROUND_LEVEL, SKY, 0)
     screen.draw.line(BORDER, (0, GROUND_LEVEL), (WIDTH, GROUND_LEVEL), 2)
+
+    screen.draw.text(f"{current_stage.name}", center=(WIDTH//2, 30))
 
 run()
 
