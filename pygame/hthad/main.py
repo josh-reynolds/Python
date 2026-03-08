@@ -212,7 +212,8 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
 def add_candidate(name: str, parent: Location, direction: int,
-                  size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
+                  size: Tuple[int,int]=(BEAD,BEAD),
+                  distance: int=1) -> Location:
     """Add a candidate location to the locations list."""
     orthogonal = directions[0:4]
     shuffle(orthogonal)
@@ -220,7 +221,8 @@ def add_candidate(name: str, parent: Location, direction: int,
     shuffle(diagonal)
     shuffled = orthogonal + diagonal
 
-    candidate_location = PVector.add(parent.coordinate, shuffled[direction])
+    scaled = PVector.mult(shuffled[direction], distance)
+    candidate_location = PVector.add(parent.coordinate, scaled)
     room_to_add = create_location(Room, candidate_location, size)
     room_to_add.name = name
     locations.append(room_to_add)
@@ -269,11 +271,12 @@ def get_parent_room(types: List[str], mine_start: Location) -> Location:
     return choice([r for r in parents if len(r.neighbors) == min_neighbors])
 
 def get_candidate_room(parent: Location, room_name: str,
-                       size: Tuple[int,int]=(BEAD,BEAD)) -> Location | None:
+                       size: Tuple[int,int]=(BEAD,BEAD),
+                       distance: int=1) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
     attempt = 0
     while attempt < 8:
-        candidate = add_candidate(room_name, parent, attempt, size)
+        candidate = add_candidate(room_name, parent, attempt, size, distance)
 
         rooms = parent.get_all_connected_locations()
         tunnels = parent.get_all_connected_tunnels()
@@ -582,7 +585,8 @@ class CivilizationAge():
                         # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
                         selection = get_parent_room(["Great Hall"], self.mine_start)
-                        new_room = get_candidate_room(selection, "Hall of Records", (BEAD, BEAD))
+                        new_room = get_candidate_room(selection, "Hall of Records",
+                                                      (BEAD, BEAD), 3)
                         new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                         check_for_connections(new_room)
 
@@ -796,3 +800,10 @@ run()
 #
 # So we'll need something to receive the update pulses. How about a class
 # (or classes) to represent each game phase. Let's start with Primordial.
+# ---------------------------------------------
+# Priorities:
+# 1) fix room creation sequence so we properly handle collisions, connections
+#    invalid positions and lack of viable candidates in all cases
+# 2) implement entity group interaction, population loss, etc.
+# 3) refactor bloated code - getting out of hand again
+
