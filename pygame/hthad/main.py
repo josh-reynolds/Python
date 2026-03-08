@@ -289,8 +289,8 @@ def get_candidate_room(parent: Location, room_name: str,
             distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
             dist_to_parent = PVector.dist(candidate.coordinate, parent.coordinate)
 
-            for i,room in enumerate(rooms):
-                if distances[i] <= dist_to_parent:
+            for index,room in enumerate(rooms):
+                if distances[index] <= dist_to_parent:
                     room.add_neighbor(candidate)
 
             return candidate
@@ -531,7 +531,7 @@ class CivilizationAge():
                         # TO_DO: vary the size & shape of workshops
                         print("Workshops")
                         selection = get_parent_room(["Mine"], self.mine_start)
-                        new_location = PVector(selection.coordinate.x, 
+                        new_location = PVector(selection.coordinate.x,
                                                selection.coordinate.y + ROOM_SPACING)
                         new_room = create_location(Room, new_location, (BEAD*2,BEAD))
                         new_room.name = "Workshop"
@@ -547,7 +547,7 @@ class CivilizationAge():
                         new_room = get_candidate_room(selection, "Great Hall", (FINGER//2, BEAD))
                         new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                         check_for_connections(new_room)
-                        
+
                     case 5:
                         print("Exploratory Shaft")
                         shaft_x = self.mine_start.coordinate.x
@@ -555,7 +555,7 @@ class CivilizationAge():
                         shaft_rooms.sort(key=lambda room: room.coordinate.y)
                         shaft_bottom = shaft_rooms.pop()
 
-                        new_location = PVector(shaft_bottom.coordinate.x, 
+                        new_location = PVector(shaft_bottom.coordinate.x,
                                                shaft_bottom.coordinate.y + FINGER)
                         new_room = create_location(Room, new_location)
                         new_room.name = "Outpost"
