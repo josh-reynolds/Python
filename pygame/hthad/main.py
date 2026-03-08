@@ -259,7 +259,7 @@ def out_of_bounds(point: PVector) -> bool:
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
 
-def get_parent_room(types: List[str], mine_start: Location) -> Location:
+def get_parent_rooms(types: List[str], mine_start: Location) -> List[Location]:
     """Return the parent room to attach a new room to."""
     parents = []
     for room_name in types:
@@ -268,13 +268,14 @@ def get_parent_room(types: List[str], mine_start: Location) -> Location:
     neighbor_counts = [len(r.neighbors) for r in parents]
     min_neighbors = min(neighbor_counts)
 
-    return choice([r for r in parents if len(r.neighbors) == min_neighbors])
+    return [r for r in parents if len(r.neighbors) == min_neighbors]
 
-def get_candidate_room(parent: Location, room_name: str,
+def get_candidate_room(parents: List[Location], room_name: str,
                        size: Tuple[int,int]=(BEAD,BEAD),
                        distance: int=1) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
     attempt = 0
+    parent = choice(parents)
     while attempt < 8:
         candidate = add_candidate(room_name, parent, attempt, size, distance)
 
@@ -443,7 +444,7 @@ class CivilizationAge():
                     for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
-                        selection = get_parent_room(["Barracks"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks"], self.mine_start)
                         new_room = get_candidate_room(selection, "Treasure Room")
 
                         treasure.parent = new_room
@@ -457,7 +458,7 @@ class CivilizationAge():
                     for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
-                        selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks")
 
                         new_room.contents = Entity("Dwarves", new_room, CREATURE)
@@ -533,7 +534,7 @@ class CivilizationAge():
                     case 3:
                         # TO_DO: vary the size & shape of workshops
                         print("Workshops")
-                        selection = get_parent_room(["Mine"], self.mine_start)
+                        selection = choice(get_parent_rooms(["Mine"], self.mine_start))
                         new_location = PVector(selection.coordinate.x,
                                                selection.coordinate.y + ROOM_SPACING)
                         new_room = create_location(Room, new_location, (BEAD*2,BEAD))
@@ -544,7 +545,7 @@ class CivilizationAge():
 
                     case 4:
                         print("Great Hall")
-                        selection = get_parent_room(["Barracks", "Treasure Room"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
                         new_room = get_candidate_room(selection, "Great Hall", (FINGER//2, BEAD))
@@ -584,7 +585,7 @@ class CivilizationAge():
                     case 7:
                         # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
-                        selection = get_parent_room(["Great Hall"], self.mine_start)
+                        selection = get_parent_rooms(["Great Hall"], self.mine_start)
                         new_room = get_candidate_room(selection, "Hall of Records",
                                                       (BEAD, BEAD), 3)
                         new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
