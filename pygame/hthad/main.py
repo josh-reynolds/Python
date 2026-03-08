@@ -449,11 +449,11 @@ class CivilizationAge():
                         selection = get_parent_rooms(["Barracks"], self.mine_start)
                         new_room = get_candidate_room(selection, "Treasure Room")
 
-                        treasure.parent = new_room
-                        treasure.name = "Dwarven Treasure"
-                        new_room.contents = treasure
-
-                        check_for_connections(new_room)
+                        if new_room:
+                            treasure.parent = new_room
+                            treasure.name = "Dwarven Treasure"
+                            new_room.contents = treasure
+                            check_for_connections(new_room)
 
                     # add another dwarf barracks and populate it - do this in separate loop because
                     # these new arrivals should not be part of the treasure room bonanza above
@@ -464,9 +464,9 @@ class CivilizationAge():
                         selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks")
 
-                        new_room.contents = Entity("Dwarves", new_room, CREATURE)
-
-                        check_for_connections(new_room)
+                        if new_room:
+                            new_room.contents = Entity("Dwarves", new_room, CREATURE)
+                            check_for_connections(new_room)
 
                 self.step += 1
                 return new_locations
@@ -552,8 +552,10 @@ class CivilizationAge():
 
                         # TO_DO: need to customize size/shape of Great Hall
                         new_room = get_candidate_room(selection, "Great Hall", (FINGER//2, BEAD))
-                        new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                        check_for_connections(new_room)
+
+                        if new_room:
+                            new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                            check_for_connections(new_room)
 
                     case 5:
                         print("Exploratory Shaft")
@@ -591,8 +593,10 @@ class CivilizationAge():
                         selection = get_parent_rooms(["Great Hall"], self.mine_start)
                         new_room = get_candidate_room(selection, "Hall of Records",
                                                       (BEAD, BEAD), 3)
-                        new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                        check_for_connections(new_room)
+
+                        if new_room:
+                            new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                            check_for_connections(new_room)
 
                     case 8:
                         print("Dwarven Golden Age City")
