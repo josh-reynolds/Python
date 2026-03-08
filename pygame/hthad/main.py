@@ -274,37 +274,38 @@ def get_candidate_room(parents: List[Location], room_name: str,
                        size: Tuple[int,int]=(BEAD,BEAD),
                        distance: int=1) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
-    attempt = 0
-    parent = choice(parents)
-    while attempt < 8:
-        candidate = add_candidate(room_name, parent, attempt, size, distance)
+    for parent in parents:
+        attempt = 0
+        while attempt < 8:
+            candidate = add_candidate(room_name, parent, attempt, size, distance)
 
-        rooms = parent.get_all_connected_locations()
-        tunnels = parent.get_all_connected_tunnels()
+            rooms = parent.get_all_connected_locations()
+            tunnels = parent.get_all_connected_tunnels()
 
-        viable = is_viable(candidate, rooms, tunnels)
+            viable = is_viable(candidate, rooms, tunnels)
 
-        # TO_DO: tunnel crossings aren't handled yet
+            # TO_DO: tunnel crossings aren't handled yet
 
-        if viable:
-            print("Candidate location is viable - adding room.")
-            parent.add_neighbor(candidate)
-            candidate.color = parent.color
-            distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
-            dist_to_parent = PVector.dist(candidate.coordinate, parent.coordinate)
+            if viable:
+                print("Candidate location is viable - adding room.")
+                parent.add_neighbor(candidate)
+                candidate.color = parent.color
+                distances = [PVector.dist(candidate.coordinate, r.coordinate) for r in rooms]
+                dist_to_parent = PVector.dist(candidate.coordinate, parent.coordinate)
 
-            for index,room in enumerate(rooms):
-                if distances[index] <= dist_to_parent:
-                    room.add_neighbor(candidate)
+                for index,room in enumerate(rooms):
+                    if distances[index] <= dist_to_parent:
+                        room.add_neighbor(candidate)
 
-            return candidate
+                return candidate
 
-        for room in rooms:
-            if candidate in room.neighbors:
-                room.remove_neighbor(candidate)
-        locations.remove(candidate)
+            for room in rooms:
+                if candidate in room.neighbors:
+                    room.remove_neighbor(candidate)
+            locations.remove(candidate)
 
-        attempt += 1
+            attempt += 1
+        print("Next parent")
 
     print("No viable locations found!")
     return None
@@ -444,6 +445,7 @@ class CivilizationAge():
                     for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
+                        print("Adding Treasure Room")
                         selection = get_parent_rooms(["Barracks"], self.mine_start)
                         new_room = get_candidate_room(selection, "Treasure Room")
 
@@ -458,6 +460,7 @@ class CivilizationAge():
                     for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
+                        print("Adding Barracks")
                         selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks")
 
