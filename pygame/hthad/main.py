@@ -444,7 +444,7 @@ class CivilizationAge():
                 # TO_DO: some ambiguity in the rules here - we want to gather all
                 #        treasures from the mines and store them, but the rules do
                 #        _not_ later say to make these 'Dwarven Treasures'. It is
-                #        implied later that these small treasure rooms contain 
+                #        implied later that these small treasure rooms contain
                 #        'regular' treasures, not 'Dwarven Treasures.' But if we
                 #        don't distinguish them, we'll have an infinite loop of
                 #        treasure room creation. Perhaps a new name for these?
@@ -740,9 +740,7 @@ def draw() -> None:
         if current_stage.mine_start:
             candidates = current_stage.mine_start.get_locations_by_name("Great Hall")
         for room in candidates:
-            screen.draw.rect(room.rect.x, room.rect.y,
-                             room.rect.w, room.rect.h,
-                             (255,0,0), 2)
+            screen.draw.rect(rect=room.rect, color=(255,0,0), width=2)
 
     for index in range(6):
         screen.draw.text(f"{index+1}", center=(10, strata_depth(index)))
@@ -863,4 +861,3 @@ run()
 #    invalid positions and lack of viable candidates in all cases
 # 2) implement entity group interaction, population loss, etc.
 # 3) refactor bloated code - getting out of hand again
-
