@@ -598,11 +598,20 @@ class CivilizationAge():
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                             check_for_connections(new_room)
 
+                    # TO_DO: name the city
                     case 8:
                         print("Dwarven Golden Age City")
+                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
+                        new_room = get_candidate_room(selection, "Dwarven City",
+                                                      (FINGER, BEAD))
+
+                        if new_room:
+                            new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                            check_for_connections(new_room)
+
                     case 9:
                         print("Treasure Room")
-                    case 10:
+                    case 10 | 11 | 12 | 13 | 14 | 15:
                         print("Delve Too Deep")
                         self.done = True
 
