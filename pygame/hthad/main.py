@@ -120,7 +120,7 @@ def ancient_wyrm_factory() -> List[Cavern]:
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
     cavern2 = create_location(Cavern, second_point)
     cavern2.color = CAVERN
-    cavern2.contents = Entity("Treasure", cavern2, TREASURE)
+    cavern2.contents = Entity("Wyrm Treasure", cavern2, TREASURE)
     sites.append(cavern2)
 
     sites[0].add_neighbor(sites[1])
@@ -441,6 +441,15 @@ class CivilizationAge():
 
                 treasures = self.mine_start.get_all_matching_entities("Treasure")
 
+                # TO_DO: some ambiguity in the rules here - we want to gather all
+                #        treasures from the mines and store them, but the rules do
+                #        _not_ later say to make these 'Dwarven Treasures'. It is
+                #        implied later that these small treasure rooms contain 
+                #        'regular' treasures, not 'Dwarven Treasures.' But if we
+                #        don't distinguish them, we'll have an infinite loop of
+                #        treasure room creation. Perhaps a new name for these?
+                #        Alternatively, we can remove treasures at the end of the
+                #        Age by room name, which is how the rules are written...
                 if treasures:
                     for treasure in treasures:
                         # pylint: disable=C0103
@@ -666,10 +675,24 @@ class MonsterAge():
         """Create an instance of a MonsterAge object."""
         self.done = False
         self.name = "Age of Monsters"
+        self.step = 0
 
     def update(self) -> List:
         """Return the next generated map location."""
         print("MonsterAge.update()")
+        match self.step:
+            case 0:
+                # remove all dwarves and regular treasures
+                all_entities = get_all_entities()
+                for entity in all_entities:
+                    match entity.name:
+                        case "Dwarves" | "Treasure":
+                            entity.parent.contents = None
+
+                self.step += 1
+
+            case 1:
+                pass
         return []
 
     def is_done(self) -> bool:
