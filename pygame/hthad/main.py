@@ -713,6 +713,15 @@ def update() -> None:
         if current_stage.is_done():
             current_stage = stages.pop(0)
 
+        groups = {}
+        for entity in get_all_entities():
+            if entity.color == CREATURE:
+                if entity.name in groups:
+                    groups[entity.name] += 1
+                else:
+                    groups[entity.name] = 1
+        print(groups)
+
     for location in locations:
         location.update()
 
