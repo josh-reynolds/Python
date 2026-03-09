@@ -609,8 +609,16 @@ class CivilizationAge():
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                             check_for_connections(new_room)
 
+                    # TO_DO: Treasure Room should have two treasures in it
+                    # TO_DO: Treasure Room should not connect to rest of dwarf mine
                     case 9:
                         print("Treasure Room")
+                        new_room = get_candidate_room(all_rooms, "Treasure Room",
+                                                      (BEAD*2, BEAD*2),ROOM_SPACING * 3)
+
+                        if new_room:
+                            new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+
                     case 10 | 11 | 12 | 13 | 14 | 15:
                         print("Delve Too Deep")
                         self.done = True
