@@ -440,21 +440,22 @@ class CivilizationAge():
                     case 6:
                         print("Hall Expansion")
                         candidates = self.mine_start.get_locations_by_name("Great Hall")
-                        print(len(candidates))
-                        great_hall = candidates[0]
-                        new_x = great_hall.rect.x - BEAD
-                        new_w = great_hall.rect.w + (BEAD * 2)
-                        great_hall.rect = Rect(new_x,
-                                               great_hall.rect.y,
-                                               new_w,
-                                               great_hall.rect.h)
+                        if candidates:
+                            great_hall = candidates[0]
+                            new_x = great_hall.rect.x - BEAD
+                            new_w = great_hall.rect.w + (BEAD * 2)
+                            great_hall.rect = Rect(new_x,
+                                                   great_hall.rect.y,
+                                                   new_w,
+                                                   great_hall.rect.h)
 
                     case 7:
                         # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
                         selection = get_parent_rooms(["Great Hall"], self.mine_start)
-                        new_room = get_candidate_room(selection, "Hall of Records",
-                                                      (BEAD, BEAD), 3)
+                        if selection:
+                            new_room = get_candidate_room(selection, "Hall of Records",
+                                                          (BEAD, BEAD), 3)
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
