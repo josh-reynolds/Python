@@ -20,6 +20,7 @@ class Entity():
 
         self.radius = BEAD//3
         self.color = color
+        self.value = 1
 
     def __str__(self) -> str:
         """Return the string representation of an Entity."""
@@ -44,3 +45,4 @@ class Entity():
     def draw(self) -> None:
         """Draw the Entity on the screen once per frame."""
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
+        screen.draw.text(f"{self.value}", center=(self.x, self.y))
