@@ -1,5 +1,6 @@
 """Contains the MonsterAge class and supporting functions."""
 from typing import List
+from location import Location
 
 # Age of Monsters
 # TO_DO: we'll need the Great Disaster too, not sure yet if that folds in here
@@ -13,13 +14,13 @@ class MonsterAge():
         self.name = "Age of Monsters"
         self.step = 0
 
-    def update(self) -> List:
+    def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("MonsterAge.update()")
         match self.step:
             case 0:
                 # remove all dwarves and regular treasures
-                all_entities = get_all_entities()
+                all_entities = get_all_entities(locs)
                 for entity in all_entities:
                     match entity.name:
                         case "Dwarves" | "Treasure":

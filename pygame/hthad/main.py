@@ -30,11 +30,10 @@ def check_for_connections(room: Location) -> None:
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
 
-# TO_DO: accesses global locations list
-def get_all_entities() -> List[Entity]:
+def get_all_entities(locs: List[Location]) -> List[Entity]:
     """Return a list of all Entities on the map."""
     entities = []
-    for location in locations:
+    for location in locs:
         if isinstance(location, Location) and location.contents:
             entities.append(location.contents)
     return entities
@@ -256,7 +255,7 @@ class CivilizationAge():
         self.year = 0
         self.name = "Age of Civilization"
 
-    def update(self) -> List:
+    def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("CivilizationAge.update()")
         new_locations = []
@@ -531,12 +530,12 @@ def update() -> None:
 
     # probably want to make the Ages into a FSM
     if counter % 200 == 0:
-        locations += current_stage.update()
+        locations += current_stage.update(locations)
         if current_stage.is_done():
             current_stage = stages.pop(0)
 
         groups = {}
-        for entity in get_all_entities():
+        for entity in get_all_entities(locations):
             if entity.color == CREATURE:
                 if entity.name in groups:
                     groups[entity.name] += 1

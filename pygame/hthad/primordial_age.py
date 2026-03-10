@@ -118,7 +118,7 @@ class PrimordialAge():
         self.rolls = 0
         self.name = "Primordial Age"
 
-    def update(self) -> List:
+    def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
 
