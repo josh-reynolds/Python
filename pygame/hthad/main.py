@@ -15,6 +15,7 @@ from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
 from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 from primordial_age import PrimordialAge, create_location
+from monster_age import MonsterAge
 
 locations = []
 
@@ -29,6 +30,7 @@ def check_for_connections(room: Location) -> None:
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
 
+# TO_DO: accesses global locations list
 def get_all_entities() -> List[Entity]:
     """Return a list of all Entities on the map."""
     entities = []
@@ -519,40 +521,6 @@ class CivilizationAge():
         return self.done
 
 
-# Age of Monsters
-# TO_DO: we'll need the Great Disaster too, not sure yet if that folds in here
-#        or should be handled as its own 'Age'
-class MonsterAge():
-    """Manages creation of the landscape and entities during the Age of Monsters."""
-
-    def __init__(self) -> None:
-        """Create an instance of a MonsterAge object."""
-        self.done = False
-        self.name = "Age of Monsters"
-        self.step = 0
-
-    def update(self) -> List:
-        """Return the next generated map location."""
-        print("MonsterAge.update()")
-        match self.step:
-            case 0:
-                # remove all dwarves and regular treasures
-                all_entities = get_all_entities()
-                for entity in all_entities:
-                    match entity.name:
-                        case "Dwarves" | "Treasure":
-                            entity.parent.contents = None
-
-                self.step += 1
-
-            case 1:
-                pass
-        return []
-
-    def is_done(self) -> bool:
-        """Return whether the MonsterAge has completed or not."""
-        return self.done
-
 counter = 1
 stages = [PrimordialAge(), CivilizationAge(), MonsterAge()]
 current_stage = stages.pop(0)
@@ -711,9 +679,24 @@ run()
 #
 # So we'll need something to receive the update pulses. How about a class
 # (or classes) to represent each game phase. Let's start with Primordial.
+#
 # ---------------------------------------------
 # Priorities:
 # 1) fix room creation sequence so we properly handle collisions, connections
 #    invalid positions and lack of viable candidates in all cases
 # 2) implement entity group interaction, population loss, etc.
 # 3) refactor bloated code - getting out of hand again
+#
+# ---------------------------------------------
+# It might be helpful to introduce builder objects that can govern
+# the goals above. The assorted factory methods are partway there, but the
+# current implementation has a mix of approaches. A standardized builder
+# could get us there. We can still have a simple list of locations, and
+# the builders themselves would be cleaned up once they've finished.
+#
+# I was intiially thinking about how to do this via the locations themselves.
+# That still might be an option. But lots of plumbing required - would need
+# to propagate update & draw events through the chain, etc. (This is the
+# idea that rather than have a flat locations list, we'd just retain one
+# node per graph - or potentially a 'graph' object - and have them manage
+# themselves.)
