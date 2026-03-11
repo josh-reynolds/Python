@@ -20,10 +20,9 @@ from utilities import get_all_entities
 
 locations = []
 
-# TO_DO: touches global locations list
-def check_for_connections(room: Location) -> None:
+def check_for_connections(room: Location, locs: List[Location]) -> None:
     """Test whether a newly-added room collides with an existing one, and link up if so."""
-    cavities = [l for l in locations if isinstance(l, Location)]
+    cavities = [l for l in locs if isinstance(l, Location)]
     if room in cavities:
         cavities.remove(room)
     for location in cavities:
@@ -309,7 +308,7 @@ class CivilizationAge():
                             treasure.parent = new_room
                             treasure.name = "Dwarven Treasure"
                             new_room.contents = treasure
-                            check_for_connections(new_room)
+                            check_for_connections(new_room, locations)
 
                     # add another dwarf barracks and populate it - do this in separate loop because
                     # these new arrivals should not be part of the treasure room bonanza above
@@ -322,7 +321,7 @@ class CivilizationAge():
 
                         if new_room:
                             new_room.contents = Entity("Dwarves", new_room, CREATURE)
-                            check_for_connections(new_room)
+                            check_for_connections(new_room, locations)
 
                 self.step += 1
                 return new_locations
@@ -411,7 +410,7 @@ class CivilizationAge():
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                            check_for_connections(new_room)
+                            check_for_connections(new_room, locations)
 
                     case 5:
                         print("Exploratory Shaft")
@@ -453,7 +452,7 @@ class CivilizationAge():
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                            check_for_connections(new_room)
+                            check_for_connections(new_room, locations)
 
                     # TO_DO: name the city
                     case 8:
@@ -464,7 +463,7 @@ class CivilizationAge():
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                            check_for_connections(new_room)
+                            check_for_connections(new_room, locations)
 
                     # TO_DO: Treasure Room should have two treasures in it
                     # TO_DO: Treasure Room should not connect to rest of dwarf mine
