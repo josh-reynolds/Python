@@ -1,6 +1,7 @@
 """Contains the MonsterAge class and supporting functions."""
 from typing import List
 from location import Location
+from utilities import get_all_entities
 
 # Age of Monsters
 # TO_DO: we'll need the Great Disaster too, not sure yet if that folds in here

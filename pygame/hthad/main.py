@@ -16,6 +16,7 @@ from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
 from primordial_age import PrimordialAge, create_location
 from monster_age import MonsterAge
+from utilities import get_all_entities
 
 locations = []
 
@@ -29,14 +30,6 @@ def check_for_connections(room: Location) -> None:
         if room.intersects(location):
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
-
-def get_all_entities(locs: List[Location]) -> List[Entity]:
-    """Return a list of all Entities on the map."""
-    entities = []
-    for location in locs:
-        if isinstance(location, Location) and location.contents:
-            entities.append(location.contents)
-    return entities
 
 def dwarf_mine_factory(x_location: int, depth: int,
                        target_mineral: GoldVein | Mithril) -> List[Room]:
