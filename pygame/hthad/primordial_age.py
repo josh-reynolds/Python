@@ -9,11 +9,11 @@ from landscape import GoldVein, UndergroundRiver, get_random_underground_locatio
 from location import Cavern, Location
 from utilities import create_location
 
-def natural_cavern_factory() -> Cavern:
+def natural_cavern_factory(locs: List[Location]) -> Cavern:
     """Generate a natural cavern."""
     coordinate = get_random_underground_location()
 
-    cavern = create_location(Cavern, coordinate)
+    cavern = create_location(Cavern, coordinate, locs)
     cavern.color = CAVERN
 
     detail = randint(1,6)
@@ -34,12 +34,12 @@ def natural_cavern_factory() -> Cavern:
 
     return cavern
 
-def add_caverns() -> List[Location]:
+def add_caverns(locs: List[Location]) -> List[Location]:
     """Generate a random number of Caverns."""
-    new_locations = [natural_cavern_factory()]
+    new_locations = [natural_cavern_factory(locs)]
     cavern_count = 1
     while randint(1,6) < 6 and cavern_count < 6:
-        new_locations.append(natural_cavern_factory())
+        new_locations.append(natural_cavern_factory(locs))
         cavern_count += 1
     return new_locations
 
@@ -49,27 +49,27 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
     new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
 
-def cave_complex_factory() -> List[Cavern]:
+def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
     """Generate a cave complex."""
     radius = BEAD
     sites = []
 
     first_point = get_random_underground_location()
-    cavern1 = create_location(Cavern, first_point)
+    cavern1 = create_location(Cavern, first_point, locs)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Primordial Beasts", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, 3 * radius, angle_1)
-    cavern2 = create_location(Cavern, second_point)
+    cavern2 = create_location(Cavern, second_point, locs)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Primordial Beasts", cavern2, CREATURE)
     sites.append(cavern2)
 
     angle_2 = angle_1 + randint(70,290)
     third_point = get_orbital_point(first_point, 3 * radius, angle_2)
-    cavern3 = create_location(Cavern, third_point)
+    cavern3 = create_location(Cavern, third_point, locs)
     cavern3.color = CAVERN
     cavern3.contents = Entity("Primordial Beasts", cavern3, CREATURE)
     sites.append(cavern3)
@@ -80,20 +80,20 @@ def cave_complex_factory() -> List[Cavern]:
     return sites
 
 # TO_DO: name the wyrm
-def ancient_wyrm_factory() -> List[Cavern]:
+def ancient_wyrm_factory(locs: List[Location]) -> List[Cavern]:
     """Generate a cavern containing an ancient wyrm."""
     radius = BEAD
     sites = []
 
     first_point = get_random_underground_location()
-    cavern1 = create_location(Cavern, first_point)
+    cavern1 = create_location(Cavern, first_point, locs)
     cavern1.color = CAVERN
     cavern1.contents = Entity("Ancient Wyrm", cavern1, CREATURE)
     sites.append(cavern1)
 
     angle_1 = randint(0,359)
     second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
-    cavern2 = create_location(Cavern, second_point)
+    cavern2 = create_location(Cavern, second_point, locs)
     cavern2.color = CAVERN
     cavern2.contents = Entity("Wyrm Treasure", cavern2, TREASURE)
     sites.append(cavern2)
@@ -111,8 +111,6 @@ class PrimordialAge():
         self.rolls = 0
         self.name = "Primordial Age"
 
-    # pylint: disable=W0613
-    # W0613: Unused argument 'locs'
     def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
@@ -126,20 +124,20 @@ class PrimordialAge():
                 #new_locations.append(Mithril())
                 new_locations.append(GoldVein())
             case 1 | 2:
-                new_locations += add_caverns()
+                new_locations += add_caverns(locs)
             case 3:
                 new_locations.append(GoldVein())
             case 4:
-                new_locations += cave_complex_factory()
+                new_locations += cave_complex_factory(locs)
             case 5:
                 river = UndergroundRiver()
                 new_locations.append(river)
                 for coord in river.caves:
-                    new_cavern = create_location(Cavern, coord)
+                    new_cavern = create_location(Cavern, coord, locs)
                     new_cavern.color = CAVERN
                     new_locations.append(new_cavern)
             case 6:
-                new_locations += ancient_wyrm_factory()
+                new_locations += ancient_wyrm_factory(locs)
             # TO_DO: there is an additional choice for natural disasters,
             #        implement when we come to that rule
 

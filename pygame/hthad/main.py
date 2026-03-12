@@ -25,19 +25,19 @@ def dwarf_mine_factory(x_location: int, depth: int,
     """Generate the start of a Dwarf mine."""
     sites = []
 
-    room0 = create_location(Room, PVector(x_location, GROUND_LEVEL))
+    room0 = create_location(Room, PVector(x_location, GROUND_LEVEL), locations)
     room0.name = "Start"
     room0.color = DWARF
     sites.append(room0)
 
     half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-    room1 = create_location(Room, PVector(x_location, half_height))
+    room1 = create_location(Room, PVector(x_location, half_height), locations)
     room1.name = "Barracks"
     room1.color = DWARF
     room1.contents = Entity("Dwarves", room1, CREATURE)
     sites.append(room1)
 
-    room2 = create_location(Room, PVector(x_location, depth))
+    room2 = create_location(Room, PVector(x_location, depth), locations)
     room2.name = "Mine"
     room2.color = DWARF
     room2.target = target_mineral
@@ -105,7 +105,7 @@ def add_candidate(name: str, parent: Location, direction: int,
 
     scaled = PVector.mult(shuffled[direction], distance)
     candidate_location = PVector.add(parent.coordinate, scaled)
-    room_to_add = create_location(Room, candidate_location, size)
+    room_to_add = create_location(Room, candidate_location, locations, size)
     room_to_add.name = name
     locations.append(room_to_add)
     return room_to_add
@@ -350,7 +350,7 @@ class CivilizationAge():
                 if isinstance(deposit, GoldVein):
                     new_x = parent_mine.coordinate.x + (direction * ROOM_SPACING)
                     new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-                    new_room = create_location(Room, PVector(new_x, new_y))
+                    new_room = create_location(Room, PVector(new_x, new_y), locations)
                     new_room.name = "Mine"
                     new_room.target = parent_mine.target
                     new_room.color = parent_mine.color
@@ -363,7 +363,7 @@ class CivilizationAge():
                     #        need a better approach here
                     to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
                     new_location = PVector.sub(parent_mine.coordinate, to_corner)
-                    new_room = create_location(Room, new_location)
+                    new_room = create_location(Room, new_location, locations)
                     new_room.name = "Mine"
                     new_room.target = parent_mine.target
                     new_room.color = parent_mine.color
@@ -385,7 +385,7 @@ class CivilizationAge():
                         selection = choice(get_parent_rooms(["Mine"], self.mine_start))
                         new_location = PVector(selection.coordinate.x,
                                                selection.coordinate.y + ROOM_SPACING)
-                        new_room = create_location(Room, new_location, (BEAD*2,BEAD))
+                        new_room = create_location(Room, new_location, locations, (BEAD*2,BEAD))
                         new_room.name = "Workshop"
                         new_room.color = selection.color
                         selection.add_neighbor(new_room)
@@ -411,7 +411,7 @@ class CivilizationAge():
 
                         new_location = PVector(shaft_bottom.coordinate.x,
                                                shaft_bottom.coordinate.y + FINGER)
-                        new_room = create_location(Room, new_location)
+                        new_room = create_location(Room, new_location, locations)
                         new_room.name = "Outpost"
                         new_room.color = shaft_bottom.color
                         shaft_bottom.add_neighbor(new_room)
@@ -479,7 +479,7 @@ class CivilizationAge():
                         shaft_x = bottom.coordinate.x
                         shaft_y = HEIGHT + BEAD
 
-                        new_room = create_location(Room, PVector(shaft_x, shaft_y))
+                        new_room = create_location(Room, PVector(shaft_x, shaft_y), locations)
                         new_room.name = "End"
                         new_room.color = bottom.color
                         bottom.add_neighbor(new_room)
