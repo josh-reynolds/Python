@@ -29,6 +29,5 @@ def create_location(location_type: Callable,
                     size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
     """Create a new location and add to the list."""
     new_location = location_type(coordinate=coordinate, size=size)
-    # TO_DO: commented out while check_for_connections is fixed up
-    #check_for_connections(new_location)
+    check_for_connections(new_location, locs)
     return new_location
