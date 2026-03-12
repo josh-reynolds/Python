@@ -14,9 +14,9 @@ from landscape import UndergroundRiver, Stratum
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
 from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
 from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
-from primordial_age import PrimordialAge, create_location
+from primordial_age import PrimordialAge
 from monster_age import MonsterAge
-from utilities import get_all_entities, check_for_connections
+from utilities import get_all_entities, check_for_connections, create_location
 
 locations = []
 

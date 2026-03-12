@@ -1,5 +1,7 @@
 """Contains utility functions."""
-from typing import List
+from typing import List, Callable, Tuple
+from pvector import PVector
+from constants import BEAD
 from entity import Entity
 from location import Location
 
@@ -20,3 +22,11 @@ def check_for_connections(room: Location, locs: List[Location]) -> None:
         if room.intersects(location):
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
+
+def create_location(location_type: Callable, coordinate: PVector,
+                    size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
+    """Create a new location and add to the list."""
+    new_location = location_type(coordinate=coordinate, size=size)
+    # TO_DO: commented out while check_for_connections is fixed up
+    #check_for_connections(new_location)
+    return new_location

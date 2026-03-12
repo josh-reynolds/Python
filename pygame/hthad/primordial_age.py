@@ -1,12 +1,13 @@
 """Contains the PrimordialAge class and supporting functions."""
 import math
 from random import randint
-from typing import Callable, Tuple, List
+from typing import List
 from pvector import PVector
 from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
 from entity import Entity
-from landscape import Mithril, GoldVein, UndergroundRiver, get_random_underground_location
+from landscape import GoldVein, UndergroundRiver, get_random_underground_location
 from location import Cavern, Location
+from utilities import create_location
 
 def natural_cavern_factory() -> Cavern:
     """Generate a natural cavern."""
@@ -41,14 +42,6 @@ def add_caverns() -> List[Location]:
         new_locations.append(natural_cavern_factory())
         cavern_count += 1
     return new_locations
-
-def create_location(location_type: Callable, coordinate: PVector,
-                    size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
-    """Create a new location and add to the list."""
-    new_location = location_type(coordinate=coordinate, size=size)
-    # TO_DO: commented out while check_for_connections is fixed up
-    #check_for_connections(new_location)
-    return new_location
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
     """Generate a point on a circle of given radius and angle around an origin."""
@@ -118,6 +111,8 @@ class PrimordialAge():
         self.rolls = 0
         self.name = "Primordial Age"
 
+    # pylint: disable=W0613
+    # W0613: Unused argument 'locs'
     def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
