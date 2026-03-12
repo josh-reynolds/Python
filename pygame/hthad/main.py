@@ -140,7 +140,11 @@ def out_of_bounds(point: PVector) -> bool:
 #   bail out after some number of attempts?
 # try another if none found
 # how do we handle if _no_ viable locations can be found?
-
+#
+# might be better to sort the list by neighbor count rather than
+# prune - sometimes the current approach can get stuck. It returns a
+# very short list of parents, none of which have viable build locations
+# adjacent.
 def get_parent_rooms(types: List[str], mine_start: Location) -> List[Location]:
     """Return the parent room to attach a new room to."""
     parents = []
@@ -148,9 +152,11 @@ def get_parent_rooms(types: List[str], mine_start: Location) -> List[Location]:
         parents += mine_start.get_locations_by_name(room_name)
 
     neighbor_counts = [len(r.neighbors) for r in parents]
-    min_neighbors = min(neighbor_counts)
+    if neighbor_counts:
+        min_neighbors = min(neighbor_counts)
+        return [r for r in parents if len(r.neighbors) == min_neighbors]
 
-    return [r for r in parents if len(r.neighbors) == min_neighbors]
+    return []
 
 def get_candidate_room(parents: List[Location], room_name: str,
                        size: Tuple[int,int]=(BEAD,BEAD),
@@ -306,7 +312,8 @@ class CivilizationAge():
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         print("Adding Barracks")
-                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Room", "Outpost"],
+                                                     self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks")
 
                         if new_room:
