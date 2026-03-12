@@ -1,14 +1,9 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
-from random import randint, choice, shuffle
-from typing import List, Tuple, Callable
-from pygame import Rect
+from random import shuffle
 from engine import screen, run
-from pvector import PVector
-from intersections import rect_segment_intersects
-from location import Location, Cavern, Room
-from entity import Entity
-from landscape import Mithril, GoldVein, get_random_underground_location, strata_depth
-from landscape import UndergroundRiver, Stratum
+from landscape import strata_depth
+from landscape import Stratum
+
 # pylint: disable=W0611
 # W0611: Unused TITLE imported from constants (unused-import)
 from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
@@ -38,14 +33,6 @@ for i in range(6):
 
 # TO_DO: don't store all locations in locations list, we just need
 #        one node (i.e. location) for each graph
-
-def in_bounds(point: PVector) -> bool:
-    """Test whether the given point is within the underground region of the screen."""
-    return 0 <= point.x <= WIDTH and GROUND_LEVEL <= point.y <= HEIGHT
-
-def out_of_bounds(point: PVector) -> bool:
-    """Test whether the given point is outside the underground region of the screen."""
-    return not in_bounds(point)
 
 counter = 1
 stages = [PrimordialAge(), CivilizationAge(), MonsterAge()]

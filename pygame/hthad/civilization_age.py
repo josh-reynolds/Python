@@ -1,6 +1,7 @@
 """Contains the CivilizationAge class and supporting functions."""
 from random import choice, randint, shuffle
 from typing import List, Tuple
+from pygame import Rect
 from pvector import PVector
 from intersections import rect_segment_intersects
 from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, CREATURE
@@ -371,7 +372,8 @@ class CivilizationAge():
                         selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
-                        new_room = get_candidate_room(selection, "Great Hall", locs, (FINGER//2, BEAD))
+                        new_room = get_candidate_room(selection, "Great Hall", locs,
+                                                      (FINGER//2, BEAD))
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
@@ -423,7 +425,8 @@ class CivilizationAge():
                     case 8:
                         print("Dwarven Golden Age City")
                         selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
-                        new_room = get_candidate_room(selection, "Dwarven City", locs, (FINGER, BEAD))
+                        new_room = get_candidate_room(selection, "Dwarven City", locs,
+                                                      (FINGER, BEAD))
 
                         if new_room:
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
@@ -475,4 +478,3 @@ class CivilizationAge():
     def is_done(self) -> bool:
         """Return whether the CivilizationAge has completed or not."""
         return self.done
-
