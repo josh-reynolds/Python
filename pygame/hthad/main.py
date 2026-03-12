@@ -1,9 +1,6 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
-from random import shuffle
-from typing import List
 from engine import screen, run
-from landscape import strata_depth
-from landscape import Stratum
+from landscape import strata_depth, make_strata
 
 # pylint: disable=W0611
 # W0611: Unused TITLE imported from constants (unused-import)
@@ -16,23 +13,6 @@ from civilization_age import CivilizationAge
 from utilities import get_all_entities, check_for_connections, create_location
 
 locations = []
-
-
-def make_strata() -> List[Stratum]:
-    colors = [(105,99,39),
-              (137,131,75),
-              (87,84,57),
-              (177,169,96),
-              (108,86,19),
-              (125,117,93),
-              (45,48,19)]
-    shuffle(colors)
-
-    results = []
-    for i in range(6):
-        results.append(Stratum(150 + i * 120, colors[i]))
-    return results
-
 strata = make_strata()
 
 # TO_DO: need to keep track of yearly events

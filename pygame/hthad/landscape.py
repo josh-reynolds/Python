@@ -1,7 +1,7 @@
 """Contains classes to represent landscape features."""
 import math
-from random import randint
-from typing import Tuple
+from random import randint, shuffle
+from typing import Tuple, List
 from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
@@ -161,3 +161,19 @@ class Stratum():
     def draw(self) -> None:
         """Draw the Stratum to the screen once per frame."""
         screen.draw.polygon(self.points, self.color, 0)
+
+def make_strata() -> List[Stratum]:
+    colors = [(105,99,39),
+              (137,131,75),
+              (87,84,57),
+              (177,169,96),
+              (108,86,19),
+              (125,117,93),
+              (45,48,19)]
+    shuffle(colors)
+
+    results = []
+    for i in range(6):
+        results.append(Stratum(150 + i * 120, colors[i]))
+    return results
+
