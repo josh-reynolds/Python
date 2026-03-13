@@ -388,6 +388,7 @@ class CivilizationAge():
                         # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
                         selection = get_parent_rooms(["Great Hall"], self.mine_start)
+                        new_room = None
                         if selection:
                             new_room = get_candidate_room(selection, "Hall of Records", locs,
                                                           (BEAD, BEAD), 3)
@@ -407,7 +408,6 @@ class CivilizationAge():
                             new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
                             check_for_connections(new_room, locs)
 
-                    # TO_DO: Treasure Room should have two treasures in it
                     # TO_DO: Treasure Room should not connect to rest of dwarf mine
                     case 9:
                         print("Treasure Room")
@@ -416,7 +416,9 @@ class CivilizationAge():
                                                       ROOM_SPACING * 3)
 
                         if new_room:
-                            new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                            treasure = Entity("Dwarven Treasure", new_room, TREASURE)
+                            treasure.value = 2
+                            new_room.contents = treasure
 
                     case 10 | 11 | 12 | 13 | 14 | 15:
                         print("Delve Too Deep")
