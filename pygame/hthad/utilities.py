@@ -1,6 +1,7 @@
 """Contains utility functions."""
 from typing import List, Callable, Tuple
 from pvector import PVector
+from intersections import rect_segment_intersects
 from constants import BEAD, WIDTH, GROUND_LEVEL, HEIGHT
 from entity import Entity
 from location import Location
@@ -40,3 +41,18 @@ def out_of_bounds(point: PVector) -> bool:
     """Test whether the given point is outside the underground region of the screen."""
     return not in_bounds(point)
 
+def is_viable(candidate_room: Location, nodes: List[Location], edges: List[Tuple]) -> bool:
+    """Test whether a candidate location is legal."""
+    for location in nodes:
+        if candidate_room.intersects(location):
+            return False
+
+    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in edges]
+    for tunnel in tunnel_coords:
+        if rect_segment_intersects(candidate_room.rect, tunnel):
+            return False
+
+    if out_of_bounds(candidate_room.coordinate):
+        return False
+
+    return True

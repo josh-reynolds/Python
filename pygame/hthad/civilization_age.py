@@ -9,7 +9,7 @@ from constants import TREASURE, HEIGHT
 from entity import Entity
 from landscape import Mithril, GoldVein
 from location import Location, Room
-from utilities import create_location, check_for_connections, in_bounds, out_of_bounds
+from utilities import create_location, check_for_connections, in_bounds, out_of_bounds, is_viable
 
 directions = [PVector(ROOM_SPACING,0),
               PVector(-ROOM_SPACING,0),
@@ -37,22 +37,6 @@ def add_candidate(name: str, parent: Location, direction: int,
     room_to_add.name = name
     locs.append(room_to_add)
     return room_to_add
-
-def is_viable(candidate_room: Location, nodes: List[Location], edges: List[Tuple]) -> bool:
-    """Test whether a candidate location is legal."""
-    for location in nodes:
-        if candidate_room.intersects(location):
-            return False
-
-    tunnel_coords = [(a.coordinate, b.coordinate) for a,b in edges]
-    for tunnel in tunnel_coords:
-        if rect_segment_intersects(candidate_room.rect, tunnel):
-            return False
-
-    if out_of_bounds(candidate_room.coordinate):
-        return False
-
-    return True
 
 def get_candidate_room(parents: List[Location], room_name: str,
                        locs: List[Location],
