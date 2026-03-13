@@ -11,7 +11,7 @@ class Location():
 
     # pylint: disable=R0902
     # R0902: Too many instance attributes (9/7)
-    def __init__(self, coordinate: PVector, name: str, 
+    def __init__(self, coordinate: PVector, name: str,
                  color: Tuple, size: Tuple[int,int]) -> None:
         """Create an instance of a Location object."""
         self.name = name

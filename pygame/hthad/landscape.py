@@ -6,7 +6,7 @@ from pvector import PVector
 from screen_matrix import push_matrix, pop_matrix, translate, rotate, equilateral_triangle
 from engine import screen
 from constants import WIDTH, HEIGHT, FINGER, GROUND_LEVEL, STRATA_HEIGHT, BEAD
-from constants import GOLD, MITHRIL, BORDER, SHOW_LABELS, MARGIN, CAVERN, WATER
+from constants import GOLD, MITHRIL, SHOW_LABELS, MARGIN, WATER
 
 def nearest_corner(point: PVector) -> PVector:
     """Return the nearest screen corner to the given point."""
@@ -163,6 +163,7 @@ class Stratum():
         screen.draw.polygon(self.points, self.color, 0)
 
 def make_strata() -> List[Stratum]:
+    """Create and return a set of Strata."""
     colors = [(105,99,39),
               (137,131,75),
               (87,84,57),
@@ -176,4 +177,3 @@ def make_strata() -> List[Stratum]:
     for i in range(6):
         results.append(Stratum(150 + i * 120, colors[i]))
     return results
-
