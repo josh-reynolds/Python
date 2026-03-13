@@ -1,7 +1,7 @@
 """Contains utility functions."""
 from typing import List, Callable, Tuple
 from pvector import PVector
-from constants import BEAD
+from constants import BEAD, WIDTH, GROUND_LEVEL, HEIGHT
 from entity import Entity
 from location import Location
 
@@ -31,3 +31,12 @@ def create_location(location_type: Callable,
     new_location = location_type(coordinate=coordinate, size=size)
     check_for_connections(new_location, locs)
     return new_location
+
+def in_bounds(point: PVector) -> bool:
+    """Test whether the given point is within the underground region of the screen."""
+    return 0 <= point.x <= WIDTH and GROUND_LEVEL <= point.y <= HEIGHT
+
+def out_of_bounds(point: PVector) -> bool:
+    """Test whether the given point is outside the underground region of the screen."""
+    return not in_bounds(point)
+
