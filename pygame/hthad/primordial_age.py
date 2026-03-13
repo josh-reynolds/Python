@@ -7,7 +7,7 @@ from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
 from entity import Entity
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location
 from location import Cavern, Location
-from utilities import create_location
+from utilities import create_location, out_of_bounds
 
 def natural_cavern_factory(locs: List[Location]) -> Cavern:
     """Generate a natural cavern."""
@@ -45,8 +45,10 @@ def add_caverns(locs: List[Location]) -> List[Location]:
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
     """Generate a point on a circle of given radius and angle around an origin."""
-    new_x = radius * math.cos(math.radians(angle)) + origin.x
-    new_y = radius * math.sin(math.radians(angle)) + origin.y
+    new_x = new_y = -1
+    while out_of_bounds(PVector(new_x, new_y)):
+        new_x = radius * math.cos(math.radians(angle)) + origin.x
+        new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
 
 def cave_complex_factory(locs: List[Location]) -> List[Cavern]:

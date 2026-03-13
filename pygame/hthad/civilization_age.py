@@ -3,7 +3,6 @@ from random import choice, randint, shuffle
 from typing import List, Tuple
 from pygame import Rect
 from pvector import PVector
-from intersections import rect_segment_intersects
 from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, CREATURE
 from constants import TREASURE, HEIGHT
 from entity import Entity
