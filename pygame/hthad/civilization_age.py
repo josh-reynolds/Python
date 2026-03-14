@@ -237,32 +237,29 @@ class CivilizationAge():
                 #        Alternatively, we can remove treasures at the end of the
                 #        Age by room name, which is how the rules are written...
                 if treasures:
+                    current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
                     for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         print("Adding Treasure Vault")
-                        selection = get_parent_rooms(["Barracks"], self.mine_start)
-                        new_room = get_candidate_room(selection, "Treasure Vault", locs)
+                        new_vault = get_candidate_room(current_barracks, "Treasure Vault", locs)
 
-                        if new_room:
-                            treasure.parent = new_room
+                        if new_vault:
+                            treasure.parent = new_vault
                             treasure.name = "Dwarven Treasure"
-                            new_room.contents = treasure
-                            check_for_connections(new_room, locs)
+                            new_vault.contents = treasure
+                            check_for_connections(new_vault, locs)
 
-                    # add another dwarf barracks and populate it - do this in separate loop because
-                    # these new arrivals should not be part of the treasure room bonanza above
-                    for treasure in treasures:
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         print("Adding Barracks")
                         selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
                                                      self.mine_start)
-                        new_room = get_candidate_room(selection, "Barracks", locs)
+                        new_barracks = get_candidate_room(selection, "Barracks", locs)
 
-                        if new_room:
-                            new_room.contents = Entity("Dwarves", new_room, CREATURE)
-                            check_for_connections(new_room, locs)
+                        if new_barracks:
+                            new_barracks.contents = Entity("Dwarves", new_barracks, CREATURE)
+                            check_for_connections(new_barracks, locs)
 
                 self.step += 1
                 return new_locations
