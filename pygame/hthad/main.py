@@ -199,3 +199,115 @@ run()
 # idea that rather than have a flat locations list, we'd just retain one
 # node per graph - or potentially a 'graph' object - and have them manage
 # themselves.)
+# ---------------------------------------------
+# Cataloging current location creation approaches:
+#
+# Caverns:
+# PrimordialAge.update()
+#   add_caverns()
+#     natural_cavern_factory()
+#       get_random_underground_location()
+#       create_location()
+#       CUSTOMIZE
+#
+#   cave_complex_factory()
+#     get_random_underground_location()
+#     create_location()
+#     CUSTOMIZE
+#     get_orbital_point()
+#     create_location()
+#     CUSTOMIZE
+#     get_orbital_point()
+#     create_location()
+#     CUSTOMIZE
+#     CONNECT
+#
+#   ancient_wyrm_factory()
+#     get_random_underground_location()
+#     create_location()
+#     CUSTOMIZE
+#     get_orbital_point()
+#     create_location()
+#     CUSTOMIZE
+#     CONNECT
+#
+#   CALCULATE NEW LOCATION  # inside UndergroundRiver creation
+#   create_location()
+#   CUSTOMIZE
+
+# Rooms:
+# PrimordialAge.update()
+#   get_mine_start_location()
+#   dwarf_mine_factory()
+#     create_location()
+#     CUSTOMIZE
+#     CALCULATE NEW LOCATION
+#     create_location()
+#     CUSTOMIZE
+#     CALCULATE NEW LOCATION
+#     create_location()
+#     CUSTOMIZE
+#     CONNECT
+#
+#   get_parent_rooms()     # treasure room
+#   get_candidate_room()
+#     add_candidate()
+#       CALCULATE NEW LOCATION
+#       create_location()
+#       if is_viable():
+#         CONNECT
+#       else:
+#         REMOVE CANDIDATE
+#   CUSTOMIZE
+#   CONNECT
+#   get_parent_rooms()    # barracks
+#   get_candidate_room()
+#     add_candidate()
+#       CALCULATE NEW LOCATION
+#       create_location()
+#       if is_viable():
+#         CONNECT
+#       else:
+#         REMOVE CANDIDATE
+#   CUSTOMIZE
+#   CONNECT
+#
+#   DETERMINE MINE DIRECTION
+#   get_y_at_x()
+#   create_location()
+#   CUSTOMIZE
+#   CONNECT
+#
+#   get_parent_rooms()   # workshops
+#   CALCULATE NEW LOCATION
+#   create_location()
+#   CUSTOMIZE
+#   CONNECT
+#
+#   get_parent_rooms()   # great hall, hall of records, dwarf city
+#   get_candidate_room()
+#     add_candidate()
+#       CALCULATE NEW LOCATION
+#       create_location()
+#       if is_viable():
+#         CONNECT
+#       else:
+#         REMOVE CANDIDATE
+#   CUSTOMIZE
+#   CONNECT
+#
+#   FIND MAIN SHAFT BOTTOM  # exploratory shaft
+#   CALCULATE NEW LOCATION
+#   create_location()
+#   CUSTOMIZE
+#   CONNECT
+#
+#   get_candidate_room()    # treasure room
+#   CUSTOMIZE
+#
+#   FIND MINE COMPLEX BOTTOM
+#   CALCULATE NEW LOCATION
+#   create_location()
+#   CUSTOMIZE
+#   CONNECT
+#  

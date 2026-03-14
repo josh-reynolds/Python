@@ -385,7 +385,6 @@ class CivilizationAge():
                                                    great_hall.rect.h)
 
                     case 7:
-                        # TO_DO: tunnel should be longer, need to tweak creation
                         print("Hall of Records")
                         selection = get_parent_rooms(["Great Hall"], self.mine_start)
                         new_room = None
@@ -420,6 +419,8 @@ class CivilizationAge():
                             treasure.value = 2
                             new_room.contents = treasure
 
+                    # TO_DO: cook up a better approach, we could still run off the 
+                    #        end of this and get stuck, in theory
                     case 10 | 11 | 12 | 13 | 14 | 15:
                         print("Delve Too Deep")
                         self.done = True
@@ -443,6 +444,8 @@ class CivilizationAge():
                 self.step += 1
                 return new_locations
 
+            # TO_DO: haven't implemented conflict or death yet - need to track and
+            #        build tombs accordingly once we do...
             case 4:
                 print(f"Year {self.year} Winter - mourning")
 
