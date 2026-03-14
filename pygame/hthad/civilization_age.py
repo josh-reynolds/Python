@@ -238,13 +238,11 @@ class CivilizationAge():
                 #        Age by room name, which is how the rules are written...
                 if treasures:
                     for treasure in treasures:
-                        # TO_DO: should distinguish this from the construction event
-                        #        maybe these are 'Treasure Vaults'?
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
-                        print("Adding Treasure Room")
+                        print("Adding Treasure Vault")
                         selection = get_parent_rooms(["Barracks"], self.mine_start)
-                        new_room = get_candidate_room(selection, "Treasure Room", locs)
+                        new_room = get_candidate_room(selection, "Treasure Vault", locs)
 
                         if new_room:
                             treasure.parent = new_room
@@ -258,7 +256,7 @@ class CivilizationAge():
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         print("Adding Barracks")
-                        selection = get_parent_rooms(["Barracks", "Treasure Room", "Outpost"],
+                        selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
                                                      self.mine_start)
                         new_room = get_candidate_room(selection, "Barracks", locs)
 
@@ -346,7 +344,7 @@ class CivilizationAge():
 
                     case 4:
                         print("Great Hall")
-                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Vault"], self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
                         new_room = get_candidate_room(selection, "Great Hall", locs,
@@ -401,7 +399,7 @@ class CivilizationAge():
                     # TO_DO: name the city
                     case 8:
                         print("Dwarven Golden Age City")
-                        selection = get_parent_rooms(["Barracks", "Treasure Room"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Vault"], self.mine_start)
                         new_room = get_candidate_room(selection, "Dwarven City", locs,
                                                       (FINGER, BEAD))
 
