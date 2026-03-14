@@ -238,6 +238,8 @@ class CivilizationAge():
                 #        Age by room name, which is how the rules are written...
                 if treasures:
                     for treasure in treasures:
+                        # TO_DO: should distinguish this from the construction event
+                        #        maybe these are 'Treasure Vaults'?
                         # pylint: disable=C0103
                         # C0103: Constant name doesn't conform to UPPER_CASE naming style
                         print("Adding Treasure Room")

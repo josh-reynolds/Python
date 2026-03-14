@@ -239,28 +239,17 @@ run()
 # PrimordialAge.update()
 #   get_mine_start_location()
 #   dwarf_mine_factory()
-#     create_location()
+#     create_location()      # start
 #     CUSTOMIZE
 #     CALCULATE NEW LOCATION
-#     create_location()
+#     create_location()      # barracks
 #     CUSTOMIZE
 #     CALCULATE NEW LOCATION
-#     create_location()
+#     create_location()      # mine
 #     CUSTOMIZE
 #     CONNECT
 #
-#   get_parent_rooms()     # treasure room
-#   get_candidate_room()
-#     add_candidate()
-#       CALCULATE NEW LOCATION
-#       create_location()
-#       if is_viable():
-#         CONNECT
-#       else:
-#         REMOVE CANDIDATE
-#   CUSTOMIZE
-#   CONNECT
-#   get_parent_rooms()    # barracks
+#   get_parent_rooms()     # treasure vault, barracks, great hall, hall of records, dwarf city
 #   get_candidate_room()
 #     add_candidate()
 #       CALCULATE NEW LOCATION
@@ -272,7 +261,7 @@ run()
 #   CUSTOMIZE
 #   CONNECT
 #
-#   DETERMINE MINE DIRECTION
+#   DETERMINE MINE DIRECTION   # mines
 #   get_y_at_x()
 #   create_location()
 #   CUSTOMIZE
@@ -284,8 +273,13 @@ run()
 #   CUSTOMIZE
 #   CONNECT
 #
-#   get_parent_rooms()   # great hall, hall of records, dwarf city
-#   get_candidate_room()
+#   FIND MAIN SHAFT BOTTOM  # exploratory shaft
+#   CALCULATE NEW LOCATION
+#   create_location()
+#   CUSTOMIZE
+#   CONNECT
+#
+#   get_candidate_room()    # treasure room (parents=all)
 #     add_candidate()
 #       CALCULATE NEW LOCATION
 #       create_location()
@@ -294,20 +288,59 @@ run()
 #       else:
 #         REMOVE CANDIDATE
 #   CUSTOMIZE
-#   CONNECT
 #
-#   FIND MAIN SHAFT BOTTOM  # exploratory shaft
+#   FIND MINE COMPLEX BOTTOM   # dig too deep
 #   CALCULATE NEW LOCATION
 #   create_location()
 #   CUSTOMIZE
 #   CONNECT
 #
-#   get_candidate_room()    # treasure room
-#   CUSTOMIZE
+# ----------------------------------------------------------------------------------------------
+#                               ROOMS                                    | CAVERNS
+#                               DD TR ES GH HR DC WS MN BR TV ST STB STT | UR AW AWT CCS CC+ CV
+# 1. find potential coordinates                                          |
+#       calculated               .  .  .  .  .  .  .  .  .  .  x   .   . |  x  x   .   x   .  x
+#       offset from parent       x  x  x  x  x  x  x  x  x  x  .   x   x |  .  .   x   .   x  .
+# 2. test viability              .  x  .  x  x  x  .  .  x  x  .   .   . |  .  .   .   .   .  .
+# 3. customize                   x  x  x  x  x  x  x  x  x  x  x   x   x |  x  x   x   x   x  x
+# 4. connect parent              x  .  x  x  x  x  x  x  x  x  .   x   x |  .  .   x   .   x  .
+# 5. proximity connections                                               |  .  .   .   .   .  .
+
+# generalizing location creation:
 #
-#   FIND MINE COMPLEX BOTTOM
-#   CALCULATE NEW LOCATION
-#   create_location()
-#   CUSTOMIZE
-#   CONNECT
-#  
+# 1. is this the start of a new graph, or attached to existing?
+#    A. START OF NEW (CV, CCS, AW, AR, UR, ST)
+#       1. calculate a coordinate
+#          get_random_underground_location() | UndergroundRiver() | get_mine_start_location()
+#       2. create location
+#          create_location()
+#       3. customize it
+#          DIRECT ACCESS
+
+#    B. ATTACHED TO EXISTING (CC+, AWT, STB, STT, TV, BR, GH, HR, DC, MN, WS, ES, TR, DD)
+#       1. determine parent node candidates
+#          BAKED IN | get_parent_rooms() | MINE LAYOUT | SHAFT BOTTOM | COMPLEX BOTTOM | ALL
+#       2. calculate offset from parent - if none, bail out
+#          get_orbital_point() | BAKED IN OFFSET | DIRECTIONAL CALC
+#       3. test for legality
+#          TRUE | is_viable()
+#          a. if illegal loop back to 1.B.2. with next parent
+#          b. if legal
+#             1. create location
+#                create_location()
+#             2. customize it
+#                DIRECT ACCESS
+#             3. attach to parent
+#                OBJECT METHOD
+#             4. check for proximity and make more connections
+#                check_for_connections()
+#
+# Notes:
+#  - might help to convert some of the inline code to functions, then this could become a strategy
+#    that we customize by passing in function objects. The ALL CAPS entries above.
+#  - the 'missing' viability tests could be interpreted as a lambda that always returns True
+#  - with this kind of flexibilty we could cook up all kinds of variations just by plugging in
+#    different functions
+#  - the 'clumped' creation sequences should be broken up - mine start, cavern complex, etc. These
+#    are really higher level factories or builders - separate them from actual location creation,
+#    and probably allow for sequential building rather than all at once.
