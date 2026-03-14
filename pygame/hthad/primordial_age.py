@@ -22,11 +22,11 @@ def natural_cavern_factory(locs: List[Location]) -> Cavern:
             cavern.tunnel = True
             cavern.tilt = randint(-FINGER//2, FINGER//2)
         case 2:
-            event = Entity(f"Plague", cavern, EVENT)
+            event = Entity("Plague", cavern, EVENT)
             event.value = randint(1,4)
             cavern.contents = event
         case 3:
-            treasure = Entity(f"Gemstones", cavern, TREASURE)
+            treasure = Entity("Gemstones", cavern, TREASURE)
             treasure.value = randint(1,4)
             cavern.contents = treasure
         case 4:

@@ -8,7 +8,7 @@ from constants import TREASURE, HEIGHT
 from entity import Entity
 from landscape import Mithril, GoldVein
 from location import Location, Room
-from utilities import create_location, check_for_connections, in_bounds, out_of_bounds, is_viable
+from utilities import create_location, check_for_connections, is_viable
 
 directions = [PVector(ROOM_SPACING,0),
               PVector(-ROOM_SPACING,0),
@@ -341,7 +341,8 @@ class CivilizationAge():
 
                     case 4:
                         print("Great Hall")
-                        selection = get_parent_rooms(["Barracks", "Treasure Vault"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                                     self.mine_start)
 
                         # TO_DO: need to customize size/shape of Great Hall
                         new_room = get_candidate_room(selection, "Great Hall", locs,
@@ -396,7 +397,8 @@ class CivilizationAge():
                     # TO_DO: name the city
                     case 8:
                         print("Dwarven Golden Age City")
-                        selection = get_parent_rooms(["Barracks", "Treasure Vault"], self.mine_start)
+                        selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                                     self.mine_start)
                         new_room = get_candidate_room(selection, "Dwarven City", locs,
                                                       (FINGER, BEAD))
 
@@ -416,7 +418,7 @@ class CivilizationAge():
                             treasure.value = 2
                             new_room.contents = treasure
 
-                    # TO_DO: cook up a better approach, we could still run off the 
+                    # TO_DO: cook up a better approach, we could still run off the
                     #        end of this and get stuck, in theory
                     case 10 | 11 | 12 | 13 | 14 | 15:
                         print("Delve Too Deep")
