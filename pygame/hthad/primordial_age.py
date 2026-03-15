@@ -154,38 +154,46 @@ class UndergroundRiverStrategy(LocationStrategy):
         """Return the developer string representation of a UndergroundRiverStrategy."""
         return "UndergroundRiverStrategy()"
 
+
 class AncientWyrmStrategy(LocationStrategy):
     """Build an AncientWyrm lair."""
+
+    def __init__(self) -> None:
+        """Create an instance of an AncientWyrmStrategy object."""
+        super().__init__()
+        self.step = 1
+        self.radius = BEAD
+        self.start_node = None
 
     def __repr__(self) -> str:
         """Return the developer string representation of a AncientWyrmStrategy."""
         return "AncientWyrmStrategy()"
 
+    # TO_DO: name the wyrm
+    def next(self, locs: List[Location]) -> List:
+        """Return the next location in the sequence."""
+        sites = []
 
+        if self.step == 1:
+            point = get_random_underground_location()
+            self.start_node = create_location(Cavern, point, locs)
+            self.start_node.color = CAVERN
+            self.start_node.contents = Entity("Ancient Wyrm", self.start_node, CREATURE)
+            sites.append(self.start_node)
 
+        if self.step == 2:
+            self.done = True
 
-# TO_DO: name the wyrm
-def ancient_wyrm_factory(locs: List[Location]) -> List[Cavern]:
-    """Generate a cavern containing an ancient wyrm."""
-    radius = BEAD
-    sites = []
+            angle = randint(0,359)
+            point = get_orbital_point(self.start_node.coordinate, self.radius * 1.5, angle)
+            cavern = create_location(Cavern, point, locs)
+            cavern.color = CAVERN
+            cavern.contents = Entity("Wyrm Treasure", cavern, TREASURE)
+            self.start_node.add_neighbor(cavern)
+            sites.append(cavern)
 
-    first_point = get_random_underground_location()
-    cavern1 = create_location(Cavern, first_point, locs)
-    cavern1.color = CAVERN
-    cavern1.contents = Entity("Ancient Wyrm", cavern1, CREATURE)
-    sites.append(cavern1)
-
-    angle_1 = randint(0,359)
-    second_point = get_orbital_point(first_point, radius * 1.5, angle_1)
-    cavern2 = create_location(Cavern, second_point, locs)
-    cavern2.color = CAVERN
-    cavern2.contents = Entity("Wyrm Treasure", cavern2, TREASURE)
-    sites.append(cavern2)
-
-    sites[0].add_neighbor(sites[1])
-
-    return sites
+        self.step += 1
+        return sites
 
 
 class PrimordialAge():
@@ -202,8 +210,8 @@ class PrimordialAge():
             check = randint(0,6)
             match check:
                 case 0:
-                    # TO_DO: for testing
                     self.builders.append(MithrilStrategy())
+                    # TO_DO: for testing
                     #self.builders.append(GoldVeinStrategy())
                 case 1 | 2:
                     self.builders.append(SimpleCavernStrategy())
@@ -240,8 +248,6 @@ class PrimordialAge():
         print(self.builders)
         print(self.current_builder)
 
-            #case 1 | 2:
-                #new_locations += add_caverns(locs)
             #case 4:
                 #new_locations += cave_complex_factory(locs)
             #case 5:
