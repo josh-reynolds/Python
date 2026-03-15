@@ -9,6 +9,14 @@ from landscape import GoldVein, UndergroundRiver, get_random_underground_locatio
 from location import Cavern, Location
 from utilities import create_location, out_of_bounds
 
+def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
+    """Generate a point on a circle of given radius and angle around an origin."""
+    new_x = new_y = -1
+    while out_of_bounds(PVector(new_x, new_y)):
+        new_x = radius * math.cos(math.radians(angle)) + origin.x
+        new_y = radius * math.sin(math.radians(angle)) + origin.y
+    return PVector(new_x, new_y)
+
 class LocationStrategy:
     """Base class for LocationStrategy builders."""
 
@@ -16,7 +24,7 @@ class LocationStrategy:
         """Create an instance of a LocationStrategy object."""
         self.done = False
 
-    def next(self) -> List:
+    def next(self, locs: List[Location]) -> List:
         """Return the next location in the sequence."""
         self.done = True    # TO_DO: temporary to make stubs work
         return []
@@ -35,7 +43,7 @@ class GoldVeinStrategy(LocationStrategy):
         """Return the developer string representation of a GoldVeinStrategy."""
         return "GoldVeinStrategy()"
 
-    def next(self) -> List:
+    def next(self, locs: List[Location]) -> List:
         """Return the next location in the sequence."""
         self.done = True
         return [GoldVein()]
@@ -47,7 +55,7 @@ class MithrilStrategy(LocationStrategy):
         """Return the developer string representation of a MithrilStrategy."""
         return "MithrilStrategy()"
 
-    def next(self) -> List:
+    def next(self, locs: List[Location]) -> List:
         """Return the next location in the sequence."""
         self.done = True
         return [Mithril()]
@@ -55,9 +63,51 @@ class MithrilStrategy(LocationStrategy):
 class SimpleCavernStrategy(LocationStrategy):
     """Build a random number of simple Caverns."""
 
+    def __init__(self) -> None:
+        """Create an instance of a SimpleCavernStrategy object."""
+        super().__init__()
+        self.cavern_count = 0
+
     def __repr__(self) -> str:
         """Return the developer string representation of a SimpleCavernStrategy."""
         return "SimpleCavernStrategy()"
+
+    def next(self, locs: List[Location]) -> List:
+        """Return the next location in the sequence."""
+        self.cavern_count += 1
+        if randint(1,6) == 6 or self.cavern_count >= 6:
+            self.done = True
+        return [self._natural_cavern_factory(locs)]
+
+    def _natural_cavern_factory(self, locs: List[Location]) -> Cavern:
+        """Generate a natural cavern."""
+        coordinate = get_random_underground_location()
+
+        cavern = create_location(Cavern, coordinate, locs)
+        cavern.color = CAVERN
+
+        detail = randint(1,6)
+        match detail:
+            case 1:
+                cavern.tunnel = True
+                cavern.tilt = randint(-FINGER//2, FINGER//2)
+            case 2:
+                event = Entity("Plague", cavern, EVENT)
+                event.value = randint(1,4)
+                cavern.contents = event
+            case 3:
+                treasure = Entity("Gemstones", cavern, TREASURE)
+                treasure.value = randint(1,4)
+                cavern.contents = treasure
+            case 4:
+                pass
+            case 5:
+                cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+            case 6:
+                cavern.contents = Entity("Fate", cavern, EVENT)
+
+        return cavern
+
 
 class ComplexCavernStrategy(LocationStrategy):
     """Build a complex Cavern."""
@@ -65,66 +115,6 @@ class ComplexCavernStrategy(LocationStrategy):
     def __repr__(self) -> str:
         """Return the developer string representation of a ComplexCavernStrategy."""
         return "ComplexCavernStrategy()"
-
-class UndergroundRiverStrategy(LocationStrategy):
-    """Build an UndergroundRiver."""
-
-    def __repr__(self) -> str:
-        """Return the developer string representation of a UndergroundRiverStrategy."""
-        return "UndergroundRiverStrategy()"
-
-class AncientWyrmStrategy(LocationStrategy):
-    """Build an AncientWyrm lair."""
-
-    def __repr__(self) -> str:
-        """Return the developer string representation of a AncientWyrmStrategy."""
-        return "AncientWyrmStrategy()"
-
-def natural_cavern_factory(locs: List[Location]) -> Cavern:
-    """Generate a natural cavern."""
-    coordinate = get_random_underground_location()
-
-    cavern = create_location(Cavern, coordinate, locs)
-    cavern.color = CAVERN
-
-    detail = randint(1,6)
-    match detail:
-        case 1:
-            cavern.tunnel = True
-            cavern.tilt = randint(-FINGER//2, FINGER//2)
-        case 2:
-            event = Entity("Plague", cavern, EVENT)
-            event.value = randint(1,4)
-            cavern.contents = event
-        case 3:
-            treasure = Entity("Gemstones", cavern, TREASURE)
-            treasure.value = randint(1,4)
-            cavern.contents = treasure
-        case 4:
-            pass
-        case 5:
-            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
-        case 6:
-            cavern.contents = Entity("Fate", cavern, EVENT)
-
-    return cavern
-
-def add_caverns(locs: List[Location]) -> List[Location]:
-    """Generate a random number of Caverns."""
-    new_locations = [natural_cavern_factory(locs)]
-    cavern_count = 1
-    while randint(1,6) < 6 and cavern_count < 6:
-        new_locations.append(natural_cavern_factory(locs))
-        cavern_count += 1
-    return new_locations
-
-def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
-    """Generate a point on a circle of given radius and angle around an origin."""
-    new_x = new_y = -1
-    while out_of_bounds(PVector(new_x, new_y)):
-        new_x = radius * math.cos(math.radians(angle)) + origin.x
-        new_y = radius * math.sin(math.radians(angle)) + origin.y
-    return PVector(new_x, new_y)
 
 def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
     """Generate a cave complex."""
@@ -155,6 +145,24 @@ def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
     sites[0].add_neighbor(sites[2])
 
     return sites
+
+
+class UndergroundRiverStrategy(LocationStrategy):
+    """Build an UndergroundRiver."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a UndergroundRiverStrategy."""
+        return "UndergroundRiverStrategy()"
+
+class AncientWyrmStrategy(LocationStrategy):
+    """Build an AncientWyrm lair."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a AncientWyrmStrategy."""
+        return "AncientWyrmStrategy()"
+
+
+
 
 # TO_DO: name the wyrm
 def ancient_wyrm_factory(locs: List[Location]) -> List[Cavern]:
@@ -227,21 +235,13 @@ class PrimordialAge():
                 self.done = True
                 return []
 
-        new_locations += self.current_builder.next()
+        new_locations += self.current_builder.next(locs)
 
         print(self.builders)
         print(self.current_builder)
 
-        #check = randint(0,6)
-        #match check:
-            #case 0:
-                ## TO_DO: for testing
-                ##new_locations.append(Mithril())
-                #new_locations.append(GoldVein())
             #case 1 | 2:
                 #new_locations += add_caverns(locs)
-            #case 3:
-                #new_locations.append(GoldVein())
             #case 4:
                 #new_locations += cave_complex_factory(locs)
             #case 5:
