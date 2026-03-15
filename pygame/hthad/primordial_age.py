@@ -5,7 +5,7 @@ from typing import List
 from pvector import PVector
 from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
 from entity import Entity
-from landscape import GoldVein, UndergroundRiver, get_random_underground_location
+from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
 from utilities import create_location, out_of_bounds
 
@@ -46,6 +46,11 @@ class MithrilStrategy(LocationStrategy):
     def __repr__(self) -> str:
         """Return the developer string representation of a MithrilStrategy."""
         return "MithrilStrategy()"
+
+    def next(self) -> List:
+        """Return the next location in the sequence."""
+        self.done = True
+        return [Mithril()]
 
 class SimpleCavernStrategy(LocationStrategy):
     """Build a random number of simple Caverns."""
@@ -190,8 +195,8 @@ class PrimordialAge():
             match check:
                 case 0:
                     # TO_DO: for testing
-                    #self.builders.append(MithrilStrategy())
-                    self.builders.append(GoldVeinStrategy())
+                    self.builders.append(MithrilStrategy())
+                    #self.builders.append(GoldVeinStrategy())
                 case 1 | 2:
                     self.builders.append(SimpleCavernStrategy())
                 case 3:
