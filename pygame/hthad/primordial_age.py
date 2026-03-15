@@ -25,12 +25,20 @@ class LocationStrategy:
         """Return whether the LocationStrategy is complete or not."""
         return self.done
 
+# TO_DO: strategy.next() should return individual locations
+#        not a list
+
 class GoldVeinStrategy(LocationStrategy):
     """Build a GoldVein."""
 
     def __repr__(self) -> str:
         """Return the developer string representation of a GoldVeinStrategy."""
         return "GoldVeinStrategy()"
+
+    def next(self) -> List:
+        """Return the next location in the sequence."""
+        self.done = True
+        return [GoldVein()]
 
 class MithrilStrategy(LocationStrategy):
     """Build a Mithril deposit."""
