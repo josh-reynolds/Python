@@ -17,6 +17,7 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
         new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
 
+
 class LocationStrategy:
     """Base class for LocationStrategy builders."""
 
@@ -33,6 +34,7 @@ class LocationStrategy:
         """Return whether the LocationStrategy is complete or not."""
         return self.done
 
+
 # TO_DO: strategy.next() should return individual locations
 #        not a list
 
@@ -48,6 +50,7 @@ class GoldVeinStrategy(LocationStrategy):
         self.done = True
         return [GoldVein()]
 
+
 class MithrilStrategy(LocationStrategy):
     """Build a Mithril deposit."""
 
@@ -59,6 +62,7 @@ class MithrilStrategy(LocationStrategy):
         """Return the next location in the sequence."""
         self.done = True
         return [Mithril()]
+
 
 class SimpleCavernStrategy(LocationStrategy):
     """Build a random number of simple Caverns."""
@@ -116,6 +120,9 @@ class ComplexCavernStrategy(LocationStrategy):
         """Return the developer string representation of a ComplexCavernStrategy."""
         return "ComplexCavernStrategy()"
 
+            #case 4:
+                #new_locations += cave_complex_factory(locs)
+
 def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
     """Generate a cave complex."""
     radius = BEAD
@@ -150,9 +157,36 @@ def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
 class UndergroundRiverStrategy(LocationStrategy):
     """Build an UndergroundRiver."""
 
+    def __init__(self) -> None:
+        """Create an instance of an UndergroundRiverStrategy object."""
+        super().__init__()
+        self.river = None
+        self.step = 0
+        self.total_steps = 1
+
     def __repr__(self) -> str:
         """Return the developer string representation of a UndergroundRiverStrategy."""
         return "UndergroundRiverStrategy()"
+
+    def next(self, locs: List[Location]) -> List:
+        """Return the next location in the sequence."""
+        sites = []
+        
+        if self.step == 0:
+            self.river = UndergroundRiver()
+            self.total_steps = len(self.river.caves) + 1
+            sites.append(self.river)
+        else:
+            cavern = create_location(Cavern, self.river.caves[self.step-1], locs)
+            cavern.color = CAVERN
+            sites.append(cavern)
+
+        self.step += 1
+
+        if self.step >= self.total_steps:
+            self.done = True
+
+        return sites
 
 
 class AncientWyrmStrategy(LocationStrategy):
@@ -248,17 +282,6 @@ class PrimordialAge():
         print(self.builders)
         print(self.current_builder)
 
-            #case 4:
-                #new_locations += cave_complex_factory(locs)
-            #case 5:
-                #river = UndergroundRiver()
-                #new_locations.append(river)
-                #for coord in river.caves:
-                    #new_cavern = create_location(Cavern, coord, locs)
-                    #new_cavern.color = CAVERN
-                    #new_locations.append(new_cavern)
-            #case 6:
-                #new_locations += ancient_wyrm_factory(locs)
 
         return new_locations
 
