@@ -43,6 +43,8 @@ def update() -> None:
                     groups[entity.name] = 1
         print(groups)
 
+    # TO_DO: all of the update methods are stubs - are we
+    #        going to use this?
     for location in locations:
         location.update()
 
@@ -344,3 +346,26 @@ run()
 #  - the 'clumped' creation sequences should be broken up - mine start, cavern complex, etc. These
 #    are really higher level factories or builders - separate them from actual location creation,
 #    and probably allow for sequential building rather than all at once.
+#
+# Current sequencing - - - - - -
+# Every 200 frames:
+#   Get list of Locations from current_stage.update()
+#     PrimordialAge:
+#       randomly add either a landscape object or group of locations
+#         methods/ctors return individual or lists of objects
+#     CivilizationAge:
+#       maintain internal state ('step')
+#       return group of locations 
+#   Add list to global locations
+#   If done, next stage
+#   
+# what if instead we:
+#   current_stage.update()
+#     if current builder done or none, add one
+#     ask current builder for next location
+#       builder concrete classes contain body of code from case statements & factory funcs
+#     set stage done when builders exhausted
+#
+# class LocationStrategy:
+#   def next() -> List[Location]     # consider landscape 'locations' too
+#   def is_done() -> bool

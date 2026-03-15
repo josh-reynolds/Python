@@ -9,6 +9,64 @@ from landscape import GoldVein, UndergroundRiver, get_random_underground_locatio
 from location import Cavern, Location
 from utilities import create_location, out_of_bounds
 
+class LocationStrategy:
+    """Base class for LocationStrategy builders."""
+
+    def __init__(self) -> None:
+        """Create an instance of a LocationStrategy object."""
+        self.done = False
+
+    def next(self) -> List:
+        """Return the next location in the sequence."""
+        self.done = True    # TO_DO: temporary to make stubs work
+        return []
+
+    def is_done(self) -> bool:
+        """Return whether the LocationStrategy is complete or not."""
+        return self.done
+
+class GoldVeinStrategy(LocationStrategy):
+    """Build a GoldVein."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a GoldVeinStrategy."""
+        return "GoldVeinStrategy()"
+
+class MithrilStrategy(LocationStrategy):
+    """Build a Mithril deposit."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a MithrilStrategy."""
+        return "MithrilStrategy()"
+
+class SimpleCavernStrategy(LocationStrategy):
+    """Build a random number of simple Caverns."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a SimpleCavernStrategy."""
+        return "SimpleCavernStrategy()"
+
+class ComplexCavernStrategy(LocationStrategy):
+    """Build a complex Cavern."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a ComplexCavernStrategy."""
+        return "ComplexCavernStrategy()"
+
+class UndergroundRiverStrategy(LocationStrategy):
+    """Build an UndergroundRiver."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a UndergroundRiverStrategy."""
+        return "UndergroundRiverStrategy()"
+
+class AncientWyrmStrategy(LocationStrategy):
+    """Build an AncientWyrm lair."""
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a AncientWyrmStrategy."""
+        return "AncientWyrmStrategy()"
+
 def natural_cavern_factory(locs: List[Location]) -> Cavern:
     """Generate a natural cavern."""
     coordinate = get_random_underground_location()
@@ -114,42 +172,77 @@ class PrimordialAge():
 
     def __init__(self) -> None:
         """Create an instance of a PrimordialAge object."""
-        self.rolls = 0
         self.name = "Primordial Age"
+        self.done = False
+
+        self.builders = []
+
+        for _ in range(3):
+            check = randint(0,6)
+            match check:
+                case 0:
+                    # TO_DO: for testing
+                    #self.builders.append(MithrilStrategy())
+                    self.builders.append(GoldVeinStrategy())
+                case 1 | 2:
+                    self.builders.append(SimpleCavernStrategy())
+                case 3:
+                    self.builders.append(GoldVeinStrategy())
+                case 4:
+                    self.builders.append(ComplexCavernStrategy())
+                case 5:
+                    self.builders.append(UndergroundRiverStrategy())
+                case 6:
+                    self.builders.append(AncientWyrmStrategy())
+            # TO_DO: there is an additional choice for natural disasters,
+            #        implement when we come to that rule
+
+        self.current_builder = self.builders.pop(0)
 
     def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("PrimordialAge.update()")
 
+        # TO_DO: this model is shifting to one location at a time,
+        #        so we'll be doing away with this list
         new_locations = []
 
-        check = randint(0,6)
-        match check:
-            case 0:
-                # TO_DO: for testing
-                #new_locations.append(Mithril())
-                new_locations.append(GoldVein())
-            case 1 | 2:
-                new_locations += add_caverns(locs)
-            case 3:
-                new_locations.append(GoldVein())
-            case 4:
-                new_locations += cave_complex_factory(locs)
-            case 5:
-                river = UndergroundRiver()
-                new_locations.append(river)
-                for coord in river.caves:
-                    new_cavern = create_location(Cavern, coord, locs)
-                    new_cavern.color = CAVERN
-                    new_locations.append(new_cavern)
-            case 6:
-                new_locations += ancient_wyrm_factory(locs)
-            # TO_DO: there is an additional choice for natural disasters,
-            #        implement when we come to that rule
+        if self.current_builder.is_done():
+            if self.builders:
+                self.current_builder = self.builders.pop(0)
+            else:
+                self.done = True
+                return []
 
-        self.rolls += 1
+        new_locations += self.current_builder.next()
+
+        print(self.builders)
+        print(self.current_builder)
+
+        #check = randint(0,6)
+        #match check:
+            #case 0:
+                ## TO_DO: for testing
+                ##new_locations.append(Mithril())
+                #new_locations.append(GoldVein())
+            #case 1 | 2:
+                #new_locations += add_caverns(locs)
+            #case 3:
+                #new_locations.append(GoldVein())
+            #case 4:
+                #new_locations += cave_complex_factory(locs)
+            #case 5:
+                #river = UndergroundRiver()
+                #new_locations.append(river)
+                #for coord in river.caves:
+                    #new_cavern = create_location(Cavern, coord, locs)
+                    #new_cavern.color = CAVERN
+                    #new_locations.append(new_cavern)
+            #case 6:
+                #new_locations += ancient_wyrm_factory(locs)
+
         return new_locations
 
     def is_done(self) -> bool:
         """Return whether the PrimordialAge has completed or not."""
-        return self.rolls > 2
+        return self.done
