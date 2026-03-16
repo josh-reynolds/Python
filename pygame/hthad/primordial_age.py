@@ -94,6 +94,8 @@ class SimpleCavernStrategy(LocationStrategy):
         return cavern
 
 
+# BUG: sometimes gets hung up generating second & third rooms
+#      I suspect we're not handling invalid locations properly
 class ComplexCavernStrategy(LocationStrategy):
     """Build a complex Cavern."""
 

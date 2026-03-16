@@ -237,21 +237,68 @@ class MineStartStrategy(LocationStrategy):
 class SpringStrategy(LocationStrategy):
     """Gather treasures and grow the population."""
 
-    def __init__(self) -> None:
+    def __init__(self, mine_start: Room) -> None:
         """Create an instance of a SpringStrategy object."""
         super().__init__()
+        self.mine_start = mine_start
         self.step = 1
+        self.treasures = self.mine_start.get_all_matching_entities("Treasure")
 
     def __repr__(self) -> str:
         """Return the developer string representation of a SpringStrategy."""
         return "SpringStrategy()"
 
-    def next(self, locs: List[Location]) -> Room:
+    # TO_DO: some ambiguity in the rules here - we want to gather all
+    #        treasures from the mines and store them, but the rules do
+    #        _not_ later say to make these 'Dwarven Treasures'. It is
+    #        implied later that these small treasure rooms contain
+    #        'regular' treasures, not 'Dwarven Treasures.' But if we
+    #        don't distinguish them, we'll have an infinite loop of
+    #        treasure room creation. Perhaps a new name for these?
+    #        Alternatively, we can remove treasures at the end of the
+    #        Age by room name, which is how the rules are written...
+    def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None
 
-        self.step += 1
+        if self.treasures:
+            if self.step == 1:
+                print("Adding Treasure Vault")
+
+                current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
+                result = get_candidate_room(current_barracks, "Treasure Vault", locs)
+
+                if result:
+                    result.contents = Entity("Dwarven Treasure", result, TREASURE)
+                    check_for_connections(result, locs)
+
+                self.step += 1
+
+            if self.step == 2:
+                print("Adding Barracks")
+                selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
+                                             self.mine_start)
+                result = get_candidate_room(selection, "Barracks", locs)
+
+                if result:
+                    result.contents = Entity("Dwarves", result, CREATURE)
+                    check_for_connections(result, locs)
+
+                self.step -= 1
+                self.treasures.pop()
+        else:
+            self.done = True
+
         return result
+
+
+class SummerStrategy(LocationStrategy):
+    """Dig new mines."""
+
+    def __init__(self, mine_start: Room) -> None:
+        """Create an instance of a SummerStrategy object."""
+        super().__init__()
+        self.mine_start = mine_start
 
 
 # Age of Civilization
@@ -304,7 +351,7 @@ class CivilizationAge():
         # if we broke them up even finer, then maybe we would want to
         # accumulate a queue at this level, something to think about
 
-        # the strategy point could eliminate the need for a 'step'
+        # the strategy approach could eliminate the need for a 'step'
         # counter and the match case structure below. What if the
         # strategy returned its successor when done?
 
@@ -312,9 +359,6 @@ class CivilizationAge():
             case 0:
                 print("Setup")
                 new_locations.append(self.current_strategy.next(locs))
-                if self.current_strategy.is_done():
-                    self.step += 1
-                    self.current_strategy = SpringStrategy()
 
                 # TO_DO: we can probably rework this awkward logic with the
                 #        new approach... TBD
@@ -323,48 +367,22 @@ class CivilizationAge():
                     if self.mine_start:
                         self.mine_start = self.mine_start[0]
 
+                if self.current_strategy.is_done():
+                    self.step += 1
+                    self.current_strategy = SpringStrategy(self.mine_start)
+
                 return new_locations
 
             case 1:
                 print(f"Year {self.year} Spring - gathering and growing")
+                addition = self.current_strategy.next(locs)
+                if addition:
+                    new_locations.append(addition)
 
-                treasures = self.mine_start.get_all_matching_entities("Treasure")
+                if self.current_strategy.is_done():
+                    self.step += 1
+                    self.current_strategy = SummerStrategy(self.mine_start)
 
-                # TO_DO: some ambiguity in the rules here - we want to gather all
-                #        treasures from the mines and store them, but the rules do
-                #        _not_ later say to make these 'Dwarven Treasures'. It is
-                #        implied later that these small treasure rooms contain
-                #        'regular' treasures, not 'Dwarven Treasures.' But if we
-                #        don't distinguish them, we'll have an infinite loop of
-                #        treasure room creation. Perhaps a new name for these?
-                #        Alternatively, we can remove treasures at the end of the
-                #        Age by room name, which is how the rules are written...
-                if treasures:
-                    current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
-                    for treasure in treasures:
-                        # pylint: disable=C0103
-                        # C0103: Constant name doesn't conform to UPPER_CASE naming style
-                        print("Adding Treasure Vault")
-                        new_vault = get_candidate_room(current_barracks, "Treasure Vault", locs)
-
-                        if new_vault:
-                            treasure.parent = new_vault
-                            treasure.name = "Dwarven Treasure"
-                            new_vault.contents = treasure
-                            check_for_connections(new_vault, locs)
-
-                        # pylint: disable=C0103
-                        # C0103: Constant name doesn't conform to UPPER_CASE naming style
-                        print("Adding Barracks")
-                        selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
-                                                     self.mine_start)
-                        new_barracks = get_candidate_room(selection, "Barracks", locs)
-
-                        if new_barracks:
-                            new_barracks.contents = Entity("Dwarves", new_barracks, CREATURE)
-                            check_for_connections(new_barracks, locs)
-
-                self.step += 1
                 return new_locations
 
             case 2:
