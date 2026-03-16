@@ -369,3 +369,30 @@ run()
 # class LocationStrategy:
 #   def next() -> List[Location]     # consider landscape 'locations' too
 #   def is_done() -> bool
+#
+# ----------------------------------------------------------------------------------------------
+# For creature entities, I was initially thinking of grouping them, then managing behavior by
+# group. But what if we let each think for itself?
+#
+# 1) Only one entity per location
+# 2) Each entity can see into its neighboring locations
+# 3) If the neighbor is a treasure not belonging to them (how do we know?)
+#    they steal it. Can they pick it up? Where do they bring it?
+# 4) If the neighbor is a creature not on their team (same name?), they
+#    attack it. If they win the fight, they move to the location.
+# 5) If the neighbor is empty, they move to it.
+#
+# Considerations:
+# 1) Ordering. Who goes first? Does this give advantage to some teams?
+# 2) We aren't accounting for Event entities yet.
+# 3) Should we color Locations by ownership? Zones of control?
+# 4) If entities can pick up treasure, we could even model things like dwarves
+#    carrying mining output back to their base.
+# 5) And if we go that far, could even have 'mining' as an action, for digging
+#    new rooms. Not all creatures are capable of this.
+# 6) But... since the 'turns' are seasons at the fastest, maybe modelling indviduals
+#    scurrying around isn't desirable, so don't worry about 4 & 5, at least not yet.
+# 7) But we _could_ have defeated creatures drop whatever treasure they are
+#    carrying.
+
+

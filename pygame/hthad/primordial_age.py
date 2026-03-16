@@ -7,6 +7,7 @@ from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
 from entity import Entity
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
+from location_strategy import LocationStrategy
 from utilities import create_location, out_of_bounds
 
 def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
@@ -16,24 +17,6 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
         new_x = radius * math.cos(math.radians(angle)) + origin.x
         new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
-
-
-# TO_DO: should be an ABC
-class LocationStrategy:
-    """Base class for LocationStrategy builders."""
-
-    def __init__(self) -> None:
-        """Create an instance of a LocationStrategy object."""
-        self.done = False
-
-    def next(self, locs: List[Location]) -> Any | None:
-        """Return the next location in the sequence."""
-        self.done = True    # TO_DO: temporary to make stubs work
-        return None
-
-    def is_done(self) -> bool:
-        """Return whether the LocationStrategy is complete or not."""
-        return self.done
 
 
 class GoldVeinStrategy(LocationStrategy):
