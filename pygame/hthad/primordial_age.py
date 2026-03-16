@@ -1,7 +1,7 @@
 """Contains the PrimordialAge class and supporting functions."""
 import math
 from random import randint
-from typing import List
+from typing import List, Any
 from pvector import PVector
 from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
 from entity import Entity
@@ -18,6 +18,7 @@ def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
     return PVector(new_x, new_y)
 
 
+# TO_DO: should be an ABC
 class LocationStrategy:
     """Base class for LocationStrategy builders."""
 
@@ -25,18 +26,15 @@ class LocationStrategy:
         """Create an instance of a LocationStrategy object."""
         self.done = False
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> Any | None:
         """Return the next location in the sequence."""
         self.done = True    # TO_DO: temporary to make stubs work
-        return []
+        return None
 
     def is_done(self) -> bool:
         """Return whether the LocationStrategy is complete or not."""
         return self.done
 
-
-# TO_DO: strategy.next() should return individual locations
-#        not a list
 
 class GoldVeinStrategy(LocationStrategy):
     """Build a GoldVein."""
@@ -45,10 +43,10 @@ class GoldVeinStrategy(LocationStrategy):
         """Return the developer string representation of a GoldVeinStrategy."""
         return "GoldVeinStrategy()"
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> GoldVein:
         """Return the next location in the sequence."""
         self.done = True
-        return [GoldVein()]
+        return GoldVein()
 
 
 class MithrilStrategy(LocationStrategy):
@@ -58,10 +56,10 @@ class MithrilStrategy(LocationStrategy):
         """Return the developer string representation of a MithrilStrategy."""
         return "MithrilStrategy()"
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> Mithril:
         """Return the next location in the sequence."""
         self.done = True
-        return [Mithril()]
+        return Mithril()
 
 
 class SimpleCavernStrategy(LocationStrategy):
@@ -76,12 +74,12 @@ class SimpleCavernStrategy(LocationStrategy):
         """Return the developer string representation of a SimpleCavernStrategy."""
         return "SimpleCavernStrategy()"
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> Cavern:
         """Return the next location in the sequence."""
         self.cavern_count += 1
         if randint(1,6) == 6 or self.cavern_count >= 6:
             self.done = True
-        return [self._natural_cavern_factory(locs)]
+        return self._natural_cavern_factory(locs)
 
     def _natural_cavern_factory(self, locs: List[Location]) -> Cavern:
         """Generate a natural cavern."""
@@ -128,16 +126,16 @@ class ComplexCavernStrategy(LocationStrategy):
         """Return the developer string representation of a ComplexCavernStrategy."""
         return "ComplexCavernStrategy()"
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> Cavern:
         """Return the next location in the sequence."""
-        sites = []
+        result = None
 
         if self.step == 1:
             point = get_random_underground_location()
             self.start_node = create_location(Cavern, point, locs)
             self.start_node.color = CAVERN
             self.start_node.contents = Entity("Primordial Beasts", self.start_node, CREATURE)
-            sites.append(self.start_node)
+            result = self.start_node
 
         if self.step == 2:
             angle = randint(0,359)
@@ -147,7 +145,7 @@ class ComplexCavernStrategy(LocationStrategy):
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
             self.start_node.add_neighbor(cavern)
-            sites.append(cavern)
+            result = cavern
 
         if self.step == 3:
             self.done = True
@@ -159,12 +157,15 @@ class ComplexCavernStrategy(LocationStrategy):
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
             self.start_node.add_neighbor(cavern)
-            sites.append(cavern)
+            result = cavern
 
         self.step += 1
-        return sites
+        return result
 
 
+# TO_DO: due to the references to self.river, this probably doesn't get
+#        cleaned up when it's done. We may want an explicit garbage collection
+#        on finished LocationStrategies, or change how references are passed around.
 class UndergroundRiverStrategy(LocationStrategy):
     """Build an UndergroundRiver."""
 
@@ -179,25 +180,25 @@ class UndergroundRiverStrategy(LocationStrategy):
         """Return the developer string representation of a UndergroundRiverStrategy."""
         return "UndergroundRiverStrategy()"
 
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> UndergroundRiver | Cavern:
         """Return the next location in the sequence."""
-        sites = []
+        result = None
         
         if self.step == 0:
             self.river = UndergroundRiver()
             self.total_steps = len(self.river.caves) + 1
-            sites.append(self.river)
+            result = self.river
         else:
             cavern = create_location(Cavern, self.river.caves[self.step-1], locs)
             cavern.color = CAVERN
-            sites.append(cavern)
+            result = cavern
 
         self.step += 1
 
         if self.step >= self.total_steps:
             self.done = True
 
-        return sites
+        return result
 
 
 class AncientWyrmStrategy(LocationStrategy):
@@ -215,16 +216,16 @@ class AncientWyrmStrategy(LocationStrategy):
         return "AncientWyrmStrategy()"
 
     # TO_DO: name the wyrm
-    def next(self, locs: List[Location]) -> List:
+    def next(self, locs: List[Location]) -> Cavern:
         """Return the next location in the sequence."""
-        sites = []
+        result = None
 
         if self.step == 1:
             point = get_random_underground_location()
             self.start_node = create_location(Cavern, point, locs)
             self.start_node.color = CAVERN
             self.start_node.contents = Entity("Ancient Wyrm", self.start_node, CREATURE)
-            sites.append(self.start_node)
+            result = self.start_node
 
         if self.step == 2:
             self.done = True
@@ -235,10 +236,10 @@ class AncientWyrmStrategy(LocationStrategy):
             cavern.color = CAVERN
             cavern.contents = Entity("Wyrm Treasure", cavern, TREASURE)
             self.start_node.add_neighbor(cavern)
-            sites.append(cavern)
+            result = cavern
 
         self.step += 1
-        return sites
+        return result
 
 
 class PrimordialAge():
@@ -255,9 +256,9 @@ class PrimordialAge():
             check = randint(0,6)
             match check:
                 case 0:
-                    self.builders.append(MithrilStrategy())
+                    #self.builders.append(MithrilStrategy())
                     # TO_DO: for testing
-                    #self.builders.append(GoldVeinStrategy())
+                    self.builders.append(GoldVeinStrategy())
                 case 1 | 2:
                     self.builders.append(SimpleCavernStrategy())
                 case 3:
@@ -277,9 +278,7 @@ class PrimordialAge():
         """Return the next generated map location."""
         print("PrimordialAge.update()")
 
-        # TO_DO: this model is shifting to one location at a time,
-        #        so we'll be doing away with this list
-        new_locations = []
+        #esult = None
 
         if self.current_builder.is_done():
             if self.builders:
@@ -288,13 +287,14 @@ class PrimordialAge():
                 self.done = True
                 return []
 
-        new_locations += self.current_builder.next(locs)
+        #result = self.current_builder.next(locs)
 
         print(self.builders)
         print(self.current_builder)
 
-
-        return new_locations
+        # TO_DO: returning a list for compatibility, until
+        #        all other Ages have been refactored to this model
+        return [self.current_builder.next(locs)]
 
     def is_done(self) -> bool:
         """Return whether the PrimordialAge has completed or not."""
