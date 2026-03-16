@@ -116,42 +116,53 @@ class SimpleCavernStrategy(LocationStrategy):
 class ComplexCavernStrategy(LocationStrategy):
     """Build a complex Cavern."""
 
+    def __init__(self) -> None:
+        """Create an instance of a ComplexCavernStrategy object."""
+        super().__init__()
+        self.step = 1
+        self.radius = BEAD
+        self.start_node = None
+        self.previous_angle = 0
+
     def __repr__(self) -> str:
         """Return the developer string representation of a ComplexCavernStrategy."""
         return "ComplexCavernStrategy()"
 
-            #case 4:
-                #new_locations += cave_complex_factory(locs)
+    def next(self, locs: List[Location]) -> List:
+        """Return the next location in the sequence."""
+        sites = []
 
-def cave_complex_factory(locs: List[Location]) -> List[Cavern]:
-    """Generate a cave complex."""
-    radius = BEAD
-    sites = []
+        if self.step == 1:
+            point = get_random_underground_location()
+            self.start_node = create_location(Cavern, point, locs)
+            self.start_node.color = CAVERN
+            self.start_node.contents = Entity("Primordial Beasts", self.start_node, CREATURE)
+            sites.append(self.start_node)
 
-    first_point = get_random_underground_location()
-    cavern1 = create_location(Cavern, first_point, locs)
-    cavern1.color = CAVERN
-    cavern1.contents = Entity("Primordial Beasts", cavern1, CREATURE)
-    sites.append(cavern1)
+        if self.step == 2:
+            angle = randint(0,359)
+            self.previous_angle = angle
+            point = get_orbital_point(self.start_node.coordinate, self.radius * 3, angle)
+            cavern = create_location(Cavern, point, locs)
+            cavern.color = CAVERN
+            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+            self.start_node.add_neighbor(cavern)
+            sites.append(cavern)
 
-    angle_1 = randint(0,359)
-    second_point = get_orbital_point(first_point, 3 * radius, angle_1)
-    cavern2 = create_location(Cavern, second_point, locs)
-    cavern2.color = CAVERN
-    cavern2.contents = Entity("Primordial Beasts", cavern2, CREATURE)
-    sites.append(cavern2)
+        if self.step == 3:
+            self.done = True
 
-    angle_2 = angle_1 + randint(70,290)
-    third_point = get_orbital_point(first_point, 3 * radius, angle_2)
-    cavern3 = create_location(Cavern, third_point, locs)
-    cavern3.color = CAVERN
-    cavern3.contents = Entity("Primordial Beasts", cavern3, CREATURE)
-    sites.append(cavern3)
+            # TO_DO: rework this to use viability check instead of constrained angular offset
+            angle = self.previous_angle + randint(70,290)
+            point = get_orbital_point(self.start_node.coordinate, self.radius * 3, angle)
+            cavern = create_location(Cavern, point, locs)
+            cavern.color = CAVERN
+            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+            self.start_node.add_neighbor(cavern)
+            sites.append(cavern)
 
-    sites[0].add_neighbor(sites[1])
-    sites[0].add_neighbor(sites[2])
-
-    return sites
+        self.step += 1
+        return sites
 
 
 class UndergroundRiverStrategy(LocationStrategy):
