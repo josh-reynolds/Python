@@ -260,32 +260,37 @@ class SpringStrategy(LocationStrategy):
     def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None
+        print("Calling SpringStrategy.next() -------------------------")
 
         if self.treasures:
-            if self.step == 1:
-                print("Adding Treasure Vault")
+            match self.step:
+                case 1:
+                    print("Adding Treasure Vault")
 
-                current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
-                result = get_candidate_room(current_barracks, "Treasure Vault", locs)
+                    current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
+                    result = get_candidate_room(current_barracks, "Treasure Vault", locs)
 
-                if result:
-                    result.contents = Entity("Dwarven Treasure", result, TREASURE)
-                    check_for_connections(result, locs)
+                    if result:
+                        result.contents = Entity("Dwarven Treasure", result, TREASURE)
+                        check_for_connections(result, locs)
 
-                self.step += 1
+                    self.step += 1
 
-            if self.step == 2:
-                print("Adding Barracks")
-                selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
-                                             self.mine_start)
-                result = get_candidate_room(selection, "Barracks", locs)
+                case 2:
+                    print("Adding Barracks")
+                    selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
+                                                 self.mine_start)
+                    result = get_candidate_room(selection, "Barracks", locs)
 
-                if result:
-                    result.contents = Entity("Dwarves", result, CREATURE)
-                    check_for_connections(result, locs)
+                    if result:
+                        result.contents = Entity("Dwarves", result, CREATURE)
+                        check_for_connections(result, locs)
 
-                self.step -= 1
-                self.treasures.pop()
+                    self.step -= 1
+                    source_treasure = self.treasures.pop()
+                    source_treasure.parent.contents = None
+                    source_treasure.detach()
+
         else:
             self.done = True
 
@@ -377,6 +382,7 @@ class CivilizationAge():
                 print(f"Year {self.year} Spring - gathering and growing")
                 addition = self.current_strategy.next(locs)
                 if addition:
+                    print(f"Adding {addition}")
                     new_locations.append(addition)
 
                 if self.current_strategy.is_done():

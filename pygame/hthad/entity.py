@@ -42,6 +42,10 @@ class Entity():
         self.x = self.parent.coordinate.x
         self.y = self.parent.coordinate.y
 
+    def detach(self) -> None:
+        """Detach the Entity from its parent without setting a new one."""
+        self._parent = None
+
     def draw(self) -> None:
         """Draw the Entity on the screen once per frame."""
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
