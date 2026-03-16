@@ -394,5 +394,12 @@ run()
 #    scurrying around isn't desirable, so don't worry about 4 & 5, at least not yet.
 # 7) But we _could_ have defeated creatures drop whatever treasure they are
 #    carrying.
+# 8) We need to track deaths per year for the dwarven winter.
+# 10) There's also the issue of modifying the list we're iterating over: if
+#     a creature wins the fight and its opponent is removed, then we'll have bugs.
+#     Might be better to mark 'dead' (and potentially even show graphically), then
+#     in a later pass remove all dead creatures. This could allow us to tally losses
+#     for point 9 - though it does mean that the victor does not move into the
+#     captured space.
 
 

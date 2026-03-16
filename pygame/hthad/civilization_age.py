@@ -8,6 +8,7 @@ from constants import TREASURE, HEIGHT
 from entity import Entity
 from landscape import Mithril, GoldVein
 from location import Location, Room
+from location_strategy import LocationStrategy
 from utilities import create_location, check_for_connections, is_viable
 
 directions = [PVector(ROOM_SPACING,0),
@@ -174,6 +175,65 @@ def get_mine_start_location(target_mineral: Mithril | GoldVein) -> Tuple[int, in
 
     return (x_location, depth)
 
+class MineStartStrategy(LocationStrategy):
+    """Build the starting main shaft of a dwarven mine."""
+
+    def __init__(self) -> None:
+        """Create an instance of a MineStartStrategy object."""
+        super().__init__()
+        self.step = 1
+        self.previous_node = None
+        self.x_location = -1
+        self.depth = -1
+        self.target_mineral = None
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a MineStartStrategy."""
+        return "MineStartStrategy()"
+
+    def next(self, locs: List[Location]) -> Room:
+        """Return the next location in the sequence."""
+        result = None
+        print(self.step)
+
+        if not self.target_mineral:
+            # pick a spot on the surface above a gold vein or mithril deposit
+            minerals = [l for l in locs if isinstance(l, (Mithril, GoldVein))]
+            self.target_mineral = choice(minerals)
+            self.x_location, self.depth = get_mine_start_location(self.target_mineral)
+
+        if self.step == 1:
+            self.previous_node = create_location(Room, 
+                                                 PVector(self.x_location, GROUND_LEVEL), 
+                                                 locs)
+            self.previous_node.name = "Start"
+            self.previous_node.color = DWARF
+            result = self.previous_node
+
+        if self.step == 2:
+            half_height = (self.depth - GROUND_LEVEL)//2 + GROUND_LEVEL
+            room = create_location(Room, PVector(self.x_location, half_height), locs)
+            room.name = "Barracks"
+            room.color = DWARF
+            room.contents = Entity("Dwarves", room, CREATURE)
+            self.previous_node.add_neighbor(room)
+            self.previous_node = room
+            result = room
+
+        if self.step == 3:
+            self.done = True
+
+            room = create_location(Room, PVector(self.x_location, self.depth), locs)
+            room.name = "Mine"
+            room.color = DWARF
+            room.target = self.target_mineral
+            room.contents = Entity("Treasure", room, TREASURE)
+            self.previous_node.add_neighbor(room)
+            result = room
+
+        self.step += 1
+        return result
+
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
 class CivilizationAge():
@@ -186,12 +246,16 @@ class CivilizationAge():
         self.mine_start = None
         self.year = 0
         self.name = "Age of Civilization"
+        self.current_strategy = None
 
+    # TO_DO: we will shift away from a list of new_locations
+    #        to just one at a time
     def update(self, locs: List[Location]) -> List:
         """Return the next generated map location."""
         print("CivilizationAge.update()")
         new_locations = []
 
+        # TO_DO: use GoldVeinStrategy here
         if not any(isinstance(l, (Mithril, GoldVein)) for l in locs):
             print("Adding gold vein")
             new_locations.append(GoldVein())
@@ -202,19 +266,33 @@ class CivilizationAge():
             population = len(self.mine_start.get_all_matching_entities("Dwarves"))
         print(f"Population = {population}")
 
+        if not self.mine_start:
+            self.current_strategy = MineStartStrategy()
+
+        # possible algorithm for handling steps:
+        # 0. start with just the setup strategy in the queue
+        # 1. pop off the queue
+        # 2. execute next()
+        # 3. if not done, go to 2
+        # 4. if done, add next strategy to queue (if Age is not done)
+        # 5. go to 1
+
+        # is a queue warranted? seems like we'll only ever have one
+        # active Strategy at a time - so maybe just a single 'current_builder'
+        # pointer? the sequencing is happening _inside_ the strategies
+        #
+        # if we broke them up even finer, then maybe we would want to
+        # accumulate a queue at this level, something to think about
+
         match self.step:
             case 0:
                 print("Setup")
-                # pick a spot on the surface above a gold vein or mithral deposit
-                minerals = [l for l in locs if isinstance(l, (Mithril, GoldVein))]
-                target_mineral = choice(minerals + new_locations)
-                # TO_DO: alternatively, choose the mineral closest to the surface
+                new_locations.append(self.current_strategy.next(locs))
+                if self.current_strategy.is_done():
+                    self.step += 1
 
-                x_location, depth = get_mine_start_location(target_mineral)
-
-                new_locations += dwarf_mine_factory(x_location, depth, target_mineral, locs)
-                self.step += 1
-
+                # TO_DO: we can probably rework this awkward logic with the
+                #        new approach... TBD
                 if not self.mine_start:
                     self.mine_start = [r for r in new_locations if r.name == "Start"]
                     if self.mine_start:
