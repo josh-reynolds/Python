@@ -194,7 +194,6 @@ class MineStartStrategy(LocationStrategy):
     def next(self, locs: List[Location]) -> Room:
         """Return the next location in the sequence."""
         result = None
-        print(self.step)
 
         if not self.target_mineral:
             # pick a spot on the surface above a gold vein or mithril deposit
@@ -233,6 +232,27 @@ class MineStartStrategy(LocationStrategy):
 
         self.step += 1
         return result
+
+
+class SpringStrategy(LocationStrategy):
+    """Gather treasures and grow the population."""
+
+    def __init__(self) -> None:
+        """Create an instance of a SpringStrategy object."""
+        super().__init__()
+        self.step = 1
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a SpringStrategy."""
+        return "SpringStrategy()"
+
+    def next(self, locs: List[Location]) -> Room:
+        """Return the next location in the sequence."""
+        result = None
+
+        self.step += 1
+        return result
+
 
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
@@ -284,12 +304,17 @@ class CivilizationAge():
         # if we broke them up even finer, then maybe we would want to
         # accumulate a queue at this level, something to think about
 
+        # the strategy point could eliminate the need for a 'step'
+        # counter and the match case structure below. What if the
+        # strategy returned its successor when done?
+
         match self.step:
             case 0:
                 print("Setup")
                 new_locations.append(self.current_strategy.next(locs))
                 if self.current_strategy.is_done():
                     self.step += 1
+                    self.current_strategy = SpringStrategy()
 
                 # TO_DO: we can probably rework this awkward logic with the
                 #        new approach... TBD
