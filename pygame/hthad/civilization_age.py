@@ -263,6 +263,7 @@ class SpringStrategy(LocationStrategy):
         print("Calling SpringStrategy.next() -------------------------")
 
         if self.treasures:
+            print(f"{len(self.treasures)} treasures found")
             match self.step:
                 case 1:
                     print("Adding Treasure Vault")
@@ -390,7 +391,6 @@ class CivilizationAge():
                 if self.current_strategy.is_done():
                     self.step += 1
                     # TO_DO: temporary loop-back util Summer has been implemented
-                    self.current_strategy = SpringStrategy(self.mine_start)
                     #self.current_strategy = SummerStrategy(self.mine_start)
 
                 return new_locations
@@ -451,6 +451,8 @@ class CivilizationAge():
                     new_locations.append(new_room)
 
                 self.step += 1
+                # TO_DO: temporary loop-back util Summer has been implemented
+                self.current_strategy = SpringStrategy(self.mine_start)
                 return new_locations
 
             case 3:
