@@ -383,11 +383,15 @@ class CivilizationAge():
                 addition = self.current_strategy.next(locs)
                 if addition:
                     print(f"Adding {addition}")
-                    new_locations.append(addition)
+                    # TO_DO: Spring uses get_candidate_room(), which modifies locs list
+                    #        may want to rethink this...
+                    #new_locations.append(addition)
 
                 if self.current_strategy.is_done():
                     self.step += 1
-                    self.current_strategy = SummerStrategy(self.mine_start)
+                    # TO_DO: temporary loop-back util Summer has been implemented
+                    self.current_strategy = SpringStrategy(self.mine_start)
+                    #self.current_strategy = SummerStrategy(self.mine_start)
 
                 return new_locations
 

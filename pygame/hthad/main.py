@@ -35,13 +35,23 @@ def update() -> None:
             current_stage = stages.pop(0)
 
         groups = {}
+
+        # BUG: the first dwarf to be created during Spring is
+        #      being returned twice here, resulting in an incorrect sum
+        #      check if we've added the barracks twice...
         for entity in get_all_entities(locations):
             if entity.color == CREATURE:
+                print(f"Adding {entity.name} = {id(entity)} = {id(entity.parent)}")
                 if entity.name in groups:
                     groups[entity.name] += 1
                 else:
                     groups[entity.name] = 1
         print(groups)
+
+        # BUG: per previous comment - yes, the newly redesigned Spring
+        #      procedure is adding rooms to locations twice
+        for location in locations:
+            print(f"{location.name} = {id(location)}")
 
     # TO_DO: all of the update methods are stubs - are we
     #        going to use this?
