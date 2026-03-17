@@ -304,15 +304,54 @@ class SummerStrategy(LocationStrategy):
         """Create an instance of a SummerStrategy object."""
         super().__init__()
         self.mine_start = mine_start
+        self.step = 1
+        self.mines = self.mine_start.get_locations_by_name("Mine")
+                #x_coords = [m.coordinate.x for m in mines]
+                #mine_max_x = max(x_coords)
+                #mine_min_x = min(x_coords)
+#
+                #endpoints = []
+                #if mine_max_x < WIDTH - ROOM_SPACING - BEAD:
+                    #endpoints.append(mine_max_x)
+#
+                #if mine_min_x > ROOM_SPACING + BEAD:
+                    #endpoints.append(mine_min_x)
+#
+                #potential_parents = [m for m in mines if m.coordinate.x in endpoints]
+                #parent_mine = choice(potential_parents)
+#
+                #direction = 1
+                #if parent_mine.coordinate.x == mine_min_x:
+                    #direction = -1
+#
+                #deposit = parent_mine.target
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a SummerStrategy."""
+        return "SummerStrategy()"
+
+    def next(self, locs: List[Location]) -> Room | None:
+        """Return the next location in the sequence."""
+        result = None
+        return result
 
 
 class AutumnStrategy(LocationStrategy):
     """Build major construction projects."""
 
     def __init__(self, mine_start: Room) -> None:
-        """Create an instance of a AutumnStrategy object."""
+        """Create an instance of an AutumnStrategy object."""
         super().__init__()
         self.mine_start = mine_start
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of an AutumnStrategy."""
+        return "AutumnStrategy()"
+
+    def next(self, locs: List[Location]) -> Room | None:
+        """Return the next location in the sequence."""
+        result = None
+        return result
 
 
 class WinterStrategy(LocationStrategy):
@@ -322,6 +361,15 @@ class WinterStrategy(LocationStrategy):
         """Create an instance of a WinterStrategy object."""
         super().__init__()
         self.mine_start = mine_start
+
+    def __repr__(self) -> str:
+        """Return the developer string representation of a WinterStrategy."""
+        return "WinterStrategy()"
+
+    def next(self, locs: List[Location]) -> Room | None:
+        """Return the next location in the sequence."""
+        result = None
+        return result
 
 
 # Age of Civilization
@@ -407,16 +455,12 @@ class CivilizationAge():
 
                 if self.current_strategy.is_done():
                     self.step += 1
-                    # TO_DO: temporary loop-back util Summer has been implemented
-                    #self.current_strategy = SummerStrategy(self.mine_start)
+                    self.current_strategy = SummerStrategy(self.mine_start)
 
                 return new_locations
 
             case 2:
                 print(f"Year {self.year} Summer - digging new mines")
-                # TO_DO: should restrict to mines connected to this start
-                #        (though admittedly I don't think we can have more
-                #        than one at this point, so perhaps moot?)
                 mines = [l for l in locs if l.name == "Mine"]
 
                 # we want to add mines at the ends of a GoldVein, or
