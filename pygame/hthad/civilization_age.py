@@ -263,7 +263,6 @@ class SpringStrategy(LocationStrategy):
         print("Calling SpringStrategy.next() -------------------------")
 
         if self.treasures:
-            print(f"{len(self.treasures)} treasures found")
             match self.step:
                 case 1:
                     print("Adding Treasure Vault")
