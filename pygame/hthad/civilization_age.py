@@ -306,6 +306,24 @@ class SummerStrategy(LocationStrategy):
         self.mine_start = mine_start
 
 
+class AutumnStrategy(LocationStrategy):
+    """Build major construction projects."""
+
+    def __init__(self, mine_start: Room) -> None:
+        """Create an instance of a AutumnStrategy object."""
+        super().__init__()
+        self.mine_start = mine_start
+
+
+class WinterStrategy(LocationStrategy):
+    """Mourn and build tombs."""
+
+    def __init__(self, mine_start: Room) -> None:
+        """Create an instance of a WinterStrategy object."""
+        super().__init__()
+        self.mine_start = mine_start
+
+
 # Age of Civilization
 # TO_DO: implementing Dwarves first, Dark Elves to come later
 class CivilizationAge():
