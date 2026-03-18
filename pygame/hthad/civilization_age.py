@@ -439,9 +439,6 @@ class AutumnStrategy(LocationStrategy):
                 #shaft_bottom.add_neighbor(new_room)
                 #new_locations.append(new_room)
 
-                #if new_room.coordinate.y > HEIGHT:
-                    #self.done = True
-
             case 6:
                 print("Hall Expansion")
                 #candidates = self.mine_start.get_locations_by_name("Great Hall")
@@ -496,20 +493,20 @@ class AutumnStrategy(LocationStrategy):
                 print("Delve Too Deep")
 
                 ## might be simpler to sort by y coordinate and pop...
-                #y_coords = [m.coordinate.y for m in all_rooms]
-                #mine_max_y = max(y_coords)
+                y_coords = [m.coordinate.y for m in self.all_rooms]
+                mine_max_y = max(y_coords)
 
-                #potential_bottom = [m for m in all_rooms if m.coordinate.y == mine_max_y]
-                #bottom = choice(potential_bottom)
+                potential_bottom = [m for m in self.all_rooms if m.coordinate.y == mine_max_y]
+                bottom = choice(potential_bottom)
 
-                #shaft_x = bottom.coordinate.x
-                #shaft_y = HEIGHT + BEAD
+                shaft_x = bottom.coordinate.x
+                shaft_y = HEIGHT + BEAD
 
-                #new_room = create_location(Room, PVector(shaft_x, shaft_y), locs)
-                #new_room.name = "End"
-                #new_room.color = bottom.color
-                #bottom.add_neighbor(new_room)
-                #new_locations.append(new_room)
+                new_room = create_location(Room, PVector(shaft_x, shaft_y), locs)
+                new_room.name = "End"
+                new_room.color = bottom.color
+                bottom.add_neighbor(new_room)
+                result = new_room
 
         self.done = True
         return result
@@ -586,6 +583,15 @@ class CivilizationAge():
         # the strategy approach could eliminate the need for a 'step'
         # counter and the match case structure below. What if the
         # strategy returned its successor when done?
+
+        # TO_DO: duplicated from AutumnStrategy.next() - should
+        #        extract a function for testing this end-condition
+        if self.mine_start:
+            all_rooms = self.mine_start.get_all_connected_locations()
+            y_coords = [m.coordinate.y for m in all_rooms]
+            mine_max_y = max(y_coords)
+            if mine_max_y > HEIGHT:
+                self.done = True
 
         match self.step:
             case 0:
