@@ -297,6 +297,9 @@ class SpringStrategy(LocationStrategy):
         return result
 
 
+# TO_DO: might want to have separate Summer strategies for GoldVein
+#        and Mithril - instantiate the correct one accordingly
+#        would keep this class from getting too big
 class SummerStrategy(LocationStrategy):
     """Dig new mines."""
 

@@ -10,10 +10,12 @@ from location import Cavern, Location
 from location_strategy import LocationStrategy
 from utilities import create_location, out_of_bounds
 
-def get_orbital_point(origin: PVector, radius: int, angle: int) -> PVector:
+def get_orbital_point(origin: PVector, radius: int, 
+                      min_angle: int, max_angle: int) -> PVector:
     """Generate a point on a circle of given radius and angle around an origin."""
     new_x = new_y = -1
     while out_of_bounds(PVector(new_x, new_y)):
+        angle = randint(min_angle, max_angle)
         new_x = radius * math.cos(math.radians(angle)) + origin.x
         new_y = radius * math.sin(math.radians(angle)) + origin.y
     return PVector(new_x, new_y)
@@ -94,8 +96,6 @@ class SimpleCavernStrategy(LocationStrategy):
         return cavern
 
 
-# BUG: sometimes gets hung up generating second & third rooms
-#      I suspect we're not handling invalid locations properly
 class ComplexCavernStrategy(LocationStrategy):
     """Build a complex Cavern."""
 
@@ -123,9 +123,8 @@ class ComplexCavernStrategy(LocationStrategy):
             result = self.start_node
 
         if self.step == 2:
-            angle = randint(0,359)
-            self.previous_angle = angle
-            point = get_orbital_point(self.start_node.coordinate, self.radius * 3, angle)
+            point = get_orbital_point(self.start_node.coordinate, 
+                                      self.radius * 3, 0, 359)
             cavern = create_location(Cavern, point, locs)
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
@@ -136,8 +135,8 @@ class ComplexCavernStrategy(LocationStrategy):
             self.done = True
 
             # TO_DO: rework this to use viability check instead of constrained angular offset
-            angle = self.previous_angle + randint(70,290)
-            point = get_orbital_point(self.start_node.coordinate, self.radius * 3, angle)
+            point = get_orbital_point(self.start_node.coordinate, 
+                                      self.radius * 3, 0, 359)
             cavern = create_location(Cavern, point, locs)
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
@@ -215,8 +214,8 @@ class AncientWyrmStrategy(LocationStrategy):
         if self.step == 2:
             self.done = True
 
-            angle = randint(0,359)
-            point = get_orbital_point(self.start_node.coordinate, self.radius * 1.5, angle)
+            point = get_orbital_point(self.start_node.coordinate, 
+                                      self.radius * 1.5, 0, 359)
             cavern = create_location(Cavern, point, locs)
             cavern.color = CAVERN
             cavern.contents = Entity("Wyrm Treasure", cavern, TREASURE)
@@ -245,15 +244,23 @@ class PrimordialAge():
                     # TO_DO: for testing
                     self.builders.append(GoldVeinStrategy())
                 case 1 | 2:
-                    self.builders.append(SimpleCavernStrategy())
+                    #self.builders.append(SimpleCavernStrategy())
+                    # TO_DO: for testing
+                    self.builders.append(ComplexCavernStrategy())
                 case 3:
-                    self.builders.append(GoldVeinStrategy())
+                    #self.builders.append(GoldVeinStrategy())
+                    # TO_DO: for testing
+                    self.builders.append(ComplexCavernStrategy())
                 case 4:
                     self.builders.append(ComplexCavernStrategy())
                 case 5:
-                    self.builders.append(UndergroundRiverStrategy())
+                    #self.builders.append(UndergroundRiverStrategy())
+                    # TO_DO: for testing
+                    self.builders.append(ComplexCavernStrategy())
                 case 6:
-                    self.builders.append(AncientWyrmStrategy())
+                    #self.builders.append(AncientWyrmStrategy())
+                    # TO_DO: for testing
+                    self.builders.append(ComplexCavernStrategy())
             # TO_DO: there is an additional choice for natural disasters,
             #        implement when we come to that rule
 
