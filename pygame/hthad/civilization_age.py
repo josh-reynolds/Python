@@ -380,6 +380,11 @@ class AutumnStrategy(LocationStrategy):
         """Create an instance of an AutumnStrategy object."""
         super().__init__()
         self.mine_start = mine_start
+        self.all_rooms = self.mine_start.get_all_connected_locations()
+
+        # TO_DO: duplicated from PrimordialAge.update() below
+        #        should this be a property somewhere? Where?
+        self.population = len(self.mine_start.get_all_matching_entities("Dwarves"))
 
     def __repr__(self) -> str:
         """Return the developer string representation of an AutumnStrategy."""
@@ -388,6 +393,120 @@ class AutumnStrategy(LocationStrategy):
     def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None
+        match self.population:
+            case 3:
+                # TO_DO: vary the size & shape of workshops
+                print("Workshops")
+                #selection = choice(get_parent_rooms(["Mine"], self.mine_start))
+                #new_location = PVector(selection.coordinate.x,
+                                       #selection.coordinate.y + ROOM_SPACING)
+                #new_room = create_location(Room, new_location, locs, (BEAD*2,BEAD))
+                #new_room.name = "Workshop"
+                #new_room.color = selection.color
+                #selection.add_neighbor(new_room)
+                #new_locations.append(new_room)
+
+            case 4:
+                print("Great Hall")
+                #selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                             #self.mine_start)
+
+                ## TO_DO: need to customize size/shape of Great Hall
+                #new_room = get_candidate_room(selection, "Great Hall", locs,
+                                              #(FINGER//2, BEAD))
+
+                #if new_room:
+                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    #check_for_connections(new_room, locs)
+
+            case 5:
+                print("Exploratory Shaft")
+                #shaft_x = self.mine_start.coordinate.x
+                #shaft_rooms = [m for m in all_rooms if m.coordinate.x == shaft_x]
+                #shaft_rooms.sort(key=lambda room: room.coordinate.y)
+                #shaft_bottom = shaft_rooms.pop()
+
+                #new_location = PVector(shaft_bottom.coordinate.x,
+                                       #shaft_bottom.coordinate.y + FINGER)
+                #new_room = create_location(Room, new_location, locs)
+                #new_room.name = "Outpost"
+                #new_room.color = shaft_bottom.color
+                #shaft_bottom.add_neighbor(new_room)
+                #new_locations.append(new_room)
+
+                #if new_room.coordinate.y > HEIGHT:
+                    #self.done = True
+
+            case 6:
+                print("Hall Expansion")
+                #candidates = self.mine_start.get_locations_by_name("Great Hall")
+                #if candidates:
+                    #great_hall = candidates[0]
+                    #new_x = great_hall.rect.x - BEAD
+                    #new_w = great_hall.rect.w + (BEAD * 2)
+                    #great_hall.rect = Rect(new_x,
+                                           #great_hall.rect.y,
+                                           #new_w,
+                                           #great_hall.rect.h)
+
+            case 7:
+                print("Hall of Records")
+                #selection = get_parent_rooms(["Great Hall"], self.mine_start)
+                #new_room = None
+                #if selection:
+                    #new_room = get_candidate_room(selection, "Hall of Records", locs,
+                                                  #(BEAD, BEAD), 3)
+
+                #if new_room:
+                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    #check_for_connections(new_room, locs)
+
+            # TO_DO: name the city
+            case 8:
+                print("Dwarven Golden Age City")
+                #selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                             #self.mine_start)
+                #new_room = get_candidate_room(selection, "Dwarven City", locs,
+                                              #(FINGER, BEAD))
+
+                #if new_room:
+                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    #check_for_connections(new_room, locs)
+
+            # TO_DO: Treasure Room should not connect to rest of dwarf mine
+            case 9:
+                print("Treasure Room")
+                #new_room = get_candidate_room(all_rooms, "Treasure Room", locs,
+                                              #(BEAD*2, BEAD*2),
+                                              #ROOM_SPACING * 3)
+
+                #if new_room:
+                    #treasure = Entity("Dwarven Treasure", new_room, TREASURE)
+                    #treasure.value = 2
+                    #new_room.contents = treasure
+
+            # TO_DO: cook up a better approach, we could still run off the
+            #        end of this and get stuck, in theory
+            case 10 | 11 | 12 | 13 | 14 | 15:
+                print("Delve Too Deep")
+                self.done = True
+
+                ## might be simpler to sort by y coordinate and pop...
+                #y_coords = [m.coordinate.y for m in all_rooms]
+                #mine_max_y = max(y_coords)
+
+                #potential_bottom = [m for m in all_rooms if m.coordinate.y == mine_max_y]
+                #bottom = choice(potential_bottom)
+
+                #shaft_x = bottom.coordinate.x
+                #shaft_y = HEIGHT + BEAD
+
+                #new_room = create_location(Room, PVector(shaft_x, shaft_y), locs)
+                #new_room.name = "End"
+                #new_room.color = bottom.color
+                #bottom.add_neighbor(new_room)
+                #new_locations.append(new_room)
+
         return result
 
 

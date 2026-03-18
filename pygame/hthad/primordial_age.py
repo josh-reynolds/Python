@@ -244,23 +244,23 @@ class PrimordialAge():
                     # TO_DO: for testing
                     self.builders.append(GoldVeinStrategy())
                 case 1 | 2:
-                    #self.builders.append(SimpleCavernStrategy())
+                    self.builders.append(SimpleCavernStrategy())
                     # TO_DO: for testing
-                    self.builders.append(ComplexCavernStrategy())
+                    #self.builders.append(ComplexCavernStrategy())
                 case 3:
-                    #self.builders.append(GoldVeinStrategy())
+                    self.builders.append(GoldVeinStrategy())
                     # TO_DO: for testing
-                    self.builders.append(ComplexCavernStrategy())
+                    #self.builders.append(ComplexCavernStrategy())
                 case 4:
                     self.builders.append(ComplexCavernStrategy())
                 case 5:
-                    #self.builders.append(UndergroundRiverStrategy())
+                    self.builders.append(UndergroundRiverStrategy())
                     # TO_DO: for testing
-                    self.builders.append(ComplexCavernStrategy())
+                    #self.builders.append(ComplexCavernStrategy())
                 case 6:
-                    #self.builders.append(AncientWyrmStrategy())
+                    self.builders.append(AncientWyrmStrategy())
                     # TO_DO: for testing
-                    self.builders.append(ComplexCavernStrategy())
+                    #self.builders.append(ComplexCavernStrategy())
             # TO_DO: there is an additional choice for natural disasters,
             #        implement when we come to that rule
 
