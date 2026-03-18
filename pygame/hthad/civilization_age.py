@@ -305,34 +305,68 @@ class SummerStrategy(LocationStrategy):
         super().__init__()
         self.mine_start = mine_start
         self.step = 1
-        self.mines = self.mine_start.get_locations_by_name("Mine")
-                #x_coords = [m.coordinate.x for m in mines]
-                #mine_max_x = max(x_coords)
-                #mine_min_x = min(x_coords)
-#
-                #endpoints = []
-                #if mine_max_x < WIDTH - ROOM_SPACING - BEAD:
-                    #endpoints.append(mine_max_x)
-#
-                #if mine_min_x > ROOM_SPACING + BEAD:
-                    #endpoints.append(mine_min_x)
-#
-                #potential_parents = [m for m in mines if m.coordinate.x in endpoints]
-                #parent_mine = choice(potential_parents)
-#
-                #direction = 1
-                #if parent_mine.coordinate.x == mine_min_x:
-                    #direction = -1
-#
-                #deposit = parent_mine.target
+        
+        mines = self.mine_start.get_locations_by_name("Mine")
+
+        # we want to add mines at the ends of a GoldVein, or
+        # at the points of a Mithril deposit
+        # TO_DO: add Mithril handling
+
+        x_coords = [m.coordinate.x for m in mines]
+        mine_max_x = max(x_coords)
+        mine_min_x = min(x_coords)
+
+        endpoints = []
+        if mine_max_x < WIDTH - ROOM_SPACING - BEAD:
+            endpoints.append(mine_max_x)
+
+        if mine_min_x > ROOM_SPACING + BEAD:
+            endpoints.append(mine_min_x)
+
+        potential_parents = [m for m in mines if m.coordinate.x in endpoints]
+        self.parent_mine = choice(potential_parents)
+
+        self.direction = 1
+        if self.parent_mine.coordinate.x == mine_min_x:
+            self.direction = -1
+
+        self.deposit = self.parent_mine.target
 
     def __repr__(self) -> str:
         """Return the developer string representation of a SummerStrategy."""
         return "SummerStrategy()"
 
+    # TO_DO: we need the same tests for collision as in
+    #        get_candidate_room()
     def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None
+
+        if isinstance(self.deposit, GoldVein):
+            new_x = self.parent_mine.coordinate.x + (self.direction * ROOM_SPACING)
+            new_y = get_y_at_x(self.deposit.left, self.deposit.right, new_x)
+            new_room = create_location(Room, PVector(new_x, new_y), locs)
+            new_room.name = "Mine"
+            new_room.target = self.parent_mine.target
+            new_room.color = self.parent_mine.color
+            self.parent_mine.add_neighbor(new_room)
+            new_room.contents = Entity("Treasure", new_room, TREASURE)
+            result = new_room
+
+        if isinstance(self.deposit, Mithril):
+            # TO_DO: only works when the mine is centered on the deposit
+            #        need a better approach here
+            to_corner = PVector.mult(self.deposit.corner_vector, ROOM_SPACING)
+            new_location = PVector.sub(self.parent_mine.coordinate, to_corner)
+            new_room = create_location(Room, new_location, locs)
+            new_room.name = "Mine"
+            new_room.target = self.parent_mine.target
+            new_room.color = self.parent_mine.color
+            self.parent_mine.add_neighbor(new_room)
+            new_room.contents = Entity("Treasure", new_room, TREASURE)
+            result = new_room
+
+        self.done = True
         return result
 
 
@@ -461,59 +495,15 @@ class CivilizationAge():
 
             case 2:
                 print(f"Year {self.year} Summer - digging new mines")
-                mines = [l for l in locs if l.name == "Mine"]
+                addition = self.current_strategy.next(locs)
+                if addition:
+                    print(f"Adding {addition}")
+                    new_locations.append(addition)
 
-                # we want to add mines at the ends of a GoldVein, or
-                # at the points of a Mithril deposit
-                x_coords = [m.coordinate.x for m in mines]
-                mine_max_x = max(x_coords)
-                mine_min_x = min(x_coords)
+                if self.current_strategy.is_done():
+                    self.step += 1
+                    self.current_strategy = AutumnStrategy(self.mine_start)
 
-                endpoints = []
-                if mine_max_x < WIDTH - ROOM_SPACING - BEAD:
-                    endpoints.append(mine_max_x)
-
-                if mine_min_x > ROOM_SPACING + BEAD:
-                    endpoints.append(mine_min_x)
-
-                potential_parents = [m for m in mines if m.coordinate.x in endpoints]
-                parent_mine = choice(potential_parents)
-
-                direction = 1
-                if parent_mine.coordinate.x == mine_min_x:
-                    direction = -1
-
-                deposit = parent_mine.target
-
-                # TO_DO: we need the same tests for collision as in
-                #        get_candidate_room()
-                if isinstance(deposit, GoldVein):
-                    new_x = parent_mine.coordinate.x + (direction * ROOM_SPACING)
-                    new_y = get_y_at_x(deposit.left, deposit.right, new_x)
-                    new_room = create_location(Room, PVector(new_x, new_y), locs)
-                    new_room.name = "Mine"
-                    new_room.target = parent_mine.target
-                    new_room.color = parent_mine.color
-                    parent_mine.add_neighbor(new_room)
-                    new_room.contents = Entity("Treasure", new_room, TREASURE)
-                    new_locations.append(new_room)
-
-                if isinstance(deposit, Mithril):
-                    # TO_DO: only works when the mine is centered on the deposit
-                    #        need a better approach here
-                    to_corner = PVector.mult(deposit.corner_vector, ROOM_SPACING)
-                    new_location = PVector.sub(parent_mine.coordinate, to_corner)
-                    new_room = create_location(Room, new_location, locs)
-                    new_room.name = "Mine"
-                    new_room.target = parent_mine.target
-                    new_room.color = parent_mine.color
-                    parent_mine.add_neighbor(new_room)
-                    new_room.contents = Entity("Treasure", new_room, TREASURE)
-                    new_locations.append(new_room)
-
-                self.step += 1
-                # TO_DO: temporary loop-back util Summer has been implemented
-                self.current_strategy = SpringStrategy(self.mine_start)
                 return new_locations
 
             case 3:
@@ -635,6 +625,8 @@ class CivilizationAge():
                         new_locations.append(new_room)
 
                 self.step += 1
+                ## TO_DO: temporary loop-back util Autumn has been implemented
+                self.current_strategy = SpringStrategy(self.mine_start)
                 return new_locations
 
             # TO_DO: haven't implemented conflict or death yet - need to track and
