@@ -3,7 +3,7 @@ from typing import Tuple, Self, List
 from pygame import Rect
 from engine import screen
 from pvector import PVector
-from constants import BEAD
+from constants import BEAD, BORDER
 
 # TO_DO: should be ABS
 class Location():
@@ -292,3 +292,4 @@ class Room(Location):
         # pylint: disable=E1121
         # E1121: Too many positional arguments for method call
         screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, self.color, 0)
+        screen.draw.rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h, BORDER, 1)
