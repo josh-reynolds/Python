@@ -20,6 +20,7 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(ROOM_SPACING,-ROOM_SPACING),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
+# TO_DO: remove locs parameter
 def add_candidate(name: str, parent: Location, direction: int,
                   locs: List[Location],
                   size: Tuple[int,int]=(BEAD,BEAD),
@@ -35,9 +36,9 @@ def add_candidate(name: str, parent: Location, direction: int,
     candidate_location = PVector.add(parent.coordinate, scaled)
     room_to_add = create_location(Room, candidate_location, locs, size)
     room_to_add.name = name
-    locs.append(room_to_add)
     return room_to_add
 
+# TO_DO: remove locs parameter
 def get_candidate_room(parents: List[Location], room_name: str,
                        locs: List[Location],
                        size: Tuple[int,int]=(BEAD,BEAD),
@@ -68,10 +69,11 @@ def get_candidate_room(parents: List[Location], room_name: str,
 
                 return candidate
 
+            # TO_DO: reworking how/when connections are hooked up, probably will
+            #        need to move or remove this at some point
             for room in rooms:
                 if candidate in room.neighbors:
                     room.remove_neighbor(candidate)
-            locs.remove(candidate)
 
             attempt += 1
         print("Next parent")
@@ -616,9 +618,7 @@ class CivilizationAge():
                 addition = self.current_strategy.next(locs)
                 if addition:
                     print(f"Adding {addition}")
-                    # TO_DO: Spring uses get_candidate_room(), which modifies locs list
-                    #        may want to rethink this...
-                    #new_locations.append(addition)
+                    new_locations.append(addition)
 
                 if self.current_strategy.is_done():
                     self.step += 1
@@ -644,9 +644,6 @@ class CivilizationAge():
                 addition = self.current_strategy.next(locs)
                 if addition:
                     print(f"Adding {addition}")
-                    # TO_DO: Autumn uses a mix of get_candidate_room() and simple
-                    #        room creation - need to rework or we will get double-addition
-                    #        on the get_candidate_room() variants
                     new_locations.append(addition)
 
                 if self.current_strategy.is_done():
