@@ -36,9 +36,7 @@ def add_candidate(name: str, parent: Location, direction: int,
     room_to_add.name = name
     return room_to_add
 
-# TO_DO: remove locs parameter
 def get_candidate_room(parents: List[Location], room_name: str,
-                       locs: List[Location],
                        size: Tuple[int,int]=(BEAD,BEAD),
                        distance: int=1) -> Location | None:
     """Evaluate potental candidate Locations and return first viable."""
@@ -238,7 +236,7 @@ class SpringStrategy(LocationStrategy):
                     print("Adding Treasure Vault")
 
                     current_barracks = get_parent_rooms(["Barracks"], self.mine_start)
-                    result = get_candidate_room(current_barracks, "Treasure Vault", locs)
+                    result = get_candidate_room(current_barracks, "Treasure Vault")
 
                     if result:
                         result.contents = Entity("Dwarven Treasure", result, TREASURE)
@@ -250,7 +248,7 @@ class SpringStrategy(LocationStrategy):
                     print("Adding Barracks")
                     selection = get_parent_rooms(["Barracks", "Treasure Vault", "Outpost"],
                                                  self.mine_start)
-                    result = get_candidate_room(selection, "Barracks", locs)
+                    result = get_candidate_room(selection, "Barracks")
 
                     if result:
                         result.contents = Entity("Dwarves", result, CREATURE)
@@ -388,7 +386,7 @@ class AutumnStrategy(LocationStrategy):
                                              #self.mine_start)
 
                 ## TO_DO: need to customize size/shape of Great Hall
-                #new_room = get_candidate_room(selection, "Great Hall", locs,
+                #new_room = get_candidate_room(selection, "Great Hall",
                                               #(FINGER//2, BEAD))
 
                 #if new_room:
@@ -427,7 +425,7 @@ class AutumnStrategy(LocationStrategy):
                 #selection = get_parent_rooms(["Great Hall"], self.mine_start)
                 #new_room = None
                 #if selection:
-                    #new_room = get_candidate_room(selection, "Hall of Records", locs,
+                    #new_room = get_candidate_room(selection, "Hall of Records",
                                                   #(BEAD, BEAD), 3)
 
                 #if new_room:
@@ -439,7 +437,7 @@ class AutumnStrategy(LocationStrategy):
                 print("Dwarven Golden Age City")
                 #selection = get_parent_rooms(["Barracks", "Treasure Vault"],
                                              #self.mine_start)
-                #new_room = get_candidate_room(selection, "Dwarven City", locs,
+                #new_room = get_candidate_room(selection, "Dwarven City",
                                               #(FINGER, BEAD))
 
                 #if new_room:
@@ -449,7 +447,7 @@ class AutumnStrategy(LocationStrategy):
             # TO_DO: Treasure Room should not connect to rest of dwarf mine
             case 9:
                 print("Treasure Room")
-                #new_room = get_candidate_room(all_rooms, "Treasure Room", locs,
+                #new_room = get_candidate_room(all_rooms, "Treasure Room",
                                               #(BEAD*2, BEAD*2),
                                               #ROOM_SPACING * 3)
 
