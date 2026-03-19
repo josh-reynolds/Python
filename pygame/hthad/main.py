@@ -1,16 +1,13 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 from engine import screen, run
 from landscape import strata_depth, make_strata
-
-# pylint: disable=W0611
-# W0611: Unused TITLE imported from constants (unused-import)
-from constants import WIDTH, HEIGHT, TITLE, BEAD, GROUND_LEVEL, CAVERN
-from constants import FINGER, CREATURE, EVENT, STRATA_HEIGHT, DWARF, TREASURE
-from constants import ROOM_SPACING, GROUND, SKY, BORDER, WATER, SHOW_LABELS
+from constants import WIDTH, HEIGHT, TITLE, GROUND_LEVEL
+from constants import CREATURE
+from constants import SKY, BORDER
 from primordial_age import PrimordialAge
 from monster_age import MonsterAge
 from civilization_age import CivilizationAge
-from utilities import get_all_entities, check_for_connections, create_location
+from utilities import get_all_entities
 
 locations = []
 strata = make_strata()
@@ -351,10 +348,10 @@ run()
 #         methods/ctors return individual or lists of objects
 #     CivilizationAge:
 #       maintain internal state ('step')
-#       return group of locations 
+#       return group of locations
 #   Add list to global locations
 #   If done, next stage
-#   
+#
 # what if instead we:
 #   current_stage.update()
 #     if current builder done or none, add one
@@ -397,5 +394,3 @@ run()
 #     in a later pass remove all dead creatures. This could allow us to tally losses
 #     for point 9 - though it does mean that the victor does not move into the
 #     captured space.
-
-
