@@ -20,9 +20,7 @@ directions = [PVector(ROOM_SPACING,0),
               PVector(ROOM_SPACING,-ROOM_SPACING),
               PVector(-ROOM_SPACING,-ROOM_SPACING)]
 
-# TO_DO: remove locs parameter
 def add_candidate(name: str, parent: Location, direction: int,
-                  locs: List[Location],
                   size: Tuple[int,int]=(BEAD,BEAD),
                   distance: int=1) -> Location:
     """Add a candidate location to the locations list."""
@@ -47,7 +45,7 @@ def get_candidate_room(parents: List[Location], room_name: str,
     for parent in parents:
         attempt = 0
         while attempt < 8:
-            candidate = add_candidate(room_name, parent, attempt, locs, size, distance)
+            candidate = add_candidate(room_name, parent, attempt, size, distance)
 
             rooms = parent.get_all_connected_locations()
             tunnels = parent.get_all_connected_tunnels()
