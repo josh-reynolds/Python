@@ -24,10 +24,8 @@ def check_for_connections(room: Location, locs: List[Location]) -> None:
             print(f"Intersection detected: {room} - {location}")
             room.add_neighbor(location)
 
-# TO_DO: remove locs parameter
 def create_location(location_type: Callable,
                     coordinate: PVector,
-                    locs: List[Location],
                     size: Tuple[int,int]=(BEAD,BEAD)) -> Location:
     """Create a new location and add to the list."""
     new_location = location_type(coordinate=coordinate, size=size)

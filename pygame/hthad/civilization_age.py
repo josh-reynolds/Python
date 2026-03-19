@@ -34,7 +34,7 @@ def add_candidate(name: str, parent: Location, direction: int,
 
     scaled = PVector.mult(shuffled[direction], distance)
     candidate_location = PVector.add(parent.coordinate, scaled)
-    room_to_add = create_location(Room, candidate_location, locs, size)
+    room_to_add = create_location(Room, candidate_location, size)
     room_to_add.name = name
     return room_to_add
 
@@ -105,36 +105,6 @@ def get_parent_rooms(types: List[str], mine_start: Location) -> List[Location]:
 
     return []
 
-def dwarf_mine_factory(x_location: int, depth: int,
-                       target_mineral: GoldVein | Mithril,
-                       locs: List[Location]) -> List[Room]:
-    """Generate the start of a Dwarf mine."""
-    sites = []
-
-    room0 = create_location(Room, PVector(x_location, GROUND_LEVEL), locs)
-    room0.name = "Start"
-    room0.color = DWARF
-    sites.append(room0)
-
-    half_height = (depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-    room1 = create_location(Room, PVector(x_location, half_height), locs)
-    room1.name = "Barracks"
-    room1.color = DWARF
-    room1.contents = Entity("Dwarves", room1, CREATURE)
-    sites.append(room1)
-
-    room2 = create_location(Room, PVector(x_location, depth), locs)
-    room2.name = "Mine"
-    room2.color = DWARF
-    room2.target = target_mineral
-    room2.contents = Entity("Treasure", room2, TREASURE)
-    sites.append(room2)
-
-    sites[0].add_neighbor(sites[1])
-    sites[1].add_neighbor(sites[2])
-
-    return sites
-
 # TO_DO: there's a vector-based solution for this too using
 #        ratio of x along the line segment
 def get_y_at_x(start: PVector, end: PVector, x_coord: int) -> int:
@@ -193,6 +163,7 @@ class MineStartStrategy(LocationStrategy):
         """Return the developer string representation of a MineStartStrategy."""
         return "MineStartStrategy()"
 
+    # TO_DO: remove locs parameter?
     def next(self, locs: List[Location]) -> Room:
         """Return the next location in the sequence."""
         result = None
@@ -205,15 +176,14 @@ class MineStartStrategy(LocationStrategy):
 
         if self.step == 1:
             self.previous_node = create_location(Room, 
-                                                 PVector(self.x_location, GROUND_LEVEL), 
-                                                 locs)
+                                                 PVector(self.x_location, GROUND_LEVEL))
             self.previous_node.name = "Start"
             self.previous_node.color = DWARF
             result = self.previous_node
 
         if self.step == 2:
             half_height = (self.depth - GROUND_LEVEL)//2 + GROUND_LEVEL
-            room = create_location(Room, PVector(self.x_location, half_height), locs)
+            room = create_location(Room, PVector(self.x_location, half_height))
             room.name = "Barracks"
             room.color = DWARF
             room.contents = Entity("Dwarves", room, CREATURE)
@@ -224,7 +194,7 @@ class MineStartStrategy(LocationStrategy):
         if self.step == 3:
             self.done = True
 
-            room = create_location(Room, PVector(self.x_location, self.depth), locs)
+            room = create_location(Room, PVector(self.x_location, self.depth))
             room.name = "Mine"
             room.color = DWARF
             room.target = self.target_mineral
@@ -350,7 +320,7 @@ class SummerStrategy(LocationStrategy):
         if isinstance(self.deposit, GoldVein):
             new_x = self.parent_mine.coordinate.x + (self.direction * ROOM_SPACING)
             new_y = get_y_at_x(self.deposit.left, self.deposit.right, new_x)
-            new_room = create_location(Room, PVector(new_x, new_y), locs)
+            new_room = create_location(Room, PVector(new_x, new_y))
             new_room.name = "Mine"
             new_room.target = self.parent_mine.target
             new_room.color = self.parent_mine.color
@@ -363,7 +333,7 @@ class SummerStrategy(LocationStrategy):
             #        need a better approach here
             to_corner = PVector.mult(self.deposit.corner_vector, ROOM_SPACING)
             new_location = PVector.sub(self.parent_mine.coordinate, to_corner)
-            new_room = create_location(Room, new_location, locs)
+            new_room = create_location(Room, new_location)
             new_room.name = "Mine"
             new_room.target = self.parent_mine.target
             new_room.color = self.parent_mine.color
@@ -395,6 +365,7 @@ class AutumnStrategy(LocationStrategy):
         """Return the developer string representation of an AutumnStrategy."""
         return "AutumnStrategy()"
 
+    # TO_DO: remove locs parameter
     def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None
@@ -407,7 +378,7 @@ class AutumnStrategy(LocationStrategy):
                 selection = choice(get_parent_rooms(["Mine"], self.mine_start))
                 new_location = PVector(selection.coordinate.x,
                                        selection.coordinate.y + ROOM_SPACING)
-                new_room = create_location(Room, new_location, locs, (BEAD*2,BEAD))
+                new_room = create_location(Room, new_location, (BEAD*2,BEAD))
                 new_room.name = "Workshop"
                 new_room.color = selection.color
                 selection.add_neighbor(new_room)
@@ -435,7 +406,7 @@ class AutumnStrategy(LocationStrategy):
 
                 #new_location = PVector(shaft_bottom.coordinate.x,
                                        #shaft_bottom.coordinate.y + FINGER)
-                #new_room = create_location(Room, new_location, locs)
+                #new_room = create_location(Room, new_location)
                 #new_room.name = "Outpost"
                 #new_room.color = shaft_bottom.color
                 #shaft_bottom.add_neighbor(new_room)
@@ -504,7 +475,7 @@ class AutumnStrategy(LocationStrategy):
                 shaft_x = bottom.coordinate.x
                 shaft_y = HEIGHT + BEAD
 
-                new_room = create_location(Room, PVector(shaft_x, shaft_y), locs)
+                new_room = create_location(Room, PVector(shaft_x, shaft_y))
                 new_room.name = "End"
                 new_room.color = bottom.color
                 bottom.add_neighbor(new_room)

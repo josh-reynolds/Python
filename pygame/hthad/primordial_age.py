@@ -66,11 +66,12 @@ class SimpleCavernStrategy(LocationStrategy):
             self.done = True
         return self._natural_cavern_factory(locs)
 
+    # TO_DO: remove locs paameter
     def _natural_cavern_factory(self, locs: List[Location]) -> Cavern:
         """Generate a natural cavern."""
         coordinate = get_random_underground_location()
 
-        cavern = create_location(Cavern, coordinate, locs)
+        cavern = create_location(Cavern, coordinate)
         cavern.color = CAVERN
 
         detail = randint(1,6)
@@ -111,13 +112,14 @@ class ComplexCavernStrategy(LocationStrategy):
         """Return the developer string representation of a ComplexCavernStrategy."""
         return "ComplexCavernStrategy()"
 
+    # TO_DO: remove locs parameter
     def next(self, locs: List[Location]) -> Cavern:
         """Return the next location in the sequence."""
         result = None
 
         if self.step == 1:
             point = get_random_underground_location()
-            self.start_node = create_location(Cavern, point, locs)
+            self.start_node = create_location(Cavern, point)
             self.start_node.color = CAVERN
             self.start_node.contents = Entity("Primordial Beasts", self.start_node, CREATURE)
             result = self.start_node
@@ -125,7 +127,7 @@ class ComplexCavernStrategy(LocationStrategy):
         if self.step == 2:
             point = get_orbital_point(self.start_node.coordinate, 
                                       self.radius * 3, 0, 359)
-            cavern = create_location(Cavern, point, locs)
+            cavern = create_location(Cavern, point)
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
             self.start_node.add_neighbor(cavern)
@@ -137,7 +139,7 @@ class ComplexCavernStrategy(LocationStrategy):
             # TO_DO: rework this to use viability check instead of constrained angular offset
             point = get_orbital_point(self.start_node.coordinate, 
                                       self.radius * 3, 0, 359)
-            cavern = create_location(Cavern, point, locs)
+            cavern = create_location(Cavern, point)
             cavern.color = CAVERN
             cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
             self.start_node.add_neighbor(cavern)
@@ -164,6 +166,7 @@ class UndergroundRiverStrategy(LocationStrategy):
         """Return the developer string representation of a UndergroundRiverStrategy."""
         return "UndergroundRiverStrategy()"
 
+    # TO_DO: remove locs parameter
     def next(self, locs: List[Location]) -> UndergroundRiver | Cavern:
         """Return the next location in the sequence."""
         result = None
@@ -173,7 +176,7 @@ class UndergroundRiverStrategy(LocationStrategy):
             self.total_steps = len(self.river.caves) + 1
             result = self.river
         else:
-            cavern = create_location(Cavern, self.river.caves[self.step-1], locs)
+            cavern = create_location(Cavern, self.river.caves[self.step-1])
             cavern.color = CAVERN
             result = cavern
 
@@ -200,13 +203,14 @@ class AncientWyrmStrategy(LocationStrategy):
         return "AncientWyrmStrategy()"
 
     # TO_DO: name the wyrm
+    # TO_DO: remove locs parameter
     def next(self, locs: List[Location]) -> Cavern:
         """Return the next location in the sequence."""
         result = None
 
         if self.step == 1:
             point = get_random_underground_location()
-            self.start_node = create_location(Cavern, point, locs)
+            self.start_node = create_location(Cavern, point)
             self.start_node.color = CAVERN
             self.start_node.contents = Entity("Ancient Wyrm", self.start_node, CREATURE)
             result = self.start_node
@@ -216,7 +220,7 @@ class AncientWyrmStrategy(LocationStrategy):
 
             point = get_orbital_point(self.start_node.coordinate, 
                                       self.radius * 1.5, 0, 359)
-            cavern = create_location(Cavern, point, locs)
+            cavern = create_location(Cavern, point)
             cavern.color = CAVERN
             cavern.contents = Entity("Wyrm Treasure", cavern, TREASURE)
             self.start_node.add_neighbor(cavern)
