@@ -382,16 +382,17 @@ class AutumnStrategy(LocationStrategy):
 
             case 4:
                 print("Great Hall")
-                #selection = get_parent_rooms(["Barracks", "Treasure Vault"],
-                                             #self.mine_start)
+                selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                             self.mine_start)
 
                 ## TO_DO: need to customize size/shape of Great Hall
-                #new_room = get_candidate_room(selection, "Great Hall",
-                                              #(FINGER//2, BEAD))
+                new_room = get_candidate_room(selection, "Great Hall",
+                                              (FINGER//2, BEAD))
 
-                #if new_room:
-                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                    #check_for_connections(new_room, locs)
+                if new_room:
+                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    check_for_connections(new_room, locs)
+                    result = new_room
 
             case 5:
                 print("Exploratory Shaft")
