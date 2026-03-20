@@ -40,6 +40,7 @@ def update() -> None:
                     groups[entity.name] += 1
                 else:
                     groups[entity.name] = 1
+            entity.update()
         print(groups)
 
         #for location in locations:

@@ -22,6 +22,8 @@ class Entity():
         self.color = color
         self.value = 1
 
+        self.is_dead = False
+
     def __str__(self) -> str:
         """Return the string representation of an Entity."""
         return self.name
@@ -50,3 +52,10 @@ class Entity():
         """Draw the Entity on the screen once per frame."""
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
         screen.draw.text(f"{self.value}", center=(self.x, self.y))
+
+        if self.is_dead:
+            screen.draw.text("X", center=(self.x, self.y), color=Color('red'))
+
+    def update(self) -> None:
+        """Update the Entity object once per game tick."""
+        print(f"{self}")
