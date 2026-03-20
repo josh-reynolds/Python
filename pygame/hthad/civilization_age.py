@@ -437,14 +437,15 @@ class AutumnStrategy(LocationStrategy):
             # TO_DO: name the city
             case 8:
                 print("Dwarven Golden Age City")
-                #selection = get_parent_rooms(["Barracks", "Treasure Vault"],
-                                             #self.mine_start)
-                #new_room = get_candidate_room(selection, "Dwarven City",
-                                              #(FINGER, BEAD))
+                selection = get_parent_rooms(["Barracks", "Treasure Vault"],
+                                             self.mine_start)
+                new_room = get_candidate_room(selection, "Dwarven City",
+                                              (FINGER, BEAD))
 
-                #if new_room:
-                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                    #check_for_connections(new_room, locs)
+                if new_room:
+                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    check_for_connections(new_room, locs)
+                    result = new_room
 
             # TO_DO: Treasure Room should not connect to rest of dwarf mine
             case 9:
