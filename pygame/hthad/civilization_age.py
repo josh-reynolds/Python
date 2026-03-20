@@ -450,14 +450,15 @@ class AutumnStrategy(LocationStrategy):
             # TO_DO: Treasure Room should not connect to rest of dwarf mine
             case 9:
                 print("Treasure Room")
-                #new_room = get_candidate_room(all_rooms, "Treasure Room",
-                                              #(BEAD*2, BEAD*2),
-                                              #ROOM_SPACING * 3)
+                new_room = get_candidate_room(self.all_rooms, "Treasure Room",
+                                              (BEAD*2, BEAD*2),
+                                              ROOM_SPACING * 3)
 
-                #if new_room:
-                    #treasure = Entity("Dwarven Treasure", new_room, TREASURE)
-                    #treasure.value = 2
-                    #new_room.contents = treasure
+                if new_room:
+                    treasure = Entity("Dwarven Treasure", new_room, TREASURE)
+                    treasure.value = 2
+                    new_room.contents = treasure
+                    result = new_room
 
             # TO_DO: cook up a better approach, we could still run off the
             #        end of this and get stuck, in theory
