@@ -411,15 +411,15 @@ class AutumnStrategy(LocationStrategy):
 
             case 6:
                 print("Hall Expansion")
-                #candidates = self.mine_start.get_locations_by_name("Great Hall")
-                #if candidates:
-                    #great_hall = candidates[0]
-                    #new_x = great_hall.rect.x - BEAD
-                    #new_w = great_hall.rect.w + (BEAD * 2)
-                    #great_hall.rect = Rect(new_x,
-                                           #great_hall.rect.y,
-                                           #new_w,
-                                           #great_hall.rect.h)
+                candidates = self.mine_start.get_locations_by_name("Great Hall")
+                if candidates:
+                    great_hall = candidates[0]
+                    new_x = great_hall.rect.x - BEAD
+                    new_w = great_hall.rect.w + (BEAD * 2)
+                    great_hall.rect = Rect(new_x,
+                                           great_hall.rect.y,
+                                           new_w,
+                                           great_hall.rect.h)
 
             case 7:
                 print("Hall of Records")
