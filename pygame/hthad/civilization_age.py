@@ -423,15 +423,16 @@ class AutumnStrategy(LocationStrategy):
 
             case 7:
                 print("Hall of Records")
-                #selection = get_parent_rooms(["Great Hall"], self.mine_start)
-                #new_room = None
-                #if selection:
-                    #new_room = get_candidate_room(selection, "Hall of Records",
-                                                  #(BEAD, BEAD), 3)
+                selection = get_parent_rooms(["Great Hall"], self.mine_start)
+                new_room = None
+                if selection:
+                    new_room = get_candidate_room(selection, "Hall of Records",
+                                                  (BEAD, BEAD), 3)
 
-                #if new_room:
-                    #new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
-                    #check_for_connections(new_room, locs)
+                if new_room:
+                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    check_for_connections(new_room, locs)
+                    result = new_room
 
             # TO_DO: name the city
             case 8:
