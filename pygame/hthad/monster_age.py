@@ -25,7 +25,7 @@ class MonsterAge():
                 for entity in all_entities:
                     match entity.name:
                         case "Dwarves" | "Treasure":
-                            entity.parent.contents = None
+                            entity.detach()
 
                 self.step += 1
 

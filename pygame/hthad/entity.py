@@ -51,6 +51,9 @@ class Entity():
         self._parent.contents = None
         self._parent = None
 
+    # TO_DO: Would be nice to animate this movement rather than
+    #        all in one big jump. Will need to consider timers and
+    #        relationship between frames and game ticks.
     def move(self, destination: Location) -> None:
         """Move the Entity to a new Location."""
         self.detach()
