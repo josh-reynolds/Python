@@ -381,3 +381,40 @@
 # evaluate that cavern factory, of course...)
 #
 # OK. The cavern factory was trivial, and done.
+#
+# LocationStrategy.next()    # interface
+#
+# PrimordialAge.update()
+#    GoldVeinStrategy.next()
+#        # <not used>
+#    MithrilStrategy.next()
+#        # <not used>
+#    SimpleCavernStrategy.next()
+#        # <not used>
+#    ComplexCavernStrategy.next()
+#        # <not used>
+#    UndergroundRiverStrategy.next()
+#        # <not used>
+#    AncientWyrmStrategy.next()
+#        # <not used>
+#
+# CivilizationAge.update()
+#    # <adding a GoldVein if necessary>
+#    MineStartStrategy.next()
+#        # <finding mineral deposit>
+#    SpringStrategy.next()
+#        utilities.check_for_connections()
+#    SummerStrategy.next()
+#        # <not used>
+#    AutumnStrategy.next()
+#        utilities.check_for_connections()
+#    WinterStrategy.next()
+#        # <not used>
+#
+# MonsterAge.update()
+#    utilities.get_all_entities()
+#
+# We should probably also distinguish between query usage
+# of a global resource, and mutation. The latter is much
+# less desirable. All of the uses above are queries. We only
+# mutate the global list in main.update()

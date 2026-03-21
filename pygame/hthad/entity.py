@@ -58,4 +58,7 @@ class Entity():
 
     def update(self) -> None:
         """Update the Entity object once per game tick."""
-        print(f"{self}")
+        nearby = self.parent.neighbors
+        neighbors = [l.contents for l in nearby if l.contents]
+
+        print(f"{self} : {nearby} : {neighbors}")
