@@ -64,10 +64,9 @@ class SimpleCavernStrategy(LocationStrategy):
         self.cavern_count += 1
         if randint(1,6) == 6 or self.cavern_count >= 6:
             self.done = True
-        return self._natural_cavern_factory(locs)
+        return self._natural_cavern_factory()
 
-    # TO_DO: remove locs paameter
-    def _natural_cavern_factory(self, locs: List[Location]) -> Cavern:
+    def _natural_cavern_factory(self) -> Cavern:
         """Generate a natural cavern."""
         coordinate = get_random_underground_location()
 

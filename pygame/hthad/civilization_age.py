@@ -355,7 +355,7 @@ class AutumnStrategy(LocationStrategy):
         """Return the developer string representation of an AutumnStrategy."""
         return "AutumnStrategy()"
 
-    # TO_DO: remove locs parameter
+    # TO_DO: remove locs parameter?
     def next(self, locs: List[Location]) -> Room | None:
         """Return the next location in the sequence."""
         result = None

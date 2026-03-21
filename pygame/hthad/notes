@@ -353,3 +353,31 @@
 # counter and the match case structure below. What if the
 # strategy returned its successor when done?
 # ------------------------------------------------------
+
+# ------------------------------------------------------
+# Reeling back the locs parameter. Originally we had locations as
+# a global list used everywhere, when this was all in main. When the 
+# functions and classes were dispersed across multiple modules, I plumbed
+# the list through as a parameter. Still not great - methods were mutating
+# it in place. I'm gradually replacing this with return values (getting
+# unit tests would help drive this decoupling too).
+#
+# One big change was removing check_for_connections() from create_location().
+# That removed the need to pass in locs, and many of the higher functions in
+# this call chain were just passing it all the way down without any other
+# usage.
+#
+# A quick search (grep locs *.py | grep def) shows that other than a bunch
+# of next() and update() methods, we only have the following still in use:
+#
+# SimpleCavernStrategy._natural_cavern_factory()
+# utilities.get_all_entities()
+# utilities.check_for_connections()
+#
+# Many of the next() & update() methods just carry for conformity with the
+# interface, without actually using it. And the utility functions are valid
+# usage. The real question is where/when are _they_ used and can that be
+# reworked to decouple the locations list as much as possible. (And also
+# evaluate that cavern factory, of course...)
+#
+# OK. The cavern factory was trivial, and done.
