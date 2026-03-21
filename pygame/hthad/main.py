@@ -31,6 +31,7 @@ def update() -> None:
         if current_stage.is_done():
             current_stage = stages.pop(0)
 
+    if (counter - 50) % 200 == 0:
         groups = {}
 
         for entity in get_all_entities(locations):
