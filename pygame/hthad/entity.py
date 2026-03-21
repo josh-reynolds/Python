@@ -1,8 +1,9 @@
 """Contains Entity class to represent room & cavern contents."""
+from random import choice
 from typing import Tuple
 from engine import screen
 from location import Location
-from constants import BEAD
+from constants import BEAD, CREATURE
 
 
 class Entity():
@@ -40,13 +41,20 @@ class Entity():
     @parent.setter
     def parent(self, new_parent: Location) -> None:
         """Set the Entity's parent Location."""
+        new_parent.contents = self
         self._parent = new_parent
         self.x = self.parent.coordinate.x
         self.y = self.parent.coordinate.y
 
     def detach(self) -> None:
         """Detach the Entity from its parent without setting a new one."""
+        self._parent.contents = None
         self._parent = None
+
+    def move(self, destination: Location) -> None:
+        """Move the Entity to a new Location."""
+        self.detach()
+        self.parent = destination
 
     def draw(self) -> None:
         """Draw the Entity on the screen once per frame."""
@@ -62,3 +70,9 @@ class Entity():
         neighbors = [l.contents for l in nearby if l.contents]
 
         print(f"{self} : {nearby} : {neighbors}")
+
+        if self.color == CREATURE:
+            vacancies = [l for l in nearby if not l.contents]
+            if vacancies:
+                target = choice(vacancies)
+                self.move(target)

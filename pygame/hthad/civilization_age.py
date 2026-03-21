@@ -250,7 +250,6 @@ class SpringStrategy(LocationStrategy):
 
                     self.step -= 1
                     source_treasure = self.treasures.pop()
-                    source_treasure.parent.contents = None
                     source_treasure.detach()
 
         else:
