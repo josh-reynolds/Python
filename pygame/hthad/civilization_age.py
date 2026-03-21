@@ -77,17 +77,11 @@ def get_candidate_room(parents: List[Location], room_name: str,
     print("No viable locations found!")
     return None
 
-# start with priority-sorted list of parent locations
-# take the first one
-#   test candidate locations attached to parent for viability
-#   bail out after some number of attempts?
-# try another if none found
-# how do we handle if _no_ viable locations can be found?
-#
-# might be better to sort the list by neighbor count rather than
-# prune - sometimes the current approach can get stuck. It returns a
-# very short list of parents, none of which have viable build locations
-# adjacent.
+
+# TO_DO: might be better to sort the list by neighbor count rather than
+#        prune - sometimes the current approach can get stuck. It returns a
+#        very short list of parents, none of which have viable build locations
+#        adjacent.
 def get_parent_rooms(types: List[str], mine_start: Location) -> List[Location]:
     """Return the parent room to attach a new room to."""
     parents = []
@@ -465,7 +459,7 @@ class AutumnStrategy(LocationStrategy):
             case 10 | 11 | 12 | 13 | 14 | 15:
                 print("Delve Too Deep")
 
-                ## might be simpler to sort by y coordinate and pop...
+                # might be simpler to sort by y coordinate and pop...
                 y_coords = [m.coordinate.y for m in self.all_rooms]
                 mine_max_y = max(y_coords)
 
@@ -537,25 +531,6 @@ class CivilizationAge():
 
         if not self.mine_start:
             self.current_strategy = MineStartStrategy()
-
-        # possible algorithm for handling steps:
-        # 0. start with just the setup strategy in the queue
-        # 1. pop off the queue
-        # 2. execute next()
-        # 3. if not done, go to 2
-        # 4. if done, add next strategy to queue (if Age is not done)
-        # 5. go to 1
-
-        # is a queue warranted? seems like we'll only ever have one
-        # active Strategy at a time - so maybe just a single 'current_builder'
-        # pointer? the sequencing is happening _inside_ the strategies
-        #
-        # if we broke them up even finer, then maybe we would want to
-        # accumulate a queue at this level, something to think about
-
-        # the strategy approach could eliminate the need for a 'step'
-        # counter and the match case structure below. What if the
-        # strategy returned its successor when done?
 
         # TO_DO: duplicated from AutumnStrategy.next() - should
         #        extract a function for testing this end-condition
