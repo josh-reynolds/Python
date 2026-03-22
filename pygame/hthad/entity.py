@@ -48,8 +48,10 @@ class Entity():
         """Set the Entity's parent Location."""
         new_parent.contents = self
         self._parent = new_parent
-        self.x = self.parent.coordinate.x
-        self.y = self.parent.coordinate.y
+
+        if not self.destination:
+            self.x = self.parent.coordinate.x
+            self.y = self.parent.coordinate.y
 
     def detach(self) -> None:
         """Detach the Entity from its parent without setting a new one."""
@@ -59,9 +61,13 @@ class Entity():
     def move(self, destination: Location) -> None:
         """Move the Entity to a new Location."""
         self.destination = destination
+
         vector = PVector.sub(self.destination.coordinate, self.parent.coordinate)
         vector / 50    # arrive in 50 frames
         self.velocity = vector
+
+        self.detach()
+        self.parent = self.destination
 
     def update(self) -> None:
         """Update the Entity's state once per frame."""
@@ -77,8 +83,6 @@ class Entity():
             max_y = self.destination.coordinate.y + EPSILON
             if min_x <= self.x <= max_x and min_y <= self.y <= max_y:
 
-                self.detach()
-                self.parent = self.destination
                 self.velocity = None
                 self.destination = None
 
