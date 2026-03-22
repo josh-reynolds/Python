@@ -4,7 +4,7 @@ from typing import List, Tuple
 from pygame import Rect
 from pvector import PVector
 from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, HEIGHT
-from entity import Entity, Creature, Treasure
+from entity import Creature, Treasure
 from landscape import Mithril, GoldVein
 from location import Location, Room
 from location_strategy import LocationStrategy

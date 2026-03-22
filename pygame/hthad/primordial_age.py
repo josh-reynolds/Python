@@ -4,7 +4,7 @@ from random import randint
 from typing import List, Any
 from pvector import PVector
 from constants import CAVERN, BEAD, FINGER
-from entity import Entity, Creature, Treasure, Event
+from entity import Creature, Treasure, Event
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
 from location_strategy import LocationStrategy
