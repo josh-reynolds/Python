@@ -1,9 +1,8 @@
 """Play Tony Dowler's 'How to Host a Dungeon'."""
 from engine import screen, run
 from landscape import strata_depth, make_strata
-from constants import WIDTH, HEIGHT, TITLE, GROUND_LEVEL
-from constants import CREATURE
-from constants import SKY, BORDER
+from constants import WIDTH, HEIGHT, TITLE, GROUND_LEVEL, SKY, BORDER
+from entity import Creature
 from primordial_age import PrimordialAge
 from monster_age import MonsterAge
 from civilization_age import CivilizationAge
@@ -35,7 +34,7 @@ def update() -> None:
         groups = {}
 
         for entity in get_all_entities(locations):
-            if entity.color == CREATURE:
+            if isinstance(entity, Creature):
                 #print(f"Adding {entity.name} = {id(entity)} = {id(entity.parent)}")
                 if entity.name in groups:
                     groups[entity.name] += 1

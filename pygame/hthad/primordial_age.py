@@ -3,8 +3,8 @@ import math
 from random import randint
 from typing import List, Any
 from pvector import PVector
-from constants import CAVERN, CREATURE, BEAD, FINGER, EVENT, TREASURE
-from entity import Entity
+from constants import CAVERN, BEAD, FINGER, EVENT, TREASURE
+from entity import Entity, Creature
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
 from location_strategy import LocationStrategy
@@ -89,7 +89,7 @@ class SimpleCavernStrategy(LocationStrategy):
             case 4:
                 pass
             case 5:
-                cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+                cavern.contents = Creature("Primordial Beasts", cavern)
             case 6:
                 cavern.contents = Entity("Fate", cavern, EVENT)
 
@@ -120,7 +120,7 @@ class ComplexCavernStrategy(LocationStrategy):
             point = get_random_underground_location()
             self.start_node = create_location(Cavern, point)
             self.start_node.color = CAVERN
-            self.start_node.contents = Entity("Primordial Beasts", self.start_node, CREATURE)
+            self.start_node.contents = Creature("Primordial Beasts", self.start_node)
             result = self.start_node
 
         if self.step == 2:
@@ -128,7 +128,7 @@ class ComplexCavernStrategy(LocationStrategy):
                                       self.radius * 3, 0, 359)
             cavern = create_location(Cavern, point)
             cavern.color = CAVERN
-            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+            cavern.contents = Creature("Primordial Beasts", cavern)
             self.start_node.add_neighbor(cavern)
             result = cavern
 
@@ -140,7 +140,7 @@ class ComplexCavernStrategy(LocationStrategy):
                                       self.radius * 3, 0, 359)
             cavern = create_location(Cavern, point)
             cavern.color = CAVERN
-            cavern.contents = Entity("Primordial Beasts", cavern, CREATURE)
+            cavern.contents = Creature("Primordial Beasts", cavern)
             self.start_node.add_neighbor(cavern)
             result = cavern
 
@@ -211,7 +211,7 @@ class AncientWyrmStrategy(LocationStrategy):
             point = get_random_underground_location()
             self.start_node = create_location(Cavern, point)
             self.start_node.color = CAVERN
-            self.start_node.contents = Entity("Ancient Wyrm", self.start_node, CREATURE)
+            self.start_node.contents = Creature("Ancient Wyrm", self.start_node)
             result = self.start_node
 
         if self.step == 2:

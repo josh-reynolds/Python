@@ -3,9 +3,9 @@ from random import choice, randint, shuffle
 from typing import List, Tuple
 from pygame import Rect
 from pvector import PVector
-from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, CREATURE
+from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF
 from constants import TREASURE, HEIGHT
-from entity import Entity
+from entity import Entity, Creature
 from landscape import Mithril, GoldVein
 from location import Location, Room
 from location_strategy import LocationStrategy
@@ -176,7 +176,7 @@ class MineStartStrategy(LocationStrategy):
             room = create_location(Room, PVector(self.x_location, half_height))
             room.name = "Barracks"
             room.color = DWARF
-            room.contents = Entity("Dwarves", room, CREATURE)
+            room.contents = Creature("Dwarves", room)
             self.previous_node.add_neighbor(room)
             self.previous_node = room
             result = room
@@ -245,7 +245,7 @@ class SpringStrategy(LocationStrategy):
                     result = get_candidate_room(selection, "Barracks")
 
                     if result:
-                        result.contents = Entity("Dwarves", result, CREATURE)
+                        result.contents = Creature("Dwarves", result)
                         check_for_connections(result, locs)
 
                     self.step -= 1
