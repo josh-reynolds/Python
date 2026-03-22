@@ -3,8 +3,8 @@ import math
 from random import randint
 from typing import List, Any
 from pvector import PVector
-from constants import CAVERN, BEAD, FINGER, EVENT
-from entity import Entity, Creature, Treasure
+from constants import CAVERN, BEAD, FINGER
+from entity import Entity, Creature, Treasure, Event
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
 from location_strategy import LocationStrategy
@@ -79,7 +79,7 @@ class SimpleCavernStrategy(LocationStrategy):
                 cavern.tunnel = True
                 cavern.tilt = randint(-FINGER//2, FINGER//2)
             case 2:
-                event = Entity("Plague", cavern, EVENT)
+                event = Event("Plague", cavern)
                 event.value = randint(1,4)
                 cavern.contents = event
             case 3:
@@ -91,7 +91,7 @@ class SimpleCavernStrategy(LocationStrategy):
             case 5:
                 cavern.contents = Creature("Primordial Beasts", cavern)
             case 6:
-                cavern.contents = Entity("Fate", cavern, EVENT)
+                cavern.contents = Event("Fate", cavern)
 
         return cavern
 
