@@ -46,6 +46,9 @@ def update() -> None:
         #for location in locations:
             #print(f"{location.name} = {id(location)}")
 
+    for entity in get_all_entities(locations):
+        entity.update()
+
     # TO_DO: all of the update methods are stubs - are we
     #        going to use this?
     for location in locations:

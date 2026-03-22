@@ -2,6 +2,7 @@
 from random import choice
 from typing import Tuple
 from engine import screen
+from pvector import PVector
 from location import Location
 from constants import BEAD, CREATURE, TREASURE, EVENT
 
@@ -25,6 +26,9 @@ class Entity():
         self.value = 1
 
         self.is_dead = False
+
+        self.destination = None
+        self.velocity = None
 
     def __str__(self) -> str:
         """Return the string representation of an Entity."""
@@ -52,13 +56,31 @@ class Entity():
         self._parent.contents = None
         self._parent = None
 
-    # TO_DO: Would be nice to animate this movement rather than
-    #        all in one big jump. Will need to consider timers and
-    #        relationship between frames and game ticks.
     def move(self, destination: Location) -> None:
         """Move the Entity to a new Location."""
-        self.detach()
-        self.parent = destination
+        self.destination = destination
+        vector = PVector.sub(self.destination.coordinate, self.parent.coordinate)
+        vector / 50    # arrive in 50 frames
+        self.velocity = vector
+
+    def update(self) -> None:
+        """Update the Entity's state once per frame."""
+        if self.velocity:
+            self.x += self.velocity.x
+            self.y += self.velocity.y
+
+        if self.destination:
+            EPSILON = 0.01
+            min_x = self.destination.coordinate.x - EPSILON
+            max_x = self.destination.coordinate.x + EPSILON
+            min_y = self.destination.coordinate.y - EPSILON
+            max_y = self.destination.coordinate.y + EPSILON
+            if min_x <= self.x <= max_x and min_y <= self.y <= max_y:
+
+                self.detach()
+                self.parent = self.destination
+                self.velocity = None
+                self.destination = None
 
     def draw(self) -> None:
         """Draw the Entity on the screen once per frame."""
@@ -80,6 +102,27 @@ class Entity():
             if vacancies:
                 target = choice(vacancies)
                 self.move(target)
+
+        # Timing is a question here once we start animating
+        # need to complete all animations between game ticks
+        # and interactions between Entities need to consider this too
+        # for example, an attack should be resolved immediately so
+        # that the target can't choose to move away or any other
+        # interruption
+
+        # Concern that the game logic works against room occupancy,
+        # not actual screen coordinates - but again, the animation is
+        # just sugar over the game state. As long as the animation
+        # finishes before the next tick we should be OK.
+
+        # Another issue I'm already seeing with just move() implemented:
+        # two creatures can choose the same destination and after the
+        # move, one of them disappears (is probably an invisible zombie)
+        # we should lay claim to the destination immediately as well -
+        # so same principal as attack: the _effect_ of an action
+        # takes place immediately, since the entities are acting in
+        # serial order. But the on-screen visible 'effect' can
+        # take as much time as desired before the next tick.
 
 
 class Creature(Entity):
