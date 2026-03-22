@@ -442,3 +442,20 @@
 #     captured space.
 #
 # ------------------------------------------------------
+
+# ------------------------------------------------------
+# It would be nice if CREATUREs moved along tunnels and didn't just teleport
+# from room to room. In order to pull this off, I think we need to separate
+# frame updates (for animation) and game ticks (for thinking & acting). So
+# maybe Entity.update() and Entity.think()?
+#
+# And before we get to that, it's probably time to create a little Entity
+# hierarchy. I think we're about to get a bunch of polymorphic behavior.
+#
+# Entity
+#            move    attack    take   affect
+#            ----    ------    ----   ------
+# Treasure   no      no        no     no
+# Creature   yes     yes       yes    no(?)
+# Event      no      no        no     yes
+# ------------------------------------------------------

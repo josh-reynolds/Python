@@ -3,9 +3,10 @@ from random import choice
 from typing import Tuple
 from engine import screen
 from location import Location
-from constants import BEAD, CREATURE
+from constants import BEAD, CREATURE, TREASURE, EVENT
 
 
+# TO_DO: moving to a hierarchy - this one should become an ABC
 class Entity():
     """Represents creatures and things on the map."""
 
@@ -79,3 +80,27 @@ class Entity():
             if vacancies:
                 target = choice(vacancies)
                 self.move(target)
+
+
+class Creature(Entity):
+    """Represents creatures on the map."""
+
+    def __init__(self, name: str, parent: Location) -> None:
+        """Create an instance of a Creature object."""
+        super().__init__(name, parent, CREATURE)
+
+
+class Treasure(Entity):
+    """Represents treasure on the map."""
+
+    def __init__(self, name: str, parent: Location) -> None:
+        """Create an instance of a Treasure object."""
+        super().__init__(name, parent, TREASURE)
+
+
+class Event(Entity):
+    """Represents events on the map."""
+
+    def __init__(self, name: str, parent: Location) -> None:
+        """Create an instance of an Event object."""
+        super().__init__(name, parent, EVENT)
