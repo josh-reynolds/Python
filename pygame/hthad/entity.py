@@ -68,12 +68,12 @@ class Entity():
         if self.is_dead:
             screen.draw.text("X", center=(self.x, self.y), color=Color('red'))
 
-    def update(self) -> None:
-        """Update the Entity object once per game tick."""
+    def think(self) -> None:
+        """Decide what action to take and queue it up once per game tick."""
         nearby = self.parent.neighbors
         neighbors = [l.contents for l in nearby if l.contents]
 
-        print(f"{self} : {nearby} : {neighbors}")
+        #print(f"{self} : {nearby} : {neighbors}")
 
         if self.color == CREATURE:
             vacancies = [l for l in nearby if not l.contents]
