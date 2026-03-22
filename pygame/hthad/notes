@@ -70,6 +70,10 @@
 # could do ray-casting from the surface down until we strike a mineral. And
 # so on.
 #
+# Another benefit - we could do away with the odd non-locations from 
+# the landscape module that are added to the locations list just so we
+# can redraw every frame.
+#
 # ---------------------------------------------
 # How to handle interaction between the groups? I _think_ there's a pretty
 # basic one-for-one attrition when groups meet, with only the larger
@@ -398,7 +402,7 @@
 # So let's assume:
 #   * Each Location has at most one Entity in it, and each Location has some
 #     number of neighboring (connected) Locations, could be zero.
-#   * Once per game tick, each Entity assesses it's position and takes action.
+#   * Once per game tick, each Entity assesses its position and takes action.
 #   * There are three types of Entity, currently designated by color: CREATURE,
 #     EVENT and TREASURE.
 #   * Only CREATUREs and EVENTs can act. TREASUREs are inert.
@@ -458,4 +462,79 @@
 # Treasure   no      no        no     no
 # Creature   yes     yes       yes    no(?)
 # Event      no      no        no     yes
+# ------------------------------------------------------
+
+# ------------------------------------------------------
+# I got animated movement working. Some learnings from it:
+
+# Timing is a question once we start animating -
+# need to complete all animations between game ticks
+# and interactions between Entities need to consider this too
+# for example, an attack should be resolved immediately so
+# that the target can't choose to move away or any other
+# interruption.
+
+# Concern is that the game logic works against room occupancy,
+# not actual screen coordinates - but again, the animation is
+# just sugar over the game state. As long as the animation
+# finishes before the next tick we should be OK.
+
+# Another issue I'm already seeing with just move() implemented:
+# two creatures can choose the same destination and after the
+# move, one of them disappears (is probably an invisible zombie)
+# we should lay claim to the destination immediately as well -
+# so same principle as attack: the _effect_ of an action
+# takes place immediately, since the entities are acting in
+# serial order. But the on-screen visible 'effect' can
+# take as much time as desired before the next tick.
+
+# Finally resolved that last issue, following the rule of thumb
+# to execute the result immediately in think() and as necessary
+# queue up an animation to follow. _All_ entities will complete
+# think() - in order, one at a time - before starting their next 
+# series of update().
+
+# Not sure yet if we want to fiddle with some sort of 'initiative'
+# handling or randomizing. Currently I think they are going
+# execute in the same order, over and over. (Or possibly in an
+# order derived from their parent location's placement in the list -
+# so it could shift very slightly as they move around. Is that
+# enough?)
+# ------------------------------------------------------
+
+# ------------------------------------------------------
+# Now that Creatures are moving, it would help to distinguish by
+# color so I (and ultimately the player) can see what's going on.
+# That's done, and wired through the constants module. But it
+# leads nicely into the question of territories.
+#
+# We could have Creatures claiming rooms as they move into them.
+# And to distinguish, we ought to have a color for those as well.
+# So each 'team' has a foreground (for Entity markers), and a
+# background (for Locations + connecting tunnels).
+# ------------------------------------------------------
+
+# ------------------------------------------------------
+# Action priority:
+# let's assume attack > steal > move
+#
+# We have move more or less done, designing attack next.
+# - RAW has some sort of dice resolution - check that out.
+# - Probably don't want anything fiddly like hit points, at least
+#   not yet. All fights are to the death. One of the two participants
+#   will bite the dust.
+# - _Two_ participants. So like with move, random selection if
+#   we have more than one potential target?
+# - Due to the list mutation issue above, we're going to set the
+#   loser to dead, not remove it immediately. Some implications:
+#   - We need a later sweep to remove all dead Creatures.
+#   - Dwarves have a Winter phase to handle this, which again is
+#     different than Entity-based procedure we're designing here.
+#   - Including both of the previous, work through the sequencing.
+#   - Dead Creatures cannot act. Need to enforce.
+#   - Dead Creatures cannot be attacked. Need to enforce.
+#
+# Probably enough to get started. Will almost certainly need some
+# tweaks once we run a few test games.
+#
 # ------------------------------------------------------

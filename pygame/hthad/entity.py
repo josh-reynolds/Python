@@ -1,6 +1,6 @@
 """Contains Entity class to represent room & cavern contents."""
 from random import choice
-from typing import Tuple
+from typing import Tuple, Self
 from engine import screen
 from pvector import PVector
 from location import Location
@@ -25,7 +25,7 @@ class Entity():
         self.color = color
         self.value = 1
 
-        self.is_dead = False
+        self.is_dead = False     # Creatures only?
 
     def __str__(self) -> str:
         """Return the string representation of an Entity."""
@@ -66,32 +66,12 @@ class Entity():
         screen.draw.circle(self.x, self.y, self.radius, self.color, 0)
         screen.draw.text(f"{self.value}", center=(self.x, self.y))
 
+        # Creatures only?
         if self.is_dead:
             screen.draw.text("X", center=(self.x, self.y), color=Color('red'))
 
     def think(self) -> None:
         """Decide what action to take and queue it up once per game tick."""
-
-        # Timing is a question here once we start animating
-        # need to complete all animations between game ticks
-        # and interactions between Entities need to consider this too
-        # for example, an attack should be resolved immediately so
-        # that the target can't choose to move away or any other
-        # interruption
-
-        # Concern that the game logic works against room occupancy,
-        # not actual screen coordinates - but again, the animation is
-        # just sugar over the game state. As long as the animation
-        # finishes before the next tick we should be OK.
-
-        # Another issue I'm already seeing with just move() implemented:
-        # two creatures can choose the same destination and after the
-        # move, one of them disappears (is probably an invisible zombie)
-        # we should lay claim to the destination immediately as well -
-        # so same principal as attack: the _effect_ of an action
-        # takes place immediately, since the entities are acting in
-        # serial order. But the on-screen visible 'effect' can
-        # take as much time as desired before the next tick.
 
 
 class Creature(Entity):
@@ -114,6 +94,10 @@ class Creature(Entity):
         self.destination = None
         self.velocity = None
 
+    def attack(self, target: Self) -> None:
+        """Attack the target Creature."""
+        print(f"{self} attacks {target}")
+
     def move(self, destination: Location) -> None:
         """Move the Creature to a new Location."""
         self.destination = destination
@@ -129,6 +113,12 @@ class Creature(Entity):
         """Decide what action to take and queue it up once per game tick."""
         nearby = self.parent.neighbors
         neighbors = [l.contents for l in nearby if l.contents]
+
+        neighbor_creatures = [n for n in neighbors if isinstance(n, Creature)]
+        if neighbor_creatures:
+            target = choice(neighbor_creatures)
+            self.attack(target)
+            return
 
         vacancies = [l for l in nearby if not l.contents]
         if vacancies:

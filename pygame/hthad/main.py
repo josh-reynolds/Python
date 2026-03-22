@@ -31,20 +31,18 @@ def update() -> None:
             current_stage = stages.pop(0)
 
     if (counter - 50) % 200 == 0:
+        # TO_DO: not currently using groups - should this be deprecated?
+        #        might want for Event Entities...
         groups = {}
 
         for entity in get_all_entities(locations):
             if isinstance(entity, Creature):
-                #print(f"Adding {entity.name} = {id(entity)} = {id(entity.parent)}")
                 if entity.name in groups:
                     groups[entity.name] += 1
                 else:
                     groups[entity.name] = 1
             entity.think()
         print(groups)
-
-        #for location in locations:
-            #print(f"{location.name} = {id(location)}")
 
     for entity in get_all_entities(locations):
         entity.update()

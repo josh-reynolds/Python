@@ -172,6 +172,7 @@ class Location():
 
         return locations
 
+    # TO_DO: should we have a match by Entity subclass?
     def get_all_matching_entities(self, entity_name) -> List:
         """Use BFS to gather all matching Entities reachable from self."""
         entities = []
