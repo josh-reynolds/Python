@@ -74,6 +74,13 @@ class Entity():
         """Decide what action to take and queue it up once per game tick."""
 
 
+def valid_target(attacker_name: str, target: Entity) -> bool:
+    """Assess whether an Entity can be attacked or not."""
+    return (isinstance(target, Creature) and
+            target.name != attacker_name and
+            not target.is_dead)
+
+
 class Creature(Entity):
     """Represents creatures on the map."""
 
@@ -114,7 +121,7 @@ class Creature(Entity):
         nearby = self.parent.neighbors
         neighbors = [l.contents for l in nearby if l.contents]
 
-        neighbor_creatures = [n for n in neighbors if isinstance(n, Creature)]
+        neighbor_creatures = [n for n in neighbors if valid_target(self.name, n)]
         if neighbor_creatures:
             target = choice(neighbor_creatures)
             self.attack(target)
