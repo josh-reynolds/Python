@@ -4,7 +4,7 @@ from typing import Tuple
 from engine import screen
 from pvector import PVector
 from location import Location
-from constants import BEAD, CREATURE, TREASURE, EVENT
+from constants import BEAD, TREASURE, EVENT, DWARF, BEASTS, WYRM
 
 
 # TO_DO: moving to a hierarchy - this one should become an ABC
@@ -99,7 +99,17 @@ class Creature(Entity):
 
     def __init__(self, name: str, parent: Location) -> None:
         """Create an instance of a Creature object."""
-        super().__init__(name, parent, CREATURE)
+        super().__init__(name, parent, (128,128,128))
+
+        # TO_DO: probably going to end up with subclasses,
+        #        but go with just colors for now until
+        #        behavior starts to fragment
+        if self.name == "Dwarves":
+            self.color = DWARF
+        if self.name == "Primordial Beasts":
+            self.color = BEASTS
+        if self.name == "Ancient Wyrm":
+            self.color = WYRM
 
         self.destination = None
         self.velocity = None

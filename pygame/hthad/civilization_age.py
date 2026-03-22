@@ -3,7 +3,7 @@ from random import choice, randint, shuffle
 from typing import List, Tuple
 from pygame import Rect
 from pvector import PVector
-from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, HEIGHT
+from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, HEIGHT, DWARF_TERRITORY
 from entity import Creature, Treasure
 from landscape import Mithril, GoldVein
 from location import Location, Room
@@ -167,14 +167,14 @@ class MineStartStrategy(LocationStrategy):
             self.previous_node = create_location(Room, 
                                                  PVector(self.x_location, GROUND_LEVEL))
             self.previous_node.name = "Start"
-            self.previous_node.color = DWARF
+            self.previous_node.color = DWARF_TERRITORY
             result = self.previous_node
 
         if self.step == 2:
             half_height = (self.depth - GROUND_LEVEL)//2 + GROUND_LEVEL
             room = create_location(Room, PVector(self.x_location, half_height))
             room.name = "Barracks"
-            room.color = DWARF
+            room.color = DWARF_TERRITORY
             room.contents = Creature("Dwarves", room)
             self.previous_node.add_neighbor(room)
             self.previous_node = room
@@ -185,7 +185,7 @@ class MineStartStrategy(LocationStrategy):
 
             room = create_location(Room, PVector(self.x_location, self.depth))
             room.name = "Mine"
-            room.color = DWARF
+            room.color = DWARF_TERRITORY
             room.target = self.target_mineral
             room.contents = Treasure("Treasure", room)
             self.previous_node.add_neighbor(room)

@@ -20,10 +20,15 @@ GOLD = (255, 255, 0)
 BORDER = (0, 0, 0)
 CAVERN = (0, 0, 0)
 WATER = (0, 0, 255)
-DWARF = (100, 80, 255)
 
-TREASURE = (255,255,0)
-CREATURE = (255,0,255)
 EVENT = (128,128,128)
+TREASURE = (255,255,0)
+
+# may want to have foreground/background colors
+# for each 'team' so we can show claimed territory
+DWARF_TERRITORY = (100, 80, 255)
+DWARF = (255,0,255)
+BEASTS = (255,0,0)
+WYRM = (0,255,0)
 
 SHOW_LABELS = False
