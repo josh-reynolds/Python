@@ -27,9 +27,6 @@ class Entity():
 
         self.is_dead = False
 
-        self.destination = None
-        self.velocity = None
-
     def __str__(self) -> str:
         """Return the string representation of an Entity."""
         return self.name
@@ -60,31 +57,9 @@ class Entity():
 
     def move(self, destination: Location) -> None:
         """Move the Entity to a new Location."""
-        self.destination = destination
-
-        vector = PVector.sub(self.destination.coordinate, self.parent.coordinate)
-        vector / 50    # arrive in 50 frames
-        self.velocity = vector
-
-        self.detach()
-        self.parent = self.destination
 
     def update(self) -> None:
         """Update the Entity's state once per frame."""
-        if self.velocity:
-            self.x += self.velocity.x
-            self.y += self.velocity.y
-
-        if self.destination:
-            EPSILON = 0.01
-            min_x = self.destination.coordinate.x - EPSILON
-            max_x = self.destination.coordinate.x + EPSILON
-            min_y = self.destination.coordinate.y - EPSILON
-            max_y = self.destination.coordinate.y + EPSILON
-            if min_x <= self.x <= max_x and min_y <= self.y <= max_y:
-
-                self.velocity = None
-                self.destination = None
 
     def draw(self) -> None:
         """Draw the Entity on the screen once per frame."""
@@ -96,16 +71,6 @@ class Entity():
 
     def think(self) -> None:
         """Decide what action to take and queue it up once per game tick."""
-        nearby = self.parent.neighbors
-        neighbors = [l.contents for l in nearby if l.contents]
-
-        #print(f"{self} : {nearby} : {neighbors}")
-
-        if self.color == CREATURE:
-            vacancies = [l for l in nearby if not l.contents]
-            if vacancies:
-                target = choice(vacancies)
-                self.move(target)
 
         # Timing is a question here once we start animating
         # need to complete all animations between game ticks
@@ -135,6 +100,47 @@ class Creature(Entity):
     def __init__(self, name: str, parent: Location) -> None:
         """Create an instance of a Creature object."""
         super().__init__(name, parent, CREATURE)
+
+        self.destination = None
+        self.velocity = None
+
+    def move(self, destination: Location) -> None:
+        """Move the Creature to a new Location."""
+        self.destination = destination
+
+        vector = PVector.sub(self.destination.coordinate, self.parent.coordinate)
+        vector / 50    # arrive in 50 frames
+        self.velocity = vector
+
+        self.detach()
+        self.parent = self.destination
+
+    def think(self) -> None:
+        """Decide what action to take and queue it up once per game tick."""
+        nearby = self.parent.neighbors
+        neighbors = [l.contents for l in nearby if l.contents]
+
+        vacancies = [l for l in nearby if not l.contents]
+        if vacancies:
+            target = choice(vacancies)
+            self.move(target)
+
+    def update(self) -> None:
+        """Update the Creature's state once per frame."""
+        if self.velocity:
+            self.x += self.velocity.x
+            self.y += self.velocity.y
+
+        if self.destination:
+            EPSILON = 0.01
+            min_x = self.destination.coordinate.x - EPSILON
+            max_x = self.destination.coordinate.x + EPSILON
+            min_y = self.destination.coordinate.y - EPSILON
+            max_y = self.destination.coordinate.y + EPSILON
+            if min_x <= self.x <= max_x and min_y <= self.y <= max_y:
+
+                self.velocity = None
+                self.destination = None
 
 
 class Treasure(Entity):
