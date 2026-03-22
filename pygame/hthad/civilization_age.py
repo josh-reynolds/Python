@@ -3,9 +3,8 @@ from random import choice, randint, shuffle
 from typing import List, Tuple
 from pygame import Rect
 from pvector import PVector
-from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF
-from constants import TREASURE, HEIGHT
-from entity import Entity, Creature
+from constants import FINGER, WIDTH, ROOM_SPACING, BEAD, GROUND_LEVEL, DWARF, HEIGHT
+from entity import Entity, Creature, Treasure
 from landscape import Mithril, GoldVein
 from location import Location, Room
 from location_strategy import LocationStrategy
@@ -188,7 +187,7 @@ class MineStartStrategy(LocationStrategy):
             room.name = "Mine"
             room.color = DWARF
             room.target = self.target_mineral
-            room.contents = Entity("Treasure", room, TREASURE)
+            room.contents = Treasure("Treasure", room)
             self.previous_node.add_neighbor(room)
             result = room
 
@@ -233,7 +232,7 @@ class SpringStrategy(LocationStrategy):
                     result = get_candidate_room(current_barracks, "Treasure Vault")
 
                     if result:
-                        result.contents = Entity("Dwarven Treasure", result, TREASURE)
+                        result.contents = Treasure("Dwarven Treasure", result)
                         check_for_connections(result, locs)
 
                     self.step += 1
@@ -314,7 +313,7 @@ class SummerStrategy(LocationStrategy):
             new_room.target = self.parent_mine.target
             new_room.color = self.parent_mine.color
             self.parent_mine.add_neighbor(new_room)
-            new_room.contents = Entity("Treasure", new_room, TREASURE)
+            new_room.contents = Treasure("Treasure", new_room)
             result = new_room
 
         if isinstance(self.deposit, Mithril):
@@ -327,7 +326,7 @@ class SummerStrategy(LocationStrategy):
             new_room.target = self.parent_mine.target
             new_room.color = self.parent_mine.color
             self.parent_mine.add_neighbor(new_room)
-            new_room.contents = Entity("Treasure", new_room, TREASURE)
+            new_room.contents = Treasure("Treasure", new_room)
             result = new_room
 
         self.done = True
@@ -383,7 +382,7 @@ class AutumnStrategy(LocationStrategy):
                                               (FINGER//2, BEAD))
 
                 if new_room:
-                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    new_room.contents = Treasure("Dwarven Treasure", new_room)
                     check_for_connections(new_room, locs)
                     result = new_room
 
@@ -423,7 +422,7 @@ class AutumnStrategy(LocationStrategy):
                                                   (BEAD, BEAD), 3)
 
                 if new_room:
-                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    new_room.contents = Treasure("Dwarven Treasure", new_room)
                     check_for_connections(new_room, locs)
                     result = new_room
 
@@ -436,7 +435,7 @@ class AutumnStrategy(LocationStrategy):
                                               (FINGER, BEAD))
 
                 if new_room:
-                    new_room.contents = Entity("Dwarven Treasure", new_room, TREASURE)
+                    new_room.contents = Treasure("Dwarven Treasure", new_room)
                     check_for_connections(new_room, locs)
                     result = new_room
 
@@ -448,7 +447,7 @@ class AutumnStrategy(LocationStrategy):
                                               ROOM_SPACING * 3)
 
                 if new_room:
-                    treasure = Entity("Dwarven Treasure", new_room, TREASURE)
+                    treasure = Treasure("Dwarven Treasure", new_room)
                     treasure.value = 2
                     new_room.contents = treasure
                     result = new_room

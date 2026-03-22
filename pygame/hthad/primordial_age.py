@@ -3,8 +3,8 @@ import math
 from random import randint
 from typing import List, Any
 from pvector import PVector
-from constants import CAVERN, BEAD, FINGER, EVENT, TREASURE
-from entity import Entity, Creature
+from constants import CAVERN, BEAD, FINGER, EVENT
+from entity import Entity, Creature, Treasure
 from landscape import GoldVein, UndergroundRiver, get_random_underground_location, Mithril
 from location import Cavern, Location
 from location_strategy import LocationStrategy
@@ -83,7 +83,7 @@ class SimpleCavernStrategy(LocationStrategy):
                 event.value = randint(1,4)
                 cavern.contents = event
             case 3:
-                treasure = Entity("Gemstones", cavern, TREASURE)
+                treasure = Treasure("Gemstones", cavern)
                 treasure.value = randint(1,4)
                 cavern.contents = treasure
             case 4:
@@ -221,7 +221,7 @@ class AncientWyrmStrategy(LocationStrategy):
                                       self.radius * 1.5, 0, 359)
             cavern = create_location(Cavern, point)
             cavern.color = CAVERN
-            cavern.contents = Entity("Wyrm Treasure", cavern, TREASURE)
+            cavern.contents = Treasure("Wyrm Treasure", cavern)
             self.start_node.add_neighbor(cavern)
             result = cavern
 
